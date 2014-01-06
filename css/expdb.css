@@ -1,0 +1,638 @@
+
+canvas {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  border: none;
+  padding:2px;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+}
+
+#querygraphtab{
+  background-image:url('../img/ajax-loader.gif');
+  background-repeat:no-repeat;
+  background-position:center;
+}
+
+#qmenu{ 
+  float:left;
+  border: 1px solid #d5d5d5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  padding: 5px;
+}
+
+#expdbschema, 
+#expdbschema2{
+  min-height: 630px;
+  width:970px;
+  background-image: url(../img/expdbschema.png);
+  background-repeat: no-repeat;
+  background-color: #fff;
+  -webkit-backface-visibility:hidden;
+  overflow: scroll;
+}
+
+
+.expdbtab, .expdbtab2 {
+  display:none;
+}
+
+
+#expdbschema > a {
+  height:20px;
+}
+#expdbschema2 > a {
+  height:20px;
+}
+
+#sqlbox{
+  min-height:60px;
+  opacity:0.5;
+  background:url(../img/glyphicons_030_pencil.png) center center no-repeat;
+  border: 1px solid #b3b3b3;
+  margin-bottom: 10px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+a.btn-small{
+  text-align: left;
+  font-size: 13px;
+}
+
+
+.topmenu{
+  float:right;
+  margin-top: 20px;
+  margin-bottom: -55px;
+  display:none;
+  position: relative;
+  z-index: 1020;
+}
+
+
+.topmenu > .btn-group{
+  display: inline-block;
+  clear: none;
+}
+
+.topmenu > input{
+  float:left;
+  width:140px;
+}
+
+.tour{
+  line-height: 14pt;
+}
+
+.tourlink > code{
+  border:none;
+}
+
+.tourlink:hover{
+  text-decoration:none;
+}
+
+.popover.bottom {
+	padding: 0px;
+	background-color: #FFFFFF;
+	border: 1px solid #CCCCCC;
+}
+
+
+.topmenu > output{
+  padding:5px;
+  line-height: 30px;
+  float:right;
+}
+
+.topmenu > .btn-group .input:first-child {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-left: 0;
+}
+
+.btn-group .input {
+    float: left;
+    position: relative;
+}
+
+#maincontainer{
+  min-height:400px;
+}
+
+#topmenuScatter{
+  margin-top: -20px;
+  padding-top: 0px;
+  position:absolute;
+  right:25px;
+  z-index:100;
+}
+
+
+#scattermain{
+  margin-top: 20px;
+}
+
+
+#linemain{
+  margin-top: 20px;
+}
+
+
+#topmenuLine{
+  margin-top: -20px;
+  padding-top: 0px;
+  position:absolute;
+  right:25px;
+  z-index:100;
+}
+
+.c select{
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 12px;
+  width: 120px;
+  height: 18px;
+}
+
+.c input[type="text"]{
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 12px;
+  width: 100px;
+  height: 12px;
+}
+
+.sqlmessage{
+  float:left;
+  display:none;
+  width:80%;
+  color:red;
+}
+
+
+.close-button{
+  background-color: #4183c4;
+}
+
+#query-btn, #sqlquery-btn, #wizardquery-btn {
+  float:right;
+  display: inline-block;
+  margin-right:1%;
+}
+
+
+
+
+
+/* Footer start here */
+footer {
+  position: relative;
+  z-index: 1030;
+  margin-top: 20px;
+  border-top: 2px solid #aeaeae;
+  background-image: -moz-linear-gradient(top, #dadada, #ffffff);
+  background-image: -ms-linear-gradient(top, #dadada, #ffffff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dadada), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #dadada, #ffffff);
+  background-image: -o-linear-gradient(top, #dadada, #ffffff);
+  background-image: linear-gradient(top, #dadada, #ffffff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dadada', endColorstr='#ffffff', GradientType=0);
+  border-color: #aeaeae #aeaeae #aeaeae;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #dadada;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.075);
+  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.075);
+}
+
+ul.footer{
+  border:none;
+  margin-top:10px;
+  padding:0px;
+  padding-left:0px;
+  display: block;
+  font-size: 12px;
+  list-style: none;
+  font-weight: bold;
+}
+
+li.footerhead{
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  color: #999999;
+}
+
+footer > p{
+  padding:0px;
+  margin-left:20px;
+}
+
+footer > hr{
+  margin: 5px 0;
+  border: 0;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #cecece;
+}
+
+textarea,
+input[type="text"] {
+  display: inline-block;
+  height: 28px;
+  padding: 4px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #555555;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  outline: none;
+}
+
+input[type="text"]:focus{
+outline: none;
+-webkit-tap-highlight-color:rgba(255, 255, 255, 0);
+}
+
+
+.expdbtable {
+  display: block;
+  cursor: pointer;
+  background-color: transparent;
+  /*border: 1px solid #ff6666;*/
+}
+
+.expdbtable:hover {
+  border-color: #4183c4;
+  -webkit-box-shadow: 0px 0px 3px 3px rgba(0, 105, 214, 0.25);
+  -moz-box-shadow: 0px 0px 3px 3px rgba(0, 105, 214, 0.25);
+  box-shadow: 0px 0px 3px 3px rgba(0, 105, 214, 0.25);
+}
+
+.doubleLineHeight {
+  line-height:200%;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.membername{
+	font-size: 110%;
+	font-weight: normal;
+	padding: 0px;
+	margin: 0px;
+}
+.memberline{
+ 	font-size: 90%;
+	font-weight: normal;
+	margin-bottom:20px;
+}
+.userprofile{
+	color: #40A236;
+	font-style:italic;
+	font-weight: normal;
+	padding-left: 5px;
+}
+
+
+.justify {
+  text-align: justify;
+}
+
+hr.softSmall {
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  border: 0;
+}
+
+hr.hardSmall {
+  margin-top:-10px;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,.1), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:    -moz-linear-gradient(left, rgba(0,0,0,.1), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:     -ms-linear-gradient(left, rgba(0,0,0,.1), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:      -o-linear-gradient(left, rgba(0,0,0,.1), rgba(0,0,0,.1), rgba(0,0,0,0));
+  border: 0;
+}
+
+
+
+.verticalSpace50 {
+  height: 50px;
+}
+
+.softText {
+  font-weight: normal;
+}
+
+/* Tutorial */
+
+      .embed-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16/9 ratio */
+            padding-top: 30px; /* IE6 workaround*/
+            height: 0;
+            overflow: hidden;
+        }
+        .embed-container iframe,
+        .embed-container object,
+        .embed-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+/* Base class */
+.bs-docs-tutorial {
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  *padding-top: 19px;
+  max-width: 700px;
+  background-color: #fff;
+  border: 1px solidt #ddd;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+/* Echo out a label for the example */
+.bs-docs-tutorial:after {
+  content: "Tutorial";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #9da0a4;
+  -webkit-border-radius: 4px 0 4px 0;
+     -moz-border-radius: 4px 0 4px 0;
+          border-radius: 4px 0 4px 0;
+}
+
+
+.ui-autocomplete {
+	max-height: 200px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+}
+
+.img-modal{
+  display: block;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.sqlmessage-buttonbox {
+        min-height: 20px;
+      }
+
+      /* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      a:hover {
+        cursor:pointer;
+      }
+
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto 10px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+	margin-top:-70px;
+        height: 60px;
+	padding: 5px;
+      }
+      #footer {
+        background-color: #f5f5f5;
+      }
+
+.expand-all a {
+    color: #08C;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 7px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+.expand-all a:hover{
+    color: #04C;
+  }
+
+.nav-search {
+  *zoom: 1;
+}
+
+.nav-search:before,
+.nav-search:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.nav-search:after {
+  clear: both;
+}
+
+
+.nav-search > li {
+  float: left;
+  padding-top:4px;
+  padding-bottom:0px;
+}
+
+.nav-search > li > a:hover {
+  background-color: #ffffff;
+  color: #ff0000;
+}
+
+.nav-search > li > a {
+  padding-right: 11px;
+  padding-left: 11px;
+  margin-right: 2px;
+  line-height: 14px;
+  color: #777;
+}
+
+.nav-search > li > a {
+  padding-top: 8px;
+  padding-bottom: 10px;
+  margin-top: 2px;
+  margin-bottom: 0px;
+}
+
+.nav-search > .active > a{
+  border-bottom: 3px solid #ff0000;
+  color: #ff0000;
+  margin-bottom: -3px;
+}
+
+.topsearch{
+  padding-top:15px;
+  padding-bottom:7px;
+  z-index:1040;
+}
+
+.topsearch form{
+  margin-bottom:0px;
+}
+
+.searchstats{
+  color: #999;
+  font-size: 13px;
+  padding-bottom:20px;
+}
+
+.noresult{
+  color: #000;
+  font-size: 16px;
+  padding:40px;
+}
+
+.noresult p{
+  padding:4px;
+}
+
+.searchresult{
+  padding-bottom:30px;
+}
+
+.searchresult > .teaser{
+  padding-left:18px;
+  font-size: 13px;
+}
+
+.searchresult > .runStats{
+  padding-top:0px;
+  padding-left:18px;
+  font-size: 13px;
+  color: rgb(0, 153, 51);
+}
+
+.help-block, .help-block2{
+  font-size: 12px;
+  color: #999;
+}
+
+#sociallinks {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 50px;
+  width: 110%;
+  z-index: 1030;
+}
+
+.social {
+	width: 100%;
+	padding-left:40px !important;
+        padding-top:12px;
+        padding-bottom:4px;
+	min-height: 20px;
+	margin-left: -5px;
+  	background-color: #fafafa;
+	background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
+	background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
+	background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
+	background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
+	background-repeat: repeat-x;
+	border: 1px solid #d4d4d4;
+}
+  
+/* Set an optional width for your button wrappers */
+.social span {
+	display:inline-block;
+	vertical-align: top;
+}
+ 
+/* Adjust the widths individually if you like */
+
+.social .linkedin {
+	width: 95px;
+}
+
+.social .Facebook {
+	width: 300px;
+	clear: both !important;
+	margin:0 auto !important;
+}
+
+.social .twitter {
+	width: 95px;
+}
+
+.stats {
+  margin-bottom: 20px;
+  display: block;
+  line-height: 18px;
+  color: #999999;
+  padding-top:15px;
+  padding-left:2px;
+
+}
+
+.carousel-inner{
+ 	text-align:center;
+}
+
+
+.item{
+ 	text-align:center;
+	margin:0 auto;
+}
+
+
+.item > .span8{
+ 	text-align:center;
+	margin:0 auto;
+}
+
