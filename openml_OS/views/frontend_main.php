@@ -40,6 +40,7 @@
         <link rel="stylesheet" href="css/MyFontsWebfontsKit.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
             <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
             -->
@@ -58,6 +59,7 @@
         <script type="text/javascript" src="js/libs/jquery.dataTables.bootstrap.js"></script>
         <script type="text/javascript" src="js/libs/jquery.form.js"></script>
         <script type="text/javascript" src="js/openml.js"></script>
+        <script type="text/javascript" src="js/balls.js"></script>
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>
     </head>

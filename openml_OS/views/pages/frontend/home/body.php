@@ -2,13 +2,10 @@
   We're still under construction, check back soon! 
 </div> -->
 <!-- Main hero unit for a primary marketing message or call to action -->
-
+<canvas id="c" width="400" height="400"></canvas>
 <div class="marketing" style="margin-top:45px">
-
 <div class="col-md-12">
-<table style="margin-left:auto;margin-right:auto;margin-bottom:20px;">
-	<tr><td style="margin:0px;"><img width="340px" src="img/openmllogo-beta.png" style="margin:0px;"/></td></tr>
-</table>
+<div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
 
 <div class="col-md-12">
