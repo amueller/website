@@ -13,10 +13,10 @@ $(function() {
 		
 		gLength = g.length;
 		for (var i = 0; i < gLength; i++) {
-			g[i].curPos.x = (canvasWidth/2 - 150) + g[i].curPos.x;
+			g[i].curPos.x = (canvasWidth/2 - 140) + g[i].curPos.x;
 			g[i].curPos.y = (140 - 50) + g[i].curPos.y;
 			i
-			g[i].originalPos.x = (canvasWidth/2 - 150) + g[i].originalPos.x;
+			g[i].originalPos.x = (canvasWidth/2 - 140) + g[i].originalPos.x;
 			g[i].originalPos.y = (140 - 50) + g[i].originalPos.y;
 		};
 		
