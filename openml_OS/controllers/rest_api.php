@@ -597,11 +597,23 @@ class Rest_api extends CI_Controller {
 		}
     
     if(is_numeric($id) === false ) {
-      $record = $this->getWhere('`fullName` = "' . $id . '" OR `binary_md5` = "'.$id.'" OR `source_md5` = "'.$id.'"');
-      if( count($record) ) {
+      $record = $this->Implementation->getWhere('`fullName` = "' . $id . '"');
+      
+      if( $record !== false ) {
         $id = $record[0]->id;
       } else {
-        $id = -1;
+        // maybe a file hash has been given.
+        $files =  $this->File->getColumnWhere('id','`md5_hash` = "'.$id.'"');
+        if( count($files) ) {
+          $record = $this->Implementation->getWhere('`binary_file_id` IN ('.implode(',', $files).') OR `source_file_id` IN ('.implode(',', $files).')');
+          if( $record !== false ) {
+            $id = $record[0]->id;
+          } else {
+            $id = -1;
+          }
+        } else {
+          $id = -1;
+        }
       }
     }
     

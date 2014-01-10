@@ -27,6 +27,22 @@ class Community extends CI_Model {
 		$data = $this->db->where( $where )->get( $this->table );
 		return ( $data->num_rows() > 0 ) ? $data->result() : false;
 	}
+	
+	function getColumn( $column, $orderby = null) {
+		if( $orderby != null ) 
+			$this->db->order_by( $orderby );
+		$data = $this->db->select( $column )->get( $this->table );
+		$res = array();
+		foreach( $data->result() as $row )
+			$res[] = $row->{$column};
+		
+		return count( $res ) > 0 ? $res : false;
+	}
+	
+	function getColumnWhere( $column, $where, $orderby = null ) {
+		$this->db->where( $where );
+		return $this->getColumn( $column, $orderby );
+	}
 
 	function get( $orderby = null ) {
 		$this->db->where( $this->deleted_activated );

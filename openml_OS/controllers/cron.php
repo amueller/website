@@ -15,7 +15,7 @@ class Cron extends CI_Controller {
   }
 	
 	function build_search_index() {
-		$command = 'java -jar '.APPPATH.'third_party/OpenML/Java/luceneSearch.jar index -index '.DATA_PATH.'search_index -server '. DB_HOST .' -database '. DB_NAME .' -username '. DB_USER .' -password ' . DB_PASS;
+		$command = 'java -jar '.APPPATH.'third_party/OpenML/Java/luceneSearch.jar index -index '.DATA_PATH.'search_index -server '. DB_HOST_EXPDB .' -database '. DB_NAME_EXPDB .' -username '. DB_USER_EXPDB_READ .' -password ' . DB_PASS_EXPDB_WRITE;
 		$code = 0;
 		$res = array();
 		
