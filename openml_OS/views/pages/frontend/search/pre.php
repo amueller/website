@@ -27,46 +27,50 @@ if( $this->terms != false ) {
 	exec( $command, $res, $code );
 	
 	$results = json_decode( implode( "\n", $res ) );
-	$this->time = $results->time;
-	$this->total_count = $results->nr_results;
-	
-	if($this->total_count > 0){	
-	
-		foreach( $results->results as $re ) {
-			$type = $re->type;
-			$name = $re->name;
-			$icon = $icons[$type];
-			$runs = 0;
-			$description = '';
-			if ($type == 'implementation'){
-				$description = $this->Implementation->getColumnWhere('description', 'fullname = "'.$name.'"');
-				$count = $this->Implementation->query('select count(rid) as nbruns from cvrun r, algorithm_setup s where r.learner = s.sid and s.implementation_id = (SELECT id FROM implementation WHERE fullName ="'.$name.'")');
-				$runs = $count[0]->nbruns;
-				$this->implementation_count++;
-			}
-			elseif ($type == 'function'){
-				$description = $this->Math_function->getColumnWhere('description', 'name = "'.$name.'"');
-				$this->function_count++;
-			}
-			elseif ($type == 'dataset'){
-				$description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
-				$count = $this->Dataset->query('select count(rid) as nbruns from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
-				$runs = $count[0]->nbruns;
-				$this->dataset_count++;
-			}
-			
-			$result = array(
-				'type' => $type,
-				'name' => $name,
-				'icon' => $icon,
-				'description' => $description[0],
-				'runs' => $runs
-			);
-			$this->results_runcount[] = $runs;
-			$this->results_all[] = $result;
-		}
-    array_multisort($this->results_runcount, SORT_DESC, $this->results_all);
-	}
+  $this->total_count = 0;
+  
+  if( $results ) {
+    $this->time = $results->time;
+    $this->total_count = $results->nr_results;
+    
+    if($this->total_count > 0){	
+    
+      foreach( $results->results as $re ) {
+        $type = $re->type;
+        $name = $re->name;
+        $icon = $icons[$type];
+        $runs = 0;
+        $description = '';
+        if ($type == 'implementation'){
+          $description = $this->Implementation->getColumnWhere('description', 'fullname = "'.$name.'"');
+          $count = $this->Implementation->query('select count(rid) as nbruns from cvrun r, algorithm_setup s where r.learner = s.sid and s.implementation_id = (SELECT id FROM implementation WHERE fullName ="'.$name.'")');
+          $runs = $count[0]->nbruns;
+          $this->implementation_count++;
+        }
+        elseif ($type == 'function'){
+          $description = $this->Math_function->getColumnWhere('description', 'name = "'.$name.'"');
+          $this->function_count++;
+        }
+        elseif ($type == 'dataset'){
+          $description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
+          $count = $this->Dataset->query('select count(rid) as nbruns from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
+          $runs = $count[0]->nbruns;
+          $this->dataset_count++;
+        }
+        
+        $result = array(
+          'type' => $type,
+          'name' => $name,
+          'icon' => $icon,
+          'description' => $description[0],
+          'runs' => $runs
+        );
+        $this->results_runcount[] = $runs;
+        $this->results_all[] = $result;
+      }
+      array_multisort($this->results_runcount, SORT_DESC, $this->results_all);
+    }
+  }
 } else {
 	$start_time = microtime(true);
 	
