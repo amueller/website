@@ -59,7 +59,9 @@
         <script type="text/javascript" src="js/libs/jquery.dataTables.bootstrap.js"></script>
         <script type="text/javascript" src="js/libs/jquery.form.js"></script>
         <script type="text/javascript" src="js/openml.js"></script>
-        <script type="text/javascript" src="js/balls.js"></script>
+        <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
+        <script type="text/javascript" src="<?php echo $j; ?>"></script>
+        <?php endforeach; endif; ?>
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>
     </head>

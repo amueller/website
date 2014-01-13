@@ -71,44 +71,50 @@ if( $this->terms != false ) {
 	$start_time = microtime(true);
 	
 	$datasets = $this->Dataset->query('SELECT dataset.name, dataset.description, COUNT(*) as runs FROM cvrun RIGHT JOIN dataset ON cvrun.inputData = dataset.did GROUP BY inputData ORDER BY runs DESC LIMIT 0,30');
-	foreach( $datasets as $d ) {
-		$result = array(
-			'type' => 'dataset',
-			'name' => $d->name,
-			'icon' => $icons['dataset'],
-			'description' => $d->description,
-			'runs' => $d->runs
-		);
-		$this->results_all[] = $result;
-		$this->dataset_count++;
+  if( $datasets != false ) {
+	  foreach( $datasets as $d ) {
+		  $result = array(
+			  'type' => 'dataset',
+			  'name' => $d->name,
+			  'icon' => $icons['dataset'],
+			  'description' => $d->description,
+			  'runs' => $d->runs
+		  );
+		  $this->results_all[] = $result;
+		  $this->dataset_count++;
+    }
 	}
 	
 	$implementation = $this->Implementation->query('SELECT i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id GROUP BY s.implementation_id ORDER BY runs DESC LIMIT 0,30');
-	foreach( $implementation as $i ) {
-		$result = array(
-			'type' => 'implementation',
-			'name' => $i->fullName,
-			'icon' => $icons['implementation'],
-			'description' => $i->description,
-			'runs' => $i->runs
-		);
-		$this->results_all[] = $result;
-		$this->implementation_count++;
+  if( $implementation != false ) {
+	  foreach( $implementation as $i ) {
+		  $result = array(
+			  'type' => 'implementation',
+			  'name' => $i->fullName,
+			  'icon' => $icons['implementation'],
+			  'description' => $i->description,
+			  'runs' => $i->runs
+		  );
+		  $this->results_all[] = $result;
+		  $this->implementation_count++;
+    }
 	}
 	
 	$functions = $this->Math_function->getWhere('functionType = "EvaluationFunction"');
 	$this->function_total = count($functions);
-	foreach( $functions as $f ) {
-		$result = array(
-			'type' => 'function',
-			'name' => $f->name,
-			'icon' => $icons['function'],
-			'description' => $f->description,
-			'runs' => 0
-		);
-		$this->results_all[] = $result;
-		$this->function_count++;
-	}
+  if( $functions != false ) {
+	  foreach( $functions as $f ) {
+		  $result = array(
+			  'type' => 'function',
+			  'name' => $f->name,
+			  'icon' => $icons['function'],
+			  'description' => $f->description,
+			  'runs' => 0
+		  );
+		  $this->results_all[] = $result;
+		  $this->function_count++;
+	  }
+  }
 	
 	$this->time = round(microtime(true) - $start_time,3);
 }
