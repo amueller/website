@@ -2,10 +2,10 @@
 class Task_type_io extends Database_read {
 	
 	function __construct() {
-		parent::__construct();
-		$this->table = 'task_type_io';
-		$this->id_column = array('ttid','name');
-    }
+    parent::__construct();
+    $this->table = 'task_type_io';
+    $this->id_column = array('ttid','name');
+  }
 	
 	public function getByTaskType( $ttid, $orderBy = null ) {
 		return $this->getWhere( 'ttid = ' . $ttid, $orderBy );

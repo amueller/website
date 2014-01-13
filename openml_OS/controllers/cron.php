@@ -22,11 +22,26 @@ class Cron extends CI_Controller {
 		exec($command,$res,$code);
 		
 		if( $code == 0 ) {
-			$this->Log->cronjob( 'succes', 'build_search_index', 'Created a new search index. Java response supressed. ' );
+			$this->Log->cronjob( 'success', 'build_search_index', 'Created a new search index. Java response suppressed. ' );
 		} else {
 			$this->Log->cronjob( 'error', 'build_search_index', 'Failed to create a search index. Java response: ' . $res );
 		}
 	}
+  
+  function install_database() {
+    // TODO: we might scan the directory and pick up all models that contain a SQL file. Decide later. 
+    $models = array('Algorithm','Estimation_procedure','Math_function','Quality','Task_type','Task_type_function','Task_type_io');
+    foreach( $models as $m ) {
+      $this->load->model( $m );
+      if( $this->$m->get() === false ) {
+        $file = DATA_PATH . 'sql/' . strtolower( $m ) . '.sql';
+        if( file_exists( $file ) ) {
+          $sql = file_get_contents( $file );
+          $result = $this->Dataset->query( $sql );
+        }
+      }
+    }
+  }
 	
   // manually perform this cronjob. Type the following command:
   // watch -n 10 "wget -O - http://openml.liacs.nl/cron/process_dataset" (specify server correct)

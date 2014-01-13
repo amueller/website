@@ -156,4 +156,12 @@ function xml_array_to_plain_array( $xml, $field ) {
   return $result;
 }
 
+function array_to_js_array( $array ) {
+	if( is_array($array) ) {
+		return '["' . implode ( '","', $array ) . '"]';
+	} else {
+		return '[]';
+	}
+}
+
 ?>
