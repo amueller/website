@@ -12,6 +12,8 @@ if($this->function_count>0) {
 } else {
 	if( $this->terms != false ) {
 		o('no-search-results');
-	}
+	} else {
+    o('no-results');
+  }
 }
 ?>

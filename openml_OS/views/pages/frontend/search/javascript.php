@@ -22,6 +22,25 @@ var redrawLineRequest = false;
 
 var resultTableMaxCols = 5;
 
+$(function() {
+  var datasets = expdbDatasets();
+  var evaluationmetrics = expdbEvaluationMetrics();
+  var algorithms = expdbAlgorithms();
+  var implementations = getImplementationsWithAlgorithms( ['SVM', 'C4.5'] ); // TODO: bind to algorithm field
+  	
+  makeCommaSeperatedAutoComplete( "#datasetDropdown", datasets ); 
+  makeCommaSeperatedAutoComplete( "#algorithmDropdown", algorithms ); 
+  makeCommaSeperatedAutoComplete( "#implementationDropdown", implementations ); 
+  makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
+  makeCommaSeperatedAutoComplete( "#regressionDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
+  makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() ); 
+  makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() ); 
+  
+  $( "#evaluationmetricDropdown" ).autocomplete({
+    source: evaluationmetrics,
+		minLength: 1
+  });
+});
 
 //sql editor
 $(document).ready(function() {

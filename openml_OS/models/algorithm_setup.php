@@ -22,7 +22,7 @@ class Algorithm_setup extends Database_write {
 		if(count($parameters)) {
 			$sql = 'SELECT `sid`,`implementation_id`,`nr_parameters`,`parameters`,`values` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters`, GROUP_CONCAT(`input_setting`.`input`) AS `parameters`, GROUP_CONCAT(`input_setting`.`value`) AS `values` FROM `input_setting` GROUP BY `setup` ORDER BY `input`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation_id` = "'.$implementation->id.'" AND `p`.`parameters` = "'.substr( $paramString, 1 ).'" AND `p`.`values` = "'.substr( $valueString, 1 ).'" LIMIT 0,1;';
 		} else {
-			$sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation` = "'.$implementation->id.'" AND `nr_parameters` IS NULL LIMIT 0,1';
+			$sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation_id` = "'.$implementation->id.'" AND `nr_parameters` IS NULL LIMIT 0,1';
 		}
 		
 		$result = $this->db->query( $sql )->result();

@@ -15,7 +15,7 @@ define( 'BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DATA_URL: The subdirectory where the data can be accessed. Will be 
- * depricated in a few updates.
+ * deprecated in a few updates.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DATA_URL', BASE_URL . 'data/' );
 
@@ -27,9 +27,12 @@ define( 'DATA_URL', BASE_URL . 'data/' );
 define( 'PATH', '/var/www/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- * DATA_PATH: The directory on whete the uploaded data is stored.
+ * DATA_PATH: The directory on whether the uploaded data is stored.
  * It might be a good idea to locate this directory outside of the 
- * webserver directory. Should be writable for webserver.
+ * webserver directory. Should be writeable for webserver.
+ * IMPORTANT NOTE: If you choose to change the value indicated below
+ * (PATH . 'data/') into something different, make sure to also move
+ * the content of the data directory that was provided at installation.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DATA_PATH', PATH . 'data/' );
 
@@ -90,7 +93,7 @@ define( 'DEBUG', FALSE );
 define( 'EMAIL_FROM', 'noreply@openml.org' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- * DISQUS_USERNAME: The username for the discuss plugin. 
+ * DISQUS_USERNAME: The username for the discuss plug-in. 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DISQUS_USERNAME', 'DISQUS USERNAME HERE' );
 
@@ -103,7 +106,7 @@ define( 'DISQUS_USERNAME', 'DISQUS USERNAME HERE' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * EXTERNAL_API_PROXY_PORT: The port of the proxy
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * EXTERNAL_API_PROXY_URL: The url of the proxy
+ * EXTERNAL_API_PROXY_URL: The URL of the proxy
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * EXTERNAL_API_PASSWORD: The password of the proxy
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

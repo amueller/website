@@ -1,27 +1,7 @@
 
 <div class="container">
 <script type="text/javascript" src="index.php/javascript/page/data"></script>
-<script type="text/javascript">
-	$(function() {
-        var datasets = expdbDatasets();
-		var evaluationmetrics = expdbEvaluationMetrics();
-		var algorithms = expdbAlgorithms();
-		var implementations = getImplementationsWithAlgorithms( ['SVM', 'C4.5'] ); // TODO: bind to algorithm field
-		
-		makeCommaSeperatedAutoComplete( "#datasetDropdown", datasets ); 
-		makeCommaSeperatedAutoComplete( "#algorithmDropdown", algorithms ); 
-        makeCommaSeperatedAutoComplete( "#implementationDropdown", implementations ); 
-        makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
-        makeCommaSeperatedAutoComplete( "#regressionDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
-        makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() ); 
-        makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() ); 
-		
-		$( "#evaluationmetricDropdown" ).autocomplete({
-            source: evaluationmetrics,
-			minLength: 1
-        });
-    });
-</script>
+
 <div class="row">
 	<div class="col-md-12">
 		<ul class="nav nav-search" id="qtabs">

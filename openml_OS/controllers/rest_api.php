@@ -604,7 +604,7 @@ class Rest_api extends CI_Controller {
       } else {
         // maybe a file hash has been given.
         $files =  $this->File->getColumnWhere('id','`md5_hash` = "'.$id.'"');
-        if( count($files) ) {
+        if( $files !== false ) {
           $record = $this->Implementation->getWhere('`binary_file_id` IN ('.implode(',', $files).') OR `source_file_id` IN ('.implode(',', $files).')');
           if( $record !== false ) {
             $id = $record[0]->id;
@@ -742,7 +742,7 @@ class Rest_api extends CI_Controller {
 			$parameters[$component . '_' . $p->name] = $p->value . '';
 			
 		}
-		// search setup ...
+		// search setup ... // TODO: do something about the new parameters. Are still retrieved by ID, does not work with Weka plugin. 
 		$setupId = $this->Algorithm_setup->getSetupId( $implementation, $parameters, true );
 		if( $setupId === false ) {
 			$this->_returnError( 213 );

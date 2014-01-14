@@ -1,39 +1,39 @@
 function expdbDatasets() {
-	return [ <?php echo '"' . implode ( '","', $this->datasets ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->datasets ); ?>;
 }
 
 function expdbDatasetVersion() {
-	return [ <?php echo '"' . implode ( '","', $this->datasetVesion ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->datasetVesion ); ?>;
 }
 
 function expdbDatasetVersionOriginal() {
-	return [ <?php echo '"' . implode ( '","', $this->datasetVesionOriginal ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->datasetVesionOriginal ); ?>;
 }
 
 function expdbDatasetIDs() {
-	return [ <?php echo '"' . implode ( '","', $this->datasetIds ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->datasetIds ); ?>;
 }
 
 function expdbEvaluationMetrics() {
-	return [ <?php echo '"' . implode ( '","', $this->evaluationMetrics ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->evaluationMetrics ); ?>;
 }
 
 function expdbClassificationEvaluationMetrics() {
-	return [ <?php echo '"' . implode ( '","', $this->classificationEvaluationMetrics ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->classificationEvaluationMetrics ); ?>;
 }
 
 function expdbRegressionEvaluationMetrics() {
-	return [ <?php echo '"' . implode ( '","', $this->regressionEvaluationMetrics ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->regressionEvaluationMetrics ); ?>;
 }
 
 function expdbAlgorithms() {
-	return [ <?php echo '"' . implode ( '","', $this->algorithms ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->algorithms ); ?>;
 }
 
 function expdbImplementations() {
-	return [ <?php echo '"' . implode ( '","', $this->implementations ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->implementations ); ?>;
 }
 
 function expdbTaskTypes() {
-	return [ <?php echo '"' . implode ( '","', $this->taskTypes ) . '"'; ?> ];
+	return <?php echo array_to_js_array( $this->taskTypes ); ?>;
 }

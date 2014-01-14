@@ -1,11 +1,11 @@
 <?php
 class Estimation_procedure extends Database_read {
-	
-	function __construct() {
-		parent::__construct();
-		$this->table = 'estimation_procedure';
-		$this->id_column = 'id';
-    }
+  
+  function __construct() {
+    parent::__construct();
+    $this->table = 'estimation_procedure';
+    $this->id_column = 'id';
+  }
 	
 	function sql_constraints( $id, $ttid, $columns = array('type','repeats','folds','percentage','stratified_sampling') ) {
 		$evaluation_method = $this->getById( $id );
