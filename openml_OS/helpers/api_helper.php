@@ -124,12 +124,12 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
   // insert all important "components"
   foreach( $implementation_objects as $key => $value ) {
     
-    if( $key == 'components' ) {
-      $components = $value->children( 'oml', true );
-      foreach($components as $component) {
+    if( $key == 'component' ) {
+      foreach($value as $entry) {
+        $component = $entry->implementation->children('oml', true);
         $similarComponent = $ci->Implementation->compareToXml( $component );
         if( $similarComponent === false ) {
-          $component->version = $ci->Implementation->incrementVersionNumber( $component->name );;
+          $component->version = $ci->Implementation->incrementVersionNumber( $component->name );
           $componentFullName = $component->name . '(' . $component->version . ')';
           $succes = insertImplementationFromXML( 
             $component, 
@@ -138,9 +138,9 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
 		  
           if($succes == false) { return false; }
           
-          $ci->Implementation->addComponent( $res, $succes );
+          $ci->Implementation->addComponent( $res, $succes, $entry->identifier );
         } else {
-          $ci->Implementation->addComponent( $res, $similarComponent );
+          $ci->Implementation->addComponent( $res, $similarComponent, $entry->identifier );
         }
       }
     } elseif( $key == 'bibliographical_reference' ) {

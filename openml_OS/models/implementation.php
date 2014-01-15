@@ -9,8 +9,8 @@ class Implementation extends Database_write {
     $this->load->model('File');
   }
 	
-	function addComponent( $parent, $child ) {
-		return $this->db->insert( 'implementation_component', array( 'parent' => $parent, 'child' => $child ) );
+	function addComponent( $parent, $child, $identifier ) {
+		return $this->db->insert( 'implementation_component', array( 'parent' => $parent, 'child' => $child, 'identifier' => $identifier ) );
 	}
   
   function isComponent( $id ) {
@@ -33,22 +33,17 @@ class Implementation extends Database_write {
 	}
 	
 	
-	function getComponents( $included, $iterative = false ) {
-		//$components = $this->db->select( 'implementation.*' )->where( '`implementation_component`.`parent` = "'.$fullName.'" AND `implementation_component`.`child` = `implementation`.`fullName`' )->get( '`implementation`, `implementation_component`' )->result();
-		$components = $this->db->distinct()->where('`parent` IN ("'.implode('","',$included).'")')->get('implementation_component')->result();
-		$results = object_array_get_property( $components, 'child' );
-		//echo 'function called, params: ' .implode(',',$included). ', returned ' . implode(',',$results) . '<br/>';
-		if( $iterative ) {
-			$previous_size = count($results);
-			$current_size  = count($results);
-			do {
-				$components = $this->getComponents( $results );
-				//var_dump($components);
-				$results = array_unique( array_merge( $results, $components ) );
-				$previous_size = $current_size;
-				$current_size = count($results);
-			} while( $current_size > $previous_size );
-		}
+	function getComponents( $parent ) {
+		$results = $this->query(
+      'SELECT implementation.* FROM implementation, implementation_component 
+       WHERE implementation.id = implementation_component.child 
+       AND implementation_component.parent = ' . $parent->id
+    );
+    if( is_array( $results ) ) {
+      foreach( $result as $r ) {
+        $this->_extendImplementation( $r );
+      }
+    }
 		return $results;
 	}
   
@@ -107,10 +102,7 @@ class Implementation extends Database_write {
 		$implementation->contributor = getcsv( $implementation->contributor );
 		$implementation->parameterSetting = $this->Input->getWhere( 'implementation_id = "' . $implementation->id . '"' );
 		$implementation->bibliographicalReference = $this->Bibliographical_reference->getWhere( 'implementation_id = "' . $implementation->id . '"' );
-		$implementation->components = $this->getComponents( array( $implementation->id ) );
-		for( $i = 0; $i < count( $implementation->components ); $i++ ) {
-			$implementation->components[$i] = $this->_extendImplementation( $this->Implementation->getById( $implementation->components[$i] ) );
-		}
+		$implementation->components = $this->getComponents( $implementation->id );
     
     foreach( array('binary','source') as $type ) {
       if( $implementation->{$type.'_file_id'} != false ) {
@@ -122,8 +114,6 @@ class Implementation extends Database_write {
         }
       }
     }
-
-
 		return $implementation;
 	}
 }
