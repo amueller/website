@@ -60,8 +60,8 @@ class Rest_api extends CI_Controller {
     $this->xml_fields_implementation = array(
       'string' => array('name','description','licence','language','fullDescription','installationNotes','dependencies',),
       'csv' => array('creator','contributor',),
-      'array' => array('bibliographical_reference','parameter'),
-      'plain' => array('components')
+      'array' => array('bibliographical_reference','parameter','component'),
+      'plain' => array()
     );
 
 		$this->data_controller = BASE_URL . 'files/';

@@ -1,6 +1,6 @@
+<?php foreach( $source as $imp ): ?>
 <oml:components>
-	<?php 
-	foreach( $source as $imp )
-		sub_xml( 'implementation-get', array( 'source' => $imp ), false );
-	?>
+  <oml:identifier><?php echo $imp->identifier; ?></oml:identifier>
+	<?php sub_xml( 'implementation-get', array( 'source' => $imp->implementation ), false ); ?>
 </oml:components>
+<?php endforeach; ?>
