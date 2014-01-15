@@ -4,16 +4,16 @@
 	<div class="col-md-2">
 		<ul class="nav nav-list bs-docs-sidenav2" id="result-tabs">
 			<li class="topchild">
-				<a href="#tab-general" data-toggle="tab"><i class="icon-info-sign"></i>&nbsp;General Information</a>
+				<a href="#tab-general" data-toggle="tab"><i class="fa fa-info-circle"></i>&nbsp;General Information</a>
 			</li>
 			<li class="active">
-				<a href="#tab-runs" data-toggle="tab"><i class="icon-star"></i>&nbsp;Runs</a>
+				<a href="#tab-runs" data-toggle="tab"><i class="fa fa-star"></i>&nbsp;Runs</a>
 			</li>
 			<li>
-				<a href="#tab-params" data-toggle="tab"><i class="icon-tasks"></i>&nbsp;Algorithm Parameters</a>
+				<a href="#tab-params" data-toggle="tab"><i class="fa fa-tasks"></i>&nbsp;Algorithm Parameters</a>
 			</li>
 			<li class="bottomchild">
-				<a href="#tab-qualities" data-toggle="tab"><i class="icon-tags"></i>&nbsp;Algorithm Properties</a>
+				<a href="#tab-qualities" data-toggle="tab"><i class="fa fa-tags"></i>&nbsp;Algorithm Properties</a>
 			</li>
 		</ul>
 	</div>

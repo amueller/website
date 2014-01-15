@@ -22,8 +22,8 @@
 		<?php foreach( $this->threads as $thread ): ?>
 			<div class=" justify">
 				<h4 class="softText"><a href="frontend/page/community_thread/tid/<?php echo $thread->id; ?>"><?php echo stripslashes( $thread->title ); ?></a></h4>
-				<strong><i class="icon-folder-open"></i>Category: <a href="frontend/page/community_category/cid/<?php echo $thread->category_id; ?>"><?php echo $thread->category_title; ?></a></strong><br/>
-				<i class="icon-calendar"></i><small>Posted on <?php echo dateNeat( $thread->post_date ); ?> at <?php echo timeNeat( $thread->post_date ); ?></small><br/>
+				<strong><i class="fa fa-folder-open"></i>Category: <a href="frontend/page/community_category/cid/<?php echo $thread->category_id; ?>"><?php echo $thread->category_title; ?></a></strong><br/>
+				<i class="fa fa-calendar"></i><small>Posted on <?php echo dateNeat( $thread->post_date ); ?> at <?php echo timeNeat( $thread->post_date ); ?></small><br/>
 				<?php echo stripslashes( teaser( $thread->body ) ); ?>
 			</div>
 			<div>&nbsp;</div>

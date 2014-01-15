@@ -4,10 +4,10 @@
 	<div class="col-md-2">
 		<ul class="nav nav-list bs-docs-sidenav2" id="result-tabs">
 			<li class="topchild">
-				<a href="#tab-general" data-toggle="tab"><i class="icon-info-sign"></i>&nbsp;General Information</a>
+				<a href="#tab-general" data-toggle="tab"><i class="fa fa-info-circle"></i>&nbsp;General Information</a>
 			</li>
 			<li class="bottomchild active">
-				<a href="#tab-runs" data-toggle="tab"><i class="icon-star"></i>&nbsp;Runs</a>
+				<a href="#tab-runs" data-toggle="tab"><i class="fa fa-star"></i>&nbsp;Runs</a>
 			</li>
 		</ul>
 	</div>

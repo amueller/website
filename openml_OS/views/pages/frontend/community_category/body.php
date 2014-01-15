@@ -26,7 +26,7 @@
 			foreach( $this->threads as $thread ): ?>
 			<div class="justify">
 				<h4 class="softText"><a href="frontend/page/community_thread/tid/<?php echo $thread->id; ?>"><?php echo stripslashes( $thread->title ); ?></a></h4>
-				<i class="icon-calendar"></i><small>Posted on <?php echo dateNeat( $thread->post_date ); ?> at <?php echo timeNeat( $thread->post_date ); ?></small><br/>
+				<i class="fa fa-calendar"></i><small>Posted on <?php echo dateNeat( $thread->post_date ); ?> at <?php echo timeNeat( $thread->post_date ); ?></small><br/>
 				<?php echo stripslashes( teaser( $thread->body ) ); ?>
 			</div>
 			<div class="row">&nbsp;</div><?php 

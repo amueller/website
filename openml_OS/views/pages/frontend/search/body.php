@@ -5,16 +5,16 @@
 <div class="row">
 	<div class="col-md-12">
 		<ul class="nav nav-search" id="qtabs">
-		  <li class="<?php if($this->active_tab == 'searchtab') echo 'active';?>"><a href="#searchtab" data-toggle="tab"><i class="icon-search"></i>  All</a></li>
-		  <li class="<?php if($this->active_tab == 'datasetsearchtab') echo 'active';?>"><a href="#datasetsearchtab" data-toggle="tab"><i class="icon-table"></i>  Datasets</a></li>
-		  <li class="<?php if($this->active_tab == 'implementationsearchtab') echo 'active';?>"><a href="#implementationsearchtab" data-toggle="tab"><i class="icon-cogs"></i>  Implementations</a></li>
-		  <li class="<?php if($this->active_tab == 'metricsearchtab') echo 'active';?>"><a href="#metricsearchtab" data-toggle="tab"><i class="icon-signal"></i>  Metrics</a></li>
-		  <li class="<?php if($this->active_tab == 'tasktab') echo 'active';?>"><a href="#tasktab" data-toggle="tab"><i class="icon-check"></i>  Tasks</a></li>
-		  <li class="<?php if($this->active_tab == 'wizardtab') echo 'active';?>"><a href="#wizardtab" data-toggle="tab"><i class="icon-bolt"></i>  Runs</a></li>
-		  <li class="<?php if($this->active_tab == 'exampletab') echo 'active';?>"><a href="#exampletab" data-toggle="tab"><i class=" icon-beaker"></i>  Advanced</a></li>
-		  <li class="<?php if($this->active_tab == 'sqltab') echo 'active';?>"><a href="#sqltab" data-toggle="tab"><i class="icon-pencil"></i>  SQL</a></li>
-		  <li class="<?php if($this->active_tab == 'querygraphtab') echo 'active';?>"><a href="#querygraphtab" data-toggle="tab"><i class="icon-hand-up"></i>  Graph</a></li>
-		  <li class="<?php if($this->active_tab == 'resultstab') echo 'active';?>"><a href="#resultstab" data-toggle="tab"><i class="icon-list"></i>  Results</a></li>
+		  <li class="<?php if($this->active_tab == 'searchtab') echo 'active';?>"><a href="#searchtab" data-toggle="tab"><i class="fa fa-search"></i>  All</a></li>
+		  <li class="<?php if($this->active_tab == 'datasetsearchtab') echo 'active';?>"><a href="#datasetsearchtab" data-toggle="tab"><i class="fa fa-table"></i>  Datasets</a></li>
+		  <li class="<?php if($this->active_tab == 'implementationsearchtab') echo 'active';?>"><a href="#implementationsearchtab" data-toggle="tab"><i class="fa fa-cogs"></i>  Implementations</a></li>
+		  <li class="<?php if($this->active_tab == 'metricsearchtab') echo 'active';?>"><a href="#metricsearchtab" data-toggle="tab"><i class="fa fa-signal"></i>  Metrics</a></li>
+		  <li class="<?php if($this->active_tab == 'tasktab') echo 'active';?>"><a href="#tasktab" data-toggle="tab"><i class="fa fa-check"></i>  Tasks</a></li>
+		  <li class="<?php if($this->active_tab == 'wizardtab') echo 'active';?>"><a href="#wizardtab" data-toggle="tab"><i class="fa fa-bolt"></i>  Runs</a></li>
+		  <li class="<?php if($this->active_tab == 'exampletab') echo 'active';?>"><a href="#exampletab" data-toggle="tab"><i class=" fa fa-flask"></i>  Advanced</a></li>
+		  <li class="<?php if($this->active_tab == 'sqltab') echo 'active';?>"><a href="#sqltab" data-toggle="tab"><i class="fa fa-pencil"></i>  SQL</a></li>
+		  <!--<li class="<?php if($this->active_tab == 'querygraphtab') echo 'active';?>"><a href="#querygraphtab" data-toggle="tab"><i class="fa fa-hand-o-up"></i>  Graph</a></li>-->
+		  <li class="<?php if($this->active_tab == 'resultstab') echo 'active';?>"><a href="#resultstab" data-toggle="tab"><i class="fa fa-list"></i>  Results</a></li>
 		</ul>
 		<hr style="margin:0px;padding-top:0px">
 	</div>

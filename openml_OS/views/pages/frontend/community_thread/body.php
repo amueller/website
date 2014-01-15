@@ -12,7 +12,7 @@
          <div class="container">
             <div class="row">
                <h2><?php echo $this->thread->title; ?></h2>
-				<span style="font-size: 14px;"><i class="icon-calendar"></i>&nbsp;Posted by <?php echo user_display_text( $this->author ); ?> on <?php echo dateNeat( $this->thread->post_date ); ?> at <?php echo timeNeat( $this->thread->post_date ); ?></span><br/>
+				<span style="font-size: 14px;"><i class="fa fa-calendar"></i>&nbsp;Posted by <?php echo user_display_text( $this->author ); ?> on <?php echo dateNeat( $this->thread->post_date ); ?> at <?php echo timeNeat( $this->thread->post_date ); ?></span><br/>
 
 				<img src="<?php echo htmlentities( authorImage( $this->author->image ) ); ?>" width="120" class="img-circle" style="padding: 10px;" alt="<?php echo $this->author->first_name . ' ' . $this->author->last_name; ?>" />
 				<?php if( $this->author->external_source != 'Anonymous' && $this->author->external_source != 'OpenML' ): ?>

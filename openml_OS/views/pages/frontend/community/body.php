@@ -23,7 +23,7 @@
 		<h3 class="softText"><?php echo $category->title; ?></h3>
 		<hr class="hardSmall" />
 		<div class="uppercase doubleLineHeight">
-			<i class="icon-list"></i> 
+			<i class="fa fa-list"></i> 
 			<?php echo isset( $this->threadsPerCategory[$category->id] ) ? $this->threadsPerCategory[$category->id]->threads : '0'; ?> articles 
 			<a href="frontend/page/community_category/cid/<?php echo $category->id;?>"><span class="label">View all</span></a>&nbsp;
 			<a href="frontend/page/community_create/cid/<?php echo $category->id;?>"><span class="label">Ask new question</span></a>

@@ -12,7 +12,7 @@ $this->implementation_total = $this->Implementation->numberOfRecords();
 $this->dataset_total = $this->Dataset->numberOfRecords();
 $this->function_total = 0; // fetched later on. 
 
-$icons = array( 'function' => 'icon-signal', 'implementation' => 'icon-cog', 'dataset' => 'icon-list-alt' );
+$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
 
 $this->active_tab = gu('tab');
 if($this->active_tab == false) $this->active_tab = 'searchtab';

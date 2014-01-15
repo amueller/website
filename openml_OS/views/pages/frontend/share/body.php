@@ -18,8 +18,8 @@
     <div class="col-md-3">
       <div class="bs-sidebar-fixed">
         <ul class="nav bs-sidenav-fixed" id="qtabs">
-          <li class="active"><a href="#datasettab" data-toggle="tab"><i class="icon-th-list"></i>&nbsp; Datasets</a></li>
-          <li><a href="#algorithmtab" data-toggle="tab"><i class="icon-cogs"></i>&nbsp; Implementations</a></li>
+          <li class="active"><a href="#datasettab" data-toggle="tab"><i class="fa fa-th-list"></i>&nbsp; Datasets</a></li>
+          <li><a href="#algorithmtab" data-toggle="tab"><i class="fa fa-cogs"></i>&nbsp; Implementations</a></li>
         </ul>
       </div>
     </div>
@@ -64,7 +64,7 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style="text-decoration:none;color:#999;">
-                <i class="icon-sort-by-attributes-alt"></i>  More information
+                <i class="fa fa-sort-amount-desc"></i>  More information
                 </a>
               </div>
               <div id="collapseOne" class="panel-collapse collapse">
@@ -170,7 +170,7 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" style="text-decoration:none;color:#999;">
-                <i class="icon-sort-by-attributes-alt"></i> More information </a>
+                <i class="fa fa-sort-amount-desc"></i> More information </a>
               </div>
               <div id="collapseTwo" class="panel-collapse collapse">
                 <div class="panel-body">

@@ -11,7 +11,7 @@
 <div class="col-md-12">
 		<form class="form-inline" method="post" action="search">
 		  <input type="text" class="form-control" style="width: 50%; height: 30px; font-size: 13pt;" id="openmlsearch" name="searchterms" placeholder="" value="<?php if( isset( $terms ) ) echo $terms; ?>" />
-		  <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="icon-search icon-large"></i></button>
+		  <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>
 		</form>
 </div>
 

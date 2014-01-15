@@ -4,9 +4,9 @@
 	<div class="col-md-2">
 	    <div class="bs-sidebar-fixed">
 		<ul class="nav bs-sidenav-fixed" id="result-tabs">
-			<li><a href="#tabletab" data-toggle="tab"><i class="icon-th-list"></i>&nbsp; Table</a></li>
-			<li><a href="#scatterplottab" data-toggle="tab" onclick="onclickScatterPlot();"><i class="icon-bar-chart"></i>&nbsp; Scatterplot</a></li>
-			<li><a href="#linetab" data-toggle="tab" onclick="onclickLinePlot();"><i class="icon-bar-chart"></i>&nbsp; Line plot</a></li>
+			<li><a href="#tabletab" data-toggle="tab"><i class="fa fa-th-list"></i>&nbsp; Table</a></li>
+			<li><a href="#scatterplottab" data-toggle="tab" onclick="onclickScatterPlot();"><i class="fa fa-bar-chart-o"></i>&nbsp; Scatterplot</a></li>
+			<li><a href="#linetab" data-toggle="tab" onclick="onclickLinePlot();"><i class="fa fa-bar-chart-o"></i>&nbsp; Line plot</a></li>
 		</ul>
             </div>
 	</div>

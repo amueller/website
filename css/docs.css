@@ -400,11 +400,15 @@ padding: 0px !important;
           transition: all .2s linear;
 }
 .socialshare {
-  margin-left: 10px;
-  padding-right:0px !important;
+  margin-left: 0px;
+  padding-right: 10px;
+  padding-top: 10px;
   float: right;
   color: #aeaeae;
   text-decoration: none;
+  border: none;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .socialshare .bs-icon2 {

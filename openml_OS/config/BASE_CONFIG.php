@@ -11,7 +11,7 @@ setlocale(LC_ALL, 'nl_NL');
  * of OpenML, this would be http://www.openml.org/. For an instance on
  * a localhost, this would be http://localhost/. 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/' );
+define( 'BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/OpenML/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DATA_URL: The subdirectory where the data can be accessed. Will be 
@@ -24,7 +24,7 @@ define( 'DATA_URL', BASE_URL . 'data/' );
  * can be found, with tailing slash. Typically, this would be 
  * something like /var/www/ (on Ubuntu installations)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'PATH', '/var/www/' );
+define( 'PATH', '/Library/WebServer/Documents/OpenML/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DATA_PATH: The directory on whether the uploaded data is stored.
@@ -56,12 +56,12 @@ define( 'DATA_PATH', PATH . 'data/' );
  * DB_PASS_WRITING: The password that belongs to the DB_USER_WRITING
  * account. 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'DB_NAME_EXPDB', 'openml_expdb' );
+define( 'DB_NAME_EXPDB', 'expdb' );
 define( 'DB_HOST_EXPDB', 'localhost' );
-define( 'DB_USER_EXPDB_READ', 'FILL_IN_USERNAME1' );
-define( 'DB_PASS_EXPDB_READ', 'FILL_IN_PASSWORD1' );
-define( 'DB_USER_EXPDB_WRITE', 'FILL_IN_USERNAME2' );
-define( 'DB_PASS_EXPDB_WRITE', 'FILL_IN_PASSWORD2' );
+define( 'DB_USER_EXPDB_READ', 'root' );
+define( 'DB_PASS_EXPDB_READ', 'MySQLQu1n0' );
+define( 'DB_USER_EXPDB_WRITE', 'root' );
+define( 'DB_PASS_EXPDB_WRITE', 'MySQLQu1n0' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * Configuration details for the OpenML database (User accounts, etc.)
@@ -75,16 +75,16 @@ define( 'DB_PASS_EXPDB_WRITE', 'FILL_IN_PASSWORD2' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DB_PASS: The password that belongs to the username
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'DB_NAME_OPENML', 'openml' );
+define( 'DB_NAME_OPENML', 'expdb_community' );
 define( 'DB_HOST_OPENML', 'localhost' );
-define( 'DB_USER_OPENML', 'FILL_IN_USERNAME2' );
-define( 'DB_PASS_OPENML', 'FILL_IN_PASSWORD2' );
+define( 'DB_USER_OPENML', 'root' );
+define( 'DB_PASS_OPENML', 'MySQLQu1n0' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DEBUG: Will produce errors and warnings on the screen. Set this 
  * to true when developing. Set to false on the production server
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'DEBUG', FALSE );
+define( 'DEBUG', TRUE );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * EMAIL_FROM: The email address from which the emails will be send.

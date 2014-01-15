@@ -1,0 +1,104 @@
+  .sharrre{
+    float:left;
+    margin-right: 20px;
+    margin-bottom: -20px;
+  }
+  .sharrre .count {
+    color:#525b67;
+    display:block;
+    font-size:14px;
+    float: center;
+    text-align:center;
+  }
+
+/* Create square icons, white logo on colored background */
+
+#social-bar {
+    height: 80px;
+}
+
+#social-bar .fa {
+    color: white;
+    border-radius: 25px;
+    font-size:30px;
+    min-width: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+#social-bar a {
+    margin-right: 15px;
+}
+
+#social-bar a:first-child {
+    padding-left: 0;
+}
+
+/* Set icon color related to the service */
+
+#social-bar a span {
+    margin-left: 5px;
+    padding: 5px;
+}
+
+#social-bar .fa-rss {
+    background: #e5842f;
+}
+
+#social-bar .fa-facebook {
+    background: #3B5998;
+}
+
+#social-bar .fa-twitter {
+    background: #00ACED;
+}
+
+#social-bar .fa-google-plus {
+    background: #E14107;
+}
+
+#social-bar .fa-pinterest {
+    background: #C10707;
+}
+
+#social-bar .fa-linkedin {
+    background: #008ACB;
+}
+
+#social-bar .fa-github {
+    background: #000000;
+}
+
+
+
+
+/* Don't underline icon etc. */
+#social-bar a:hover {
+    text-decoration: none;
+}
+
+#social-bar a:hover span {
+    text-decoration: underline;
+    color: #333333; /* Match icon highlight color */
+}
+
+/* Animate mouse hover */
+#social-bar a .fa {
+   transition: background 0.5s;
+}
+
+#social-bar a:hover .fa {
+    background: #333333;
+    transition: background 0.5s;
+}
+
+.sharetitle {
+   position: relative;
+   width: 40px;
+   font-family: 'Roboto', sans-serif;
+   font-weight: 100;
+   color: #333;
+   font-size: 45px;
+   padding-bottom: 10px;
+}
+

@@ -69,14 +69,14 @@
         <p class="lead">Download OpenML data to use it in novel ways, or upload new data to increase their impact (and yours).</p>
         <h3 id="dev-code">Latest source code</h3>
         <p>Get the latest source code for all OpenML tools and plugins by downloading it directly from GitHub. We will soon add links to the developer versions of individual plugins.</p>
-        <a href="https://github.com/openml/OpenML/archive/master.zip" class="btn btn-primary"><i class="icon-github icon-large"></i> Download OpenML</a>
+        <a href="https://github.com/openml/OpenML/archive/master.zip" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Download OpenML</a>
         <h3 id="dev-clone">Clone or fork via GitHub</h3>
         <p>Clone the entire project or fork your own version of OpenML tools to make them your own by visiting us on GitHub. Or, join a <a href="https://github.com/organizations/openml/teams">team</a> working on an OpenML plugin.</p>
-        <a href="https://github.com/organizations/openml" class="btn btn-primary"><i class="icon-github icon-large"></i> OpenML on GitHub</a>
+        <a href="https://github.com/organizations/openml" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> OpenML on GitHub</a>
         <h3 id="dev-database">Database snapshots</h3>
         <p>OpenML consists of two databases, a public database (the experiment database) and a private database (containing all user data, etc). The Snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. The Snapshot of the private database contains the table structure and important records, like usergroups. Both in SQL format (gzipped).</p>
-        <a href="downloads/ExpDB_SNAPSHOT.sql.gz" class="btn btn-primary"><i class="icon-cloud-download icon-large"></i> Download public database</a>
-        <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="icon-cloud-download icon-large"></i> Download private database</a>
+        <a href="downloads/ExpDB_SNAPSHOT.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Download public database</a>
+        <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Download private database</a>
         <h3 id="dev-feature">Feature requests</h3>
         <p>Feature request, as well as issues, can be posted in the <a href="community">community discussions</a>, or by directly opening an issue in our <a href="https://github.com/openml/OpenML/issues?state=open">GitHub project</a>.</p>
       </div>

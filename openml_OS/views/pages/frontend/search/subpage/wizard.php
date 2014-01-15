@@ -31,7 +31,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" style="text-decoration:none;color:#999;">
-      <i class="icon-sort-by-attributes-alt"></i>  Advanced options
+      <i class="fa fa-sort-amount-desc"></i>  Advanced options
       </a>
     </div>
     <div id="collapseOne" class="accordion-body collapse">

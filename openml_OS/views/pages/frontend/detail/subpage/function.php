@@ -4,10 +4,10 @@
 	<div class="col-md-2">
 		<ul class="nav nav-list bs-docs-sidenav2" id="result-tabs">
 			<li class="topchild active">
-				<a href="#tab-general" data-toggle="tab"><i class="icon-info-sign"></i>&nbsp;General Information</a>
+				<a href="#tab-general" data-toggle="tab"><i class="fa fa-info-circle"></i>&nbsp;General Information</a>
 			</li>
 			<li class="bottomchild">
-				<a href="#tab-undefined" data-toggle="tab"><i class="icon-star"></i>&nbsp;Undefined content</a>
+				<a href="#tab-undefined" data-toggle="tab"><i class="fa fa-star"></i>&nbsp;Undefined content</a>
 			</li>
 		</ul>
 	</div>
