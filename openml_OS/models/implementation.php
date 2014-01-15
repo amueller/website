@@ -10,7 +10,8 @@ class Implementation extends Database_write {
   }
 	
 	function addComponent( $parent, $child, $identifier ) {
-		return $this->db->insert( 'implementation_component', array( 'parent' => $parent, 'child' => $child, 'identifier' => $identifier ) );
+    $insert = array( 'parent' => $parent, 'child' => $child, 'identifier' => $identifier );
+		return $this->db->insert( 'implementation_component', $insert );
 	}
   
   function isComponent( $id ) {
@@ -34,36 +35,36 @@ class Implementation extends Database_write {
 	
 	
 	function getComponents( $parent ) {
-		$results = $this->query(
-      'SELECT implementation.* FROM implementation, implementation_component 
+    $sql = 'SELECT implementation.* FROM implementation, implementation_component 
        WHERE implementation.id = implementation_component.child 
-       AND implementation_component.parent = ' . $parent->id
-    );
+       AND implementation_component.parent = ' . $parent->id;
+		$results = $this->query( $sql );
     if( is_array( $results ) ) {
-      foreach( $result as $r ) {
-        $this->_extendImplementation( $r );
+      for( $i = 0; $i < count($results); $i++ ) {
+        $results[$i] = $this->_extendImplementation( $results[$i] );
       }
+      return $results;
+    } else {
+      return array();
     }
-		return $results;
 	}
   
   public function compareToXML( $xml ) {
     $relevant = array('name','creator','contributor','description','fullDescription','installationNotes','dependencies','implements');
-    $sql = '';
+    $where = array();
     
     foreach( $relevant as $item ) {
       if( property_exists( $xml->children('oml', true), $item ) ) {
         if(in_array($item, array('creator','contributor') ) ) {
-          $sql .= ' AND `'.$item.'` = \''.putcsv(xml_array_to_plain_array($xml, $item)).'\' ';
+          $where[$item] = putcsv(xml_array_to_plain_array($xml, $item));
         } else {
-          $sql .= ' AND `'.$item.'` = "'.$xml->children('oml', true)->$item.'" ';
+          $where[$item] = trim($xml->children('oml', true)->$item);
         }
       } else {
-        $sql .= ' AND `'.$item.'` IS NULL ';
+        $where[$item] = null;
       }
     }
-    
-    $candidates = $this->Implementation->getWhere(substr($sql, 5 ));
+    $candidates = $this->Implementation->getWhere($where);
     if(is_array($candidates)) {
       foreach( $candidates as $candidate ) {
         // check parameters
@@ -81,11 +82,11 @@ class Implementation extends Database_write {
           if( $this->Bibliographical_reference->compareToXML( $candidate->id, $b ) === false ) continue;
         }
         // check components
-        $components = $this->getComponents( array( $candidate->id ) );
-        if( count($components) != xml_subsize( $xml, 'components', 'implementation' ) ) { continue; }
+        $components = $this->getComponents( $candidate );
+        if( count($components) != xml_size( $xml, 'component' ) ) { continue; }
         if( count( $components ) ) {
-          foreach( $xml->children('oml', true)->components->implementation as $i ) {
-            if( $this->compareToXML( $i ) === false ) continue;
+          foreach( $xml->children('oml', true)->component as $i ) {
+            if( $this->compareToXML( $i->children('oml', true)->implementation ) === false ) continue;
           }
         }
 
@@ -102,7 +103,7 @@ class Implementation extends Database_write {
 		$implementation->contributor = getcsv( $implementation->contributor );
 		$implementation->parameterSetting = $this->Input->getWhere( 'implementation_id = "' . $implementation->id . '"' );
 		$implementation->bibliographicalReference = $this->Bibliographical_reference->getWhere( 'implementation_id = "' . $implementation->id . '"' );
-		$implementation->components = $this->getComponents( $implementation->id );
+		$implementation->components = $this->getComponents( $implementation );
     
     foreach( array('binary','source') as $type ) {
       if( $implementation->{$type.'_file_id'} != false ) {
