@@ -33,7 +33,7 @@ class Algorithm_setup extends Database_write {
 			return false;
 		} else {
 			// CREATE THE NEW SETUP
-			$components = array_merge( array($implementation->id), $this->Implementation->getComponents(array($implementation->id), true ) );
+			$components = array_merge( array($implementation->id), $this->Implementation->getComponentIds( $implementation->id ) );
 			$legal_parameters = $this->Input->getAssociativeArray('fullName','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
 			$isDefault = false;
 			
