@@ -63,8 +63,7 @@
         <script type="text/javascript" src="js/openml.js"></script>
         <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
         <script type="text/javascript" src="<?php echo $j; ?>"></script>
-        <?php endforeach; endif; ?>
-        <script type="text/javascript" src="js/balls.js"></script>        
+        <?php endforeach; endif; ?>     
 
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>

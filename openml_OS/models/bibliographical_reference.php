@@ -7,17 +7,18 @@ class Bibliographical_reference extends Database_write {
     $this->id_column = 'id';
   }
 
-  function compareToXML( $implementation, $xml ) {
-    $relevant = array('citation','url');
-    $sql = '`implementation_id` = "'.$implementation.'"';
-    foreach( $relevant as $item ) {
+  function compareToXML( $xml, $implementation_id ) {
+    $relevant = array('citation' => 'citation','url' => 'url');
+    $where = array('implementation_id' => $implementation_id);
+    
+    foreach( $relevant as $key => $item ) {
       if( property_exists( $xml->children('oml', true), $item ) ) {
-        $sql .= ' AND `'.$item.'` = "'.$xml->children('oml', true)->$item.'" ';
+        $where[$key] = trim($xml->children('oml', true)->$item);
       } else {
-        $sql .= ' AND `'.$item.'` IS NULL ';
+        $where[$key] = null;
       }
     }
-    $result = $this->getWhere( $sql );
+    $result = $this->getWhere( $where );
     if( $result != false ) {
       return $result[0]->id;
     } else {

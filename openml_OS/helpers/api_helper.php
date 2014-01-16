@@ -60,13 +60,13 @@ function all_tags_from_xml( $xml, $configuration = array(), $return_array = arra
 			  if( !array_key_exists( $key, $csv_tags ) ) {
 				  $csv_tags[$key] = array();
 			  } 
-			  $csv_tags[$key][] = $value;
+			  $csv_tags[$key][] = trim( $value );
 		  } elseif( array_key_exists( 'plain', $configuration ) && in_array( $key , $configuration['plain'] ) ) { 
         // returned plain (xml object)
 			  $return_array[$key] = $value;
 		  } elseif( array_key_exists( 'string', $configuration ) && in_array( $key , $configuration['string'] ) ) {
         // returned as string
-        $return_array[$key] = '' . $value;
+        $return_array[$key] = trim($value);
       } else {
         // an illegal or undefined category
       }
@@ -127,7 +127,7 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
     if( $key == 'component' ) {
       foreach($value as $entry) {
         $component = $entry->implementation->children('oml', true);
-        $similarComponent = $ci->Implementation->compareToXml( $component );
+        $similarComponent = $ci->Implementation->compareToXml( $entry->implementation );
         if( $similarComponent === false ) {
           $component->version = $ci->Implementation->incrementVersionNumber( $component->name );
           $componentFullName = $component->name . '(' . $component->version . ')';
@@ -137,10 +137,9 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
             array( 'uploadDate' => now(), 'uploader' => $implementation['uploader'] ) );
 		  
           if($succes == false) { return false; }
-          
-          $ci->Implementation->addComponent( $res, $succes, $entry->identifier );
+          $ci->Implementation->addComponent( $res, $succes, trim($entry->identifier) );
         } else {
-          $ci->Implementation->addComponent( $res, $similarComponent, $entry->identifier );
+          $ci->Implementation->addComponent( $res, $similarComponent, trim($entry->identifier) );
         }
       }
     } elseif( $key == 'bibliographical_reference' ) {
@@ -165,7 +164,6 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
       }
     }
   }
-	
 	return $res;
 }
 
