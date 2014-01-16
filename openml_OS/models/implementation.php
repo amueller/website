@@ -49,14 +49,14 @@ class Implementation extends Database_write {
   // TODO: test getComponentIds()
   function getComponentIds( $parent_id ) {
     $results = array();
-    $components = $this->Implementation_component->getWhere('parent = ' . $parent->id);
+    $components = $this->Implementation_component->getWhere('parent = ' . $parent_id);
     foreach( $components as $c ) {
       $sub_components = $this->getComponentIds( $c );
       foreach( $sub_components as $s ) {
         if( in_array( $s, $results ) == false ) $results[] = $s;
       }
     }
-    return $array();
+    return $result;
   }
   
   public function compareToXML( $xml, $implementation_id = false ) {
