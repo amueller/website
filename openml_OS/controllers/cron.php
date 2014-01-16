@@ -33,7 +33,7 @@ class Cron extends CI_Controller {
   
   function install_database() {
     // TODO: we might scan the directory and pick up all models that contain a SQL file. Decide later. 
-    $models = array('Algorithm','Estimation_procedure','Math_function','Quality','Task_type','Task_type_function','Task_type_io');
+    $models = array('Algorithm','Estimation_procedure','Implementation','Math_function','Quality','Task_type','Task_type_function','Task_type_io');
     foreach( $models as $m ) {
       $this->load->model( $m );
       if( $this->$m->get() === false ) {
