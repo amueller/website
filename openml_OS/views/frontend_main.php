@@ -73,18 +73,7 @@
         <!--[if lt IE 7]>
         <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
         <![endif]-->
-	<div id="fb-root"></div>
-	<script>(function(d, s, id) {
-	  var js, fjs = d.getElementsByTagName(s)[0];
-	  if (d.getElementById(id)) return;
-	  js = d.createElement(s); js.id = id;
-	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
-	  fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));</script>
-        <script src="//platform.linkedin.com/in.js" type="text/javascript">
-            lang: en_US
-        </script>
-        <div class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar navbar-default navbar-static-top">
             <div class="navbar-inner">
                 <div class="container">
                     <a class="socialshare navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse" style="background:none">
@@ -93,6 +82,20 @@
                     <a class="nav pull-right socialshare" data-toggle="modal" href="#sociallinks">
                      <i class="fa fa-share fa-2x"></i>
                     </a>
+                    <a class="nav pull-right openmlmenu">
+                     <i class="fa fa-th fa-2x"></i>
+                    </a>
+		    <script>
+			$('.openmlmenu').each(function() {
+			  var $this = $(this);
+			  $this.popover({
+			    trigger: 'hover',
+			    placement: 'bottom',
+			    html: true,
+			    content: $this.find('#sociallinks').html()  
+			  });
+			});
+		    </script>
                     <a class="navbar-brand" href="" style="float:left">OpenML</a>
                     <div class="navbar-collapse collapse navbar-responsive-collapse" style="width:900px">
                         <ul class="nav navbar-nav">
