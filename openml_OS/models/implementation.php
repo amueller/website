@@ -35,23 +35,23 @@ class Implementation extends Database_write {
 	
 	
 	function getComponents( $parent ) {
-    $sql = 'SELECT implementation.* FROM implementation, implementation_component 
-       WHERE implementation.id = implementation_component.child 
-       AND implementation_component.parent = ' . $parent->id;
-		$results = $this->query( $sql );
-    if( is_array( $results ) ) {
-      for( $i = 0; $i < count($results); $i++ ) {
-        $results[$i] = $this->_extendImplementation( $results[$i] );
+    $components = $this->Implementation_component->getWhere('parent = ' . $parent->id);
+    if( is_array( $components ) ) {
+      for( $i = 0; $i < count($components); $i++ ) {
+        $implementation = $this->getById( $components[$i]->child );
+        $components[$i]->implementation = $this->_extendImplementation( $implementation );
       }
-      return $results;
+      return $components;
     } else {
       return array();
     }
 	}
   
-  public function compareToXML( $xml ) {
+  public function compareToXML( $xml, $implementation_id = false ) {
     $relevant = array('name','creator','contributor','description','fullDescription','installationNotes','dependencies','implements');
     $where = array();
+    if($implementation_id !== false)
+      $where['id'] = $implementation_id;
     
     foreach( $relevant as $item ) {
       if( property_exists( $xml->children('oml', true), $item ) ) {
@@ -67,31 +67,34 @@ class Implementation extends Database_write {
     $candidates = $this->Implementation->getWhere($where);
     if(is_array($candidates)) {
       foreach( $candidates as $candidate ) {
+        $valid_duplicate = true;
+        
         // check parameters
         $params = $this->Input->getColumnFunctionWhere( 'count(*)', 'implementation_id = "'.$candidate->id.'"' );
-        
-        if( $params[0] != xml_size( $xml, 'parameter' ) ) continue;
+        if( $params[0] != xml_size( $xml, 'parameter' ) ) $valid_duplicate = false;
         foreach( $xml->children('oml', true)->parameter as $p ) {
-          if( $this->Input->compareToXML( $candidate->id, $p ) === false ) continue;
+          if( $this->Input->compareToXML( $p, $candidate->id ) === false ) {
+            $valid_duplicate = false;
+          }
         }
         // check bibrefs
         $bibrefs = $this->Bibliographical_reference->getColumnFunctionWhere( 'count(*)', 'implementation_id = "'.$candidate->id.'"' );
         
-        if( $bibrefs[0] != xml_size( $xml, 'bibliographical_reference' ) ) continue;
+        if( $bibrefs[0] != xml_size( $xml, 'bibliographical_reference' ) ) $valid_duplicate = false;
         foreach( $xml->children('oml', true)->bibliographical_reference as $b ) {
-          if( $this->Bibliographical_reference->compareToXML( $candidate->id, $b ) === false ) continue;
+          if( $this->Bibliographical_reference->compareToXML( $b, $candidate->id ) === false ) $valid_duplicate = false;
         }
         // check components
         $components = $this->getComponents( $candidate );
-        if( count($components) != xml_size( $xml, 'component' ) ) { continue; }
-        if( count( $components ) ) {
-          foreach( $xml->children('oml', true)->component as $i ) {
-            if( $this->compareToXML( $i->children('oml', true)->implementation ) === false ) continue;
-          }
+        if( count($components) != xml_size( $xml, 'component' ) ) { $valid_duplicate = false; }
+        foreach( $xml->children('oml', true)->component as $i ) {
+          if( $this->Implementation_component->compareToXML( $i, $candidate->id ) === false ) $valid_duplicate = false;
         }
-
-        // passed all checks :)
-        return $candidate->id;
+        
+        if($valid_duplicate) {
+          // passed all checks :)
+          return $candidate->id;
+        }
       }
     }
     // none of the implementations matched
