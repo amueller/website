@@ -119,8 +119,8 @@ class Database_read extends CI_Model {
 	
 	function incrementVersionNumber( $name ) {
 		$data = $this->getWhere( 'name = "' . $name . '"'  );
-		if( $data === false || count($data) == 0 )
-			return '1.0';
+		if( $data === false )
+			return 1;
 			
 		$highest = $data[0];
 		for( $i = 1; $i < count($data); $i++ ) {
@@ -130,11 +130,7 @@ class Database_read extends CI_Model {
 		}
 		
 		$newVersion = explode( '.', $highest->version );
-		if( is_numeric( end($newVersion) ) )
-			$newVersion[count($newVersion)-1]++;
-		else
-			$newVersion[count($newVersion)] = 1;
-		return implode( '.', $newVersion );
+		return $newVersion[0] + 1;
 	}
 }
 ?>

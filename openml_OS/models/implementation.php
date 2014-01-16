@@ -67,7 +67,7 @@ class Implementation extends Database_write {
     $candidates = $this->Implementation->getWhere($where);
     if(is_array($candidates)) {
       foreach( $candidates as $candidate ) {
-        $valid_duplicate = true;
+        $valid_duplicate = true; // TODO: Continue outerloop when false. 
         
         // check parameters
         $params = $this->Input->getColumnFunctionWhere( 'count(*)', 'implementation_id = "'.$candidate->id.'"' );

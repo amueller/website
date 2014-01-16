@@ -268,15 +268,7 @@ class Rest_api extends CI_Controller {
 		
 		$name = '' . $xml->children('oml', true)->{'name'};
 		
-		//if( property_exists( $xml->children('oml', true), 'version' ) == false ) {
 		$version = $this->Dataset->incrementVersionNumber( $name );
-		/*} else {
-			$version = '' . $xml->children('oml', true)->version;
-			if( $this->Dataset->getWhere( 'name = "'.$name.'" AND version = "'.$version.'"' ) != false ) {
-				$this->_returnError( 139 );
-				return;
-			}
-		}*/
 		
 		$datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
 		$datasetFileProvided = isset( $_FILES['dataset'] );
