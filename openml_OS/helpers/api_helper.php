@@ -155,10 +155,10 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
 			    array(
 				    'fullName' => $implementation['fullName'] . '_' . $children->name,
 				    'implementation_id' => $res,
-				    'name' => ''.$children->name,
-				    'defaultValue' => ''.$children->default_value,
-				    'description' => ''.$children->description,
-				    'dataType' => ''.$children->data_type,
+				    'name' => trim($children->name),
+				    'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
+				    'description' => property_exists( $children, 'description') ? trim($children->description) : null,
+				    'dataType' => property_exists( $children, 'data_type') ? trim($children->data_type) : null,
 			    ) 
 		    );
       }
