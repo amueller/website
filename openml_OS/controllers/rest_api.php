@@ -485,8 +485,7 @@ class Rest_api extends CI_Controller {
 			$xml = simplexml_load_file( $description['tmp_name'] );
       $similar = $this->Implementation->compareToXML( $xml );
       if( $similar ) {
-        $implementation = $this->Implementation->getById( $similar );
-        $this->_xmlContents( 'implementation-upload', $implementation );
+        $this->_returnError( 171, 'implementation_id:' . $similar );
 				return;
       }
 		} else {
@@ -537,6 +536,26 @@ class Rest_api extends CI_Controller {
 		
 		$this->_xmlContents( 'implementation-upload', $implementation );
 	}
+  
+  private function _openml_implementation_exists() {
+    if(isset($_FILES['description']) === false || $_FILES['description']['error'] != 0) {
+      $this->_returnError( 330 );
+      return;
+    }
+    $description = $_FILES['description'];
+    $xmlErrors = '';
+    if( validateXml( $description['tmp_name'], xsd('openml.implementation.upload'), $xmlErrors ) == false ) {
+      $this->_returnError( 331, $xmlErrors );
+      return;
+    }
+    $xml = simplexml_load_file( $description['tmp_name'] );
+    $similar = $this->Implementation->compareToXML( $xml );
+    $result = array( 'exists' => 'false', 'id' => -1 );
+    if( $similar ) {
+      $result = array( 'exists' => 'true', 'id' => $similar );
+    }
+    $this->_xmlContents( 'implementation-exists', $result );
+  }
 
   private function _openml_implementation_delete() {
     if(!$this->authenticated) {
