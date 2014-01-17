@@ -483,9 +483,10 @@ class Rest_api extends CI_Controller {
 				return;
 			}
 			$xml = simplexml_load_file( $description['tmp_name'] );
-      $similarImplementations = $this->Implementation->compareToXML( $xml );
-      if( $similarImplementations ) {
-        $this->_returnError( 171, 'implementation_id:' . $similarImplementations );
+      $similar = $this->Implementation->compareToXML( $xml );
+      if( $similar ) {
+        $implementation = $this->Implementation->getById( $similar );
+        $this->_xmlContents( 'implementation-upload', $implementation );
 				return;
       }
 		} else {
@@ -532,8 +533,9 @@ class Rest_api extends CI_Controller {
 			$this->_returnError( 165 );
 			return;
 		}
+    $implementation = $this->Implementation->getById( $impl );
 		
-		$this->_xmlContents( 'implementation-upload', array( 'fullName' => $impl ) );
+		$this->_xmlContents( 'implementation-upload', $implementation );
 	}
 
   private function _openml_implementation_delete() {
