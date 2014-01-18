@@ -34,15 +34,20 @@ class Algorithm_setup extends Database_write {
 		} else {
 			// CREATE THE NEW SETUP
 			$components = array_merge( array($implementation->id), $this->Implementation->getComponentIds( $implementation->id ) );
-			$legal_parameters = $this->Input->getAssociativeArray('fullName','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
-			$isDefault = false;
-			
+			$legal_parameters = $this->Input->getAssociativeArray('CONCAT(`implementation_id`,\'_\',`name`)','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
+			$isDefault = false; 
+      
 			foreach( $parameters as $key => $value ) {
 				if( array_key_exists( $key, $legal_parameters ) == false ) {
 					// an illegal parameter was set. 
 					return false;
 				}
 			}
+      
+      foreach( $legal_parameters as $key => $value ) {
+        if( $value == null ) unset($legal_parameters[$key]);
+      }
+      
 			if(count(array_diff_assoc($legal_parameters, $parameters)) === 0) {
 				$isDefault = true;
 			}
@@ -63,7 +68,7 @@ class Algorithm_setup extends Database_write {
 				$insert = array( 'setup' => $setupId, 'input' => $key, 'value' => $value );
 				$this->Input_setting->insert( $insert );
 				if(!$insert) return false;
-			}
+			}// TODO: input setting was saved with key {implementation_id}_{name}. Make a better index for input_setting link
 			return $setupId;
 		}
 	}
