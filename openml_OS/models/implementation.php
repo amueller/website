@@ -50,13 +50,15 @@ class Implementation extends Database_write {
   function getComponentIds( $parent_id ) {
     $results = array();
     $components = $this->Implementation_component->getWhere('parent = ' . $parent_id);
-    foreach( $components as $c ) {
-      $sub_components = $this->getComponentIds( $c );
-      foreach( $sub_components as $s ) {
-        if( in_array( $s, $results ) == false ) $results[] = $s;
+    if( is_array( $components ) ) {
+      foreach( $components as $c ) {
+        $sub_components = $this->getComponentIds( $c->child );
+        foreach( $sub_components as $s ) {
+          if( in_array( $s, $results ) == false ) $results[] = $s;
+        }
       }
     }
-    return $result;
+    return $results;
   }
   
   public function compareToXML( $xml, $implementation_id = false ) {
