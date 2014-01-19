@@ -919,11 +919,13 @@ class Rest_api extends CI_Controller {
 		$error['additional'] = htmlentities( $additionalInfo );
 		$this->_xmlContents( 'error-message', $error );
 	}
-	
-	private function _xmlContents( $xmlFile, $source ) {
-		header('Content-type: text/xml; charset=utf-8');
-		$view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
-		$this->load->view( $view, $source );
-	}
+  
+  private function _xmlContents( $xmlFile, $source ) {
+    header('Content-type: text/xml; charset=utf-8');
+    $view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
+    $data = $this->load->view( $view, $source, true );
+    header('Content-length: ' . strlen($data) );
+    echo $data;
+  }
 }
 ?>
