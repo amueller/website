@@ -52,6 +52,7 @@ class Implementation extends Database_write {
     $components = $this->Implementation_component->getWhere('parent = ' . $parent_id);
     if( is_array( $components ) ) {
       foreach( $components as $c ) {
+        $results[] = $c->child;
         $sub_components = $this->getComponentIds( $c->child );
         foreach( $sub_components as $s ) {
           if( in_array( $s, $results ) == false ) $results[] = $s;

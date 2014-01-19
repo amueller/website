@@ -88,28 +88,30 @@ if($this->type == 'function'){
 	$this->displayName = $this->record->name;
 	
 	$this->dt_main 						= array();
-	$this->dt_main['columns'] 			= array('img_open','rid','sid','l.implementation','algorithm','value');
+	$this->dt_main['columns'] 			= array('img_open','rid','sid','i.fullName','algorithm','value');
 	$this->dt_main['column_widths']		= array(10,0,0,30,30,30);
 	$this->dt_main['column_content']	= array('<img src="img/datatables/details_open.png">',null,null,'<a href="detail/type/implementation/name/[CONTENT]">[CONTENT]</a>',null,null);
 	$this->dt_main['column_source']		= array('content','db','db','wrapper','db','db');
-	$this->dt_main['group_by'] 			= 'l.implementation';
+	$this->dt_main['group_by'] 			= 'l.implementation_id';
 	
-	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, `l`.`implementation`, `l`.`algorithm`, max(`e`.`value`) AS `value` ' .
-										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r` ' .
+	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, `i`.`fullName`, `l`.`algorithm`, max(`e`.`value`) AS `value` ' .
+										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r`, `implementation` `i` ' .
 										'WHERE `r`.`learner`=`l`.`sid` ' .
 										'AND `e`.`source`=`r`.`rid` ' .
+                    'AND `l`.`implementation_id` = `i`.`id` ' .
 										'AND `r`.`task_id`="'.$this->record->task_id.'"';
 										
 	$this->dt_main_all = array();
-	$this->dt_main_all['columns'] 		= array('img_open','rid','sid','l.implementation','algorithm','value');
+	$this->dt_main_all['columns'] 		= array('img_open','rid','sid','i.fullName','algorithm','value');
 	$this->dt_main_all['column_content']= array('<img src="img/datatables/details_open.png">',null,null,'<a href="detail/type/implementation/name/[CONTENT]">[CONTENT]</a>',null,null);
 	$this->dt_main_all['column_source']	= array('content','db','db','wrapper','db','db');
 	//$this->dt_main_all['group_by'] 	= 'l.implementation'; NONE
 	
-	$this->dt_main_all['base_sql'] 	= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, `l`.`implementation`, `l`.`algorithm`, `e`.`value` AS `value` ' .
-										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r` ' .
+	$this->dt_main_all['base_sql'] 	= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, `i`.`fullName`, `l`.`algorithm`, `e`.`value` AS `value` ' .
+										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r`, `implementation` `i` ' .
 										'WHERE `r`.`learner`=`l`.`sid` ' .
 										'AND `e`.`source`=`r`.`rid` ' .
+                    'AND `l`.`implementation_id` = `i`.`id` ' .
 										'AND `r`.`task_id`="'.$this->record->task_id.'"';
 } else {
 	// fall into the "record == false" section
