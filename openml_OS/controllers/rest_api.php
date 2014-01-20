@@ -878,7 +878,7 @@ class Rest_api extends CI_Controller {
 			}
 		}
 		// TODO: temp linking on concat of fields. should be done better
-		$this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` LEFT JOIN `input` ON CONCAT( `input`.`implementation_id` , '_', `input`.`name` ) WHERE setup = "'.$setup->sid.'"');
+		$this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` LEFT JOIN `input` ON CONCAT( `input`.`implementation_id` , "_", `input`.`name` ) WHERE setup = "'.$setup->sid.'"');
 		
 		
 		$this->_xmlContents( 'setup-parameters', array( 'parameters' => $this->parameters ) );
