@@ -22,6 +22,18 @@ case 2:
 		$this->task_message = 'None of the tasks met the search criteria. Please try again. ';
 	}
 	break;
+case 3:
+  $this->found_tasks = $this->Task->getLearningCurves( 
+		$ttid, 
+		$this->input->post('estimation_procedure'), 
+		$dataset_ids, 
+		$this->input->post('target_feature'), 
+		$this->input->post('evaluation_measure'),
+		true );
+	if($this->found_tasks === false) {
+		$this->task_message = 'None of the tasks met the search criteria. Please try again. ';
+	}
+  break;
 default:
 	$this->task_message = 'Illigal task type. ';
 	break;

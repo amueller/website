@@ -42,10 +42,20 @@ class Estimation_procedure extends Database_read {
 			return $instances * $instances;
 		} elseif( $ep->type == 'holdout' ) {
 			return $instances * $ep->repeats;
+		} elseif( $ep->type == 'learningcurve' ) {
+			$total = 0; 
+		  for( $i = 0; $this->sample_size( $i ) < $instances; ++$i ) { 
+        $total += $this->sample_size( $i );
+      }
+      return $total;
 		} else {
 			// TODO: implement other types.
 			return -1;
 		}
+	}
+  
+  private sample_size( $number ) {
+		return round( pow( 2, 6.5 + ( $number * 0.5 ) ) );
 	}
 	
 	function toString( $ttep ) {
