@@ -54,7 +54,7 @@ class Estimation_procedure extends Database_read {
 		}
 	}
   
-  private sample_size( $number ) {
+  private function sample_size( $number ) {
 		return round( pow( 2, 6.5 + ( $number * 0.5 ) ) );
 	}
 	
