@@ -7,8 +7,8 @@
     <li class="<?php echo ($this->att == 'supervised_regression') ? 'active' : '' ?>">
 		<a href="#supervised_regression" data-toggle="tab">Supervised Regression</a>
 	</li>
-    <li class="<?php echo ($this->att == 'learning_curve') ? 'active' : 'disabled' ?>">
-		<a href="#results" data-toggle="tab">Learning Curve</a>
+    <li class="<?php echo ($this->att == 'learning_curve') ? 'active' : '' ?>">
+		<a href="#learning_curves" data-toggle="tab">Learning Curve</a>
 	</li>
     <li class="<?php echo ($this->att == 'results') ? 'active' : 'disabled' ?>">
 		<a href="#results" data-toggle="tab">Results</a>
