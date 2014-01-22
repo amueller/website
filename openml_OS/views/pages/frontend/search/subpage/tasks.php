@@ -133,6 +133,7 @@
 					</button>
 				</div>
 			</div>
+      </form>
 		</div>
 	</div>
   <div class="tab-pane <?php echo ($this->att == 'learning_curve') ? 'active' : '' ?>" id="learning_curve">
@@ -145,7 +146,7 @@
 		<form class="form-horizontal" action="search/tab/tasktab" method="post">
 			<div class="form-group">
 				<label class="col-md-2 control-label" for="datasetDropdown">Estimation procedure</label>
-				<input type="hidden" name="task_type" value="2" />
+				<input type="hidden" name="task_type" value="3" />
 				<div class="col-md-10">
 					<select class="form-control input-small" name="estimation_procedure">
 						<?php foreach($this->ep as $e): if($e->ttid != 3)continue; ?>
@@ -168,7 +169,7 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label" for="learningCurveEvaluationMeasureDropdown">Evaluation measure</label>
 				<div class="col-md-10">
-					<input type="text" class="form-control" id="learningCurveEvaluationMeasureDropdown" name="evaluation_measure" placeholder="evaluation measure" value="mean_absolute_error" />
+					<input type="text" class="form-control" id="learningCurveEvaluationMeasureDropdown" name="evaluation_measure" placeholder="evaluation measure" value="predictive_accuracy" />
 					<span class="help-block">The evaluation measure to optimize for. </span>
 				</div>
 			</div>
@@ -193,6 +194,7 @@
 					</button>
 				</div>
 			</div>
+    </form>
 		</div>
 	</div>
 	<div class="tab-pane <?php echo ($this->att == 'results') ? 'active' : '' ?>" id="results">

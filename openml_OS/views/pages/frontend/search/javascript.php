@@ -33,8 +33,10 @@ $(function() {
   makeCommaSeperatedAutoComplete( "#implementationDropdown", implementations ); 
   makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
   makeCommaSeperatedAutoComplete( "#regressionDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
+  makeCommaSeperatedAutoComplete( "#learningCurveDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
   makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() ); 
-  makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() ); 
+  makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() );  
+  makeAutoComplete( "#learningCurveEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() ); 
   
   $( "#evaluationmetricDropdown" ).autocomplete({
     source: evaluationmetrics,
@@ -119,6 +121,17 @@ $(document).ready(function() {
 		}
 	}); 
 	$('#specify_regression_target_feature').hide();
+  
+  $('#specify_learningCurve_target_feature_btn').click(function() {
+		if( $(this).is(':checked')) {
+		    $("#specify_learningCurve_target_feature").hide();
+		} else {
+		    $("#specify_learningCurve_target_feature").show();
+		}
+	}); 
+	$('#specify_learningCurve_target_feature').hide();
+  
+  
 });
 
 function updateSchemaPosition(){

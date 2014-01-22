@@ -394,12 +394,13 @@ class Rest_api extends CI_Controller {
 			$this->_returnError( 301 );
 			return;
 		}
-		$estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->functionType, $task->repeats, $task->folds, $task->percentage, $task->stratified_sampling );
+		$estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->type, $task->repeats, $task->folds, $task->percentage, $task->stratified_sampling );
 		
 		$results = array();
 		$implementations = array();
+    $implementation_ids = array();
 
-		$runs = $this->Run->query('SELECT r.task_id, r.rid, s.implementation, e.function, e.value FROM run r, output_data od, algorithm_setup s, evaluation e  WHERE s.sid = r.setup AND r.task_id = '.$task_id.' AND od.run = r.rid AND e.did = od.data ORDER BY rid, implementation ASC');
+		$runs = $this->Run->query('SELECT r.task_id, r.rid, s.implementation_id, i.fullName, e.function, e.value FROM run r, output_data od, algorithm_setup s, evaluation e, implementation i  WHERE s.sid = r.setup AND r.task_id = '.$task_id.' AND od.run = r.rid AND e.did = od.data AND s.implementation_id = i.id ORDER BY rid, s.implementation_id ASC');
 		$previous = -1;
 		if($runs != false ) { //TODO: sort on value ..x.. ?
 			foreach( $runs as $r ) {
@@ -408,12 +409,13 @@ class Rest_api extends CI_Controller {
 				} else {
 					$results[$r->rid] = array();
 					$results[$r->rid][$r->{'function'}] = $r->value; 
-					$implementations[$r->rid] = $r->implementation;
+					$implementations[$r->rid] = $r->implementation_id;
+					$implementation_ids[$r->rid] = $r->fullName;
 				}
 				$previous = $r->rid;
 			}
 		}
-		$this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results, 'implementations' => $implementations ) );
+		$this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results, 'implementations' => $implementations, 'implementation_ids' => $implementation_ids ) );
 	}
 	
 	private function _openml_tasks_search_supervised_classification() {

@@ -7,16 +7,19 @@ class Estimation_procedure extends Database_read {
     $this->id_column = 'id';
   }
 	
-	function sql_constraints( $id, $ttid, $columns = array('type','repeats','folds','percentage','stratified_sampling') ) {
+	function sql_constraints( $id, $ttid, 
+                            $indices = array('type', 'repeats', 'folds', 'percentage', 'stratified_sampling'), 
+                            $columns = array('type','repeats','folds','percentage','stratified_sampling') ) {
 		$evaluation_method = $this->getById( $id );
 		if( $evaluation_method == false ) return false;
 		if( $evaluation_method->ttid != $ttid ) return false;
 		
-		$repeat_str = ' AND ' . $columns[1] . (($evaluation_method->repeats == NULL) ? ' IS NULL ' : ' = ' . $evaluation_method->repeats);
-		$fold_str = ' AND ' . $columns[2] . (($evaluation_method->folds == NULL) ? ' IS NULL ' : ' = ' . $evaluation_method->folds);
-		$percentage_str = ' AND ' . $columns[3] . (($evaluation_method->percentage == NULL) ? ' IS NULL ' : ' = ' . $evaluation_method->percentage);
-		$stratified = ' AND ' . $columns[4] . (($evaluation_method->stratified_sampling == NULL) ? ' IS NULL ' : ' = ' . $evaluation_method->stratified_sampling);
-		return $columns[0].' = "' . $evaluation_method->type . '" ' . $repeat_str . $fold_str . $percentage_str . ' ';
+    $str = array();
+    for( $i = 0; $i < count($indices); ++$i ) {
+      $str[] = $columns[$i] . (($evaluation_method->{$indices[$i]} == NULL) ? ' IS NULL ' : ' = "' . $evaluation_method->{$indices[$i]} . '" ');
+    }
+    
+    return implode( ' AND ', $str );
 	}
 	
 	function get_by_parameters( $ttid, $type, $repeats, $folds, $percentage, $stratified ) {

@@ -12,11 +12,11 @@ class Api_splits extends CI_Controller {
 		$this->load->model('Log');
 		
 		$this->db = $this->load->database('read',true);
-		$this->task_types = array( 1, 2 );
+		$this->task_types = array( 1, 2, 3 );
 		$this->evaluation = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
 	}
 	
-	function get( $task_id ) {
+	function get( $task_id, $estimation_procedure_id ) {
 		$task = $this->Task->getById( $task_id );
 		if( $task === false || in_array( $task->ttid, $this->task_types ) === false ) {
 			die('Task not providing datasplits.');
@@ -33,14 +33,9 @@ class Api_splits extends CI_Controller {
 		 * values[8] - stratified
 		 */
 		
-		$task_type  = 'ttid = ' . $task->ttid;
-		$type    	= ' AND type  = "' . $values[3] . '"';
-		$repeats 	= ' AND repeats ' . (($values[5] == NULL) ? ' IS NULL ' : ' = ' . $values[5]);
-		$folds   	= ' AND folds ' . (($values[6] == NULL) ? ' IS NULL ' : ' = ' . $values[6]);
-		$percentage = ' AND percentage ' . (($values[7] == NULL) ? ' IS NULL ' : ' = ' . $values[7]);
-		$stratified = ' AND stratified_sampling ' . (($values[8] == NULL) ? ' IS NULL ' : ' = ' . $values[8]);
 		
-		$estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $values[3], $values[5], $values[6], $values[7], $values[8] );
+    $estimation_procedure = $this->Estimation_procedure->getById( $estimation_procedure_id );
+    
 		if($estimation_procedure == false) {
 			die('estimation procedure not found');
 		}
