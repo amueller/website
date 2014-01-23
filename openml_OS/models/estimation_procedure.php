@@ -47,7 +47,7 @@ class Estimation_procedure extends Database_read {
 		} elseif( $ep->type == 'holdout' ) {
 			return $instances * $ep->repeats;
 		} elseif( $ep->type == 'learningcurve' ) {
-      $foldsize = ceil($instances() / $ep->folds);
+      $foldsize = ceil($instances / $ep->folds);
 			$trainingsetsize = $foldsize * ($ep->folds-1);
 			$totalsize = 0;
 			for( $i = 0; $i < $ep->folds; ++$i ) {
