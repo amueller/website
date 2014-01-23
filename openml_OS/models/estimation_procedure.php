@@ -22,6 +22,7 @@ class Estimation_procedure extends Database_read {
     return implode( ' AND ', $str );
 	}
 	
+  // TODO: only used by rest_api. get rid of it whenever possible. 
 	function get_by_parameters( $ttid, $type, $repeats, $folds, $percentage, $stratified ) {
 		
 		$task_type  = 'ttid = ' . $ttid;
@@ -46,11 +47,14 @@ class Estimation_procedure extends Database_read {
 		} elseif( $ep->type == 'holdout' ) {
 			return $instances * $ep->repeats;
 		} elseif( $ep->type == 'learningcurve' ) {
-			$total = 0; 
-		  for( $i = 0; $this->sample_size( $i ) < $instances; ++$i ) { 
-        $total += $this->sample_size( $i );
-      }
-      return $total;
+      $foldsize = ceil($instances() / $ep->folds);
+			$trainingsetsize = $foldsize * ($ep->folds-1);
+			$totalsize = 0;
+			for( $i = 0; $i < $ep->folds; ++$i ) {
+        // size of the sample and size of the 'test set'
+				$totalsize += $this->sample_size($i, $trainingsetsize ) + $foldsize;
+			}
+			return $totalsize * $ep->folds; 
 		} else {
 			// TODO: implement other types.
 			return -1;
@@ -58,7 +62,7 @@ class Estimation_procedure extends Database_read {
 	}
   
   private function sample_size( $number ) {
-		return round( pow( 2, 6.5 + ( $number * 0.5 ) ) );
+		return round( pow( 2, 6 + ( $number * 0.5 ) ) );
 	}
 	
 	function toString( $ttep ) {
