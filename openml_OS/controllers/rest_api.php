@@ -739,7 +739,7 @@ class Rest_api extends CI_Controller {
 		
 		// check whether uploaded files are present.
 		if($error_message === false) {
-			if( count( $_FILES ) != 2 ) { // TODO: task type specific to task type 1 and 2
+			if( count( $_FILES ) != 2 ) { // TODO: task type specific to task type 1, 2 and 3
 				$this->_returnError( 206 );
 				return;
 			}
