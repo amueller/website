@@ -22,6 +22,7 @@ class Cron extends CI_Controller {
 		$code = 0;
 		$res = array();
 		
+    $ci->Log->cmd( 'Build Search Index', $command ); 
 		exec($command,$res,$code);
     
 		if( $code == 0 ) {

@@ -100,7 +100,8 @@ class Run extends Database_write {
 		  $errorCode = 'failed to start evaluation engine.';
 		  return false;
 	  }
-	
+	  
+    $this->Log->cmd( 'Evaluate Run', $command ); 
 	  exec( $command, $res, $code );
 	
 	  $json = json_decode( implode( "\n", $res ) );
