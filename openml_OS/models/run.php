@@ -25,7 +25,11 @@ class Run extends Database_write {
 	function getInputData( $runId ) {
 		if( !is_numeric($runId) ) return false;
 		$sql = 'SELECT dataset.* FROM input_data, dataset WHERE input_data.data = dataset.did AND input_data.run = ' . $runId;
-		return $this->db->query( $sql )->result();
+		$result = $this->db->query( $sql )->result();
+    if(count($result)) 
+      return $result;
+    else
+      return false;
 	}
 	
 	function getOutputData( $runId ) {

@@ -50,19 +50,30 @@ class Estimation_procedure extends Database_read {
       $foldsize = ceil($instances / $ep->folds);
 			$trainingsetsize = $foldsize * ($ep->folds-1);
 			$totalsize = 0;
-			for( $i = 0; $i < $ep->folds; ++$i ) {
+			for( $i = 0; $i < $this->number_of_samples( $trainingsetsize ); ++$i ) {
         // size of the sample and size of the 'test set'
 				$totalsize += $this->sample_size($i, $trainingsetsize ) + $foldsize;
 			}
-			return $totalsize * $ep->folds; 
+			return $totalsize * $ep->folds * $ep->repeats; 
 		} else {
 			// TODO: implement other types.
 			return -1;
 		}
 	}
   
-  private function sample_size( $number ) {
-		return round( pow( 2, 6 + ( $number * 0.5 ) ) );
+  public function trainingset_size( $datasetsize, $folds ) {
+    $foldsize = ceil($datasetsize / $folds);
+    return $foldsize * ($folds-1);
+  }
+  
+  public function number_of_samples( $trainingsetsize ) {
+    $i = 0;
+		for( ; $this->sample_size( $i, $trainingsetsize ) < $trainingsetsize; ++$i ) { }
+		return $i + 1; // + 1 for considering the "full" training set
+  }
+    
+  private function sample_size( $number, $trainingsetsize ) {
+		return min( $trainingsetsize, round( pow( 2, 6 + ( $number * 0.5 ) ) ) );
 	}
 	
 	function toString( $ttep ) {

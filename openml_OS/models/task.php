@@ -136,8 +136,12 @@ class Task extends Database_write {
 					'6' => $ep->folds,
 					'7' => $ep->percentage,
 					'8' => $ep->stratified_sampling,
-					'9' => $evaluation_measure 
+					'9' => $evaluation_measure
 				);
+        // TODO: we present the user with additional information about the number of samples
+        // to expect. However, due to an ill sized dataset (not good dividable by #instances)
+        // this can be one sample to much. communicate this to user. 
+        if( $task_type === 3 ) $data['10'] = $this->Estimation_procedure->number_of_samples();
 			
 				foreach( $data as $key => $value ){
 					$this->Task_values->insert( array( 'task_id' => $task_id, 'input' => $key, 'value' => $value ) );
