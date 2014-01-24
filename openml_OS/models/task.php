@@ -141,8 +141,12 @@ class Task extends Database_write {
         // TODO: we present the user with additional information about the number of samples
         // to expect. However, due to an ill sized dataset (not good dividable by #instances)
         // this can be one sample to much. communicate this to user. 
-        if( $task_type === 3 ) $data['10'] = $this->Estimation_procedure->number_of_samples();
-			
+        if( $task_type === 3 ) {
+          $numInstances = $this->Data_quality->getFeature( $d->did, 'NumberOfInstances' );
+          $data['10'] = $this->Estimation_procedure->number_of_samples(
+            $this->Estimation_procedure->trainingset_size( $numInstances, $ep->folds ) );
+			  }
+        
 				foreach( $data as $key => $value ){
 					$this->Task_values->insert( array( 'task_id' => $task_id, 'input' => $key, 'value' => $value ) );
 				}
