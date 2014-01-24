@@ -27,7 +27,7 @@ class Data_quality extends Database_write {
       if( $res === false ) {
         return false;
       } else {
-        return $res[0];
+        return $res[0]->value;
       }
     }
   }
