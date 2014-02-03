@@ -21,7 +21,6 @@ class Rest_api extends CI_Controller {
 		$this->load->model('Run');
 		$this->load->model('Evaluation');
 		$this->load->model('Evaluation_fold');
-		$this->load->model('Confusion_matrix');
 		$this->load->model('Input');
 		$this->load->model('Bibliographical_reference');
 		$this->load->model('Input_setting');
@@ -50,7 +49,7 @@ class Rest_api extends CI_Controller {
 			'run'				=> 'run/'
 		);
 		
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold','confusion_matrix' );
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold');
     
     // XML maintainance
     $this->xml_fields_dataset = array(
@@ -317,6 +316,7 @@ class Rest_api extends CI_Controller {
 			// obtain data features.
       $class = array_key_exists( 'default_target_attribute', $dataset ) ? $dataset['default_target_attribute'] : false;
 			$features = get_arff_features( $destinationUrl, $class );
+      
 			if(property_exists( $features, 'error' ) || $features == false) {
 				$this->_returnError( 142 );
 				return;

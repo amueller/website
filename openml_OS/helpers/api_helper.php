@@ -182,8 +182,12 @@ function get_arff_features( $datasetUrl, $class = false ) {
 		return false;
 	}
 	exec( $command, $res, $code );
-
-	return json_decode( implode( "\n", $res ) );
+  
+  if( $code == 0 && is_array( $res ) ) {
+    return json_decode( implode( "\n", $res ) );
+  } else {
+    return false;
+  }
 }
 
 function features_array_contains( $value, $array, $case_insensitive = false ) {

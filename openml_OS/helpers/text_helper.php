@@ -34,4 +34,16 @@ function rand_string( $length, $type='' ) {
 
 	return $str;
 }
+
+function arr2string( $array ) {
+  if( is_array( $array ) ) {
+    $res = array();
+    foreach( $array as $item ) {
+      $res[] = arr2string( $item );
+    }
+    return '['.implode( ',', $res ).']';
+  } else {
+    return $array;
+  }
+}
 ?>

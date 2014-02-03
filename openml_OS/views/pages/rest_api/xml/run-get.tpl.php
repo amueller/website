@@ -5,8 +5,6 @@
 	<oml:implementation_id><?php echo $source->setup->implementation_id; ?></oml:implementation_id>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
   <?php if($source->error !== null):?> <oml:error_message><?php echo $source->error; ?></oml:error_message> <?php endif; ?>
-
-
 		<?php if(is_array($source->inputSetting)) foreach( $source->inputSetting as $parameter ): ?>
 	    <oml:parameter_setting>
         <oml:name><?php echo $parameter->input;?></oml:name>
@@ -39,6 +37,7 @@
 			  <oml:name><?php echo $e->{'function'}; ?></oml:name>
 			  <oml:implementation><?php echo $e->{'implementation_id'}; ?></oml:implementation>
 			  <oml:value><?php echo $e->value; ?></oml:value>
+			  <oml:array_data><?php echo $e->array_data; ?></oml:array_data>
 		  </oml:evaluation>
 	  <?php endforeach; ?>
 	</oml:output_data>

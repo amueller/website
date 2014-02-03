@@ -37,6 +37,11 @@ class Algorithm_setup extends Database_write {
       $legal_parameters = $this->Input->getAssociativeArray('CONCAT(`implementation_id`,\'_\',`name`)','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
       $isDefault = false; 
       
+      if( is_array( $legal_parameters ) === false ) {
+        // no legal parameters found, make it an array anyway
+        $legal_parameters = array();
+      }
+      
       foreach( $parameters as $key => $value ) {
         if( array_key_exists( $key, $legal_parameters ) == false ) {
           // an illegal parameter was set. 
