@@ -832,7 +832,7 @@ class Rest_api extends CI_Controller {
 		
 		$errorCode = -1;
 		$errorMessage = false;
-		if( $task->ttid == 1 || $task->ttid == 2 ) {
+		if( $task->ttid == 1 || $task->ttid == 2 || $task->ttid == 3 ) {
 			if( $this->Run->insertSupervisedClassificationRun( $this->user_id, $run, $task, $setupId, $predictionsUrl, $output_data, $errorCode, $errorMessage ) == false ) {
 				$this->_returnError( $errorCode, $errorMessage );
 				return;
