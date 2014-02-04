@@ -21,6 +21,7 @@ class Rest_api extends CI_Controller {
 		$this->load->model('Run');
 		$this->load->model('Evaluation');
 		$this->load->model('Evaluation_fold');
+		$this->load->model('Evaluation_sample');
 		$this->load->model('Input');
 		$this->load->model('Bibliographical_reference');
 		$this->load->model('Input_setting');
@@ -49,7 +50,7 @@ class Rest_api extends CI_Controller {
 			'run'				=> 'run/'
 		);
 		
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold');
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample');
     
     // XML maintainance
     $this->xml_fields_dataset = array(
@@ -64,9 +65,6 @@ class Rest_api extends CI_Controller {
     );
 
 		$this->data_controller = BASE_URL . 'files/';
-		
-		
-		$this->specialTaskTypes = array( 1, 2 );
 		
 		$this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
     $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
