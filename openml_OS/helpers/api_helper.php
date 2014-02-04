@@ -159,6 +159,8 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
 				    'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
 				    'description' => property_exists( $children, 'description') ? trim($children->description) : null,
 				    'dataType' => property_exists( $children, 'data_type') ? trim($children->data_type) : null,
+//				    'min' => property_exists( $children, 'min') ? trim($children->min) : null,
+//				    'max' => property_exists( $children, 'max') ? trim($children->max) : null,
 			    ) 
 		    );
       }
