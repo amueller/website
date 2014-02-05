@@ -239,7 +239,8 @@ class Run extends Database_write {
 		              'implementation_id' => $implementation_record->id,
                   'repeat' => $repeat,
                   'fold' => $fold,
-                  'sample' => $sample );
+                  'sample' => $sample,
+                  'sample_size' => $metric->sample_size );
                 if( property_exists($metric, 'label') )
                   $data['label'] = '' . $metric->label;
                 if( property_exists($metric, 'value') )
