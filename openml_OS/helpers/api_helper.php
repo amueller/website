@@ -108,12 +108,17 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
   $version = $ci->Implementation->incrementVersionNumber( $implementation['name'] );
   $implementation['fullName'] = $implementation['name'] . '(' . $version . ')';
   $implementation['version'] = $version;
-  if( array_key_exists( 'external_version', $implementation ) === false ) {
-    if( array_key_exists( 'source_md5', $implementation ) ) {
+  
+  if( array_key_exists( 'source_md5', $implementation ) ) {
+    if( array_key_exists( 'external_version', $implementation ) === false ) {
       $implementation['external_version'] = $implementation['source_md5'];
-    } elseif( array_key_exists( 'binary_md5', $implementation ) ) {
+    }
+    unset($implementation['source_md5']);
+  } elseif( array_key_exists( 'binary_md5', $implementation ) ) {
+    if( array_key_exists( 'external_version', $implementation ) === false ) {
       $implementation['external_version'] = $implementation['binary_md5'];
     }
+    unset($implementation['binary_md5']);
   }
   
   if( array_key_exists( 'implements', $implementation ) ) {
