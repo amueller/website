@@ -26,17 +26,20 @@ $(function() {
   var datasets = expdbDatasets();
   var evaluationmetrics = expdbEvaluationMetrics();
   var algorithms = expdbAlgorithms();
-  var implementations = getImplementationsWithAlgorithms( ['SVM', 'C4.5'] ); // TODO: bind to algorithm field
+  var implementations = expdbImplementations();
+  var filteredImplementations = getImplementationsWithAlgorithms( ['SVM', 'C4.5'] ); // TODO: bind to algorithm field
   	
-  makeCommaSeperatedAutoComplete( "#datasetDropdown", datasets ); 
-  makeCommaSeperatedAutoComplete( "#algorithmDropdown", algorithms ); 
-  makeCommaSeperatedAutoComplete( "#implementationDropdown", implementations ); 
-  makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
-  makeCommaSeperatedAutoComplete( "#regressionDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
-  makeCommaSeperatedAutoComplete( "#learningCurveDatasetVersionDropdown", expdbDatasetVersionOriginal() ); 
-  makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() ); 
-  makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() );  
-  makeAutoComplete( "#learningCurveEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() ); 
+  makeCommaSeperatedAutoComplete( "#datasetDropdown", datasets );                                           // run search
+  makeCommaSeperatedAutoComplete( "#algorithmDropdown", algorithms );                                       // run search
+  makeCommaSeperatedAutoComplete( "#implementationDropdown", filteredImplementations );                     // run search
+  makeCommaSeperatedAutoComplete( "#searchLearningcurvesImplementationDropdown", implementations );         // learning curve search
+  makeCommaSeperatedAutoComplete( "#searchLearningcurvesDatasetDropdown", datasets );                       // learning curve search
+  makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); // task search
+  makeCommaSeperatedAutoComplete( "#regressionDatasetVersionDropdown", expdbDatasetVersionOriginal() );     // task search
+  makeCommaSeperatedAutoComplete( "#learningCurveDatasetVersionDropdown", expdbDatasetVersionOriginal() );  // task search
+  makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );   // task search
+  makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() );           // task search
+  makeAutoComplete( "#learningCurveEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );    // task search
   
   $( "#evaluationmetricDropdown" ).autocomplete({
     source: evaluationmetrics,
@@ -840,6 +843,37 @@ function splitDatasetsFromCollections( list ) {
 	return result;
 }
 
+function learningCurveQuery( datasets, implementations ) {
+  autocrosstabulate = true;
+  datasets = commaSeperatedListToCleanArray( datasets );
+  implementations = commaSeperatedListToCleanArray( implementations );
+  
+  var datasetConstraint = '';
+  var implementationConstraint = '';
+	if ( datasets.length > 0 ) datasetConstraint = ' AND `d`.`name` IN ("' + datasets.join('","') + '") ';
+	if ( implementations.length > 0 ) implementationConstraint = ' AND `i`.`fullName` IN ("' + implementations.join('","') + '") ';
+  
+  var sql = 
+    'SELECT `e`.`sample`, CONCAT(`i`.`name`," on Task ",`r`.`task_id`, ": ", `d`.`name`) AS `name`, avg(`e`.`value`) ' +
+    'FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t`, `task_values` `v`, `dataset` `d` ' + 
+    'WHERE `e`.`function` = "predictive_accuracy" ' + 
+    'AND `t`.`ttid` = 3 ' + 
+    'AND `v`.`input` = 1 ' + 
+    datasetConstraint +
+    implementationConstraint +
+    'AND `r`.`rid` = `e`.`source` ' + 
+    'AND `r`.`setup` = `a`.`sid` ' + 
+    'AND `a`.`implementation_id` = `i`.`id` ' + 
+    'AND `r`.`task_id` = `t`.`task_id` ' + 
+    'AND `t`.`task_id` = `v`.`task_id` ' + 
+    'AND `v`.`value` = `d`.`did` ' + 
+    'GROUP BY `r`.`rid`,`e`.`sample` ' + 
+    'ORDER BY `sample`, `name` ASC';
+    
+    runQuery( sql );
+	  window.editor.setValue( sql );
+}
+
 function wizardQuery( algorithms, implementations, defaultParams, datasets, evaluationMethod, evaluationMetric, crosstabulate ) {
 	// TODO: only available evaluationMethod: CV . Var is not used yet. 
 	$('#wizardquery-btn').button('loading');
@@ -926,10 +960,10 @@ function toggleResultTables() {
 	$('#crosstabulateBtn').button('reset');
 }
 
-function updateImplementations() {
-	var algorithms = commaSeperatedListToCleanArray( $('#algorithmDropdown').val() );
+function updateImplementations( cssSelectorImplementations, cssSelectorAlgorithms ) {
+	var algorithms = commaSeperatedListToCleanArray( $( cssSelectorAlgorithms ).val() );
 	var implementations = ( algorithms != "" ) ? getImplementationsWithAlgorithms( algorithms ) : expdbImplementations();
-	makeCommaSeperatedAutoComplete( "#implementationDropdown", implementations ); 
+	makeCommaSeperatedAutoComplete( cssSelector, implementations ); 
 }
 
 function getImplementationsWithAlgorithms( requestedAlgorithms ) {

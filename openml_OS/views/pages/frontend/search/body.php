@@ -11,7 +11,7 @@
 		  <li class="<?php if($this->active_tab == 'metricsearchtab') echo 'active';?>"><a href="#metricsearchtab" data-toggle="tab"><i class="fa fa-signal"></i>  Metrics</a></li>
 		  <li class="<?php if($this->active_tab == 'tasktab') echo 'active';?>"><a href="#tasktab" data-toggle="tab"><i class="fa fa-check"></i>  Tasks</a></li>
 		  <li class="<?php if($this->active_tab == 'wizardtab') echo 'active';?>"><a href="#wizardtab" data-toggle="tab"><i class="fa fa-bolt"></i>  Runs</a></li>
-		  <li class="<?php if($this->active_tab == 'curvestab') echo 'active';?>"><a href="#curvestab" data-toggle="tab"><i class="fa fa-bolt"></i>  Learning Curves</a></li>
+		  <li class="<?php if($this->active_tab == 'curvestab') echo 'active';?>"><a href="#curvestab" data-toggle="tab"><i class="fa fa-expand"></i>  Learning Curves</a></li>
 		  <li class="<?php if($this->active_tab == 'exampletab') echo 'active';?>"><a href="#exampletab" data-toggle="tab"><i class=" fa fa-flask"></i>  Advanced</a></li>
 		  <li class="<?php if($this->active_tab == 'sqltab') echo 'active';?>"><a href="#sqltab" data-toggle="tab"><i class="fa fa-pencil"></i>  SQL</a></li>
 		  <!--<li class="<?php if($this->active_tab == 'querygraphtab') echo 'active';?>"><a href="#querygraphtab" data-toggle="tab"><i class="fa fa-hand-o-up"></i>  Graph</a></li>-->

@@ -15,7 +15,7 @@
 	<div class="form-group">
 		<label class="col-md-2 control-label" for="algorithmDropdown">Implementations</label>
 		<div class="col-md-10">
-			<input type="text" class="form-control" id="algorithmDropdown" placeholder="Include all algorithms" value="SVM, C4.5, " onblur="updateImplementations();">
+			<input type="text" class="form-control" id="algorithmDropdown" placeholder="Include all algorithms" value="SVM, C4.5, " onblur="updateImplementations( '#implementationDropdown', '#algorithmDropdown' );">
 			<span class="help-block">A comma separated list of implementations. Leave empty to include all algorithms.</span>
 		</div>
 	</div>
