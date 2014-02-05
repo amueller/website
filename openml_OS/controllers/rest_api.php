@@ -58,7 +58,7 @@ class Rest_api extends CI_Controller {
       'csv' => array('creator','contributor',)
     );
     $this->xml_fields_implementation = array(
-      'string' => array('name','description','licence','language','fullDescription','installationNotes','dependencies',),
+      'string' => array('name','external_version','description','licence','language','fullDescription','installationNotes','dependencies',),
       'csv' => array('creator','contributor',),
       'array' => array('bibliographical_reference','parameter','component'),
       'plain' => array()
@@ -515,7 +515,7 @@ class Rest_api extends CI_Controller {
 			$file_record = $this->File->getById($file_id);
 			
 			//$implementation[$key.'Url'] = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
-			//$implementation[$key.'Md5'] = $file_record->md5_hash;
+			$implementation[$key.'_md5'] = $file_record->md5_hash;
       $implementation[$key.'_file_id'] = $file_id;
 			//$implementation[$key.'Format'] = $file_record->md5_hash;
 			

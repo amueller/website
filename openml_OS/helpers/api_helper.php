@@ -108,6 +108,13 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
   $version = $ci->Implementation->incrementVersionNumber( $implementation['name'] );
   $implementation['fullName'] = $implementation['name'] . '(' . $version . ')';
   $implementation['version'] = $version;
+  if( array_key_exists( 'external_version', $implementation ) === false ) {
+    if( array_key_exists( 'source_md5', $implementation ) ) {
+      $implementation['external_version'] = $implementation['source_md5'];
+    } elseif( array_key_exists( 'binary_md5', $implementation ) {
+      $implementation['external_version'] = $implementation['binary_md5'];
+    }
+  }
   
   if( array_key_exists( 'implements', $implementation ) ) {
     if( in_array( $implementation['implements'], $ci->supportedMetrics ) == false && 
@@ -157,10 +164,9 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
 				    'implementation_id' => $res,
 				    'name' => trim($children->name),
 				    'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
-				    'description' => property_exists( $children, 'description') ? trim($children->description) : null,
-				    'dataType' => property_exists( $children, 'data_type') ? trim($children->data_type) : null,
-//				    'min' => property_exists( $children, 'min') ? trim($children->min) : null,
-//				    'max' => property_exists( $children, 'max') ? trim($children->max) : null,
+            'description' => property_exists( $children, 'description') ? trim($children->description) : null,
+            'dataType' => property_exists( $children, 'data_type') ? trim($children->data_type) : null,
+            'recommendedRange' => property_exists( $children, 'recommended_range') ? trim($children->recommendedRange) : null
 			    ) 
 		    );
       }
