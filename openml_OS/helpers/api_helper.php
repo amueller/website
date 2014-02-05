@@ -113,12 +113,10 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
     if( array_key_exists( 'external_version', $implementation ) === false ) {
       $implementation['external_version'] = $implementation['source_md5'];
     }
-    unset($implementation['source_md5']);
   } elseif( array_key_exists( 'binary_md5', $implementation ) ) {
     if( array_key_exists( 'external_version', $implementation ) === false ) {
       $implementation['external_version'] = $implementation['binary_md5'];
     }
-    unset($implementation['binary_md5']);
   }
   
   if( array_key_exists( 'implements', $implementation ) ) {
@@ -128,6 +126,9 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
     }
   }
   
+  // information illegal to insert
+  unset($implementation['source_md5']);
+  unset($implementation['binary_md5']);
   $res = $ci->Implementation->insert( $implementation );
 	if( $res === false ) {
 		return false;
