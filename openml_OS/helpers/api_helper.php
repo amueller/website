@@ -111,7 +111,7 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
   if( array_key_exists( 'external_version', $implementation ) === false ) {
     if( array_key_exists( 'source_md5', $implementation ) ) {
       $implementation['external_version'] = $implementation['source_md5'];
-    } elseif( array_key_exists( 'binary_md5', $implementation ) {
+    } elseif( array_key_exists( 'binary_md5', $implementation ) ) {
       $implementation['external_version'] = $implementation['binary_md5'];
     }
   }

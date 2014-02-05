@@ -4,6 +4,7 @@ $mapping = array(
   'uploader' => 'uploader',
   'name' => 'name',
   'version' => 'version',
+  'external_version' => 'external_version',
   'description' => 'description',
   'creator' => 'creator',
   'contributor' => 'contributor',
