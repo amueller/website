@@ -538,21 +538,20 @@ class Rest_api extends CI_Controller {
 	}
   
   private function _openml_implementation_exists() {
-    if(isset($_FILES['description']) === false || $_FILES['description']['error'] != 0) {
+    $name = $this->input->get( 'name' );
+    $external_version = $this->input->get( 'external_version' );
+    
+    $similar = false;
+		if( $name !== false && $external_version !== false ) {
+			$similar = $this->Implementation->getWhere( '`name` = "' . $name . '" AND `external_version` = "' . $external_version . '"' );
+    } else {
       $this->_returnError( 330 );
       return;
     }
-    $description = $_FILES['description'];
-    $xmlErrors = '';
-    if( validateXml( $description['tmp_name'], xsd('openml.implementation.upload'), $xmlErrors ) == false ) {
-      $this->_returnError( 331, $xmlErrors );
-      return;
-    }
-    $xml = simplexml_load_file( $description['tmp_name'] );
-    $similar = $this->Implementation->compareToXML( $xml );
+    
     $result = array( 'exists' => 'false', 'id' => -1 );
     if( $similar ) {
-      $result = array( 'exists' => 'true', 'id' => $similar );
+      $result = array( 'exists' => 'true', 'id' => $similar[0]->id );
     }
     $this->_xmlContents( 'implementation-exists', $result );
   }

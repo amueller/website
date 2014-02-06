@@ -316,10 +316,7 @@ $this->apiErrors[324][0] = 'Deleting implementation failed.';
 $this->apiErrors[324][1] = 'Deleting the implementation failed. Please contact support team. ';
 
 // for function: openml.implementation.exists
-$this->apiErrors[330][0] = 'No description file provided.';
-$this->apiErrors[330][1] = 'Implementation exists check is done by uploading a XML file describing the implementation. ';
+$this->apiErrors[330][0] = 'Mandatory fields not present.';
+$this->apiErrors[330][1] = 'Please provide one of the following mandatory field combination: name and external_version. ';
 
-// for function: openml.implementation.exists
-$this->apiErrors[331][0] = 'The description file could not be validated by the XSD.';
-$this->apiErrors[331][1] = 'Implementation exists check is done by uploading a XML file. This file was not valid. ';
 ?>
