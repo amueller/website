@@ -40,6 +40,7 @@ $(function() {
   makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );   // task search
   makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() );           // task search
   makeAutoComplete( "#learningCurveEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );    // task search
+  makeAutoComplete( "#dataStreamEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );    // task search
   
   $( "#evaluationmetricDropdown" ).autocomplete({
     source: evaluationmetrics,

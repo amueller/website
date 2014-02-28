@@ -10,19 +10,31 @@ switch($ttid) {
 case 1:
 case 2:
 case 3:
-	$this->found_tasks = $this->Task->getGeneralTask( 
-		$ttid, 
-		$this->input->post('estimation_procedure'), 
-		$dataset_ids, 
-		$this->input->post('target_feature'), 
-		$this->input->post('evaluation_measure'),
-		true );
-	if($this->found_tasks === false) {
-		$this->task_message = 'None of the tasks met the search criteria. Please try again. ';
-	}
-	break;
+  $this->found_tasks = $this->Task->getGeneralTask( 
+    $ttid, 
+    $this->input->post('estimation_procedure'), 
+    $dataset_ids, 
+    $this->input->post('target_feature'), 
+    $this->input->post('evaluation_measure'),
+    true );
+  if($this->found_tasks === false) {
+    $this->task_message = 'None of the tasks met the search criteria. Please try again. ';
+  }
+  break;
+case 4: // TODO: build this functionality!
+  $this->found_tasks = $this->Task->getGeneralTask( 
+    $ttid, 
+    $this->input->post('estimation_procedure'), 
+    $dataset_ids, 
+    $this->input->post('target_feature'), 
+    $this->input->post('evaluation_measure'),
+    true );
+  if($this->found_tasks === false) {
+    $this->task_message = 'None of the tasks met the search criteria. Please try again. ';
+  }
+  break;
 default:
-	$this->task_message = 'Illigal task type. ';
-	break;
+  $this->task_message = 'Illigal task type. ';
+  break;
 }
 ?>
