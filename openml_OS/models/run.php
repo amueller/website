@@ -8,7 +8,7 @@ class Run extends Database_write {
     
     $this->load->model('Cvrun');
     $this->load->model('Implementation');
-    }
+  }
   
   function inputData( $run, $data, $table ) {
     if( !is_numeric($run) || !is_numeric($data) ) return false;
@@ -175,7 +175,8 @@ class Run extends Database_write {
       if( property_exists($metric, 'value') )
         $data['value'] = ''.$metric->value;
       if( property_exists($metric, 'array_data') )
-        $data['array_data'] = arr2string( $metric->array_data );
+        $data['array_data'] = '' . $metric->array_data;
+      
       $this->Evaluation->insert( $data );
     }
     

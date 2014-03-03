@@ -763,14 +763,14 @@ class Rest_api extends CI_Controller {
 			$this->_returnError( 213 );
 			return;
 		}
-		
+    
 		// fetch task
-		$task = $this->Task->getByIdWithValues( $task_id );
+		$task = $this->Task->getByIdForEvaluation( $task_id );
 		if( $task === false ) { 
 			$this->_returnError( 204 );
 			return;
 		}
-		
+    
 		// now create a run
 		$runId = $this->Run->getHighestIndex( array('run'), 'rid' );
 		
@@ -834,7 +834,8 @@ class Rest_api extends CI_Controller {
 		
 		$errorCode = -1;
 		$errorMessage = false;
-		if( $task->ttid == 1 || $task->ttid == 2 || $task->ttid == 3 ) {
+    
+		if( $task->ttid == 1 || $task->ttid == 2 || $task->ttid == 3 || $task_id = 4 ) {
 			if( $this->Run->insertSupervisedClassificationRun( $this->user_id, $run, $task, $setupId, $predictionsUrl, $output_data, $errorCode, $errorMessage ) == false ) {
 				$this->_returnError( $errorCode, $errorMessage );
 				return;
