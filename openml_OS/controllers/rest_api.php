@@ -315,8 +315,11 @@ class Rest_api extends CI_Controller {
       $class = array_key_exists( 'default_target_attribute', $dataset ) ? $dataset['default_target_attribute'] : false;
 			$features = get_arff_features( $destinationUrl, $class );
       
-			if(property_exists( $features, 'error' ) || $features == false) {
+			if($features == false) {
 				$this->_returnError( 142 );
+				return;
+			} elseif( property_exists( $features, 'error' ) ) {
+			  $this->_returnError( 142 );
 				return;
 			}
 		}

@@ -1,53 +1,12 @@
 <?php
 class Task extends Database_write {
   
-  private $base_sql = 
-    'SELECT `task`.`task_id`,
-    `task`.`task_id` AS `id`, 
-    `task`.`ttid`, 
-    `input_data`.`value` AS `did`, 
-    `target`.`value` AS `target_feature`, 
-    `type`.`value` AS `type`, 
-    `splits_url`.`value` AS `splits_url`, 
-    `repeats`.`value` AS `repeats`, 
-    `folds`.`value` AS `folds`,
-    `percentage`.`value` AS `percentage`,
-    `stratified`.`value` AS `stratified_sampling`,
-    `evaluation_measure`.`value` AS `evaluation_measure`,
-    `dataset`.`default_target_attribute` AS `dta`,
-    CONCAT("Task ", `task`.`task_id`, ": ", `dataset`.`name`, " - ", `task_type`.`name`) AS `name`
-    FROM `task`, 
-    `task_type`,
-    `task_values` AS `input_data`, 
-    `task_values` AS `target`, 
-    `task_values` AS `type`, 
-    `task_values` AS `splits_url`, 
-    `task_values` AS `repeats`, 
-    `task_values` AS `folds`,
-    `task_values` AS `percentage`,
-    `task_values` AS `stratified`,
-    `task_values` AS `evaluation_measure`,
-    `dataset`
-    WHERE `task`.`ttid` = `task_type`.`ttid` 
-    AND `task`.`task_id` = `input_data`.`task_id` 
-    AND `task`.`task_id` = `target`.`task_id` 
-    AND `task`.`task_id` = `splits_url`.`task_id` 
-    AND `task`.`task_id` = `type`.`task_id` 
-    AND `task`.`task_id` = `repeats`.`task_id` 
-    AND `task`.`task_id` = `folds`.`task_id` 
-    AND `task`.`task_id` = `percentage`.`task_id` 
-    AND `task`.`task_id` = `stratified`.`task_id` 
-    AND `task`.`task_id` = `evaluation_measure`.`task_id` 
-    AND `dataset`.`did` = `input_data`.`value` 
-    AND `input_data`.`input` = 1 
-    AND `target`.`input` = 2 
-    AND `type`.`input` = 3 
-    AND `splits_url`.`input` = 4 
-    AND `repeats`.`input` = 5 
-    AND `folds`.`input` = 6 
-    AND `percentage`.`input` = 7 
-    AND `stratified`.`input` = 8 
-    AND `evaluation_measure`.`input` = 9 ';
+  private $sql_configuration = array(
+    1 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' ),
+    2 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' ),
+    3 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' ),
+    4 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' )
+  );
   
   function __construct() {
     parent::__construct();
@@ -58,14 +17,12 @@ class Task extends Database_write {
     $this->load->model('Estimation_procedure');
   }
   
-  function getWithValues() {
-    return $this->query( $this->base_sql );
-  }
-  
   function getByIdWithValues( $id ) {
     if(is_numeric($id) === false)
       return false;
-    $task = $this->query( $this->base_sql . ' AND `task`.`task_id` = ' . $id );
+    $record = $this->Task->getById( $id );
+    $ttid = $record->ttid;
+    $task = $this->query( $this->construct_sql( $ttid ) . ' AND `task`.`task_id` = ' . $id );
     if($task)
       return end($task);
     else
@@ -76,11 +33,12 @@ class Task extends Database_write {
   function getGeneralTask( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $create ) {
     $constr_estimation_procesure = ' AND ' . $this->Estimation_procedure->sql_constraints( $estimation_procedure_id, $task_type,
       array('type','repeats','folds','percentage','stratified_sampling'), 
-      array('`type`.`value`','`repeats`.`value`','`folds`.`value`','`percentage`.`value`','`stratified`.`value`') );
-    $constr_task_type = 'AND `task`.`ttid` = "'.$task_type.'" ';
-    $constr_target = 'AND `target`.`value` = ' . ( $target ? '"'.safe($target).'" ' : '`dataset`.`default_target_attribute` ');
-    $constr_dataset = (!$dataset_ids ? '' : 'AND `input_data`.`value` IN ('.implode(',',$dataset_ids).') ');
-    $constr_eval_measures = 'AND `evaluation_measure`.`value` = "'.safe($evaluation_measure).'" ';
+      array('`vtable_type`.`value`','`vtable_repeats`.`value`','`vtable_folds`.`value`','`vtable_percentage`.`value`','`vtable_stratified_sampling`.`value`') );
+    
+    
+    $constr_target = 'AND `vtable_target_feature`.`value` = ' . ( $target ? '"'.safe($target).'" ' : '`dataset`.`default_target_attribute` ');
+    $constr_dataset = (!$dataset_ids ? '' : 'AND `vtable_did`.`value` IN ('.implode(',',$dataset_ids).') ');
+    $constr_eval_measures = 'AND `vtable_evaluation_measure`.`value` = "'.safe($evaluation_measure).'" ';
     
     if( in_array($task_type,array(1,2,3)) === false ) 
       return false;
@@ -93,7 +51,7 @@ class Task extends Database_write {
       return false;
     }
 
-    $sql = $this->base_sql . $constr_estimation_procesure . $constr_task_type . $constr_target . $constr_dataset . $constr_eval_measures;
+    $sql = $this->construct_sql( $task_type ) . $constr_estimation_procesure . $constr_target . $constr_dataset . $constr_eval_measures;
     
     $tasks = $this->query( $sql );
     if($create) {
@@ -162,6 +120,35 @@ class Task extends Database_write {
     {
       $this->db->trans_commit();
     }
+  }
+  
+  // constructs a query, able to concatinate multiple entrees out of the task_values table
+  // in one "crosstabulated" record. For this, an entry in the sql_configuration array
+  // is needed. Due to the nature of the query, at least one field DID should be present.
+  private function construct_sql( $task_type ) {
+    $base_sql = 
+      'SELECT `task`.`task_id`,
+      `task`.`task_id` AS `id`, 
+      `task`.`ttid`, 
+      `dataset`.`default_target_attribute` AS `dta`,
+      CONCAT("Task ", `task`.`task_id`, ": ", `dataset`.`name`, " - ", `task_type`.`name`) AS `name`';
+    foreach( $this->sql_configuration[$task_type] as $value ) {
+      $base_sql .= ', `vtable_' . $value . '`.`value` AS `'.$value.'` ';
+    }
+    $base_sql .= 'FROM `task`, `task_type`, `dataset` ';
+    foreach( $this->sql_configuration[$task_type] as $value )
+      $base_sql .= ',`task_values` AS `vtable_' . $value . '` ';
+    $base_sql .= 
+      'WHERE `task`.`ttid` = `task_type`.`ttid` ' .
+      'AND `dataset`.`did` = `vtable_did`.`value` ' .
+      'AND `task`.`ttid` = ' . $task_type . ' ';
+      
+    foreach( $this->sql_configuration[$task_type] as $key => $value ) {
+      $base_sql .= "\n". 'AND `vtable_' . $value .'`.`input` = ' . $key . ' ';
+      $base_sql .=       'AND `vtable_' . $value . '`.`task_id` = `task`.`task_id` ';
+    }
+    
+    return $base_sql;
   }
 }
 ?>
