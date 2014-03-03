@@ -159,9 +159,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-md-2 control-label" for="classificationMinimalDatasetSize">Minimal dataset size</label>
+        <label class="col-md-2 control-label" for="datastreamsMinimalDatasetSize">Minimal dataset size</label>
         <div class="col-md-10">
-          <input type="text" class="form-control" id="datastreamsEvaluationMeasureDropdown" name="evaluation_measure" placeholder="No minimun" value="50000" />
+          <input type="text" class="form-control" id="datastreamsMinimalDatasetSize" name="minimal_dataset_size" placeholder="No minimun" value="50000" />
           <span class="help-block">The minimal number of instances that datasets should cover. Leave empty to insert datasets of any size</span>
         </div>
       </div>
