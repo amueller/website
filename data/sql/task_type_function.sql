@@ -24,4 +24,14 @@ INSERT INTO `task_type_function` (`ttid`, `math_function`) VALUES
 (3, 'relative_absolute_error'),
 (3, 'root_mean_prior_squared_error'),
 (3, 'root_mean_squared_error'),
-(3, 'root_relative_squared_error');
+(3, 'root_relative_squared_error'),
+(4, 'kappa'),
+(4, 'kb_relative_information_score'),
+(4, 'mean_absolute_error'),
+(4, 'mean_prior_absolute_error'),
+(4, 'predictive_accuracy'),
+(4, 'prior_entropy'),
+(4, 'relative_absolute_error'),
+(4, 'root_mean_prior_squared_error'),
+(4, 'root_mean_squared_error'),
+(4, 'root_relative_squared_error');

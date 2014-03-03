@@ -3,7 +3,7 @@
  * Sets the local time to a specific zone. Can be removed, if it is
  * set in php.ini. 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-setlocale(LC_ALL, 'nl_NL');
+setlocale(LC_TIME, 'nl_NL');
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * BASE_URL: The domain of the instance, along with the folder where
@@ -85,6 +85,12 @@ define( 'DB_PASS_OPENML', 'FILL_IN_PASSWORD2' );
  * to true when developing. Set to false on the production server
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DEBUG', FALSE );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * CMD_PREFIX: Adds a prefix to all shell commands; needed for bugfix
+ * on some MAMP (OSX) systems. Can be left empty on all other systems.
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+define( 'CMD_PREFIX', '');
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * EMAIL_FROM: The email address from which the emails will be send.

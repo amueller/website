@@ -1,26 +1,26 @@
 <?php
 
 function validateXml( $xmlDocument, $xsdDocument, &$xmlErrors, $from_file = true ) {
-	$xmlErrors = '';
-	libxml_use_internal_errors(true);
-	
-	$xml = new DOMDocument(); 
-	if($from_file)
-		$xml->load( $xmlDocument );
-	else
-		$xml->loadXML( $xmlDocument );
-	
-	$cxmlErrors = '';
-	foreach (libxml_get_errors() as $error) {
-		$xmlErrors .= $error->message . '. ';
+  $xmlErrors = '';
+  libxml_use_internal_errors(true);
+  
+  $xml = new DOMDocument(); 
+  if($from_file)
+    $xml->load( $xmlDocument );
+  else
+    $xml->loadXML( $xmlDocument );
+  
+  $cxmlErrors = '';
+  foreach (libxml_get_errors() as $error) {
+    $xmlErrors .= $error->message . '. ';
   }
-	
-	if ( $xml->schemaValidate( $xsdDocument ) ) { 
-	   return true;
-	} else {
-		$xmlErrors .= 'XML does not correspond to XSD schema. ';
-		return false;
-	}
+  
+  if ( $xml->schemaValidate( $xsdDocument ) ) { 
+     return true;
+  } else {
+    $xmlErrors .= 'XML does not correspond to XSD schema. ';
+    return false;
+  }
 }
 
 /**
@@ -44,10 +44,10 @@ function validateXml( $xmlDocument, $xsdDocument, &$xmlErrors, $from_file = true
  */
 
 function all_tags_from_xml( $xml, $configuration = array(), $return_array = array() ) {
-	$csv_tags = array();
+  $csv_tags = array();
   $include = array_collapse($configuration);
   
-	foreach( $xml as $key => $value ) {
+  foreach( $xml as $key => $value ) {
     if( in_array( $key, $include ) ) {
       if( array_key_exists( 'array', $configuration ) && in_array( $key, $configuration['array'] ) ) { 
         // returned in plain array
@@ -55,51 +55,51 @@ function all_tags_from_xml( $xml, $configuration = array(), $return_array = arra
           $return_array[$key] = array();
         }
         $return_array[$key][] = $value;
-		  } elseif( array_key_exists( 'csv', $configuration ) && in_array( $key, $configuration['csv'] ) ) { 
+      } elseif( array_key_exists( 'csv', $configuration ) && in_array( $key, $configuration['csv'] ) ) { 
         // returned in CSV format
-			  if( !array_key_exists( $key, $csv_tags ) ) {
-				  $csv_tags[$key] = array();
-			  } 
-			  $csv_tags[$key][] = trim( $value );
-		  } elseif( array_key_exists( 'plain', $configuration ) && in_array( $key , $configuration['plain'] ) ) { 
+        if( !array_key_exists( $key, $csv_tags ) ) {
+          $csv_tags[$key] = array();
+        } 
+        $csv_tags[$key][] = trim( $value );
+      } elseif( array_key_exists( 'plain', $configuration ) && in_array( $key , $configuration['plain'] ) ) { 
         // returned plain (xml object)
-			  $return_array[$key] = $value;
-		  } elseif( array_key_exists( 'string', $configuration ) && in_array( $key , $configuration['string'] ) ) {
+        $return_array[$key] = $value;
+      } elseif( array_key_exists( 'string', $configuration ) && in_array( $key , $configuration['string'] ) ) {
         // returned as string
         $return_array[$key] = trim($value);
       } else {
         // an illegal or undefined category
       }
     }
-	}
-	
-	foreach( $csv_tags as $key => $value ) {
-		$return_array[$key] = putcsv( $value );
-	}
-	return $return_array;
+  }
+  
+  foreach( $csv_tags as $key => $value ) {
+    $return_array[$key] = putcsv( $value );
+  }
+  return $return_array;
 }
 
 function xsd( $name ) {
-	return APPPATH.'views/pages/rest_api/xsd/' . $name . '.xsd';
+  return APPPATH.'views/pages/rest_api/xsd/' . $name . '.xsd';
 }
 
 function sub_xml( $xmlFile, $source ) {
-	$ci = &get_instance();
-	$view = 'pages/rest_api/xml/'.$xmlFile.'.tpl.php';
-	$ci->load->view( $view, $source );
+  $ci = &get_instance();
+  $view = 'pages/rest_api/xml/'.$xmlFile.'.tpl.php';
+  $ci->load->view( $view, $source );
 }
 
 function camelcaseToUnderscores( $string ) {
-	return strtolower( preg_replace( '/(?<=\\w)(?=[A-Z])/', "_$1", $string ) ); 
+  return strtolower( preg_replace( '/(?<=\\w)(?=[A-Z])/', "_$1", $string ) ); 
 }
 
 function underscoresToCammelcase( $string ) {
-	return lcfirst( str_replace( ' ', '', ucwords( str_replace( '_', ' ', $string ) ) ) );
+  return lcfirst( str_replace( ' ', '', ucwords( str_replace( '_', ' ', $string ) ) ) );
 }
 
 
 function insertImplementationFromXML( $xml, $configuration, $implementation_base = array() ) {
-	$ci = &get_instance();
+  $ci = &get_instance();
   
   $implementation_objects = all_tags_from_xml( $xml, array_custom_filter($configuration, array('plain','array')) );
   $implementation = all_tags_from_xml( $xml, array_custom_filter($configuration, array('string','csv')), $implementation_base );
@@ -130,9 +130,9 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
   unset($implementation['source_md5']);
   unset($implementation['binary_md5']);
   $res = $ci->Implementation->insert( $implementation );
-	if( $res === false ) {
-		return false;
-	}
+  if( $res === false ) {
+    return false;
+  }
   
   // insert all important "components"
   foreach( $implementation_objects as $key => $value ) {
@@ -148,7 +148,7 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
             $component, 
             $configuration, 
             array( 'uploadDate' => now(), 'uploader' => $implementation['uploader'] ) );
-		  
+      
           if($succes == false) { return false; }
           $ci->Implementation->addComponent( $res, $succes, trim($entry->identifier) );
         } else {
@@ -158,44 +158,44 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
     } elseif( $key == 'bibliographical_reference' ) {
       foreach( $value as $entry ) {
         $children = $entry->children('oml', true);
-		    $children->implementation_id = $res;
-		    $succes = $ci->Bibliographical_reference->insert( $children );
+        $children->implementation_id = $res;
+        $succes = $ci->Bibliographical_reference->insert( $children );
       }
     } elseif( $key == 'parameter' ) {
       foreach( $value as $entry ) {
         $children = $entry->children('oml', true);
-		    $succes = $ci->Input->insert( 
-			    array(
-				    'fullName' => $implementation['fullName'] . '_' . $children->name,
-				    'implementation_id' => $res,
-				    'name' => trim($children->name),
-				    'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
+        $succes = $ci->Input->insert( 
+          array(
+            'fullName' => $implementation['fullName'] . '_' . $children->name,
+            'implementation_id' => $res,
+            'name' => trim($children->name),
+            'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
             'description' => property_exists( $children, 'description') ? trim($children->description) : null,
             'dataType' => property_exists( $children, 'data_type') ? trim($children->data_type) : null,
             'recommendedRange' => property_exists( $children, 'recommended_range') ? trim($children->recommendedRange) : null
-			    ) 
-		    );
+          ) 
+        );
       }
     }
   }
-	return $res;
+  return $res;
 }
 
 function get_arff_features( $datasetUrl, $class = false ) {
-	$ci = &get_instance();
-	$eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
-	$res = array();
-	$code = 0;
-	$command = "java -jar $eval -f data_features -d $datasetUrl";
+  $ci = &get_instance();
+  $eval = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
+  $res = array();
+  $code = 0;
+  $command = "java -jar $eval -f data_features -d $datasetUrl";
   if($class != false)
     $command .= ' -c ' . $class;
   
-	$ci->Log->cmd( 'ARFF Feature Extractor', $command ); 
+  $ci->Log->cmd( 'ARFF Feature Extractor', $command ); 
 
-	if(function_enabled('exec') === false ) {
-		return false;
-	}
-	exec( $command, $res, $code );
+  if(function_enabled('exec') === false ) {
+    return false;
+  }
+  exec( CMD_PREFIX . $command, $res, $code );
   
   if( $code == 0 && is_array( $res ) ) {
     return json_decode( implode( "\n", $res ) );
@@ -205,37 +205,37 @@ function get_arff_features( $datasetUrl, $class = false ) {
 }
 
 function features_array_contains( $value, $array, $case_insensitive = false ) {
-	foreach( $array as $item ) {
-		if( $item->name == $value ) {
-			return true;
-		} elseif( $case_insensitive && strtolower($item->name) == strtolower($value) ) {
-			return true;
-		}
-	}
-	return false;
+  foreach( $array as $item ) {
+    if( $item->name == $value ) {
+      return true;
+    } elseif( $case_insensitive && strtolower($item->name) == strtolower($value) ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function insert_arff_features( $did, $features ) {
-	$ci = &get_instance();
-	foreach( $features as $f ) {
-		$feature_array = (array) $f;
-		$feature_array['did'] = $did;
-		$ci->Data_features->insert( $feature_array );
-	}
+  $ci = &get_instance();
+  foreach( $features as $f ) {
+    $feature_array = (array) $f;
+    $feature_array['did'] = $did;
+    $ci->Data_features->insert( $feature_array );
+  }
 }
 
 function insert_arff_qualities($did, $qualities) {
-	$ci = &get_instance();
-	foreach( $qualities as $q ) {
-		$quality = array( 'data' => $did, 'quality' => $q->name, 'value' => $q->value );
-		if( property_exists($q, 'label') ) {
+  $ci = &get_instance();
+  foreach( $qualities as $q ) {
+    $quality = array( 'data' => $did, 'quality' => $q->name, 'value' => $q->value );
+    if( property_exists($q, 'label') ) {
       $quality['label'] = $q->label;
     }
     
     if( $ci->Data_quality->getWhere( assoc_to_string( $quality, array('value') ) ) === false ) {
       $ci->Data_quality->insert( $quality );
     }
-	}
+  }
 }
 
 // @param: $filter: all entries of filter will NOT be used in result 

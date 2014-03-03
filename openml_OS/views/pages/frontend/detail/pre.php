@@ -125,7 +125,7 @@ if($this->record == false ) {
   $datasets = $this->Dataset->getColumnsWhere('`name`, `name` AS `id`,"dataset" AS `type`','`isOriginal` = "true"', '`name` ASC'); 
   $implementations = $this->Implementation->getColumns('`fullName` AS `name`,`fullName` AS `id`,"implementation" AS `type`','`fullName` ASC'); 
   $functions = $this->Math_function->getColumnsWhere('`name`, `name` AS `id`,"function" AS `type`','`functionType` = "EvaluationFunction"', '`name` ASC');
-  $tasks = $this->Task->getWithValues();
+  $tasks = $this->Task->getAllTasks();
   if($datasets == false ) $datasets = array();
   if($implementations == false ) $implementations = array();
   if($functions == false ) $functions = array();

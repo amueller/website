@@ -23,7 +23,10 @@ class Cron extends CI_Controller {
     $res = array();
     
     $this->Log->cmd( 'Build Search Index', $command ); 
-    exec($command,$res,$code);
+    if(function_enabled('exec') === false ) {
+      return false;
+    }
+    exec( CMD_PREFIX . $command,$res,$code);
     
     if( $code == 0 ) {
       $this->Log->cronjob( 'success', 'build_search_index', 'Created a new search index. Java response suppressed. ' );
