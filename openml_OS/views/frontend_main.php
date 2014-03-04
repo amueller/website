@@ -39,6 +39,8 @@
         <link rel="stylesheet" href="css/TableTools.css" type="text/css"/>
         <link rel="stylesheet" href="css/datatables.bootstrap.css" type="text/css"/>
         <link rel="stylesheet" href="css/MyFontsWebfontsKit.css">
+        <link rel="stylesheet" href="css/bootstrap-select.css">
+        <link rel="stylesheet" href="css/bootstrap-slider.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
@@ -53,59 +55,98 @@
         <script type="text/javascript" src="js/libs/dat.gui.min.js" ></script>
         <script type="text/javascript" src="js/libs/codemirror.js" ></script>
         <script type="text/javascript" src="js/libs/mysql.js" ></script>
-        <script type="text/javascript" src="js/libs/highcharts.js"></script>
+        <!-- <script type="text/javascript" src="js/libs/highcharts.js"></script> -->
+	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
         <script type="text/javascript" src="js/libs/modules/exporting.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.TableTools.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.bootstrap.js"></script>
         <script type="text/javascript" src="js/libs/jquery.form.js"></script>
         <script type="text/javascript" src="js/libs/jquery.sharrre.js"></script>
+        <script type="text/javascript" src="js/libs/bootstrap-select.js"></script>
+        <script type="text/javascript" src="js/libs/bootstrap-slider.js" ></script>
+        <script type="text/javascript" src="js/libs/rainbowvis.js"></script>
         <script type="text/javascript" src="js/openml.js"></script>
         <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
         <script type="text/javascript" src="<?php echo $j; ?>"></script>
-        <?php endforeach; endif; ?>     
+        <?php endforeach; endif; ?>
 
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>
     </head>
-    <body data-spy="scroll" data-target=".bs-docs-sidebar">
+    <body onresize="try{updateCanvasDimensions()}catch(err){}">
         <!--[if lt IE 7]>
         <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
         <![endif]-->
-        <div class="navbar navbar-default navbar-static-top">
+        <div class="navbar navbar-static-top" style="margin-bottom: 0px;">
             <div class="navbar-inner">
-                <div class="container">
-                    <a class="socialshare navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse" style="background:none">
-                     <i class="fa fa-bars fa-2x"></i>
-                    </a>
-                    <a class="nav pull-right socialshare" data-toggle="modal" href="#sociallinks">
+                    <a class="nav pull-right socialshare socialshareicon" id="popover2">
                      <i class="fa fa-share fa-2x"></i>
                     </a>
-                    <a class="nav pull-right openmlmenu">
+                    <a class="nav pull-right socialshare socialshareicon" id="popover">
                      <i class="fa fa-th fa-2x"></i>
                     </a>
 		    <script>
-			$('.openmlmenu').each(function() {
-			  var $this = $(this);
-			  $this.popover({
-			    trigger: 'hover',
-			    placement: 'bottom',
-			    html: true,
-			    content: $this.find('#sociallinks').html()  
-			  });
+			$(document).ready(function(){
+				$('#popover').popover({
+				    trigger: 'click',
+				    placement: 'bottom',
+				    html: true,
+				    container: 'body',
+				    animation: 'false',
+				    content: function() { return $('#openmllinks').html(); }
+				}); 
+				$('#popover2').popover({
+				    trigger: 'click',
+				    placement: 'bottom',
+				    html: true,
+				    container: 'body',
+				    animation: 'false',
+				    content: $('#sociallinks')
+				}); 
+				$('#popover').on('shown.bs.popover', function () {
+ 					 $('.popover').css('left','inherit')
+ 					 $('.popover').css('right','10px')
+ 					 $('.arrow').css('left','inherit')
+ 					 $('.arrow').css('right','55px')
+				})
+				$('#popover2').on('shown.bs.popover', function () {
+ 					 $('.popover').css('left','inherit')
+ 					 $('.popover').css('right','10px')
+ 					 $('.arrow').css('left','inherit')
+ 					 $('.arrow').css('right','10px')
+					 $('#sociallinks').css('display','block')
+				})
+				$('#popover2').on('hide.bs.popover', function () {
+					 $('body').append($('#sociallinks'))
+					 $('#sociallinks').css('display','none')
+				})
 			});
-		    </script>
-                    <a class="navbar-brand" href="" style="float:left">OpenML</a>
-                    <div class="navbar-collapse collapse navbar-responsive-collapse" style="width:900px">
-                        <ul class="nav navbar-nav">
-                            <li <?php if($this->active=='search') echo 'class="active"'; ?>><a href="search">Search</a></li>
-                            <li <?php if($this->active=='share') echo 'class="active"'; ?>><a href="share">Share</a></li>
-                            <li <?php if($this->active=='plugins') echo 'class="active"'; ?>><a href="plugins">Plugins</a></li>
-                            <li <?php if($this->active=='developers') echo 'class="active"'; ?>><a href="developers">Developers</a></li>
-                            <li <?php if($this->active=='community') echo 'class="active"'; ?>><a href="community">Community</a></li>
-                            <li class="dropdown <?php if($this->active=='profile') echo 'active'; ?>" id="menu1" >
+			$(document).click(function (e) {
+			    $('#popover').each(function () {
+				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+				    if ($(this).data('bs.popover').tip().hasClass('in')) {
+					$(this).popover('toggle');
+				    }
+				    return;
+				}
+			    });
+			    $('#popover2').each(function () {
+				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+				    if ($(this).data('bs.popover').tip().hasClass('in')) {
+					$(this).popover('toggle');
+				    }
+				    return;
+				}
+			    });
+			});	
+		   </script>
+
+                    <!-- <a class="brand" href="" style="float:left">OpenML</a> -->
+                    <div class="socialshare">
+                        <div class="dropdown <?php if($this->active=='profile') echo 'active'; ?>" id="menu1" >
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="<?php echo $_SERVER['REQUEST_URI'];?>#menu1">
-                                <i class="fa fa-user"></i><span class="userprofile"><?php if ($this->ion_auth->logged_in()) echo user_display_text(); else echo 'Sign in' ?></span>
+                                <span class="userprofile"><?php if ($this->ion_auth->logged_in()) echo user_display_text(); else echo 'Sign in' ?></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <?php if (!$this->ion_auth->logged_in()): ?>
@@ -121,31 +162,38 @@
                                     <li><a href="frontend/logout">Sign off</a></li>
                                     <?php endif; ?>
                                 </ul>
-                            </li>
-                        </ul>
+                        </div>
                     </div>
                     <!--/.nav-collapse -->
-                </div>
             </div>
         </div>
-	<div class="modal fade" id="sociallinks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-body">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="openmllinks">
+	  <div class="iconrow">
+	  <a href="datasets"><div class="iconcell icongreen"><i class="fa fa-table fa-3x"></i><br><span>datasets</span></div></a>
+	  <a href="code"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>code</span></div></a>
+	  <a href="tasks"><div class="iconcell iconyellow"><i class="fa fa-check-square-o fa-3x"></i><br><span>tasks</span></div></a>
+	  <a href="results"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>results</span></div></a>
+	  </div><div class="iconrow">
+	  <a href="plugins"><div class="iconcell icongray"><i class="fa fa-flash fa-3x"></i><br><span>plugins</span></div></a>
+	  <a href="developers"><div class="iconcell icongray"><i class="fa fa-users fa-3x"></i><br><span>community</span></div></a>
+	  <a href="community"><div class="iconcell icongray"><i class="fa fa-comments fa-3x"></i><br><span>forum</span></div></a>
+	  <a href="about"><div class="iconcell icongray"><i class="fa fa-heart fa-3x"></i><br><span>about</span></div></a>
+	  </div>
+	</div>
+	<div id="sociallinks">
 		<div class="socialcontainer">
-		<div class="sharetitle">Share</div>
+		<div class="sharetitle">Spread the word</div>
 		<div id="social-bar">
 		  <div id="twitter" data-url="http://openml.org" data-text="Check out #OpenML at openml.org" data-title="twitter"></div>
 		  <div id="facebook" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="facebook"></div>
 		  <div id="googleplus" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="google-plus"></div>
 		  <div id="linkedin" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="linkedin"></div>
-		  <div id="pinterest" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="pinterest"></div>
+		  <!--<div id="pinterest" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="pinterest"></div>-->
+        	  <script type="text/javascript" src="js/share.js"></script>
 		</div>
-		  <script type="text/javascript" src="js/share.js"></script>
 		</div>
 		<div class="socialcontainer">
-		<div class="sharetitle">Follow</div>
+		<div class="sharetitle">Follow us</div>
 		<div id="social-bar">
                 <a href="https://twitter.com/open_ml">
                     <i class="fa fa-twitter"></i>
@@ -162,9 +210,7 @@
             	</div>
 		</div>
               </div>
-	    </div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+	</div><!-- /.sociallinks -->
         <script>
             $(document).ready(function(){ 
             	$("#loginForm").validate({ }); 
@@ -187,30 +233,45 @@
             <?php endif; ?>
             <?php echo body(); ?>
         </div>
-        <hr class="softennarrow" style="margin: 10px 0 0 0">
-        <div class="navbar navbar-default navbar-bottom openmlfooter">
-            <div class="navbar-inner">
-                <div class="container">
-                    <ul class="nav navbar-nav pull-left visible-lg">
-                        <li><a href="http://dtai.cs.kuleuven.be" target="_blank"><img src="img/logo_kuleuven.png" alt="kuleuven" /></a></li>
-                        <li><a href="http://datamining.liacs.nl" target="_blank"><img src="img/logo_uleiden.png" alt="uleiden" /></a></li>
-                        <li><a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank"><img src="img/logo_tue.gif" alt="tue" /></a></li>
-                    </ul>
-                    <ul class="nav navbar-nav pull-right visible-lg">
-                        <li><a href="http://www.nwo.nl/" target="_blank"><img src="img/partners/nwo.png" alt="nwo" /></a></li>
-                        <li><a href="http://www.pascal-network.org/" target="_blank"><img src="img/partners/PASCAL2.png" alt="pascal2" /></a></li>
-                    </ul>
-                    <ul class="nav openml-contact">
+	<div class="openmlfooter">
+		<div class="row">
+
+		  <div class="col-xs-12 col-sm-6 col-md-6 pull-right-lg">
+                    <ul class="openml-contact">
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
                         <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
-                        <li><a href="community"><i class="fa fa-comments-o fa-2x"></i><br />discuss</a></li>
+			<li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-2x"></i><br />comment</a></li>
+                        <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-2x"></i><br />comment</a></li>
+                        <li><a href="community"><i class="fa fa-comments-o fa-2x"></i><br />forum</a></li>
+			<li><a href="https://github.com/openml/OpenML/issues?state=open" target="_blank"><i class="fa fa-github fa-2x"></i><br />issues</a></li>
                     </ul>
-                </div>
-            </div>
-        </div>
+		  </div>
+
+		  <div class="col-xs-6 col-sm-3 col-md-2 pull-left-lg">
+                    <ul class="openml-footer">
+                        <li>Hosted by</li>
+                        <li><a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a></li>
+                        <li><a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
+                        <li><a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">Eindhoven University of Technology</a></li>
+                    </ul>
+		  </div>
+
+		  <div class="col-xs-6 col-sm-3 col-md-2 pull-left-lg">
+                    <ul class="openml-footer">
+ 			<li>Funded by</li>
+                        <li><a href="http://www.nwo.nl/" target="_blank">NWO</a></li>
+                        <li><a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
+                    </ul>
+     	    	  </div>
+
+		</div>
+
+
+	</div>
         <script src="js/libs/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/application.js"></script>
+	<script type="text/javascript">$('.tip').tooltip();</script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

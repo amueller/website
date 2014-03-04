@@ -330,92 +330,6 @@ border: 1px solid #AFAFAF;
 border-radius: 10px;
 }
 
-.openmlfooter{
-margin-bottom:-5px;
-}
-
-.openmlfooter img {
-height:45px;
-padding: 7px;
-opacity:0.6;
-    filter: grayscale(100%); /* Current draft standard */
-    -webkit-filter: grayscale(100%); /* New WebKit */
-    -moz-filter: grayscale(100%);
-    -ms-filter: grayscale(100%); 
-    -o-filter: grayscale(100%); /* Not yet supported in Gecko, Opera or IE */ 
-    /* filter: url(resources.svg#desaturate); Gecko !Commented out, firefox doesn't like it!!!*/
-    filter: gray; /* IE */
-    -webkit-filter: grayscale(1); /* Old WebKit */
-}
-
-.openmlfooter a {
-padding: 0px !important;
-}
-
-.openml-contact{
-  display: block;
-  margin-right: auto;
-  margin-left: auto;
-  text-align: center;}
-
-.openml-contact li{
-  display: inline-block;
-  padding: 7px;
-}
-
-.openml-contact a{
-  text-decoration: none;
-  color: #666;
-  font-size: 11px;
-
-}
-
-.openml-contact a:hover{
-  text-decoration: none;
-  color: #333;
-}
-
-/* Tweak navbar brand link to be super sleek
--------------------------------------------------- */
-
-.navbar {
-  font-size: 13px;
-}
-
-/* Change the docs' brand */
-.navbar .brand {
-  padding-right: 0;
-  padding-left: 0;
-  margin-left: 10px;
-  margin-right: 10px;
-  float: left;
-  color: #000;
-  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.125);
-  -webkit-transition: all .2s linear;
-     -moz-transition: all .2s linear;
-          transition: all .2s linear;
-}
-.socialshare {
-  margin-left: 0px;
-  padding-right: 10px;
-  padding-top: 10px;
-  float: right;
-  color: #aeaeae;
-  text-decoration: none;
-  border: none;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
-.socialshare .bs-icon2 {
-  opacity: .6;
-}
-
-.navbar .brand:hover {
-  text-decoration: none;
-  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.4);
-}
-
 
 /* Sections
 -------------------------------------------------- */
@@ -1199,6 +1113,19 @@ form.bs-docs-example {
     position: absolute;
   }
 
+  .pull-left-lg{
+    float: left !important;
+  }
+  .pull-right-lg{
+    float: right !important;
+  }
+  .openml-contact {
+    float: right;
+  }
+
+
+
+
 }
 
 
@@ -1224,6 +1151,20 @@ form.bs-docs-example {
     margin-top: 0;
     margin-bottom: 0;
   }
+
+  .pull-left-lg{
+    float: left !important;
+  }
+  .pull-right-lg{
+    float: right !important;
+  }  
+  .openml-contact {
+    float: right;
+  }
+
+
+
+
 }
 @media screen and (min-width: 1200px) {
   /* Widen the fixed sidebar again */
@@ -1266,8 +1207,13 @@ form.bs-docs-example {
     margin-right: -20px;
     margin-left: -20px;
   }
-}
 
+  .pull-left-lg{
+    float: left !important;
+  }
+  .pull-right-lg{
+    float: right !important;
+  }
 /* Tablet
 ------------------------- */
 @media (max-width: 767px) {
@@ -1278,6 +1224,14 @@ form.bs-docs-example {
   .social{
     margin-right: 20px;
     margin-left: -20px;
+  }
+
+  .pull-left-lg{
+    float: left !important;
+  }
+
+  .pull-right-lg{
+    float: left !important;
   }
 
   .carousel-control{
@@ -1343,6 +1297,11 @@ form.bs-docs-example {
   .footer p {
     margin-bottom: 9px;
   }
+  .resultoption{
+    display: block;
+  }
+
+
 }
 /* Landscape phones
 ------------------------- */
@@ -1350,6 +1309,16 @@ form.bs-docs-example {
   /* Remove padding above jumbotron */
   body {
   }
+
+  .pull-left-lg{
+    float: left !important;
+  }
+
+  .pull-right-lg{
+    float: left !important;
+  }
+
+
 
   .bs-docs-sidenav2.affix-top{
     width:100%;

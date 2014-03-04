@@ -63,6 +63,9 @@ $frontend_pages = array(
 					'profile_activate',
 					'register',
 					'search',
+					'd',
+					'f',
+					'runs',
 					'share',
 					'tour');
 

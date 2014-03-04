@@ -3,8 +3,7 @@ $('#twitter').sharrre({
     twitter: true
   },
   enableHover: false,
-  enableTracking: true,
-  buttons: { twitter: {via: 'joavanschoren'}},
+  enableTracking: false,
   click: function(api, options){
     api.simulateClick();
     api.openPopup('twitter');
@@ -15,7 +14,7 @@ $('#facebook').sharrre({
     facebook: true
   },
   enableHover: false,
-  enableTracking: true,
+  enableTracking: false,
   click: function(api, options){
     api.simulateClick();
     api.openPopup('facebook');
@@ -26,7 +25,7 @@ $('#linkedin').sharrre({
     linkedin: true
   },
   enableHover: false,
-  enableTracking: true,
+  enableTracking: false,
   click: function(api, options){
     api.simulateClick();
     api.openPopup('linkedin');
@@ -37,7 +36,7 @@ $('#pinterest').sharrre({
     pinterest: true
   },
   enableHover: false,
-  enableTracking: true,
+  enableTracking: false,
   click: function(api, options){
     api.simulateClick();
     api.openPopup('pinterest');
@@ -50,10 +49,9 @@ $('#googleplus').sharrre({
   },
   urlCurl: 'javascript/page/share',
   enableHover: false,
-  enableTracking: true,
+  enableTracking: false,
   click: function(api, options){
     api.simulateClick();
     api.openPopup('googlePlus');
   }
 });
-

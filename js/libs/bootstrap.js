@@ -1387,6 +1387,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
         /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width   }
   }
 
+
   Tooltip.prototype.getTitle = function () {
     var title
     var $e = this.$element

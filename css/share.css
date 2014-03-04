@@ -1,3 +1,44 @@
+/* Change the docs' brand */
+.brand {
+   position: relative;
+   width: 40px;
+   font-family: 'Roboto', sans-serif;
+   font-weight: 100;
+   color: #333;
+   font-size: 25px;
+   padding-bottom: 10px;
+   padding-top: 5px;
+   padding-left: 5px;
+   text-decoration: none;
+}
+
+.brand:hover {   
+   color: #333;   
+   text-decoration: none;
+}
+
+.socialshare {
+  margin-left: 0px;
+  padding-left: 5px;
+  padding-right: 15px;
+  padding-top: 14px;
+  float: right;
+  color: #aeaeae;
+  text-decoration: none;
+  border: none;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.socialshareicon {
+  padding-top: 10px;
+}
+
+
+.socialshare .bs-icon2 {
+  opacity: .6;
+}
+
   .sharrre{
     float:left;
     margin-right: 20px;
@@ -15,14 +56,17 @@
 
 #social-bar {
     height: 80px;
+    width: 260px;
+    clear: both;
+    padding-top: 7px;
 }
 
 #social-bar .fa {
     color: white;
     border-radius: 25px;
-    font-size:30px;
-    min-width: 50px;
-    line-height: 50px;
+    font-size:25px;
+    min-width: 45px;
+    line-height: 45px;
     text-align: center;
 }
 
@@ -94,11 +138,82 @@
 
 .sharetitle {
    position: relative;
-   width: 40px;
+   width: 200px;
    font-family: 'Roboto', sans-serif;
    font-weight: 100;
    color: #333;
-   font-size: 45px;
+   font-size: 25px;
    padding-bottom: 10px;
 }
 
+#openmllinks {
+   display: none;
+}
+
+#sociallinks {
+   display: none;
+}
+
+
+.iconrow a {
+    margin-right: 15px;
+    text-decoration: none;
+    float: left;
+}
+
+.iconrow a span {
+    color: #666666;
+}
+
+
+.iconcell{
+    width: 60px;
+    text-align:center;
+    margin-bottom: 15px;
+}
+
+.iconcell .fa{
+    padding-bottom: 5px;
+}
+
+
+.iconrow a:hover {
+    margin-right: 15px;
+    text-decoration: none;
+}
+
+
+.iconrow a:first-child {
+    padding-left: 0;
+}
+
+.iconrow{
+   width: 300px;
+   clear: both;
+   padding-top: 7px;
+}
+
+.popover {
+  max-width: 314px;
+}
+
+
+.icongreen {
+  color: #5cb85c;
+}
+
+.iconblue {
+  color: #428bca;
+}
+
+.iconyellow {
+  color: #f0ad4e;
+}
+
+.iconred {
+  color: #d9534f;
+}
+
+.icongray {
+  color: #854AB8;
+}

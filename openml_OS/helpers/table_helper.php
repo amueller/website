@@ -25,6 +25,25 @@ function generate_table( $keys, $data = false, $nullrecord = false ) {
 	return $string;
 }
 
+function generate_headless_table( $keys, $data = false, $nullrecord = false ) {
+        $string = "<tbody>\n";
+	if( $data != false ) {
+		foreach( $data as $d ) {
+			$string .= "<tr>";
+			foreach( $keys as $key => $value ) {
+				$string .= "<td>" . $d->{$key} . $d->{$value} . "</td>";
+			}
+			$string .= "</tr>\n";
+		}
+		$string .= "</tbody></table>\n";
+	} elseif( $nullrecord == true ) {
+		$string .= "<tbody><tr>\n";
+		$string .= '<td colspan="'.count($keys).'">Loading ... </td>';
+		$string .= "</tr>\n</tbody>\n";
+	}
+	return $string;
+}
+
 function generate_table_one_record( $keys, $data = false ) {
 	$string = "<thead>\n<tr><th>Name</th>\n<th>Value</th>\n</tr>\n</thead>\n";
 	

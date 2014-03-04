@@ -508,7 +508,7 @@
     }
     else{ //template by defaults
       $(this.element).html(
-		    '<a href="#"><i class="fa fa-'+this.options.title+'"></i><br><div class="count">' + total + '</div></a>'
+		    '<a class="share" href="#"><i class="fa fa-'+this.options.title+'"></i><br><div class="count">' + total + '</div></a>'
 		  );
 }
 };

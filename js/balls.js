@@ -22,9 +22,6 @@ $(function() {
 		
 		pointCollection = new PointCollection();
 		pointCollection.points = g;
-		
-		initEventListeners();
-		timeout();
 	};
 	
 	function initEventListeners() {
@@ -42,7 +39,7 @@ $(function() {
 	
 	function updateCanvasDimensions() {
 		canvas.attr({height: $(window).height(), width: $(window).width()});
-		canvasWidth = canvas.width();
+		canvasWidth = window.innerWidth;
 		canvasHeight = canvas.height();
 
 		draw();
@@ -132,9 +129,9 @@ $(function() {
 				var dd = (dx * dx) + (dy * dy);
 				var d = Math.sqrt(dd);
 				
-				if (d < 75) {
-					point.targetPos.x = (this.mousePos.x < point.curPos.x) ? point.curPos.x - dx : point.curPos.x - dx;
-					point.targetPos.y = (this.mousePos.y < point.curPos.y) ? point.curPos.y - dy : point.curPos.y - dy;
+				if (d < 50) {
+					point.targetPos.x = (this.mousePos.x < point.curPos.x) ? point.curPos.x - dx*5 : point.curPos.x - dx*5;
+					point.targetPos.y = (this.mousePos.y < point.curPos.y) ? point.curPos.y - dy*5 : point.curPos.y - dy*5;
 				} else {
 					point.targetPos.x = point.originalPos.x;
 					point.targetPos.y = point.originalPos.y;
@@ -206,4 +203,12 @@ $(function() {
 	};
 	
 	init();
+	initEventListeners();
+	timeout();
+
+
+$(window).resize(function(e) {
+        init();
 });
+});
+

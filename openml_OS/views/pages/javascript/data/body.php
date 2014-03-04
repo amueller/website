@@ -3,11 +3,11 @@ function expdbDatasets() {
 }
 
 function expdbDatasetVersion() {
-	return <?php echo array_to_js_array( $this->datasetVesion ); ?>;
+	return <?php echo array_to_js_array( $this->datasetVersion ); ?>;
 }
 
 function expdbDatasetVersionOriginal() {
-	return <?php echo array_to_js_array( $this->datasetVesionOriginal ); ?>;
+	return <?php echo array_to_js_array( $this->datasetVersionOriginal ); ?>;
 }
 
 function expdbDatasetIDs() {
