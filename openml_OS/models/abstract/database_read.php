@@ -76,12 +76,13 @@ class Database_read extends CI_Model {
 	}
 	
 	function getAssociativeArray( $key, $value, $where, $orderby = null ) {
+    $this->db->select( $key . ' AS `key`, ' . $value . ' AS `value`', false );
 		$data = $this->getWhere( $where, $orderby );
 		if($data === false) return false;
 		
 		$res = array();
 		foreach( $data as $item ) {
-			$res[$item->{$key}] = $item->{$value};
+			$res[$item->{'key'}] = $item->{'value'};
 		}
 		return $res;
 	}

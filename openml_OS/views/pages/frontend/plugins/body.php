@@ -20,7 +20,8 @@
   <li><a href="#weka">WEKA</a>
   <ul class="nav">
     <li><a href="#weka-plugin">Download Plugin</a></li>
-    <li><a href="#weka-start">Quick Start</a></li>
+    <li><a href="#weka-start-exp">Quick Start</a></li>
+    <li><a href="#weka-start-cli">Quick Start CLI</a></li>
   </ul>
   </li>
 
@@ -52,15 +53,15 @@
      <div class="page-header">
             <h2 id="weka">WEKA</h2>
           </div>
-	  	  <h3 id="weka-plugin">Download Plugin</h3>
-		  Weka (Waikato Environment for Knowledge Analysis) has a component called the WEKA Experimenter to run large amounts of experiments. 
-		  OpenML can be used right from the WEKA Experimenter by selecting it as the result destination. The current beta integration is available as a seperate WEKA version which can be downloaded here:<br/>
+	  	  <h3 id="weka-plugin">Download Plugin (Last major update: 07-02-2014)</h3> 
+		  OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Experimenter and the Command Line Interface. 
+      The current beta integration is available as a stand alone WEKA version which can be downloaded here:<br/>
 		  <br/>
 		  <a href="downloads/OpenWeka.beta.jar"><button class="btn btn-large btn-primary" type="button">Download Weka OpenML</button></a>
 		  <br/><br/>
 		  <img src="img/partners/Weka_logo.png" /><br/>
 
-			<h3 id="weka-start">Quick Start</h3>
+			<h3 id="weka-start-exp">Quick Start Experimenter</h3>
 			<div>
 			Open WEKA allows you to run OpenML Tasks in the Weka Experimenter. You can solve OpenML tasks locally and/or automatically upload your experiments to OpenML.
 			<ol>
@@ -77,16 +78,27 @@
 				<li>In your browser, log in to OpenML.org. Click on your name and choose 'My runs' to see a list of all submitted runs. They can now be queried together with all OpenML results. More overviews of your personal experiments will be added soon.</li>
 			</ol> 
 			</div>
+      
+      <h3 id="weka-start-cli">Quick Start CommandLine interface</h3>
+      The Command Line interface is useful for running experiments automatically on a server, without the possibility of invoking a GUI.
+      <ol>
+        <li>Make sure a recent version of JRE is installed (version 1.6 or higher).</li>
+        <li>Open a console and browse to the same directory as the Weka JAR. </li>
+        <li>Create a config file called <code>openml.conf</code>. This config file should be in the same directory as the Weka jar. </li>
+        <li>This config file should contain two lines: Line 1 contains a string in the format username = &lt;Your username&gt;. Line 2 contains a string in the format password = &lt;Your password&gt;</li>
+        <li>Execute the following command: <pre>java -cp OpenWeka.beta.jar openml.experiment.TaskBasedExperiment -T &lt;task_id&gt; -C &lt;classifier_classpath&gt; -- &lt;parameter_settings&gt;</pre></li>
+        <li>For example, the following command will run Weka's J48 algorithm on Task 1: <pre>java -cp OpenWeka.beta.jar openml.experiment.TaskBasedExperiment -T 1 -C weka.classifiers.trees.J48</pre> </li>
+        <li>The following suffix will set some parameters of this classifier: <pre>-- -C 0.25 -M 2</pre></li>      
+      </ol>
 			
-		  <span class="label label-warning">Warning</span> Please note that this is a beta version, which is under (very) active development. Please report any bugs that you may encounter to <a href="mailto:jvrijn@liacs.nl">jvrijn@liacs.nl</a>. Whenever a result is uploaded, it can only be inspected by a query on the Web interface. At the moment, we are integrating this into our Weka package. Not all algorithms have been integrated yet, we are also working on this. A new major release is planned on June 14th, 2013.
-	</div>
+		  Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:jvrijn@liacs.nl">jvrijn@liacs.nl</a>. </div>
 
   <div class="bs-docs-section">
           <div class="page-header">
             <h2 id="r">R</h2>
           </div>
 	<h3 id="r-plugin">Download Plugin</h3>
-	Several R packages for running machine learning experiments have OpenML support. They are currently <a href="https://github.com/joaquinvanschoren/OpenML"> under development</a>.
+	Several R packages for running machine learning experiments have OpenML support. They are currently <a href="https://github.com/openml/r"> under development</a>.
 	<h3 id="r-start">Quick Start</h3>
 	Stay tuned.
 

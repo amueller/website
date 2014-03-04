@@ -1,24 +1,24 @@
 <?php
 
 function check_uploaded_file( $file, $image_restriction = false, &$message = NULL ) {
-	if( $file == false ) {
+  if( $file == false ) {
     $message = 'File meta-info is missing. ';
-		return false;
-	} else if( is_array($file) == false ) {
+    return false;
+  } else if( is_array($file) == false ) {
     $message = 'File meta-info is no array. ';
-		return false;
-	} else if( $file['error'] > 0 ) { // php error generated
+    return false;
+  } else if( $file['error'] > 0 ) { // php error generated
     $message = 'Upload Error ' . $file['error'] . ': ' . upload_error_message( $file['error'] );
-		return false;
-	} else if( ! file_exists( $file['tmp_name'] ) ) { // file doesn't exist
+    return false;
+  } else if( ! file_exists( $file['tmp_name'] ) ) { // file doesn't exist
     $message = 'File not present at expected location. ';
-		return false;
-	} else if( $image_restriction && substr( $file['type'], 0, 5 ) != 'image' ) {
+    return false;
+  } else if( $image_restriction && substr( $file['type'], 0, 5 ) != 'image' ) {
     $message = 'File should be an image; MIME-type does not confirm this. ';
-		return false;
-	}
-	
-	return true;
+    return false;
+  }
+  
+  return true;
 }
 
 function upload_error_message( $code ) {
@@ -36,76 +36,76 @@ function upload_error_message( $code ) {
 }
 
 function getAvailableName( $folder, $name ) {
-	$name = explode( '.', $name );
-	if( count( $name ) > 1 ) {
-		$extension = end( $name );
-		unset( $name[count($name)-1] );
-	} else { $extension = 'arff'; }
-	
-	$name = implode( '.', $name );
-	
-	$newName = $name . '.' . $extension;
-	for( $i = 1; file_exists( $folder . $newName ); $i++ ) {
-		$newName = $name . '_' . $i . '.' . $extension;
-	}
-	return $newName;
+  $name = explode( '.', $name );
+  if( count( $name ) > 1 ) {
+    $extension = end( $name );
+    unset( $name[count($name)-1] );
+  } else { $extension = 'arff'; }
+  
+  $name = implode( '.', $name );
+  
+  $newName = $name . '.' . $extension;
+  for( $i = 1; file_exists( $folder . $newName ); $i++ ) {
+    $newName = $name . '_' . $i . '.' . $extension;
+  }
+  return $newName;
 }
 
 function subdirectory($needle,$haystack) {
-	$dirs = explode('/',$haystack);
-	$found = false;
-	$result = '';
-	foreach($dirs as $d) {
-		if($found == true) {
-			$result .= '/' . $d;
-		} elseif($d == $needle) {
-			$found = true;
-		}
-	}
-	if(!$found) return false;
-	else return substr($result,1);
+  $dirs = explode('/',$haystack);
+  $found = false;
+  $result = '';
+  foreach($dirs as $d) {
+    if($found == true) {
+      $result .= '/' . $d;
+    } elseif($d == $needle) {
+      $found = true;
+    }
+  }
+  if(!$found) return false;
+  else return substr($result,1);
 }
 
 function resize_image_squared( $image_path, $target_width ) {
-	scale_image( $image_path, $target_width, $target_width ); // target_width suffices. squared image.	
-	list($width,$height) = getimagesize( $image_path );
-	crop_image( $image_path, min( $width, $height ), min( $width, $height ) );
+  scale_image( $image_path, $target_width, $target_width ); // target_width suffices. squared image.  
+  list($width,$height) = getimagesize( $image_path );
+  crop_image( $image_path, min( $width, $height ), min( $width, $height ) );
 }
 
 function scale_image( $image_path, $target_width, $target_height ) {
-	$ci = &get_instance();
-	
-	$config['source_image'] = $image_path;
-	$config['image_library'] = 'gd2';
-	$config['quality'] = '100%';
-	$config['create_thumb'] = false;
-	$config['maintain_ratio'] = true;
-	$config['width'] = $target_width;
-	$config['height'] = $target_height;
-	
-	$ci->load->library('image_lib');
-	$ci->image_lib->initialize($config);
-	$ci->image_lib->resize();
-	$ci->image_lib->clear();
+  $ci = &get_instance();
+  
+  $config['source_image'] = $image_path;
+  $config['image_library'] = 'gd2';
+  $config['quality'] = '100%';
+  $config['create_thumb'] = false;
+  $config['maintain_ratio'] = true;
+  $config['width'] = $target_width;
+  $config['height'] = $target_height;
+  
+  $ci->load->library('image_lib');
+  $ci->image_lib->initialize($config);
+  $ci->image_lib->resize();
+  $ci->image_lib->clear();
 }
 
 function crop_image( $image_path, $target_width, $target_height ) {
-	$ci = &get_instance();
-	list($width,$height) = getimagesize( $image_path );
-	$config['source_image'] = $image_path;
-	$config['image_library'] = 'gd2';
-	$config['quality'] = '100%';
-	$config['create_thumb'] = false;
-	$config['maintain_ratio'] = false;
-	$config['width'] = $target_width;
-	$config['height'] = $target_height;
-	$config['x_axis'] = (int) ($width < $height ? 0 : ($width - $height) / 2);
-	$config['y_axis'] = (int) ($height < $width ? 0 : ($height - $width) / 2);
-	
-	$ci->load->library('image_lib');
-	$ci->image_lib->initialize($config);
-	$ci->image_lib->crop();
-	$ci->image_lib->clear();
+  $ci = &get_instance();
+  list($width,$height) = getimagesize( $image_path );
+  $config['source_image'] = $image_path;
+  $config['image_library'] = 'gd2';
+  $config['quality'] = '100%';
+  $config['create_thumb'] = false;
+  $config['maintain_ratio'] = false;
+  $config['width'] = $target_width;
+  $config['height'] = $target_height;
+  $config['x_axis'] = (int) ($width < $height ? 0 : ($width - $height) / 2);
+  $config['y_axis'] = (int) ($height < $width ? 0 : ($height - $width) / 2);
+  
+  $ci->load->library('image_lib');
+  $ci->image_lib->initialize($config);
+  $ci->image_lib->crop();
+  $ci->image_lib->clear();
 }
 
 /**
@@ -117,8 +117,19 @@ function create_dir( $directory ) {
   $creation_mode = $ci->config->item('content_directories_mode');
   
   if(! file_exists( $directory ) ) {
-    if( $creation_rights ) {        
-      $res = mkdir( $directory, $creation_mode, true );
+    if( $creation_rights ) {
+      $res = true;
+      $all_dirs = explode( '/', $directory );
+      $total_path = '';
+      foreach( $all_dirs as $dir ) {
+        if( $dir != '' ) {
+          $total_path .= $dir . '/';
+          if(! file_exists( $total_path ) ) {
+            $res = $res && mkdir( $total_path, $creation_mode );
+          }
+        }
+      }
+      
       if($res) {
         return true;
       } else {

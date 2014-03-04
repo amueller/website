@@ -1,156 +1,220 @@
 <?php
 class Task extends Database_write {
-	
-	private $base_sql = 
-			'SELECT `task`.`task_id`,
-			`task`.`task_id` AS `id`, 
-			`task`.`ttid`, 
-			`input_data`.`value` AS `did`, 
-			`target`.`value` AS `target_feature`, 
-			`type`.`value` AS `type`, 
-			`splits_url`.`value` AS `splits_url`, 
-			`repeats`.`value` AS `repeats`, 
-			`folds`.`value` AS `folds`,
-			`percentage`.`value` AS `percentage`,
-			`stratified`.`value` AS `stratified_sampling`,
-			`evaluation_measure`.`value` AS `evaluation_measure`,
-			`dataset`.`default_target_attribute` AS `dta`,
-			CONCAT("Task ", `task`.`task_id`, ": ", `dataset`.`name`, " - ", `task_type`.`name`) AS `name`
-			FROM `task`, 
-			`task_type`,
-			`task_values` AS `input_data`, 
-			`task_values` AS `target`, 
-			`task_values` AS `type`, 
-			`task_values` AS `splits_url`, 
-			`task_values` AS `repeats`, 
-			`task_values` AS `folds`,
-			`task_values` AS `percentage`,
-			`task_values` AS `stratified`,
-			`task_values` AS `evaluation_measure`,
-			`dataset`
-			WHERE  `task`.`ttid` = `task_type`.`ttid` 
-			AND `task`.`task_id` = `input_data`.`task_id` 
-			AND `task`.`task_id` = `target`.`task_id` 
-			AND `task`.`task_id` = `splits_url`.`task_id` 
-			AND `task`.`task_id` = `type`.`task_id` 
-			AND `task`.`task_id` = `repeats`.`task_id` 
-			AND `task`.`task_id` = `folds`.`task_id` 
-			AND `task`.`task_id` = `percentage`.`task_id` 
-			AND `task`.`task_id` = `stratified`.`task_id` 
-			AND `task`.`task_id` = `evaluation_measure`.`task_id` 
-			AND `dataset`.`did` = `input_data`.`value` 
-			AND `input_data`.`input` = 1 
-			AND `target`.`input` = 2 
-			AND `type`.`input` = 3 
-			AND `splits_url`.`input` = 4 
-			AND `repeats`.`input` = 5 
-			AND `folds`.`input` = 6 
-			AND `percentage`.`input` = 7 
-			AND `stratified`.`input` = 8 
-			AND `evaluation_measure`.`input` = 9 ';
-	
-	function __construct() {
-		parent::__construct();
-		$this->table = 'task';
-		$this->id_column = 'task_id';
-		
-		$this->load->model('Task_type_function');
-		$this->load->model('Estimation_procedure');
-    }
-
-	function getWithValues() {
-		return $this->query( $this->base_sql );
-	}
-	
-	function getByIdWithValues( $id ) {
-		if(is_numeric($id) === false)
-			return false;
-    $task = $this->query( $this->base_sql . ' AND `task`.`task_id` = ' . $id );
+  
+  // An config array configuring all tasks types. The key is the task type id (counting 
+  // from 1) and the value is an array with key value pairs of all important information
+  // for task search. Note that not necessarily all fields are included. E.g., nr_of_samples
+  // (learning curves) is implicit information, hence it is not used for searching. 
+  private $sql_configuration = array(
+    0 => array( 1 => 'did' ), // UNIFORM KEY TO OBTAIN ALL TASSKS
+    1 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' ),
+    2 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' ),
+    3 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 5 => 'repeats', 6 => 'folds', 7 => 'percentage', 8 => 'stratified_sampling', 9 => 'evaluation_measure' ),
+    4 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'evaluation_measure' )
+  );
+  private $sql_configuration_evaluation = array(
+    0 => array(),
+    1 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds' ),
+    2 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds' ),
+    3 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type', 4 => 'splits_url', 5 => 'repeats', 6 => 'folds' ),
+    4 => array( 1 => 'did', 2 => 'target_feature', 3 => 'type' )
+  );
+  
+  
+  function __construct() {
+    parent::__construct();
+    $this->table = 'task';
+    $this->id_column = 'task_id';
+    
+    $this->load->model('Task_type_function');
+    $this->load->model('Estimation_procedure');
+  }
+  
+  function getAllTasks() {
+    return $this->query( $this->construct_sql( 0 ) . ' ORDER BY `task_id`' );
+  }
+  
+  function getByIdWithValues( $id ) {
+    if(is_numeric($id) === false)
+      return false;
+    $record = $this->Task->getById( $id );
+    $ttid = $record->ttid;
+    $task = $this->query( $this->construct_sql( $ttid ) . ' AND `task`.`task_id` = ' . $id );
     if($task)
       return end($task);
     else
       return false;
-	}
-	
-	// task_type = 1, 2
-	function getSupervisedClassificationRegression( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $create ) {
-		$constr_estimation_procesure = ' AND ' . $this->Estimation_procedure->sql_constraints( $estimation_procedure_id, $task_type, 
-			array('`type`.`value`','`repeats`.`value`','`folds`.`value`','`percentage`.`value`','`stratified_sampling`.`value`') );
-		$constr_task_type = 'AND `task`.`ttid` = "'.$task_type.'" ';
-		$constr_target = 'AND `target`.`value` = ' . ( $target ? '"'.safe($target).'" ' : '`dataset`.`default_target_attribute` ');
-		$constr_dataset = (!$dataset_ids ? '' : 'AND `input_data`.`value` IN ('.implode(',',$dataset_ids).') ');
-		$constr_eval_measures = 'AND `evaluation_measure`.`value` = "'.safe($evaluation_measure).'" ';
-		
-		if( in_array($task_type,array(1,2)) === false ) 
-			return false;
-		if( $constr_estimation_procesure == false )
-			return false;
-		$clause = '`ttid` = ' . $task_type . ' AND `math_function` = "' . safe($evaluation_measure) . '"';
-		if( $this->Task_type_function->getWhere( $clause ) == false )
-			return false;
-		if( $dataset_ids == false ) {
-			return false;
-		}
+  }
+  
+  function getByIdForEvaluation( $id ) {
+    if(is_numeric($id) === false)
+      return false;
+    $record = $this->Task->getById( $id );
+    $ttid = $record->ttid;
+    $task = $this->query( $this->construct_sql( $ttid, true ) . ' AND `task`.`task_id` = ' . $id );
+    if($task)
+      return end($task);
+    else
+      return false;
+  }
+  
+  // task_type = 1, 2, 3, 4
+  function getGeneralTask( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $create ) {
+    $constr_estimation_procesure = ' AND ' . $this->Estimation_procedure->sql_constraints( $estimation_procedure_id, $task_type,
+      array('type','repeats','folds','percentage','stratified_sampling'), 
+      array('`vtable_type`.`value`','`vtable_repeats`.`value`','`vtable_folds`.`value`','`vtable_percentage`.`value`','`vtable_stratified_sampling`.`value`') );
+    
+    $constr_target = 'AND `vtable_target_feature`.`value` = ' . ( $target ? '"'.safe($target).'" ' : '`dataset`.`default_target_attribute` ');
+    $constr_dataset = (!$dataset_ids ? '' : 'AND `vtable_did`.`value` IN ('.implode(',',$dataset_ids).') ');
+    $constr_eval_measures = 'AND `vtable_evaluation_measure`.`value` = "'.safe($evaluation_measure).'" ';
+    
+    if( in_array($task_type,array(1, 2, 3, 4)) === false ) 
+      return false;
+    if( $constr_estimation_procesure == false )
+      return false;
+    $clause = '`ttid` = ' . $task_type . ' AND `math_function` = "' . safe($evaluation_measure) . '"';
+    if( $this->Task_type_function->getWhere( $clause ) == false )
+      return false;
+    if( $dataset_ids == false ) {
+      return false;
+    }
 
-		$sql = $this->base_sql . $constr_estimation_procesure . $constr_task_type . $constr_target . $constr_dataset . $constr_eval_measures;
-		
-		$tasks = $this->query( $sql );
-		if($create) {
-			$this->createSupervisedClassificationRegression( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $tasks );
-			return $this->query( $sql );
-		} else {
-			return $tasks;
-		}
-	}
+    $sql = $this->construct_sql( $task_type ) . $constr_estimation_procesure . $constr_target . $constr_dataset . $constr_eval_measures;
+    
+    $tasks = $this->query( $sql );
+    
+    if($create) {
+      $this->createGeneralTask( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $tasks );
+      return $this->query( $sql );
+    } else {
+      return $tasks;
+    }
+  }
+  
+  // task_type = 1, 2, 3, 4
+  private function createGeneralTask( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $tasks ) {
+    $task_dids = object_array_get_property( $tasks, 'did' );
+    $ep = $this->Estimation_procedure->getById( $estimation_procedure_id );
+    $target_type = array('nominal');
+    if( $task_type == 2 ) $target_type = array('numeric','real');
+    $datasets = $this->Dataset->getDatasetsWithFeature( $dataset_ids, $target, $target_type );
+    
+    if($datasets == false) 
+      return;
+    
+    $this->db->trans_begin();
+    
+    foreach( $datasets as $d ) {
+      // For each dataset, we are going to check whether it occurs in 
+      // the already found tasks. Otherwise we'll create it.
+      if( in_array( $d->did, $task_dids ) === false ) {
+        // clearly, the task on the current dataset was not found. 
+        // create it if it does not violate any constraints on arff size
+        
+        if( $this->Estimation_procedure->splits_arff_size( $ep, $d->instances ) > $this->config->item('max_split_arff_size') )
+          continue;
+        $task_id = $this->Task->insert( array('ttid' => $task_type) );
+        $data = $this->prepare_insertion_array( $task_id, $task_type, $d, $ep, $evaluation_measure );
+        
+        foreach( $data as $key => $value ){
+          $this->Task_values->insert( array( 'task_id' => $task_id, 'input' => $key, 'value' => $value ) );
+        }
+      }
+    }
 
-	// task_type = 1, 2
-	private function createSupervisedClassificationRegression( $task_type, $estimation_procedure_id, $dataset_ids, $target, $evaluation_measure, $tasks ) {
-		$task_dids = object_array_get_property( $tasks, 'did' );
-		$ep = $this->Estimation_procedure->getById( $estimation_procedure_id );
-		$datasets = $this->Dataset->getDatasetsWithFeature( $dataset_ids, $target, ($task_type == 1 ? array('nominal') : array('numeric','real')), true );
-		
-		if($datasets == false) 
-			return;
-		
-		$this->db->trans_begin();
-		
-		foreach( $datasets as $d ) {
-			// For each dataset, we are going to check whether it occurs in 
-			// the already found tasks. Otherwise we'll create it.
-			if( in_array( $d->did, $task_dids ) === false ) {
-				// clearly, the task on the current dataset was not found. 
-				// create it if it does not violate any constraints on arff size
-				
-				if( $this->Estimation_procedure->splits_arff_size( $ep, $d->instances ) > $this->config->item('max_split_arff_size') )
-					continue;
-				$task_id = $this->Task->insert( array('ttid' => $task_type) );
-				$data = array( 
-					'1' => $d->did, 
-					'2' => $d->feature, 
-					'3' => $ep->type, 
-					'4' => BASE_URL . 'api_splits/get/' . $task_id . '/Task_' . $task_id . '_' . $d->name . '_splits.arff', 
-					'5' => $ep->repeats, 
-					'6' => $ep->folds,
-					'7' => $ep->percentage,
-					'8' => $ep->stratified_sampling,
-					'9' => $evaluation_measure 
-				);
-			
-				foreach( $data as $key => $value ){
-					$this->Task_values->insert( array( 'task_id' => $task_id, 'input' => $key, 'value' => $value ) );
-				}
-			}
-		}
-
-		$this->db->trans_complete();
-		if ($this->db->trans_status() === FALSE)
-		{
-			$this->db->trans_rollback();
-		}
-		else
-		{
-			$this->db->trans_commit();
-		}
-	}
+    $this->db->trans_complete();
+    if ($this->db->trans_status() === FALSE)
+    {
+      $this->db->trans_rollback();
+    }
+    else
+    {
+      $this->db->trans_commit();
+    }
+  }
+  
+  // constructs a query, able to concatinate multiple entrees out of the task_values table
+  // in one "crosstabulated" record. For this, an entry in the sql_configuration array
+  // is needed. Due to the nature of the query, at least one field DID should be present.
+  private function construct_sql( $task_type, $for_evaluation = false ) {
+    $conf = $for_evaluation ? $this->sql_configuration_evaluation[$task_type] : $this->sql_configuration[$task_type];
+    
+    $base_sql = 
+      'SELECT `task`.`task_id`,
+      `task`.`task_id` AS `id`, 
+      `task`.`ttid`, 
+      `dataset`.`default_target_attribute` AS `dta`,
+      CONCAT("Task ", `task`.`task_id`, ": ", `dataset`.`name`, " - ", `task_type`.`name`) AS `name`';
+    foreach( $conf as $value ) {
+      $base_sql .= ', `vtable_' . $value . '`.`value` AS `'.$value.'` ';
+    }
+    $base_sql .= 'FROM `task`, `task_type`, `dataset` ';
+    foreach( $conf as $value )
+      $base_sql .= ',`task_values` AS `vtable_' . $value . '` ';
+    $base_sql .= 
+      'WHERE `task`.`ttid` = `task_type`.`ttid` ' .
+      'AND `dataset`.`did` = `vtable_did`.`value` ' .
+    (($task_type != 0) ? 'AND `task`.`ttid` = ' . $task_type . ' ' : '');
+      
+    foreach( $conf as $key => $value ) {
+      $base_sql .= "\n". 'AND `vtable_' . $value .'`.`input` = ' . $key . ' ';
+      $base_sql .=       'AND `vtable_' . $value . '`.`task_id` = `task`.`task_id` ';
+    }
+    
+    return $base_sql;
+  }
+  
+  private function prepare_insertion_array( $task_id, $ttid, $dataset, $estimation_procedure, $evaluation_measure ) {
+    $insertion_array = array(
+      '1' => $dataset->did, 
+      '2' => $dataset->feature, 
+      '3' => $estimation_procedure->type
+    );
+    
+    switch( $ttid ) {
+      case 1: // supervised classification [EQUALS]
+      case 2: // supervised regression 
+        $insertion_array = array(
+          '1' => $dataset->did, 
+          '2' => $dataset->feature, 
+          '3' => $estimation_procedure->type, 
+          '4' => BASE_URL . 'api_splits/get/' . $task_id . '/' . $estimation_procedure->id . '/Task_' . $task_id . '_' . $dataset->name . '_splits.arff', 
+          '5' => $estimation_procedure->repeats, 
+          '6' => $estimation_procedure->folds,
+          '7' => $estimation_procedure->percentage,
+          '8' => $estimation_procedure->stratified_sampling,
+          '9' => $evaluation_measure );
+        break;
+      case 3: // Learning Curves
+        $numInstances = $this->Data_quality->getFeature( $dataset->did, 'NumberOfInstances' );
+        $numSamples = $this->Estimation_procedure->number_of_samples(
+          $this->Estimation_procedure->trainingset_size( $numInstances, $estimation_procedure->folds ) 
+        );
+        $insertion_array = array(
+          '1' => $dataset->did, 
+          '2' => $dataset->feature, 
+          '3' => $estimation_procedure->type, 
+          '4' => BASE_URL . 'api_splits/get/' . $task_id . '/' . $estimation_procedure->id . '/Task_' . $task_id . '_' . $dataset->name . '_splits.arff', 
+          '5' => $estimation_procedure->repeats, 
+          '6' => $estimation_procedure->folds,
+          '7' => $estimation_procedure->percentage,
+          '8' => $estimation_procedure->stratified_sampling,
+          '9' => $evaluation_measure,
+          '10'=> $numSamples );
+        
+        break;
+      case 4: // Supervised Data Stream Classification
+        $insertion_array = array(
+          '1' => $dataset->did, 
+          '2' => $dataset->feature, 
+          '3' => $estimation_procedure->type, 
+          '4' => $evaluation_measure );
+        break;
+      default:
+        break;
+    }
+    
+    return $insertion_array;
+  }
 }
 ?>

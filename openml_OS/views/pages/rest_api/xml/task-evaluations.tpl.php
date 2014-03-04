@@ -9,6 +9,7 @@
 		<?php foreach( $results as $rid => $metrics ): ?>
 		<oml:run>
 			<oml:run_id><?php echo $rid; ?></oml:run_id>
+			<oml:implementation_id><?php echo $implementation_ids[$rid]; ?></oml:implementation_id>
 			<oml:implementation><?php echo $implementations[$rid]; ?></oml:implementation>
 			<?php foreach( $metrics as $name => $value ): ?>
 			<oml:measure name="<?php echo $name;?>"><?php echo $value;?></oml:measure>

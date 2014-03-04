@@ -9,6 +9,7 @@ class Frontend extends CI_Controller {
 		
 		$this->load->model('File');
 		$this->load->model('Dataset');
+		$this->load->model('Data_quality');
 		$this->load->model('Implementation');
 		$this->load->model('Math_function');
 		$this->load->model('Task');

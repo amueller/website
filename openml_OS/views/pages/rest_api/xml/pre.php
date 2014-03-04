@@ -314,4 +314,9 @@ $this->apiErrors[324][1] = 'The implementation is used in runs, evaluations or a
 // for function: openml.implementation.delete
 $this->apiErrors[324][0] = 'Deleting implementation failed.';
 $this->apiErrors[324][1] = 'Deleting the implementation failed. Please contact support team. ';
+
+// for function: openml.implementation.exists
+$this->apiErrors[330][0] = 'Mandatory fields not present.';
+$this->apiErrors[330][1] = 'Please provide one of the following mandatory field combination: name and external_version. ';
+
 ?>

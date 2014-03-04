@@ -33,7 +33,6 @@ class Implementation extends Database_write {
 		return ( $implementation == false ) ? false : $this->_extendImplementation($implementation);
 	}
 	
-	
 	function getComponents( $parent ) {
     $components = $this->Implementation_component->getWhere('parent = ' . $parent->id);
     if( is_array( $components ) ) {
@@ -46,6 +45,22 @@ class Implementation extends Database_write {
       return array();
     }
 	}
+  
+  // TODO: test getComponentIds()
+  function getComponentIds( $parent_id ) {
+    $results = array();
+    $components = $this->Implementation_component->getWhere('parent = ' . $parent_id);
+    if( is_array( $components ) ) {
+      foreach( $components as $c ) {
+        $results[] = $c->child;
+        $sub_components = $this->getComponentIds( $c->child );
+        foreach( $sub_components as $s ) {
+          if( in_array( $s, $results ) == false ) $results[] = $s;
+        }
+      }
+    }
+    return $results;
+  }
   
   public function compareToXML( $xml, $implementation_id = false ) {
     $relevant = array('name','creator','contributor','description','fullDescription','installationNotes','dependencies','implements');

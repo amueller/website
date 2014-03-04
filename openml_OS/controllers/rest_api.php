@@ -21,7 +21,7 @@ class Rest_api extends CI_Controller {
 		$this->load->model('Run');
 		$this->load->model('Evaluation');
 		$this->load->model('Evaluation_fold');
-		$this->load->model('Confusion_matrix');
+		$this->load->model('Evaluation_sample');
 		$this->load->model('Input');
 		$this->load->model('Bibliographical_reference');
 		$this->load->model('Input_setting');
@@ -50,7 +50,7 @@ class Rest_api extends CI_Controller {
 			'run'				=> 'run/'
 		);
 		
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold','confusion_matrix' );
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample');
     
     // XML maintainance
     $this->xml_fields_dataset = array(
@@ -58,16 +58,13 @@ class Rest_api extends CI_Controller {
       'csv' => array('creator','contributor',)
     );
     $this->xml_fields_implementation = array(
-      'string' => array('name','description','licence','language','fullDescription','installationNotes','dependencies',),
+      'string' => array('name','external_version','description','licence','language','fullDescription','installationNotes','dependencies',),
       'csv' => array('creator','contributor',),
       'array' => array('bibliographical_reference','parameter','component'),
       'plain' => array()
     );
 
 		$this->data_controller = BASE_URL . 'files/';
-		
-		
-		$this->specialTaskTypes = array( 1, 2 );
 		
 		$this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
     $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
@@ -317,8 +314,12 @@ class Rest_api extends CI_Controller {
 			// obtain data features.
       $class = array_key_exists( 'default_target_attribute', $dataset ) ? $dataset['default_target_attribute'] : false;
 			$features = get_arff_features( $destinationUrl, $class );
-			if(property_exists( $features, 'error' ) || $features == false) {
+      
+			if($features == false) {
 				$this->_returnError( 142 );
+				return;
+			} elseif( property_exists( $features, 'error' ) ) {
+			  $this->_returnError( 142 );
 				return;
 			}
 		}
@@ -394,12 +395,13 @@ class Rest_api extends CI_Controller {
 			$this->_returnError( 301 );
 			return;
 		}
-		$estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->functionType, $task->repeats, $task->folds, $task->percentage, $task->stratified_sampling );
+		$estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->type, $task->repeats, $task->folds, $task->percentage, $task->stratified_sampling );
 		
 		$results = array();
 		$implementations = array();
+    $implementation_ids = array();
 
-		$runs = $this->Run->query('SELECT r.task_id, r.rid, s.implementation, e.function, e.value FROM run r, output_data od, algorithm_setup s, evaluation e  WHERE s.sid = r.setup AND r.task_id = '.$task_id.' AND od.run = r.rid AND e.did = od.data ORDER BY rid, implementation ASC');
+		$runs = $this->Run->query('SELECT r.task_id, r.rid, s.implementation_id, i.fullName, e.function, e.value FROM run r, output_data od, algorithm_setup s, evaluation e, implementation i  WHERE s.sid = r.setup AND r.task_id = '.$task_id.' AND od.run = r.rid AND e.did = od.data AND s.implementation_id = i.id ORDER BY rid, s.implementation_id ASC');
 		$previous = -1;
 		if($runs != false ) { //TODO: sort on value ..x.. ?
 			foreach( $runs as $r ) {
@@ -408,12 +410,13 @@ class Rest_api extends CI_Controller {
 				} else {
 					$results[$r->rid] = array();
 					$results[$r->rid][$r->{'function'}] = $r->value; 
-					$implementations[$r->rid] = $r->implementation;
+					$implementations[$r->rid] = $r->implementation_id;
+					$implementation_ids[$r->rid] = $r->fullName;
 				}
 				$previous = $r->rid;
 			}
 		}
-		$this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results, 'implementations' => $implementations ) );
+		$this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results, 'implementations' => $implementations, 'implementation_ids' => $implementation_ids ) );
 	}
 	
 	private function _openml_tasks_search_supervised_classification() {
@@ -483,9 +486,9 @@ class Rest_api extends CI_Controller {
 				return;
 			}
 			$xml = simplexml_load_file( $description['tmp_name'] );
-      $similarImplementations = $this->Implementation->compareToXML( $xml );
-      if( $similarImplementations ) {
-        $this->_returnError( 171, 'implementation_id:' . $similarImplementations );
+      $similar = $this->Implementation->compareToXML( $xml );
+      if( $similar ) {
+        $this->_returnError( 171, 'implementation_id:' . $similar );
 				return;
       }
 		} else {
@@ -515,7 +518,7 @@ class Rest_api extends CI_Controller {
 			$file_record = $this->File->getById($file_id);
 			
 			//$implementation[$key.'Url'] = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
-			//$implementation[$key.'Md5'] = $file_record->md5_hash;
+			$implementation[$key.'_md5'] = $file_record->md5_hash;
       $implementation[$key.'_file_id'] = $file_id;
 			//$implementation[$key.'Format'] = $file_record->md5_hash;
 			
@@ -532,9 +535,29 @@ class Rest_api extends CI_Controller {
 			$this->_returnError( 165 );
 			return;
 		}
+    $implementation = $this->Implementation->getById( $impl );
 		
-		$this->_xmlContents( 'implementation-upload', array( 'fullName' => $impl ) );
+		$this->_xmlContents( 'implementation-upload', $implementation );
 	}
+  
+  private function _openml_implementation_exists() {
+    $name = $this->input->get( 'name' );
+    $external_version = $this->input->get( 'external_version' );
+    
+    $similar = false;
+		if( $name !== false && $external_version !== false ) {
+			$similar = $this->Implementation->getWhere( '`name` = "' . $name . '" AND `external_version` = "' . $external_version . '"' );
+    } else {
+      $this->_returnError( 330 );
+      return;
+    }
+    
+    $result = array( 'exists' => 'false', 'id' => -1 );
+    if( $similar ) {
+      $result = array( 'exists' => 'true', 'id' => $similar[0]->id );
+    }
+    $this->_xmlContents( 'implementation-exists', $result );
+  }
 
   private function _openml_implementation_delete() {
     if(!$this->authenticated) {
@@ -716,7 +739,7 @@ class Rest_api extends CI_Controller {
 		
 		// check whether uploaded files are present.
 		if($error_message === false) {
-			if( count( $_FILES ) != 2 ) { // TODO: task type specific to task type 1 and 2
+			if( count( $_FILES ) != 2 ) { // TODO: task type specific to task type 1, 2 and 3
 				$this->_returnError( 206 );
 				return;
 			}
@@ -740,14 +763,14 @@ class Rest_api extends CI_Controller {
 			$this->_returnError( 213 );
 			return;
 		}
-		
+    
 		// fetch task
-		$task = $this->Task->getByIdWithValues( $task_id );
+		$task = $this->Task->getByIdForEvaluation( $task_id );
 		if( $task === false ) { 
 			$this->_returnError( 204 );
 			return;
 		}
-		
+    
 		// now create a run
 		$runId = $this->Run->getHighestIndex( array('run'), 'rid' );
 		
@@ -811,7 +834,8 @@ class Rest_api extends CI_Controller {
 		
 		$errorCode = -1;
 		$errorMessage = false;
-		if( $task->ttid == 1 || $task->ttid == 2 ) {
+    
+		if( $task->ttid == 1 || $task->ttid == 2 || $task->ttid == 3 || $task_id = 4 ) {
 			if( $this->Run->insertSupervisedClassificationRun( $this->user_id, $run, $task, $setupId, $predictionsUrl, $output_data, $errorCode, $errorMessage ) == false ) {
 				$this->_returnError( $errorCode, $errorMessage );
 				return;
@@ -856,8 +880,8 @@ class Rest_api extends CI_Controller {
 				return;
 			}
 		}
-		
-		$this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` LEFT JOIN `input` ON `input`.`fullName` = `input_setting`.`input` WHERE setup = "'.$setup->sid.'"');
+		// TODO: temp linking on concat of fields. should be done better
+		$this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` LEFT JOIN `input` ON CONCAT( `input`.`implementation_id` , "_", `input`.`name` ) = `input_setting`.`input` WHERE setup = "'.$setup->sid.'"');
 		
 		
 		$this->_xmlContents( 'setup-parameters', array( 'parameters' => $this->parameters ) );
@@ -898,11 +922,13 @@ class Rest_api extends CI_Controller {
 		$error['additional'] = htmlentities( $additionalInfo );
 		$this->_xmlContents( 'error-message', $error );
 	}
-	
-	private function _xmlContents( $xmlFile, $source ) {
-		header('Content-type: text/xml; charset=utf-8');
-		$view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
-		$this->load->view( $view, $source );
-	}
+  
+  private function _xmlContents( $xmlFile, $source ) {
+    header('Content-type: text/xml; charset=utf-8');
+    $view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
+    $data = $this->load->view( $view, $source, true );
+    header('Content-length: ' . strlen($data) );
+    echo $data;
+  }
 }
 ?>

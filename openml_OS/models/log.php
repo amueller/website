@@ -34,5 +34,11 @@ class Log extends CI_Model {
     fwrite( $this->handle, '[' . now() . '] [' . $source . '] ' . $cmd . "\n" );
     fclose($this->handle);
   }
+  
+  function mapping( $file, $line, $message ) {
+    $this->handle = fopen( $this->dir . 'mapping.log', 'a' );
+    fwrite( $this->handle, '[' . now() . '] [' . $file . ': ' . $line . '] Inconsistent mapping: ' . $message . "\n" );
+    fclose($this->handle);
+  }
 }
 ?>
