@@ -39,13 +39,13 @@
 			<h2>Parameters</h2>
 			<div class="table-responsive">
 				<table class="table table-striped">
-				<?php $result = $this->Implementation->query("SELECT name, generalName, defaultValue, suggestedValues from input where implementation_id=" . $this->record->{'id'});
+				<?php $result = $this->Implementation->query("SELECT name, description, defaultValue, recommendedRange from input where implementation_id=" . $this->record->{'id'});
 				if (is_array($result)){
 				foreach( $result as $r ) {
-					if (strlen($r->{'suggestedValues'})>0){
-					echo "<tr><td>" . $r->{'name'} . "</td><td>" . $r->{'generalName'} . "</td><td><div class='tip default' data-toggle='tooltip' data-placement='left' title='Default value'><i class='fa fa-hand-o-right'></i> " . $r->{'defaultValue'} . "</div><br><div class='tip recommendedrange' data-toggle='tooltip' data-placement='left' title='Recommended range'><i class='fa fa-thumbs-o-up'></i> ". $r->{'suggestedValues'} . "</div></td></tr>";}
+					if (strlen($r->{'recommendedRange'})>0){
+					echo "<tr><td>" . $r->{'name'} . "</td><td>" . $r->{'description'} . "</td><td><div class='tip default' data-toggle='tooltip' data-placement='left' title='Default value'><i class='fa fa-hand-o-right'></i> " . $r->{'defaultValue'} . "</div><br><div class='tip recommendedrange' data-toggle='tooltip' data-placement='left' title='Recommended range'><i class='fa fa-thumbs-o-up'></i> ". $r->{'recommendedRange'} . "</div></td></tr>";}
 					else{
-					echo "<tr><td>" . $r->{'name'} . "</td><td>" . $r->{'generalName'} . "</td><td><div class='tip default' data-toggle='tooltip' data-placement='left' title='Default value'><i class='fa fa-hand-o-right'></i> " . $r->{'defaultValue'} . "</div></td></tr>";}
+					echo "<tr><td>" . $r->{'name'} . "</td><td>" . $r->{'description'} . "</td><td><div class='tip default' data-toggle='tooltip' data-placement='left' title='Default value'><i class='fa fa-hand-o-right'></i> " . $r->{'defaultValue'} . "</div></td></tr>";}
 				}}
 				?>
 				</table>
