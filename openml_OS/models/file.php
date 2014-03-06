@@ -14,6 +14,7 @@ class File extends Community {
       return false;
     }
     
+    create_dir( DATA_PATH . $to_folder );
     $newName = getAvailableName( DATA_PATH . $to_folder, $file['name'] );
     
     $file_record = array(
@@ -29,7 +30,6 @@ class File extends Community {
       'access_policy' => $access_policy
     );
     
-    create_dir( DATA_PATH . $to_folder );
     if( move_uploaded_file( $file['tmp_name'], DATA_PATH . $to_folder . $newName ) === false ) {
       return false;
     }
