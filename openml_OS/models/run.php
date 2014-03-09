@@ -63,8 +63,8 @@ class Run extends Database_write {
       'inputData' => $taskRecord->did,
       'learner' => $setupId,
       'runType' => 'classification',
-      'nrFolds' => $taskRecord->repeats,
-      'nrIterations' => $taskRecord->folds
+      'nrFolds' => property_exists( $taskRecord, 'folds' ) ? $taskRecord->folds : 1,
+      'nrIterations' => property_exists( $taskRecord, 'repeats' ) ? $taskRecord->repeats : 1
     );
     
     $cvrunId = $this->Cvrun->insert( $cvRunData );
@@ -82,7 +82,8 @@ class Run extends Database_write {
     $inputData = $this->Dataset->getById( $taskRecord->did );    
     
     // and now evaluate the run
-    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $taskRecord->splits_url, $predictionsUrl, $taskRecord->target_feature, $userSpecifiedMetrices, $errorMessage ) == false ) {
+    $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
+    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $userSpecifiedMetrices, $errorMessage ) == false ) {
       $errorCode = 216;
       return false;
     }
@@ -93,7 +94,7 @@ class Run extends Database_write {
     $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $res = array();
     $code = 0;
-    $command = "java -jar $eval -f evaluate_predictions -d $datasetUrl -s $splitsUrl -p $predictionsUrl -c $targetFeature";
+    $command = "java -jar $eval -f evaluate_predictions -d '$datasetUrl' -s '$splitsUrl' -p '$predictionsUrl' -c '$targetFeature'";
     $this->Log->cmd( 'REST API::openml.run.upload', $command ); 
   
     if(function_enabled('exec') === false ) {
