@@ -18,9 +18,6 @@ $this->dataset_total = $this->Dataset->numberOfRecords();
 
 $icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
 
-$this->active_tab = gu('tab');
-if($this->active_tab == false) $this->active_tab = 'searchtab';
-
 if( $this->terms != false and $this->terms != 'all') { // normal search
 	$eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
 	$res = array();
@@ -45,11 +42,23 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
         $runs = 0;
  	$id = 0;
         $description = '';
+        $nbruns = 0;
+	   $nbinstances = 0;
+	   $nbfeatures = 0;
+	   $nbmissing = 0;
+	   $nbclasses = 0;
+
         if ($type == 'dataset'){
-          $description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
-          $count = $this->Dataset->query('select count(rid) as nbruns, d.did from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
-          $runs = $count[0]->nbruns;
-          $id = $count[0]->did;
+	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.inputData=d.did and d.name="'.$name.'" group by d.did');
+          if( $d != false ) {
+           $nbruns = $d[0]->nbruns;
+           $id = $d[0]->did;
+	   $nbinstances = $d[0]->instances;
+	   $nbfeatures = $d[0]->features;
+	   $nbmissing = $d[0]->missing;
+	   $nbclasses = $d[0]->classes;
+           $description = $d[0]->description;
+	  }
           $this->dataset_count++;
         }
         
@@ -58,8 +67,12 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
           'id' => $id,
           'name' => $name,
           'icon' => $icon,
-          'description' => $description[0],
-          'runs' => $runs
+          'description' => $description,
+          'runs' => $nbruns,
+	  'instances' => $nbinstances,
+	  'features' => $nbfeatures,
+	  'missing' => $nbmissing,
+	  'classes' => $nbclasses
         );
         $this->results_runcount[] = $runs;
         $this->results_all[] = $result;
