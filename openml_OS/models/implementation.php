@@ -25,6 +25,12 @@ class Implementation extends Database_write {
 		return $implementation[0];
 	}
 	
+	function getByID( $id ) {
+		$implementation = $this->getWhere('id = "'.$id.'"');
+		if($implementation == false) return false;
+		return $implementation[0];
+	}
+
 	function fullImplementation( $id ) {
 	  $impls = $this->getWhere( 'id = ' . $id );
     if(count($impls) == 0) return false;

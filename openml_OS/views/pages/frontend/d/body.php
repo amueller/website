@@ -27,20 +27,20 @@
 
 <div class="sectionheader">
 <div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitleblue"><a href="d">Data</a></div>
+<div class="sectiontitlegreen"><a href="d">Data</a></div>
 </div>
 <div class="bs-docs-container topborder">
     <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
         <!-- Upload stuff -->
 	<div class="upload">
-        <button type="button" data-toggle="tab" data-target="#datashare" class="btn btn-primary" style="width:100%; text-align:left;"><i class="fa fa-cloud-upload fa-lg" style="padding-right:5px;"></i> Share</button>
+        <button type="button" data-toggle="tab" data-target="#datashare" class="btn btn-success" style="width:100%; text-align:left;"><i class="fa fa-cloud-upload fa-lg" style="padding-right:5px;"></i> Add data</button>
         </div><!-- upload -->
 
 	<!-- Search -->
 	<form class="form" method="post" action="d">
 	<div class="input-group" style="margin-bottom:7px;">
-	  <span class="input-group-addon" style="background-color:#428bca; color:#FFFFFF; border-color:#428bca"><i class="fa fa-search fa-fw"></i></span>
-	  <input type="text" class="form-control" style="width: 100%; height: 30px; font-size: 11pt;" id="openmlsearch" name="searchterms" placeholder="Search" value="<?php if( $this->terms != false ) echo $this->terms; ?>" />
+	  <span class="input-group-addon" style="background-color:#5cb85c; color:#FFFFFF; border-color:#5cb85c"><i class="fa fa-search fa-fw"></i></span>
+	  <input type="text" class="form-control" style="width: 100%; height: 30px; font-size: 11pt;" id="openmlsearch" name="searchterms" placeholder="Search datasets" value="<?php if( $this->terms != false ) echo $this->terms; ?>" />
 	</div>
 	Filters:
 	<div class="row">
@@ -116,10 +116,10 @@
 
     <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
      <div class="tab-content">
-      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'name')) { echo 'active'; } ?>" id="intro">
+      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/d/')) { echo 'active'; } ?>" id="intro">
       <?php 
 	if( $this->terms == false) { ?>
-      <div class="blueheader">
+      <div class="greenheader">
       <h1><i class="fa fa-table"></i> Data</h1>
       <p>Datasets posing interesting challenges for machine learning research.</p>
       </div>
@@ -131,7 +131,7 @@
 		
 		foreach( $this->results_all as $r ): if($r['type'] != 'dataset') continue;?>
 			<div class="searchresult">
-				<a href="d/name/<?php echo urlencode($r['name']); ?>"><i class="<?php echo $r['icon']; ?>"></i>  <?php echo $r['name']; ?></a><br />
+				<a href="d/<?php echo urlencode($r['id']); ?>"><i class="<?php echo $r['icon']; ?>"></i>  <?php echo $r['name']; ?></a><br />
 				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
 				<div class="runStats"><?php echo $r['runs'];?> runs - <?php echo $r['instances'];?> instances - <?php echo $r['features'];?> features - <?php echo $r['classes'];?> classes - <?php echo $r['missing'];?> missing values</div>
 			</div><?php 
@@ -151,7 +151,7 @@
         <?php } ?> 
      </div> <!-- end intro tab -->
      <div class="tab-pane sharing" id="datashare">
-	      <h1 class="modal-title" id="myModalLabel">Share data</h1>
+	      <h1 class="modal-title" id="myModalLabel">Add datasets</h1>
               <div id="responseImplementationTxt" class="<?php echo $this->initialMsgClass;?>"><?php echo $this->initialMsg; ?></div>
 	      <form method="post" id="datasetForm" action="api/?f=openml.data.upload" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_dataset_description" name="description" value="" />
@@ -210,7 +210,7 @@
 	          </div>
 		  <div class="form-group">
 			    <label class="control-label" for="input_dataset_citation">Citation</label>
-			    <textarea class="form-control" id="input_dataset_citation"  placeholder="How to reference this data in papers." value=""></textarea>			         		  </div>
+			    <textarea class="form-control" id="input_dataset_citation"  placeholder="How to reference this data in papers." value=""></textarea>			         		  		</div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Paper/preprint</label>
 		    <input type="text" class="form-control" id="source_url" placeholder="URL to paper or preprint about this data." value="" /> 
@@ -241,9 +241,9 @@
 	</form>
 	</div>
      </div> <!-- end tab share -->
-     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'name')) { echo 'active'; } ?>" id="codedetail">
+     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) { echo 'active'; } ?>" id="codedetail">
      	<?php 
-	 if(false !== strpos($_SERVER['REQUEST_URI'],'name')) {
+	 if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		subpage('dataset'); 
 	}?>
      </div>

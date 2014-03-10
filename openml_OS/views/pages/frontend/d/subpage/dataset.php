@@ -41,10 +41,10 @@
 			<h2>Features</h2>
 			<div class="table-responsive">
 				<table class="table table-striped">
-				<?php $result = $this->Dataset->query("SELECT name, data_type, is_target, NumberOfDistinctValues FROM `data_feature` WHERE did=" . $this->record->{'did'});
+				<?php $result = $this->Dataset->query("SELECT name, data_type, is_target, NumberOfDistinctValues, NumberOfMissingValues FROM `data_feature` WHERE did=" . $this->record->{'did'});
 				if (is_array($result)){
 				foreach( $result as $r ) {
-					echo "<tr><td>" . $r->{'name'} . ($r->{'is_target'} == 'true' ? ' (target)': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . "</td></tr>";
+					echo "<tr><td>" . $r->{'name'} . ($r->{'is_target'} == 'true' ? ' (target)': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td></tr>";
 				}}
 				?>
 				</table>
@@ -93,7 +93,7 @@
 				</select>
 		<h2>Performance evaluation</h2>
 		Evaluation measure:
-				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); redrawchart();">
+				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
 					<?php foreach($this->measures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
@@ -106,12 +106,27 @@
 				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
 					<?php echo generate_table( 
 								array('img_open' => '', 
-										'rid' => 'run id', 
+										'rid' => 'Run', 
 										'sid' => 'setup id', 
-										'name' => 'Name', 
-										'value' => 'Evaluation', ) ); ?>
+										'name' => 'Flow', 
+										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
 				</table></div>
 			</div>
+
+<div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+	<div id="runinfo"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 		</div> <!-- end tab-runs -->
 		
 	</div> <!-- end col-md-12 -->

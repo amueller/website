@@ -77,6 +77,9 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
 
 
 /// DETAIL
+<?php  
+if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
+?>
 
 function fetch_params_succes(xml, setup_id) {
     inner = '<table><thead><tr><th style="border: 0">Parameter Name</th><th style="border: 0">Description</th><th style="border: 0">Default Value</th><th style="border: 0">Chosen value</th></tr></thead><tbody>';
@@ -187,10 +190,12 @@ $(document).ready(function() {
     } );
 } );
 
-
+function updateTableHeader(){
+	$("#value").html(evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' '));
+}
 
 function redrawchart(){
-
+categoryMap = {};
 options = {
             chart: {
                 renderTo: 'code_result_visualize',
@@ -206,7 +211,7 @@ options = {
                 categories: [],
 		labels: {
                   formatter: function() {
-                    return '<a href="d/name/'+ this.value +'">'+ this.value +'</a>';
+                    return '<a href="d/'+ categoryMap[this.value] +'">'+ this.value +'</a>';
                   },
         	  useHTML: true
 		},
@@ -216,7 +221,7 @@ options = {
             },
             xAxis: {
                 title: {
-                    text: evaluation_measure
+                    text: evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' ')
                 },
                 gridLineWidth: 1
             },
@@ -246,46 +251,94 @@ options = {
                                 enabled: false
                             }
                         }
-                    },
-		    tooltip: {
-			formatter: function() {
-				return  this.category.name +' '+this.x;
-			}
-		    }
+                    }
+		}
+            },
+            tooltip:{
+                formatter:function(){
+                    return '<p>Task data:<b> '+this.series.yAxis.categories[this.y]+'</b><br>'+ this.series.xAxis.axisTitle.element.textContent + '<b>: ' + this.x+'</b><br>'+ ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>No parameter selected. Click for info.</i>') + '</p>';
                 }
             },
             series: [{
+		turboThreshold: 0,
 		color: 'rgba(119, 152, 191, .5)',
-                data: []
+                data: [],
+		point: {
+                    events: {
+                        click: function(){$('#runModal').modal('show'); updateRunModal(this.r);}
+                    }
+                }
             }]
         };
 
-var theQuery = 'select distinct d.name, round(e.value,4) as value from algorithm_setup l, evaluation e, cvrun r, dataset d  where r.learner=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.inputdata=d.did AND d.isOriginal="true" AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
+var theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, r.rid from algorithm_setup l, evaluation e, cvrun r, dataset d  where r.learner=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.inputdata=d.did AND d.isOriginal="true" AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
+
+if(typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
+ theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, ins.value as paramval, r.rid from algorithm_setup l, evaluation e, cvrun r, dataset d, input_setting ins  where r.learner=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.inputdata=d.did AND d.isOriginal="true" AND e.source=r.rid AND e.function="'+evaluation_measure+'" AND l.sid=ins.setup AND ins.input="'+selected_parameter+'" group by d.name, value order by value desc';
+}
+	
 var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent(theQuery), "UTF-8");
 $.getJSON(query,function(jsonData){
         var data = jsonData.data;
 	var catcount = 0;
 	var map = {};
-	var d=[];
-	var c=[];
+	options.series[0].data = [];
+	options.yAxis.categories = [];
+	var useparams = false;
+	if (data[0].length > 4){
+		useparams = true;
+	}
+	var parvaluenumeric = true;
+	var parvalues = [];
+	var heatmap = new Rainbow();
+
+	if (useparams){
+		if (useparams && isNaN(data[0][3])){
+			parvaluenumeric = false;
+		}
+		for(var i=0;i<data.length;i++){
+			if (parvalues.indexOf(data[i][3])<0){
+				parvalues.push(data[i][3]);
+			}	
+		}
+ 		if (parvaluenumeric){
+			if (parvalues.length > 10){
+				var min = Math.min.apply( Math, parvalues );
+				var max = Math.max.apply( Math, parvalues );
+				if(min<max){
+					heatmap.setNumberRange(min,max);
+				}
+			} else {
+				parvalues.sort(function(a,b){return parseInt(a)-parseInt(b)});
+				heatmap.setNumberRange(0, parvalues.length);
+			}		
+			heatmap.setSpectrum('blue','green','yellow','orange','red');
+		} else {
+			heatmap.setNumberRange(0, parvalues.length);
+		}
+		
+	}
 	for(var i=0;i<data.length;i++){
 		if (!(data[i][0] in map)){
 			map[data[i][0]] = catcount++;
-			c.push(data[i][0]);
+			options.yAxis.categories.push(data[i][0]);
+			categoryMap[data[i][0]]= data[i][1]; 
 		}
-		d.push([parseFloat(data[i][1]),map[data[i][0]]]);
+		if (useparams){
+			var col = "#000000";
+			if (parvaluenumeric && parvalues.length > 10){
+				col = heatmap.colourAt(data[i][3]);
+			} else {
+				col = heatmap.colourAt(parvalues.indexOf(data[i][3]));
+			}
+			options.series[0].data.push({x: parseFloat(data[i][2]), y: map[data[i][0]], z: data[i][3], r: data[i][4], fillColor: 'rgba('+parseInt(col.substring(0,2),16)+','+parseInt(col.substring(2,4),16)+','+parseInt(col.substring(4,6),16)+',0.5)'});
+		} else {
+			options.series[0].data.push({x: parseFloat(data[i][2]), y: map[data[i][0]], r: data[i][3]});
+		}
 	}
-
-	//color
-	var heatmap = new Rainbow(); 
-	heatmap.setSpectrum('black', 'blue', 'aqua', 'lime', 'yellow', 'red');
-	heatmap.setNumberRange(0, 3065);
-
-	options.yAxis.categories = c;
-	options.series[0].data = d;
-	options.chart.height = c.length*15;
-
+	options.chart.height = options.yAxis.categories.length*15;
 	coderesultchart = new Highcharts.Chart(options);
+
 
 }).fail(function(){ console.log('failure', arguments); });
 
@@ -297,4 +350,46 @@ setTimeout(function(){
    redrawchart();
     },1000);
 });
+
+$(document).on('click', '.openRunModal', function(){updateRunModal($(this).data('id'))});
+
+function updateRunModal(rid) {
+	var runq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent('select r.uploader, r.task_id, r.start_time, c.inputData, c.learner, c.runType, c.nrFolds, c.nrIterations from run r, cvrun c where r.rid='+rid+' and r.rid=c.rid'), "UTF-8");
+	$.getJSON(runq,function(jsonData){
+	        var data = jsonData.data;
+		$("#runinfo").empty();
+		$("#runinfo").append("<h3>Run details</h3>Run id: " + rid);
+		$("#runinfo").append("<br>Author: " + data[0][0]);
+		$("#runinfo").append("<br>Date: " + data[0][2]);
+		taskid = data[0][1];
+		dataid = data[0][3];
+		flowid = data[0][4];
+		$("#runinfo").append("<h3>Task</h3>Task id: " + taskid);
+		$("#runinfo").append("<br>Type: " + data[0][5]);
+		$("#runinfo").append("<br>Procedure: " + data[0][7] + " x " + data[0][6] + " cross-validation");
+
+		var dataq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent('select name, version from dataset where did='+dataid), "UTF-8");
+		$.getJSON(dataq,function(jsonData){
+			var data = jsonData.data;
+			$("#runinfo").append("<br>Input data: <a href='d/" + dataid + "'>"+ data[0][0] + "</a>");
+
+			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent('SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE  s.implementation_id=i.id and s.sid='+flowid), "UTF-8");
+			$.getJSON(flowq,function(jsonData){
+				var data = jsonData.data;
+				$("#runinfo").append("<h3>Flow</h3>Flow: <a href='f/" + data[0][3] + "'>"+ data[0][0] + "</a>");
+				if(data[0][1].length > 0){
+					$("#runinfo").append("<br>Parameter settings:<br>");
+				}				
+				for(var i=0;i<data.length;i++){
+					$("#runinfo").append(data[i][1]+": "+ data[i][2]+"<br>");
+				}
+			});
+		});
+	});
+}
+
+
+<?php  
+}
+?>
 

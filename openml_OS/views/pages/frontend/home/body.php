@@ -10,8 +10,8 @@
 
 
 <div class="col-md-12">
-		<form class="form-inline" method="post" action="search">
-		  <input type="text" class="form-control" style="width: 50%; height: 30px; font-size: 13pt;" id="openmlsearch" name="searchterms" placeholder="" value="<?php if( isset( $terms ) ) echo $terms; ?>" />
+		<form class="form-inline" method="post" action="r">
+		  <input type="text" class="form-control" style="width: 50%; height: 30px; font-size: 11pt" id="openmlsearch" name="searchterms" placeholder="Search machine learning experiments" value="<?php if( isset( $terms ) ) echo $terms; ?>" />
 		  <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>
 		</form>
 </div>
@@ -25,7 +25,7 @@ document.getElementById('openmlsearch').focus()
  <div class="statrow">
 	  <a href="d" class="col-sm-4"><div class="statcell icongreen"><i class="fa fa-table fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(did) as count from dataset where isOriginal="true"'); echo($count[0]->count); ?></span>datasets</div></div></a>
 	  <a href="f" class="col-sm-4"><div class="statcell iconblue"><i class="fa fa-cogs fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(fullName) as count from implementation'); echo($count[0]->count); ?></span>workflows</div></div></a>
-	  <a href="runs" class="col-sm-4"><div class="statcell iconred"><i class="fa fa-star fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(rid) as count from run'); echo($count[0]->count); ?></span>runs</div></div></a>
+	  <a href="r" class="col-sm-4"><div class="statcell iconred"><i class="fa fa-star fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(rid) as count from run'); echo($count[0]->count); ?></span>runs</div></div></a>
  </div>
 </div>
 </div>

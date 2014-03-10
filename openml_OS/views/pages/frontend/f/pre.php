@@ -18,9 +18,6 @@ $this->implementation_total = $this->Implementation->numberOfRecords();
 
 $icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
 
-$this->active_tab = gu('tab');
-if($this->active_tab == false) $this->active_tab = 'searchtab';
-
 if( $this->terms != false and $this->terms != 'all') { // normal search
 	$eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
 	$res = array();
@@ -46,8 +43,9 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
         $description = '';
         if ($type == 'implementation'){
           $description = $this->Implementation->getColumnWhere('description', 'fullname = "'.$name.'"');
-          $count = $this->Implementation->query('select count(rid) as nbruns from cvrun r, algorithm_setup s where r.learner = s.sid and s.implementation_id = (SELECT id FROM implementation WHERE fullName ="'.$name.'")');
+          $count = $this->Implementation->query('select count(rid) as nbruns, s.implementation_id as id from cvrun r, algorithm_setup s where r.learner = s.sid and s.implementation_id = (SELECT id FROM implementation WHERE fullName ="'.$name.'")');
           $runs = $count[0]->nbruns;
+          $id = $count[0]->id;
           $this->implementation_count++;
         }
         elseif ($type == 'function'){
@@ -56,13 +54,15 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
         }
         elseif ($type == 'dataset'){
           $description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
-          $count = $this->Dataset->query('select count(rid) as nbruns from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
+          $count = $this->Dataset->query('select count(rid) as nbruns, did as id from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
+          $id = $count[0]->id;
           $runs = $count[0]->nbruns;
           $this->dataset_count++;
         }
         
         $result = array(
           'type' => $type,
+          'id' => $id,
           'name' => $name,
           'icon' => $icon,
           'description' => $description[0],
@@ -77,10 +77,11 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 } else if ($this->terms != false and $this->terms == 'all'){ // all implementations
 	$start_time = microtime(true);
 	
-	$implementation = $this->Implementation->query('SELECT i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id and i.fullName<>\'weka.Evaluation(1.86)\' GROUP BY s.implementation_id ORDER BY i.fullName');
+	$implementation = $this->Implementation->query('SELECT i.id, i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id and i.fullName<>\'weka.Evaluation(1.86)\' GROUP BY s.implementation_id ORDER BY i.fullName');
   if( $implementation != false ) {
 	  foreach( $implementation as $i ) {
 		  $result = array(
+			  'id' => $i->id,
 			  'type' => 'implementation',
 			  'name' => $i->fullName,
 			  'icon' => $icons['implementation'],
@@ -96,10 +97,11 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 } else{ // Popular
 	$start_time = microtime(true);
 	
-	$implementation = $this->Implementation->query('SELECT i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id and i.fullName<>\'weka.Evaluation(1.86)\' GROUP BY s.implementation_id ORDER BY runs DESC LIMIT 0,5');
+	$implementation = $this->Implementation->query('SELECT i.id, i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id and i.fullName<>\'weka.Evaluation(1.86)\' GROUP BY s.implementation_id ORDER BY runs DESC LIMIT 0,5');
   if( $implementation != false ) {
 	  foreach( $implementation as $i ) {
 		  $result = array(
+			  'id' => $i->id,
 			  'type' => 'implementation',
 			  'name' => $i->fullName,
 			  'icon' => $icons['implementation'],
@@ -122,18 +124,17 @@ $this->displayName = false;
 $this->measures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';
 
-if(false !== strpos($_SERVER['REQUEST_URI'],'name')) {
-	$this->codename = html_entity_decode(gu('name'));
-	$this->record = $this->Implementation->getByFullName($this->codename);
+if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
+	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
+	$this->record = $this->Implementation->getByID($this->id);
 	$this->displayName = $this->record->fullName;
 	
-	$this->dt_main['columns'] 		= array('img_open','rid','sid','name','value');
-	$this->dt_main['column_widths']		= array(10,0,0,60,30);
-	$this->dt_main['column_content']	= array('<img src="img/datatables/details_open.png">',null,null,'<a href="d/name/[CONTENT]">[CONTENT]</a>',null);
-	$this->dt_main['column_source'] 	= array('content','db','db','wrapper','db');
-	
-	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`,d.name, e.value '.
-										'FROM algorithm_setup l, evaluation e, cvrun r, dataset d  '.
+	$this->dt_main['columns'] 		= array('r.rid','rid','sid','name','value');
+	$this->dt_main['column_widths']		= array(1,1,0,60,30);
+	$this->dt_main['column_content']	= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);
+	$this->dt_main['column_source'] 	= array('wrapper','db','db','doublewrapper','db');
+	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(d.did, "~", d.name) as name, round(e.value,4) as value '.
+										'FROM algorithm_setup l, evaluation e, cvrun r, dataset d '.
 										'WHERE r.learner=l.sid  '.
 										'AND l.implementation_id="'.$this->record->id.'"  '.
 										'AND l.isDefault="true"' . 
@@ -141,12 +142,12 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'name')) {
 										'AND d.isOriginal="true"  '.
 										'AND e.source=r.rid  ';
 
-	$this->dt_main_all['columns'] 		= array('img_open','rid','sid','name','value');
-	$this->dt_main_all['column_widths']		= array(10,0,0,60,30);
-	$this->dt_main_all['column_content']	= array('<img src="img/datatables/details_open.png">',null,null,'<a href="d/name/[CONTENT]">[CONTENT]</a>',null);
-	$this->dt_main_all['column_source'] 	= array('content','db','db','wrapper','db');
+	$this->dt_main_all['columns'] 		= array('r.rid','rid','sid','name','value');
+	$this->dt_main_all['column_widths']		= array(1,1,0,60,30);
+	$this->dt_main_all['column_content']	= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);
+	$this->dt_main_all['column_source'] 	= array('wrapper','db','db','doublewrapper','db');
 	
-	$this->dt_main_all['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`,d.name, e.value '.
+	$this->dt_main_all['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(d.did, "~", d.name) as name, round(e.value,4) as value '.
 										'FROM algorithm_setup l, evaluation e, cvrun r, dataset d  '.
 										'WHERE r.learner=l.sid  '.
 										'AND l.implementation_id="'.$this->record->id.'"  '.

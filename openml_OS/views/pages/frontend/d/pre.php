@@ -43,16 +43,19 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
         $name = $re->name;
         $icon = $icons[$type];
         $runs = 0;
+ 	$id = 0;
         $description = '';
         if ($type == 'dataset'){
           $description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
-          $count = $this->Dataset->query('select count(rid) as nbruns from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
+          $count = $this->Dataset->query('select count(rid) as nbruns, d.did from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
           $runs = $count[0]->nbruns;
+          $id = $count[0]->did;
           $this->dataset_count++;
         }
         
         $result = array(
           'type' => $type,
+          'id' => $id,
           'name' => $name,
           'icon' => $icon,
           'description' => $description[0],
@@ -67,11 +70,12 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 } else if ($this->terms != false and $this->terms == 'all'){ // all dataset
 	$start_time = microtime(true);
 	
-	$dataset = $this->Dataset->query('select d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' group by d.did');
+	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' group by d.did');
   if( $dataset != false ) {
 	  foreach( $dataset as $d ) {
 		  $result = array(
 			  'type' => 'dataset',
+			  'id' => $d->did,
 			  'name' => $d->name,
 			  'icon' => $icons['dataset'],
 			  'description' => $d->description,
@@ -90,11 +94,12 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 } else{ // Popular
 	$start_time = microtime(true);
 	
-	$dataset = $this->Dataset->query('select d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' group by d.did ORDER BY runs DESC LIMIT 0,5');
+	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' group by d.did ORDER BY runs DESC LIMIT 0,5');
   if( $dataset != false ) {
 	  foreach( $dataset as $d ) {
 		  $result = array(
 			  'type' => 'dataset',
+			  'id' => $d->did,
 			  'name' => $d->name,
 			  'icon' => $icons['dataset'],
 			  'description' => $d->description,
@@ -120,40 +125,40 @@ $this->displayName = false;
 $this->measures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';
 
-if(false !== strpos($_SERVER['REQUEST_URI'],'name')) {
-	$this->dataname = html_entity_decode(gu('name'));
-	$this->record = $this->Dataset->getWhere('name = "' . $this->dataname . '"');
+if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
+	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
+	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
 	$this->displayName = $this->record->name;
 	
 	$this->dt_main 						= array();
-	$this->dt_main['columns'] 			= array('img_open','rid','sid','i.fullName','value');
-	$this->dt_main['column_widths']		= array(10,0,0,30,30);
-	$this->dt_main['column_content']	= array('<img src="img/datatables/details_open.png">',null,null,'<a href="f/name/[CONTENT]">[CONTENT]</a>',null);
-	$this->dt_main['column_source']		= array('content','db','db','wrapper','db');
-	$this->dt_main['group_by'] 			= 'l.implementation_id';
+	$this->dt_main['columns'] 			= array('r.rid','rid','sid','fullName','value');
+	$this->dt_main['column_widths']		= array(1,1,0,30,30);
+	$this->dt_main['column_content']	= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
+	$this->dt_main['column_source']		= array('wrapper','db','db','doublewrapper','db','db');
+	$this->dt_main['group_by'] 		= 'l.implementation_id';
 	
-	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, `i`.`fullName`, max(`e`.`value`) AS `value` ' .
+	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
 										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r`, dataset `d`, implementation `i` ' .
 										'WHERE `r`.`learner`=`l`.`sid` ' .
 										'AND `l`.`implementation_id` = `i`.`id` ' . 
 										'AND `r`.`inputdata`=`d`.`did` ' .
 										'AND `e`.`source`=`r`.`rid` ' .
-										'AND `d`.`name`="'.$this->record->name.'"';
+										'AND `d`.`did`="'.$this->record->did.'"';
 										
 	$this->dt_main_all = array();
-	$this->dt_main_all['columns'] 		= array('img_open','rid','sid','i.fullName','value');
-	$this->dt_main_all['column_content']= array('<img src="img/datatables/details_open.png">',null,null,'<a href="f/name/[CONTENT]">[CONTENT]</a>',null);
-	$this->dt_main_all['column_source']	= array('content','db','db','wrapper','db');
+	$this->dt_main_all['columns'] 		= array('r.rid','rid','sid','fullName','value');
+	$this->dt_main_all['column_content']= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
+	$this->dt_main_all['column_source']	= array('wrapper','db','db','doublewrapper','db','db');
 	//$this->dt_main_all['group_by'] 	= 'l.implementation'; NONE
 	
-	$this->dt_main_all['base_sql'] 	= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, `i`.`fullName`, `e`.`value` AS `value` ' .
+	$this->dt_main_all['base_sql'] 	= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(`e`.`value`,4) AS `value` ' .
 										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r`, dataset `d`, implementation `i` ' .
 										'WHERE `r`.`learner`=`l`.`sid` ' .
 										'AND `r`.`inputdata`=`d`.`did` ' .
 										'AND `l`.`implementation_id` = `i`.`id` ' . 
 										'AND `e`.`source`=`r`.`rid` ' .
-										'AND `d`.`name`="'.$this->record->name.'"';
+										'AND `d`.`did`="'.$this->record->did.'"';
 	
 	$this->dt_features = array();
 	$this->dt_features['columns'] 		= array('index','name','data_type','NumberOfDistinctValues','NumberOfUniqueValues','NumberOfMissingValues','MaximumValue','MinimumValue','MeanValue','StandardDeviation');

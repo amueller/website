@@ -78,7 +78,9 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
 
 
 /// DETAIL
-
+<?php  
+if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
+?>
 
 var oTableRunsShowAll = false;
 var evaluation_measure = "<?php echo $this->current_measure; ?>";
@@ -158,10 +160,12 @@ $(document).ready(function() {
     } );
 } );
 
-
+function updateTableHeader(){
+	$("#value").html(evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' '));
+}
 
 function redrawchart(){
-
+categoryMap = {};
 options = {
             chart: {
                 renderTo: 'data_result_visualize',
@@ -177,7 +181,7 @@ options = {
                 categories: [],
 		labels: {
                   formatter: function() {
-                    return '<a href="f/name/'+ this.value +'">'+ this.value +'</a>';
+                    return '<a class="hccategory" href="f/'+ categoryMap[this.value] +'">'+ this.value +'</a>';
                   },
         	  useHTML: true
 		},
@@ -187,7 +191,7 @@ options = {
             },
             xAxis: {
                 title: {
-                    text: evaluation_measure
+                    text: evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' ')
                 },
                 gridLineWidth: 1
             },
@@ -198,7 +202,7 @@ options = {
                 enabled: false
             },
             credits: {
-                enabled: false
+                 enabled: false
             },
             plotOptions: {
                 scatter: {
@@ -217,21 +221,27 @@ options = {
                                 enabled: false
                             }
                         }
-                    },
-		    tooltip: {
-			formatter: function() {
-				return  this.category.name +' '+this.x;
-			}
-		    }
+                    }                
+		}
+            },
+            tooltip:{
+                formatter:function(){
+                    return '<div>Flow:<b> '+this.series.yAxis.categories[this.y]+'</b><br>'+ this.series.xAxis.axisTitle.element.textContent + '<b>: ' + this.x+'</b><br>'+ ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
                 }
             },
             series: [{
+		turboThreshold: 0,		
 		color: 'rgba(119, 152, 191, .5)',
-                data: []
+                data: [],
+		point: {
+                    events: {
+                        click: function(){$('#runModal').modal('show'); updateRunModal(this.r);}
+                    }
+                }
             }]
         };
 
-var theQuery = 'select distinct i.fullname, round(e.value,4) as value from algorithm_setup l, evaluation e, cvrun r, implementation i  where r.learner=l.sid AND l.implementation_id=i.id AND r.inputdata=<?php echo $this->record->did; ?> AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
+var theQuery = 'select distinct i.fullname, round(e.value,4) as value, r.rid, i.id from algorithm_setup l, evaluation e, cvrun r, implementation i  where r.learner=l.sid AND l.implementation_id=i.id AND r.inputdata=<?php echo $this->record->did; ?> AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
 var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent(theQuery), "UTF-8");
 $.getJSON(query,function(jsonData){
         var data = jsonData.data;
@@ -242,15 +252,11 @@ $.getJSON(query,function(jsonData){
 	for(var i=0;i<data.length;i++){
 		if (!(data[i][0] in map)){
 			map[data[i][0]] = catcount++;
+			categoryMap[data[i][0]]= data[i][3]; 
 			c.push(data[i][0]);
 		}
-		d.push([parseFloat(data[i][1]),map[data[i][0]]]);
+		d.push({x: parseFloat(data[i][1]), y: map[data[i][0]], r: data[i][2]});
 	}
-
-	//color
-	var heatmap = new Rainbow(); 
-	heatmap.setSpectrum('black', 'blue', 'aqua', 'lime', 'yellow', 'red');
-	heatmap.setNumberRange(0, 3065);
 
 	options.yAxis.categories = c;
 	options.series[0].data = d;
@@ -259,13 +265,52 @@ $.getJSON(query,function(jsonData){
 	coderesultchart = new Highcharts.Chart(options);
 
 }).fail(function(){ console.log('failure', arguments); });
-
-
 }
 
 $(document).ready(function() {
-setTimeout(function(){
    redrawchart();
-    },1000);
 });
+
+$(document).on('click', '.openRunModal', function(){updateRunModal($(this).data('id'))});
+
+function updateRunModal(rid) {
+	var runq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent('select r.uploader, r.task_id, r.start_time, c.inputData, c.learner, c.runType, c.nrFolds, c.nrIterations from run r, cvrun c where r.rid='+rid+' and r.rid=c.rid'), "UTF-8");
+	$.getJSON(runq,function(jsonData){
+	        var data = jsonData.data;
+		$("#runinfo").empty();
+		$("#runinfo").append("<h3>Run details</h3>Run id: " + rid);
+		$("#runinfo").append("<br>Author: " + data[0][0]);
+		$("#runinfo").append("<br>Date: " + data[0][2]);
+		taskid = data[0][1];
+		dataid = data[0][3];
+		flowid = data[0][4];
+		$("#runinfo").append("<h3>Task</h3>Task id: " + taskid);
+		$("#runinfo").append("<br>Type: " + data[0][5]);
+		$("#runinfo").append("<br>Procedure: " + data[0][7] + " x " + data[0][6] + " cross-validation");
+
+		var dataq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent('select name, version from dataset where did='+dataid), "UTF-8");
+		$.getJSON(dataq,function(jsonData){
+			var data = jsonData.data;
+			$("#runinfo").append("<br>Input data: <a href='d/" + dataid + "'>"+ data[0][0] + "</a>");
+
+			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent('SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE  s.implementation_id=i.id and s.sid='+flowid), "UTF-8");
+			console.log(flowq);
+			$.getJSON(flowq,function(jsonData){
+				var data = jsonData.data;
+				$("#runinfo").append("<h3>Flow</h3>Flow: <a href='f/" + data[0][3] + "'>"+ data[0][0] + "</a>");
+				if(data[0][1].length > 0){
+					$("#runinfo").append("<br>Parameter settings:<br>");
+				}				
+				for(var i=0;i<data.length;i++){
+					$("#runinfo").append(data[i][1]+": "+ data[i][2]+"<br>");
+				}				
+			});
+		});
+	});
+}
+
+
+<?php  
+}
+?>
 

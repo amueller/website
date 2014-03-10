@@ -39,9 +39,9 @@
 			<h2>Parameters</h2>
 			<div class="table-responsive">
 				<table class="table table-striped">
-				<?php $result = $this->Implementation->query("SELECT name, description, defaultValue, recommendedRange from input where implementation_id=" . $this->record->{'id'});
-				if (is_array($result)){
-				foreach( $result as $r ) {
+				<?php $params = $this->Implementation->query("SELECT fullname, name, description, defaultValue, recommendedRange from input where implementation_id=" . $this->record->{'id'});
+				if (is_array($params)){
+				foreach( $params as $r ) {
 					if (strlen($r->{'recommendedRange'})>0){
 					echo "<tr><td>" . $r->{'name'} . "</td><td>" . $r->{'description'} . "</td><td><div class='tip default' data-toggle='tooltip' data-placement='left' title='Default value'><i class='fa fa-hand-o-right'></i> " . $r->{'defaultValue'} . "</div><br><div class='tip recommendedrange' data-toggle='tooltip' data-placement='left' title='Recommended range'><i class='fa fa-thumbs-o-up'></i> ". $r->{'recommendedRange'} . "</div></td></tr>";}
 					else{
@@ -94,13 +94,21 @@
 				</select>
 		<h2>Performance evaluation</h2>
 		Evaluation measure:
-				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); redrawchart();">
+				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
 					<?php foreach($this->measures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 				</select>
-
-						
+		<div style="float:right">
+		Parameter:
+				<select class="selectpicker" data-width="auto" onchange="selected_parameter = this.value; oTableRuns.fnDraw(true); redrawchart();">
+					<option value="none" selected>none</option>
+					<?php foreach($params as $r): ?>
+					<option value="<?php echo $r->{'fullname'};?>"><?php echo str_replace('_', ' ', $r->{'name'} );?></option>
+					<?php endforeach; ?>
+				</select>
+		</div>
+				
 			<div id="code_result_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
 
 			<div>   <div class="table-responsive">
@@ -110,9 +118,23 @@
 										'rid' => 'run id', 
 										'sid' => 'setup id', 
 										'name' => 'Name', 
-										'value' => 'Evaluation', ) ); ?>
+										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
 				</table></div>
 			</div>
+
+<div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+	<div id="runinfo"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 		</div> <!-- end tab-runs -->
 		
 	</div> <!-- end col-md-12 -->

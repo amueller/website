@@ -184,6 +184,8 @@ class Api_query extends CI_Controller {
 					$formatted_row[] = $column_content[$i];
 				} else if($column_source[$i] == 'wrapper') {
 					$formatted_row[] = str_replace( '[CONTENT]', $row[$columnsOutput[$i]],$column_content[$i]);
+				} else if($column_source[$i] == 'doublewrapper') {
+					$formatted_row[] = str_replace( '[CONTENT2]', explode("~", $row[$columnsOutput[$i]])[1], str_replace( '[CONTENT1]', explode("~", $row[$columnsOutput[$i]])[0],$column_content[$i]));
 				} else {
 					$formatted_row[] = '';
 				}

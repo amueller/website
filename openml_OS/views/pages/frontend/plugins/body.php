@@ -1,21 +1,11 @@
-
-    <div class="bs-header">
-      <div class="container">
-        <div class="col-md-8">
-          <h2>Plugins</h2>
-          <p>Download OpenML tasks to your favorite environment and automatically upload all your resources and results.</p>
-        </div>
-        <div class="col-md-4">
-		<img src="img/openml-plugins.png" style="display: block;margin-left:auto;margin-right:auto;width:300px"><br />
-        </div>
-      </div>
-    </div>
-
-<div class="container bs-docs-container">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="bs-sidebar">
-            <ul class="nav bs-sidenav">
+<div class="sectionheader">
+<div class="sectionlogo"><a href="">OpenML</a></div>
+<div class="sectiontitlepurple"><a href="plugins">Plugins</a></div>
+</div>
+<div class="bs-docs-container topborder">
+    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
+ <div class="bs-sidebar">
+ <ul class="nav bs-sidenav">
               
   <li><a href="#weka">WEKA</a>
   <ul class="nav">
@@ -47,11 +37,13 @@
   </li>              
             </ul>
           </div>
-        </div>
-        <div class="col-md-9">
-<div class="bs-docs-section">
+
+    </div> <!-- end col-2 -->
+
+    <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
+    <div class="bs-docs-section">
      <div class="page-header">
-            <h2 id="weka">WEKA</h2>
+            <h1 id="weka">WEKA</h1>
           </div>
 	  	  <h3 id="weka-plugin">Download Plugin (Last major update: 07-02-2014)</h3> 
 		  OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Experimenter and the Command Line Interface. 
@@ -95,18 +87,23 @@
 
   <div class="bs-docs-section">
           <div class="page-header">
-            <h2 id="r">R</h2>
+            <h1 id="r">R</h1>
           </div>
 	<h3 id="r-plugin">Download Plugin</h3>
-	Several R packages for running machine learning experiments have OpenML support. They are currently <a href="https://github.com/openml/r"> under development</a>.
-	<h3 id="r-start">Quick Start</h3>
-	Stay tuned.
-
+	The R plugin is under development. It is best checked out from <a href="https://github.com/openml/r"> GitHub</a>.
+	<h3 id="r-start">Quick Start (for mlr package)</h3>
+	The R package openML is an interface to make interactions with the openML server as comfortable as possible. Users can download and upload files, run their implementations on specific tasks, get predictions in the correct form, make SQL queries, etc. directly via R commands. In <a href="https://github.com/openml/r/blob/master/doc/knitted/1-Introduction.md">this tutorial</a>, we will show you the most important functions of this package and give you examples on standard workflows.
+	<ul>
+	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/2-Download-a-task.md">Download a task</a></li>
+	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/3-Upload-an-implementation.md">Upload an implementation</a></li>
+	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/4-Upload-predictions.md">Upload predictions</a></li>
+	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/5-Download-performance-measures.md">Download performance measures</a></li>
+	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/6-Browse-the-database.md">Browse the database</a></li>
 	</div>
 
   <div class="bs-docs-section">
           <div class="page-header">
-            <h2 id="knime">KNIME</h2>
+            <h1 id="knime">KNIME</h1>
           </div>
 	<h3 id="knime-plugin">Download Plugin</h3>
 	You can design OpenML workflows in KNIME to directly interact with OpenML. The KNIME plugin is currently <a href="https://github.com/joaquinvanschoren/OpenML"> under development</a>.
@@ -118,7 +115,7 @@
   <div class="bs-docs-section">
 
           <div class="page-header">
-            <h2 id="rapidminer">RapidMiner</h2>
+            <h1 id="rapidminer">RapidMiner</h1>
           </div>
 	<h3 id="rm-plugin">Download Plugin</h3>
 	You can design OpenML workflows in RapidMiner to directly interact with OpenML. The RapidMiner plugin is currently <a href="https://github.com/joaquinvanschoren/OpenML"> under development</a>.

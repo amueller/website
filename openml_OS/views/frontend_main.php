@@ -169,13 +169,13 @@
         </div>
 	<div id="openmllinks">
 	  <div class="iconrow">
-	  <a href="datasets"><div class="iconcell icongreen"><i class="fa fa-table fa-3x"></i><br><span>datasets</span></div></a>
-	  <a href="code"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>code</span></div></a>
-	  <a href="tasks"><div class="iconcell iconyellow"><i class="fa fa-check-square-o fa-3x"></i><br><span>tasks</span></div></a>
-	  <a href="results"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>results</span></div></a>
+	  <a href="d"><div class="iconcell icongreen"><i class="fa fa-table fa-3x"></i><br><span>data</span></div></a>
+	  <a href="f"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>flows</span></div></a>
+	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-check-square-o fa-3x"></i><br><span>tasks</span></div></a>
+	  <a href="r"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>runs</span></div></a>
 	  </div><div class="iconrow">
 	  <a href="plugins"><div class="iconcell icongray"><i class="fa fa-flash fa-3x"></i><br><span>plugins</span></div></a>
-	  <a href="developers"><div class="iconcell icongray"><i class="fa fa-users fa-3x"></i><br><span>community</span></div></a>
+	  <a href="developers"><div class="iconcell icongray"><i class="fa fa-users fa-3x"></i><br><span>developers</span></div></a>
 	  <a href="community"><div class="iconcell icongray"><i class="fa fa-comments fa-3x"></i><br><span>forum</span></div></a>
 	  <a href="about"><div class="iconcell icongray"><i class="fa fa-heart fa-3x"></i><br><span>about</span></div></a>
 	  </div>

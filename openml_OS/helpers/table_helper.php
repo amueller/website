@@ -2,8 +2,8 @@
 
 function generate_table( $keys, $data = false, $nullrecord = false ) {
 	$string = "<thead>\n<tr>\n";
-	foreach( $keys as $value ) {
-		$string .= "<th>" . $value . "</th>\n";
+	foreach( $keys as $key => $value ) {
+		$string .= "<th id='$key'>" . $value . "</th>\n";
 	}
 	$string .= "</tr>\n</thead>\n";
 	

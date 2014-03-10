@@ -1,17 +1,10 @@
-<div class="bs-header">
-  <div class="container">
-    <div class="col-md-8">
-      <h2>Developers</h2>
-      <p>Get creative with machine learning data and the OpenML API.</p>
-    </div>
-    <div class="col-md-4">
-      <img src="img/openml-down.png" style="display: block;margin-left:auto;margin-right:auto;width:300px"><br />
-    </div>
-  </div>
+<div class="sectionheader">
+<div class="sectionlogo"><a href="">OpenML</a></div>
+<div class="sectiontitlepurple"><a href="developers">Developers</a></div>
 </div>
-<div class="container bs-docs-container api-container">
-  <div class="row">
-    <div class="col-md-3">
+<div class="bs-docs-container topborder">
+    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
+
       <div class="bs-sidebar">
         <ul class="nav bs-sidenav">
           <li>
@@ -60,11 +53,12 @@
           </li>
         </ul>
       </div>
-    </div>
-    <div class="col-md-9">
+    </div> <!-- end col-2 -->
+
+    <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
       <div class="bs-docs-section">
         <div class="page-header">
-          <h2 id="dev-start">Get started</h2>
+          <h1 id="dev-start">Get started</h1>
         </div>
         <p class="lead">Download OpenML data to use it in novel ways, or upload new data to increase their impact (and yours).</p>
         <h3 id="dev-code">Latest source code</h3>
@@ -82,7 +76,7 @@
       </div>
       <div class="bs-docs-section">
         <div class="page-header">
-          <h2 id="dev-tutorial">API Tutorial</h2>
+          <h1 id="dev-tutorial">API Tutorial</h1>
         </div>
         <p class="lead">An overview of the most common use cases with working examples and links to the full documentation of the services involved.</p>
         <h3 id="dev-searchdata">Search datasets</h3>
@@ -94,7 +88,7 @@
         <h3 id="dev-searchresult">Search results</h3>
         <p>Will be added soon</p>
         <h3 id="dev-getdata">Download a dataset</h3>
-        <img src="img/api_get_dataset.png" style="display: block;margin-left:auto;margin-right:auto;width:80%;padding:10px">
+        <img src="img/api_get_dataset.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for a dataset using the <a href="developers#openml_data_description">openml.data.description</a> service and a <code>dataset id</code>. The <code>dataset id</code> is typically part of a task, or returned when <a href="developers#dev-searchdata">searching for datasets</a>.</li>
           <li>OpenML returns a description of the dataset as an XML file. <a href="http://www.openml.org/api/?f=openml.data.description&amp;data_id=1" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
@@ -106,7 +100,7 @@
           <li><a href="developers#openml_data_description">openml.data.description</a></li>
         </ul>
         <h3 id="dev-getimpl">Download an implementation</h3>
-        <img src="img/api_get_implementation.png" style="display: block;margin-left:auto;margin-right:auto;width:80%;padding:10px">
+        <img src="img/api_get_implementation.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for an implementation using the <a href="developers#openml_implementation_get">openml.implementation.get</a> service and a <code>implementation id</code>. The <code>implementation id</code> is typically returned when <a href="developers#dev-searchimpl">searching for implementations</a>.</li>
           <li>OpenML returns a description of the implementation as an XML file. <a href="http://www.openml.org/api/?f=openml.implementation.get&amp;implementation_id=weka.J48(1.2)" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
@@ -118,7 +112,7 @@
           <li><a href="developers#openml_implementation_get">openml.implementation.get</a></li>
         </ul>
         <h3 id="dev-gettask">Download a task</h3>
-        <img src="img/api_get_task.png" style="display: block;margin-left:auto;margin-right:auto;width:80%;padding:10px">
+        <img src="img/api_get_task.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for a task using the <a href="developers#openml_tasks_search">openml.tasks.search</a> service and a <code>task id</code>. The <code>task id</code> is typically returned when <a href="developers#dev-searchtask">searching for tasks</a>.</li>
           <li>OpenML returns a description of the task as an XML file. <a href="http://www.openml.org/api/?f=openml.tasks.search&amp;task_id=1" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
@@ -135,7 +129,7 @@
           <li><a href="developers#openml_data_description">openml.data.description</a></li>
         </ul>
         <h3 id="dev-setdata">Upload a dataset</h3>
-        <img src="img/api_upload_data.png" style="display: block;margin-left:auto;margin-right:auto;width:80%;padding:10px">
+        <img src="img/api_upload_data.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User authenticates herself by calling <a href="developers#openml_authenticate">openml.authenticate</a> with her <code>username</code> and (hashed) <code>password</code>. OpenML will return an authentication <code>session token</code>.</li>
           <li>The user uploads the <code>dataset</code> together a <code>dataset description</code> and her <code>session token</code> to <a href="developers#openml_data_upload">openml.data.upload</a>. The dataset description is an XML file that contains at least the dataset name and a textual description. For now, the only truly supported dataset format is ARFF.</li>
@@ -147,7 +141,7 @@
           <li><a href="developers#openml_data_upload">openml.data.upload</a></li>
         </ul>
         <h3 id="dev-setimpl">Upload an implementation</h3>
-        <img src="img/api_upload_implementation.png" style="display: block;margin-left:auto;margin-right:auto;width:80%;padding:10px">
+        <img src="img/api_upload_implementation.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User authenticates herself by calling <a href="developers#openml_authenticate">openml.authenticate</a> with her <code>username</code> and (hashed) <code>password</code>. OpenML will return an authentication <code>session token</code>.</li>
           <li>The user uploads her <code>session token</code>, <code>implementation description</code>, the <code>implementation binary</code> and/or the <code>implementation source</code> to <a href="developers#openml_implementation_upload">openml.implementation.upload</a>. The implementation description is an XML file that contains at least the implementation name and a textual description. The implementation binary and source will typically be a ZIP file. An implementation can be a single algorithm or a composed workflow.</li>
@@ -159,7 +153,7 @@
           <li><a href="developers#openml_implementation_upload">openml.implementation.upload</a></li>
         </ul>
         <h3 id="dev-setrun">Upload a run</h3>
-        <img src="img/api_upload_run.png" style="display: block;margin-left:auto;margin-right:auto;width:80%;padding:10px">
+        <img src="img/api_upload_run.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User authenticates herself by calling <a href="developers#openml_authenticate">openml.authenticate</a> with her <code>username</code> and (hashed) <code>password</code>. OpenML will return an authentication <code>session token</code>.</li>
           <li>The user uploads a <code>run description</code> and any <code>run result</code> files together with her <code>session token</code> to <a href="developers#openml_run_upload">openml.run.upload</a>. The run description is an XML file that contains the <code>task id</code> of the task it addresses and (optionally) a list of parameter settings if these differ from the default settings in the used implementation. The run result files contain the results of the run as detailed in the corresponding task description.</li>
@@ -173,7 +167,7 @@
       </div>
       <div class="bs-docs-section">
         <div class="page-header">
-          <h2 id="dev-docs">API Documentation</h2>
+          <h1 id="dev-docs">API Documentation</h1>
         </div>
         <p class="lead">Details of all OpenML services, with their expected arguments, file formats, responses and error codes.</p>
         <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">

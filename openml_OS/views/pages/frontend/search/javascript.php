@@ -26,6 +26,7 @@ $(function() {
   var datasets = expdbDatasets();
   var evaluationmetrics = expdbEvaluationMetrics();
   var algorithms = expdbAlgorithms();
+  console.log(algorithms);
   var implementations = expdbImplementations();
   var filteredImplementations = getImplementationsWithAlgorithms( ['SVM', 'C4.5'] ); // TODO: bind to algorithm field
   	

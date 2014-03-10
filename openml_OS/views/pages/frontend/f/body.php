@@ -27,20 +27,20 @@
 
 <div class="sectionheader">
 <div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitleblue"><a href="code">Flows</a></div>
+<div class="sectiontitleblue"><a href="f">Flows</a></div>
 </div>
 <div class="bs-docs-container topborder">
     <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
         <!-- Upload stuff -->
 	<div class="upload">
-        <button type="button" data-toggle="tab" data-target="#codeshare" class="btn btn-primary" style="width:100%; text-align:left;"><i class="fa fa-cloud-upload fa-lg" style="padding-right:5px;"></i> Share</button>
+        <button type="button" data-toggle="tab" data-target="#codeshare" class="btn btn-primary" style="width:100%; text-align:left;"><i class="fa fa-cloud-upload fa-lg" style="padding-right:5px;"></i> Add flows</button>
         </div><!-- upload -->
 
 	<!-- Search -->
 	<form class="form" method="post" action="f">
 	<div class="input-group" style="margin-bottom:7px;">
 	  <span class="input-group-addon" style="background-color:#428bca; color:#FFFFFF; border-color:#428bca"><i class="fa fa-search fa-fw"></i></span>
-	  <input type="text" class="form-control" style="width: 100%; height: 30px; font-size: 11pt;" id="openmlsearch" name="searchterms" placeholder="Search" value="<?php if( $this->terms != false ) echo $this->terms; ?>" />
+	  <input type="text" class="form-control" style="width: 100%; height: 30px; font-size: 11pt;" id="openmlsearch" name="searchterms" placeholder="Search flows" value="<?php if( $this->terms != false ) echo $this->terms; ?>" />
 	</div>
 	Filters:
 	<div class="row">
@@ -100,7 +100,7 @@
 
     <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
      <div class="tab-content">
-      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'name')) { echo 'active'; } ?>" id="intro">
+      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="intro">
       <?php 
 	if( $this->terms == false) { ?>
       <div class="blueheader">
@@ -115,7 +115,7 @@
 		
 		foreach( $this->results_all as $r ): if($r['type'] != 'implementation') continue;?>
 			<div class="searchresult">
-				<a href="f/name/<?php echo urlencode($r['name']); ?>"><i class="<?php echo $r['icon']; ?>"></i>  <?php echo $r['name']; ?></a><br />
+				<a href="f/<?php echo urlencode($r['id']); ?>"><i class="<?php echo $r['icon']; ?>"></i>  <?php echo $r['name']; ?></a><br />
 				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
 				<div class="runStats"><?php echo $r['runs'] . ' runs'; ?></div>
 			</div><?php 
@@ -135,7 +135,7 @@
         <?php } ?> 
      </div> <!-- end intro tab -->
      <div class="tab-pane sharing" id="codeshare">
-	      <h1 class="modal-title" id="myModalLabel">Share flows</h1>
+	      <h1 class="modal-title" id="myModalLabel">Add flows</h1>
               <div id="responseImplementationTxt" class="<?php echo $this->initialMsgClass;?>"><?php echo $this->initialMsg; ?></div>
 	      <form method="post" id="implementationForm" action="api/?f=openml.implementation.upload" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_implementation_description" name="description" value="" />
@@ -271,10 +271,10 @@
 	</form>
 	</div>
      </div> <!-- end tab share -->
-     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'name')) { echo 'active'; } ?>" id="codedetail">
-     	<?php 
-	 if(false !== strpos($_SERVER['REQUEST_URI'],'name')) {
-		subpage('implementation'); 
+     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="codedetail">
+     	<?php
+	 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
+		subpage('implementation');
 	}?>
      </div>
      </div> <!-- end tabs content -->
