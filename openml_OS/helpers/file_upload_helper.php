@@ -120,7 +120,7 @@ function create_dir( $directory ) {
     if( $creation_rights ) {
       $res = true;
       $all_dirs = explode( '/', $directory );
-      $total_path = '';
+      $total_path = '/';
       foreach( $all_dirs as $dir ) {
         if( $dir != '' ) {
           $total_path .= $dir . '/';
