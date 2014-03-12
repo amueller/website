@@ -372,12 +372,17 @@ class Rest_api extends CI_Controller {
 		}
 		
 		$task = $this->Task->getById( $task_id );
-		$task_type = $this->Task_type->getById( $task->ttid );
-
-		if( $task === false || $task_type === false ) {
+		if( $task === false ) {
 			$this->_returnError( 151 );
 			return;
 		}
+		
+		$task_type = $this->Task_type->getById( $task->ttid );
+		if( $task_type === false ) {
+			$this->_returnError( 151 );
+			return;
+		}
+		
 		$task_values = $this->Task_values->getTaskValuesAssoc( $task_id );
 		$parsed_io = $this->Task_type_io->getParsed( $task->ttid, $task_values );
 		$this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
