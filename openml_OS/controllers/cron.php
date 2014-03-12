@@ -56,56 +56,17 @@ class Cron extends CI_Controller {
     $datasets = $this->Dataset->getWhere( 'error = "false"', '`processed` ASC, `did` ASC' );
     
     $processed = 0;
-    foreach( $datasets as $d ) {
-      if(++$processed > 5 )break;
-  
-      $update = array( 'processed' => now() );
-      $succes = $this->Dataset->update( $d->did, $update );
-      
-      if( strtolower($d->format) == 'arff' ) {
-        // fill features and data quality table
-        $dataFeatures = $this->Data_features->getByDid( $d->did );
-        $dataQualities = $this->Data_quality->getByDid( $d->did );
+    if( is_array( $datasets ) ) {
+      foreach( $datasets as $d ) {
+        if(++$processed > 5 )break;
+        $message = false;
         
-        
-        $result = get_arff_features( $d->url, $d->default_target_attribute );
-          
-        if( $result == false || property_exists( $result,  'error' )) {
-          $this->_error( $d->did, 'Java library error. ' );
-          continue;
+        $res = $this->Dataset->process( $d->did, $message );
+        if( $res === true ) {
+          $this->Log->cronjob( 'success', 'process_dataset', 'Did ' . $d->did . ' processed successfully. '  );
+        } else {
+          $this->_error( $d->did, $message );
         }
-        
-        // only insert features when these were not yet extracted.
-        if($dataFeatures == false) 
-          insert_arff_features( $d->did, $result->data_features );
-
-        // insert qualities anyway. duplicate keys will not be inserted, (MySQL handles this)
-        // but we might have obtained additional measures
-        insert_arff_qualities( $d->did, $result->data_qualities );
-        
-      }
-      
-      // update the date
-      if( $d->upload_date == '0000-00-00 00:00:00' ) {
-        $update['upload_date'] = now();
-      }
-      
-      // generate the checksum
-      if( is_null( $d->md5_checksum ) ) {
-        $md5_file = md5_file( $d->url );
-        if( $md5_file === false ) {
-          $this->_error( $d->did, 'Could not generate md5 hash' );
-          continue;
-        }
-        $update['md5_checksum'] = $md5_file;
-      }      
-      
-      // update database record
-      $succes = $this->Dataset->update( $d->did, $update );
-      if( $succes == false ) {
-        $this->_error( $d->did, 'Could not update database record' );
-      } else {
-        $this->Log->cronjob( 'succes', 'process_dataset', 'Did ' . $d->did . ' processed succesfully. '  );
       }
     }
   }
@@ -113,6 +74,7 @@ class Cron extends CI_Controller {
   private function _error($did, $message) {
     $this->Dataset->update( $did, array( 'processed' => now(), 'error' => 'true' ) );
     $this->Log->cronjob( 'error', 'process_dataset', 'Did ' . $did . ' processed with error: ' . $message );
+    // TODO: email user about the error that occurred. 
   }
 }
 ?>

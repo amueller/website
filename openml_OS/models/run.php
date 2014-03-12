@@ -16,9 +16,10 @@ class Run extends Database_write {
     return $this->db->query( $sql );
   }
   
-  function outputData( $run, $data, $table ) {
+  function outputData( $run, $data, $table, $field = NULL ) {
     if( !is_numeric($run) || !is_numeric($data) ) return false;
-    $sql = 'INSERT INTO `output_data`(`run`,`data`,`name`) VALUES("'.$run.'","'.$data.'","'.$table.'"); ';
+    $field = ( $field != NULL ) ? $field = '"' . $field . '"' : 'NULL';
+    $sql = 'INSERT INTO `output_data`(`run`,`data`,`name`,`field`) VALUES("'.$run.'","'.$data.'","'.$table.'",'.$field.'); ';
     return $this->db->query( $sql );
   }
   
@@ -94,7 +95,7 @@ class Run extends Database_write {
     $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $res = array();
     $code = 0;
-    $command = "java -jar $eval -f evaluate_predictions -d '$datasetUrl' -s '$splitsUrl' -p '$predictionsUrl' -c '$targetFeature'";
+    $command = "java -jar $eval -f evaluate_predictions -d \"$datasetUrl\" -s \"$splitsUrl\" -p \"$predictionsUrl\" -c \"$targetFeature\"";
     $this->Log->cmd( 'REST API::openml.run.upload', $command ); 
   
     if(function_enabled('exec') === false ) {

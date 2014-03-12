@@ -302,27 +302,12 @@ class Rest_api extends CI_Controller {
 			'isOriginal' => 'true',
 		);
 		
-		if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
+    // TODO: We could check on this, but it will be generated anyway during the cronjob
+		// if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
 		
 		$dataset = all_tags_from_xml( 
       $xml->children('oml', true), 
       $this->xml_fields_dataset, $dataset );
-		
-		$features = false;
-		if(strtolower($dataset['format']) == 'arff') {
-			// check whether the format is correct. For now we only check on ARFF
-			// obtain data features.
-      $class = array_key_exists( 'default_target_attribute', $dataset ) ? $dataset['default_target_attribute'] : false;
-			$features = get_arff_features( $destinationUrl, $class );
-      
-			if($features == false) {
-				$this->_returnError( 142 );
-				return;
-			} elseif( property_exists( $features, 'error' ) ) {
-			  $this->_returnError( 142 );
-				return;
-			}
-		}
 
 		/* * * * 
 		 * THE ACTUAL INSERTION
@@ -331,11 +316,12 @@ class Rest_api extends CI_Controller {
 		if( ! $id ) {
 			$this->_returnError( 134 );
 			return;
-		} else {
-			// fill table features. 
-			insert_arff_features ( $id, $features->data_features );
-			insert_arff_qualities( $id, $features->data_qualities );
 		}
+    
+    if( DEBUG ) { // for local purposes
+      // if result is false, do not mark this yet. Will try again in API
+      $this->Dataset->process( $id, $message );
+    }
 
 		$this->_xmlContents( 'data-set-upload', array( 'id' => $id ) );
 	}
@@ -829,7 +815,7 @@ class Rest_api extends CI_Controller {
 			if( $key === 'predictions' ) 
 				$predictionsUrl = $record['url'];
 			
-			$this->Run->outputData( $run->rid, $data_id, 'dataset' );
+			$this->Run->outputData( $run->rid, $data_id, 'dataset', $key );
 		}
 		
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
