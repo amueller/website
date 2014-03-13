@@ -6,8 +6,20 @@ class Run extends Database_write {
     $this->table = 'run';
     $this->id_column = 'rid';
     
+    $this->load->model('Algorithm');
     $this->load->model('Cvrun');
+    $this->load->model('Task');
+    $this->load->model('Dataset');
+    $this->load->model('Evaluation');
+    $this->load->model('Evaluation_fold');
+    $this->load->model('Evaluation_sample');
     $this->load->model('Implementation');
+    $this->load->model('Math_function');
+    
+    // TODO: copied from rest_api, for functionality in cron.
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample');
+    $this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
+    $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
   }
   
   function inputData( $run, $data, $table ) {
@@ -50,19 +62,54 @@ class Run extends Database_write {
       return false;
   }
   
+  function process( $run_id, &$errorCode, &$errorMessage ) {
+    $run = $this->getById( $run_id );
+    $task = $this->Task->getById( $run->task_id );
+    
+    $success = false;
+    if( in_array( $task->ttid, array( 1, 2, 3, 4 ) ) ) {
+      $success = $this->insertSupervisedClassificationRun( $run, $errorCode, $errorMessage ); 
+      
+      $update = array( 'processed' => now() );
+      $this->Run->update( $run_id, $update );
+    }
+    
+    return $success;
+  }
+  
   /*
    *  Does all the specialized things needed for registering a Supervised Classification Run.
-   *  @pre: There must be a run record, and a task record
+   *  @pre: There must be a run record
    *
    */
-  function insertSupervisedClassificationRun( $user_id, $runRecord, $taskRecord, $setupId, $predictionsUrl, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
+  function insertSupervisedClassificationRun( $runRecord, &$errorCode, &$errorMessage ) {
+    $taskRecord = $this->Task->getByIdForEvaluation( $runRecord->task_id );
+    
+    $predSql = 'SELECT `d`.* FROM `output_data` `r`,`dataset` `d` WHERE `r`.`data` = `d`.`did` AND `r`.`run` = "' . $runRecord->rid . '" AND `r`.`field` = "predictions";';
+    $descSql = 'SELECT `d`.* FROM `output_data` `r`,`dataset` `d` WHERE `r`.`data` = `d`.`did` AND `r`.`run` = "' . $runRecord->rid . '" AND `r`.`field` = "description";';
+    
+    $predictionsRecord = end( $this->query( $predSql ) );
+    $descriptionRecord = end( $this->query( $descSql ) );
+    
+    $predictionsUrl = $predictionsRecord->url;
+    $descriptionUrl = $descriptionRecord->url;
+    
+    $xml = simplexml_load_file( $descriptionUrl );
+    
+    $output_data = array();
+    if( $xml->children('oml', true)->{'output_data'} != false ) {
+      foreach( $xml->children('oml', true)->{'output_data'}->children('oml', true) as $out ) {
+        $output_data[] = $out;
+      }
+    }
+    
     // create shortcut record
     $cvRunData = array(
       'rid' => $runRecord->rid,
-      'uploader' => $user_id,
+      'uploader' => $runRecord->uploader,
       'task_id' => $taskRecord->id,
       'inputData' => $taskRecord->did,
-      'learner' => $setupId,
+      'learner' => $runRecord->setup,
       'runType' => 'classification',
       'nrFolds' => property_exists( $taskRecord, 'folds' ) ? $taskRecord->folds : 1,
       'nrIterations' => property_exists( $taskRecord, 'repeats' ) ? $taskRecord->repeats : 1
@@ -84,7 +131,7 @@ class Run extends Database_write {
     
     // and now evaluate the run
     $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
-    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $userSpecifiedMetrices, $errorMessage ) == false ) {
+    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $output_data, $errorMessage ) == false ) {
       $errorCode = 216;
       return false;
     }

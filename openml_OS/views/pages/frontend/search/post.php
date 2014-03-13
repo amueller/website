@@ -9,7 +9,7 @@ switch($ttid) {
 case 1:
 case 2:
 case 3:
-  $dataset_ids = $this->Dataset->getColumnWhere('did', 'processed IS NOT NULL AND error = "false" AND format = "arff" AND ' . $this->Dataset->nameVersionConstraints( $this->input->post('datasets') ) );
+  $dataset_ids = $this->Dataset->getColumnWhere('did', '`processed` IS NOT NULL AND `error` = "false" AND LOWER(`format`) = "arff" AND `isOriginal` = "true" AND ' . $this->Dataset->nameVersionConstraints( $this->input->post('datasets') ) );
   $this->found_tasks = $this->Task->getGeneralTask( 
     $ttid, 
     $this->input->post('estimation_procedure'), 
@@ -39,7 +39,7 @@ case 4:
   }
   break;
 default:
-	$this->task_message = 'Illegal task type. ';
-	break;
+  $this->task_message = 'Illegal task type. ';
+  break;
 }
 ?>

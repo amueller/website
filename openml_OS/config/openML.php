@@ -1,7 +1,7 @@
 <?php
 $config['max_avatar_size'] = 256;
 
-$config['max_split_arff_size'] = 1000000;
+$config['max_split_arff_size'] = 10000000;
 
 $config['double_epsilon'] = 0.0000001;
 

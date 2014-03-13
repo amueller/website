@@ -786,8 +786,6 @@ class Rest_api extends CI_Controller {
 		
 		// attach uploaded files as output to run
 		foreach( $_FILES as $key => $value ) {
-			if( $key == 'description' ) continue;
-			
 			$file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, 'predictions');
 			if(!$file_id) {
 				$this->_returnError( 212 );
@@ -823,14 +821,11 @@ class Rest_api extends CI_Controller {
      * supported tasks, like classification, regression        *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 		
-		$errorCode = -1;
+		$errorCode = 0;
 		$errorMessage = false;
     
-		if( $task->ttid == 1 || $task->ttid == 2 || $task->ttid == 3 || $task_id = 4 ) {
-			if( $this->Run->insertSupervisedClassificationRun( $this->user_id, $run, $task, $setupId, $predictionsUrl, $output_data, $errorCode, $errorMessage ) == false ) {
-				$this->_returnError( $errorCode, $errorMessage );
-				return;
-			}
+		if( DEBUG ) {
+		  $this->Run->process( $result->run_id, $errorCode, $errorMessage );
 		}
 		
 		// and present result, in effect only a run_id. 

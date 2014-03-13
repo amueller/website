@@ -5,7 +5,7 @@ class Dataset extends Database_write {
     parent::__construct();
     $this->table = 'dataset';
     $this->id_column = 'did';
-    }
+  }
   
   // returns all dataset with a given feature $feature and data type $type.
   function getDatasetsWithFeature( $datasets, $feature, $type, $onlyOriginal = false ) {
@@ -13,7 +13,7 @@ class Dataset extends Database_write {
       SELECT `d`.`did` , `d`.`name` , `df`.`index` , `df`.`name` AS `feature` , `df`.`data_type`, `dq`.`value` AS `instances`
       FROM `dataset` AS `d` , `data_feature` AS `df`, `data_quality` AS `dq`
       WHERE `d`.`did` = `df`.`did`
-      AND `d`.`format` = "arff"
+      AND LOWER(`d`.`format`) = "arff"
       AND `dq`.`quality` = "NumberOfInstances"
       AND `dq`.`data` = `d`.`did`
       AND `df`.`data_type` IN ("'.implode('","',$type).'") 
@@ -21,7 +21,6 @@ class Dataset extends Database_write {
       AND `d`.`did` IN ('.implode(',',$datasets).') ';
     
     if($onlyOriginal) $sql .= ' AND `d`.`isOriginal` = "true"';
-
     return $this->Dataset->query($sql);
   }
   
@@ -93,6 +92,7 @@ class Dataset extends Database_write {
       // fill features and data quality table
       $dataFeatures = $this->Data_features->getByDid( $dataset->did );
       $dataQualities = $this->Data_quality->getByDid( $dataset->did );
+      
       $result = get_arff_features( $dataset->url, $dataset->default_target_attribute );
         
       if( $result == false || property_exists( $result,  'error' )) {
@@ -100,9 +100,15 @@ class Dataset extends Database_write {
         return false;
       }
       
+      if( $dataset->default_target_attribute == NULL ) {
+        $target_feature = end( $result->data_features );
+        $update['default_target_attribute'] = $target_feature->name;
+        $succes = $this->Dataset->update( $dataset->did, $update );
+      }
+      
       // only insert features when these were not yet extracted.
       if($dataFeatures == false) insert_arff_features( $dataset->did, $result->data_features );
-
+      
       // insert qualities anyway. duplicate keys will not be inserted, (MySQL handles this)
       // but we might have obtained additional measures
       insert_arff_qualities( $dataset->did, $result->data_qualities );

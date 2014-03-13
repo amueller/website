@@ -9,6 +9,7 @@ class Cron extends CI_Controller {
     $this->load->model('Dataset');
     $this->load->model('Data_features');
     $this->load->model('Data_quality');
+    $this->load->model('Run');
     $this->load->model('Log');
     
     $this->load->helper('Api');
@@ -51,7 +52,8 @@ class Cron extends CI_Controller {
   }
   
   // manually perform this cronjob. Type the following command:
-  // watch -n 10 "wget -O - http://openml.liacs.nl/cron/process_dataset" (specify server correct)
+  // cronjob command: wget -O - http://openml.liacs.nl/cron/process_dataset
+  // or CLI  command: watch -n 10 "wget -O - http://openml.liacs.nl/cron/process_dataset" (specify server correct)
   function process_dataset() {
     $datasets = $this->Dataset->getWhere( 'error = "false"', '`processed` ASC, `did` ASC' );
     
@@ -66,6 +68,26 @@ class Cron extends CI_Controller {
           $this->Log->cronjob( 'success', 'process_dataset', 'Did ' . $d->did . ' processed successfully. '  );
         } else {
           $this->_error( $d->did, $message );
+        }
+      }
+    }
+  }
+  
+  function process_run() {
+    $runs = $this->Run->getWhere( '`error` IS NULL AND `processed` IS NULL' );
+    
+    $processed = 0;
+    if( is_array( $runs ) ) {
+      foreach( $runs as $r ) {
+        if(++$processed > 1 )break;
+        $code = 0;
+        $message = false;
+        
+        $res = $this->Run->process( $r->rid, $code, $message );
+        if( $res === true ) {
+          $this->Log->cronjob( 'success', 'process_run', 'Rid ' . $r->rid . ' processed successfully. '  );
+        } else {
+          $this->_error( $r->rid, 'Error code ' . $code . ': ' . $message );
         }
       }
     }
