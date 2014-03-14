@@ -79,7 +79,7 @@ class Cron extends CI_Controller {
     $processed = 0;
     if( is_array( $runs ) ) {
       foreach( $runs as $r ) {
-        if(++$processed > 1 )break;
+        if(++$processed > 5 )break;
         $code = 0;
         $message = false;
         
