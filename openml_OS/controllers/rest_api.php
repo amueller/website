@@ -302,27 +302,12 @@ class Rest_api extends CI_Controller {
 			'isOriginal' => 'true',
 		);
 		
-		if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
+    // TODO: We could check on this, but it will be generated anyway during the cronjob
+		// if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
 		
 		$dataset = all_tags_from_xml( 
       $xml->children('oml', true), 
       $this->xml_fields_dataset, $dataset );
-		
-		$features = false;
-		if(strtolower($dataset['format']) == 'arff') {
-			// check whether the format is correct. For now we only check on ARFF
-			// obtain data features.
-      $class = array_key_exists( 'default_target_attribute', $dataset ) ? $dataset['default_target_attribute'] : false;
-			$features = get_arff_features( $destinationUrl, $class );
-      
-			if($features == false) {
-				$this->_returnError( 142 );
-				return;
-			} elseif( property_exists( $features, 'error' ) ) {
-			  $this->_returnError( 142 );
-				return;
-			}
-		}
 
 		/* * * * 
 		 * THE ACTUAL INSERTION
@@ -331,11 +316,12 @@ class Rest_api extends CI_Controller {
 		if( ! $id ) {
 			$this->_returnError( 134 );
 			return;
-		} else {
-			// fill table features. 
-			insert_arff_features ( $id, $features->data_features );
-			insert_arff_qualities( $id, $features->data_qualities );
 		}
+    
+    if( DEBUG ) { // for local purposes
+      // if result is false, do not mark this yet. Will try again in API
+      $this->Dataset->process( $id, $message );
+    }
 
 		$this->_xmlContents( 'data-set-upload', array( 'id' => $id ) );
 	}
@@ -372,12 +358,17 @@ class Rest_api extends CI_Controller {
 		}
 		
 		$task = $this->Task->getById( $task_id );
-		$task_type = $this->Task_type->getById( $task->ttid );
-
-		if( $task === false || $task_type === false ) {
+		if( $task === false ) {
 			$this->_returnError( 151 );
 			return;
 		}
+		
+		$task_type = $this->Task_type->getById( $task->ttid );
+		if( $task_type === false ) {
+			$this->_returnError( 151 );
+			return;
+		}
+		
 		$task_values = $this->Task_values->getTaskValuesAssoc( $task_id );
 		$parsed_io = $this->Task_type_io->getParsed( $task->ttid, $task_values );
 		$this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
@@ -795,8 +786,6 @@ class Rest_api extends CI_Controller {
 		
 		// attach uploaded files as output to run
 		foreach( $_FILES as $key => $value ) {
-			if( $key == 'description' ) continue;
-			
 			$file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, 'predictions');
 			if(!$file_id) {
 				$this->_returnError( 212 );
@@ -824,7 +813,7 @@ class Rest_api extends CI_Controller {
 			if( $key === 'predictions' ) 
 				$predictionsUrl = $record['url'];
 			
-			$this->Run->outputData( $run->rid, $data_id, 'dataset' );
+			$this->Run->outputData( $run->rid, $data_id, 'dataset', $key );
 		}
 		
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -832,14 +821,11 @@ class Rest_api extends CI_Controller {
      * supported tasks, like classification, regression        *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 		
-		$errorCode = -1;
+		$errorCode = 0;
 		$errorMessage = false;
     
-		if( $task->ttid == 1 || $task->ttid == 2 || $task->ttid == 3 || $task_id = 4 ) {
-			if( $this->Run->insertSupervisedClassificationRun( $this->user_id, $run, $task, $setupId, $predictionsUrl, $output_data, $errorCode, $errorMessage ) == false ) {
-				$this->_returnError( $errorCode, $errorMessage );
-				return;
-			}
+		if( DEBUG ) {
+		  $this->Run->process( $result->run_id, $errorCode, $errorMessage );
 		}
 		
 		// and present result, in effect only a run_id. 

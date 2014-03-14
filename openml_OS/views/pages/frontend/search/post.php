@@ -9,7 +9,7 @@ switch($ttid) {
 case 1:
 case 2:
 case 3:
-  $dataset_ids = $this->Dataset->getColumnWhere('did', 'format = "arff" AND ' . $this->Dataset->nameVersionConstraints( $this->input->post('datasets') ) );
+  $dataset_ids = $this->Dataset->getColumnWhere('did', '`processed` IS NOT NULL AND `error` = "false" AND LOWER(`format`) = "arff" AND `isOriginal` = "true" AND ' . $this->Dataset->nameVersionConstraints( $this->input->post('datasets') ) );
   $this->found_tasks = $this->Task->getGeneralTask( 
     $ttid, 
     $this->input->post('estimation_procedure'), 
@@ -24,7 +24,7 @@ case 3:
 case 4:
   $minNumInstances = $this->input->post('minimal_dataset_size');
   if( $minNumInstances == false ) $minNumInstances = '0';
-  $datasets = $this->Dataset->getDatasetWithQualities( array('NumberOfInstances'), array('> ' . $minNumInstances) );
+  $datasets = $this->Dataset->getDatasetWithQualities( array('NumberOfInstances'), array('> ' . $minNumInstances), true, true );
   $dataset_ids = object_array_get_property( $datasets, 'did' );
   
   $this->found_tasks = $this->Task->getGeneralTask( 
@@ -39,7 +39,7 @@ case 4:
   }
   break;
 default:
-	$this->task_message = 'Illegal task type. ';
-	break;
+  $this->task_message = 'Illegal task type. ';
+  break;
 }
 ?>
