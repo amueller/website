@@ -10,7 +10,7 @@
 			<div class="col-4 col-md-2 head">
 				<img src="img/community/misc/joaquin.png" class="img-circle" width="70" alt="Joaquin Vanschoren" title="Joaquin Vanschoren" /><br/>
 				<span class="membername">Joaquin Vanschoren</span><br>
-				<span class="memberline">University of Leiden</span>
+				<span class="memberline">University of Eindhoven</span>
 			</div>
 			<div class="col-4 col-md-2 head">
 				<img src="img/community/misc/hendrik.png" class="img-circle" width="70" alt="Hendrik Blockeel" title="Hendrik Blockeel" /><br/>
@@ -40,7 +40,7 @@
 			<div class="col-4 col-md-2 head">
 				<img src="img/community/misc/simon.png" class="img-circle" width="70" alt="Simon Fischer" title="Simon Fischer" /><br/>
 				<span class="membername">Simon Fischer</span><br>
-				<span class="memberline">Rapid-I</span>
+				<span class="memberline">RapidMiner</span>
 			</div>			
 			<div class="col-4 col-md-2 head">
 				<img src="img/community/misc/anonymousMan.png" class="img-circle" width="70" alt="Patrick Winter" title="Patrick Winter" /><br/>

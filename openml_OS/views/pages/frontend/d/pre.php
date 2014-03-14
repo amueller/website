@@ -43,10 +43,10 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
  	$id = 0;
         $description = '';
         $nbruns = 0;
-	   $nbinstances = 0;
-	   $nbfeatures = 0;
-	   $nbmissing = 0;
-	   $nbclasses = 0;
+	$nbinstances = 0;
+	$nbfeatures = 0;
+	$nbmissing = 0;
+	$nbclasses = 0;
 
         if ($type == 'dataset'){
 	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.inputData=d.did and d.name="'.$name.'" group by d.did');

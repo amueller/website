@@ -40,32 +40,23 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
         $name = $re->name;
         $icon = $icons[$type];
         $runs = 0;
+        $id = 0;
         $description = '';
         if ($type == 'implementation'){
-          $description = $this->Implementation->getColumnWhere('description', 'fullname = "'.$name.'"');
-          $count = $this->Implementation->query('select count(rid) as nbruns, s.implementation_id as id from cvrun r, algorithm_setup s where r.learner = s.sid and s.implementation_id = (SELECT id FROM implementation WHERE fullName ="'.$name.'")');
-          $runs = $count[0]->nbruns;
-          $id = $count[0]->id;
+	  $i = $this->Implementation->query('select count(rid) as nbruns, i.id as id, i.description from cvrun r, algorithm_setup s, implementation i where r.learner = s.sid and s.implementation_id = i.id and i.fullName ="'.$name.'"');
+          if( $i != false ) {
+	  	$description = $i[0]->description;
+          	$runs = $i[0]->nbruns;
+          	$id = $i[0]->id;
+	  }
           $this->implementation_count++;
-        }
-        elseif ($type == 'function'){
-          $description = $this->Math_function->getColumnWhere('description', 'name = "'.$name.'"');
-          $this->function_count++;
-        }
-        elseif ($type == 'dataset'){
-          $description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
-          $count = $this->Dataset->query('select count(rid) as nbruns, did as id from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
-          $id = $count[0]->id;
-          $runs = $count[0]->nbruns;
-          $this->dataset_count++;
-        }
-        
+        }        
         $result = array(
           'type' => $type,
           'id' => $id,
           'name' => $name,
           'icon' => $icon,
-          'description' => $description[0],
+          'description' => $description,
           'runs' => $runs
         );
         $this->results_runcount[] = $runs;
