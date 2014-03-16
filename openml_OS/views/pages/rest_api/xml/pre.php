@@ -319,4 +319,11 @@ $this->apiErrors[324][1] = 'Deleting the implementation failed. Please contact s
 $this->apiErrors[330][0] = 'Mandatory fields not present.';
 $this->apiErrors[330][1] = 'Please provide one of the following mandatory field combination: name and external_version. ';
 
+// for function: openml.run.getjob
+$this->apiErrors[340][0] = 'Please provide workbench and task type.';
+$this->apiErrors[340][1] = 'Please provide workbench and task type.';
+
+// for function: openml.run.getjob
+$this->apiErrors[341][0] = 'No jobs available.';
+$this->apiErrors[341][1] = 'There are no jobs that need to be executed.';
 ?>
