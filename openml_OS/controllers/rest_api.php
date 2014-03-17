@@ -30,6 +30,7 @@ class Rest_api extends CI_Controller {
 		$this->load->model('Algorithm');
 		$this->load->model('Feature');
 		$this->load->model('Math_function');
+		$this->load->model('Schedule');
 		$this->load->model('Task');
 		$this->load->model('Task_type');
 		$this->load->model('Task_values');
@@ -831,7 +832,26 @@ class Rest_api extends CI_Controller {
 		// and present result, in effect only a run_id. 
 		$this->_xmlContents( 'run-upload', $result );
 	}
-	
+  
+  private function _openml_run_getjob() {
+    $workbench = $this->input->get('workbench');
+    $task_type_id = $this->input->get('task_type_id');
+    
+    if( $workbench == false || $task_type_id == false ) {
+      $this->_returnError( 340 );
+      return;
+    }
+    
+    $job = $this->Schedule->getJob( $workbench, $task_type_id );
+    
+    if( $job == false ) {
+      $this->_returnError( 341 );
+      return;
+    }
+    
+    $this->_xmlContents( 'run-getjob', array( 'source' => $job ) );
+  }
+  
 	private function _openml_run_get() {
 		$run_id = $this->input->get('run_id');
 		if( $run_id == false ) {
