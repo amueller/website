@@ -5,13 +5,13 @@
   <oml:implementation_id><?php echo $source->setup->implementation_id; ?></oml:implementation_id>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
   <?php if($source->error !== null):?> <oml:error_message><?php echo $source->error; ?></oml:error_message> <?php endif; ?>
-    <?php if(is_array($source->inputSetting)) foreach( $source->inputSetting as $parameter ): ?>
-      <oml:parameter_setting>
-        <oml:name><?php echo $parameter->input;?></oml:name>
-        <oml:value><?php echo $parameter->value;?></oml:value>
-      </oml:parameter_setting>
-    <?php endforeach; ?>
-
+  <oml:setup_string><?php echo $source->setup->setup_string; ?></oml:setup_string>
+  <?php if(is_array($source->inputSetting)) foreach( $source->inputSetting as $parameter ): ?>
+    <oml:parameter_setting>
+      <oml:name><?php echo $parameter->input;?></oml:name>
+      <oml:value><?php echo $parameter->value;?></oml:value>
+    </oml:parameter_setting>
+  <?php endforeach; ?>
   <?php if(is_array($source->inputData)): ?>
     <oml:input_data>
     <?php foreach( $source->inputData as $d ): ?>
