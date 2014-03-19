@@ -10,4 +10,8 @@ INSERT INTO `algorithm_setup` (`sid`, `parent`, `implementation_id`, `algorithm`
 (9, 0, 64, NULL, 'Learner', 'true', NULL, 'weka.classifiers.trees.REPTree -- -M 2 -V 0.001 -N 3 -S 1 -L -1'),
 (10, 0, 62, NULL, 'Learner', 'true', NULL, 'weka.classifiers.trees.DecisionStump'),
 (11, 0, 66, NULL, 'Learner', 'true', NULL, 'weka.classifiers.functions.SMO -- -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.PolyKernel -C 250007 -E 1.0"'),
-(12, 0, 68, NULL, 'Learner', 'true', NULL, 'weka.classifiers.functions.SMO -- -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.RBFKernel -C 250007 -G 0.01"');
+(12, 0, 68, NULL, 'Learner', 'true', NULL, 'weka.classifiers.functions.SMO -- -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.RBFKernel -C 250007 -G 0.01"'),
+(13, 0, 70, NULL, 'Learner', 'true', NULL, 'bayes.NaiveBayes '),
+(14, 0, 71, NULL, 'Learner', 'true', NULL, 'functions.SGD '),
+(15, 0, 72, NULL, 'Learner', 'true', NULL, 'trees.HoeffdingTree '),
+(16, 0, 73, NULL, 'Learner', 'false', NULL, 'meta.LeveragingBag ');
