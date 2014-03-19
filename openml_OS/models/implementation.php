@@ -133,7 +133,7 @@ class Implementation extends Database_write {
       if( $implementation->{$type.'_file_id'} != false ) {
         $file = $this->File->getById( $implementation->{$type.'_file_id'} );
         if( $file != false ) {
-          $implementation->{$type.'Url'} = BASE_URL . 'data/download/' . $file->id . '/' . $file->filename_original;
+          $implementation->{$type.'Url'} = fileRecordToUrl( $file );
           $implementation->{$type.'Format'} = $file->extension;
           $implementation->{$type.'Md5'} = $file->md5_hash;
         }

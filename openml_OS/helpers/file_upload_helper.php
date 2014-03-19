@@ -144,4 +144,8 @@ function create_dir( $directory ) {
     return true;
   }
 }
+
+function fileRecordToUrl( $file ) {
+  return BASE_URL . 'data/download/' . $file->id . '/' . $file->filename_original;
+}
 ?>

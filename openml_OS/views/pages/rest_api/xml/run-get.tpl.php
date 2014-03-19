@@ -32,14 +32,22 @@
         <oml:name><?php echo $d->name; ?></oml:name>
         <oml:url><?php echo $d->url; ?></oml:url>
       </oml:dataset>
+    <?php endforeach; ?>
+    <?php endif; if(array_key_exists('runfile',$source->outputData) ): ?>
+      <?php foreach( $source->outputData['runfile'] as $r ): ?>
+      <oml:file>
+        <oml:did><?php echo $r->did; ?></oml:did>
+        <oml:name><?php echo $r->field; ?></oml:name>
+        <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl( $f ); ?></oml:url>
+      </oml:file>
       <?php endforeach; ?>
     <?php endif; if(array_key_exists('evaluations', $source->outputData) ): ?>
       <?php foreach( $source->outputData['evaluations'] as $e ): ?>
         <oml:evaluation>
           <oml:name><?php echo $e->{'function'}; ?></oml:name>
           <oml:implementation><?php echo $e->{'implementation_id'}; ?></oml:implementation>
-          <oml:value><?php echo $e->value; ?></oml:value>
-          <oml:array_data><?php echo $e->array_data; ?></oml:array_data>
+          <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
+          <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
         </oml:evaluation>
       <?php endforeach; ?>
     <?php endif; ?>

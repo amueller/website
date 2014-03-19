@@ -13,6 +13,11 @@ class Cron extends CI_Controller {
     $this->load->model('Log');
     
     $this->load->helper('Api');
+    
+    // TODO: copied from rest_api, for functionality in cron.
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'runfile');
+    $this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
+    $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
   }
   
   function build_search_index() {

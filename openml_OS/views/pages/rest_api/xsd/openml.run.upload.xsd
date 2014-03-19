@@ -24,12 +24,20 @@
   <xs:complexType name="data">
     <xs:sequence>
       <xs:element name="dataset" minOccurs="0" maxOccurs="unbounded" type="oml:dataset" /> 
+      <xs:element name="file" minOccurs="0" maxOccurs="unbounded" type="oml:file" /> 
       <xs:element name="evaluation" minOccurs="0" maxOccurs="unbounded" type="oml:evaluation" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="dataset">
     <xs:sequence>
       <xs:element name="did" type="xs:integer"/> <!-- A reference to the dataset table, by did.-->
+      <xs:element name="name" type="xs:string"/> <!-- The name of the dataset -->
+      <xs:element name="url" type="xs:string"/> <!-- A url to the datset -->
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="file">
+    <xs:sequence>
+      <xs:element name="did" type="xs:integer"/> <!-- A reference to the runfiles table, by did.-->
       <xs:element name="name" type="xs:string"/> <!-- The name of the dataset -->
       <xs:element name="url" type="xs:string"/> <!-- A url to the datset -->
     </xs:sequence>

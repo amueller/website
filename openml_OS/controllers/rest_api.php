@@ -25,6 +25,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Input');
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input_setting');
+    $this->load->model('Runfile');
 
     // only for reading
     $this->load->model('Algorithm');
@@ -51,7 +52,8 @@ class Rest_api extends CI_Controller {
       'run'        => 'run/'
     );
     
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample');
+    // TODO: also in controllers/cron.php
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'runfile');
     
     // XML maintainance
     $this->xml_fields_dataset = array(
@@ -795,26 +797,18 @@ class Rest_api extends CI_Controller {
       $file_record = $this->File->getById($file_id);
       $filename = getAvailableName( DATA_PATH . $this->data_folders['run'], $value['name'] );
       
-      $dbName = 'run-' . $run->rid . '-' . $value['name'];
+      $did = $this->Runfile->getHighestIndex( $this->data_tables, 'did' );
       $record = array(
-        'did' => $this->Dataset->getHighestIndex( $this->data_tables, 'did' ),
+        'did' => $did,
         'source' => $run->rid,
-        'name' => $dbName,
-        'version' => $this->Dataset->incrementVersionNumber( $dbName ),
-        'description' => 'uploaded content, attached to run ' . $run->rid,
+        'field' => $key,
+        'name' => $value['name'],
         'format' => $file_record->extension,
-        'upload_date' => now(),
-        'licence' => 'public domain',
-        'url' => $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original, 
-        'isOriginal' => 'false',
-        'md5_checksum' => $file_record->md5_hash,
-        'uploader' => $this->user_id );
+        'file_id' => $file_id );
       
-      $data_id = $this->Dataset->insert( $record ); 
-      if( $key === 'predictions' ) 
-        $predictionsUrl = $record['url'];
+      $this->Runfile->insert( $record ); 
       
-      $this->Run->outputData( $run->rid, $data_id, 'dataset', $key );
+      $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
