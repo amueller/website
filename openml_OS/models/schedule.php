@@ -11,12 +11,13 @@ class Schedule extends Database_read {
   // time, by accident. We want to avoid that. 
   function getJob( $workbench, $task_type ) {
     $sql = 
-      'SELECT s.*, r.start_time
-       FROM
-        (SELECT `s`.`learner`,`s`.`workbench`, `s`.`setup_id`, `s`.`ttid`, `t`.`task_id` 
+      'SELECT `a`.`setup_string`, `s`.*, `r`.`start_time` 
+       FROM `algorithm_setup` `a`,
+        (SELECT `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id` 
          FROM `schedule` `s`, `task` `t` WHERE `s`.`ttid` = `t`.`ttid`) AS `s`
-       LEFT JOIN run `r` ON `s`.`task_id` = `r`.`task_id` AND `s`.setup_id = `r`.`setup`
+       LEFT JOIN run `r` ON `s`.`task_id` = `r`.`task_id` AND `s`.`sid` = `r`.`setup`
        WHERE r.start_time IS NULL
+       AND `a`.`sid` = `s`.`sid`
        AND `s`.`workbench` = "'.$workbench.'" 
        AND `s`.`ttid` = "'.$task_type.'"';
     $res = $this->query($sql);

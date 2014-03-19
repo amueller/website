@@ -15,11 +15,7 @@ class Run extends Database_write {
     $this->load->model('Evaluation_sample');
     $this->load->model('Implementation');
     $this->load->model('Math_function');
-    
-    // TODO: copied from rest_api, for functionality in cron.
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample');
-    $this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
-    $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
+    $this->load->model('Runfile');
   }
   
   function inputData( $run, $data, $table ) {
@@ -47,14 +43,14 @@ class Run extends Database_write {
   
   function getOutputData( $runId ) {
     if( !is_numeric($runId) ) return false;
-    $sql = 'SELECT dataset.* FROM output_data, dataset WHERE output_data.data = dataset.did AND output_data.run = ' . $runId;
-    $datasets = $this->db->query( $sql )->result();
-    $sql = 'SELECT evaluation.* FROM output_data, evaluation WHERE output_data.data = evaluation.did AND output_data.run = ' . $runId;
-    $evaluations = $this->db->query( $sql )->result();
+    $datasets = $this->Dataset->getWhere(array( 'source' => $runId ));
+    $runfiles = $this->Runfile->getWhere(array( 'source' => $runId ));
+    $evaluations = $this->Evaluation->getWhere(array( 'source' => $runId ));
     
     $result = array();
-    if(count($datasets)) $result['dataset'] = $datasets;
-    if(count($evaluations)) $result['evaluations'] = $evaluations;
+    if(is_array($datasets)) $result['dataset'] = $datasets;
+    if(is_array($evaluations)) $result['evaluations'] = $evaluations;
+    if(is_array($runfiles)) $result['runfile'] = $runfiles;
     
     if(count($result)) 
       return $result;
@@ -85,14 +81,8 @@ class Run extends Database_write {
   function insertSupervisedClassificationRun( $runRecord, &$errorCode, &$errorMessage ) {
     $taskRecord = $this->Task->getByIdForEvaluation( $runRecord->task_id );
     
-    $predSql = 'SELECT `d`.* FROM `output_data` `r`,`dataset` `d` WHERE `r`.`data` = `d`.`did` AND `r`.`run` = "' . $runRecord->rid . '" AND `r`.`field` = "predictions";';
-    $descSql = 'SELECT `d`.* FROM `output_data` `r`,`dataset` `d` WHERE `r`.`data` = `d`.`did` AND `r`.`run` = "' . $runRecord->rid . '" AND `r`.`field` = "description";';
-    
-    $predictionsRecord = end( $this->query( $predSql ) );
-    $descriptionRecord = end( $this->query( $descSql ) );
-    
-    $predictionsUrl = $predictionsRecord->url;
-    $descriptionUrl = $descriptionRecord->url;
+    $predictionsUrl = fileRecordToUrl( $this->Runfile->fileFromRun( $runRecord->rid, 'predictions' ) );
+    $descriptionUrl = fileRecordToUrl( $this->Runfile->fileFromRun( $runRecord->rid, 'description' ) );
     
     $xml = simplexml_load_file( $descriptionUrl );
     

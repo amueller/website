@@ -8,7 +8,7 @@ class Algorithm_setup extends Database_write {
   }
   
   
-  function getSetupId( $implementation, $parameters, $create = false ) {
+  function getSetupId( $implementation, $parameters, $create, $setup_string = null ) {
     $paramString = '';
     $valueString = '';
     
@@ -63,6 +63,7 @@ class Algorithm_setup extends Database_write {
   //      'parent' => '0',
         'algorithm' => $implementation->implements,
         'implementation_id' => $implementation->id,
+        'setup_string' => $setup_string,
         'isDefault' => $isDefault ? 'true' : 'false',
       ); 
       

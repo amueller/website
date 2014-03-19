@@ -13,6 +13,11 @@ class Cron extends CI_Controller {
     $this->load->model('Log');
     
     $this->load->helper('Api');
+    
+    // TODO: copied from rest_api, for functionality in cron.
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'runfile');
+    $this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
+    $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
   }
   
   function build_search_index() {
@@ -38,7 +43,21 @@ class Cron extends CI_Controller {
   
   function install_database() {
     // TODO: we might scan the directory and pick up all models that contain a SQL file. Decide later. 
-    $models = array('Algorithm','Estimation_procedure','Implementation','Math_function','Quality','Task_type','Task_type_function','Task_type_io');
+    $models = array(
+      'Algorithm',
+      'Algorithm_setup',
+      'Estimation_procedure',
+      'Implementation',
+      'Implementation_component',
+      'Input',
+      'Input_setting',
+      'Math_function',
+      'Quality',
+      'Task_type',
+      'Task_type_function',
+      'Task_type_io',
+      'Schedule'
+    );
     foreach( $models as $m ) {
       $this->load->model( $m );
       if( $this->$m->get() === false ) {
