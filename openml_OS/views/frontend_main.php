@@ -186,7 +186,7 @@
 		<div id="social-bar">
 		  <div id="twitter" data-url="http://openml.org" data-text="Check out #OpenML at openml.org" data-title="twitter"></div>
 		  <div id="facebook" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="facebook"></div>
-		  <div id="googleplus" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="google-plus"></div>
+		  <div id="googleplus" data-url="openml.org" data-text="Check out OpenML at openml.org" data-title="google-plus"></div>
 		  <div id="linkedin" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="linkedin"></div>
 		  <!--<div id="pinterest" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="pinterest"></div>-->
         	  <script type="text/javascript" src="js/share.js"></script>
