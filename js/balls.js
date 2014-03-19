@@ -38,7 +38,7 @@ $(function() {
 	};
 	
 	function updateCanvasDimensions() {
-		canvas.attr({height: $(window).height(), width: $(window).width()});
+		canvas.attr({height: $(window).height(), width: ($(window).width()-10)});
 		canvasWidth = window.innerWidth;
 		canvasHeight = canvas.height();
 

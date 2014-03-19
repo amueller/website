@@ -48,6 +48,7 @@ document.getElementById('openmlsearch').focus()
 <p>What if you could share new data, code and experiments as easily as sending a tweet?</p>
 <!-- <p>What if all algorithms and experiments are organized online?</p> -->
 
+<div class="container-fluid corrected">
 <div class="row">
   <div class="col-md-4"><h1><i class="fa fa-globe"></i></h1><h2>Networked science</h2>
   <p>OpenML enables truly collaborative machine learning. Scientists can post important data, inviting anyone to help analyze it. OpenML structures and organizes all results online to show the state of the art and push progress.</p>
@@ -61,6 +62,7 @@ document.getElementById('openmlsearch').focus()
   </div>
 </div>
 <!-- Sharing like twitter, search like gmail, discuss like facebook -->
+</div>
  </div>
         
  <div id="blue" class="introsection bluesection"> 
@@ -68,6 +70,7 @@ document.getElementById('openmlsearch').focus()
 <p>What if you could collaborate on hard problems with hundreds of scientists at once?</p>
 <p>What if you could easily access the latest data to answer questions or verify findings?</p>
 
+<div class="container-fluid corrected">
 <div class="row">
   <div class="col-md-4"><h1><i class="fa fa-sun-o"></i></h1><h2>Transparency</h2>
   <p>Science follows certain methods. On OpenML, these are expressed as <i>tasks</i> detailing what results must be uploaded, and requiring the information necessary to ensure that uploaded results are interpretable and verifiable.</p>
@@ -82,7 +85,7 @@ document.getElementById('openmlsearch').focus()
   </div>
 
 </div>
-
+</div>
 
 
  </div>
@@ -93,6 +96,7 @@ document.getElementById('openmlsearch').focus()
 <p>What if you could spend more time doing actual research?</p>
 <p>What if you could get more credit for your work by making it more visible?</p>
 
+<div class="container-fluid corrected">
 <div class="row">
   <div class="col-md-4"><h1><i class="fa fa-clock-o"></i></h1><h2>More time</h2>
   <p>OpenML takes care of the routinizable work required for yielding insight. It helps you run large amounts of experiments using many datasets and techniques, organizes them online and relates them to the state-of-the-art.</p>
@@ -107,7 +111,7 @@ document.getElementById('openmlsearch').focus()
   </div>
 
 </div>
-
+</div>
 
 
 </div>

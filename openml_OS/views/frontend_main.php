@@ -234,6 +234,7 @@
             <?php echo body(); ?>
         </div>
 	<div class="openmlfooter">
+		<div class="container-fluid corrected">
 		<div class="row">
 
 		  <div class="col-xs-12 col-sm-6 col-md-6 pull-right-lg">
@@ -264,6 +265,7 @@
                     </ul>
      	    	  </div>
 
+		</div>
 		</div>
 
 
