@@ -815,6 +815,13 @@ class Rest_api extends CI_Controller {
       $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
     
+    // attach input data
+    $inputData = $this->Run->inputData( $runId, $task->did, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
+    if( $inputData === false ) {
+      $errorCode = 211;
+      return false;
+    }    
+    
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Now the stuff that needs to be done for the special     *
      * supported tasks, like classification, regression        *

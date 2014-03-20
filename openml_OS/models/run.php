@@ -116,14 +116,7 @@ class Run extends Database_write {
         return false;
       }
     }
-    
-    // attach input data
-    $inputData = $this->inputData( $runRecord->rid, $taskRecord->did, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
-    if( $inputData === false ) {
-      $errorCode = 211;
-      return false;
-    }    
-    $inputData = $this->Dataset->getById( $taskRecord->did );    
+    $inputData = $this->Dataset->getById( $taskRecord->did );
     
     // and now evaluate the run
     $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
