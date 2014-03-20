@@ -123,7 +123,7 @@ class Cron extends CI_Controller {
     }
   }
   
-  private function _error($did, $message) {
+  private function _error($type, $did, $message) {
     $this->Log->cronjob( 'error', 'process_' . $type, 'Id ' . $did . ' processed with error: ' . $message );
     // TODO: email user about the error that occurred. 
   }
