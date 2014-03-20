@@ -90,7 +90,8 @@ class Cron extends CI_Controller {
         if( $res === true ) {
           $this->Log->cronjob( 'success', 'process_dataset', 'Did ' . $d->did . ' processed successfully. '  );
         } else {
-          $this->_error( $d->did, $message );
+          $this->Dataset->update( $d->did, array( 'processed' => now(), 'error' => 'true' ) );
+          $this->_error( 'dataset', $d->did, $message );
         }
       }
     }
@@ -114,15 +115,16 @@ class Cron extends CI_Controller {
         if( $res === true ) {
           $this->Log->cronjob( 'success', 'process_run', 'Rid ' . $r->rid . ' processed successfully. '  );
         } else {
-          $this->_error( $r->rid, 'Error code ' . $code . ': ' . $message );
+          
+          $this->Run->update( $r->rid, array( 'processed' => now(), 'error' => 'true' ) );
+          $this->_error( 'run', $r->rid, 'Error code ' . $code . ': ' . $message );
         }
       }
     }
   }
   
   private function _error($did, $message) {
-    $this->Dataset->update( $did, array( 'processed' => now(), 'error' => 'true' ) );
-    $this->Log->cronjob( 'error', 'process_dataset', 'Did ' . $did . ' processed with error: ' . $message );
+    $this->Log->cronjob( 'error', 'process_' . $type, 'Id ' . $did . ' processed with error: ' . $message );
     // TODO: email user about the error that occurred. 
   }
 }
