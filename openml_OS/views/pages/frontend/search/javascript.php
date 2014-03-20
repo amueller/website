@@ -852,8 +852,8 @@ function learningCurveQuery( datasets, implementations ) {
   
   var datasetConstraint = '';
   var implementationConstraint = '';
-	if ( datasets.length > 0 ) datasetConstraint = ' AND `d`.`name` IN ("' + datasets.join('","') + '") ';
-	if ( implementations.length > 0 ) implementationConstraint = ' AND `i`.`fullName` IN ("' + implementations.join('","') + '") ';
+  if ( datasets.length > 0 ) datasetConstraint = ' AND `d`.`name` IN ("' + datasets.join('","') + '") ';
+  if ( implementations.length > 0 ) implementationConstraint = ' AND `i`.`fullName` IN ("' + implementations.join('","') + '") ';
   
   var sql = 
     'SELECT `e`.`sample_size`, CONCAT(`i`.`name`," on Task ",`r`.`task_id`, ": ", `d`.`name`) AS `name`, avg(`e`.`value`) as `score`' + 
@@ -873,70 +873,61 @@ function learningCurveQuery( datasets, implementations ) {
     'ORDER BY `sample`, `name` ASC';
     
     runQuery( sql );
-	  window.editor.setValue( sql );
+    window.editor.setValue( sql );
 }
 
-function wizardQuery( algorithms, implementations, defaultParams, datasets, evaluationMethod, evaluationMetric, crosstabulate ) {
-	// TODO: only available evaluationMethod: CV . Var is not used yet. 
-	$('#wizardquery-btn').button('loading');
-	
-	datasets = commaSeperatedListToCleanArray( datasets );
-	algorithms = commaSeperatedListToCleanArray( algorithms );
-	implementations = commaSeperatedListToCleanArray( implementations );
-	
-	var sql = '';
-	var algorithmConstraint = '';
-	var datasetConstraint = '';
-	var implementationConstraint = '';
-	var selectColumns = ' i.fullName, d.name, e.value ';
-	if ( algorithms.length > 0 ) algorithmConstraint = ' AND l.algorithm IN ("' + algorithms.join('","') + '") ';
-	if ( implementations.length > 0 ) implementationConstraint = ' AND l.implementation IN ("' + implementations.join('","') + '") ';
-	if ( datasets.length > 0 ) {
-		var c_d  = splitDatasetsFromCollections( datasets );
-		if( c_d.collections.length > 0 && c_d.datasets.length > 0 ) {
-			datasetConstraint = ' AND ( d.name IN ("' + c_d.datasets.join('","') + '") OR d.collection IN ("' + c_d.collections.join('","') + '") ) ';
-		} else if( c_d.collections.length > 0 ) {
-			datasetConstraint = ' AND d.collection IN ("' + c_d.collections.join('","') + '")  ';
-		} else if( c_d.datasets.length > 0 ) {
-			datasetConstraint = ' AND d.name IN ("' + c_d.datasets.join('","') + '") ';
-		}
-	}
-	if( crosstabulate != "none" ) {
-		autocrosstabulate = true;
-		if( crosstabulate == 'dataset' ) selectColumns = ' d.name, i.fullName, e.value ';
-	} 
-	
-	if( defaultParams )
-		sql = 	'SELECT ' + selectColumns + 
-				'FROM algorithm_setup l, evaluation e, cvrun r, dataset d, implementation i ' + 
-				'WHERE r.learner = l.sid ' +
-				algorithmConstraint + 
-				datasetConstraint + 
-				implementationConstraint + 
-				'AND l.isDefault = "true" ' +
-				'AND r.inputData=d.did ' + 
-				'AND l.implementation_id = i.id ' +
-				'AND d.isOriginal="true" ' + 
-				'AND e.source=r.rid ' +
-				'AND e.function="' + evaluationMetric + '" ' + 
-				'ORDER BY l.algorithm ASC, d.name ASC;';
-	else 
-		sql = 	'SELECT CONCAT(i.fullName, " with ", IFNULL(GROUP_CONCAT( CONCAT( p.name, "=", ps.value ) ),"") ) AS algorithm, d.name, e.value ' +
-				'FROM evaluation e, cvrun r, implementation i dataset d, algorithm_setup l LEFT JOIN input_setting ps ON l.sid = ps.setup LEFT JOIN input p ON ps.input = p.fullname ' + 
-				'WHERE r.learner = l.sid ' +
-				algorithmConstraint + 
-				datasetConstraint + 
-				implementationConstraint + 
-				'AND r.inputData=d.did ' + 
-				'AND l.implementation_id = i.id ' +
-				'AND d.isOriginal="true" ' + 
-				'AND e.source=r.rid ' +
-				'AND e.function="' + evaluationMetric + '" ' + 
-				'GROUP BY l.sid, d.name ' +
-				'ORDER BY l.algorithm ASC, d.name ASC;';
-	
-	runQuery( sql );
-	window.editor.setValue( sql );
+function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets, evaluationMethod, evaluationMetric, crosstabulate ) {
+  // TODO: only available evaluationMethod: CV . Var is not used yet. 
+  $('#wizardquery-btn').button('loading');
+  datasets = commaSeperatedListToCleanArray( datasets );
+  algorithms = commaSeperatedListToCleanArray( algorithms );
+  implementations = commaSeperatedListToCleanArray( implementations );
+  
+  var sql = '';
+  var algorithmConstraint = '';
+  var datasetConstraint = '';
+  var implementationConstraint = '';
+  var selectImplementation = 'i.fullName';
+  if( defaultParams == false ) selectImplementation = 'CONCAT("i.implementation"," (", l.setup_string, ")")';
+  var selectColumns = selectImplementation + ', d.name, e.value ';
+  var setupConstraint = '';
+  if( defaultParams ) setupConstraint = ' AND l.isDefault = "true" ';
+  if ( algorithms.length > 0 ) algorithmConstraint = ' AND l.algorithm IN ("' + algorithms.join('","') + '") ';
+  if ( implementations.length > 0 ) implementationConstraint = ' AND l.implementation IN ("' + implementations.join('","') + '") ';
+  if ( datasets.length > 0 ) {
+    var c_d  = splitDatasetsFromCollections( datasets );
+    if( c_d.collections.length > 0 && c_d.datasets.length > 0 ) {
+      datasetConstraint = ' AND ( d.name IN ("' + c_d.datasets.join('","') + '") OR d.collection IN ("' + c_d.collections.join('","') + '") ) ';
+    } else if( c_d.collections.length > 0 ) {
+      datasetConstraint = ' AND d.collection IN ("' + c_d.collections.join('","') + '")  ';
+    } else if( c_d.datasets.length > 0 ) {
+      datasetConstraint = ' AND d.name IN ("' + c_d.datasets.join('","') + '") ';
+    }
+  }
+  if( crosstabulate != "none" ) {
+    autocrosstabulate = true;
+    if( crosstabulate == 'dataset' ) selectColumns = ' d.name, ' + selectImplementation + ', e.value ';
+  } 
+  
+
+  sql = 'SELECT ' + selectColumns + 
+        'FROM algorithm_setup l, evaluation e, cvrun r, task t, dataset d, implementation i ' + 
+        'WHERE r.learner = l.sid ' +
+        algorithmConstraint + 
+        datasetConstraint + 
+        implementationConstraint + 
+        setupConstraint +
+        'AND r.inputData = d.did ' + 
+        'AND l.implementation_id = i.id ' +
+        'AND d.isOriginal = "true" ' + 
+        'AND e.source = r.rid ' +
+        'AND e.function = "' + evaluationMetric + '" ' + 
+        'AND r.task_id = t.task_id ' + 
+        'AND t.ttid = ' + ttid + ' '
+        'ORDER BY l.algorithm ASC, d.name ASC;';
+  
+  runQuery( sql );
+  window.editor.setValue( sql );
 }
 
 function exportResult( filetype ) {
