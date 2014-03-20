@@ -85,6 +85,10 @@ class Run extends Database_write {
     $descriptionUrl = fileRecordToUrl( $this->Runfile->fileFromRun( $runRecord->rid, 'description' ) );
     
     $xml = simplexml_load_file( $descriptionUrl );
+    if( $xml == false ) {
+      $errorCode = 219;
+      return false;
+    }
     
     $output_data = array();
     if( $xml->children('oml', true)->{'output_data'} != false ) {
@@ -93,24 +97,26 @@ class Run extends Database_write {
       }
     }
     
-    // create shortcut record
-    $cvRunData = array(
-      'rid' => $runRecord->rid,
-      'uploader' => $runRecord->uploader,
-      'task_id' => $taskRecord->id,
-      'inputData' => $taskRecord->did,
-      'learner' => $runRecord->setup,
-      'runType' => 'classification',
-      'nrFolds' => property_exists( $taskRecord, 'folds' ) ? $taskRecord->folds : 1,
-      'nrIterations' => property_exists( $taskRecord, 'repeats' ) ? $taskRecord->repeats : 1
-    );
-    
-    $cvrunId = $this->Cvrun->insert( $cvRunData );
-    if( $cvrunId === false ) {
-      $errorCode = 209;
-      return false;
+    // create shortcut record, after check whether it doesn't exists
+    if( $this->Cvrun->getById( $runRecord->rid ) === false ) {
+      $cvRunData = array(
+        'rid' => $runRecord->rid,
+        'uploader' => $runRecord->uploader,
+        'task_id' => $taskRecord->id,
+        'inputData' => $taskRecord->did,
+        'learner' => $runRecord->setup,
+        'runType' => 'classification',
+        'nrFolds' => property_exists( $taskRecord, 'folds' ) ? $taskRecord->folds : 1,
+        'nrIterations' => property_exists( $taskRecord, 'repeats' ) ? $taskRecord->repeats : 1
+      );
+      
+      $cvrunId = $this->Cvrun->insert( $cvRunData );
+      if( $cvrunId === false ) {
+        $errorCode = 209;
+        return false;
+      }
     }
-        
+    
     // attach input data
     $inputData = $this->inputData( $runRecord->rid, $taskRecord->did, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {

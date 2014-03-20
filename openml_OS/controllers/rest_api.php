@@ -698,6 +698,10 @@ class Rest_api extends CI_Controller {
     
     // fetch xml
     $xml = simplexml_load_file( $description['tmp_name'] );
+    if( $xml === false ) {
+      $this->_returnError( 219, $xmlErrors );
+      return;
+    }
     
     $task_id = (string) $xml->children('oml', true)->{'task_id'}->{0};
     $implementation_id = (string) $xml->children('oml', true)->{'implementation_id'}->{0};

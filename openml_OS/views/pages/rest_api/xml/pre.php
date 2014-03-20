@@ -211,6 +211,11 @@ $this->apiErrors[217][1] = 'One of the provided evaluation measures could not be
 $this->apiErrors[218][0] = 'Wrong implementation associated with run: this implements a math_function';
 $this->apiErrors[218][1] = 'The implementation implements a math_function, which is unable to generate predictions. Please select another implementation. ';
 
+// for function: openml.run.upload
+$this->apiErrors[219][0] = 'Error reading the XML document';
+$this->apiErrors[219][1] = 'The xml description file could not be verified. ';
+
+
 // for function: openml.run.get 
 $this->apiErrors[220][0] = 'Please provide run_id';
 $this->apiErrors[220][1] = 'In order to view run details, please provide run_id';
