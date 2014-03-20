@@ -73,8 +73,12 @@ class Cron extends CI_Controller {
   // manually perform this cronjob. Type the following command:
   // cronjob command: wget -O - http://openml.liacs.nl/cron/process_dataset
   // or CLI  command: watch -n 10 "wget -O - http://openml.liacs.nl/cron/process_dataset" (specify server correct)
-  function process_dataset() {
-    $datasets = $this->Dataset->getWhere( 'error = "false"', '`processed` ASC, `did` ASC' );
+  function process_dataset( $did = false ) {
+    if( $did = false ) {
+      $datasets = $this->Dataset->getWhere( '`error` = "false"', '`processed` ASC, `did` ASC' );
+    } else {
+      $datasets = $this->Dataset->getWhere( '`did` = "' . $did . '"' );
+    }
     
     $processed = 0;
     if( is_array( $datasets ) ) {
@@ -92,8 +96,12 @@ class Cron extends CI_Controller {
     }
   }
   
-  function process_run() {
-    $runs = $this->Run->getWhere( '`error` IS NULL AND `processed` IS NULL' );
+  function process_run( $rid = false ) {
+    if( $rid == false ) {
+      $runs = $this->Run->getWhere( '`error` IS NULL AND `processed` IS NULL' );
+    } else {
+      $runs = $this->Run->getWhere( '`rid` = "'.$rid.'"');
+    }
     
     $processed = 0;
     if( is_array( $runs ) ) {
