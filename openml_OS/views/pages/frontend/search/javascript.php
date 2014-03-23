@@ -888,7 +888,7 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   var datasetConstraint = '';
   var implementationConstraint = '';
   var selectImplementation = 'i.fullName';
-  if( defaultParams == false ) selectImplementation = 'CONCAT(`i`.`implementation`," (", `l`.`setup_string`, ")")';
+  if( defaultParams == false ) selectImplementation = 'CONCAT(`i`.`name`," (", `l`.`setup_string`, ")")';
   var selectColumns = selectImplementation + ', d.name, e.value ';
   var setupConstraint = '';
   if( defaultParams ) setupConstraint = ' AND l.isDefault = "true" ';
