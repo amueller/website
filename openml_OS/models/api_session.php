@@ -47,7 +47,7 @@ class Api_session extends Community {
 	}
 	
 	function validUntil( $date ) {
-		return date('Y-m-d H:i:s', strtotime($date . '+1 hours'));
+		return date('Y-m-d H:i:s', strtotime($date . '+' . $this->config->item('api_session_length')));
 	}
 }
 ?>
