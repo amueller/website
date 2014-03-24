@@ -264,4 +264,17 @@ function xml_subsize( $xml_resource, $xml_field, $subfield ) {
     return 0;
   }
 }
+
+function xml2object ( $xmlObject, $attributes = false ) {
+    $out = new stdClass ();
+    foreach ( (array) $xmlObject as $index => $node )
+      $out->{$index} = ( is_object ( $node ) ) ? xml2object ( $node ) : $node;
+    if( $attributes ) {
+      foreach ( $xmlObject->attributes() as $index => $node ) {
+        $out->{$index} = ''. $node;
+      }
+    }
+
+    return $out;
+}
 ?>

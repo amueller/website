@@ -93,7 +93,7 @@ class Run extends Database_write {
     $output_data = array();
     if( $xml->children('oml', true)->{'output_data'} != false ) {
       foreach( $xml->children('oml', true)->{'output_data'}->children('oml', true) as $out ) {
-        $output_data[] = $out;
+        $output_data[] = xml2object( $out, true );
       }
     }
     
@@ -120,14 +120,14 @@ class Run extends Database_write {
     
     // and now evaluate the run
     $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
-    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $output_data, $errorMessage ) == false ) {
+    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $output_data, $errorCode, $errorMessage ) == false ) {
       $errorCode = 216;
       return false;
     }
     return true;
   }
   
-  private function evaluateRun( $runId, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode ) {
+  private function evaluateRun( $runId, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
     $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $res = array();
     $code = 0;
@@ -206,16 +206,20 @@ class Run extends Database_write {
       $data = array(
         'did' => $did_global,
         'source' => $runId,
-        'function' => ''.$metric->name,
+        'function' => $metric->name,
         'implementation_id' => $implementation_record->id );
       if( property_exists($metric, 'label') )
-        $data['label'] = ''.$metric->label;
+        $data['label'] = $metric->label;
       if( property_exists($metric, 'value') )
-        $data['value'] = ''.$metric->value;
+        $data['value'] = $metric->value;
       if( property_exists($metric, 'array_data') )
-        $data['array_data'] = '' . $metric->array_data;
+        $data['array_data'] = $metric->array_data;
       
-      $this->Evaluation->insert( $data );
+      if( property_exists($metric, 'fold') || property_exists($metric, 'repeat') || property_exists($metric, 'sample' ) ) {
+        // TODO!!!!  store these later
+      } else {
+        $this->Evaluation->insert( $data );
+      }
     }
     
     // fold metrics
