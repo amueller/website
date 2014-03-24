@@ -10,5 +10,5 @@ $config['community_teaser_length'] = 300;
 $config['content_directories_create'] = TRUE;
 $config['content_directories_mode'] = 0777;
 
-$config['api_session_length'] = '5 minutes 10 seconds';
+$config['api_session_length'] = '1 hour';
 ?>

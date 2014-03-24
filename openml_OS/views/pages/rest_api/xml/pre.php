@@ -317,8 +317,8 @@ $this->apiErrors[324][0] = 'Implementation is in use by other content. Can not b
 $this->apiErrors[324][1] = 'The implementation is used in runs, evaluations or as component of another implementation. Delete this other content before deleting this implementation. ';
 
 // for function: openml.implementation.delete
-$this->apiErrors[324][0] = 'Deleting implementation failed.';
-$this->apiErrors[324][1] = 'Deleting the implementation failed. Please contact support team. ';
+$this->apiErrors[325][0] = 'Deleting implementation failed.';
+$this->apiErrors[325][1] = 'Deleting the implementation failed. Please contact support team. ';
 
 // for function: openml.implementation.exists
 $this->apiErrors[330][0] = 'Mandatory fields not present.';
@@ -331,4 +331,28 @@ $this->apiErrors[340][1] = 'Please provide workbench and task type.';
 // for function: openml.run.getjob
 $this->apiErrors[341][0] = 'No jobs available.';
 $this->apiErrors[341][1] = 'There are no jobs that need to be executed.';
+
+// for function: openml.data.delete
+$this->apiErrors[350][0] = 'Please provide session_hash';
+$this->apiErrors[350][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.data.delete
+$this->apiErrors[351][0] = 'Authentication failed';
+$this->apiErrors[351][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.data.delete
+$this->apiErrors[352][0] = 'Dataset does not exists';
+$this->apiErrors[352][1] = 'The data id could not be linked to an existing dataset.';
+
+// for function: openml.data.delete
+$this->apiErrors[353][0] = 'Dataset is not owned by you';
+$this->apiErrors[353][1] = 'The dataset was owned by another user. Hence you cannot delete it.';
+
+// for function: openml.data.delete
+$this->apiErrors[354][0] = 'Dataset is in use by other content. Can not be deleted';
+$this->apiErrors[354][1] = 'The data is used in runs. Delete this other content before deleting this implementation. ';
+
+// for function: openml.data.delete
+$this->apiErrors[355][0] = 'Deleting dataset failed.';
+$this->apiErrors[355][1] = 'Deleting the dataset failed. Please contact support team. ';
 ?>

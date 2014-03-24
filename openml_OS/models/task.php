@@ -46,6 +46,19 @@ class Task extends Database_write {
       return false;
   }
   
+  function getTasksWithDid( $did ) {
+    $sql = $this->construct_sql( 0, false ) . ' AND `vtable_did`.`value` = "'.$did.'"';
+    $tasks = $this->query( $sql );
+    
+    $res = array();
+    if( is_array( $tasks ) ) {
+      foreach( $tasks as $task ) {
+        $res[] = $task->task_id;
+      }
+    }
+    return $res;
+  }
+  
   function getByIdForEvaluation( $id ) {
     if(is_numeric($id) === false)
       return false;

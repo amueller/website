@@ -90,7 +90,7 @@ class Dataset extends Database_write {
     // and add features / qualities
     if( strtolower($dataset->format) == 'arff' ) {
       // fill features and data quality table
-      $dataFeatures = $this->Data_features->getByDid( $dataset->did );
+      $dataFeatures = $this->Data_feature->getByDid( $dataset->did );
       $dataQualities = $this->Data_quality->getByDid( $dataset->did );
       
       $result = get_arff_features( $dataset->url, $dataset->default_target_attribute );

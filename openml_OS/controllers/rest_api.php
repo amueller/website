@@ -12,7 +12,7 @@ class Rest_api extends CI_Controller {
     
     // for writing
     $this->load->model('Dataset');
-    $this->load->model('Data_features');
+    $this->load->model('Data_feature');
     $this->load->model('Data_quality');
     $this->load->model('File');
     $this->load->model('Algorithm_setup');
@@ -224,6 +224,51 @@ class Rest_api extends CI_Controller {
     }
     
     $this->_xmlContents( 'data-set-features', $dataset );
+  }
+  
+  
+
+  private function _openml_data_delete() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 350 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 351 );
+        return;
+      }
+    }
+    
+    $dataset = $this->Dataset->getById( $this->input->post( 'data_id' ) );
+    if( $dataset == false ) {
+      $this->_returnError( 352 );
+      return;
+    }
+    
+    if($dataset->uploader != $this->user_id ) {
+      $this->_returnError( 353 );
+      return;
+    }
+    
+    $task_ids = $this->Task->getTasksWithDid( $dataset->did );
+    
+    $runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
+    
+    
+    if( $runs ) {
+      $this->_returnError( 354 );
+      return;
+    }
+    
+    $result = $this->Dataset->delete( $dataset->did );
+    $this->Data_feature->deleteWhere('did =' . $dataset->did);
+    $this->Data_quality->deleteWhere('data =' . $dataset->did);
+
+    if( $result == false ) {
+      $this->_returnError( 355 );
+      return;
+    }
+    $this->_xmlContents( 'data-delete', array( 'dataset' => $dataset ) );
   }
   
   private function _openml_data_licences() {

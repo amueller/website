@@ -220,7 +220,7 @@ function insert_arff_features( $did, $features ) {
   foreach( $features as $f ) {
     $feature_array = (array) $f;
     $feature_array['did'] = $did;
-    $ci->Data_features->insert( $feature_array );
+    $ci->Data_feature->insert( $feature_array );
   }
 }
 

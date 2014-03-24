@@ -7,7 +7,7 @@ class Cron extends CI_Controller {
     $this->controller = strtolower(get_class ($this));
     
     $this->load->model('Dataset');
-    $this->load->model('Data_features');
+    $this->load->model('Data_feature');
     $this->load->model('Data_quality');
     $this->load->model('Run');
     $this->load->model('Log');
