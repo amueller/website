@@ -19,7 +19,7 @@ class Data extends CI_Controller {
     if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
       $this->_error404();
     } else {
-      $this->_header_download($file->filename_original,$file->filesize);
+      $this->_header_download($file);
       $this->_readfile_chunked(DATA_PATH . $file->filepath);
     }
   }
@@ -40,15 +40,15 @@ class Data extends CI_Controller {
     $this->load->view('404');
   }
   
-  function _header_download($filename,$filesize) {
+  function _header_download($file) {
     header('Content-Description: File Transfer');
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename='.basename($filename));
-    header('Content-Transfer-Encoding: binary');
+    header('Content-Type: ' . $file->mime_type);
+    header('Content-Disposition: attachment; filename='.basename($file->filename_original));
+//    header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
-    header('Content-Length: ' . $filesize);
+    header('Content-Length: ' . $file->filesize);
   }
   
   function _readfile_chunked($filename,$retbytes=true) {

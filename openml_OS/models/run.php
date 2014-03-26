@@ -84,8 +84,13 @@ class Run extends Database_write {
     $predictionsUrl = fileRecordToUrl( $this->Runfile->fileFromRun( $runRecord->rid, 'predictions' ) );
     $descriptionUrl = fileRecordToUrl( $this->Runfile->fileFromRun( $runRecord->rid, 'description' ) );
     
-    $xml = simplexml_load_file( $descriptionUrl );
+    $description = file_get_contents( $descriptionUrl );
+    libxml_use_internal_errors(true);
+    $xml = simplexml_load_string( $description );
+    
     if( $xml == false ) {
+      die( $description );
+      foreach(libxml_get_errors() as $error) $errorMessage .= $error . '. ';
       $errorCode = 219;
       return false;
     }
@@ -166,59 +171,17 @@ class Run extends Database_write {
     if( property_exists( $json, 'global_metrices' ) ) {
       foreach( $json->global_metrices as $metric ) {
         if( in_array( $metric->name, $this->supportedMetrics ) ) {
-          $res[$metric->name] = property_exists( $metric, 'value' ) ? $metric->value : $metric->array_data;
-          // TODO: smarter way to deal with this :)
-          $implementation_record = $this->Implementation->getByFullName($metric->implementation);
-          if( $implementation_record == false ) {
-            $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $metric->implementation . ' not found in database. ' );
-            continue;
-          }
-          
-          $data = array(
-            'did' => $did_global,
-            'source' => $runId,
-            'function' => $metric->name,
-            'implementation_id' => $implementation_record->id );
-          if( property_exists($metric, 'label') )
-            $data['label'] = ''.$metric->label;
-          if( property_exists($metric, 'value') )
-            $data['value'] = ''.$metric->value;
-          if( property_exists($metric, 'array_data') )
-            $data['array_data'] = arr2string( $metric->array_data );
-          
-          if( $this->measureConsistent($metric, $userSpecifiedMetrices) == false ) {
-            $inconsistentMeasures[] = $metric->name;
-          }
-          
-          $this->Evaluation->insert( $data );
+          $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
         }
       }
     }
     
-    // user defined metrics:
-    foreach( $userSpecifiedMetrices as $metric ) { 
-      // TODO: smarter way to deal with this :)
-      $implementation_record = $this->Implementation->getByFullName($metric->implementation);
-      if( $implementation_record == false ) {
-        $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $metric->implementation . ' not found in database. ' );
-        continue;
-      }
-      $data = array(
-        'did' => $did_global,
-        'source' => $runId,
-        'function' => $metric->name,
-        'implementation_id' => $implementation_record->id );
-      if( property_exists($metric, 'label') )
-        $data['label'] = $metric->label;
-      if( property_exists($metric, 'value') )
-        $data['value'] = $metric->value;
-      if( property_exists($metric, 'array_data') )
-        $data['array_data'] = $metric->array_data;
-      
+    // user defined global metrics:
+    foreach( $userSpecifiedMetrices as $metric ) {
       if( property_exists($metric, 'fold') || property_exists($metric, 'repeat') || property_exists($metric, 'sample' ) ) {
-        // TODO!!!!  store these later
+        continue;
       } else {
-        $this->Evaluation->insert( $data );
+        $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
       }
     }
     
@@ -229,29 +192,12 @@ class Run extends Database_write {
           $did = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
           $this->Run->outputData( $runId, $did, 'evaluation_fold' );
           foreach( $json->fold_metrices[$repeat][$fold] as $metric ) {
-            if( in_array( $metric->name, $this->supportedMetrics ) ) {
-              // TODO: smarter way to deal with this :)
-              $implementation_record = $this->Implementation->getByFullName($metric->implementation);
-              if( $implementation_record == false ) {
-                $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $metric->implementation . ' not found in database. ' );
-                continue;
-              }
-              
-              $data = array(
-                'did' => $did,
-                'source' => $runId,
-                'parent' => $did_global,
-                'function' => $metric->name,
-                'implementation_id' => $implementation_record->id,
-                'repeat' => $repeat,
-                'fold' => $fold );
-              if( property_exists($metric, 'label') )
-                $data['label'] = '' . $metric->label;
-              if( property_exists($metric, 'value') )
-                $data['value'] = ''.$metric->value;
-              if( property_exists($metric, 'array_data') )
-                $data['array_data'] = arr2string( $metric->array_data );
-              $this->Evaluation_fold->insert( $data );
+            $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
+          }
+          foreach( $userSpecifiedMetrices as $metric ) {
+            if( property_exists($metric, 'fold') && property_exists($metric, 'repeat') && !property_exists($metric, 'sample' ) ) {
+              if( $metric->repeat == $repeat && $metric->fold == $fold )
+                $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
             }
           }
         }
@@ -266,31 +212,12 @@ class Run extends Database_write {
             $did = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
             $this->Run->outputData( $runId, $did, 'evaluation_sample' );
             foreach( $json->sample_metrices[$repeat][$fold][$sample] as $metric ) {
-              if( in_array( $metric->name, $this->supportedMetrics ) ) {
-                // TODO: smarter way to deal with this :)
-                $implementation_record = $this->Implementation->getByFullName($metric->implementation);
-                if( $implementation_record == false ) {
-                  $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $metric->implementation . ' not found in database. ' );
-                  continue;
-                }
-                
-                $data = array(
-                  'did' => $did,
-                  'source' => $runId,
-                  'parent' => $did_global,
-                  'function' => $metric->name,
-                  'implementation_id' => $implementation_record->id,
-                  'repeat' => $repeat,
-                  'fold' => $fold,
-                  'sample' => $sample,
-                  'sample_size' => $metric->sample_size );
-                if( property_exists($metric, 'label') )
-                  $data['label'] = '' . $metric->label;
-                if( property_exists($metric, 'value') )
-                  $data['value'] = ''.$metric->value;
-                if( property_exists($metric, 'array_data') )
-                  $data['array_data'] = arr2string( $metric->array_data );
-                $this->Evaluation_sample->insert( $data );
+              $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold, $sample );
+            }
+            foreach( $userSpecifiedMetrices as $metric ) {
+              if( property_exists($metric, 'fold') && property_exists($metric, 'repeat') && property_exists($metric, 'sample' ) ) {
+                if( $metric->repeat == $repeat && $metric->fold == $fold && $metric->sample == $sample )
+                  $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold, $sample );
               }
             }
           }
@@ -303,8 +230,50 @@ class Run extends Database_write {
       $errorCode = 'Inconsistent evaluation measures: ' . implode( '; ', $inconsistentMeasures);
       return false;
     }
-
     return $res;
+  }
+  
+  private function storeEvaluationMeasure( $metric, $did, $runId, $did_global = false, $repeat = false, $fold = false, $sample = false ) {
+    if( in_array( $metric->name, $this->supportedMetrics ) ) {
+      // TODO: smarter way to deal with this :)
+      $implementation_record = $this->Implementation->getByFullName($metric->implementation);
+      if( $implementation_record == false ) {
+        $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $metric->implementation . ' not found in database. ' );
+        return false;
+      }
+      
+      $data = array(
+        'did' => $did,
+        'source' => $runId,
+        'function' => ''.$metric->name,
+        'implementation_id' => $implementation_record->id );
+      if( $did_global !== false )
+        $data['parent'] = $did_global;
+      
+      if( property_exists($metric, 'stdev') ) $data['stdev'] = ''.$metric->stdev;
+      if( property_exists($metric, 'sample_size') ) $data['sample_size'] = ''.$metric->sample_size;
+      if( property_exists($metric, 'label') ) $data['label'] = ''.$metric->label;
+      if( property_exists($metric, 'value') ) $data['value'] = ''.$metric->value;
+      if( property_exists($metric, 'array_data') ) $data['array_data'] = arr2string( $metric->array_data );
+      
+      if( $repeat !== false && $fold !== false && $sample !== false ) {
+        $data['repeat'] = $repeat;
+        $data['fold'] = $fold;
+        $data['sample'] = $sample;
+        $this->Evaluation_sample->insert( $data );
+        return true;
+      } else if( $repeat !== false && $fold !== false ) {
+        $data['repeat'] = $repeat;
+        $data['fold'] = $fold;
+        $this->Evaluation_fold->insert( $data );
+        return true;
+      } else if( $repeat === false && $fold === false && $sample === false ) {
+        $this->Evaluation->insert( $data );
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
   
   private function measureConsistent( $engine, &$user_all ) {
