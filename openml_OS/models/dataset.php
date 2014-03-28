@@ -68,7 +68,7 @@ class Dataset extends Database_write {
   function process( $did, &$message ) {
     $dataset = $this->getById( $did );
     
-    $update = array( 'processed' => now() );
+    $update = array( 'processed' => now(), 'error' => 'false' );
     
     // update the date, legacy dataset corrections, can be removed later
     if( $dataset->upload_date == '0000-00-00 00:00:00' ) {
