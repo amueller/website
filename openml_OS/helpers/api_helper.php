@@ -186,7 +186,12 @@ function get_arff_features( $datasetUrl, $class = false ) {
   $eval = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
   $res = array();
   $code = 0;
-  $command = "java -jar $eval -f data_features -d $datasetUrl";
+  
+  $heap = '-Xmx' . ( $ci->input->is_cli_request() ? 
+    $ci->config->item('java_heap_space_cli') : 
+    $ci->config->item('java_heap_space_web') );
+  
+  $command = "java $heap -jar $eval -f data_features -d $datasetUrl";
   if($class != false)
     $command .= ' -c ' . $class;
   

@@ -13,32 +13,57 @@ class Log extends CI_Model {
   
   function cronjob( $level, $function, $message ) {
     $this->handle = fopen( $this->dir . 'cron.log', 'a' );
-    fwrite( $this->handle, '[' . now() . '] [' . $level . '] ' . $function . ': ' . $message . "\n" );
-    fclose($this->handle);
+    if( $this->handle ) {
+      fwrite( $this->handle, '[' . now() . '] [' . $level . '] ' . $function . ': ' . $message . "\n" );
+      fclose($this->handle);
+    } else {
+      $this->email_log( );
+    }
   }
   
   function api_error( $level, $user, $code, $function, $message ) {
     $this->handle = fopen( $this->dir . 'api_errors.log', 'a' );
-    fwrite( $this->handle, '[' . now() . '] ['.$level.'] [' . $user . '] Errorcode: ' . $code . '. Function: ' . $function . '. Response: ' . $message . "\n" );
-    fclose($this->handle);
+    if( $this->handle ) {
+      fwrite( $this->handle, '[' . now() . '] ['.$level.'] [' . $user . '] Errorcode: ' . $code . '. Function: ' . $function . '. Response: ' . $message . "\n" );
+      fclose($this->handle);
+    } else {
+      $this->email_log( );
+    }
   }
   
   function sql( $query, $type='server' ) {
     $this->handle = fopen( $this->dir . 'sql.log', 'a' );
-    fwrite( $this->handle, '[' . now() . '] [' . $type . '] ' . str_replace( "\n", '', $query ) . "\n" );
-    fclose($this->handle);
+    if( $this->handle ) {
+      fwrite( $this->handle, '[' . now() . '] [' . $type . '] ' . str_replace( "\n", '', $query ) . "\n" );
+      fclose($this->handle);
+    } else {
+      $this->email_log( );
+    }
   }
 
   function cmd( $source, $cmd ) {
     $this->handle = fopen( $this->dir . 'cmd.log', 'a' );
-    fwrite( $this->handle, '[' . now() . '] [' . $source . '] ' . $cmd . "\n" );
-    fclose($this->handle);
+    if( $this->handle ) {
+      fwrite( $this->handle, '[' . now() . '] [' . $source . '] ' . $cmd . "\n" );
+      fclose($this->handle);
+    } else {
+      $this->email_log( );
+    }
   }
   
   function mapping( $file, $line, $message ) {
     $this->handle = fopen( $this->dir . 'mapping.log', 'a' );
-    fwrite( $this->handle, '[' . now() . '] [' . $file . ': ' . $line . '] Inconsistent mapping: ' . $message . "\n" );
-    fclose($this->handle);
+    if( $this->handle ) {
+      fwrite( $this->handle, '[' . now() . '] [' . $file . ': ' . $line . '] Inconsistent mapping: ' . $message . "\n" );
+      fclose($this->handle);
+    } else {
+      $this->email_log( );
+    }
+  }
+  
+  // send an email when logging seemed to fail
+  private function email_log( ) {
+    // TODO! 
   }
 }
 ?>
