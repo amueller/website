@@ -13,6 +13,7 @@ canvas {
 position:absolute; 
 top:0;
 left:0;
+padding-top:30px;
 }
 
 #logo{
@@ -21,7 +22,7 @@ left:0;
   color: #333;
   font-size: 45px;
   padding-top: 20px;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
   display: inline-block;
   padding-left: 10px;
   margin-left: 50px;
@@ -32,9 +33,8 @@ left:0;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
   color: #333;
-  font-size: 30px;
-  padding-top: 40px;
-  padding-bottom: 10px;
+  font-size: 20px;
+  padding-bottom: 15px;
   display: inline-block;
 }
 
@@ -51,6 +51,7 @@ left:0;
 
 .corrected{
  margin-right:15px;
+ padding-left: 15px;
 }
 
 .dataprop{
@@ -88,9 +89,43 @@ width: 80pt;
   font-weight: 200;
   font-size: 24px;
   float: left;
-  width: 250px;;
+  width: 250px;
   min-height: 40px;
   z-index: 1000;
+}
+
+.searchheader{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 200;
+  font-size: 24px;
+  float: left;
+  width: 80%;
+  min-height: 40px;
+  z-index: 1000;
+}
+
+.searchheader input[type=text]{
+	width: 200px; 
+	height: 30px; 
+	font-size: 10pt;
+}
+.searchheader input[type=text]:focus{
+	width: 380px;
+	border-color: #51a7e8;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.1),0 0 5px rgba(81,167,232,0.5);
+	outline: none;
+}
+
+#openmlsearch::-webkit-input-placeholder{ color: #aeaeae;}
+#openmlsearch:-moz-placeholder{ color: #aeaeae;}
+#openmlsearch::-moz-placeholder{ color: #aeaeae;}
+#openmlsearch:-ms-input-placeholder{ color: #aeaeae;}
+
+.coverspacer{
+   height: 30px;
 }
 
 .blueheader{
@@ -988,14 +1023,13 @@ hr.hardSmall {
         min-height: 20px;
       }
 
-      /* Sticky footer styles
-      -------------------------------------------------- */
+html, body {
+   height: 100%;
+   font-family: 'Roboto', sans-serif;
+   font-weight: 400;
+   min-width: 400px; /* suppose you want minimun width of 1000px */
+   width: auto !important;  /* Firefox will set width as auto */
 
-      html,
-      body {
-        height: 100%;
-  	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
 
         /* The html and body elements cannot have any padding or margin. */
       }
@@ -1219,8 +1253,8 @@ hr.hardSmall {
   display: inline-block;
   line-height: 18px;
   color: #999999;
-  padding-top:20px;
-  padding-bottom:100px;
+  padding-top:100px;
+  padding-bottom:10px;
 }
 
 .statrow {
@@ -1228,9 +1262,143 @@ hr.hardSmall {
     margin: 0 auto;
 }
 
-.statrow a {
+.dotcontainer a {
     text-decoration: none;
+    text-align: center;
+    margin: 0 auto;
 }
+
+.dotcontainer a:hover {
+    color: #fff;
+}
+
+a.bold{
+    text-decoration: none;
+    font-weight: bold;
+    color: #666;
+}
+
+a.bold:hover{
+    color: #333;
+}
+
+
+
+.numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+
+
+    width: 76px;
+    height: 76px;
+    padding: 0px;
+    
+    background: #fff;
+    color: #fff;
+    display:block;
+    position: relative;
+
+}
+
+.numberCircle .number{
+    font-size: 20px;
+    font-weight: 300;
+    line-height:62px;
+    position: absolute;
+    text-align: center;
+    display: block;
+    width:100%;
+}
+.numberCircle .label{
+     font-size: 13px;
+     font-weight: 300;
+     position: absolute;
+     text-align: center;
+     display: block;
+     width:100%;
+     line-height:95px;
+}
+
+.arc {
+	height: 76px;
+	left: 0;
+	top: 0;
+	position: absolute;
+	width: 76px;
+
+	content: "";
+  	animation: spin 3s infinite linear;
+  	-webkit-animation: spin 3s infinite linear;
+}
+
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(360deg); }
+}
+
+.circlegreen{
+	border-width: 2px 2px 0 0;
+	border-style: solid;
+	border-color: #3d8b3d;
+	border-radius: 50%;
+	background: #5cb85c;
+}
+
+a:hover > .circlegreen{
+	background: #3d8b3d;
+}
+
+.circleblue {
+	border-width: 2px 2px 0 0;
+	border-style: solid;
+	border-color: #2a6496;
+	border-radius: 50%;
+	background: #428bca;
+}
+
+a:hover > .circleblue{
+	background: #2a6496;
+}
+
+.circleyellow {
+	border-width: 2px 2px 0 0;
+	border-style: solid;
+	border-color: #df8a13;
+	border-radius: 50%;
+  	background: #f0ad4e;
+}
+
+a:hover > .circleyellow{
+	background: #df8a13;
+}
+
+
+.circlered {
+	border-width: 2px 2px 0 0;
+	border-style: solid;
+	border-color: #b52b27;
+	border-radius: 50%;
+  	background: #d9534f;
+}
+
+a:hover > .circlered{
+	background: #b52b27;
+}
+
+.shortintro{
+   font-size: 16px;
+   font-weight: 300;
+   color: #666;
+   padding-bottom:30px;
+}
+
+
 
 .statvalue span {
    font-size: 20px;

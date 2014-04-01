@@ -2,44 +2,39 @@
   We're still under construction, check back soon! 
 </div> -->
 <!-- Main hero unit for a primary marketing message or call to action -->
+<div class="searchheader">
+		<form class="form-inline" method="post" action="r">
+		  <input type="text" class="form-control" id="openmlsearch" name="searchterms" placeholder="Search datasets, flows, people,..." value="<?php if( isset( $terms ) ) echo $terms; ?>" />
+		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
+		</form>
+<!--<script type="text/javascript">
+document.getElementById('openmlsearch').focus()
+</script>-->
+</div>
 <canvas id="c" width="400" height="400"></canvas>
-<div class="marketing" style="margin-top:45px">
+<div class="marketing" style="margin-top:70px">
 <div class="col-md-12">
 <div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
-
-
+<div id="catchphrase">Exploring machine learning better, together</div>
 <div class="col-md-12">
-		<form class="form-inline" method="post" action="r">
-		  <input type="text" class="form-control" style="width: 50%; height: 30px; font-size: 11pt" id="openmlsearch" name="searchterms" placeholder="Search machine learning experiments" value="<?php if( isset( $terms ) ) echo $terms; ?>" />
-		  <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>
-		</form>
-</div>
-
-<script type="text/javascript">
-document.getElementById('openmlsearch').focus()
-</script>
-<div class="col-md-12">
-<div class="col-lg-6 col-lg-offset-3">
+<div class="col-lg-10 col-lg-offset-1">
 <div class="stats">
  <div class="statrow">
-	  <a href="d" class="col-sm-4"><div class="statcell icongreen"><i class="fa fa-table fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(did) as count from dataset where isOriginal="true"'); echo($count[0]->count); ?></span>datasets</div></div></a>
-	  <a href="f" class="col-sm-4"><div class="statcell iconblue"><i class="fa fa-cogs fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(fullName) as count from implementation'); echo($count[0]->count); ?></span>workflows</div></div></a>
-	  <a href="r" class="col-sm-4"><div class="statcell iconred"><i class="fa fa-star fa-lg"></i><div class="statvalue"><span><?php $count = $this->Implementation->query('select count(rid) as count from run'); echo($count[0]->count); ?></span>runs</div></div></a>
+    <div class="col-sm-3 dotcontainer"><a href="d" class="numberCircle"><div class="arc circlegreen"></div><span class="number"><?php $count = $this->Implementation->query('select count(did) as count from dataset where isOriginal="true"'); echo($count[0]->count); ?></span><span class="label">data sets</span></a><div class="shortintro"><br>Upload or reference <a href="d" class="bold">data</a> to challenge the community</div></div>
+
+    <div class="col-sm-3 dotcontainer"><a href="t" class="numberCircle"><div class="arc circleyellow"></div><span class="number"><?php $count = $this->Implementation->query('select count(task_id) as count from task'); echo($count[0]->count); ?></span><span class="label">tasks</span></a><br><div class="shortintro">Create scientific <a href="t" class="bold">tasks</a>, defining inputs, methods and outputs</div></div>
+
+    <div class="col-sm-3 dotcontainer"><a href="f" class="numberCircle"><div class="arc circleblue"></div><span class="number"><?php $count = $this->Implementation->query('select count(fullName) as count from implementation'); echo($count[0]->count); ?></span><span class="label">flows</span></a><br><div class="shortintro">Upload or reference <a href="f" class="bold">flows</a> that address the task</div></div>
+
+    <div class="col-sm-3 dotcontainer"><a href="r" class="numberCircle"><div class="arc circlered"></div><span class="number"><?php $count = $this->Implementation->query('select count(rid) as count from run'); echo($count[0]->count); ?></span><span class="label">runs</span></a><br><div class="shortintro">OpenML collects all <a href="r" class="bold">results</a> and organizes everything online.</div></div>
+
  </div>
 </div>
 </div>
 
 </div>
-<div class="col-md-12">
 
-<div id="catchphrase">Machine learning. Connected.</div>
-<div class="introsection">
-  <a href="#green" class="circle greensection"><i class="fa fa-rocket fa-2x"></i></a>
-  <a href="#blue" class="circle bluesection"><i class="fa fa-flask fa-2x"></i></a>
-  <a href="#red" class="circle redsection"><i class="fa fa-heart fa-2x"></i></a>
-</div>
- </div>
 
  <div id="green" class="introsection greensection"> 
 
