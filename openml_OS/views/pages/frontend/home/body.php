@@ -4,7 +4,7 @@
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="searchheader">
 		<form class="form-inline" method="post" action="r">
-		  <input type="text" class="form-control" id="openmlsearch" name="searchterms" placeholder="Search datasets, flows, people,..." value="<?php if( isset( $terms ) ) echo $terms; ?>" />
+		  <input type="text" class="form-control" id="openmlsearch" name="searchterms" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, people,...'" value="<?php if( isset( $terms ) ) echo $terms; ?>" />
 		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
 		</form>
 <!--<script type="text/javascript">
@@ -21,11 +21,11 @@ document.getElementById('openmlsearch').focus()
 <div class="col-lg-10 col-lg-offset-1">
 <div class="stats">
  <div class="statrow">
-    <div class="col-sm-3 dotcontainer"><a href="d" class="numberCircle"><div class="arc circlegreen"></div><span class="number"><?php $count = $this->Implementation->query('select count(did) as count from dataset where isOriginal="true"'); echo($count[0]->count); ?></span><span class="label">data sets</span></a><div class="shortintro"><br>Upload or reference <a href="d" class="bold">data</a> to challenge the community</div></div>
+    <div class="col-sm-3 dotcontainer"><a href="d" class="numberCircle"><div class="arc circlegreen"></div><span class="number"><?php $count = $this->Implementation->query('select count(did) as count from dataset where isOriginal="true"'); echo($count[0]->count); ?></span><span class="label">data sets</span></a><div class="shortintro"><br>Upload (or reference) <a href="d" class="bold">data</a> to challenge the community</div></div>
 
     <div class="col-sm-3 dotcontainer"><a href="t" class="numberCircle"><div class="arc circleyellow"></div><span class="number"><?php $count = $this->Implementation->query('select count(task_id) as count from task'); echo($count[0]->count); ?></span><span class="label">tasks</span></a><br><div class="shortintro">Create scientific <a href="t" class="bold">tasks</a>, defining inputs, methods and outputs</div></div>
 
-    <div class="col-sm-3 dotcontainer"><a href="f" class="numberCircle"><div class="arc circleblue"></div><span class="number"><?php $count = $this->Implementation->query('select count(fullName) as count from implementation'); echo($count[0]->count); ?></span><span class="label">flows</span></a><br><div class="shortintro">Upload or reference <a href="f" class="bold">flows</a> that address the task</div></div>
+    <div class="col-sm-3 dotcontainer"><a href="f" class="numberCircle"><div class="arc circleblue"></div><span class="number"><?php $count = $this->Implementation->query('select count(fullName) as count from implementation'); echo($count[0]->count); ?></span><span class="label">flows</span></a><br><div class="shortintro">Upload (or reference) <a href="f" class="bold">flows</a> that solve the tasks</div></div>
 
     <div class="col-sm-3 dotcontainer"><a href="r" class="numberCircle"><div class="arc circlered"></div><span class="number"><?php $count = $this->Implementation->query('select count(rid) as count from run'); echo($count[0]->count); ?></span><span class="label">runs</span></a><br><div class="shortintro">OpenML collects all <a href="r" class="bold">results</a> and organizes everything online.</div></div>
 
