@@ -66,7 +66,7 @@ class Run extends Database_write {
     if( in_array( $task->ttid, array( 1, 2, 3, 4 ) ) ) {
       $success = $this->insertSupervisedClassificationRun( $run, $errorCode, $errorMessage ); 
       
-      $update = array( 'processed' => now() );
+      $update = array( 'processed' => now(), 'error' => 'false' );
       $this->Run->update( $run_id, $update );
     }
     
@@ -125,7 +125,13 @@ class Run extends Database_write {
     
     // and now evaluate the run
     $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
-    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $output_data, $errorCode, $errorMessage ) == false ) {
+    $results = $this->evaluateRun( 
+      $runRecord->rid, $inputData->url, 
+      $splitsUrl, $predictionsUrl, 
+      $taskRecord->target_feature, 
+      $output_data, $errorCode, $errorMessage );
+      
+    if( $results == false ) {
       $errorCode = 216;
       return false;
     }
@@ -172,6 +178,11 @@ class Run extends Database_write {
       foreach( $json->global_metrices as $metric ) {
         if( in_array( $metric->name, $this->supportedMetrics ) ) {
           $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
+          if( property_exists($metric, 'value') ) {
+            $res[$metric->name] = $metric->value;
+          } elseif( property_exists($metric, 'array_data') ) {
+            $res[$metric->name] = arr2string($metric->array_data);
+          }
         }
       }
     }
