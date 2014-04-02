@@ -89,7 +89,6 @@ class Run extends Database_write {
     $xml = simplexml_load_string( $description );
     
     if( $xml == false ) {
-      die( $description );
       foreach(libxml_get_errors() as $error) $errorMessage .= $error . '. ';
       $errorCode = 219;
       return false;
