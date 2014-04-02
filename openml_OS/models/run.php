@@ -182,6 +182,13 @@ class Run extends Database_write {
         continue;
       } else {
         $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
+        if( $stored ) {
+          if( property_exists($metric, 'value') ) {
+            $res[$metric->name] = $metric->value;
+          } elseif( property_exists($metric, 'array_data') ) {
+            $res[$metric->name] = arr2string($metric->array_data);
+          }
+        } 
       }
     }
     
