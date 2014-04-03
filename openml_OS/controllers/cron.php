@@ -13,6 +13,7 @@ class Cron extends CI_Controller {
     $this->load->model('Log');
     
     $this->load->helper('Api');
+    $this->load->helper('File_upload');
     
     // TODO: copied from rest_api, for functionality in cron.
     $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'runfile');
