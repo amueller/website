@@ -113,11 +113,9 @@ class Cron extends CI_Controller {
         $message = false;
         
         $res = $this->Run->process( $r->rid, $code, $message );
-        if( $res === true ) {
+        if( $res == true ) {
           $this->Log->cronjob( 'success', 'process_run', 'Rid ' . $r->rid . ' processed successfully. '  );
         } else {
-          
-          $this->Run->update( $r->rid, array( 'processed' => now(), 'error' => 'true' ) );
           $this->_error( 'run', $r->rid, 'Error code ' . $code . ': ' . $message );
         }
       }

@@ -67,7 +67,7 @@ class Run extends Database_write {
       $success = $this->insertSupervisedClassificationRun( $run, $errorCode, $errorMessage ); 
       
       if( $success ) {
-        $update = array( 'processed' => now(), 'error' => 'false' );
+        $update = array( 'processed' => now(), 'error' => NULL );
       } else {
         $update = array( 'processed' => now(), 'error' => $errorMessage );
       }
