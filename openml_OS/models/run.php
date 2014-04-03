@@ -66,7 +66,11 @@ class Run extends Database_write {
     if( in_array( $task->ttid, array( 1, 2, 3, 4 ) ) ) {
       $success = $this->insertSupervisedClassificationRun( $run, $errorCode, $errorMessage ); 
       
-      $update = array( 'processed' => now(), 'error' => 'false' );
+      if( $success ) {
+        $update = array( 'processed' => now(), 'error' => 'false' );
+      } else {
+        $update = array( 'processed' => now(), 'error' => $errorMessage );
+      }
       $this->Run->update( $run_id, $update );
     }
     
@@ -130,11 +134,7 @@ class Run extends Database_write {
       $taskRecord->target_feature, 
       $output_data, $errorCode, $errorMessage );
       
-    if( $results == false ) {
-      $errorCode = 216;
-      return false;
-    }
-    return true;
+    return $results;
   }
   
   private function evaluateRun( $runId, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
@@ -203,7 +203,7 @@ class Run extends Database_write {
           }
         } else {
           if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
-            $inconsistentMeasures[] = $evalEngine->name;
+            $inconsistentMeasures[] = $evalEngine->name . ' (global)';
           }
         } 
       }
@@ -226,9 +226,8 @@ class Run extends Database_write {
                 if( $evalEngine === false ) {
                   $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
                 } else {
-                  //echo 'should check fold metric ' . $evalEngine->name . '->'. $repeat . ',' . $fold . '<br/>';
-                  if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
-                    $inconsistentMeasures[] = $evalEngine->name;
+                  if( $this->measureConsistent( $metric, $evalEngine ) == false ) { 
+                    $inconsistentMeasures[] = $evalEngine->name . " (repeat $repeat, fold $fold)";
                   }
                 }
               }
@@ -257,7 +256,7 @@ class Run extends Database_write {
                   } else {
                     //echo 'should check sample metric ' . $evalEngine->name . '->'. $repeat . ',' . $fold . ',' . $sample . '<br/>';
                     if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
-                      $inconsistentMeasures[] = $evalEngine->name;
+                      $inconsistentMeasures[] = $evalEngine->name . " (repeat $repeat, fold $fold, sample $sample)";
                     }
                   }
                 } 
@@ -271,7 +270,7 @@ class Run extends Database_write {
     // check if there were any inconsistent measures:
     if($inconsistentMeasures) {
       $errorCode = 217;
-      $errorMessage = 'Inconsistent evaluation measures: ' . implode( '; ', $inconsistentMeasures);
+      $errorMessage = 'Inconsistent evaluation measures provided by uploader: ' . implode( '; ', $inconsistentMeasures);
       return false;
     }
     return $res;
@@ -329,7 +328,7 @@ class Run extends Database_write {
     return false;
   }
   
-  private function measureConsistent( $userProvided, $evalEngine ) { // TODO: test. 
+  private function measureConsistent( $userProvided, $evalEngine ) { 
     if( property_exists( $userProvided, 'value' ) != property_exists( $evalEngine, 'value' ) ) {
       return false;
     }
