@@ -191,12 +191,19 @@ class Run extends Database_write {
       if( property_exists($metric, 'fold') || property_exists($metric, 'repeat') || property_exists($metric, 'sample' ) ) {
         continue;
       } else {
-        $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
-        if( $stored ) {
-          if( property_exists($metric, 'value') ) {
-            $res[$metric->name] = $metric->value;
-          } elseif( property_exists($metric, 'array_data') ) {
-            $res[$metric->name] = arr2string($metric->array_data);
+        $evalEngine = $this->getEvalEngineMeasureByName( $metric->name, $json->global_metrices );
+        if( $evalEngine === false ) {
+          $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
+          if( $stored ) {
+            if( property_exists($metric, 'value') ) {
+              $res[$metric->name] = $metric->value;
+            } elseif( property_exists($metric, 'array_data') ) {
+              $res[$metric->name] = arr2string($metric->array_data);
+            }
+          }
+        } else {
+          if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
+            $inconsistentMeasures[] = $evalEngine->name;
           }
         } 
       }
@@ -213,8 +220,18 @@ class Run extends Database_write {
           }
           foreach( $userSpecifiedMetrices as $metric ) {
             if( property_exists($metric, 'fold') && property_exists($metric, 'repeat') && !property_exists($metric, 'sample' ) ) {
-              if( $metric->repeat == $repeat && $metric->fold == $fold )
-                $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
+              
+              if( $metric->repeat == $repeat && $metric->fold == $fold ) {
+                $evalEngine = $this->getEvalEngineMeasureByName( $metric->name, $json->fold_metrices[$repeat][$fold] );
+                if( $evalEngine === false ) {
+                  $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
+                } else {
+                  //echo 'should check fold metric ' . $evalEngine->name . '->'. $repeat . ',' . $fold . '<br/>';
+                  if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
+                    $inconsistentMeasures[] = $evalEngine->name;
+                  }
+                }
+              }
             }
           }
         }
@@ -233,8 +250,17 @@ class Run extends Database_write {
             }
             foreach( $userSpecifiedMetrices as $metric ) {
               if( property_exists($metric, 'fold') && property_exists($metric, 'repeat') && property_exists($metric, 'sample' ) ) {
-                if( $metric->repeat == $repeat && $metric->fold == $fold && $metric->sample == $sample )
-                  $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold, $sample );
+                if( $metric->repeat == $repeat && $metric->fold == $fold && $metric->sample == $sample ) {
+                  $evalEngine = $this->getEvalEngineMeasureByName( $metric->name, $json->sample_metrices[$repeat][$fold][$sample] );
+                  if( $evalEngine === false ) {
+                    $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold, $sample );
+                  } else {
+                    //echo 'should check sample metric ' . $evalEngine->name . '->'. $repeat . ',' . $fold . ',' . $sample . '<br/>';
+                    if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
+                      $inconsistentMeasures[] = $evalEngine->name;
+                    }
+                  }
+                } 
               }
             }
           }
@@ -244,7 +270,8 @@ class Run extends Database_write {
     
     // check if there were any inconsistent measures:
     if($inconsistentMeasures) {
-      $errorCode = 'Inconsistent evaluation measures: ' . implode( '; ', $inconsistentMeasures);
+      $errorCode = 217;
+      $errorMessage = 'Inconsistent evaluation measures: ' . implode( '; ', $inconsistentMeasures);
       return false;
     }
     return $res;
@@ -293,17 +320,22 @@ class Run extends Database_write {
     }
   }
   
-  private function measureConsistent( $engine, &$user_all ) {
-    for( $i = 0; $i < count($user_all); ++$i ) {
-      $user_measure = $user_all[$i];
-      if( ''.$user_measure->implementation == $engine->implementation && 
-          ''.$user_measure->name == $engine->name ) {
-        if( abs(doubleval($user_measure->value) - $engine->value) > $this->config->item('double_epsilon') ) {
-          return false;
-        } else {
-          unset( $user_all[$i] );
-          return true;
-        }
+  private function getEvalEngineMeasureByName( $needle, $evalEngineMeasures ) {
+    foreach( $evalEngineMeasures as $measure ) {
+      if( $measure->name == $needle ) {
+        return $measure;
+      }
+    }
+    return false;
+  }
+  
+  private function measureConsistent( $userProvided, $evalEngine ) { // TODO: test. 
+    if( property_exists( $userProvided, 'value' ) != property_exists( $evalEngine, 'value' ) ) {
+      return false;
+    }
+    if( property_exists( $userProvided, 'value' ) ) {
+      if( abs( $userProvided->value - $evalEngine->value ) > $this->config->item('double_epsilon') ) {
+        return false;
       }
     }
     return true;
