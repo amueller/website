@@ -155,11 +155,13 @@ class Run extends Database_write {
     $json = json_decode( implode( "\n", $res ) );
     
     if( $code != 0 || $json === null ) {
-      $errorCode = implode( '; ', $res );
+      $errorMessage = implode( '; ', $res );
+      $errorCode = 215;
       return false;
     }
     if( property_exists( $json, 'error' ) ) {
-      $errorCode = $json->error;
+      $errorMessage = $json->error;
+      $errorCode = 215;
       return false;
     }
     
