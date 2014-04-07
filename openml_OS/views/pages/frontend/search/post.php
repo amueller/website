@@ -24,7 +24,7 @@ case 3:
 case 4:
   $minNumInstances = $this->input->post('minimal_dataset_size');
   if( $minNumInstances == false ) $minNumInstances = '0';
-  $datasets = $this->Dataset->getDatasetWithQualities( array('NumberOfInstances'), array('> ' . $minNumInstances), true, true );
+  $datasets = $this->Dataset->getDatasetWithQualities( array('NumberOfInstances'), array('>= ' . $minNumInstances), true, true );
   $dataset_ids = object_array_get_property( $datasets, 'did' );
   
   $this->found_tasks = $this->Task->getGeneralTask( 
