@@ -4,7 +4,13 @@ function getcsv( $string ) {
   if( $string === false || $string == null )
     return false;
   else {
-    return str_getcsv( $string );
+    // str_getcsv only available from php version 5.3 and on
+    $fh = fopen('php://temp', 'r+');
+    fwrite($fh, $string);
+    rewind($fh);
+    $row = fgetcsv($fh);
+    fclose($fh);
+    return $row;
   }
 }
 

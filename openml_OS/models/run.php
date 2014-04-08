@@ -127,21 +127,25 @@ class Run extends Database_write {
     $inputData = $this->Dataset->getById( $taskRecord->did );
     
     // and now evaluate the run
-    $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
+    $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : false;
     $results = $this->evaluateRun( 
-      $runRecord->rid, $inputData->url, 
-      $splitsUrl, $predictionsUrl, 
+      $runRecord->rid, $taskRecord, 
+      $inputData->url, $splitsUrl, $predictionsUrl, 
       $taskRecord->target_feature, 
       $output_data, $errorCode, $errorMessage );
       
     return $results;
   }
   
-  private function evaluateRun( $runId, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
+  private function evaluateRun( $runId, $taskRecord, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
     $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $res = array();
     $code = 0;
-    $command = "java -jar $eval -f evaluate_predictions -d \"$datasetUrl\" -s \"$splitsUrl\" -p \"$predictionsUrl\" -c \"$targetFeature\"";
+    $javaFunction = "evaluate_predictions";
+    if( $taskRecord->ttid == 4 ) { // data stream classification
+      $javaFunction = "evaluate_stream_predictions";
+    }
+    $command = "java -jar $eval -f $javaFunction -d \"$datasetUrl\" -s \"$splitsUrl\" -p \"$predictionsUrl\" -c \"$targetFeature\"";
     $this->Log->cmd( 'REST API::openml.run.upload', $command ); 
   
     if(function_enabled('exec') === false ) {
