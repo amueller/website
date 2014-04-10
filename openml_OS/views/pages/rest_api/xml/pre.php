@@ -256,6 +256,14 @@ $this->apiErrors[271][1] = 'Data set description with data_id was not found in t
 $this->apiErrors[272][0] = 'No features found';
 $this->apiErrors[272][1] = 'The registered dataset did not contain any features';
 
+// for function: openml.data.features 
+$this->apiErrors[273][0] = 'Dataset not processed yet';
+$this->apiErrors[273][1] = 'The dataset was not processed yet, no features are available. Please wait for a few minutes. ';
+
+// for function: openml.data.features 
+$this->apiErrors[274][0] = 'Dataset processed with error';
+$this->apiErrors[274][1] = 'The feature extractor has run into an error while processing the dataset. Please check whether it is a valid supported file. ';
+
 // for function: openml.setup.parameters
 $this->apiErrors[280][0] = 'Please provide setup_id';
 $this->apiErrors[280][1] = 'Please provide setup_id';
@@ -355,4 +363,30 @@ $this->apiErrors[354][1] = 'The data is used in runs. Delete this other content 
 // for function: openml.data.delete
 $this->apiErrors[355][0] = 'Deleting dataset failed.';
 $this->apiErrors[355][1] = 'Deleting the dataset failed. Please contact support team. ';
+
+// for function: openml.data.qualities 
+$this->apiErrors[360][0] = 'Please provide data_id';
+$this->apiErrors[360][1] = 'Please provide data_id';
+
+// for function: openml.data.qualities 
+$this->apiErrors[361][0] = 'Unknown dataset';
+$this->apiErrors[361][1] = 'Data set description with data_id was not found in the database';
+
+// for function: openml.data.qualities 
+$this->apiErrors[362][0] = 'No qualities found';
+$this->apiErrors[362][1] = 'The registered dataset did not contain any calculated qualities';
+
+// for function: openml.data.qualities 
+$this->apiErrors[363][0] = 'Dataset not processed yet';
+$this->apiErrors[363][1] = 'The dataset was not processed yet, no qualities are available. Please wait for a few minutes. ';
+
+// for function: openml.data.qualities 
+$this->apiErrors[364][0] = 'Dataset processed with error';
+$this->apiErrors[364][1] = 'The quality calculator has run into an error while processing the dataset. Please check whether it is a valid supported file. ';
+
+// for functiuon: openml.data
+$this->apiErrors[370][0] = 'No datasets available';
+$this->apiErrors[370][1] = 'There are no valid datasets in the system. ';
+
+
 ?>

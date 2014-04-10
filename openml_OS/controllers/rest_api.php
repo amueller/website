@@ -178,6 +178,14 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'authenticate.weblogin', array( 'weblogin' => $this->authenticated ? 'true' : 'false' ) );
   }
   
+  private function _openml_data() {
+    $datasets = $this->Dataset->getWhere( '`processed` IS NOT NULL AND `error` = "false"' );
+    if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
+      $this->_returnError( 110 );
+    }
+    $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
+  }
+  
   private function _openml_data_description() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {
@@ -208,6 +216,16 @@ class Rest_api extends CI_Controller {
       return;
     }
     
+    if( $dataset->processed == NULL) {
+      $this->_returnError( 273 );
+      return;
+    }
+    
+    if( $dataset->error != "false") {
+      $this->_returnError( 274 );
+      return;
+    }
+    
     $dataset->features = $this->Feature->getWhere( 'did = "' . $dataset->did . '"' );
     
     if( $dataset->features === false ) {
@@ -223,11 +241,49 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $this->_xmlContents( 'data-set-features', $dataset );
+    $this->_xmlContents( 'data-features', $dataset );
   }
   
+  private function _openml_data_qualities() {
+    $data_id = $this->input->get( 'data_id' );
+    if( $data_id == false ) {
+      $this->_returnError( 360 );
+      return;
+    }
+    $dataset = $this->Dataset->getById( $data_id );
+    if( $dataset === false ) {
+      $this->_returnError( 361 );
+      return;
+    }
+    
+    if( $dataset->processed == NULL) {
+      $this->_returnError( 363 );
+      return;
+    }
+    
+    if( $dataset->error != "false") {
+      $this->_returnError( 364 );
+      return;
+    }
+    
+    $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
+    
+    if( $dataset->qualities === false ) {
+      $this->_returnError( 362 );
+      return;
+    }
+    if( is_array( $dataset->qualities ) === false ) {
+      $this->_returnError( 362 );
+      return;
+    }
+    if( count( $dataset->qualities ) === 0 ) {
+      $this->_returnError( 362 );
+      return;
+    }
+    
+    $this->_xmlContents( 'data-qualities', $dataset );
+  }
   
-
   private function _openml_data_delete() {
     if(!$this->authenticated) {
       if(!$this->provided_hash) {
@@ -371,7 +427,7 @@ class Rest_api extends CI_Controller {
       $this->Dataset->process( $id, $message );
     }
 
-    $this->_xmlContents( 'data-set-upload', array( 'id' => $id ) );
+    $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
   private function _openml_tasks_types() {
