@@ -204,7 +204,7 @@ $this->apiErrors[216][0] = 'Error thrown by Java Application';
 $this->apiErrors[216][1] = 'The Java application has thrown an error. Additional information field is provided';
 
 // for function: openml.run.upload
-$this->apiErrors[217][0] = 'Error processing output data: unknown evaluation measure';
+$this->apiErrors[217][0] = 'Error processing output data: unknown or inconsistent evaluation measure';
 $this->apiErrors[217][1] = 'One of the provided evaluation measures could not be matched with a record in the math_function / implementation table.';
 
 // for function: openml.run.upload

@@ -66,7 +66,11 @@ class Run extends Database_write {
     if( in_array( $task->ttid, array( 1, 2, 3, 4 ) ) ) {
       $success = $this->insertSupervisedClassificationRun( $run, $errorCode, $errorMessage ); 
       
-      $update = array( 'processed' => now() );
+      if( $success ) {
+        $update = array( 'processed' => now(), 'error' => NULL );
+      } else {
+        $update = array( 'processed' => now(), 'error' => $errorMessage );
+      }
       $this->Run->update( $run_id, $update );
     }
     
@@ -89,7 +93,6 @@ class Run extends Database_write {
     $xml = simplexml_load_string( $description );
     
     if( $xml == false ) {
-      die( $description );
       foreach(libxml_get_errors() as $error) $errorMessage .= $error . '. ';
       $errorCode = 219;
       return false;
@@ -124,19 +127,25 @@ class Run extends Database_write {
     $inputData = $this->Dataset->getById( $taskRecord->did );
     
     // and now evaluate the run
-    $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : "";
-    if( $this->evaluateRun( $runRecord->rid, $inputData->url, $splitsUrl, $predictionsUrl, $taskRecord->target_feature, $output_data, $errorCode, $errorMessage ) == false ) {
-      $errorCode = 216;
-      return false;
-    }
-    return true;
+    $splitsUrl = property_exists( $taskRecord, 'splits_url' ) ? $taskRecord->splits_url : false;
+    $results = $this->evaluateRun( 
+      $runRecord->rid, $taskRecord, 
+      $inputData->url, $splitsUrl, $predictionsUrl, 
+      $taskRecord->target_feature, 
+      $output_data, $errorCode, $errorMessage );
+      
+    return $results;
   }
   
-  private function evaluateRun( $runId, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
+  private function evaluateRun( $runId, $taskRecord, $datasetUrl, $splitsUrl, $predictionsUrl, $targetFeature, $userSpecifiedMetrices, &$errorCode, &$errorMessage ) {
     $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $res = array();
     $code = 0;
-    $command = "java -jar $eval -f evaluate_predictions -d \"$datasetUrl\" -s \"$splitsUrl\" -p \"$predictionsUrl\" -c \"$targetFeature\"";
+    $javaFunction = "evaluate_predictions";
+    if( $taskRecord->ttid == 4 ) { // data stream classification
+      $javaFunction = "evaluate_stream_predictions";
+    }
+    $command = "java -jar $eval -f $javaFunction -d \"$datasetUrl\" -s \"$splitsUrl\" -p \"$predictionsUrl\" -c \"$targetFeature\"";
     $this->Log->cmd( 'REST API::openml.run.upload', $command ); 
   
     if(function_enabled('exec') === false ) {
@@ -150,11 +159,13 @@ class Run extends Database_write {
     $json = json_decode( implode( "\n", $res ) );
     
     if( $code != 0 || $json === null ) {
-      $errorCode = implode( '; ', $res );
+      $errorMessage = implode( '; ', $res );
+      $errorCode = 215;
       return false;
     }
     if( property_exists( $json, 'error' ) ) {
-      $errorCode = $json->error;
+      $errorMessage = $json->error;
+      $errorCode = 215;
       return false;
     }
     
@@ -172,6 +183,11 @@ class Run extends Database_write {
       foreach( $json->global_metrices as $metric ) {
         if( in_array( $metric->name, $this->supportedMetrics ) ) {
           $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
+          if( property_exists($metric, 'value') ) {
+            $res[$metric->name] = $metric->value;
+          } elseif( property_exists($metric, 'array_data') ) {
+            $res[$metric->name] = arr2string($metric->array_data);
+          }
         }
       }
     }
@@ -181,7 +197,21 @@ class Run extends Database_write {
       if( property_exists($metric, 'fold') || property_exists($metric, 'repeat') || property_exists($metric, 'sample' ) ) {
         continue;
       } else {
-        $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
+        $evalEngine = $this->getEvalEngineMeasureByName( $metric->name, $json->global_metrices );
+        if( $evalEngine === false ) {
+          $stored = $this->storeEvaluationMeasure( $metric, $did_global, $runId );
+          if( $stored ) {
+            if( property_exists($metric, 'value') ) {
+              $res[$metric->name] = $metric->value;
+            } elseif( property_exists($metric, 'array_data') ) {
+              $res[$metric->name] = arr2string($metric->array_data);
+            }
+          }
+        } else {
+          if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
+            $inconsistentMeasures[] = $evalEngine->name . ' (global)';
+          }
+        } 
       }
     }
     
@@ -196,8 +226,17 @@ class Run extends Database_write {
           }
           foreach( $userSpecifiedMetrices as $metric ) {
             if( property_exists($metric, 'fold') && property_exists($metric, 'repeat') && !property_exists($metric, 'sample' ) ) {
-              if( $metric->repeat == $repeat && $metric->fold == $fold )
-                $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
+              
+              if( $metric->repeat == $repeat && $metric->fold == $fold ) {
+                $evalEngine = $this->getEvalEngineMeasureByName( $metric->name, $json->fold_metrices[$repeat][$fold] );
+                if( $evalEngine === false ) {
+                  $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold );
+                } else {
+                  if( $this->measureConsistent( $metric, $evalEngine ) == false ) { 
+                    $inconsistentMeasures[] = $evalEngine->name . " (repeat $repeat, fold $fold)";
+                  }
+                }
+              }
             }
           }
         }
@@ -216,8 +255,17 @@ class Run extends Database_write {
             }
             foreach( $userSpecifiedMetrices as $metric ) {
               if( property_exists($metric, 'fold') && property_exists($metric, 'repeat') && property_exists($metric, 'sample' ) ) {
-                if( $metric->repeat == $repeat && $metric->fold == $fold && $metric->sample == $sample )
-                  $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold, $sample );
+                if( $metric->repeat == $repeat && $metric->fold == $fold && $metric->sample == $sample ) {
+                  $evalEngine = $this->getEvalEngineMeasureByName( $metric->name, $json->sample_metrices[$repeat][$fold][$sample] );
+                  if( $evalEngine === false ) {
+                    $stored = $this->storeEvaluationMeasure( $metric, $did, $runId, $did_global, $repeat, $fold, $sample );
+                  } else {
+                    //echo 'should check sample metric ' . $evalEngine->name . '->'. $repeat . ',' . $fold . ',' . $sample . '<br/>';
+                    if( $this->measureConsistent( $metric, $evalEngine ) == false ) { // TODO: test
+                      $inconsistentMeasures[] = $evalEngine->name . " (repeat $repeat, fold $fold, sample $sample)";
+                    }
+                  }
+                } 
               }
             }
           }
@@ -227,7 +275,8 @@ class Run extends Database_write {
     
     // check if there were any inconsistent measures:
     if($inconsistentMeasures) {
-      $errorCode = 'Inconsistent evaluation measures: ' . implode( '; ', $inconsistentMeasures);
+      $errorCode = 217;
+      $errorMessage = 'Inconsistent evaluation measures provided by uploader: ' . implode( '; ', $inconsistentMeasures);
       return false;
     }
     return $res;
@@ -276,17 +325,22 @@ class Run extends Database_write {
     }
   }
   
-  private function measureConsistent( $engine, &$user_all ) {
-    for( $i = 0; $i < count($user_all); ++$i ) {
-      $user_measure = $user_all[$i];
-      if( ''.$user_measure->implementation == $engine->implementation && 
-          ''.$user_measure->name == $engine->name ) {
-        if( abs(doubleval($user_measure->value) - $engine->value) > $this->config->item('double_epsilon') ) {
-          return false;
-        } else {
-          unset( $user_all[$i] );
-          return true;
-        }
+  private function getEvalEngineMeasureByName( $needle, $evalEngineMeasures ) {
+    foreach( $evalEngineMeasures as $measure ) {
+      if( $measure->name == $needle ) {
+        return $measure;
+      }
+    }
+    return false;
+  }
+  
+  private function measureConsistent( $userProvided, $evalEngine ) { 
+    if( property_exists( $userProvided, 'value' ) != property_exists( $evalEngine, 'value' ) ) {
+      return false;
+    }
+    if( property_exists( $userProvided, 'value' ) ) {
+      if( abs( $userProvided->value - $evalEngine->value ) > $this->config->item('double_epsilon') ) {
+        return false;
       }
     }
     return true;
