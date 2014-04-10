@@ -155,11 +155,11 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER[
 }
 if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER['REQUEST_URI'],'/a/data-qualities')) {
 	$this->name = end(explode('/', $_SERVER['REQUEST_URI']));
-	$dataq = $this->Dataset->query('SELECT q.quality, count(q.quality) as count, qq.description FROM data_quality q, quality qq, dataset d where q.quality = qq.name and d.did = q.data and d.isOriginal=\'true\' group by quality');
+	$dataq = $this->Dataset->query('SELECT qq.name, qq.description, count(q.quality) as count FROM quality qq left join data_quality q on q.quality = qq.name left join dataset d on (d.did = q.data and d.isOriginal=\'true\') where qq.type = \'DataQuality\' group by name');
 	if( $dataq != false ) {
 		  foreach( $dataq as $i ) {
 			$q = array(
-				  'name' => $i->quality,
+				  'name' => $i->name,
 				  'description' => $i->description,
 				  'count' => $i->count,
 				);
@@ -184,11 +184,11 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER[
 }
 if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER['REQUEST_URI'],'/a/flow-qualities')) {
 	$this->name = end(explode('/', $_SERVER['REQUEST_URI']));
-	$dataq = $this->Dataset->query('SELECT q.quality, count(q.quality) as count, qq.description FROM algorithm_quality q, quality qq where q.quality = qq.name group by quality');
+	$dataq = $this->Dataset->query('SELECT qq.name, qq.description, count(q.quality) as count  FROM quality qq left join algorithm_quality q on q.quality = qq.name where qq.type = \'AlgorithmQuality\' group by name');
 	if( $dataq != false ) {
 		  foreach( $dataq as $i ) {
 			$q = array(
-				  'name' => $i->quality,
+				  'name' => $i->name,
 				  'description' => $i->description,
 				  'count' => $i->count,
 				);
