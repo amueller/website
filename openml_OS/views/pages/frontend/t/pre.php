@@ -20,7 +20,7 @@ $this->task_message = false;
 
 // task types
 $this->tasktypes =  array();
-$types = $this->Implementation->query('SELECT tt.ttid, tt.name, tt.description, count(t.task_id) as tasks FROM task_type tt, task t WHERE  t.ttid=tt.ttid group by tt.ttid order by tasks desc');
+$types = $this->Implementation->query('SELECT tt.ttid, tt.name, tt.description, count(t.task_id) as tasks FROM task_type tt left join task t on t.ttid=tt.ttid group by tt.ttid order by tasks desc');
 if( $types != false ) {
 	  foreach( $types as $i ) {
 		  $result = array(
