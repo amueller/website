@@ -31,12 +31,12 @@ $this->runevaluations = array();
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
 	$this->run_id = end(explode('/', $_SERVER['REQUEST_URI']));
-	$run = $this->Implementation->query('SELECT r.rid, r.uploader, r.data, d.name, d.version, r.setup, i.id, i.fullName, i.description, r.task_id, tt.name as taskname, r.start_time, r.status FROM run r, dataset d, task t, task_type tt, algorithm_setup s, implementation i WHERE rid='. $this->run_id .' and r.data = d.did and r.task_id=t.task_id and t.ttid=tt.ttid and r.setup = s.sid and s.implementation_id = i.id');
+	$run = $this->Implementation->query('SELECT r.rid, r.uploader, d.did, d.name, d.version, r.setup, i.id, i.fullName, i.description, r.task_id, tt.name as taskname, r.start_time, r.status FROM run r left join task t on r.task_id=t.task_id left join task_type tt on t.ttid=tt.ttid left join task_inputs ti on (t.task_id=ti.task_id and ti.input=\'source_data\') left join dataset d on (ti.value = d.did), algorithm_setup s, implementation i WHERE rid='. $this->run_id .' and r.setup = s.sid and s.implementation_id = i.id');
      if( $run != false ) {
 	$this->record = array(
 		  'run_id' => $run[0]->rid,
 		  'uploader' => $run[0]->uploader,
-		  'data_id' => $run[0]->data,
+		  'data_id' => $run[0]->did,
 		  'data_name' => $run[0]->name,
 		  'data_version' => $run[0]->version,
 		  'setup_id' => $run[0]->setup,
