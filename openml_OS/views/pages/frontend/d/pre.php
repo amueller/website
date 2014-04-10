@@ -31,32 +31,32 @@ $nrm = safe($this->input->post('numbermissing'));
 $nrm = safe($this->input->post('numbermissing'));
 
 if(!empty($nri)){
-$array = explode(',',$nri);
-$this->nrinstances_min = $array[0];
-$this->nrinstances_max = $array[1];} else {
+$iarray = explode(',',$nri);
+$this->nrinstances_min = $iarray[0];
+$this->nrinstances_max = $iarray[1];} else {
 $this->nrinstances_min = $this->dqrange['NumberOfInstances']['min'];
 $this->nrinstances_max = $this->dqrange['NumberOfInstances']['max']; 
 }
 if(!empty($nrf)){
-$array = explode(',',$nrf);
-$this->nrfeatures_min = $array[0];
-$this->nrfeatures_max = $array[1];} else {
+$farray = explode(',',$nrf);
+$this->nrfeatures_min = $farray[0];
+$this->nrfeatures_max = $farray[1];} else {
 $this->nrfeatures_min = $this->dqrange['NumberOfFeatures']['min'];
 $this->nrfeatures_max = $this->dqrange['NumberOfFeatures']['max']; 
 }
 
 if(!empty($nrc)){
-$array = explode(',',$nrc);
-$this->nrclasses_min = $array[0];
-$this->nrclasses_max = $array[1];} else {
+$carray = explode(',',$nrc);
+$this->nrclasses_min = $carray[0];
+$this->nrclasses_max = $carray[1];} else {
 $this->nrclasses_min = $this->dqrange['NumberOfClasses']['min'];
 $this->nrclasses_max = $this->dqrange['NumberOfClasses']['max']; 
 }
 
 if(!empty($nrm)){
-$array = explode(',',$nrm);
-$this->nrmissing_min = $array[0];
-$this->nrmissing_max = $array[1];} else {
+$marray = explode(',',$nrm);
+$this->nrmissing_min = $marray[0];
+$this->nrmissing_max = $marray[1];} else {
 $this->nrmissing_min = $this->dqrange['NumberOfMissingValues']['min'];
 $this->nrmissing_max = $this->dqrange['NumberOfMissingValues']['max']; 
 }
