@@ -267,7 +267,7 @@ tr.even {
 	*margin-top: -1px;
 	-webkit-overflow-scrolling: touch;
 }
-
+/*
 .top, .bottom {
 	padding: 15px;
 	background-color: #F5F5F5;
@@ -276,7 +276,7 @@ tr.even {
 
 .top .dataTables_info {
 	float: none;
-}
+} */
 
 .clear {
 	clear: both;

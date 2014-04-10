@@ -2,9 +2,7 @@
   <div class="col-sm-12">
 	  <h1><?php echo $this->record->{'name'}; ?></h1>
   </div>
-  <div class="row">
   <div class="col-sm-12">
-  <div class="col-md-12">
 
      <p><?php echo $this->record->{'description'} ?></p>
      <ul class="hotlinks">
@@ -18,10 +16,6 @@
      </ul>
 
   </div>
-  </div>
-  </div>
-  <div class="row">
-  <div class="col-sm-12">
     <div class="col-sm-6">
 	    <h2>Attribution</h2>
             <div class="table-responsive">
@@ -51,11 +45,7 @@
 				</table>
 			</div>
       </div> <!-- end col-md-6 -->
-   </div>
-   </div> <!-- end row -->
 
-    	<div class="row">
-	  <div class="col-xs-12">
 	  <div class="qualities col-xs-12">
 		<h3>Properties</h3>
 
@@ -65,14 +55,14 @@
 			foreach( $result as $r ) {
 				if ($r->{'showonline'}=='true'){
 					if(is_numeric($r->{'value'})){
-						echo "<div class='qualcell col-xs-2'><span class='qualitynumeric'>" . round($r->{'value'},2) . "</span><br>" . $r->{'quality'} . "</div>";
+						echo "<div class='qualcell col-xs-2'><span class='qualitynumeric'>" . round($r->{'value'},2) . "</span><br><a class='dataprop' href='a/flow-qualities/".cleanName($r->{'quality'})."'>" .  $r->{'quality'} . "</a></div>";
 					} elseif($r->{'value'}=='true'){
-						echo "<div class='qualcell col-xs-2'><span class='qualitytrue'><i class='fa fa-check fa-lg'></i></span><br>" .  $r->{'quality'} . "</div>";
+						echo "<div class='qualcell col-xs-2'><span class='qualitytrue'><i class='fa fa-check fa-lg'></i></span><br><a class='dataprop' href='a/flow-qualities/".cleanName($r->{'quality'})."'>" .  $r->{'quality'} . "</a></div>";
 					} elseif($r->{'value'}=='false'){
-						echo "<div class='qualcell col-xs-2'><span class='qualityfalse'><i class='fa fa-times fa-lg'></i></span><br>" .  $r->{'quality'} . "</div>";
+						echo "<div class='qualcell col-xs-2'><span class='qualityfalse'><i class='fa fa-times fa-lg'></i></span><br><a class='dataprop' href='a/flow-qualities/".cleanName($r->{'quality'})."'>" .  $r->{'quality'} . "</a></div>";
 					}
 				} else {
-				$qtable .= "<tr><td><a class='pop' data-toggle='popover' data-placement='right' data-content='"  . $r->{'description'} . "'>" . $r->{'quality'} . "</a></td><td>";
+				$qtable .= "<tr><td><a href='a/flow-qualities/".cleanName($r->{'quality'})."'>" . $r->{'quality'} . "</a></td><td>";
  					if(is_numeric($r->{'value'})){ $qtable .= round($r->{'value'},2); }
 					else{ $qtable .= $r->{'value'};}
 				$qtable .= "</td></tr>";}
@@ -83,8 +73,6 @@
 				echo "<a data-toggle='collapse' href='#algoquals'><i class='fa fa-caret-right'></i> Show more</a><div id='algoquals' class='collapse'><div class='table-responsive'><table class='table table-striped'>" . $qtable . "</table></div></div>";}
 		 ?>
 		 </div>
-	</div>
-	</div>
 
 	        <div class="col-xs-12">
 		<h3>Results</h3> 

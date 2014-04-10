@@ -160,4 +160,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	
 }
 
+function cleanName($string){
+	return $safe = preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $string)));
+}
+
 ?>

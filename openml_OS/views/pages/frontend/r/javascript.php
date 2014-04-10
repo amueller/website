@@ -87,7 +87,7 @@ $(document).ready(function() {
 	});
 
 	// actions tied to specific tabs
-	$('#qtabs a:[href="#sqltab"]').click(function (e) {
+	$('#qtabs a[href="#sqltab"]').click(function (e) {
 		e.preventDefault();
 		window.editor.refresh();
 		updateSchemaPosition();
@@ -237,7 +237,7 @@ function jsonFailed(data, textStatus) {
 
 function showResultTab(){
 $('#runresults').collapse('show');
-$('#qtabs a:[href="#resultstab"]').tab('show');
+$('#qtabs a[href="#resultstab"]').tab('show');
 }
 
 // stores returned JSON data
@@ -260,8 +260,8 @@ function processResult(data) {
 	
         $('#x'+localStorage.runningExample).button('reset')
 	//localStorage.results=JSON.stringify(data);
-	$('#qtabs a:[href="#resultstab"]').tab('show');
-	$('#vtabs a:[href="#tabletab"]').tab('show');
+	$('#qtabs a[href="#resultstab"]').tab('show');
+	$('#vtabs a[href="#tabletab"]').tab('show');
 	
 	data_orig = data;
 	

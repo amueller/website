@@ -68,6 +68,7 @@ $frontend_pages = array(
 					'f',
 					'r',
 					't',
+					'a',
 					'share',
 					'tour');
 

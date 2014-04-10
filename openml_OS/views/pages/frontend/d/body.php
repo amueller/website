@@ -45,7 +45,7 @@
 	Filters:
 	<div class="row">
 
-  	  <div class="col-xs-4 col-sm-12">
+  	  <div class="col-sm-12">
 	    <div class="option-heading">
 		<a data-toggle="collapse" href="#collapseCodeInput">
 		  <i class="fa fa-caret-down fa-fw"></i> Format
@@ -54,13 +54,13 @@
 	    <div id="collapseCodeInput" class="panel-collapse collapse">
 	      <div class="option-body">
 		<div class="checkbox">
-			<label><input type="checkbox" value="check-classification">ARFF (Tabular)</label>
+			<label><input type="checkbox" value="check-classification" checked disabled>ARFF (Tabular)</label>
                 </div>
               </div>
 	    </div>
           </div>
 
-  	  <div class="col-xs-4 col-sm-12">
+  	  <div class="col-sm-12">
 	    <div class="option-heading">
 		<a data-toggle="collapse" href="#collapseChars">
 		   <i class="fa fa-caret-down fa-fw"></i> Characteristics
@@ -70,44 +70,25 @@
 	      <div class="option-body">
 		<div class="form-group optgroup">
 		  <div class="optslidertitle">Instances</div>
-		  <div class="optslider"><b>0</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" id="sl1" > <b>1000</b> </div> 
+		  <div class="optslider col-xs-12"><input type="text" name="numberinstances" value="" data-slider-min="<?php echo $this->dqrange['NumberOfInstances']['min']; ?>" data-slider-max="<?php echo $this->dqrange['NumberOfInstances']['max']; ?>" data-slider-step="1" data-slider-value="[<?php echo $this->nrinstances_min; ?>,<?php echo $this->nrinstances_max; ?>]" id="sl1" ></div> 
 		</div>
 		<div class="form-group optgroup">
 		  <div class="optslidertitle">Features</div>
-		  <div class="optslider"><b>0</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" id="sl2" > <b>1000</b> </div> 
+		  <div class="optslider col-xs-12"><input type="text" value="" name="numberfeatures" data-slider-min="<?php echo $this->dqrange['NumberOfFeatures']['min']; ?>" data-slider-max="<?php echo $this->dqrange['NumberOfFeatures']['max']; ?>" data-slider-step="1" data-slider-value="[<?php echo $this->nrfeatures_min; ?>,<?php echo $this->nrfeatures_max; ?>]" id="sl2" ></div> 
 		</div>
 		<div class="form-group optgroup">
 		  <div class="optslidertitle">Classes</div>
-		  <div class="optslider"><b>0</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" id="sl3" > <b>1000</b> </div> 
+		  <div class="optslider col-xs-12"><input type="text" value="" name="numberclasses" data-slider-min="<?php echo $this->dqrange['NumberOfClasses']['min']; ?>" data-slider-max="<?php echo $this->dqrange['NumberOfClasses']['max']; ?>" data-slider-step="1" data-slider-value="[<?php echo $this->nrclasses_min; ?>,<?php echo $this->nrclasses_max; ?>]" id="sl3" ></div> 
 		</div>
 		<div class="form-group optgroup">
 		  <div class="optslidertitle">Missing vals</div>
-		  <div class="optslider"><b>0</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]" id="sl4" > <b>1000</b> </div> 
+		  <div class="optslider col-xs-12"><input type="text" value=""  name="numbermissing" data-slider-min="<?php echo $this->dqrange['NumberOfMissingValues']['min']; ?>" data-slider-max="<?php echo $this->dqrange['NumberOfMissingValues']['max']; ?>" data-slider-step="1" data-slider-value="[<?php echo $this->nrmissing_min; ?>,<?php echo $this->nrmissing_max; ?>]" id="sl4"></div> 
 		</div>
 
 		<script> $('#sl1').slider(); $('#sl2').slider(); $('#sl3').slider(); $('#sl4').slider();  </script>
 	      </div>
 	    </div>
           </div>
-
-  	  <div class="col-xs-4 col-sm-12">
-	    <div class="option-heading">
-		<a data-toggle="collapse" href="#collapseCodeAttr">
-		   <i class="fa fa-caret-down fa-fw"></i> Feature types
-		</a>
-	    </div>
-	    <div id="collapseCodeAttr" class="panel-collapse collapse">
-	      <div class="option-body">
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-classification">Numerical</label>
-                </div>
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-regression">Categorical</label>
-                </div>
-	      </div>
-	    </div>
-          </div>
-
         </div>		  
 	<button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
 	</form>
@@ -120,18 +101,18 @@
       <?php 
 	if( $this->terms == false) { ?>
       <div class="greenheader">
-      <h1><i class="fa fa-table"></i> Data</h1>
-      <p>Datasets posing interesting challenges for machine learning research.</p>
+      <h1>Data</h1>
+      <p>Input data for machine learning applications, challenging the community to find the best performing algorithms. They are either uploaded or referenced by url. OpenML indexes all data sets and keeps tracks of versions, citations and reuse. Moreover, for selected data formats, OpenML also computes <a href="a">data characteristics</a>, generates <a href="t">tasks</a>, collects all results from all users, and organizes everything online.</p>
       </div>
       <h2>Popular</h2>
       <?php } ?> 
 	<?php
 	if($this->dataset_count>0) {
-		echo '<div class="searchstats">Showing ' . $this->dataset_count . ' of ' . $this->dataset_total . ' results (' . $this->time . ' seconds)</div>';	
+		echo '<div class="searchstats">Searched ' . $this->dataset_total . ' datasets and found ' . $this->dataset_count . ' matches (' . $this->time . ' seconds)</div>';	
 		
 		foreach( $this->results_all as $r ): if($r['type'] != 'dataset') continue;?>
 			<div class="searchresult">
-				<a href="d/<?php echo urlencode($r['id']); ?>"><i class="<?php echo $r['icon']; ?>"></i>  <?php echo $r['name']; ?></a><br />
+				<a href="d/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
 				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
 				<div class="runStats"><?php echo $r['runs'];?> runs - <?php echo $r['instances'];?> instances - <?php echo $r['features'];?> features - <?php echo $r['classes'];?> classes - <?php echo $r['missing'];?> missing values</div>
 			</div><?php 

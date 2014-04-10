@@ -1,3 +1,6 @@
+
+
+
 /// SHARING
 
 $(document).ready(function() { 
@@ -17,21 +20,3 @@ $(document).ready(function() {
 function showResultTab(){
 $('#ttabs a:[href="#results"]').tab('show');
 }
-
-function redrawchart(){
-
-var theQuery = 'select * from task_type';
-var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+encodeURIComponent(theQuery), "UTF-8");
-
-$.getJSON(query,function(jsonData){
-        var data = jsonData.data;
-	console.log(data);
-	for(var i=0;i<data.length;i++){
-	}
-}).fail(function(){ console.log('failure', arguments); });
-}
-
-$(document).ready(function() {
-   redrawchart();
-});
-

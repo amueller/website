@@ -104,8 +104,8 @@
       <?php 
 	if( $this->terms == false) { ?>
       <div class="blueheader">
-      <h1><i class="fa fa-gears"></i> Flows</h1>
-      <p>Algorithms, scripts or workflows to solve machine learning tasks.</p>
+      <h1>Flows</h1>
+      <p>Flows are implementations (programs, scripts, workflows) that solve OpenML tasks. They are either uploaded or referenced by url, so that anyone can easily find and run them, often through a <a href="plugins">plugin</a>. OpenML indexes all flows, keeps track of versions, citations and reuse, collects all results from all users, and organizes everything online.</p>
       </div>
       <h2>Popular</h2>
       <?php } ?> 
@@ -115,7 +115,7 @@
 		
 		foreach( $this->results_all as $r ): if($r['type'] != 'implementation') continue;?>
 			<div class="searchresult">
-				<a href="f/<?php echo urlencode($r['id']); ?>"><i class="<?php echo $r['icon']; ?>"></i>  <?php echo $r['name']; ?></a><br />
+				<a href="f/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
 				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
 				<div class="runStats"><?php echo $r['runs'] . ' runs'; ?></div>
 			</div><?php 
@@ -149,6 +149,10 @@
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_description">Description</label>
 		    <textarea class="form-control" id="input_implementation_description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea> 
+		  </div>
+		  <div class="form-group">
+		    <label class="control-label" for="input_implementation_description">Instructions</label>
+		    <textarea class="form-control" id="input_implementation_description" placeholder="How to run OpenML tasks." value=""></textarea> 
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Implementation</label>

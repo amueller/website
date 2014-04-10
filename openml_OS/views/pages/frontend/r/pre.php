@@ -25,7 +25,56 @@ $icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', '
 $this->active_tab = gu('tab');
 if($this->active_tab == false) $this->active_tab = 'searchtab';
 
-if( $this->terms != false and $this->terms != 'all') { // normal search
+$this->record = array();
+$this->runsetup = array();
+$this->runevaluations = array();
+
+if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
+	$this->run_id = end(explode('/', $_SERVER['REQUEST_URI']));
+	$run = $this->Implementation->query('SELECT r.rid, r.uploader, r.data, d.name, d.version, r.setup, i.id, i.fullName, i.description, r.task_id, tt.name as taskname, r.start_time, r.status FROM run r, dataset d, task t, task_type tt, algorithm_setup s, implementation i WHERE rid='. $this->run_id .' and r.data = d.did and r.task_id=t.task_id and t.ttid=tt.ttid and r.setup = s.sid and s.implementation_id = i.id');
+     if( $run != false ) {
+	$this->record = array(
+		  'run_id' => $run[0]->rid,
+		  'uploader' => $run[0]->uploader,
+		  'data_id' => $run[0]->data,
+		  'data_name' => $run[0]->name,
+		  'data_version' => $run[0]->version,
+		  'setup_id' => $run[0]->setup,
+		  'flow_id' => $run[0]->id,
+		  'flow_name' => $run[0]->fullName,
+		  'flow_description' => $run[0]->description,
+		  'task_id' => $run[0]->task_id,
+		  'task_name' => $run[0]->taskname,
+		  'start_time' => $run[0]->start_time,
+		  'status' => $run[0]->status
+		);
+	$setup = $this->Implementation->query('SELECT iss.input, i.description, iss.value FROM input_setting iss, input i WHERE iss.setup='.  $this->record['setup_id'] . ' and iss.input = i.fullName');
+	if( $setup != false ) {
+	   foreach( $setup as $i ) {
+		$rsetup = array(
+			  'input' => $i->input,
+			  'description' => $i->description,
+			  'value' => $i->value
+			);
+	        if($i->description == '') { $rsetup['description'] = 'No parameter description'; }
+		$this->runsetup[] = $rsetup;
+	  }
+	}
+	$evals = $this->Implementation->query('select function, round(value,4) as value, round(stdev, 4) as stdev, array_data from evaluation where source = '. $this->run_id);
+	if( $evals != false ) {
+	   foreach( $evals as $i ) {
+		$revals = array(
+			  'function' => $i->function,
+			  'value' => $i->value, 
+			  'stdev' => $i->stdev, 
+			  'array_data' => $i->array_data
+			);
+		$this->runevaluations[] = $revals;
+	  }
+	}
+     }
+}
+elseif( $this->terms != false and $this->terms != 'all') { // normal search
 	$eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
 	$res = array();
 	$code = 0;

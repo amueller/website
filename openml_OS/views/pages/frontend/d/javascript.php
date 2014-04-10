@@ -143,7 +143,7 @@ $(document).ready(function() {
     /* Add event listener for opening and closing details
      * Note that the indicator for showing which row is open is not controlled by DataTables, rather it is done here
      */
-    $('#datatable_main tbody td img').live('click', function () {
+    $('#datatable_main tbody td img').on('click', function () {
         var nTr = $(this).parents('tr')[0];
         if ( oTableRuns.fnIsOpen(nTr) )
         {
@@ -173,7 +173,13 @@ options = {
                 zoomType: 'xy',
 		spacingTop: 40
             },
-            yAxis: {
+	    title: {
+	        text: 'Evaluations per flow (multiple parameter settings)'
+	    },
+	    subtitle: {
+	        text: 'click points for details'
+	    },
+	    yAxis: {
                 title: {
                     enabled: false,
                     text: 'Flows'
@@ -195,9 +201,6 @@ options = {
                 },
                 gridLineWidth: 1
             },
-            title: {
-                text: null
-            },    
             legend: {
                 enabled: false
             },

@@ -157,7 +157,7 @@ class Task extends Database_write {
       `task`.`task_id` AS `id`, 
       `task`.`ttid`, 
       `dataset`.`default_target_attribute` AS `dta`,
-      CONCAT("Task ", `task`.`task_id`, ": ", `dataset`.`name`, " - ", `task_type`.`name`) AS `name`';
+      CONCAT("Task ", `task`.`task_id`, ": ", `task_type`.`name`, " - ", `dataset`.`name`) AS `name`';
     foreach( $conf as $value ) {
       $base_sql .= ', `vtable_' . $value . '`.`value` AS `'.$value.'` ';
     }

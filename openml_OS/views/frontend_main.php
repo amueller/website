@@ -17,13 +17,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width">
         <title>OpenML</title>
-        <meta name="description" content="OpenML is an open science platform for machine learning. Browse and compare previous research. Share experiments, algorithms and data. Get noticed and let others run with your results.">
+        <meta name="description" content="OpenML: exploring machine learning better, together. An open science platform for machine learning.">
+	<link href="http://www.openml.org/img/expdblogo2.png" rel="image_src" />
         <meta name="author" content="Joaquin Vanschoren">
         <meta property="og:title" content="OpenML"/>
         <meta property="og:url" content="http://www.openml.org"/>
-        <meta property="og:image" content="http://www.openml.org/img/openmllogo.png"/>
-        <meta property="og:site_name" content="OpenML: Open Machine Learning"/>
-        <meta property="og:description" content="OpenML is an open science platform for machine learning. Browse and compare previous research. Share experiments, algorithms and data. Get noticed and let others run with your results."/>
+        <meta property="og:image" content="http://www.openml.org/img/expdblogo2.png"/>
+        <meta property="og:site_name" content="OpenML: exploring machine learning better, together."/>
+        <meta property="og:description" content="OpenML: exploring machine learning better, together. An open science platform for machine learning."/>
         <meta property="og:type" content="Science"/>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -44,10 +45,7 @@
         <link rel="shortcut icon" href="img/favicon.ico">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
-        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-            <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-            -->
-        <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.validate.js"></script>
         <script type="text/javascript" src="js/libs/jquery-ui.js"></script>
         <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js" ></script>
@@ -56,8 +54,6 @@
         <script type="text/javascript" src="js/libs/codemirror.js" ></script>
         <script type="text/javascript" src="js/libs/mysql.js" ></script>
         <!-- <script type="text/javascript" src="js/libs/highcharts.js"></script> -->
-	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
-        <script type="text/javascript" src="js/libs/modules/exporting.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.TableTools.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.bootstrap.js"></script>
@@ -80,67 +76,12 @@
         <![endif]-->
         <div class="navbar navbar-static-top" style="margin-bottom: 0px;">
             <div class="navbar-inner">
-                    <a class="nav pull-right socialshare socialshareicon" id="popover2">
-                     <i class="fa fa-share fa-2x"></i>
-                    </a>
                     <a class="nav pull-right socialshare socialshareicon" id="popover">
                      <i class="fa fa-th fa-2x"></i>
                     </a>
-		    <script>
-			$(document).ready(function(){
-				$('#popover').popover({
-				    trigger: 'click',
-				    placement: 'bottom',
-				    html: true,
-				    container: 'body',
-				    animation: 'false',
-				    content: function() { return $('#openmllinks').html(); }
-				}); 
-				$('#popover2').popover({
-				    trigger: 'click',
-				    placement: 'bottom',
-				    html: true,
-				    container: 'body',
-				    animation: 'false',
-				    content: $('#sociallinks')
-				}); 
-				$('#popover').on('shown.bs.popover', function () {
- 					 $('.popover').css('left','inherit')
- 					 $('.popover').css('right','10px')
- 					 $('.arrow').css('left','inherit')
- 					 $('.arrow').css('right','55px')
-				})
-				$('#popover2').on('shown.bs.popover', function () {
- 					 $('.popover').css('left','inherit')
- 					 $('.popover').css('right','10px')
- 					 $('.arrow').css('left','inherit')
- 					 $('.arrow').css('right','10px')
-					 $('#sociallinks').css('display','block')
-				})
-				$('#popover2').on('hide.bs.popover', function () {
-					 $('body').append($('#sociallinks'))
-					 $('#sociallinks').css('display','none')
-				})
-			});
-			$(document).click(function (e) {
-			    $('#popover').each(function () {
-				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-				    if ($(this).data('bs.popover').tip().hasClass('in')) {
-					$(this).popover('toggle');
-				    }
-				    return;
-				}
-			    });
-			    $('#popover2').each(function () {
-				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-				    if ($(this).data('bs.popover').tip().hasClass('in')) {
-					$(this).popover('toggle');
-				    }
-				    return;
-				}
-			    });
-			});	
-		   </script>
+                    <a class="nav pull-right socialshare socialshareicon" id="popover2">
+                     <i class="fa fa-retweet fa-2x"></i>
+                    </a>
 
                     <!-- <a class="brand" href="" style="float:left">OpenML</a> -->
                     <div class="socialshare">
@@ -170,14 +111,14 @@
 	<div id="openmllinks">
 	  <div class="iconrow">
 	  <a href="d"><div class="iconcell icongreen"><i class="fa fa-table fa-3x"></i><br><span>data</span></div></a>
-	  <a href="f"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>flows</span></div></a>
 	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-check-square-o fa-3x"></i><br><span>tasks</span></div></a>
+	  <a href="f"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>flows</span></div></a>
 	  <a href="r"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>runs</span></div></a>
 	  </div><div class="iconrow">
-	  <a href="plugins"><div class="iconcell icongray"><i class="fa fa-flash fa-3x"></i><br><span>plugins</span></div></a>
+	  <a href="a"><div class="iconcell icongray"><i class="fa fa-bar-chart-o fa-3x"></i><br><span>analytics</span></div></a>
+	  <a href="plugins"><div class="iconcell icongray"><i class="fa fa-wrench fa-3x"></i><br><span>tools</span></div></a>
 	  <a href="developers"><div class="iconcell icongray"><i class="fa fa-users fa-3x"></i><br><span>developers</span></div></a>
 	  <a href="community"><div class="iconcell icongray"><i class="fa fa-comments fa-3x"></i><br><span>forum</span></div></a>
-	  <a href="about"><div class="iconcell icongray"><i class="fa fa-heart fa-3x"></i><br><span>about</span></div></a>
 	  </div>
 	</div>
 	<div id="sociallinks">
@@ -195,16 +136,16 @@
 		<div class="socialcontainer">
 		<div class="sharetitle">Follow us</div>
 		<div id="social-bar">
-                <a href="https://twitter.com/open_ml">
+                <a href="https://twitter.com/open_ml" target="_blank">
                     <i class="fa fa-twitter"></i>
                 </a>
-                <a href="https://www.facebook.com/openml">
+                <a href="https://www.facebook.com/openml" target="_blank">
                     <i class="fa fa-facebook"></i>
                 </a>
-                <a href="https://plus.google.com/communities/105075769838900568763">
+                <a href="https://plus.google.com/communities/105075769838900568763" target="_blank">
                     <i class="fa fa-google-plus"></i>
                 </a>
-                <a href="https://github.com/openml">
+                <a href="https://github.com/openml" target="_blank">
                     <i class="fa fa-github"></i>
                 </a>
             	</div>
@@ -273,13 +214,71 @@
         <script src="js/libs/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/application.js"></script>
+	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+        <script type="text/javascript" src="js/libs/modules/exporting.js"></script>
 	<script type="text/javascript">$('.tip').tooltip();</script>
+        <script>
+			$(document).ready(function(){
+				$('#popover').popover({
+				    trigger: 'click',
+				    placement: 'bottom',
+				    html: true,
+				    container: 'body',
+				    animation: 'false',
+				    content: function() { return $('#openmllinks').html(); }
+				}); 
+				$('#popover2').popover({
+				    trigger: 'click',
+				    placement: 'bottom',
+				    html: true,
+				    container: 'body',
+				    animation: 'false',
+				    content: $('#sociallinks')
+				}); 
+				$('#popover').on('shown.bs.popover', function () {
+ 					 $('.popover').css('left','inherit')
+ 					 $('.popover').css('right','10px')
+ 					 $('.arrow').css('left','inherit')
+ 					 $('.arrow').css('right','10px')
+				})
+				$('#popover2').on('shown.bs.popover', function () {
+ 					 $('.popover').css('left','inherit')
+ 					 $('.popover').css('right','10px')
+ 					 $('.arrow').css('left','inherit')
+ 					 $('.arrow').css('right','55px')
+					 $('#sociallinks').css('display','block')
+				})
+				$('#popover2').on('hide.bs.popover', function () {
+					 $('body').append($('#sociallinks'))
+					 $('#sociallinks').css('display','none')
+				})
+			});
+			$(document).click(function (e) {
+			    $('#popover').each(function () {
+				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+				    if ($(this).data('bs.popover').tip().hasClass('in')) {
+					$(this).popover('toggle');
+				    }
+				    return;
+				}
+			    });
+			    $('#popover2').each(function () {
+				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+				    if ($(this).data('bs.popover').tip().hasClass('in')) {
+					$(this).popover('toggle');
+				    }
+				    return;
+				}
+			    });
+			});	
+        </script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
             
+	    ga('require', 'linkid', 'linkid.js');
             ga('create', 'UA-40902346-1', 'openml.org');
             ga('send', 'pageview');
         </script>
