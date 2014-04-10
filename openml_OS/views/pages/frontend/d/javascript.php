@@ -263,7 +263,7 @@ $.getJSON(query,function(jsonData){
 
 	options.yAxis.categories = c;
 	options.series[0].data = d;
-	options.chart.height = c.length*15;
+	options.chart.height = c.length*15+60;
 
 	coderesultchart = new Highcharts.Chart(options);
 
@@ -296,7 +296,7 @@ function updateRunModal(rid) {
 			var data = jsonData.data;
 			$("#runinfo").append("<br>Input data: <a href='d/" + dataid + "'>"+ data[0][0] + "</a>");
 
-			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE  s.implementation_id=i.id and s.sid="+flowid, "UTF-8");
+			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE s.implementation_id=i.id and s.sid="+flowid, "UTF-8");
 			console.log(flowq);
 			$.getJSON(flowq,function(jsonData){
 				var data = jsonData.data;
