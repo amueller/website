@@ -263,7 +263,7 @@ $.getJSON(query,function(jsonData){
 
 	options.yAxis.categories = c;
 	options.series[0].data = d;
-	options.chart.height = c.length*17+120;
+	options.chart.height = c.length*18+120;
 
 	coderesultchart = new Highcharts.Chart(options);
 
