@@ -31,6 +31,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Algorithm');
     $this->load->model('Feature');
     $this->load->model('Math_function');
+    $this->load->model('Quality');
     $this->load->model('Schedule');
     $this->load->model('Task');
     $this->load->model('Task_type');
@@ -178,6 +179,14 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'authenticate.weblogin', array( 'weblogin' => $this->authenticated ? 'true' : 'false' ) );
   }
   
+  private function _openml_data() {
+    $datasets = $this->Dataset->getWhere( '`processed` IS NOT NULL AND `error` = "false"' );
+    if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
+      $this->_returnError( 110 );
+    }
+    $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
+  }
+  
   private function _openml_data_description() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {
@@ -208,6 +217,16 @@ class Rest_api extends CI_Controller {
       return;
     }
     
+    if( $dataset->processed == NULL) {
+      $this->_returnError( 273 );
+      return;
+    }
+    
+    if( $dataset->error != "false") {
+      $this->_returnError( 274 );
+      return;
+    }
+    
     $dataset->features = $this->Feature->getWhere( 'did = "' . $dataset->did . '"' );
     
     if( $dataset->features === false ) {
@@ -223,11 +242,130 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $this->_xmlContents( 'data-set-features', $dataset );
+    $this->_xmlContents( 'data-features', $dataset );
   }
   
+  private function _openml_data_qualities() {
+    $data_id = $this->input->get( 'data_id' );
+    if( $data_id == false ) {
+      $this->_returnError( 360 );
+      return;
+    }
+    $dataset = $this->Dataset->getById( $data_id );
+    if( $dataset === false ) {
+      $this->_returnError( 361 );
+      return;
+    }
+    
+    if( $dataset->processed == NULL) {
+      $this->_returnError( 363 );
+      return;
+    }
+    
+    if( $dataset->error != "false") {
+      $this->_returnError( 364 );
+      return;
+    }
+    
+    $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
+    
+    if( $dataset->qualities === false ) {
+      $this->_returnError( 362 );
+      return;
+    }
+    if( is_array( $dataset->qualities ) === false ) {
+      $this->_returnError( 362 );
+      return;
+    }
+    if( count( $dataset->qualities ) === 0 ) {
+      $this->_returnError( 362 );
+      return;
+    }
+    
+    $this->_xmlContents( 'data-qualities', $dataset );
+  }
   
-
+  private function _openml_data_qualities_upload() {
+    // authentication check. Real check is done in the constructor.
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 380 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 381 );
+        return;
+      }
+    }
+    
+    // get correct description
+    if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
+      $this->_returnError( 382 );
+      return;
+    }
+    
+    // get description from string upload
+    $description = $_FILES['description'];
+    if( validateXml( $description['tmp_name'], xsd('openml.data.qualities'), $xmlErrors ) == false ) {
+      $this->_returnError( 383, $xmlErrors );
+      return;
+    }
+    $xml = simplexml_load_file( $description['tmp_name'] );
+    $did = ''. $xml->children('oml', true)->{'did'};
+    
+    $dataset = $this->Dataset->getById( $did );
+    if( $dataset == false ) {
+      $this->_returnError( 384 );
+      return;
+    }
+    
+    $all_qualities = $this->Quality->getColumnWhere( 'name', '`type` = "DataQuality"' );
+    
+    $qualities = $this->Data_quality->getAssociativeArray( 'quality', 'value', '`data` = "' . $dataset->did . '"' );
+    
+    // check and collect the qualities
+    $newQualities = array();
+    foreach( $xml->children('oml', true)->{'quality'} as $q ) {
+      $quality = xml2object( $q );
+      
+      if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
+        $this->_returnError( 385, $$quality->name );
+        return;
+      } elseif( $qualities != false && array_key_exists( $quality->name, $qualities ) ) { // prior to this run, we already got this quality
+        if( $qualities[$quality->name] != $quality->value ) {
+          $this->_returnError( 386, $quality->name );
+          return;
+        }
+      } elseif( in_array( $quality->name, $all_qualities ) == false ) {
+        $this->_returnError( 387, $quality->name );
+        return;
+      } else {
+        $newQualities[$quality->name] = $quality->value;
+      }
+    }
+    
+    if( count( $newQualities) == 0 ) {
+      $this->_returnError( 388 );
+      return;
+    }
+    
+    $success = true;
+    foreach( $newQualities as $name => $value ) {
+      $data = array(
+        'data' => $dataset->did,
+        'quality' => $name,
+        'value' => $value
+      );
+      $this->Data_quality->insert( $data );
+    }
+    
+    if( $success ) {
+      $this->_xmlContents( 'data-qualities-upload', array( 'did' => $dataset->did ) );
+    } else {
+      $this->_returnError( 389 );
+      return;
+    }
+  }
+  
   private function _openml_data_delete() {
     if(!$this->authenticated) {
       if(!$this->provided_hash) {
@@ -371,7 +509,7 @@ class Rest_api extends CI_Controller {
       $this->Dataset->process( $id, $message );
     }
 
-    $this->_xmlContents( 'data-set-upload', array( 'id' => $id ) );
+    $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
   private function _openml_tasks_types() {
