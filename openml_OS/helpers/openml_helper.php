@@ -110,12 +110,12 @@ function object_array_get_property( $array, $property ) {
 function array_to_parsed_string($array, $string) {
   $total_string = '';
   if (is_array($array)){
-	  foreach( $array as $key => $value ) {
-	    $search = array('[KEY]', '[VALUE]');
-	    $replace = array($key, (is_array($value)) ? implode(',',$value) : $value );
-	    
-	    $total_string .= str_replace($search, $replace, $string);
-	  }
+    foreach( $array as $key => $value ) {
+      $search = array('[KEY]', '[VALUE]');
+      $replace = array($key, (is_array($value)) ? implode(',',$value) : $value );
+      
+      $total_string .= str_replace($search, $replace, $string);
+    }
   }
   return $total_string;
 }

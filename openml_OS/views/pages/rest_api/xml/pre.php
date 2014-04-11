@@ -384,9 +384,47 @@ $this->apiErrors[363][1] = 'The dataset was not processed yet, no qualities are 
 $this->apiErrors[364][0] = 'Dataset processed with error';
 $this->apiErrors[364][1] = 'The quality calculator has run into an error while processing the dataset. Please check whether it is a valid supported file. ';
 
-// for functiuon: openml.data
+// for function: openml.data
 $this->apiErrors[370][0] = 'No datasets available';
 $this->apiErrors[370][1] = 'There are no valid datasets in the system. ';
 
+// for function: openml.qualities.upload
+$this->apiErrors[380][0] = 'Please provide session_hash';
+$this->apiErrors[380][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
 
+// for function: openml.qualities.upload
+$this->apiErrors[381][0] = 'Authentication failed';
+$this->apiErrors[381][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.qualities.upload
+$this->apiErrors[382][0] = 'Please provide description xml';
+$this->apiErrors[382][1] = 'Please provide description xml';
+
+// for function: openml.qualities.upload
+$this->apiErrors[383][0] = 'Problem validating uploaded description file';
+$this->apiErrors[383][1] = 'The XML description format does not meet the standards';
+
+// for function: openml.qualities.upload
+$this->apiErrors[384][0] = 'Could not find dataset';
+$this->apiErrors[384][1] = 'The dataset to which the qualities belong could not be found. ';
+
+// for function: openml.qualities.upload
+$this->apiErrors[385][0] = 'Quality calculated twice.';
+$this->apiErrors[385][1] = 'The quality description file contains the same quality twice. ';
+
+// for function: openml.qualities.upload
+$this->apiErrors[386][0] = 'Quality inconsistent';
+$this->apiErrors[386][1] = 'The calculated quality is inconsistent with previous calculated values. ';
+
+// for function: openml.qualities.upload
+$this->apiErrors[387][0] = 'Quality does not exists';
+$this->apiErrors[387][1] = 'The calculated data quality does not exists in the quality table. ';
+
+// for function: openml.qualities.upload
+$this->apiErrors[388][0] = 'No new qualities';
+$this->apiErrors[388][1] = 'All qualities were already stored, so no new qualities were added.';
+
+// for function: openml.qualities.upload
+$this->apiErrors[389][0] = 'Quality upload failed';
+$this->apiErrors[389][1] = 'Unable to add new qualities to the database. Please contact API support';
 ?>
