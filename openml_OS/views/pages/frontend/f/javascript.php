@@ -336,7 +336,7 @@ $.getJSON(query,function(jsonData){
 			options.series[0].data.push({x: parseFloat(data[i][2]), y: map[data[i][0]], r: data[i][3]});
 		}
 	}
-	options.chart.height = options.yAxis.categories.length*17+120;
+	options.chart.height = options.yAxis.categories.length*18+120;
 	coderesultchart = new Highcharts.Chart(options);
 
 
