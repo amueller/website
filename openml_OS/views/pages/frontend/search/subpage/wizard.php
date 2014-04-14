@@ -15,10 +15,10 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-md-2 control-label" for="algorithmDropdown">Implementations</label>
+    <label class="col-md-2 control-label" for="implementationDropdown">Implementation versions</label>
     <div class="col-md-10">
-      <input type="text" class="form-control" id="algorithmDropdown" placeholder="Include all algorithms" value="SVM, C4.5, " onblur="updateImplementations( '#implementationDropdown', '#algorithmDropdown' );">
-      <span class="help-block">A comma separated list of implementations. Leave empty to include all algorithms.</span>
+      <input type="text" class="form-control input-small" id="implementationDropdown" placeholder="Include all implementations" value="" />
+      <span class="help-block">Further specify exactly which implementations you want. Leave empty to include all implementations of the selected algorithms.</span>
     </div>
   </div>
   <div class="form-group">
@@ -38,13 +38,7 @@
     </div>
     <div id="collapseOne" class="accordion-body collapse">
       <div class="panel-body">
-  <div class="form-group">
-    <label class="col-md-2 control-label" for="implementationDropdown">Implementation versions</label>
-    <div class="col-md-10">
-      <input type="text" class="form-control input-small" id="implementationDropdown" placeholder="Include all implementations of selected algorithms" value="" />
-      <span class="help-block">Further specify exactly which implementations you want. Leave empty to include all implementations of the selected algorithms.</span>
-    </div>
-  </div>
+  
   <div class="form-group">
     <label class="col-md-2 control-label" for="algorithmDefault">Default settings</label>
     <div class="col-md-10">

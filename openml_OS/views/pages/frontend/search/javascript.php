@@ -31,8 +31,7 @@ $(function() {
   var filteredImplementations = getImplementationsWithAlgorithms( ['SVM', 'C4.5'] ); // TODO: bind to algorithm field
     
   makeCommaSeperatedAutoComplete( "#datasetDropdown", datasets );                                           // run search
-  makeCommaSeperatedAutoComplete( "#algorithmDropdown", algorithms );                                       // run search
-  makeCommaSeperatedAutoComplete( "#implementationDropdown", filteredImplementations );                     // run search
+  makeCommaSeperatedAutoComplete( "#implementationDropdown", implementations );                     // run search
   makeCommaSeperatedAutoComplete( "#searchLearningcurvesImplementationDropdown", implementations );         // learning curve search
   makeCommaSeperatedAutoComplete( "#searchLearningcurvesDatasetDropdown", datasets );                       // learning curve search
   makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); // task search
@@ -110,6 +109,14 @@ $(document).ready(function() {
     $(this).button('loading');
     $('.sqlmessage').css({"display":"none"});
     runQuery(window.editor.getValue());   
+  });
+  
+  // actions tied to specific tabs
+  $('#qtabs a[href="#sqltab"]').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+    window.editor.refresh();
+    updateSchemaPosition();
   });
   
   window.editor = CodeMirror.fromTextArea(document.getElementById("sql"), {
@@ -235,14 +242,14 @@ function initData(){
 }
 
 function whenAvailable(name, callback) {
-    var interval = 10; // ms
-    window.setTimeout(function() {
-        if (window[name]) {
-            callback(window[name]);
-        } else {
-            window.setTimeout(arguments.callee, interval);
-        }
-    }, interval);
+  var interval = 10; // ms
+  window.setTimeout(function() {
+    if (window[name]) {
+      callback(window[name]);
+    } else {
+      window.setTimeout(arguments.callee, interval);
+    }
+  }, interval);
 }
 // launches a query
 function runQuery(theQuery) {
@@ -861,6 +868,7 @@ function wrapArrayValues( arr, wrapper ) {
 }
 
 function commaSeperatedListToCleanArray( list ) {
+  console.log("list: " + list);
   var arr = list.split(',');
   for( i = arr.length-1; i >= 0; i-- ) {
     arr[i] = arr[i].replace( /^ +/g, '' );
@@ -922,11 +930,11 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   // TODO: only available evaluationMethod: CV . Var is not used yet. 
   $('#wizardquery-btn').button('loading');
   datasets = commaSeperatedListToCleanArray( datasets );
-  algorithms = commaSeperatedListToCleanArray( algorithms );
+  //algorithms = commaSeperatedListToCleanArray( algorithms );
   implementations = commaSeperatedListToCleanArray( implementations );
   
   var sql = '';
-  var algorithmConstraint = '';
+  //var algorithmConstraint = '';
   var datasetConstraint = '';
   var implementationConstraint = '';
   var selectImplementation = 'i.fullName';
@@ -934,8 +942,8 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   var selectColumns = selectImplementation + ', d.name, e.value ';
   var setupConstraint = '';
   if( defaultParams ) setupConstraint = ' AND l.isDefault = "true" ';
-  if ( algorithms.length > 0 ) algorithmConstraint = ' AND l.algorithm IN ("' + algorithms.join('","') + '") ';
-  if ( implementations.length > 0 ) implementationConstraint = ' AND l.implementation IN ("' + implementations.join('","') + '") ';
+  //if ( algorithms.length > 0 ) algorithmConstraint = ' AND l.algorithm IN ("' + algorithms.join('","') + '") ';
+  if ( implementations.length > 0 ) implementationConstraint = ' AND i.name IN ("' + implementations.join('","') + '") ';
   if ( datasets.length > 0 ) {
     var c_d  = splitDatasetsFromCollections( datasets );
     if( c_d.collections.length > 0 && c_d.datasets.length > 0 ) {
@@ -955,7 +963,7 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   sql = 'SELECT ' + selectColumns + 
         'FROM algorithm_setup l, evaluation e, cvrun r, task t, dataset d, implementation i ' + 
         'WHERE r.learner = l.sid ' +
-        algorithmConstraint + 
+//        algorithmConstraint + 
         datasetConstraint + 
         implementationConstraint + 
         setupConstraint +
@@ -993,12 +1001,6 @@ function toggleResultTables() {
     readRows( data_orig );
   }
   $('#crosstabulateBtn').button('reset');
-}
-
-function updateImplementations( cssSelectorImplementations, cssSelectorAlgorithms ) {
-  var algorithms = commaSeperatedListToCleanArray( $( cssSelectorAlgorithms ).val() );
-  var implementations = ( algorithms != "" ) ? getImplementationsWithAlgorithms( algorithms ) : expdbImplementations();
-  makeCommaSeperatedAutoComplete( cssSelector, implementations ); 
 }
 
 function getImplementationsWithAlgorithms( requestedAlgorithms ) {
