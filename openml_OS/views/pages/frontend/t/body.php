@@ -144,7 +144,7 @@
               <label class="control-label" for="datasetDropdown">Estimation procedure</label>
               <div>
                 <select class="form-control input-small selectpicker" name="estimation_procedure">
-                  <?php foreach($this->ep as $e): if($e->ttid != 4)continue; ?>
+                  <?php foreach($this->ep as $e): if($e->ttid != 3)continue; ?>
                   <option value="<?php echo $e->id; ?>"><?php echo $e->name; ?></option>
                   <?php endforeach; ?>
                 </select>
@@ -181,7 +181,7 @@
               <label class="control-label" for="estimation_procedure">Estimation procedure</label>
               <div >
                 <select class="form-control input-small selectpicker" name="estimation_procedure">
-                  <?php foreach($this->ep as $e): if($e->ttid != 3)continue; ?>
+                  <?php foreach($this->ep as $e): if($e->ttid != 4)continue; ?>
                   <option value="<?php echo $e->id; ?>"><?php echo $e->name; ?></option>
                   <?php endforeach; ?>
                 </select>
