@@ -94,8 +94,11 @@ class Dataset extends Database_write {
       $dataQualities = $this->Data_quality->getByDid( $dataset->did );
       
       $result = get_arff_features( $dataset->url, $dataset->default_target_attribute );
-        
-      if( $result == false || property_exists( $result,  'error' )) {
+      
+      if( $result == false ) {
+        $message = 'Error extracting features and qualities. No result from Java webapplication ';
+        return false;
+      } elseif( property_exists( $result,  'error' )) {
         $message = 'Error extracting features and qualities: ' . $result->error;
         return false;
       }

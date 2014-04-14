@@ -331,7 +331,7 @@ class Rest_api extends CI_Controller {
         $this->_returnError( 385, $$quality->name );
         return;
       } elseif( $qualities != false && array_key_exists( $quality->name, $qualities ) ) { // prior to this run, we already got this quality
-        if( $qualities[$quality->name] != $quality->value ) {
+        if( abs( $qualities[$quality->name] - $quality->value ) > $this->config->item('double_epsilon') ) {
           $this->_returnError( 386, $quality->name );
           return;
         }

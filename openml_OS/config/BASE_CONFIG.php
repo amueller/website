@@ -11,7 +11,7 @@ setlocale(LC_TIME, 'nl_NL');
  * of OpenML, this would be http://www.openml.org/. For an instance on
  * a localhost, this would be http://localhost/. 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/' );
+define( 'BASE_URL', 'http://FILL_IN_WEB_ADDRESS/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DATA_URL: The subdirectory where the data can be accessed. Will be 
@@ -79,6 +79,18 @@ define( 'DB_NAME_OPENML', 'openml' );
 define( 'DB_HOST_OPENML', 'localhost' );
 define( 'DB_USER_OPENML', 'FILL_IN_USERNAME2' );
 define( 'DB_PASS_OPENML', 'FILL_IN_PASSWORD2' );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * Configuration details for the OpenML API (Username, password)
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * API_USERNAME: The username under which the system may perform API
+ * calls.
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * API_PASSWORD: The password that belongs to the username
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+define( 'API_USERNAME', 'FILL_IN_USERNAME' );
+define( 'API_PASSWORD', 'FILL_IN_PASSWORD' );
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DEBUG: Will produce errors and warnings on the screen. Set this 
