@@ -146,14 +146,13 @@ class Run extends Database_write {
       $javaFunction = "evaluate_stream_predictions";
     }
     $command = "java -jar $eval -f $javaFunction -d \"$datasetUrl\" -s \"$splitsUrl\" -p \"$predictionsUrl\" -c \"$targetFeature\"";
-    $this->Log->cmd( 'REST API::openml.run.upload', $command ); 
+    $this->Log->cmd( 'Evaluate Run', $command ); 
   
     if(function_enabled('exec') === false ) {
       $errorCode = 'failed to start evaluation engine.';
       return false;
     }
     
-    $this->Log->cmd( 'Evaluate Run', $command ); 
     exec( CMD_PREFIX . $command, $res, $code );
   
     $json = json_decode( implode( "\n", $res ) );

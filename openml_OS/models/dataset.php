@@ -65,7 +65,7 @@ class Dataset extends Database_write {
     return $res;
   }
   
-  function process( $did, &$message ) {
+  function process( $did, $extensive, &$message ) {
     $dataset = $this->getById( $did );
     
     $update = array( 'processed' => now(), 'error' => 'false' );
@@ -120,6 +120,30 @@ class Dataset extends Database_write {
     if( $succes == false ) {
       $message = 'Failed to insert meta data in database. ';
       return false;
+    }
+    
+    // also invoke Fantail (by Quan Sun). experimental. 
+    if( $extensive ) {
+      $dataset = $this->getById( $did ); // must be updated
+      $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
+      $res = array();
+      $code = 0;
+      $config = ' -config "username = '.API_USERNAME.';password = '.API_PASSWORD.';server = '.BASE_URL.'"';
+      $command = "java -jar $eval -f 'data_qualities' -did '" . $dataset->did . "' -c " . $dataset->default_target_attribute . $config;
+      $this->Log->cmd( 'Data Qualities', $command ); 
+      
+      if(function_enabled('exec') === false ) {
+        $errorCode = 'failed to start evaluation engine.';
+        return false;
+      }
+      
+      exec( CMD_PREFIX . $command, $res, $code );
+      $json = json_decode( implode( "\n", $res ) );
+      if( $json != false ) {
+        $this->Log->cronjob( $json->status, 'Data Qualities', $json->message ); 
+      } else {
+        $this->Log->cronjob( 'ERROR', 'Data Qualities', 'Java webapplication did not output json result. ('.$cmd.')' ); 
+      }
     }
     
     return true;

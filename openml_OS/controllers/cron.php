@@ -84,16 +84,17 @@ class Cron extends CI_Controller {
     $processed = 0;
     if( is_array( $datasets ) ) {
       foreach( $datasets as $d ) {
-        if(++$processed > 5 )break;
+        $alreadyProcessed = $d->processed !== null;
         $message = false;
         
-        $res = $this->Dataset->process( $d->did, $message );
+        $res = $this->Dataset->process( $d->did, $alreadyProcessed, $message );
         if( $res === true ) {
           $this->Log->cronjob( 'success', 'process_dataset', 'Did ' . $d->did . ' processed successfully. '  );
         } else {
           $this->Dataset->update( $d->did, array( 'processed' => now(), 'error' => 'true' ) );
           $this->_error( 'dataset', $d->did, $message );
         }
+        if(++$processed == 5 || $alreadyProcessed ) break;
       }
     }
   }
