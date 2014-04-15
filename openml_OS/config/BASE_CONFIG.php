@@ -37,6 +37,13 @@ define( 'PATH', '/var/www/' );
 define( 'DATA_PATH', PATH . 'data/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * TMP_PATH: Directory in which temporary files can be places. LOCK
+ * files are an example of these kind of files. /tmp/ is generally a
+ * good place on Unix based systems.
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+define( 'TMP_PATH', '/tmp/' );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * Configuration details for the experiment database
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DB_NAME: The name of the database
