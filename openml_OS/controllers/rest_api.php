@@ -144,6 +144,8 @@ class Rest_api extends CI_Controller {
     $source = new stdClass();
     $source->hash = $hash;
     $source->until = $this->Api_session->validUntil( $record->creation_date );
+    $source->timezone = new DateTime(null, new DateTimeZone(date_default_timezone_get()));
+    $source->timezonename = $source->timezone->getTimezone()->getName();
     
     $this->_xmlContents( 'authenticate', $source );
   }
