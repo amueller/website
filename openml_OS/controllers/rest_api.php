@@ -287,6 +287,15 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data-qualities', $dataset );
   }
   
+  private function _openml_data_qualities_list() {
+    $result = $this->Quality->allUsed( );
+    $qualities = array();
+    foreach( $result as $r ) {
+      $qualities[] = $r->name;
+    }
+    $this->_xmlContents( 'data-qualities-list', array( 'qualities' => $qualities ) );
+  }
+  
   private function _openml_data_qualities_upload() {
     // authentication check. Real check is done in the constructor.
     if(!$this->authenticated) {
