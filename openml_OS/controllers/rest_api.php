@@ -514,13 +514,13 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
-  private function _openml_tasks_types() {
+  private function _openml_task_types() {
     $data = new stdClass();
     $data->task_types = $this->Task_type->get();
     $this->_xmlContents( 'task-types', $data );
   }
   
-  private function _openml_tasks_types_search() {
+  private function _openml_task_types_search() {
     $task_type_id = $this->input->get( 'task_type_id' );
     if( $task_type_id == false ) {
       $this->_returnError( 240 );
@@ -538,7 +538,7 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'task-types-search', array( 'task_type' => $taskType, 'io' => $taskTypeIos ) );
   }
   
-  private function _openml_tasks_search() {
+  private function _openml_task_search() {
     $task_id = $this->input->get( 'task_id' );
     if( $task_id == false ) {
       $this->_returnError( 150 );
@@ -1023,7 +1023,7 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'run-upload', $result );
   }
   
-  private function _openml_run_getjob() {
+  private function _openml_job_get() {
     $workbench = $this->input->get('workbench');
     $task_type_id = $this->input->get('task_type_id');
     
@@ -1085,16 +1085,20 @@ class Rest_api extends CI_Controller {
   
   /********************************* ALIAS FUNCTIONS *********************************/
   
-  private function _openml_task_types() {
-    $this->_openml_tasks_types();
+  private function _openml_tasks_types() {
+    $this->_openml_task_types();
   }
   
-  private function _openml_task_types_search() {
-    $this->_openml_tasks_types_search();
+  private function _openml_tasks_types_search() {
+    $this->_openml_task_types_search();
   }
   
-  private function _openml_task_search() {
-    $this->_openml_tasks_search();
+  private function _openml_tasks_search() {
+    $this->_openml_task_search();
+  }
+  
+  private function _openml_run_getjob() {
+    $this->_openml_job_get();
   }
   
   /************************************* DISPLAY *************************************/
