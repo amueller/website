@@ -1072,7 +1072,7 @@ class Rest_api extends CI_Controller {
     
     if( $result ) {
       $result = $result && $this->Run->delete( $run->rid );
-      $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more soffisticated search on shortcut tables
+      $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more sophisticated search on shortcut tables
     }
     
     if( $result == false ) {
@@ -1080,6 +1080,56 @@ class Rest_api extends CI_Controller {
       return;
     }
     $this->_xmlContents( 'run-delete', array( 'run' => $run ) );
+  }
+  
+  private function _openml_run_reset() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 410 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 411 );
+        return;
+      }
+    }
+    
+    $run = $this->Run->getById( $this->input->post( 'run_id' ) );
+    if( $run == false ) {
+      $this->_returnError( 412 );
+      return;
+    }
+    
+    if($run->uploader != $this->user_id ) {
+      $this->_returnError( 413 );
+      return;
+    }
+    
+    $result = true;
+    $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more sophisticated search on shortcut tables
+    
+    $evalPlain  = $this->Evaluation->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    $evalFold   = $this->Evaluation_fold->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    $evalSample = $this->Evaluation_sample->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    if( is_array($evalPlain) == false ) $evalPlain = array();
+    if( is_array($evalFold) == false ) $evalFold = array();
+    if( is_array($evalSample) == false ) $evalSample = array();
+    
+    $evaluation_ids = array_unique ( array_merge( $evalPlain, $evalFold, $evalSample ) );
+    
+    $result = $result && $this->Output_data->deleteWhere( '`run` = "' . $run->rid  . '" AND `data` IN (' . implode( ',', $evaluation_ids ) . ')' );
+    
+    $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ');
+    $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ');
+    $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ');
+    
+    
+    $update = array( 'error' => null, 'processed' => null );
+    
+    if( $result == false ) {
+      $this->_returnError( 394 );
+      return;
+    }
+    $this->_xmlContents( 'run-reset', array( 'run' => $run ) );
   }
   
   private function _openml_job_get() {

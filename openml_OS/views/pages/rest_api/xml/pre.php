@@ -467,4 +467,24 @@ $this->apiErrors[404][1] = 'The setup is used in runs. Delete this other content
 // for function: openml.setup.delete
 $this->apiErrors[405][0] = 'Deleting setup failed.';
 $this->apiErrors[405][1] = 'Deleting the setup failed. Please contact support team. ';
+
+// for function: openml.run.reset
+$this->apiErrors[410][0] = 'Please provide session_hash';
+$this->apiErrors[410][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.run.reset
+$this->apiErrors[411][0] = 'Authentication failed';
+$this->apiErrors[411][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.run.reset
+$this->apiErrors[412][0] = 'Run does not exists';
+$this->apiErrors[412][1] = 'The run id could not be linked to an existing run.';
+
+// for function: openml.run.reset
+$this->apiErrors[413][0] = 'Run is not owned by you';
+$this->apiErrors[413][1] = 'The run was owned by another user. Hence you cannot reset it.';
+
+// for function: openml.run.reset
+$this->apiErrors[414][0] = 'Resetting run failed.';
+$this->apiErrors[414][1] = 'Resetting the run failed. Please contact support team. ';
 ?>
