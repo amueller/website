@@ -358,7 +358,7 @@ $this->apiErrors[353][1] = 'The dataset was owned by another user. Hence you can
 
 // for function: openml.data.delete
 $this->apiErrors[354][0] = 'Dataset is in use by other content. Can not be deleted';
-$this->apiErrors[354][1] = 'The data is used in runs. Delete this other content before deleting this implementation. ';
+$this->apiErrors[354][1] = 'The data is used in runs. Delete this other content before deleting this dataset. ';
 
 // for function: openml.data.delete
 $this->apiErrors[355][0] = 'Deleting dataset failed.';
@@ -427,4 +427,44 @@ $this->apiErrors[388][1] = 'All qualities were already stored, so no new qualiti
 // for function: openml.qualities.upload
 $this->apiErrors[389][0] = 'Quality upload failed';
 $this->apiErrors[389][1] = 'Unable to add new qualities to the database. Please contact API support';
+
+// for function: openml.run.delete
+$this->apiErrors[390][0] = 'Please provide session_hash';
+$this->apiErrors[390][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.run.delete
+$this->apiErrors[391][0] = 'Authentication failed';
+$this->apiErrors[391][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.run.delete
+$this->apiErrors[392][0] = 'Run does not exists';
+$this->apiErrors[392][1] = 'The run id could not be linked to an existing run.';
+
+// for function: openml.run.delete
+$this->apiErrors[393][0] = 'Run is not owned by you';
+$this->apiErrors[393][1] = 'The run was owned by another user. Hence you cannot delete it.';
+
+// for function: openml.run.delete
+$this->apiErrors[394][0] = 'Deleting run failed.';
+$this->apiErrors[394][1] = 'Deleting the run failed. Please contact support team. ';
+
+// for function: openml.setup.delete
+$this->apiErrors[400][0] = 'Please provide session_hash';
+$this->apiErrors[400][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.setup.delete
+$this->apiErrors[401][0] = 'Authentication failed';
+$this->apiErrors[401][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.setup.delete
+$this->apiErrors[402][0] = 'Setup does not exists';
+$this->apiErrors[402][1] = 'The setup id could not be linked to an existing setup.';
+
+// for function: openml.setup.delete
+$this->apiErrors[404][0] = 'Setup is in use by other content (runs, schedules, etc). Can not be deleted';
+$this->apiErrors[404][1] = 'The setup is used in runs. Delete this other content before deleting this setup. ';
+
+// for function: openml.setup.delete
+$this->apiErrors[405][0] = 'Deleting setup failed.';
+$this->apiErrors[405][1] = 'Deleting the setup failed. Please contact support team. ';
 ?>

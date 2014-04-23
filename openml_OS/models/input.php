@@ -1,7 +1,7 @@
 <?php
 class Input extends Database_write {
-	
-	function __construct() {
+  
+  function __construct() {
     parent::__construct();
     $this->table = 'input';
     $this->id_column = 'fullName';

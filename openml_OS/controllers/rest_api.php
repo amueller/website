@@ -23,6 +23,8 @@ class Rest_api extends CI_Controller {
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
     $this->load->model('Input');
+    $this->load->model('Input_data');
+    $this->load->model('Output_data');
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input_setting');
     $this->load->model('Runfile');
@@ -1032,6 +1034,54 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'run-upload', $result );
   }
   
+  private function _openml_run_delete() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 390 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 391 );
+        return;
+      }
+    }
+    
+    $run = $this->Run->getById( $this->input->post( 'run_id' ) );
+    if( $run == false ) {
+      $this->_returnError( 392 );
+      return;
+    }
+    
+    if($run->uploader != $this->user_id ) {
+      $this->_returnError( 393 );
+      return;
+    }
+    
+    $result = true;
+    $result = $result && $this->Input_data->deleteWhere( 'run =' . $run->rid );
+    $result = $result && $this->Output_data->deleteWhere( 'run =' . $run->rid );
+    
+    if( $result ) {
+      $additional_sql = ' AND `did` NOT IN (SELECT `data` FROM `input_data` UNION SELECT `data` FROM `output_data`)';
+      $result = $result && $this->Runfile->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ' . $additional_sql);
+      $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      // Not needed
+      //$this->Dataset->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+    }
+    
+    if( $result ) {
+      $result = $result && $this->Run->delete( $run->rid );
+      $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more soffisticated search on shortcut tables
+    }
+    
+    if( $result == false ) {
+      $this->_returnError( 394 );
+      return;
+    }
+    $this->_xmlContents( 'run-delete', array( 'run' => $run ) );
+  }
+  
   private function _openml_job_get() {
     $workbench = $this->input->get('workbench');
     $task_type_id = $this->input->get('task_type_id');
@@ -1088,8 +1138,47 @@ class Rest_api extends CI_Controller {
     // TODO: temp linking on concat of fields. should be done better
     $this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` LEFT JOIN `input` ON CONCAT( `input`.`implementation_id` , "_", `input`.`name` ) = `input_setting`.`input` WHERE setup = "'.$setup->sid.'"');
     
-    
     $this->_xmlContents( 'setup-parameters', array( 'parameters' => $this->parameters ) );
+  }
+  
+  private function _openml_setup_delete() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 400 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 401 );
+        return;
+      }
+    }
+    
+    $setup = $this->Algorithm_setup->getById( $this->input->post( 'setup_id' ) );
+    if( $setup == false ) {
+      $this->_returnError( 402 );
+      return;
+    }
+    
+    $runs = $this->Run->getWhere( 'setup = "' . $setup->sid . '"' );
+    $schedules = $this->Schedule->getWhere( 'sid = "' . $setup->sid . '"' );
+    
+    if( $runs || $schedules ) {
+      $this->_returnError( 404 );
+      return;
+    }
+    
+    
+    $result = true;
+    $result = $result && $this->Input_setting->deleteWhere('setup = ' . $setup->sid );
+    
+    if( $result ) {
+      $result = $this->Algorithm_setup->delete( $setup->sid );
+    }
+    
+    if( $result == false ) {
+      $this->_returnError( 405 );
+      return;
+    }
+    $this->_xmlContents( 'setup-delete', array( 'setup' => $setup ) );
   }
   
   /********************************* ALIAS FUNCTIONS *********************************/

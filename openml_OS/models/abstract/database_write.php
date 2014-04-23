@@ -21,7 +21,7 @@ class Database_write extends Database_read {
   }
   
   function deleteWhere( $clause ) {
-    $this->db->where( $clause )->delete( $this->table );
+    return $this->db->where( $clause )->delete( $this->table );
   }
 }
 ?>
