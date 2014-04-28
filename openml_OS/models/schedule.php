@@ -14,9 +14,11 @@ class Schedule extends Database_read {
       'SELECT `a`.`setup_string`, `s`.*, `r`.`start_time` 
        FROM `algorithm_setup` `a`,
         (SELECT `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id` 
-         FROM `schedule` `s`, `task` `t` WHERE `s`.`ttid` = `t`.`ttid`) AS `s`
+         FROM `schedule` `s`, `task` `t` 
+         WHERE `s`.`ttid` = `t`.`ttid`
+         AND `s`.`active` = "true") AS `s`
        LEFT JOIN run `r` ON `s`.`task_id` = `r`.`task_id` AND `s`.`sid` = `r`.`setup`
-       WHERE r.start_time IS NULL
+       WHERE `r`.`start_time` IS NULL
        AND `a`.`sid` = `s`.`sid`
        AND `s`.`workbench` = "'.$workbench.'" 
        AND `s`.`ttid` = "'.$task_type.'"';
