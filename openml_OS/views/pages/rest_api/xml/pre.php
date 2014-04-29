@@ -488,8 +488,23 @@ $this->apiErrors[413][1] = 'The run was owned by another user. Hence you cannot 
 $this->apiErrors[414][0] = 'Resetting run failed.';
 $this->apiErrors[414][1] = 'Resetting the run failed. Please contact support team. ';
 
+// for function: openml.run.evaluate
+$this->apiErrors[420][0] = 'Please provide session_hash';
+$this->apiErrors[420][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
 
 // for function: openml.run.evaluate
-$this->apiErrors[420][0] = 'Resetting run failed.';
-$this->apiErrors[420][1] = 'Resetting the run failed. Please contact support team. ';
+$this->apiErrors[421][0] = 'Authentication failed';
+$this->apiErrors[421][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.run.evaluate
+$this->apiErrors[422][0] = 'Upload problem description XML';
+$this->apiErrors[422][1] = 'Upload problem description XML';
+
+// for function: openml.run.evaluate
+$this->apiErrors[423][0] = 'Problem validating uploaded description file';
+$this->apiErrors[423][1] = 'The XML description format does not meet the standards';
+
+// for function: openml.run.evaluate
+$this->apiErrors[424][0] = 'Problem opening description xml';
+$this->apiErrors[424][1] = 'Problem opening description xml';
 ?>

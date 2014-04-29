@@ -282,4 +282,17 @@ function xml2object ( $xmlObject, $attributes = false ) {
 
     return $out;
 }
+
+function xml2assoc ( $xmlObject, $attributes = false ) {
+    $out = array ();
+    foreach ( (array) $xmlObject as $index => $node )
+      $out[$index] = ( is_object ( $node ) ) ? xml2object ( $node ) : $node;
+    if( $attributes ) {
+      foreach ( $xmlObject->attributes() as $index => $node ) {
+        $out[$index] = ''. $node;
+      }
+    }
+
+    return $out;
+}
 ?>

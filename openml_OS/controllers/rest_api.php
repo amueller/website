@@ -20,6 +20,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Implementation_component');
     $this->load->model('Run');
     $this->load->model('Evaluation');
+    $this->load->model('Evaluation_interval');
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
     $this->load->model('Input');
@@ -1039,20 +1040,20 @@ class Rest_api extends CI_Controller {
     }
     
     // check uploaded file
-    $evaluation = isset( $_FILES['evaluation'] ) ? $_FILES['evaluation'] : false;
+    $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
     if( ! check_uploaded_file( $description ) ) {
       $this->_returnError( 422 );
       return;
     }
     
     // validate xml
-    if( validateXml( $evaluation['tmp_name'], xsd('openml.run.evaluate'), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], xsd('openml.run.evaluate'), $xmlErrors ) == false ) {
       $this->_returnError( 423, $xmlErrors );
       return;
     }
     
     // fetch xml
-    $xml = simplexml_load_file( $evaluation['tmp_name'] );
+    $xml = simplexml_load_file( $description['tmp_name'] );
     if( $xml === false ) {
       $this->_returnError( 424 );
       return;
@@ -1060,7 +1061,66 @@ class Rest_api extends CI_Controller {
     
     $run_id = (string) $xml->children('oml', true)->{'run_id'};
     
+    $evaluation_global_did = null;
+    $evaluation_fold_dids = array();
+    $evaluation_sample_dids = array();
+    $evaluation_interval_dids = array();
     
+    $data = array( 'processed' => now() );
+    if( isset( $xml->children('oml', true)->{'error'}) ) {
+      $data['error'] = '' . $xml->children('oml', true)->{'error'};
+    }
+    
+    $this->Run->update( $run_id, $data );
+    
+    foreach(  $xml->children('oml', true)->{'evaluation'} as $e ) {
+      $evaluation = xml2assoc($e, true);
+      $evaluation['function'] = $evaluation['name']; 
+      unset($evaluation['name']); // TODO: fix permanently
+      
+      if( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) &&  array_key_exists( 'sample', $evaluation ) ) {
+        // evaluation_sample 
+        $key = 'sample_' . $evaluation['repeat'] . '_' . $evaluation['fold'] . '_' . $evaluation['sample'];
+        if( array_key_exists( $key, $evaluation_sample_dids ) == false ) {
+          $evaluation_sample_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
+          $this->Run->outputData( $run_id, $evaluation_sample_dids[$key], 'evaluation_sample' );
+        }
+        $evaluation['did'] = $evaluation_sample_dids[$key];
+        $succes = $this->Evaluation_sample->insert( $evaluation );
+        if( $succes == false ) echo 'failed at ' . $key;
+      } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
+        // evaluation_fold
+        $key = 'fold_' . $evaluation['repeat'] . '_' . $evaluation['fold'];
+        if( array_key_exists( $key, $evaluation_fold_dids ) == false ) {
+          $evaluation_fold_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
+          $this->Run->outputData( $run_id, $evaluation_fold_dids[$key], 'evaluation_fold' );
+        }
+        $evaluation['did'] = $evaluation_fold_dids[$key];
+        $succes = $this->Evaluation_fold->insert( $evaluation );
+        if( $succes == false ) echo 'failed at ' . $key;
+      } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
+        // evaluation_interval
+        $key = 'interval_' .  $evaluation['interval_start'] . '_' . $evaluation['interval_end'];
+        if( array_key_exists( $key, $evaluation_interval_dids ) == false ) {
+          $evaluation_interval_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
+          $this->Run->outputData( $run_id, $evaluation_interval_dids[$key], 'evaluation_interval' );
+        }
+        $evaluation['did'] = $evaluation_interval_dids[$key];
+        $succes = $this->Evaluation_interval->insert( $evaluation );
+        if( $succes == false ) echo 'failed at ' . $key;
+      } else {
+        // global
+        if( $evaluation_global_did == null ) {
+          $evaluation_global_did = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
+          $this->Run->outputData( $run_id, $evaluation_global_did, 'evaluation' );
+        }
+        $evaluation['did'] = $evaluation_global_did;
+        $succes = $this->Evaluation->insert( $evaluation );
+        if( $succes == false ) echo 'failed at global' ;
+      }
+    }
+    die();
+    $this->_xmlContents( 'run-evaluate', array( 'run_id' => $run_id ) );
   }
   
   private function _openml_run_delete() {
@@ -1257,6 +1317,7 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 405 );
       return;
     }
+    
     $this->_xmlContents( 'setup-delete', array( 'setup' => $setup ) );
   }
   
