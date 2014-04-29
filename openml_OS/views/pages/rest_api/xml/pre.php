@@ -487,4 +487,9 @@ $this->apiErrors[413][1] = 'The run was owned by another user. Hence you cannot 
 // for function: openml.run.reset
 $this->apiErrors[414][0] = 'Resetting run failed.';
 $this->apiErrors[414][1] = 'Resetting the run failed. Please contact support team. ';
+
+
+// for function: openml.run.evaluate
+$this->apiErrors[420][0] = 'Resetting run failed.';
+$this->apiErrors[420][1] = 'Resetting the run failed. Please contact support team. ';
 ?>

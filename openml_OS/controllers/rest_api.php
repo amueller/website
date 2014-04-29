@@ -895,7 +895,7 @@ class Rest_api extends CI_Controller {
     // fetch xml
     $xml = simplexml_load_file( $description['tmp_name'] );
     if( $xml === false ) {
-      $this->_returnError( 219, $xmlErrors );
+      $this->_returnError( 219 );
       return;
     }
     
@@ -1023,15 +1023,44 @@ class Rest_api extends CI_Controller {
      * supported tasks, like classification, regression        *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     
-    $errorCode = 0;
-    $errorMessage = false;
-    
-    if( DEBUG ) {
-      $this->Run->process( $result->run_id, $errorCode, $errorMessage );
-    }
-    
     // and present result, in effect only a run_id. 
     $this->_xmlContents( 'run-upload', $result );
+  }
+  
+  private function _openml_run_evaluate() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 420 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 421 );
+        return;
+      }
+    }
+    
+    // check uploaded file
+    $evaluation = isset( $_FILES['evaluation'] ) ? $_FILES['evaluation'] : false;
+    if( ! check_uploaded_file( $description ) ) {
+      $this->_returnError( 422 );
+      return;
+    }
+    
+    // validate xml
+    if( validateXml( $evaluation['tmp_name'], xsd('openml.run.evaluate'), $xmlErrors ) == false ) {
+      $this->_returnError( 423, $xmlErrors );
+      return;
+    }
+    
+    // fetch xml
+    $xml = simplexml_load_file( $evaluation['tmp_name'] );
+    if( $xml === false ) {
+      $this->_returnError( 424 );
+      return;
+    }
+    
+    $run_id = (string) $xml->children('oml', true)->{'run_id'};
+    
+    
   }
   
   private function _openml_run_delete() {
