@@ -384,6 +384,10 @@ $this->apiErrors[363][1] = 'The dataset was not processed yet, no qualities are 
 $this->apiErrors[364][0] = 'Dataset processed with error';
 $this->apiErrors[364][1] = 'The quality calculator has run into an error while processing the dataset. Please check whether it is a valid supported file. ';
 
+// for function: openml.data.qualities 
+$this->apiErrors[365][0] = 'Interval start or end illegal';
+$this->apiErrors[365][1] = 'There was a problem with the interval start or end. ';
+
 // for function: openml.data
 $this->apiErrors[370][0] = 'No datasets available';
 $this->apiErrors[370][1] = 'There are no valid datasets in the system. ';

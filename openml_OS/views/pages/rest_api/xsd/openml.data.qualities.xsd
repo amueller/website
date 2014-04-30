@@ -11,5 +11,7 @@
       <xs:element name="name" type="xs:string"/> <!-- The name of the quality that is set -->
       <xs:element name="value" type="xs:string"/> <!-- The value of the quality --> 
     </xs:sequence>
+    <xs:attribute name="interval_start" type="xs:integer" />
+    <xs:attribute name="interval_end" type="xs:integer" />
   </xs:complexType>
 </xs:schema>

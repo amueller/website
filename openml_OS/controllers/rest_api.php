@@ -14,6 +14,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Dataset');
     $this->load->model('Data_feature');
     $this->load->model('Data_quality');
+    $this->load->model('Data_quality_interval');
     $this->load->model('File');
     $this->load->model('Algorithm_setup');
     $this->load->model('Implementation');
@@ -272,7 +273,18 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
+    if( $this->input->get( 'interval_start' ) !== false || $this->input->get( 'interval_end' ) !== false ) {
+      $start = $this->input->get( 'interval_start' );
+      $end = $this->input->get( 'interval_end' );
+      
+      if( $start === false || $end === false || is_numeric( $start ) === false || is_numeric( $end ) === false ) {
+        $this->_returnError( 365 );
+        return;
+      }
+      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" AND interval_start = ' . $start . ' AND interval_end = ' . $end );
+    } else {
+      $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
+    }
     
     if( $dataset->qualities === false ) {
       $this->_returnError( 362 );
@@ -339,21 +351,27 @@ class Rest_api extends CI_Controller {
     // check and collect the qualities
     $newQualities = array();
     foreach( $xml->children('oml', true)->{'quality'} as $q ) {
-      $quality = xml2object( $q );
+      $quality = xml2object( $q, true );
       
-      if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
-        $this->_returnError( 385, $$quality->name );
+      /*if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
+        $this->_returnError( 385, $quality->name );
         return;
       } elseif( $qualities != false && array_key_exists( $quality->name, $qualities ) ) { // prior to this run, we already got this quality
         if( abs( $qualities[$quality->name] - $quality->value ) > $this->config->item('double_epsilon') ) {
           $this->_returnError( 386, $quality->name );
           return;
         }
-      } elseif( in_array( $quality->name, $all_qualities ) == false ) {
+      } else*/if( is_array( $all_qualities ) == false || in_array( $quality->name, $all_qualities ) == false ) {
         $this->_returnError( 387, $quality->name );
         return;
       } else {
-        $newQualities[$quality->name] = $quality->value;
+        $newQualities[] = $quality;
+      }
+      
+      if( property_exists( $quality, 'interval_start' ) ) {
+      
+      } else {
+      
       }
     }
     
@@ -363,14 +381,27 @@ class Rest_api extends CI_Controller {
     }
     
     $success = true;
-    foreach( $newQualities as $name => $value ) {
-      $data = array(
-        'data' => $dataset->did,
-        'quality' => $name,
-        'value' => $value
-      );
-      $this->Data_quality->insert( $data );
+    $this->db->trans_start();
+    foreach( $newQualities as $index => $quality ) {
+      if( property_exists( $quality, 'interval_start' ) ) {
+        $data = array(
+          'data' => $dataset->did,
+          'quality' => $quality->name,
+          'interval_start' => $quality->interval_start,
+          'interval_end' => $quality->interval_end,
+          'value' => $quality->value
+        );
+        $this->Data_quality_interval->insert( $data );
+      } else {
+        $data = array(
+          'data' => $dataset->did,
+          'quality' => $quality->name,
+          'value' => $quality->value
+        );
+        $this->Data_quality->insert( $data );
+      }
     }
+    $this->db->trans_complete();
     
     if( $success ) {
       $this->_xmlContents( 'data-qualities-upload', array( 'did' => $dataset->did ) );
@@ -1087,6 +1118,7 @@ class Rest_api extends CI_Controller {
     
     $implementation_ids = $this->Implementation->getAssociativeArray( 'fullName', 'id', '`name` = `name`' );
     
+    $this->db->trans_start();
     foreach(  $xml->children('oml', true)->{'evaluation'} as $e ) {
       $evaluation = xml2assoc($e, true);
       
@@ -1143,6 +1175,7 @@ class Rest_api extends CI_Controller {
         $this->Evaluation->insert( $evaluation );
       }
     }
+    $this->db->trans_complete();
     
     $this->_xmlContents( 'run-evaluate', array( 'run_id' => $run_id ) );
   }
