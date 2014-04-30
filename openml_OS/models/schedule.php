@@ -11,7 +11,18 @@ class Schedule extends Database_read {
   // time, by accident. We want to avoid that. 
   function getJob( $workbench, $task_type ) {
     $sql = 
-      'SELECT `a`.`setup_string`, `s`.*, `r`.`start_time` 
+    'SELECT `a`.`setup_string`, `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id`
+     FROM `schedule` `s`, `algorithm_setup` `a`, `task` `t`
+     WHERE `a`.`sid` = `s`.`sid` and `s`.`ttid` = `t`.`ttid` and
+     `s`.`active` = "true" 
+     AND not exists (select rid
+                from `run` `r`
+                where `t`.`task_id` = `r`.`task_id` and `s`.`sid` =
+     `r`.`setup` and `r`.`start_time` IS NOT NULL) 
+     AND `s`.`ttid` = "'.$task_type.'"
+     AND `s`.`workbench` = "'.$workbench.'";';
+
+/*      'SELECT `a`.`setup_string`, `s`.*, `r`.`start_time` 
        FROM `algorithm_setup` `a`,
         (SELECT `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id` 
          FROM `schedule` `s`, `task` `t` 
@@ -21,7 +32,7 @@ class Schedule extends Database_read {
        WHERE `r`.`start_time` IS NULL
        AND `a`.`sid` = `s`.`sid`
        AND `s`.`workbench` = "'.$workbench.'" 
-       AND `s`.`ttid` = "'.$task_type.'"';
+       AND `s`.`ttid` = "'.$task_type.'"';*/
     $res = $this->query($sql);
     
     if(is_array($res) == false) {
