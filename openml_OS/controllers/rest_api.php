@@ -1061,6 +1061,18 @@ class Rest_api extends CI_Controller {
     
     $run_id = (string) $xml->children('oml', true)->{'run_id'};
     
+    
+    $runRecord = $this->Run->getById( $run_id );
+    if( $runRecord == false ) {
+      $this->_returnError( 425 );
+      return;
+    }
+    
+    if( $runRecord->processed != null ) {
+      $this->_returnError( 426 );
+      return;
+    }
+    
     $evaluation_global_did = null;
     $evaluation_fold_dids = array();
     $evaluation_sample_dids = array();
@@ -1073,10 +1085,26 @@ class Rest_api extends CI_Controller {
     
     $this->Run->update( $run_id, $data );
     
+    $implementation_ids = $this->Implementation->getAssociativeArray( 'fullName', 'id', '`name` = `name`' );
+    
     foreach(  $xml->children('oml', true)->{'evaluation'} as $e ) {
       $evaluation = xml2assoc($e, true);
+      
+      // naming convention
       $evaluation['function'] = $evaluation['name']; 
-      unset($evaluation['name']); // TODO: fix permanently
+      unset($evaluation['name']); 
+      
+      // more naming convention
+      if( array_key_exists( $evaluation['implementation'], $implementation_ids ) ) {
+        $evaluation['implementation_id'] = $implementation_ids[$evaluation['implementation']];
+        unset($evaluation['implementation']);
+      } else {
+        $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $evaluation['implementation'] . ' not found in database. ' );
+        continue;
+      }
+      
+      // adding rid
+      $evaluation['source'] = $run_id;
       
       if( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) &&  array_key_exists( 'sample', $evaluation ) ) {
         // evaluation_sample 
@@ -1086,8 +1114,7 @@ class Rest_api extends CI_Controller {
           $this->Run->outputData( $run_id, $evaluation_sample_dids[$key], 'evaluation_sample' );
         }
         $evaluation['did'] = $evaluation_sample_dids[$key];
-        $succes = $this->Evaluation_sample->insert( $evaluation );
-        if( $succes == false ) echo 'failed at ' . $key;
+        $this->Evaluation_sample->insert( $evaluation );
       } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
         // evaluation_fold
         $key = 'fold_' . $evaluation['repeat'] . '_' . $evaluation['fold'];
@@ -1096,8 +1123,7 @@ class Rest_api extends CI_Controller {
           $this->Run->outputData( $run_id, $evaluation_fold_dids[$key], 'evaluation_fold' );
         }
         $evaluation['did'] = $evaluation_fold_dids[$key];
-        $succes = $this->Evaluation_fold->insert( $evaluation );
-        if( $succes == false ) echo 'failed at ' . $key;
+        $this->Evaluation_fold->insert( $evaluation );
       } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
         // evaluation_interval
         $key = 'interval_' .  $evaluation['interval_start'] . '_' . $evaluation['interval_end'];
@@ -1106,8 +1132,7 @@ class Rest_api extends CI_Controller {
           $this->Run->outputData( $run_id, $evaluation_interval_dids[$key], 'evaluation_interval' );
         }
         $evaluation['did'] = $evaluation_interval_dids[$key];
-        $succes = $this->Evaluation_interval->insert( $evaluation );
-        if( $succes == false ) echo 'failed at ' . $key;
+        $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
         if( $evaluation_global_did == null ) {
@@ -1115,11 +1140,10 @@ class Rest_api extends CI_Controller {
           $this->Run->outputData( $run_id, $evaluation_global_did, 'evaluation' );
         }
         $evaluation['did'] = $evaluation_global_did;
-        $succes = $this->Evaluation->insert( $evaluation );
-        if( $succes == false ) echo 'failed at global' ;
+        $this->Evaluation->insert( $evaluation );
       }
     }
-    die();
+    
     $this->_xmlContents( 'run-evaluate', array( 'run_id' => $run_id ) );
   }
   
@@ -1205,7 +1229,8 @@ class Rest_api extends CI_Controller {
     
     $evaluation_ids = array_unique ( array_merge( $evalPlain, $evalFold, $evalSample ) );
     
-    $result = $result && $this->Output_data->deleteWhere( '`run` = "' . $run->rid  . '" AND `data` IN (' . implode( ',', $evaluation_ids ) . ')' );
+    if( is_array($evaluation_ids) && count($evaluation_ids) )
+      $result = $result && $this->Output_data->deleteWhere( '`run` = "' . $run->rid  . '" AND `data` IN (' . implode( ',', $evaluation_ids ) . ')' );
     
     $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ');
     $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ');
@@ -1213,6 +1238,7 @@ class Rest_api extends CI_Controller {
     
     
     $update = array( 'error' => null, 'processed' => null );
+    $this->Run->update( $run->rid, $update );
     
     if( $result == false ) {
       $this->_returnError( 394 );

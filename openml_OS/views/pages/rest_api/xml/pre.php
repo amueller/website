@@ -507,4 +507,12 @@ $this->apiErrors[423][1] = 'The XML description format does not meet the standar
 // for function: openml.run.evaluate
 $this->apiErrors[424][0] = 'Problem opening description xml';
 $this->apiErrors[424][1] = 'Problem opening description xml';
+
+// for function: openml.run.evaluate
+$this->apiErrors[425][0] = 'Run does not exists';
+$this->apiErrors[425][1] = 'Run does not exists';
+
+// for function: openml.run.evaluate
+$this->apiErrors[426][0] = 'Run already processed';
+$this->apiErrors[426][1] = 'Run already processed';
 ?>
