@@ -57,7 +57,7 @@ class Rest_api extends CI_Controller {
     );
     
     // TODO: also in controllers/cron.php
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'runfile');
+    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'evaluation_interval', 'runfile');
     
     // XML maintainance
     $this->xml_fields_dataset = array(
@@ -1220,12 +1220,14 @@ class Rest_api extends CI_Controller {
     $result = true;
     $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more sophisticated search on shortcut tables
     
-    $evalPlain  = $this->Evaluation->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
-    $evalFold   = $this->Evaluation_fold->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
-    $evalSample = $this->Evaluation_sample->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    $evalPlain    = $this->Evaluation->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    $evalFold     = $this->Evaluation_fold->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    $evalSample   = $this->Evaluation_sample->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
+    $evalInterval = $this->Evaluation_interval->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
     if( is_array($evalPlain) == false ) $evalPlain = array();
     if( is_array($evalFold) == false ) $evalFold = array();
     if( is_array($evalSample) == false ) $evalSample = array();
+    if( is_array($evalInterval) == false ) $evalInterval = array();
     
     $evaluation_ids = array_unique ( array_merge( $evalPlain, $evalFold, $evalSample ) );
     
@@ -1235,6 +1237,7 @@ class Rest_api extends CI_Controller {
     $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ');
     $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ');
+    $result = $result && $this->Evaluation_interval->deleteWhere('`source` = "' . $run->rid . '" ');
     
     
     $update = array( 'error' => null, 'processed' => null );
