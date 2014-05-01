@@ -123,7 +123,7 @@ class Dataset extends Database_write {
     }
     
     // also invoke Fantail (by Quan Sun). experimental. 
-    if( $extensive ) {
+    /*if( $extensive ) {
       $dataset = $this->getById( $did ); // must be updated
       $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
       $res = array();
@@ -144,7 +144,7 @@ class Dataset extends Database_write {
       } else {
         $this->Log->cronjob( 'ERROR', 'Data Qualities', 'Java webapplication did not output json result. ('.$cmd.')' ); 
       }
-    }
+    }*/
     
     return true;
   }

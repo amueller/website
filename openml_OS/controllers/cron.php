@@ -76,7 +76,7 @@ class Cron extends CI_Controller {
   // or CLI  command: watch -n 10 "wget -O - http://openml.liacs.nl/cron/process_dataset" (specify server correct)
   function process_dataset( $did = false ) {
     if( $did == false ) {
-      $datasets = $this->Dataset->getWhere( '`error` = "false"', '`processed` ASC, `did` ASC' );
+      $datasets = $this->Dataset->getWhere( '`processed` IS NULL' );
     } else {
       $datasets = $this->Dataset->getWhere( '`did` = "' . $did . '"' );
     }

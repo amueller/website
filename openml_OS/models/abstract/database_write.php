@@ -11,6 +11,13 @@ class Database_write extends Database_read {
     $this->db->insert( $this->table, $data);
     return $this->db->insert_id();
   }
+
+  function insert_ignore( $data ) {
+    $insert_query = $this->db->insert_string( $this->table, $data );
+    $insert_query = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $insert_query);
+    $this->db->query($insert_query);
+    return $this->db->insert_id();
+  }
   
   function update( $id, $data ) {
     return $this->db->where( $this->id_column . ' = ' . $id )->update( $this->table, $data );

@@ -391,14 +391,14 @@ class Rest_api extends CI_Controller {
           'interval_end' => $quality->interval_end,
           'value' => $quality->value
         );
-        $this->Data_quality_interval->insert( $data );
+        $this->Data_quality_interval->insert_ignore( $data );
       } else {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name,
           'value' => $quality->value
         );
-        $this->Data_quality->insert( $data );
+        $this->Data_quality->insert_ignore( $data );
       }
     }
     $this->db->trans_complete();
