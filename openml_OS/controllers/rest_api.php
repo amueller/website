@@ -251,6 +251,57 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data-features', $dataset );
   }
   
+  private function _openml_data_features_upload() {
+    // authentication check. Real check is done in the constructor.
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 430 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 431 );
+        return;
+      }
+    }
+    
+    // get correct description
+    if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
+      $this->_returnError( 432 );
+      return;
+    }
+    
+    // get description from string upload
+    $description = $_FILES['description'];
+    if( validateXml( $description['tmp_name'], xsd('openml.data.features'), $xmlErrors ) == false ) {
+      $this->_returnError( 433, $xmlErrors );
+      return;
+    }
+    $xml = simplexml_load_file( $description['tmp_name'] );
+    $did = ''. $xml->children('oml', true)->{'did'};
+    
+    $dataset = $this->Dataset->getById( $did );
+    if( $dataset == false ) {
+      $this->_returnError( 434 );
+      return;
+    }
+    
+    $this->db->trans_start();
+    $success = true;
+    foreach( $xml->children('oml', true)->{'feature'} as $q ) {
+      $feature = xml2object( $q, true );
+      $feature->did = $did;
+      
+      $this->Data_feature->insert_ignore( $feature );
+    }
+    $this->db->trans_complete();
+    
+    if( $success ) {
+      $this->_xmlContents( 'data-features-upload', array( 'did' => $dataset->did ) );
+    } else {
+      $this->_returnError( 435 );
+      return;
+    }
+  }
+  
   private function _openml_data_qualities() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {

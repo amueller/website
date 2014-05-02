@@ -519,4 +519,28 @@ $this->apiErrors[425][1] = 'Run does not exists';
 // for function: openml.run.evaluate
 $this->apiErrors[426][0] = 'Run already processed';
 $this->apiErrors[426][1] = 'Run already processed';
+
+// for function: openml.data.features.upload
+$this->apiErrors[430][0] = 'Please provide session_hash';
+$this->apiErrors[430][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.data.features.upload
+$this->apiErrors[431][0] = 'Authentication failed';
+$this->apiErrors[431][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.data.features.upload
+$this->apiErrors[432][0] = 'Please provide description xml';
+$this->apiErrors[432][1] = 'Please provide description xml';
+
+// for function: openml.data.features.upload
+$this->apiErrors[433][0] = 'Problem validating uploaded description file';
+$this->apiErrors[433][1] = 'The XML description format does not meet the standards';
+
+// for function: openml.data.features.upload
+$this->apiErrors[434][0] = 'Could not find dataset';
+$this->apiErrors[434][1] = 'The dataset to which the qualities belong could not be found. ';
+
+// for function: openml.data.features.upload
+$this->apiErrors[435][0] = 'Feature upload failed';
+$this->apiErrors[435][1] = 'Unable to add new features to the database. Please contact API support';
 ?>
