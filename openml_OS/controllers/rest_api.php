@@ -658,6 +658,9 @@ class Rest_api extends CI_Controller {
 
   private function _openml_task_evaluations() {
     $task_id = $this->input->get( 'task_id' );
+    $interval_start = $this->input->get( 'interval_start' );
+    $interval_end   = $this->input->get( 'interval_end' );
+    
     if( $task_id == false ) {
       $this->_returnError( 300 );
       return;
@@ -668,11 +671,33 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 301 );
       return;
     }
-    $estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->type, $task->repeats, $task->folds, $task->percentage, $task->stratified_sampling );
+    
+    $repeats = property_exists( $task, 'repeats' ) ? $task->repeats : null;
+    $folds   = property_exists( $task, 'folds'   ) ? $task->folds   : null;
+    $percentage = property_exists( $task, 'percentage' ) ? $task->percentage : null;
+    $repeats = property_exists( $task, 'repeats' ) ? $task->repeats : null;
+    $stratified_sampling = property_exists( $task, 'stratified_sampling' ) ? $task->stratified_sampling : null;
+    $estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->type, $repeats, $folds, $percentage, $stratified_sampling );
+    
+    $evaluation_table = 'evaluation';
+    $evaluation_table_constraints = '';
+    if( $interval_start !== false && $interval_end !== false ) {
+      $evaluation_table = 'evaluation_interval';
+      $evaluation_table_constraints = ' AND `e`.`interval_start` <= ' . $interval_start . ' AND `e`.`interval_end` >= ' . $interval_end;
+    }
+    
+    $sql = '
+      SELECT `r`.`task_id`, `r`.`rid`, `s`.`sid`, `s`.`implementation_id`, `i`.`fullName`, `e`.* 
+      FROM `run` `r`, `output_data` `od`, `algorithm_setup` `s`, `' . $evaluation_table . '` `e`, `implementation` `i`  
+      WHERE `s`.`sid` = `r`.`setup` AND `r`.`task_id` = "'.$task_id.'" 
+      AND `od`.`run` = `r`.`rid` AND `e`.`did` = `od`.`data` 
+      AND `s`.`implementation_id` = `i`.`id` ' .
+      $evaluation_table_constraints. '
+      ORDER BY `rid`, `s`.`implementation_id` ASC;';
+    //var_dump($sql);
+    $runs = $this->Run->query( $sql );
     
     $results = array();
-    
-    $runs = $this->Run->query('SELECT r.task_id, r.rid, s.sid, s.implementation_id, i.fullName, e.function, e.value, e.array_data FROM run r, output_data od, algorithm_setup s, evaluation e, implementation i  WHERE s.sid = r.setup AND r.task_id = '.$task_id.' AND od.run = r.rid AND e.did = od.data AND s.implementation_id = i.id ORDER BY rid, s.implementation_id ASC');
     $previous = -1;
     if($runs != false ) { //TODO: sort on value ..x.. ?
       foreach( $runs as $r ) {
@@ -685,6 +710,8 @@ class Rest_api extends CI_Controller {
           $results[$r->rid]['setup_id'] = $r->sid;
           $results[$r->rid]['implementation_id'] = $r->implementation_id;
           $results[$r->rid]['implementation'] = $r->fullName;
+          if(property_exists( $r, 'interval_start' ) ) { $results[$r->rid]['interval_start'] = $r->interval_start; }
+          if(property_exists( $r, 'interval_end' ) ) { $results[$r->rid]['interval_end'] = $r->interval_end; }
         }
         $previous = $r->rid;
       }
