@@ -683,7 +683,7 @@ class Rest_api extends CI_Controller {
     $evaluation_table_constraints = '';
     if( $interval_start !== false && $interval_end !== false ) {
       $evaluation_table = 'evaluation_interval';
-      $evaluation_table_constraints = ' AND `e`.`interval_start` <= ' . $interval_start . ' AND `e`.`interval_end` >= ' . $interval_end;
+      $evaluation_table_constraints = ' AND `e`.`interval_start` >= ' . $interval_start . ' AND `e`.`interval_end` <= ' . $interval_end;
     }
     
     $sql = '
