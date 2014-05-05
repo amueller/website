@@ -11,7 +11,7 @@
         'interval_start="' . $values['interval_start'] . '" interval_end="' . $values['interval_end'] . '"' : '';
     ?>
     <oml:evaluation <?php echo $interval_str; ?>>
-      <oml:run_id><?php echo $rid; ?></oml:run_id>
+      <oml:run_id><?php echo $values['rid']; ?></oml:run_id>
       <oml:setup_id><?php echo $values['setup_id']; ?></oml:setup_id>
       <oml:implementation_id><?php echo $values['implementation_id']; ?></oml:implementation_id>
       <oml:implementation><?php echo $values['implementation']; ?></oml:implementation>

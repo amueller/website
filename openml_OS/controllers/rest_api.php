@@ -694,7 +694,6 @@ class Rest_api extends CI_Controller {
       AND `s`.`implementation_id` = `i`.`id` ' .
       $evaluation_table_constraints. '
       ORDER BY `rid`, `s`.`implementation_id` ASC;';
-      
     $runs = $this->Run->query( $sql );
     
     $results = array();
@@ -710,6 +709,7 @@ class Rest_api extends CI_Controller {
           $results[$key] = array();
           $results[$key]['measures'] = array();
           $results[$key]['measures'][$r->{'function'}] = $r->{'value'} != null ? $r->{'value'} : $r->{'array_data'};
+          $results[$key]['rid'] = $r->rid;
           $results[$key]['setup_id'] = $r->sid;
           $results[$key]['implementation_id'] = $r->implementation_id;
           $results[$key]['implementation'] = $r->fullName;
