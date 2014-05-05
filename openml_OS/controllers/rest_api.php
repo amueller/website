@@ -687,7 +687,7 @@ class Rest_api extends CI_Controller {
     }
     
     $sql = '
-      SELECT `r`.`task_id`, `r`.`rid`, `s`.`sid`, `s`.`implementation_id`, `i`.`fullName`, `e`.* 
+      SELECT `r`.`task_id`, `r`.`rid`, `s`.`sid`, `s`.`implementation_id` AS `algorithm_implementation_id`, `i`.`fullName`, `e`.* 
       FROM `run` `r`, `output_data` `od`, `algorithm_setup` `s`, `' . $evaluation_table . '` `e`, `implementation` `i`  
       WHERE `s`.`sid` = `r`.`setup` AND `r`.`task_id` = "'.$task_id.'" 
       AND `od`.`run` = `r`.`rid` AND `e`.`did` = `od`.`data` 
@@ -711,7 +711,7 @@ class Rest_api extends CI_Controller {
           $results[$key]['measures'][$r->{'function'}] = $r->{'value'} != null ? $r->{'value'} : $r->{'array_data'};
           $results[$key]['rid'] = $r->rid;
           $results[$key]['setup_id'] = $r->sid;
-          $results[$key]['implementation_id'] = $r->implementation_id;
+          $results[$key]['implementation_id'] = $r->algorithm_implementation_id;
           $results[$key]['implementation'] = $r->fullName;
           if(property_exists( $r, 'interval_start' ) ) { $results[$key]['interval_start'] = $r->interval_start; }
           if(property_exists( $r, 'interval_end' ) )   { $results[$key]['interval_end']   = $r->interval_end; }
