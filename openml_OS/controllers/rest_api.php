@@ -694,26 +694,29 @@ class Rest_api extends CI_Controller {
       AND `s`.`implementation_id` = `i`.`id` ' .
       $evaluation_table_constraints. '
       ORDER BY `rid`, `s`.`implementation_id` ASC;';
-    //var_dump($sql);
+      
     $runs = $this->Run->query( $sql );
     
     $results = array();
     $previous = -1;
     if($runs != false ) { //TODO: sort on value ..x.. ?
       foreach( $runs as $r ) {
-        if( $r->rid == $previous ) {
-          $results[$r->rid]['measures'][$r->{'function'}] = $r->{'value'} != NULL ? $r->{'value'} : $r->{'array_data'};
+        $key = $r->rid;
+        if(property_exists( $r, 'interval_start')) $key .= '_' . $r->interval_start;
+        if(property_exists( $r, 'interval_end'  )) $key .= '_' . $r->interval_end;
+        if( $key == $previous ) {
+          $results[$key]['measures'][$r->{'function'}] = $r->{'value'} != null ? $r->{'value'} : $r->{'array_data'};
         } else {
-          $results[$r->rid] = array();
-          $results[$r->rid]['measures'] = array();
-          $results[$r->rid]['measures'][$r->{'function'}] = $r->{'value'} != NULL ? $r->{'value'} : $r->{'array_data'};
-          $results[$r->rid]['setup_id'] = $r->sid;
-          $results[$r->rid]['implementation_id'] = $r->implementation_id;
-          $results[$r->rid]['implementation'] = $r->fullName;
-          if(property_exists( $r, 'interval_start' ) ) { $results[$r->rid]['interval_start'] = $r->interval_start; }
-          if(property_exists( $r, 'interval_end' ) ) { $results[$r->rid]['interval_end'] = $r->interval_end; }
+          $results[$key] = array();
+          $results[$key]['measures'] = array();
+          $results[$key]['measures'][$r->{'function'}] = $r->{'value'} != null ? $r->{'value'} : $r->{'array_data'};
+          $results[$key]['setup_id'] = $r->sid;
+          $results[$key]['implementation_id'] = $r->implementation_id;
+          $results[$key]['implementation'] = $r->fullName;
+          if(property_exists( $r, 'interval_start' ) ) { $results[$key]['interval_start'] = $r->interval_start; }
+          if(property_exists( $r, 'interval_end' ) )   { $results[$key]['interval_end']   = $r->interval_end; }
         }
-        $previous = $r->rid;
+        $previous = $key;
       }
     }
     $this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results ) );
