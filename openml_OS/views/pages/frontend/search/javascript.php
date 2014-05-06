@@ -961,13 +961,13 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   
 
   sql = 'SELECT ' + selectColumns + 
-        'FROM algorithm_setup l, evaluation e, cvrun r, task t, dataset d, implementation i ' + 
-        'WHERE r.learner = l.sid ' +
+        'FROM algorithm_setup l, evaluation e, run r, input_data id, task t, dataset d, implementation i ' + 
+        'WHERE r.setup = l.sid ' +
 //        algorithmConstraint + 
         datasetConstraint + 
         implementationConstraint + 
         setupConstraint +
-        'AND r.inputData = d.did ' + 
+        'AND r.rid = id.run AND id.data = d.did ' + 
         'AND l.implementation_id = i.id ' +
         'AND d.isOriginal = "true" ' + 
         'AND e.source = r.rid ' +
