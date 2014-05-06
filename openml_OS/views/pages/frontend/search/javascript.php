@@ -926,7 +926,7 @@ function learningCurveQuery( datasets, implementations ) {
     window.editor.setValue( sql );
 }
 
-function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets, evaluationMethod, evaluationMetric, crosstabulate ) {
+function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets, tasks, evaluationMethod, evaluationMetric, crosstabulate ) {
   // TODO: only available evaluationMethod: CV . Var is not used yet. 
   $('#wizardquery-btn').button('loading');
   datasets = commaSeperatedListToCleanArray( datasets );
@@ -935,6 +935,7 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   
   var sql = '';
   //var algorithmConstraint = '';
+  var taskConstraints = '';
   var datasetConstraint = '';
   var implementationConstraint = '';
   var selectImplementation = 'i.fullName';
@@ -954,6 +955,10 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
       datasetConstraint = ' AND d.name IN ("' + c_d.datasets.join('","') + '") ';
     }
   }
+  if( tasks.length > 0 ) {
+    taskConstraints = ' AND `t`.`task_id` IN (' + tasks + ')'
+  }
+  
   if( crosstabulate != "none" ) {
     autocrosstabulate = true;
     if( crosstabulate == 'dataset' ) selectColumns = ' d.name, ' + selectImplementation + ', e.value ';
@@ -967,6 +972,7 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
         datasetConstraint + 
         implementationConstraint + 
         setupConstraint +
+        taskConstraints +
         'AND r.rid = id.run AND id.data = d.did ' + 
         'AND l.implementation_id = i.id ' +
         'AND d.isOriginal = "true" ' + 

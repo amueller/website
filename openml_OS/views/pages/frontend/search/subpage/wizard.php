@@ -48,6 +48,15 @@
       </span>
     </div>
   </div>
+  
+  
+  <div class="form-group">
+    <label class="col-md-2 control-label" for="taskDropdown">Tasks</label>
+    <div class="col-md-10">
+      <input type="text" class="form-control" id="taskDropdown" placeholder="Include all tasks" value="" />
+      <span class="help-block">A comma separated list of task ids. Leave empty to include all tasks.</span>
+    </div>
+  </div>
 
   <div class="form-group">
     <label class="col-md-2 control-label" for="evaluationmetricDropdown">Evaluation metric</label>
@@ -89,7 +98,7 @@
   </div>
 </div>
   <div class="form-group">
-    <button id="wizardquery-btn" data-loading-text="Querying..." autocomplete="off" type="button" onclick="wizardQuery( $('#tasktype').val(), $('#algorithmDropdown').val(), $('#implementationDropdown').val(), $('#algorithmDefault').prop('checked'), $('#datasetDropdown').val(), $('#evaluationmethodDropdown').val(), $('#evaluationmetricDropdown').val(), $('input:radio[name=crosstabulate]:checked').val() );" class="btn btn-primary">
+    <button id="wizardquery-btn" data-loading-text="Querying..." autocomplete="off" type="button" onclick="wizardQuery( $('#tasktype').val(), $('#algorithmDropdown').val(), $('#implementationDropdown').val(), $('#algorithmDefault').prop('checked'), $('#datasetDropdown').val(), $('#taskDropdown').val(), $('#evaluationmethodDropdown').val(), $('#evaluationmetricDropdown').val(), $('input:radio[name=crosstabulate]:checked').val() );" class="btn btn-primary">
       Run Query
     </button>
   </div>
