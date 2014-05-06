@@ -943,7 +943,7 @@ function wizardQuery( ttid, algorithms, implementations, defaultParams, datasets
   var setupConstraint = '';
   if( defaultParams ) setupConstraint = ' AND l.isDefault = "true" ';
   //if ( algorithms.length > 0 ) algorithmConstraint = ' AND l.algorithm IN ("' + algorithms.join('","') + '") ';
-  if ( implementations.length > 0 ) implementationConstraint = ' AND i.name IN ("' + implementations.join('","') + '") ';
+  if ( implementations.length > 0 ) implementationConstraint = ' AND i.fullName IN ("' + implementations.join('","') + '") ';
   if ( datasets.length > 0 ) {
     var c_d  = splitDatasetsFromCollections( datasets );
     if( c_d.collections.length > 0 && c_d.datasets.length > 0 ) {
