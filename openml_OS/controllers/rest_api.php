@@ -660,12 +660,17 @@ class Rest_api extends CI_Controller {
     $task_id = $this->input->get( 'task_id' );
     $interval_start = $this->input->get( 'interval_start' );
     $interval_end   = $this->input->get( 'interval_end' );
+    $interval_size   = $this->input->get( 'interval_size' );
     
     if( $task_id == false ) {
       $this->_returnError( 300 );
       return;
     }
-    $task = $this->Task->getByIdWithValues( $task_id );
+    
+    $task = false;
+    if( $this->Task->getById( $task_id ) ) { // task actually exists
+      $task = $this->Task->getByIdWithValues( $task_id );
+    }
     
     if( $task === false ) {
       $this->_returnError( 301 );
@@ -681,9 +686,17 @@ class Rest_api extends CI_Controller {
     
     $evaluation_table = 'evaluation';
     $evaluation_table_constraints = '';
-    if( $interval_start !== false && $interval_end !== false ) {
+    if( $interval_start !== false || $interval_end !== false || $interval_size !== false ) {
       $evaluation_table = 'evaluation_interval';
-      $evaluation_table_constraints = ' AND `e`.`interval_start` >= ' . $interval_start . ' AND `e`.`interval_end` <= ' . $interval_end;
+      if( $interval_start !== false && is_numeric( $interval_start ) ) {
+        $evaluation_table_constraints .= ' AND `e`.`interval_start` >= ' . $interval_start;
+      }
+      if( $interval_end !== false && is_numeric( $interval_end ) ) {
+        $evaluation_table_constraints .= ' AND `e`.`interval_end` <= ' . $interval_end;
+      }
+      if( $interval_size !== false && is_numeric( $interval_size ) ) {
+        $evaluation_table_constraints .= ' AND `e`.`interval_start` - `e`.`interval_end` <= ' . $interval_size;
+      }
     }
     
     $sql = '
