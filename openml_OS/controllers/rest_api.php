@@ -324,15 +324,24 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    if( $this->input->get( 'interval_start' ) !== false || $this->input->get( 'interval_end' ) !== false ) {
-      $start = $this->input->get( 'interval_start' );
-      $end = $this->input->get( 'interval_end' );
-      
-      if( $start === false || $end === false || is_numeric( $start ) === false || is_numeric( $end ) === false ) {
-        $this->_returnError( 365 );
-        return;
+    $interval_start = $this->input->get( 'interval_start' );
+    $interval_end = $this->input->get( 'interval_end' );
+    $interval_size = $this->input->get( 'interval_size' );
+    
+    $evaluation_table_constraints = '';
+    if( $interval_start !== false || $interval_end !== false || $interval_size !== false ) {
+      $evaluation_table = 'evaluation_interval';
+      $interval_constraints = '';
+      if( $interval_start !== false && is_numeric( $interval_start ) ) {
+        $interval_constraints .= ' AND `interval_start` >= ' . $interval_start;
       }
-      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" AND interval_start = ' . $start . ' AND interval_end = ' . $end );
+      if( $interval_end !== false && is_numeric( $interval_end ) ) {
+        $interval_constraints .= ' AND `interval_end` <= ' . $interval_end;
+      }
+      if( $interval_size !== false && is_numeric( $interval_size ) ) {
+        $interval_constraints .= ' AND `interval_end` - `interval_start` = ' . $interval_size;
+      }
+      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" ' . $interval_constraints );
     } else {
       $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
     }
