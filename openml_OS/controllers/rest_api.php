@@ -695,7 +695,7 @@ class Rest_api extends CI_Controller {
         $evaluation_table_constraints .= ' AND `e`.`interval_end` <= ' . $interval_end;
       }
       if( $interval_size !== false && is_numeric( $interval_size ) ) {
-        $evaluation_table_constraints .= ' AND `e`.`interval_end` - `e`.`interval_start` <= ' . $interval_size;
+        $evaluation_table_constraints .= ' AND `e`.`interval_end` - `e`.`interval_start` = ' . $interval_size;
       }
     }
     
