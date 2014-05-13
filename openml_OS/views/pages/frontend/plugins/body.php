@@ -14,6 +14,13 @@
     <li><a href="#weka-start-cli">Quick Start CLI</a></li>
   </ul>
   </li>
+  
+  <li><a href="#moa">MOA</a>
+  <ul class="nav">
+    <li><a href="#moa-plugin">Download Plugin</a></li>
+    <li><a href="#moa-start">Quick Start</a></li>
+  </ul>
+  </li>
 
   <li><a href="#r">R</a>
   <ul class="nav">
@@ -83,8 +90,32 @@
         <li>The following suffix will set some parameters of this classifier: <pre>-- -C 0.25 -M 2</pre></li>      
       </ol>
 			
-		  Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:jvrijn@liacs.nl">jvrijn@liacs.nl</a>. </div>
-
+		  Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:j.n.van.rijn@liacs.leidenuniv.nl">j.n.van.rijn@liacs.leidenuniv.nl</a>. </div>
+      
+      <div class="bs-docs-section">
+          <div class="page-header">
+            <h1 id="moa">MOA </h1>
+		  <br/>
+          <h3 id="moa-plugin">Download Plugin (Last major update: 14-05-2014)</h3>
+            OpenML features extensive support for MOA. However currently this is implemented as a stand alone MOA compilation, using the latest version (as of May, 2014). 
+          </div><br/>
+            
+            <a href="downloads/openmlmoa.beta.jar">
+              <button class="btn btn-large btn-primary" type="button">Download MOA for OpenML</button>
+            </a>
+            <br/>
+            <br/>
+          <img src="img/partners/moa.png" /><br/>
+          <h3 id="moa-start">Quick Start</h3>
+            Make sure a file called "openml.conf" (<a target="blank" href="downloads/openml.conf">example</a>) is present in the same directory. This file should contain two lines, indicating the username and password (server is optional).
+            Launch the JAR file by double clicking on it, or use the following command:
+            <pre>java -cp openmlmoa.beta.jar moa.gui.GUI</pre>
+            
+            Select the task <code>moa.tasks.openml.OpenmlDataStreamClassification</code> to evaluate a classifier on an OpenML task, and send the results to OpenML. Select the <code>moa.tasks.WriteStreamToArff</code> task, with <code>moa.streams.generators.BayesianNetworkGenerator</code> to create a stream using the Bayesian Network Generator.<br/><br/>
+            
+            Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:j.n.van.rijn@liacs.leidenuniv.nl">j.n.van.rijn@liacs.leidenuniv.nl</a>.
+          </div>
+      
   <div class="bs-docs-section">
           <div class="page-header">
             <h1 id="r">R</h1>
