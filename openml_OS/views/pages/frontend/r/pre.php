@@ -13,6 +13,7 @@ $this->terms = safe($this->input->post('searchterms'));
 $this->implementation_count = 0;
 $this->function_count = 0;
 $this->dataset_count = 0;
+$this->total_count = 0;
 $this->results_all = array();
 $this->results_runcount = array();
 
@@ -20,7 +21,7 @@ $this->implementation_total = $this->Implementation->numberOfRecords();
 $this->dataset_total = $this->Dataset->numberOfRecords();
 $this->function_total = 0; // fetched later on. 
 
-$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
+$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cogs', 'dataset' => 'fa fa-database', 'run' => 'fa fa-star' );
 
 $this->active_tab = gu('tab');
 if($this->active_tab == false) $this->active_tab = 'searchtab';
@@ -83,8 +84,6 @@ elseif( $this->terms != false and $this->terms != 'all') { // normal search
 	exec( $command, $res, $code );
 	
 	$results = json_decode( implode( "\n", $res ) );
-
-  $this->total_count = 0;
   
   if( $results ) {
     $this->time = $results->time;
@@ -154,24 +153,24 @@ elseif( $this->terms != false and $this->terms != 'all') { // normal search
 } else{ // Popular
 	$start_time = microtime(true);
 	
-	$dataset = $this->Dataset->query('select d.name, d.did, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' group by d.did ORDER BY runs DESC LIMIT 0,5');
-  if( $dataset != false ) {
-	  foreach( $dataset as $d ) {
+	$runs = $this->Dataset->query('SELECT r.rid, r.uploader, i.id, i.fullName, r.task_id, tt.name as taskname, d.did, d.name as dataname, r.start_time FROM run r, algorithm_setup als, implementation i, task t, task_type tt, task_inputs ti left join dataset d on ti.value = d.did WHERE status=\'OK\' and r.task_id=t.task_id and t.ttid=tt.ttid and t.task_id = ti.task_id and ti.input=\'source_data\' and r.setup = als.sid and als.implementation_id=i.id order by r.start_time desc limit 0,30');
+  if( $runs != false ) {
+	  foreach( $runs as $r ) {
 		  $result = array(
-			  'type' => 'dataset',
-		          'id' => $d->did,
-			  'link' => 'd/'.$d->did,
-			  'name' => $d->name,
-			  'icon' => $icons['dataset'],
-			  'description' => $d->description,
-			  'runs' => $d->runs,
-			  'instances' => $d->instances,
-			  'features' => $d->features,
-			  'missing' => $d->missing,
-			  'classes' => $d->classes
+			  'type' => 'run',
+			  'icon' => $icons['run'],
+		          'id' => $r->rid,
+			  'task' => $r->task_id,
+			  'taskname' => $r->taskname,
+			  'data' => $r->did,
+			  'dataname' => $r->dataname,
+			  'flow' => $r->id,
+			  'flowname' => $r->fullName,
+			  'uploader' => $this->db->query('SELECT CONCAT_WS(\' \',first_name, last_name) as name from users where id =' . $r->uploader)->name,
+			  'time' => $r->start_time
 		  );
 		  $this->results_all[] = $result;
-		  $this->dataset_count++;
+		  $this->total_count++;
     }
 	}
 		

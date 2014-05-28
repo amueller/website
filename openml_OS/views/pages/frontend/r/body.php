@@ -72,20 +72,17 @@
       <h1>Runs</h1>
       <p>A run is an application of a specific <a href="f">flow</a> on a specific <a href="t">task</a>, including all details such as parameter settings and all results. OpenML collects and organizes all runs from all users, so that their results can be easily compared over all tasks and flows, analyzed, visualized or simply downloaded.</p>
       </div>
-      <h2>Popular datasets</h2>
+      <h2>Recent runs</h2>
       <?php } ?> 
 	<?php
 	if($this->total_count>0) {
-		echo '<div class="searchstats">Showing ' . $this->dataset_count . ' of ' . $this->dataset_total . ' results (' . $this->time . ' seconds)</div>';	
+		echo '<div class="searchstats">Showing ' . $this->total_count . ' results (' . $this->time . ' seconds)</div>';	
 		
 		foreach( $this->results_all as $r ):?>
 			<div class="searchresult">
-				<a href="<?php echo $r['link'] ?>"><?php echo $r['name']; ?></a><br />
-				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
-				<div class="runStats"><?php echo $r['runs'] ?> runs
-				<?php if ($r['instances']>0){ ?>
-						- <?php echo $r['instances'];?> instances - <?php echo $r['features'];?> features - <?php echo $r['classes'];?> classes - <?php echo $r['missing'];?> missing values
-				<?php } ?></div>
+				<a href="r/<?php echo $r['id'] ?>">Run <?php echo $r['id']; ?></a><br />
+				<div class="teaser">Runs <a href="f/<?php echo $r['flow'] ?>"><?php echo $r['flowname'] ?></a> on <a href="t/<?php echo $r['task'] ?>">Task <?php echo $r['task'] ?></a>: <?php echo $r['taskname'] ?> on data set <a href="d/<?php echo $r['data'] ?>"><?php echo $r['dataname'] ?></a></div>
+				<div class="runStats">Uploaded by <?php echo $r['uploader'] ?> on <?php echo $r['time'];?></div>
 				</div> <?php
 		endforeach;
 	} else {
