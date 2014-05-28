@@ -14,7 +14,7 @@ class Schedule extends Database_read {
     'SELECT `a`.`setup_string`, `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id`
      FROM `schedule` `s`, `algorithm_setup` `a`, `task` `t`
      WHERE `a`.`sid` = `s`.`sid` and `s`.`ttid` = `t`.`ttid` and
-     `s`.`active` = "true" 
+     `s`.`active` = "true" and  `t`.`task_id` IN (select task_id from `task_inputs`) 
      AND not exists (select rid
                 from `run` `r`
                 where `t`.`task_id` = `r`.`task_id` and `s`.`sid` =

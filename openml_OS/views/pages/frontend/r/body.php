@@ -75,7 +75,7 @@
       <h2>Popular datasets</h2>
       <?php } ?> 
 	<?php
-	if($this->dataset_count>0) {
+	if($this->total_count>0) {
 		echo '<div class="searchstats">Showing ' . $this->dataset_count . ' of ' . $this->dataset_total . ' results (' . $this->time . ' seconds)</div>';	
 		
 		foreach( $this->results_all as $r ):?>

@@ -83,6 +83,7 @@ elseif( $this->terms != false and $this->terms != 'all') { // normal search
 	exec( $command, $res, $code );
 	
 	$results = json_decode( implode( "\n", $res ) );
+
   $this->total_count = 0;
   
   if( $results ) {
