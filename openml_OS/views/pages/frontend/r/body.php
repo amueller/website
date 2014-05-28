@@ -80,10 +80,26 @@
 		
 		foreach( $this->results_all as $r ):?>
 			<div class="searchresult">
+				<i class="<?php echo $r['icon'] ?>"></i>
+				<?php if($r['type'] == 'run') { ?>
+
 				<a href="r/<?php echo $r['id'] ?>">Run <?php echo $r['id']; ?></a><br />
 				<div class="teaser">Runs <a href="f/<?php echo $r['flow'] ?>"><?php echo $r['flowname'] ?></a> on <a href="t/<?php echo $r['task'] ?>">Task <?php echo $r['task'] ?></a>: <?php echo $r['taskname'] ?> on data set <a href="d/<?php echo $r['data'] ?>"><?php echo $r['dataname'] ?></a></div>
 				<div class="runStats">Uploaded by <?php echo $r['uploader'] ?> on <?php echo $r['time'];?></div>
-				</div> <?php
+
+				<?php } elseif($r['type'] == 'dataset') { ?>
+
+				<a href="d/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
+				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
+				<div class="runStats"><?php echo $r['runs'];?> runs - <?php echo $r['instances'];?> instances - <?php echo $r['features'];?> features - <?php echo $r['classes'];?> classes - <?php echo $r['missing'];?> missing values</div>
+
+				<?php } elseif($r['type'] == 'implementation') { ?>
+				
+				<a href="f/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
+				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
+				<div class="runStats"><?php echo $r['runs'] . ' runs'; ?></div>
+				<?php } ?>
+			</div> <?php
 		endforeach;
 	} else {
 		if( $this->terms != false ) {

@@ -43,7 +43,7 @@
         <link rel="stylesheet" href="css/bootstrap-select.css">
         <link rel="stylesheet" href="css/bootstrap-slider.css">
         <link rel="shortcut icon" href="img/favicon.ico">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.validate.js"></script>

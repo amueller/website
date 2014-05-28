@@ -156,6 +156,7 @@ elseif( $this->terms != false and $this->terms != 'all') { // normal search
 	$runs = $this->Dataset->query('SELECT r.rid, r.uploader, i.id, i.fullName, r.task_id, tt.name as taskname, d.did, d.name as dataname, r.start_time FROM run r, algorithm_setup als, implementation i, task t, task_type tt, task_inputs ti left join dataset d on ti.value = d.did WHERE status=\'OK\' and r.task_id=t.task_id and t.ttid=tt.ttid and t.task_id = ti.task_id and ti.input=\'source_data\' and r.setup = als.sid and als.implementation_id=i.id order by r.start_time desc limit 0,30');
   if( $runs != false ) {
 	  foreach( $runs as $r ) {
+		  $author = $this->Author->getById($r->uploader);
 		  $result = array(
 			  'type' => 'run',
 			  'icon' => $icons['run'],
@@ -166,7 +167,7 @@ elseif( $this->terms != false and $this->terms != 'all') { // normal search
 			  'dataname' => $r->dataname,
 			  'flow' => $r->id,
 			  'flowname' => $r->fullName,
-			  'uploader' => $this->db->query('SELECT CONCAT_WS(\' \',first_name, last_name) as name from users where id =' . $r->uploader)->name,
+			  'uploader' =>  $author->first_name . ' ' . $author->last_name,
 			  'time' => $r->start_time
 		  );
 		  $this->results_all[] = $result;
