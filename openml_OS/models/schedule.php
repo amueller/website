@@ -10,8 +10,9 @@ class Schedule extends Database_read {
   // TODO: this function lacks history. A task can be given to two runners at the same 
   // time, by accident. We want to avoid that. 
   function getJob( $workbench, $task_type ) {
-    $sql = 
-    'SELECT `a`.`setup_string`, `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id`
+    $sql = 'SELECT * from job where ttid = "'.$task_type.'" AND workbench = "'.$workbench.'";';
+
+/*    'SELECT `a`.`setup_string`, `s`.`workbench`, `s`.`sid`, `s`.`ttid`, `t`.`task_id`
      FROM `schedule` `s`, `algorithm_setup` `a`, `task` `t`
      WHERE `a`.`sid` = `s`.`sid` and `s`.`ttid` = `t`.`ttid` and
      `s`.`active` = "true" and  `t`.`task_id` IN (select task_id from `task_inputs`) 
