@@ -83,7 +83,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
 	<div class="col-sm-12">
 
 		<h3>Flow</h3>
-		<div class='table-responsive'><table class='table table-striped'>
+		<div class='table-responsive'><table class='table table-striped fixedtable'>
 		<tr><td><a href="f/<?php echo $this->record['flow_id']; ?>"><?php echo $this->record['flow_name']; ?></a></td><td><?php echo $this->record['flow_description']; ?></td></tr>
 		<?php foreach( $this->runsetup as $r ): ?>
 		<tr><td><a class="pop" data-html="true" data-toggle="popover" data-placement="right" data-content="<?php echo $r['description']; ?>"><?php echo $r['input']; ?></td><td><?php echo $r['value']; ?></td></tr>

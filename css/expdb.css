@@ -74,6 +74,16 @@ width:100% !important;
     max-width: 1000px;
 }
 
+.fixedtable {
+	table-layout: fixed; 
+	width: 100%;
+}
+
+table td {
+    word-wrap: break-word;         /* All browsers since IE 5.5+ */
+    overflow-wrap: break-word;     /* Renamed property in CSS3 draft spec */
+}
+
 .optslidertitle{
 padding-top:10px;
 float:left;
