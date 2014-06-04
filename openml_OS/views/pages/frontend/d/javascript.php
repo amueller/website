@@ -173,7 +173,12 @@ options = {
                 renderTo: 'data_result_visualize',
                 type: 'scatter',
                 zoomType: 'xy',
-		spacingTop: 40
+		spacingTop: 40,
+                events: {
+                    load: function (event) {
+                        $('.tip').tooltip();
+                    }
+                }
             },
 	    title: {
 	        text: 'Evaluations per flow (multiple parameter settings)'
@@ -189,7 +194,8 @@ options = {
                 categories: [],
 		labels: {
                   formatter: function() {
-                    return '<a class="hccategory" href="f/'+ categoryMap[this.value] +'">'+ this.value +'</a>';
+		    var lab = this.value.length > 50 ? this.value.substring(0, 25) + ' ... ' +  this.value.substring(this.value.length - 25) : this.value;
+                    return '<a class="hccategory tip" href="f/'+ categoryMap[this.value] +'" title="' + this.value + '">'+ lab +'</a>';
                   },
         	  useHTML: true
 		},

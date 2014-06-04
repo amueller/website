@@ -47,9 +47,9 @@
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.validate.js"></script>
-        <script type="text/javascript" src="js/libs/jquery-ui.js"></script>
-        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js" ></script>
+         <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js" ></script>
         <script type="text/javascript" src="js/libs/processing.js" ></script>
         <script type="text/javascript" src="js/libs/dat.gui.min.js" ></script>
         <script type="text/javascript" src="js/libs/codemirror.js" ></script>
