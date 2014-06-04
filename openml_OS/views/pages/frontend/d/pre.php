@@ -160,7 +160,7 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 	}
 		
 	$this->time = round(microtime(true) - $start_time,3);
-} else{ // Popular
+} elseif(false === strpos($_SERVER['REQUEST_URI'],'/d/')) { // Popular
 	$start_time = microtime(true);
 	
 	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did ORDER BY runs DESC LIMIT 0,5');

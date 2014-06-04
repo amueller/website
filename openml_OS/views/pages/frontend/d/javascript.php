@@ -172,7 +172,6 @@ options = {
             chart: {
                 renderTo: 'data_result_visualize',
                 type: 'scatter',
-                zoomType: 'xy',
 		spacingTop: 40,
                 events: {
                     load: function (event) {
@@ -236,7 +235,7 @@ options = {
 		}
             },
             tooltip:{
-                followTouchMove: true,
+                followTouchMove: false,
                 formatter:function(){
                     return '<div>Flow:<b> '+this.series.yAxis.categories[this.y]+'</b><br>'+ this.series.xAxis.axisTitle.element.textContent + '<b>: ' + this.x+'</b><br>'+ ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
                 }
