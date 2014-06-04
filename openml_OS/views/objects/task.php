@@ -35,7 +35,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			$this->sourcedata_id = $i->value;
 			$this->sourcedata_name = $inout['dataset'];
 		}
-		elseif($i->type == 'EstimationProcedure'){
+		elseif($i->type == 'Estimation Procedure'){
 			$ep = $this->Implementation->query('SELECT name FROM estimation_procedure where id=' . $i->value); 
 			$inout['evalproc'] = $ep[0]->name;
 		}
@@ -61,7 +61,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 		<?php foreach( $this->taskio as $r ): if($r['category'] != 'input') continue; ?>
 		<tr><td><a class="pop" data-html="true" data-toggle="popover" data-placement="right" data-content="<?php echo $r['description']; ?>"><?php echo $r['name']; ?></td>
 		<td><?php if($r['type'] == 'Dataset') { echo '<a href="d/' . $r['value']. '">' . $r['dataset'] . '</a>';}
-		elseif($r['type'] == 'EstimationProcedure') { echo '<a href="a/evalproc/' . $r['value']. '">' . $r['value'] . ' - ' . $r['evalproc'] . '</a>';}
+		elseif($r['type'] == 'Estimation Procedure') { echo '<a href="a/estimation-procedures/' . $r['value']. '">' . $r['evalproc'] . '</a>';}
 		elseif(strpos($r['value'], "http") === 0 ) { echo '<a href="' .$r['value']. '">' . 'download' . '</a>';}
 		else { echo $r['value']; } ?></td>
 		<td><a class="pop" data-html="true" data-toggle="popover" data-placement="left" data-content="<?php echo $r['typedescription']; ?>"><?php echo $r['type']; ?></a> (<?php echo $r['requirement']; ?>)</td>

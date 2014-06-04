@@ -135,12 +135,13 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER[
 	}
 }	
 if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER['REQUEST_URI'],'/a/estimation-procedures')) {
-	$this->name = end(explode('/', $_SERVER['REQUEST_URI']));
-	$procq = $this->Dataset->query('SELECT p.name, p.repeats, p.folds, p.percentage, p.stratified_sampling, t.description, tt.name as typename FROM estimation_procedure p, estimation_procedure_type t, task_type tt WHERE p.type = t.name and p.ttid = tt.ttid');
+	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
+	$procq = $this->Dataset->query('SELECT p.id, p.name, p.repeats, p.folds, p.percentage, p.stratified_sampling, t.description, tt.name as typename FROM estimation_procedure p, estimation_procedure_type t, task_type tt WHERE p.type = t.name and p.ttid = tt.ttid');
 	if( $procq != false ) {
 		  foreach( $procq as $i ) {
 			$proc = array(
-				  'name' => $i->name . ' for ' . $i->typename,
+				  'id' => $i->id,
+				  'name' => $i->name . ' (' . $i->typename . ')',
 				  'repeats' => $i->repeats,
 				  'folds' => $i->folds,
 				  'percentage' => $i->percentage,
@@ -149,7 +150,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER[
 				  'type_name' => $i->typename
 				);
 			$this->procs[] = $proc;
-			if (cleanName($proc['name']) == $this->name) $this->record = $proc;
+			if ($proc['id'] == $this->id) $this->record = $proc;
 		   }
 	}
 }

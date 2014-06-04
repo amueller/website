@@ -198,6 +198,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
+	$author = $this->Author->getById($this->record->uploader);
+	$this->record->{'uploader'} =  $author->first_name . ' ' . $author->last_name;
 	$this->displayName = $this->record->name;
 	$this->tasks_all = array();
 	$this->current_task = false;

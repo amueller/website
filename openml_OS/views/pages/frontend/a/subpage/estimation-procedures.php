@@ -6,7 +6,7 @@
 	<h2>All procedures</h2>
 	<?php	foreach( $this->procs as $r ):?>
 			<div class="searchresult">
-				<a href="a/estimation-procedures/<?php echo cleanName($r['name']); ?>"><?php echo $r['name'];?></a><br />
+				<a href="a/estimation-procedures/<?php echo $r['id']; ?>"><?php echo $r['name'];?></a><br />
 				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
 				<div class="runStats"><?php
 					 if(strlen($r['folds'])) echo $r['folds'] . ' folds, ';
