@@ -233,7 +233,7 @@
       </div>
 
       <div class="tab-pane <?php if( isset($this->task_id) ) echo 'active'; ?>" id="taskdetail">
-        <?php if( isset($this->task_id) ) { subpage('task'); } ?>
+        <?php if( isset($this->task_id) ) { o('task'); } ?>
       </div>
 
       <div class="tab-pane sharing" id="createtype">

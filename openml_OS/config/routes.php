@@ -77,6 +77,5 @@ foreach( $frontend_pages as $page ) {
 	$route[$page.'/:any'] 	= 'frontend/page/'.$page.'/$1';
 }
 
-
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

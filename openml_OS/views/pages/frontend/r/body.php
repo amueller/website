@@ -63,7 +63,7 @@
      <div class="tab-content">
       <!-- DETAIL -->     
       <div class="tab-pane <?php  if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) echo 'active';?>" id="runtab">
-		<?php subpage('run'); ?>
+		<?php o('run'); ?>
       </div>
       <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) { echo 'active'; } ?>" id="intro">
       <?php 

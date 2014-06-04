@@ -56,7 +56,11 @@ class Frontend extends CI_Controller {
       return;
     }
     if($_POST) loadpage($indicator,TRUE,'post');
-    $this->load->view('frontend_main');
+    if(false !== strpos($_SERVER['REQUEST_URI'],'/html')){
+	 $this->load->view('html_main');
+    } else {
+	 $this->load->view('frontend_main');
+    }
   }
   
   public function error404() {

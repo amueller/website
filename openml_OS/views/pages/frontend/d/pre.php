@@ -71,7 +71,7 @@ $this->results_all = array();
 $this->results_runcount = array();
 
 $this->dataset_total = $this->Dataset->numberOfRecords();
-$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
+$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cogs', 'dataset' => 'fa fa-database', 'run' => 'fa fa-star' );
 
 
 if( $this->terms != false and $this->terms != 'all') { // normal search
@@ -106,7 +106,7 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 	$nbclasses = 0;
 
         if ($type == 'dataset'){
-	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.inputData=d.did and q.value >= '.$this->nrinstances_min .' and q.value <= '.$this->nrinstances_max .' and q2.value >= '.$this->nrfeatures_min .' and q2.value <= '.$this->nrfeatures_max .' and q3.value >= '.$this->nrmissing_min .' and q3.value <= '.$this->nrmissing_max .' and q4.value >= '.$this->nrclasses_min .' and q4.value <= '.$this->nrclasses_max .' and d.name="'.$name.'" group by d.did');
+	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and q.value >= '.$this->nrinstances_min .' and q.value <= '.$this->nrinstances_max .' and q2.value >= '.$this->nrfeatures_min .' and q2.value <= '.$this->nrfeatures_max .' and q3.value >= '.$this->nrmissing_min .' and q3.value <= '.$this->nrmissing_max .' and q4.value >= '.$this->nrclasses_min .' and q4.value <= '.$this->nrclasses_max .' and d.name="'.$name.'"  and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did');
           if( $d != false ) {
            $nbruns = $d[0]->nbruns;
            $id = $d[0]->did;
@@ -140,7 +140,7 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 } else if ($this->terms != false and $this->terms == 'all'){ // all dataset
 	$start_time = microtime(true);
 	
-	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\'  and r.inputData=d.did and q.value >= '.$this->nrinstances_min .' and q.value <= '.$this->nrinstances_max .' and q2.value >= '.$this->nrfeatures_min .' and q2.value <= '.$this->nrfeatures_max .' and q3.value >= '.$this->nrmissing_min .' and q3.value <= '.$this->nrmissing_max .' and q4.value >= '.$this->nrclasses_min .' and q4.value <= '.$this->nrclasses_max .' group by d.did');  if( $dataset != false ) {
+	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\'  and q.value >= '.$this->nrinstances_min .' and q.value <= '.$this->nrinstances_max .' and q2.value >= '.$this->nrfeatures_min .' and q2.value <= '.$this->nrfeatures_max .' and q3.value >= '.$this->nrmissing_min .' and q3.value <= '.$this->nrmissing_max .' and q4.value >= '.$this->nrclasses_min .' and q4.value <= '.$this->nrclasses_max .'  and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did order by d.name');  if( $dataset != false ) {
 	  foreach( $dataset as $d ) {
 		  $result = array(
 			  'type' => 'dataset',
@@ -163,7 +163,7 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 } else{ // Popular
 	$start_time = microtime(true);
 	
-	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' group by d.did ORDER BY runs DESC LIMIT 0,5');
+	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did ORDER BY runs DESC LIMIT 0,5');
   if( $dataset != false ) {
 	  foreach( $dataset as $d ) {
 		  $result = array(
@@ -199,21 +199,36 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
 	$this->displayName = $this->record->name;
+	$this->tasks_all = array();
+	$this->current_task = false;
+
+
+	$this->tasks = $this->Dataset->query('SELECT t.task_id, tt.name FROM task_type_inout ttio, task_inputs ti, task t, task_type tt WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=' . $this->id . ' and ti.task_id=t.task_id and t.ttid = tt.ttid and ttio.ttid=tt.ttid');
+  	if( $this->tasks != false ) {
+	  foreach( $this->tasks as $t ) {
+		  $result = array(
+			  'id' => $t->task_id,
+			  'name' => $t->name
+		  );
+		  $this->tasks_all[] = $result;
+		  if($this->current_task == false){
+			$this->current_task = $t->task_id;
+		  }
+    	}
+	}
 	
-	$this->dt_main 						= array();
-	$this->dt_main['columns'] 			= array('r.rid','rid','sid','fullName','value');
+	$this->dt_main 				= array();
+	$this->dt_main['columns'] 		= array('r.rid','rid','sid','fullName','value');
 	$this->dt_main['column_widths']		= array(1,1,0,30,30);
-	$this->dt_main['column_content']	= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
+	$this->dt_main['column_content']	= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
 	$this->dt_main['column_source']		= array('wrapper','db','db','doublewrapper','db','db');
 	$this->dt_main['group_by'] 		= 'l.implementation_id';
 	
 	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
-										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r`, dataset `d`, implementation `i` ' .
-										'WHERE `r`.`learner`=`l`.`sid` ' .
+										'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
+										'WHERE `r`.`setup`=`l`.`sid` ' .
 										'AND `l`.`implementation_id` = `i`.`id` ' . 
-										'AND `r`.`inputdata`=`d`.`did` ' .
-										'AND `e`.`source`=`r`.`rid` ' .
-										'AND `d`.`did`="'.$this->record->did.'"';
+										'AND `e`.`source`=`r`.`rid` ';
 										
 	$this->dt_main_all = array();
 	$this->dt_main_all['columns'] 		= array('r.rid','rid','sid','fullName','value');
@@ -222,12 +237,10 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	//$this->dt_main_all['group_by'] 	= 'l.implementation'; NONE
 	
 	$this->dt_main_all['base_sql'] 	= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(`e`.`value`,4) AS `value` ' .
-										'FROM algorithm_setup `l`, evaluation `e`, cvrun `r`, dataset `d`, implementation `i` ' .
-										'WHERE `r`.`learner`=`l`.`sid` ' .
-										'AND `r`.`inputdata`=`d`.`did` ' .
+										'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
+										'WHERE `r`.`setup`=`l`.`sid` ' .
 										'AND `l`.`implementation_id` = `i`.`id` ' . 
-										'AND `e`.`source`=`r`.`rid` ' .
-										'AND `d`.`did`="'.$this->record->did.'"';
+										'AND `e`.`source`=`r`.`rid` ';
 	
 	$this->dt_features = array();
 	$this->dt_features['columns'] 		= array('index','name','data_type','NumberOfDistinctValues','NumberOfUniqueValues','NumberOfMissingValues','MaximumValue','MinimumValue','MeanValue','StandardDeviation');

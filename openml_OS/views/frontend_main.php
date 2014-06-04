@@ -9,6 +9,7 @@
 <html class="no-js lt-ie9" lang="en">
 <![endif]-->
 <!--[if gt IE 8]><!--> 
+
 <html class="no-js" lang="en" xmlns:og="http://ogp.me/ns#">
     <!--<![endif]-->
     <head>
@@ -74,6 +75,7 @@
         <!--[if lt IE 7]>
         <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
         <![endif]-->
+
         <div class="navbar navbar-static-top" style="margin-bottom: 0px;">
             <div class="navbar-inner">
                     <a class="nav pull-right socialshare socialshareicon" id="popover">
@@ -160,6 +162,7 @@
             	})
             });
         </script>
+
         <div id="wrap">
             <!-- USER MESSAGE -->
             <noscript>
@@ -171,9 +174,13 @@
             <div class="alert alert-info" style="text-align:center;margin-bottom:0px">
                 <?php echo $this->message; ?>
             </div>
-            <?php endif; ?>
-            <?php echo body(); ?>
+            <?php endif;
+
+            echo body();
+
+	    ?>
         </div>
+
 	<div class="openmlfooter">
 		<div class="container-fluid corrected">
 		<div class="row">
@@ -211,6 +218,8 @@
 
 
 	</div>
+
+
         <script src="js/libs/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/application.js"></script>
@@ -270,7 +279,10 @@
 				    return;
 				}
 			    });
-			});	
+			});
+			$('body').on('hidden.bs.modal', '.modal', function () {
+			  $(this).removeData('bs.modal');
+			});
         </script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -282,5 +294,8 @@
             ga('create', 'UA-40902346-1', 'openml.org');
             ga('send', 'pageview');
         </script>
+
+
     </body>
 </html>
+

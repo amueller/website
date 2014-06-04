@@ -84,6 +84,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 
 var oTableRunsShowAll = false;
 var evaluation_measure = "<?php echo $this->current_measure; ?>";
+var current_task = "<?php echo $this->current_task; ?>";
+
 var oTableRuns = false;
 
 $(document).ready(function() {
@@ -99,7 +101,7 @@ $(document).ready(function() {
 			} else {
 				<?php echo array_to_parsed_string($this->dt_main, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
 			}
-			aoData.push( { 'value': 'AND function = "'+evaluation_measure+'"', 'name' : 'base_sql_additional' } );
+			aoData.push( { 'value': 'AND function = "'+evaluation_measure+'" AND r.task_id = '+current_task, 'name' : 'base_sql_additional' } );
 		},
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": [ 0 ] },
@@ -177,7 +179,7 @@ options = {
 	        text: 'Evaluations per flow (multiple parameter settings)'
 	    },
 	    subtitle: {
-	        text: 'click points for details'
+	        text: 'every point is a run, click for details'
 	    },
 	    yAxis: {
                 title: {
@@ -238,13 +240,13 @@ options = {
                 data: [],
 		point: {
                     events: {
-                        click: function(){$('#runModal').modal('show'); updateRunModal(this.r);}
+                        click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
                     }
                 }
             }]
         };
 
-var theQuery = 'select distinct i.fullname, round(e.value,4) as value, r.rid, i.id from algorithm_setup l, evaluation e, cvrun r, implementation i  where r.learner=l.sid AND l.implementation_id=i.id AND r.inputdata=<?php echo $this->record->did; ?> AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
+var theQuery = 'select distinct i.fullname, round(e.value,4) as value, r.rid, i.id from algorithm_setup l, evaluation e, run r, implementation i  where r.setup=l.sid AND l.implementation_id=i.id AND e.source=r.rid AND e.function="'+evaluation_measure+'" AND r.task_id = '+ current_task + ' order by value desc';
 var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+theQuery, "UTF-8");
 $.getJSON(query,function(jsonData){
         var data = jsonData.data;
@@ -273,45 +275,6 @@ $.getJSON(query,function(jsonData){
 $(document).ready(function() {
    redrawchart();
 });
-
-$(document).on('click', '.openRunModal', function(){updateRunModal($(this).data('id'))});
-
-function updateRunModal(rid) {
-	var runq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=select r.uploader, r.task_id, r.start_time, c.inputData, c.learner, c.runType, c.nrFolds, c.nrIterations from run r, cvrun c where r.rid="+rid+" and r.rid=c.rid", "UTF-8");
-	$.getJSON(runq,function(jsonData){
-	        var data = jsonData.data;
-		$("#runinfo").empty();
-		$("#runinfo").append("<h3>Run details</h3>Run id: " + rid);
-		$("#runinfo").append("<br>Author: " + data[0][0]);
-		$("#runinfo").append("<br>Date: " + data[0][2]);
-		taskid = data[0][1];
-		dataid = data[0][3];
-		flowid = data[0][4];
-		$("#runinfo").append("<h3>Task</h3>Task id: " + taskid);
-		$("#runinfo").append("<br>Type: " + data[0][5]);
-		$("#runinfo").append("<br>Procedure: " + data[0][7] + " x " + data[0][6] + " cross-validation");
-
-		var dataq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=select name, version from dataset where did="+dataid, "UTF-8");
-		$.getJSON(dataq,function(jsonData){
-			var data = jsonData.data;
-			$("#runinfo").append("<br>Input data: <a href='d/" + dataid + "'>"+ data[0][0] + "</a>");
-
-			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE s.implementation_id=i.id and s.sid="+flowid, "UTF-8");
-			console.log(flowq);
-			$.getJSON(flowq,function(jsonData){
-				var data = jsonData.data;
-				$("#runinfo").append("<h3>Flow</h3>Flow: <a href='f/" + data[0][3] + "'>"+ data[0][0] + "</a>");
-				if(data[0][1].length > 0){
-					$("#runinfo").append("<br>Parameter settings:<br>");
-				}				
-				for(var i=0;i<data.length;i++){
-					$("#runinfo").append(data[i][1]+": "+ data[i][2]+"<br>");
-				}				
-			});
-		});
-	});
-}
-
 
 <?php  
 }

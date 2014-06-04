@@ -75,11 +75,14 @@
 	</div>
 
 	        <div class="col-xs-12">
-		<h3>Results</h3> 
-		Task type: 
-				<select class="selectpicker" data-width="auto">
-					<option>Supervised Classification</option>
+		<h3>Results (per task)</h3> 
+				<select class="selectpicker" data-width="auto" onchange="current_task = this.value; oTableRuns.fnDraw(true); redrawchart();">
+					<?php foreach($this->tasks_all as $t): ?>
+					<option value="<?php echo $t['id'];?>" <?php echo ($t == $this->current_task) ? 'selected' : '';?>><?php echo 'Task ' . $t['id'] . ' (' . $t['name'] . ')';?></option>
+					<?php endforeach; ?>
 				</select>
+
+		<a onclick="$('#taskModal').modal({remote: 't/' + current_task + '/html'}); $('#taskModal').modal('show');">view task details</a>
 		<h2>Performance evaluation</h2>
 		Evaluation measure:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
@@ -102,18 +105,19 @@
 				</table></div>
 			</div>
 
-<div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="runModal" role="dialog" tabindex="-1" aria-labelledby="Run detail" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-body">
-	<div id="runinfo"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
     </div>
   </div>
 </div>
+<div class="modal fade" id="taskModal" role="dialog" tabindex="-1" aria-labelledby="Task detail" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
 
 
 		</div> <!-- end tab-runs -->

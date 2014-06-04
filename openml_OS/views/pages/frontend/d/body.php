@@ -112,6 +112,7 @@
 		
 		foreach( $this->results_all as $r ): if($r['type'] != 'dataset') continue;?>
 			<div class="searchresult">
+				<i class="<?php echo $r['icon'] ?>"></i>
 				<a href="d/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
 				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
 				<div class="runStats"><?php echo $r['runs'];?> runs - <?php echo $r['instances'];?> instances - <?php echo $r['features'];?> features - <?php echo $r['classes'];?> classes - <?php echo $r['missing'];?> missing values</div>
