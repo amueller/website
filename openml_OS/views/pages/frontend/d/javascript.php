@@ -172,7 +172,7 @@ options = {
             chart: {
                 renderTo: 'data_result_visualize',
                 type: 'scatter',
-                zoomType: 'x',
+		pinchType: 'x',
 		spacingTop: 40,
                 events: {
                     load: function (event) {
