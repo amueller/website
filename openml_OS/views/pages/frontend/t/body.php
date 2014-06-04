@@ -3,7 +3,7 @@
   <div class="sectiontitleyellow"><a href="t">Tasks</a></div>
 </div>
 <div class="bs-docs-container topborder">
-  <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
+  <div class="col-sm-12 col-md-2 searchbar">
     <!-- Search -->
     <h4 style="margin-top:3px;">Task types</h4>
     <div class="upload">
@@ -204,7 +204,7 @@
 
   </div> <!-- end col-2 -->
 
-  <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
+  <div class="col-sm-12 col-md-10 openmlsectioninfo">
     <div class="tab-content">
       <div class="tab-pane  <?php if(false === strpos($_SERVER['REQUEST_URI'],'/t/')) { echo 'active'; } ?>" id="intro">
         <div class="yellowheader">

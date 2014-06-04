@@ -29,7 +29,7 @@
 <div class="sectiontitlered"><a href="r">Runs</a></div>
 </div>
 <div class="bs-docs-container topborder">
-    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
+    <div class="col-sm-12 col-md-2 searchbar">
         <!-- Upload stuff -->
 	<div class="upload">
         <button type="button" data-toggle="tab" data-target="#runshare" class="btn btn-danger" style="width:100%; text-align:left;"><i class="fa fa-cloud-upload fa-lg" style="padding-right:5px;"></i> Add run</button>
@@ -59,7 +59,7 @@
 
     </div> <!-- end col-2 -->
 
-    <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
+    <div class="col-sm-12 col-md-10 openmlsectioninfo">
      <div class="tab-content">
       <!-- DETAIL -->     
       <div class="tab-pane <?php  if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) echo 'active';?>" id="runtab">
