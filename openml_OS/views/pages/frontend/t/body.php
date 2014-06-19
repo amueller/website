@@ -1,7 +1,3 @@
-<div class="sectionheader">
-  <div class="sectionlogo"><a href="">OpenML</a></div>
-  <div class="sectiontitleyellow"><a href="t">Tasks</a></div>
-</div>
 <div class="bs-docs-container topborder">
   <div class="col-sm-12 col-md-2 searchbar">
     <!-- Search -->
@@ -208,7 +204,7 @@
     <div class="tab-content">
       <div class="tab-pane  <?php if(false === strpos($_SERVER['REQUEST_URI'],'/t/')) { echo 'active'; } ?>" id="intro">
         <div class="yellowheader">
-          <h1>Tasks</h1>
+          <h1><i class="fa fa-check"></i> Tasks</h1>
           <p>Tasks define machine learning problems in such a way that the obtained results are clearly interpretable and verifiable. <b>Task types</b> are general descriptions in terms of the (types of) given input, expected output and scientific protocols, e.g, cross-validation, to be used. Given specific <a href="d">input data</a>, OpenML then generates individual <b>tasks</b> to be solved. Tasks are machine-readable, fully contained and are read by <a href="f">flows</a>.</p>
         </div>
         <h2>Task types</h2>

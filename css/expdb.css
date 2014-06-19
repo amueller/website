@@ -99,28 +99,24 @@ width: 80pt;
 }
 
 .sectionheader{
-  position: absolute;
-  left: 0px;
-  top: 5px;
   font-family: 'Roboto', sans-serif;
   font-weight: 200;
   font-size: 24px;
+  color: #666;
   float: left;
-  width: 250px;
   min-height: 40px;
   z-index: 1000;
 }
 
 .searchheader{
-  position: absolute;
-  left: 10px;
-  top: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
   font-family: 'Roboto', sans-serif;
   font-weight: 200;
   font-size: 24px;
   float: left;
   min-height: 40px;
-  z-index: 1000;
+  z-index: 3000;
 }
 
 .searchheader input[type=text]{
@@ -128,13 +124,37 @@ width: 80pt;
 	height: 30px; 
 	font-size: 10pt;
 	box-shadow: none;
-
+	z-index: 3000;
 }
 .searchheader input[type=text]:focus{
-	width: 380px;
+        position: absolute;
+	width: 382px;
 	border-color: #51a7e8;
 	outline: none;
+	z-index: 3000;
 }
+
+.teaser{
+  font-size: 16px !important;
+  color: #666;
+}
+
+.teaser > em{
+  font-weight: 800;
+}
+
+.searchbar{
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.searchbar i{
+  font-size: 16px;
+  color: #333;
+  margin-right: 5px;
+}
+
 
 #openmlsearch::-webkit-input-placeholder{ color: #aeaeae;}
 #openmlsearch:-moz-placeholder{ color: #aeaeae;}
@@ -217,18 +237,30 @@ width: 80pt;
   padding-top: 10px;
 }
 
+.tip{
+  font-size: 11px !important;
+  margin: 0;
+}
+
 .searchheader{
   font-family: 'Roboto', sans-serif;
   font-weight: 200;
   font-size: 18px;
+  z-index: 10000;
 }
 
 .sectionlogo{
   display: inline-block;
   float: left;
+  padding-top: 5px;
   padding-left: 10px;
-  padding-right: 10px;
+  padding-right: 3px;
 }
+
+.sectionlogo img{
+  height: 40px;
+}
+
 
 .sectionlogo a{
   color: #666666;
@@ -295,7 +327,13 @@ width: 80pt;
   text-decoration: none
 }
 
+.newmenu li > a{
+  color: #666;
+}
 
+.newmenu li i{
+  padding-right: 5px;
+}
 
 
 
@@ -317,6 +355,10 @@ width: 80pt;
 .openmlsectioninfo h1{
   font-size: 40px;
   color: #437356
+}
+
+.openmlsectioninfo h1 i{
+  color: #bebebe;
 }
 
 
@@ -1084,13 +1126,12 @@ html, body {
         height: auto !important;
         height: 100%;
         /* Negative indent footer by it's height */
-        margin: 0 auto 0;
+        margin: 0 auto -60px;
       }
 
       /* Set the fixed height of the footer here */
       #push,
       #footer {
-	margin-top:-70px;
         height: 60px;
 	padding: 5px;
       }
@@ -1250,6 +1291,11 @@ html, body {
   font-size: 13px;
   color: rgb(0, 153, 51);
 }
+
+.searchresult > .runStats > a{
+  color: rgb(0, 153, 51);
+}
+
 
 .help-block, .help-block2{
   font-size: 12px;

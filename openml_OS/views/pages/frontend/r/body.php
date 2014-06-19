@@ -24,10 +24,6 @@
 </script>
 <script type="text/javascript" src="index.php/javascript/page/data"></script>
 
-<div class="sectionheader">
-<div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitlered"><a href="r">Runs</a></div>
-</div>
 <div class="bs-docs-container topborder">
     <div class="col-sm-12 col-md-2 searchbar">
         <!-- Upload stuff -->
@@ -69,7 +65,7 @@
       <?php 
 	if( $this->terms == false) { ?>
       <div class="redheader">
-      <h1>Runs</h1>
+      <h1><i class="fa fa-star"></i> Runs</h1>
       <p>A run is an application of a specific <a href="f">flow</a> on a specific <a href="t">task</a>, including all details such as parameter settings and all results. OpenML collects and organizes all runs from all users, so that their results can be easily compared over all tasks and flows, analyzed, visualized or simply downloaded.</p>
       </div>
       <h2>Recent runs</h2>

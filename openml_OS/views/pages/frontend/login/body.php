@@ -12,18 +12,20 @@
   <div class="col-md-6" style="margin-top:30px">
     <?php echo form_open("frontend/page/login");?>
     <div class="form-group">
-      <label for="identity">Email/Username:</label>
+      <label for="identity">Username or Email</label>
       <?php echo form_input($this->identity);?>
     </div>
     <div class="form-group">
-      <label for="password">Password:</label>
+      <label for="password">Password (<a href="password_forgot">forgot password</a>)</label>
       <?php echo form_input($this->password);?>
+       
     </div>
     <div class="form-group">
       <?php echo form_submit('submit', 'Login');?>
     </div>
     <?php echo form_close();?>
-    Password forgotten? <a href="password_forgot">Click here</a>. 
+
+    Not registered yet? <a href="register">Join OpenML now!</a><br />
   </div>
 </div>
 <!--<div class="row">

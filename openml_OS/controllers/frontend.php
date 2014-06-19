@@ -1,4 +1,5 @@
 <?php
+
 class Frontend extends CI_Controller {
   
   private $oath1_providers;
@@ -39,6 +40,8 @@ class Frontend extends CI_Controller {
     );
     
     $this->page = 'home'; // default value
+
+    $this->searchclient = new Elasticsearch\Client();
   }
   
   public function index() {
@@ -50,14 +53,18 @@ class Frontend extends CI_Controller {
     $exploded_page = explode('_',$indicator);
     $this->active = $exploded_page[0]; // can be overridden. 
     $this->message = $this->session->flashdata('message'); // can be overridden
-    
-    if(!loadpage($indicator,TRUE,'pre')) {
-      $this->error404();
-      return;
+
+    if(false === strpos($_SERVER['REQUEST_URI'],'/json')){
+      if(!loadpage($indicator,TRUE,'pre')) {
+        $this->error404();
+        return;
+      }
+      if($_POST) loadpage($indicator,TRUE,'post');
     }
-    if($_POST) loadpage($indicator,TRUE,'post');
     if(false !== strpos($_SERVER['REQUEST_URI'],'/html')){
 	 $this->load->view('html_main');
+    } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/json')){
+	 $this->load->view('json_main');
     } else {
 	 $this->load->view('frontend_main');
     }

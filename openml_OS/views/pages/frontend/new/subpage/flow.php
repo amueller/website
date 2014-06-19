@@ -24,114 +24,8 @@
 	});		
 </script>
 
-<div class="bs-docs-container topborder">
-    <div class="col-sm-12 col-md-2 searchbar">
-        <!-- Upload stuff -->
-	<div class="upload">
-        <button type="button" data-toggle="tab" data-target="#codeshare" class="btn btn-primary" style="width:100%; text-align:left;"><i class="fa fa-cloud-upload fa-lg" style="padding-right:5px;"></i> Add flows</button>
-        </div><!-- upload -->
-
-	<!-- Search -->
-	<form class="form" method="post" action="f">
-	<div class="input-group" style="margin-bottom:7px;">
-	  <span class="input-group-addon" style="background-color:#428bca; color:#FFFFFF; border-color:#428bca"><i class="fa fa-search fa-fw"></i></span>
-	  <input type="text" class="form-control" style="width: 100%; height: 30px; font-size: 11pt;" id="openmlsearch" name="searchterms" placeholder="Search flows" value="<?php if( $this->terms != false ) echo $this->terms; ?>" />
-	</div>
-	Filters:
-	<div class="row">
-  	  <div class="col-xs-4 col-sm-12">
-	    <div class="option-heading">
-		<a data-toggle="collapse" href="#collapseCodeTasks">
-		   <i class="fa fa-caret-down fa-fw"></i> Tasks
-		</a>
-	    </div>
-	    <div id="collapseCodeTasks" class="panel-collapse collapse">
-	      <div class="option-body">
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-classification">Classification</label>
-                </div>
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-regression">Regression</label>
-                </div>
-	      </div>
-	    </div>
-          </div>
-  	  <div class="col-xs-4 col-sm-12">
-	    <div class="option-heading">
-		<a data-toggle="collapse" href="#collapseCodeInput">
-		  <i class="fa fa-caret-down fa-fw"></i> Input Format
-		</a>
-	    </div>
-	    <div id="collapseCodeInput" class="panel-collapse collapse">
-	      <div class="option-body">
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-classification">ARFF (Tabular)</label>
-                </div>
-              </div>
-	    </div>
-          </div>
-  	  <div class="col-xs-4 col-sm-12">
-	    <div class="option-heading">
-		<a data-toggle="collapse" href="#collapseCodeAttr">
-		   <i class="fa fa-caret-down fa-fw"></i> Attribute types
-		</a>
-	    </div>
-	    <div id="collapseCodeAttr" class="panel-collapse collapse">
-	      <div class="option-body">
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-classification">Numerical</label>
-                </div>
-		<div class="checkbox">
-			<label><input type="checkbox" value="check-regression">Categorical</label>
-                </div>
-	      </div>
-	    </div>
-          </div>
-        </div>		  
-	<button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
-	</form>
-
-    </div> <!-- end col-2 -->
-
-    <div class="col-sm-12 col-md-10 openmlsectioninfo">
-     <div class="tab-content">
-      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="intro">
-      <?php 
-	if( $this->terms == false) { ?>
-      <div class="blueheader">
-      <h1><i class="fa fa-cogs"></i> Flows</h1>
-      <p>Flows are implementations (programs, scripts, workflows) that solve OpenML tasks. They are either uploaded or referenced by url, so that anyone can easily find and run them, often through a <a href="plugins">plugin</a>. OpenML indexes all flows, keeps track of versions, citations and reuse, collects all results from all users, and organizes everything online.</p>
-      </div>
-      <h2>Popular</h2>
-      <?php } ?> 
-	<?php
-	if($this->implementation_count>0) {
-		echo '<div class="searchstats">Showing ' . $this->implementation_count . ' of ' . $this->implementation_total . ' results (' . $this->time . ' seconds)</div>';	
-		
-		foreach( $this->results_all as $r ): if($r['type'] != 'implementation') continue;?>
-			<div class="searchresult">
-				<a href="f/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
-				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
-				<div class="runStats"><?php echo $r['runs'] . ' runs'; ?></div>
-			</div><?php 
-		endforeach;
-	} else {
-		if( $this->terms != false ) {
-			o('no-search-results');
-		} else {
-	    o('no-results');
-	  }
-	}
-	if( $this->terms == false) { ?>
-	<form class="form" method="post" action="f">
-	<input type="hidden" name="searchterms" value="all">
-	<button type="submit" class="btn btn-primary"></i> Show all</button>	
-	</form>
-        <?php } ?> 
-     </div> <!-- end intro tab -->
-     <div class="tab-pane sharing" id="codeshare">
-	      <h1 class="modal-title" id="myModalLabel">Add flows</h1>
-              <div id="responseImplementationTxt" class="<?php echo $this->initialMsgClass;?>"><?php echo $this->initialMsg; ?></div>
+<div class="openmlsectioninfo">
+	      <h1><a href="f"><i class="fa fa-cogs"></i></a> Add flows</h1>
 	      <form method="post" id="implementationForm" action="api/?f=openml.implementation.upload" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_implementation_description" name="description" value="" />
 	      <div class="row">
@@ -193,7 +87,6 @@
 			  <option>Eclipse Public License</option>
 			  <option>Public Domain (CC0)</option>
 			  <option>No License (no distribution/ modification allowed)</option>
-			  <option>Other</option>
 			</select>
 	          </div>
 		  <div class="form-group">
@@ -268,14 +161,4 @@
                 </div>
 		</div>
 	</form>
-	</div>
-     </div> <!-- end tab share -->
-     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="codedetail">
-     	<?php
-	 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
-		subpage('implementation');
-	}?>
-     </div>
-     </div> <!-- end tabs content -->
-    </div> <!-- end col-9 -->
 </div> <!-- end container -->

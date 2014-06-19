@@ -1,6 +1,6 @@
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
-	  <h1><?php echo $this->record->{'name'}; ?></h1>
+	  <h1><i class="fa fa-database"></i> <?php echo $this->record->{'name'}; ?></h1>
   </div>
   <div class="col-sm-12">
 
@@ -11,6 +11,8 @@
      <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a><br>Data</li>
 	 <li><a><i class="fa fa-book fa-2x"></i></a><br>Paper/preprint</li>
+	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+
 	 <li>   <div class="version" style="margin-bottom: -10px;">
 		        <select class="selectpicker" data-width="auto">
 			  <option><?php echo $this->record->{'version'}; ?></option>

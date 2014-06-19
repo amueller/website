@@ -24,11 +24,6 @@
 	});		
 </script>
 
-
-<div class="sectionheader">
-<div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitlegreen"><a href="d">Data</a></div>
-</div>
 <div class="bs-docs-container topborder">
     <div class="col-sm-12 col-md-2 searchbar">
         <!-- Upload stuff -->
@@ -101,7 +96,7 @@
       <?php 
 	if( $this->terms == false) { ?>
       <div class="greenheader">
-      <h1>Data</h1>
+      <h1><i class="fa fa-database"></i> Data</h1>
       <p>Input data for machine learning applications, challenging the community to find the best performing algorithms. They are either uploaded or referenced by url. OpenML indexes all data sets and keeps tracks of versions, citations and reuse. Moreover, for selected data formats, OpenML also computes <a href="a">data characteristics</a>, generates <a href="t">tasks</a>, collects all results from all users, and organizes everything online.</p>
       </div>
       <h2>Popular</h2>

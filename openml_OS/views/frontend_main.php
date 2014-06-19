@@ -29,6 +29,7 @@
         <meta property="og:type" content="Science"/>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/github.css">
         <link rel="stylesheet" href="css/expdb.css">
         <link rel="stylesheet" href="css/share.css">
         <link rel="stylesheet" href="css/docs.css">
@@ -78,42 +79,62 @@
 
         <div class="navbar navbar-static-top" style="margin-bottom: 0px;">
             <div class="navbar-inner">
+	    <?php if(false === strpos(BASE_URL, $_SERVER['REQUEST_URI'])) { ?>
+		<a class="sectionheader sectionlogo" href="#"><img src="img/openmlicon.png"></a>
+	    <?php } ?>
+	      <div class="searchheader">
+		<form class="form-inline" method="get" action="search">
+		  <input type="text" class="form-control" id="openmlsearch" name="q" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, people,...'" value="<?php if( isset( $this->terms ) ) echo $this->terms; ?>" />
+		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
+		</form>
+	       </div>
                     <a class="nav pull-right socialshare socialshareicon" id="popover">
                      <i class="fa fa-th fa-2x"></i>
                     </a>
                     <a class="nav pull-right socialshare socialshareicon" id="popover2">
-                     <i class="fa fa-retweet fa-2x"></i>
+                     <i class="fa fa-paper-plane fa-lg"></i>
                     </a>
+			<div class="nav pull-right">
+			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-plus fa-2x"></i></a>
+			  <ul class="dropdown-menu newmenu">
+			    <li><a href="new/data"><i class="fa fa-fw fa-database"></i> New data</a></li>
+		            <li class="divider"></li>
+			    <li><a href="new/flow"><i class="fa fa-fw fa-cogs"></i> New flow</a></li>
+		            <li class="divider"></li>
+			    <li><a href="new/run"><i class="fa fa-fw fa-star"></i> New run</a></li>
+		            <li class="divider"></li>
+			    <li><a href="new/task"><i class="fa fa-fw fa-check"></i> New task</a></li>
+		            <li class="divider"></li>
+			    <li><a href="new/tasktype"><i class="fa fa-fw fa-check-square"></i> New task type</a></li>
+			  </ul>
+			</div>
 
                     <!-- <a class="brand" href="" style="float:left">OpenML</a> -->
-                    <div class="socialshare">
-                        <div class="dropdown <?php if($this->active=='profile') echo 'active'; ?>" id="menu1" >
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="<?php echo $_SERVER['REQUEST_URI'];?>#menu1">
-                                <span class="userprofile"><?php if ($this->ion_auth->logged_in()) echo user_display_text(); else echo 'Sign in' ?></span>
-                                </a>
+			<div class="nav pull-right">
+                                <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><?php if ($this->ion_auth->logged_in()) echo '<i class="fa fa-graduation-cap fa-2x" style="color:green;"></i>'; else echo '<i class="fa fa-user fa-2x"></i>' ?></a>
                                 <ul class="dropdown-menu">
                                     <?php if (!$this->ion_auth->logged_in()): ?>
-                                    <li><a href="register">Register</a></li>
-                                    <li class="divider"></li>
                                     <li><a href="login">Sign in</a></li>
+                                    <li class="divider"></li>  
+                                    <li><a href="register">Register</a></li>
                                     <?php else: ?>
 		                                <?php if ($this->ion_auth->user()->row()->external_source == false ): ?>
+		                                <li><a href="profile"><?php echo user_display_text(); ?></a></li>
+		                                <li class="divider"></li>
 		                                <li><a href="overview_runs">My runs</a></li>
-		                                <li><a href="profile">Profile</a></li>
 		                                <li class="divider"></li>
 		                                <?php endif; ?>
                                     <li><a href="frontend/logout">Sign off</a></li>
                                     <?php endif; ?>
                                 </ul>
                         </div>
-                    </div>
                     <!--/.nav-collapse -->
             </div>
         </div>
 	<div id="openmllinks">
 	  <div class="iconrow">
-	  <a href="d"><div class="iconcell icongreen"><i class="fa fa-table fa-3x"></i><br><span>data</span></div></a>
-	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-check-square-o fa-3x"></i><br><span>tasks</span></div></a>
+	  <a href="d"><div class="iconcell icongreen"><i class="fa fa-database fa-3x"></i><br><span>data</span></div></a>
+	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-flask fa-3x"></i><br><span>tasks</span></div></a>
 	  <a href="f"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>flows</span></div></a>
 	  <a href="r"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>runs</span></div></a>
 	  </div><div class="iconrow">
@@ -170,7 +191,7 @@
                     JavaScript is required to properly view the contents of this page!
                 </div>
             </noscript>
-            <?php if($this->message!==false): ?>
+            <?php if($this->message!==false and strlen($this->message) > 0): ?>
             <div class="alert alert-info" style="text-align:center;margin-bottom:0px">
                 <?php echo $this->message; ?>
             </div>

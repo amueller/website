@@ -2,15 +2,6 @@
   We're still under construction, check back soon! 
 </div> -->
 <!-- Main hero unit for a primary marketing message or call to action -->
-<div class="searchheader">
-		<form class="form-inline" method="post" action="r">
-		  <input type="text" class="form-control" id="openmlsearch" name="searchterms" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, people,...'" value="<?php if( isset( $terms ) ) echo $terms; ?>" />
-		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
-		</form>
-<!--<script type="text/javascript">
-document.getElementById('openmlsearch').focus()
-</script>-->
-</div>
 <canvas id="c" width="400" height="400"></canvas>
 <div class="marketing" style="margin-top:70px">
 <div class="col-md-12">

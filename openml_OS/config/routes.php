@@ -64,6 +64,7 @@ $frontend_pages = array(
 					'register',
 					'search',
 					'search2',
+					'new',
 					'd',
 					'f',
 					'r',

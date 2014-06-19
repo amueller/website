@@ -1,7 +1,3 @@
-<div class="sectionheader">
-<div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitlepurple"><a href="a">Analytics</a></div>
-</div>
 <div class="bs-docs-container topborder">
     <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
 	<!-- Search -->
@@ -31,7 +27,7 @@
       <?php 
 	if( $this->terms == false) { ?>
       <div class="redheader">
-      <h1>Analytics</h1>
+      <h1><i class="fa fa-bar-chart-o"></i> Analytics</h1>
       <p>Functions and methods used by OpenML to evaluate flows and measure data properties.</p>
       </div>
       <?php } ?> 

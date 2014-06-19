@@ -1,13 +1,11 @@
 <div class="container bs-docs-container">
   <div class="col-md-6">
     <div class="bs-header">
-      <div class="container">
         <div class="row">
-          <h2>Register</h2>
-          <p>With an OpenML account you can upload your work, organize everything online, and follow how it is used by others.</p>
+          <h2>Join OpenML</h2>
+          <p> Collaborate more effectively, build more reputation, and access more resources</p>
           <p style="font-size:14px">We handle your data with respect, that also means no spam.</a></p>
         </div>
-      </div>
     </div>
   </div>
   <div class="col-md-6" style="margin-top:30px">
