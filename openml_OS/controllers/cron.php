@@ -55,7 +55,6 @@ class Cron extends CI_Controller {
       'Math_function',
       'Quality',
       'Task_type',
-      'Task_type_function',
       'Task_type_io',
       'Schedule'
     );

@@ -46,156 +46,39 @@
           $("#typeselect").submit();
         });
       </script>
+     
       <div class="tab-content">
-        <div class="tab-pane <?php if( isset($this->id) && $this->id == 1 ) echo 'active'; ?> " id="supervised_classification">
-          <form class="form" action="t/search/type/1" method="post">
-            <input type="hidden" name="task_type" value="1" />
-
+      <?php foreach( $this->task_types as $task_type ): ?>
+        <div class="tab-pane <?php if( isset($this->id) && $this->id == $task_type->ttid ) echo 'active'; ?> " id="<?php echo text_to_underscored($task_type->name); ?>">
+          <form class="form" action="t/search/type/<?php echo $task_type->ttid; ?>" method="post">
+            <input type="hidden" name="task_type" value="<?php echo $task_type->ttid; ?>" />
+            
+            <?php foreach( $task_type->io as $io ): $input_id = text_to_underscored($task_type->name . '_' . $io->name); ?>
             <div class="form-group">
-              <label class="control-label" for="classificationDatasetVersionDropdown">Dataset</label>
-              <div>
-                <input type="text" class="form-control" id="classificationDatasetVersionDropdown" name="datasets" placeholder="Include all datasets" />
-                <span class="help-block">A comma-separated list of datasets.</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="classificationTargetFeature">Target feature</label>
-              <div>
-                <input type="text" class="form-control" id="classificationTargetFeature" name="target_feature" placeholder="Use default target feature" />
-                <span class="help-block">Name of the target feature.</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="datasetDropdown">Estimation procedure</label>
-              <select class="form-control input-small selectpicker" name="estimation_procedure">
-                <?php foreach($this->ep as $e): if($e->ttid != 1)continue; ?>
-                <option value="<?php echo $e->id; ?>"><?php echo $e->name; ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="classificationEvaluationMeasureDropdown">Evaluation measure</label>
-              <div >
-                <input type="text" class="form-control" id="classificationEvaluationMeasureDropdown" name="evaluation_measure" placeholder="evaluation measure" value="predictive_accuracy" />
-                <span class="help-block">The measure to optimize for. </span>
-              </div>
-            </div>
-	    <button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
-          </form>
-        </div>
-        <div class="tab-pane <?php if( isset($this->id) && $this->id == 2 ) echo 'active'; ?>" id="supervised_regression"> 
-          <form class="form" action="t/search/type/2" method="post">
-            <input type="hidden" name="task_type" value="2" />
-            <div class="form-group">
-              <label class="control-label" for="regressionDatasetVersionDropdown">Dataset</label>
-              <div >
-                <input type="text" class="form-control" id="regressionDatasetVersionDropdown" name="datasets" placeholder="Include all datasets" />
-                <span class="help-block">A comma-separated list of datasets.</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="regressionTargetFeature">Target feature</label>
-              <div>
-                <input type="text" class="form-control" id="regressionTargetFeature" name="target_feature" placeholder="class" />
-                <span class="help-block">Name of the target feature.</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="datasetDropdown">Estimation procedure</label>
-              <div >
-                <select class="form-control input-small selectpicker" name="estimation_procedure">
-                  <?php foreach($this->ep as $e): if($e->ttid != 2)continue; ?>
-                  <option value="<?php echo $e->id; ?>"><?php echo $e->name; ?></option>
+              <label class="control-label" for="<?php echo $input_id; ?>"><?php echo text_neat_ucwords( $io->name ); ?></label>
+              <?php $template_search = json_decode( $io->template_search ); ?>
+              <?php if( $template_search && $template_search->type == "select" ): // make a dropdown
+                  $sql = 'SELECT * FROM `'.$template_search->table.'` WHERE ttid = ' . $io->ttid; $types = $this->Dataset->query( $sql ); ?>
+                <select class="form-control input-small selectpicker" name="<?php echo text_to_underscored($io->name);?>">
+                  <option value="">Any</option>
+                  <?php foreach($types as $type): ?>
+                  <option value="<?php echo $type->{$template_search->key}; ?>"><?php echo $type->{$template_search->value}; ?></option>
                   <?php endforeach; ?>
                 </select>
-              </div>
+              <?php else: // makes a plain text input ?>
+                <div>
+                  <input type="text" class="form-control" id="<?php echo $input_id; ?>" name="<?php echo text_to_underscored($io->name);?>" />
+                  <span class="help-block"><?php echo $io->description;?></span>
+                </div>
+              <?php endif; ?>
             </div>
-            <div class="form-group">
-              <label class="control-label" for="regressionEvaluationMeasureDropdown">Evaluation measure</label>
-              <div >
-                <input type="text" class="form-control" id="regressionEvaluationMeasureDropdown" name="evaluation_measure" placeholder="evaluation measure" value="mean_absolute_error" />
-                <span class="help-block">The measure to optimize for.</span>
-              </div>
-            </div>
-	    <button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
+            <?php endforeach; ?>
+	          <button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
           </form>
         </div>
-        <div class="tab-pane <?php if( isset($this->id) && $this->id == 3 ) echo 'active'; ?>" id="learning_curve">  
-          <form class="form" action="t/search/type/3" method="post">
-            <input type="hidden" name="task_type" value="3" />
-            <div class="form-group">
-              <label class="control-label" for="learningCurveDatasetVersionDropdown">Dataset</label>
-              <div >
-                <input type="text" class="form-control" id="learningCurveDatasetVersionDropdown" name="datasets" placeholder="Include all datasets" />
-                <span class="help-block">A comma-separated list of datasets</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="datastreamsMinimalDatasetSize">Minimal dataset size</label>
-              <div >
-                <input type="text" class="form-control" id="datastreamsMinimalDatasetSize" name="minimal_dataset_size" placeholder="No minimum" value="50000" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="datasetDropdown">Estimation procedure</label>
-              <div>
-                <select class="form-control input-small selectpicker" name="estimation_procedure">
-                  <?php foreach($this->ep as $e): if($e->ttid != 3)continue; ?>
-                  <option value="<?php echo $e->id; ?>"><?php echo $e->name; ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="dataStreamEvaluationMeasureDropdown">Evaluation measure</label>
-              <div >
-                <input type="text" class="form-control" id="dataStreamEvaluationMeasureDropdown" name="evaluation_measure" placeholder="evaluation measure" value="predictive_accuracy" />
-                <span class="help-block">The measure to optimize for</span>
-              </div>
-            </div>
-	    <button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
-          </form>
-        </div>
-        <div class="tab-pane <?php if( isset($this->id) && $this->id == 4 ) echo 'active'; ?>" id="data_stream_classification">    
-          <form class="form" action="t/search/type/4" method="post">
-            <input type="hidden" name="task_type" value="4" />
-            <div class="form-group">
-              <label class="control-label" for="learningCurveDatasetVersionDropdown">Dataset</label>
-              <div >
-                <input type="text" class="form-control" id="learningCurveDatasetVersionDropdown" name="datasets" placeholder="Include all datasets" />
-                <span class="help-block">A comma-separated list of datasets</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="learningCurveTargetFeature">Target feature</label>
-              <div>
-                <input type="text" class="form-control" id="learningCurveTargetFeature" name="target_feature" placeholder="Use default target feature" />
-                <span class="help-block">Name of the target feature</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="estimation_procedure">Estimation procedure</label>
-              <div >
-                <select class="form-control input-small selectpicker" name="estimation_procedure">
-                  <?php foreach($this->ep as $e): if($e->ttid != 4)continue; ?>
-                  <option value="<?php echo $e->id; ?>"><?php echo $e->name; ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="learningCurveEvaluationMeasureDropdown">Evaluation measure</label>
-              <div >
-                <input type="text" class="form-control" id="learningCurveEvaluationMeasureDropdown" name="evaluation_measure" placeholder="evaluation measure" value="predictive_accuracy" />
-                <span class="help-block">The measure to optimize for</span>
-              </div>
-            </div>
-	    <button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" type="submit">Search</button>
-          </form>
-        </div>
+      <?php endforeach; ?>
       </div> <!-- end search tabs -->
-    </div> <!-- end collapse -->
-
+    </div>
 
 
   </div> <!-- end col-2 -->
@@ -208,15 +91,13 @@
           <p>Tasks define machine learning problems in such a way that the obtained results are clearly interpretable and verifiable. <b>Task types</b> are general descriptions in terms of the (types of) given input, expected output and scientific protocols, e.g, cross-validation, to be used. Given specific <a href="d">input data</a>, OpenML then generates individual <b>tasks</b> to be solved. Tasks are machine-readable, fully contained and are read by <a href="f">flows</a>.</p>
         </div>
         <h2>Task types</h2>
-        <?php
-        foreach( $this->tasktypes as $r ):?>
+        <?php foreach( $this->tasktypes as $r ):?>
         <div class="searchresult">
           <a href="t/type/<?php echo urlencode($r['id']); ?>"><?php echo $r['name']; ?></a><br />
           <div class="teaser"><?php echo teaser($r['description'], 200); ?></div>
           <div class="runStats"><?php echo $r['tasks'] . ' tasks'; ?></div>
-        </div><?php 
-        endforeach;
-        ?>
+        </div>
+        <?php endforeach; ?>
 
 
       </div> <!-- end intro tab -->

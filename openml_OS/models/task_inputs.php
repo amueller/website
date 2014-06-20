@@ -1,9 +1,9 @@
 <?php
-class Task_values extends Database_write {
+class Task_inputs extends Database_write {
 	
 	function __construct() {
 		parent::__construct();
-		$this->table = 'task_values';
+		$this->table = 'task_inputs';
 		$this->id_column = array( 'task_id', 'input' );
     }
 

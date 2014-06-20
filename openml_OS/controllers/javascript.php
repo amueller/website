@@ -8,7 +8,6 @@ class Javascript extends CI_Controller {
 		$this->load->model('Math_function');
 		$this->load->model('Implementation');
 		$this->load->model('Task_type');
-		$this->load->model('Task_type_function');
 		
 		$this->controller = strtolower(get_class ($this));
 		

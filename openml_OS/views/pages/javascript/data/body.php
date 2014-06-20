@@ -18,14 +18,6 @@ function expdbEvaluationMetrics() {
 	return <?php echo array_to_js_array( $this->evaluationMetrics ); ?>;
 }
 
-function expdbClassificationEvaluationMetrics() {
-	return <?php echo array_to_js_array( $this->classificationEvaluationMetrics ); ?>;
-}
-
-function expdbRegressionEvaluationMetrics() {
-	return <?php echo array_to_js_array( $this->regressionEvaluationMetrics ); ?>;
-}
-
 function expdbAlgorithms() {
 	return <?php echo array_to_js_array( $this->algorithms ); ?>;
 }

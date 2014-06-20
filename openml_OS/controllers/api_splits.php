@@ -6,7 +6,7 @@ class Api_splits extends CI_Controller {
     
     $this->load->model('Dataset');
     $this->load->model('Task');
-    $this->load->model('Task_values');
+    $this->load->model('Task_inputs');
     $this->load->model('Estimation_procedure');
     $this->load->model('Task_type_io');
     $this->load->model('Log');
@@ -29,7 +29,7 @@ class Api_splits extends CI_Controller {
     if( $task === false || in_array( $task->ttid, $this->task_types ) === false ) {
       die('Task not providing datasplits.');
     }
-    $values = $this->Task_values->getTaskValuesAssoc( $task_id );
+    $values = $this->Task_inputs->getTaskValuesAssoc( $task_id );
     $estimation_procedure = $this->Estimation_procedure->getById( $estimation_procedure_id );
     
     if($estimation_procedure == false) {

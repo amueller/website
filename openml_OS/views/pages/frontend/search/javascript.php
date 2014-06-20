@@ -907,7 +907,7 @@ function learningCurveQuery( datasets, implementations ) {
   
   var sql = 
     'SELECT `e`.`sample_size`, CONCAT(`i`.`name`," on Task ",`r`.`task_id`, ": ", `d`.`name`) AS `name`, avg(`e`.`value`) as `score`' + 
-    'FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t`, `task_values` `v`, `dataset` `d` ' + 
+    'FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t`, `task_inputs` `v`, `dataset` `d` ' + 
     'WHERE `e`.`function` = "predictive_accuracy" ' + 
     'AND `t`.`ttid` = 3 ' + 
     'AND `v`.`input` = 1 ' + 
