@@ -36,10 +36,10 @@ class Api_splits extends CI_Controller {
       die('estimation procedure not found');
     }
     
-    $dataset = $this->Dataset->getById( $values[1] );
+    $dataset = $this->Dataset->getById( $values['source_data'] );
     $epstr = $this->Estimation_procedure->toString( $estimation_procedure );
 
-    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$values[2].'" -r "'.$dataset->row_id_attribute.'"';
+    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$values['target_feature'].'" -r "'.$dataset->row_id_attribute.'"';
     if( $md5 ) $command .= ' -m';
     $this->Log->cmd( 'API Splits::get(' . $task_id . ')', $command );
     
