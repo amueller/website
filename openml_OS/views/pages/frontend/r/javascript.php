@@ -918,26 +918,28 @@ function wizardQuery( algorithms, implementations, defaultParams, datasets, eval
 	
 	if( defaultParams )
 		sql = 	'SELECT ' + selectColumns + 
-				'FROM algorithm_setup l, evaluation e, cvrun r, dataset d, implementation i ' + 
-				'WHERE r.learner = l.sid ' +
+				'FROM algorithm_setup l, evaluation e, run r, dataset d, input_data rd, implementation i ' + 
+				'WHERE r.setup = l.sid ' +
 				algorithmConstraint + 
 				datasetConstraint + 
 				implementationConstraint + 
 				'AND l.isDefault = "true" ' +
-				'AND r.inputData=d.did ' + 
+				'AND rd.data = d.did ' + 
+        'AND rd.run = r.rid ' +
 				'AND l.implementation_id = i.id ' +
-				'AND d.isOriginal="true" ' + 
-				'AND e.source=r.rid ' +
+				'AND d.isOriginal = "true" ' + 
+				'AND e.source = r.rid ' +
 				'AND e.function="' + evaluationMetric + '" ' + 
 				'ORDER BY l.algorithm ASC, d.name ASC;';
 	else 
 		sql = 	'SELECT CONCAT(i.fullName, " with ", IFNULL(GROUP_CONCAT( CONCAT( p.name, "=", ps.value ) ),"") ) AS algorithm, d.name, e.value ' +
-				'FROM evaluation e, cvrun r, implementation i dataset d, algorithm_setup l LEFT JOIN input_setting ps ON l.sid = ps.setup LEFT JOIN input p ON ps.input = p.fullname ' + 
-				'WHERE r.learner = l.sid ' +
+				'FROM evaluation e, run r, input_data rd, implementation i dataset d, algorithm_setup l LEFT JOIN input_setting ps ON l.sid = ps.setup LEFT JOIN input p ON ps.input = p.fullname ' + 
+				'WHERE r.setup = l.sid ' +
 				algorithmConstraint + 
 				datasetConstraint + 
 				implementationConstraint + 
-				'AND r.inputData=d.did ' + 
+        'AND rd.data = d.did ' + 
+        'AND rd.run = r.rid ' +
 				'AND l.implementation_id = i.id ' +
 				'AND d.isOriginal="true" ' + 
 				'AND e.source=r.rid ' +
