@@ -38,8 +38,8 @@ class Task_type_inout extends Database_read {
     
     // now create "replace" array:
     $replace = array();
-    foreach( $variables as $var ) {
-      if( array_key_exists( $values, $var ) ) {
+    foreach( $variable_names as $var ) {
+      if( array_key_exists( $var, $values ) ) {
         $replace[] = $values[$var];
       } else {
         $replace[] = '';
