@@ -54,9 +54,9 @@
             <input type="hidden" name="task_type" value="<?php echo $task_type->ttid; ?>" />
             
             <?php foreach( $task_type->io as $io ): $input_id = text_to_underscored($task_type->name . '_' . $io->name); ?>
+            <?php $template_search = json_decode( $io->template_search ); if( $template_search && $template_search->display == "none" ) continue; ?>
             <div class="form-group">
-              <label class="control-label" for="<?php echo $input_id; ?>"><?php echo text_neat_ucwords( $io->name ); ?></label>
-              <?php $template_search = json_decode( $io->template_search ); ?>
+              <label class="control-label" for="<?php echo $input_id; ?>"><?php echo ( $template_search && $template_search->name != false ) ? $template_search->name : text_neat_ucwords( $io->name ); ?></label>
               <?php if( $template_search && $template_search->type == "select" ): // make a dropdown
                   $sql = 'SELECT * FROM `'.$template_search->table.'` WHERE ttid = ' . $io->ttid; $types = $this->Dataset->query( $sql ); ?>
                 <select class="form-control input-small selectpicker" name="<?php echo text_to_underscored($io->name);?>">
