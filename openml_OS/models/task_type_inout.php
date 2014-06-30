@@ -36,7 +36,17 @@ class Task_type_inout extends Database_read {
       }
     }
     
-		return str_replace( $variables, $values, $templates );
+    // now create "replace" array:
+    $replace = array();
+    foreach( $variables as $var ) {
+      if( array_key_exists( $values, $var ) ) {
+        $replace[] = $values[$var];
+      } else {
+        $replace[] = '';
+      }
+    }
+    
+		return str_replace( $variables, $replace, $templates );
 	}
   
   private function getVariables( $subject ) {
