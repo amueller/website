@@ -3,7 +3,7 @@
 // task types
 $this->task_types = $this->Task_type->get();
 for( $i = 0; $i < count($this->task_types); ++$i ) {
-  $this->task_types[$i]->io = $this->Task_type_inout->getWhere('`ttid` = ' . $this->task_types[$i]->ttid . ' AND `io` = "input"');
+  $this->task_types[$i]->io = $this->Task_type_inout->getWhere('`ttid` = ' . $this->task_types[$i]->ttid . ' AND `io` = "input"', '`order` ASC');
 }
 
 $this->initialMsgClass = '';
