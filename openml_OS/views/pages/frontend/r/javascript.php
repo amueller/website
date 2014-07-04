@@ -29,14 +29,6 @@ function expdbEvaluationMetrics() {
 	return <?php echo array_to_js_array( $this->evaluationMetrics ); ?>;
 }
 
-function expdbClassificationEvaluationMetrics() {
-	return <?php echo array_to_js_array( $this->classificationEvaluationMetrics ); ?>;
-}
-
-function expdbRegressionEvaluationMetrics() {
-	return <?php echo array_to_js_array( $this->regressionEvaluationMetrics ); ?>;
-}
-
 function expdbAlgorithms() {
 	return <?php echo array_to_js_array( $this->algorithms ); ?>;
 }
@@ -80,13 +72,6 @@ $(function() {
   makeCommaSeperatedAutoComplete( "#implementationDropdown", filteredImplementations );                     // run search
   makeCommaSeperatedAutoComplete( "#searchLearningcurvesImplementationDropdown", implementations );         // learning curve search
   makeCommaSeperatedAutoComplete( "#searchLearningcurvesDatasetDropdown", datasets );                       // learning curve search
-  makeCommaSeperatedAutoComplete( "#classificationDatasetVersionDropdown", expdbDatasetVersionOriginal() ); // task search
-  makeCommaSeperatedAutoComplete( "#regressionDatasetVersionDropdown", expdbDatasetVersionOriginal() );     // task search
-  makeCommaSeperatedAutoComplete( "#learningCurveDatasetVersionDropdown", expdbDatasetVersionOriginal() );  // task search
-  makeAutoComplete( "#classificationEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );   // task search
-  makeAutoComplete( "#regressionEvaluationMeasureDropdown", expdbRegressionEvaluationMetrics() );           // task search
-  makeAutoComplete( "#learningCurveEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );    // task search
-  makeAutoComplete( "#dataStreamEvaluationMeasureDropdown", expdbClassificationEvaluationMetrics() );    // task search
   
   $( "#evaluationmetricDropdown" ).autocomplete({
     source: evaluationmetrics,

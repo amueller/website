@@ -3,6 +3,10 @@ function text_neat_ucwords($input) {
   return ucwords(str_replace('_',' ',$input));
 }
 
+function text_to_underscored($input) {
+  return strtolower(str_replace(' ','_',safe($input)));
+}
+
 function punc2uc($input) { // punctuation to underscores
   return preg_replace("/[^a-zA-Z0-9]+/", "_", $input );
 }

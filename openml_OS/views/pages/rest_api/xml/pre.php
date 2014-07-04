@@ -543,4 +543,13 @@ $this->apiErrors[434][1] = 'The dataset to which the qualities belong could not 
 // for function: openml.data.features.upload
 $this->apiErrors[435][0] = 'Feature upload failed';
 $this->apiErrors[435][1] = 'Unable to add new features to the database. Please contact API support';
+
+// for function: openml.estimationprocedure.get
+$this->apiErrors[440][0] = 'Please provide estimationprocedure_id';
+$this->apiErrors[440][1] = 'Please provide estimationprocedure_id';
+
+// for function: openml.estimationprocedure.get
+$this->apiErrors[441][0] = 'estimationprocedure_id not valid';
+$this->apiErrors[441][1] = 'Please provide a valid estimationprocedure_id';
+
 ?>

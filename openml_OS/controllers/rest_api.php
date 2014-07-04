@@ -38,9 +38,9 @@ class Rest_api extends CI_Controller {
     $this->load->model('Quality');
     $this->load->model('Schedule');
     $this->load->model('Task');
+    $this->load->model('Task_inputs');
     $this->load->model('Task_type');
-    $this->load->model('Task_values');
-    $this->load->model('Task_type_io');
+    $this->load->model('Task_type_inout');
     $this->load->model('Workflow_setup');
     
     // community db
@@ -660,11 +660,25 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $task_values = $this->Task_values->getTaskValuesAssoc( $task_id );
-    $parsed_io = $this->Task_type_io->getParsed( $task->ttid, $task_values );
+    $parsed_io = $this->Task_type_inout->getParsed( $task_id );
     $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
   }
-
+  
+  private function _openml_estimationprocedure_get() {
+    $id = $this->input->get( 'estimationprocedure_id' );
+    if( $id == false ) {
+      $this->_returnError( 440 );
+      return;
+    }
+    
+    $ep = $this->Estimation_procedure->getById( $id );
+    if( $ep == false ) {
+      $this->_returnError( 441 );
+      return;
+    }
+    $this->_xmlContents( 'estimationprocedure-get', array( 'ep' => $ep ) );
+  }
+  
   private function _openml_task_evaluations() {
     $task_id = $this->input->get( 'task_id' );
     $interval_start = $this->input->get( 'interval_start' );
@@ -742,11 +756,6 @@ class Rest_api extends CI_Controller {
       }
     }
     $this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results ) );
-  }
-  
-  private function _openml_tasks_search_supervised_classification() {
-    $datasets = $this->input->get( 'datasets' );
-    $classes = $this->input->get( 'class' );
   }
   
   private function _openml_implementation_licences() {

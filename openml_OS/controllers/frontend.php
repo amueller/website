@@ -14,9 +14,8 @@ class Frontend extends CI_Controller {
     $this->load->model('Implementation');
     $this->load->model('Math_function');
     $this->load->model('Task');
-    $this->load->model('Task_values');
     $this->load->model('Task_type');
-    $this->load->model('Task_type_function');
+    $this->load->model('Task_type_inout');
     $this->load->model('Estimation_procedure');
     
     

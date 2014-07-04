@@ -16,8 +16,8 @@ $this->formats				= $this->Dataset->getDistinct( 'format' );
 $this->licences				= $this->Dataset->getDistinct( 'licence' );
 
 $this->evaluationMetrics	= $this->Math_function->getColumnWhere( 'name', 'functionType = "EvaluationFunction"' );
-$this->classificationEvaluationMetrics	= $this->Task_type_function->getColumnWhere( 'math_function', 'ttid = 1' );
-$this->regressionEvaluationMetrics	= $this->Task_type_function->getColumnWhere( 'math_function', 'ttid = 2' );
+//$this->classificationEvaluationMetrics	= $this->Task_type_function->getColumnWhere( 'math_function', 'ttid = 1' );
+//$this->regressionEvaluationMetrics	= $this->Task_type_function->getColumnWhere( 'math_function', 'ttid = 2' );
 
 $this->taskTypes			= $this->Task_type->getColumn( 'name' );
 
