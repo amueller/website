@@ -1,135 +1,148 @@
 <?php
 
-$this->terms = safe($this->input->post('searchterms'));
-
-$this->implementation_count = 0;
-$this->function_count = 0;
-$this->dataset_count = 0;
-$this->results_all = array();
-$this->results_runcount = array();
-
-$this->implementation_total = $this->Implementation->numberOfRecords();
-$this->dataset_total = $this->Dataset->numberOfRecords();
-$this->function_total = 0; // fetched later on. 
-
-$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
-
-$this->active_tab = gu('tab');
-if($this->active_tab == false) $this->active_tab = 'searchtab';
-
-
-if( $this->terms != false ) {
-  $eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
-  $res = array();
-  $code = 0;
-  $command = 'java -jar '.APPPATH.'third_party/OpenML/Java/luceneSearch.jar search -index '.DATA_PATH.'search_index -query "' . $this->terms . '"';
-  
-  if(function_enabled('exec') ) {
-    
-    exec( CMD_PREFIX . $command, $res, $code );
-    
-    $results = json_decode( implode( "\n", $res ) );
-    $this->total_count = 0;
-    
-    if( $results ) {
-      $this->time = $results->time;
-      $this->total_count = $results->nr_results;
-      
-      if($this->total_count > 0){  
-      
-        foreach( $results->results as $re ) {
-          $type = $re->type;
-          $name = $re->name;
-          $icon = $icons[$type];
-          $runs = 0;
-          $description = '';
-          if ($type == 'implementation'){
-            $description = $this->Implementation->getColumnWhere('description', 'fullname = "'.$name.'"');
-            $count = $this->Implementation->query('select count(rid) as nbruns from cvrun r, algorithm_setup s where r.learner = s.sid and s.implementation_id = (SELECT id FROM implementation WHERE fullName ="'.$name.'")');
-            $runs = $count[0]->nbruns;
-            $this->implementation_count++;
-          }
-          elseif ($type == 'function'){
-            $description = $this->Math_function->getColumnWhere('description', 'name = "'.$name.'"');
-            $this->function_count++;
-          }
-          elseif ($type == 'dataset'){
-            $description = $this->Dataset->getColumnWhere('description', 'name = "'.$name.'"');
-            $count = $this->Dataset->query('select count(rid) as nbruns from cvrun r, dataset d where r.inputData=d.did and d.name="'.$name.'"');
-            $runs = $count[0]->nbruns;
-            $this->dataset_count++;
-          }
-          
-          $result = array(
-            'type' => $type,
-            'name' => $name,
-            'icon' => $icon,
-            'description' => $description[0],
-            'runs' => $runs
-          );
-          $this->results_runcount[] = $runs;
-          $this->results_all[] = $result;
-        }
-        array_multisort($this->results_runcount, SORT_DESC, $this->results_all);
+function addToGET($keyvalue){
+      $attr = $_GET;
+      foreach($keyvalue as $key => $value){
+		if(array_key_exists($key,$attr))
+			 unset($attr[$key]);
+		if($value)
+	        	$attr[$key]=$value;
       }
-    }
-  }
-} else {
-  $start_time = microtime(true);
-  
-  $datasets = $this->Dataset->query('SELECT dataset.name, dataset.description, COUNT(*) as runs FROM cvrun RIGHT JOIN dataset ON cvrun.inputData = dataset.did GROUP BY inputData ORDER BY runs DESC LIMIT 0,30');
-  if( $datasets != false ) {
-    foreach( $datasets as $d ) {
-      $result = array(
-        'type' => 'dataset',
-        'name' => $d->name,
-        'icon' => $icons['dataset'],
-        'description' => $d->description,
-        'runs' => $d->runs
-      );
-      $this->results_all[] = $result;
-      $this->dataset_count++;
-    }
-  }
-  
-  $implementation = $this->Implementation->query('SELECT i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id GROUP BY s.implementation_id ORDER BY runs DESC LIMIT 0,30');
-  if( $implementation != false ) {
-    foreach( $implementation as $i ) {
-      $result = array(
-        'type' => 'implementation',
-        'name' => $i->fullName,
-        'icon' => $icons['implementation'],
-        'description' => $i->description,
-        'runs' => $i->runs
-      );
-      $this->results_all[] = $result;
-      $this->implementation_count++;
-    }
-  }
-  
-  $functions = $this->Math_function->getWhere('functionType = "EvaluationFunction"');
-  $this->function_total = count($functions);
-  if( $functions != false ) {
-    foreach( $functions as $f ) {
-      $result = array(
-        'type' => 'function',
-        'name' => $f->name,
-        'icon' => $icons['function'],
-        'description' => $f->description,
-        'runs' => 0
-      );
-      $this->results_all[] = $result;
-      $this->function_count++;
-    }
-  }
-  
-  $this->time = round(microtime(true) - $start_time,3);
+      return http_build_query($attr); 
 }
 
-// task search
-$this->ep = $this->Estimation_procedure->get();
-$this->found_tasks = array();
-$this->task_message = false;
-$this->att = 'supervised_classification';
+/// SEARCH
+$this->terms = safe($this->input->get('q'));
+$this->coreterms = "";
+$this->filters = array();
 
+$pieces = str_getcsv($this->terms, ' ');
+
+if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type')) {
+	$tasktypeid = end(explode('/', $_SERVER['REQUEST_URI']));
+	$pieces[] = "tasktype.tt_id:"+$tasktypeid;
+}
+
+foreach($pieces as $t){
+	if(strpos($t,':') !== false){
+	  $parts = explode(":",$t);
+	  $this->filters[$parts[0]] = $parts[1];
+	} else {
+	  $this->coreterms .= $t;
+	}	
+}
+
+$this->filterstring=implode(" ",$this->filters);
+
+$this->listids = safe($this->input->get('listids'));
+$this->size = (safe($this->input->get('size')) ? safe($this->input->get('size')) : 10);
+
+// some fields can be set beforehand. If not, set them to appropriate defaults.
+
+if($this->input->get('from'))
+	$this->from = safe($this->input->get('from'));
+if(!isset($this->from))
+	$this->from = 0;
+if($this->input->get('type'))
+	$this->filtertype = safe($this->input->get('type'));
+if(!isset($this->filtertype))
+	$this->filtertype = false;
+if($this->input->get('sort'))
+	$this->sort = safe($this->input->get('sort'));
+if(!isset($this->sort))
+	$this->sort = false;
+
+
+$this->order = safe($this->input->get('order'));
+if($this->sort and !$this->order)
+   $this->order = 'desc';
+
+$this->curr_sort = "best match";
+if($this->sort=='runs')
+	$this->curr_sort = "most runs";
+if($this->sort=='date')
+	$this->curr_sort = "most recent";
+if($this->order=='asc' and $this->sort=='runs')
+	$this->curr_sort = "fewest runs";
+if($this->order=='asc' and $this->sort=='runs')
+	$this->curr_sort = "least recent";
+
+$attrs = $_GET;
+unset($attrs['from']);
+$this->rel_uri = "search?".http_build_query($attrs);
+
+$this->icons = array( 'flow' => 'fa fa-cogs', 'data' => 'fa fa-database', 'run' => 'fa fa-star', 'user' => 'fa fa-user', 'task' => 'fa fa-trophy', 'task_type' => 'fa fa-flag', 'measure' => 'fa fa-signal');
+
+$this->measures = array( 'estimation_procedure' => 'a/estimation-procedures', 'evaluation_measure' => 'a/evaluation-measures', 'data_quality' => 'a/data-qualities', 'flow_quality' => 'a/flow-qualities');
+
+$query = '"match_all" : { }';
+if($this->listids and $this->coreterms != ''){
+	$query = '"query_string" : {
+	            "query" : "'.$this->coreterms.'"
+	          }';
+}
+elseif($this->terms != 'match_all' and $this->coreterms != ''){
+	$query = '"query_string" : {
+	            "fields" : ["name^5", "first_name^5", "last_name^5", "description^2","_all"],
+	            "query" : "'.$this->coreterms.'"
+	          }';
+}
+
+$this->active_tab = gu('tab');
+$jsonfilters = array();
+if($this->filtertype)
+	$jsonfilters[] = '{ "type" : { "value" : "'.$this->filtertype.'" } }';
+foreach($this->filters as $k => $v){
+	if(strpos($v,'>') !== false and is_numeric(str_replace('>','',$v)))
+		$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gt" : '.str_replace('>','',$v).' } } }';
+	elseif(strpos($v,'<') !== false and is_numeric(str_replace('<','',$v)))
+		$jsonfilters[] = '{ "range" : { "'.$k.'" : { "lt" : '.str_replace('<','',$v).' } } }';
+	elseif(strpos($v,'..') !== false and is_numeric(str_replace('..','',$v))){
+		$parts = explode("..",$v);
+		if(count($parts) == 2)
+			$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gte" : '.$parts[0].', "lte" : '.$parts[1].' } } }';
+		}
+	else
+		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.str_replace('_',' ',$v).'"} }';
+}
+$fjson = implode(",",$jsonfilters);
+if(count($jsonfilters)>1)
+	$fjson = '"filter" : { "and" : ['.$fjson.'] },';
+elseif(count($jsonfilters)>0)
+	$fjson = '"filter" : '.$fjson.',';
+
+$params['index'] = 'openml';
+$params['body']  = '{
+    "from" : '. ($this->from ? $this->from : 0) .',
+    "size" : '. $this->size .','.
+    ($this->listids ? '"fields" : [],' : '').'
+    "query" : {'.$query.'},'.
+    ($this->sort ? '"sort" : { "'.$this->sort.'" : "'.$this->order.'" },' : '').
+    ($fjson ? $fjson : '').'
+    "highlight" : {
+        "fields" : {
+            "_all" : {}
+        }
+    },
+    "facets" : {
+        "type" : {
+          "terms" : { "field" : "_type"}
+        }
+    }
+}';
+
+// print_r($params);
+
+try {
+	$this->results = $this->searchclient->search($params);
+
+} catch (Exception $e) {
+	$this->results = array();
+	$this->results['hits'] = array();
+	$this->results['hits']['total'] = 0;
+	$this->results['facets'] = array();
+	$this->results['facets']['type'] = array();
+	$this->results['facets']['type']['total'] = 0;
+	$this->results['facets']['type']['terms'] = array();
+}
 ?>

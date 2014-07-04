@@ -952,7 +952,7 @@ class Ion_auth_model extends CI_Model
 				}
 
 				$this->trigger_events(array('post_login', 'post_login_successful'));
-				$this->set_message('login_successful');
+				//$this->set_message('login_successful');
 
 				return TRUE;
 			}

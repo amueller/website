@@ -51,8 +51,10 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	<div class="col-sm-12">
 		<h1>Task <?php echo $this->task_id; ?></h1>
 		<?php if (isset($this->record['task_id'])){ ?>		
-		<a href="http://openml.liacs.nl/api/?f=openml.task.search&task_id=<?php echo $this->task_id;?>">View XML</a>
-
+		<ul class="hotlinks">
+		 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+		 <li><a href="http://openml.liacs.nl/api/?f=openml.tasks.search&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+		</ul>
 		<h2><?php echo $this->record['type_name'] ?></h2>
 		<p><?php echo $this->record['type_description'] ?></p>
 

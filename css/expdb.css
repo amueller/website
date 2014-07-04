@@ -145,14 +145,69 @@ width: 80pt;
 
 .searchbar{
   margin-top: 10px;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 15px;
+  line-height: 20px;
 }
 
 .searchbar i{
-  font-size: 16px;
-  color: #333;
+  font-size: 18px;
+  color: #888;
   margin-right: 5px;
+}
+
+.menu{
+  border-radius:3px;
+  border:1px solid #d8d8d8;
+  list-style:none;
+  overflow:hidden;
+  padding-left:0px;
+}
+
+.menu a:hover{
+  text-decoration:none
+}
+
+.menu li{
+  border-bottom:1px
+  solid #eee;
+  border-top:1px solid #fff
+}
+
+.menu li:last-child{
+  border-bottom:none
+}
+
+.menu li:first-child{
+  border-top:none
+}
+
+.menu li.filter{
+  padding:3px;
+}
+
+.menu a{
+  display:block;
+  padding:8px 10px 8px 8px;
+  text-shadow:0 1px 0 #fff;
+  border-left:2px solid #fafafb;
+  color: #888;
+}
+
+.menu a.selected{
+  background:#fff;
+  font-weight:bold;
+  color:#d26911;
+  cursor:default
+}
+
+.menu a.selected i{
+  color:#d26911;
+}
+
+
+.menu a .counter{
+  float:right;
+  margin-left:5px
 }
 
 
@@ -193,6 +248,19 @@ width: 80pt;
   width: 100%
 }
 
+.filtertitle{
+  display:block;
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+
+.filtertitle a{
+  color: #333333;
+  text-decoration:none;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .option-heading{
   display:block;
   padding-top: 7px;
@@ -202,7 +270,8 @@ width: 80pt;
 .option-heading a{
   color: #333333;
   text-decoration:none;
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .option-body{
@@ -644,9 +713,6 @@ ul.openml-contact {
 .btn-file {
     position: relative;
     overflow: hidden;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    font-size: 13px !important;
 }
 .btn-file input[type=file] {
     position: absolute;
@@ -922,10 +988,10 @@ footer > hr{
 textarea,
 input[type="text"] {
   display: inline-block;
-  height: 28px;
+  height: 35px;
   padding: 4px;
   font-size: 13px;
-  line-height: 18px;
+  line-height: 20px;
   color: #555555;
   background-color: #ffffff;
   border: 1px solid #cccccc;
@@ -1117,7 +1183,9 @@ html, body {
       }
  
       .form-group label{
-   	font-weight: 300;
+   	font-weight: 200;
+	font-size: 11pt;
+	margin-bottom: 0px;
       }
 
       /* Wrapper for page content to push down footer */
@@ -1126,7 +1194,7 @@ html, body {
         height: auto !important;
         height: 100%;
         /* Negative indent footer by it's height */
-        margin: 0 auto -60px;
+        margin: 0 auto 0px;
       }
 
       /* Set the fixed height of the footer here */
@@ -1296,6 +1364,32 @@ html, body {
   color: rgb(0, 153, 51);
 }
 
+.ui-autocomplete {
+    max-width: 382px;
+    max-height: 982px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    border:1px solid #222;
+    position:absolute;
+  }
+
+.ui-menu-item{
+  padding: 8px;
+  border: solid rgba(0,0,0,0.05);
+  border-width: 1px 0;
+  white-space: nowrap;
+}
+
+.ui-menu-item i{
+  color: #aeaeae;
+  margin-right: 4px;
+  font-size: 20px;
+}
+
+.ui-menu-item span{
+  color: #999;
+}
 
 .help-block, .help-block2{
   font-size: 12px;

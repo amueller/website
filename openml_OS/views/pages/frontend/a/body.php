@@ -1,33 +1,12 @@
-<div class="bs-docs-container topborder">
-    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
-	<!-- Search -->
-	<form class="form" method="post" action="r">
-	<div class="input-group" style="margin-bottom:7px;">
-	  <span class="input-group-addon" style="background-color:#854AB8; color:#FFFFFF; border-color:#854AB8"><i class="fa fa-search fa-fw"></i></span>
-	  <input type="text" class="form-control" style="width: 100%; height: 30px; font-size: 11pt;" id="openmlsearch" name="searchterms" placeholder="Search" value="<?php if( $this->terms != false ) echo $this->terms; ?>" />
-	</div>
-	<h4>Evaluation</h4>
-	<ul class="runmenu">		
-		<li class="<?php if(false !== strpos($_SERVER['REQUEST_URI'],'a/evaluation-measures')) echo 'active';?>"><a href="a/evaluation-measures">Evaluation measures</a></li>
-		<li class="<?php if(false !== strpos($_SERVER['REQUEST_URI'],'a/estimation-procedures')) echo 'active';?>"><a href="a/estimation-procedures">Estimation procedures</a></li>
-
-	<h4>Qualities</h4>
-		<li class="<?php if(false !== strpos($_SERVER['REQUEST_URI'],'a/data-qualities')) echo 'active';?>"><a href="a/data-qualities">Data qualities</a></li>
-		<li class="<?php if(false !== strpos($_SERVER['REQUEST_URI'],'a/flow-qualities')) echo 'active';?>"><a href="a/flow-qualities">Flow qualities</a></li>
-	</ul>
-
-	</div>
-
-
-    </div> <!-- end col-2 -->
-
-    <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
+<div class="container-fluid topborder">
+  <div class="row">
+   <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
      <div class="tab-content">
       <div class="tab-pane fade in <?php if(false === strpos($_SERVER['REQUEST_URI'],'/a/')) { echo 'active'; } ?>" id="intro">
       <?php 
 	if( $this->terms == false) { ?>
       <div class="redheader">
-      <h1><i class="fa fa-bar-chart-o"></i> Analytics</h1>
+      <h1><i class="fa fa-bar-chart-o"></i> Analytic measures</h1>
       <p>Functions and methods used by OpenML to evaluate flows and measure data properties.</p>
       </div>
       <?php } ?> 
@@ -75,8 +54,7 @@
   		<?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/flow-qualities')) subpage('flow-qualities'); ?>
 	</div>
 
-     </div> <!-- end tabs content -->
-
-
-    </div> <!-- end col-9 -->
+   </div> <!-- end tabs content -->
+    </div> <!-- end col-10 -->
+  </div> <!-- end row -->
 </div> <!-- end container -->

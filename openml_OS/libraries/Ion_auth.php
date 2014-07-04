@@ -404,7 +404,7 @@ class Ion_auth
 			$this->session->sess_create();
 		}
 
-		$this->set_message('logout_successful');
+		//$this->set_message('logout_successful');
 		return TRUE;
 	}
 

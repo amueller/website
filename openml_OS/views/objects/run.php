@@ -58,8 +58,10 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
 	<div class="col-sm-12">
 		<h1>Run <?php echo $this->run_id ?></h1>
 		<?php if (isset($this->record['run_id'])){ ?>
-		<a href="http://openml.liacs.nl/api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>">View XML</a>
-
+	<ul class="hotlinks">
+	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+	 <li><a href="http://openml.liacs.nl/api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+        </ul>
 	</div>
 	<div class="col-sm-6">
 
@@ -89,6 +91,20 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
 		<tr><td><a class="pop" data-html="true" data-toggle="popover" data-placement="right" data-content="<?php echo $r['description']; ?>"><?php echo $r['input']; ?></td><td><?php echo $r['value']; ?></td></tr>
 		<?php endforeach; ?>
 		</table></div>
+
+	</div>
+	<div class="col-sm-12">
+		<?php
+		$getParams = array();
+		$getParams['index'] = 'openml';
+		$getParams['type']  = 'run';
+		$getParams['id']    = $this->record['run_id'];
+		$json_a = $this->searchclient->get($getParams)['_source'];
+		?>
+		<h3>Output files</h3>
+		<ul><li><a href="<?php echo $json_a['output_files']['description']; ?>">Full description (XML)</a></li>
+		    <li><a href="<?php echo $json_a['output_files']['predictions']; ?>">Instance-level predictions (ARFF)</a></li>
+		</ul>
 
 	</div>
 	<div class="col-sm-12">

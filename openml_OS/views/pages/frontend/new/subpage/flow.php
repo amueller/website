@@ -33,7 +33,7 @@
 		  <h2>Required information</h2>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_name">Name</label>
-		    <input type="text" class="form-control" id="input_implementation_name" placeholder="The name of the algorithm or workflow" value=""/>
+		    <input type="text" class="form-control" id="input_implementation_name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_description">Description</label>
@@ -41,13 +41,12 @@
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_description">Instructions</label>
-		    <textarea class="form-control" id="input_implementation_description" placeholder="How to run OpenML tasks." value=""></textarea> 
+		    <textarea class="form-control" id="input_implementation_description" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea> 
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Implementation</label>
-		    <div class="col-md-12 input-info-first">For code hosted elsewhere (e.g., GitHub).</div> 
-		    <input type="text" class="form-control" id="source_url" placeholder="URL where code is hosted." value="" /> 
-		    <div class="col-md-12 input-info">Or, upload the code (source, executable, readme) as an archive.</div>
+		    <input type="text" class="form-control" id="source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" /> 
+		    <div class="col-md-12 input-info">And/or, upload the code (source, executable, readme) as an archive.</div>
 		    <div class="input-group">
 			<span class="input-group-btn">
 				<button class="btn btn-primary btn-file">Upload&hellip;<input type="file" multiple></button>
@@ -74,7 +73,7 @@
 			placeholder="Other contributor(s) of the implementation" value="" />
 		  </div>
 		  <div class="form-group">
-		  <label class="control-label" for="input_implementation_licence">License</label> - <a href="http://choosealicense.com/licenses/" target="_blank">Learn more</a>
+		  <label class="control-label" for="input_implementation_licence">Licence</label> - <a href="http://choosealicense.com/licenses/" target="_blank">Learn more</a>
 			<select class="form-control">
 			  <option>MIT License (most permissive)</option>
 			  <option>Apache License</option>
@@ -94,7 +93,7 @@
 			    <textarea class="form-control" id="input_implementation_licence"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Paper/preprint</label>
-		    <input type="text" class="form-control" id="source_url" placeholder="URL to paper or preprint." value="" /> 
+		    <input type="text" class="form-control" id="source_url" placeholder="URL to paper or preprint describing the code." value="" /> 
 		  </div>
 		</div>
 	      </div>

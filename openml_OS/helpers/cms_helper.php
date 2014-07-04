@@ -38,4 +38,11 @@ function subpage( $subpage ) {
   if(!file_exists(APPPATH.'/views/'.$view)) { return false; }
   $r = $dq->load->view($view,'' ,false);
 }
+
+function searchview( $type ) {
+  $dq = &get_instance();
+  $view = 'pages/'.$dq->controller.'/'.'/search/'.$subpage.'.php';
+  if(!file_exists(APPPATH.'/views/'.$view)) { return false; }
+  $r = $dq->load->view($view,'' ,false);
+}
 ?>

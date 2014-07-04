@@ -107,6 +107,16 @@ function object_array_get_property( $array, $property ) {
   return $res;
 }
 
+function object_array_get_value( $array, $key ) {
+  $res = array();
+  if($array !== false) {
+    foreach( $array as $a ) {
+      $res[] = $a[$key];
+    }
+  }
+  return $res;
+}
+
 function array_to_parsed_string($array, $string) {
   $total_string = '';
   if (is_array($array)){

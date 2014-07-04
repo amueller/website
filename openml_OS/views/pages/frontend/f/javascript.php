@@ -114,6 +114,7 @@ function fnFetchParams ( oTable, row, column )
 
 var oTableRunsShowAll = false;
 var evaluation_measure = "<?php echo $this->current_measure; ?>";
+var current_task = "<?php echo $this->current_task; ?>";
 var oTableRuns = false;
 
 $(document).ready(function() {
@@ -201,7 +202,12 @@ options = {
                 renderTo: 'code_result_visualize',
                 type: 'scatter',
                 zoomType: 'xy',
-		spacingTop: 40
+		spacingTop: 40,
+                events: {
+                    load: function (event) {
+                        $('.tip').tooltip();
+                    }
+                }
             },
             yAxis: {
                 title: {
@@ -255,6 +261,7 @@ options = {
 		}
             },
             tooltip:{
+                followTouchMove: false,
                 formatter:function(){
                     return '<p>Task data:<b> '+this.series.yAxis.categories[this.y]+'</b><br>'+ this.series.xAxis.axisTitle.element.textContent + '<b>: ' + this.x+'</b><br>'+ ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>No parameter selected. Click for info.</i>') + '</p>';
                 }
@@ -265,16 +272,17 @@ options = {
                 data: [],
 		point: {
                     events: {
-                        click: function(){$('#runModal').modal('show'); updateRunModal(this.r);}
+                        click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
                     }
                 }
             }]
         };
 
-var theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, r.rid from algorithm_setup l, evaluation e, cvrun r, dataset d  where r.learner=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.inputdata=d.did AND d.isOriginal="true" AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
+var theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, r.rid from algorithm_setup l, evaluation e, run r, dataset d, task t, task_inputs ti where r.setup=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.task_id=ti.task_id and ti.input="source_data" and ti.value=d.did AND r.task_id = t.task_id and t.ttid='+ current_task + ' AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
 
 if(typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
- theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, ins.value as paramval, r.rid from algorithm_setup l, evaluation e, cvrun r, dataset d, input_setting ins  where r.learner=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.inputdata=d.did AND d.isOriginal="true" AND e.source=r.rid AND e.function="'+evaluation_measure+'" AND l.sid=ins.setup AND ins.input="'+selected_parameter+'" group by d.name, value order by value desc';
+ theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, ins.value as paramval, r.rid from algorithm_setup l, evaluation e, run r, dataset d, task t, task_inputs ti, input_setting ins where r.setup=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.task_id=ti.task_id and ti.input="source_data" and ti.value=d.did AND r.task_id = t.task_id and t.ttid='+ current_task + ' AND e.source=r.rid AND e.function="'+evaluation_measure+'" AND l.sid=ins.setup AND ins.input="'+selected_parameter+'" group by d.name, value order by value desc';
+console.log(theQuery);
 }
 	
 var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+theQuery, "UTF-8");

@@ -1,22 +1,124 @@
+<script>
+$(function() {
+
+ $("#datasetDropdown").autocomplete({
+  html: true,
+  minLength: 0,
+  source: function(request, fresponse) {
+    client.suggest({
+    index: 'openml',
+    type: 'data',
+    body: {
+     mysuggester: {
+      text: request.term.split(/[, ]+/).pop(),
+      completion: {
+       field: 'suggest',
+       fuzzy : true,
+       size: 10
+      }
+     }
+    }
+   }, function (error, response) {
+       fresponse($.map(response['mysuggester'][0]['options'], function(item) {
+        if(item['payload']['type'] == 'data')
+	return { 
+		type: item['payload']['type'], 
+		id: item['payload']['data_id'], 
+		description: item['payload']['description'].substring(0,50), 
+		text: item['text'] 
+		};
+	}));
+   });
+  },
+  select: function( event, ui ) {
+	$val = $('#datasetDropdown').val().split(/[, ]+/);
+	$val.pop();
+	$val = $val.join(", ");
+	if($val.length>0)
+		$val = $val + ", ";
+	$('#datasetDropdown').val( $val + ui.item.id);  console.log(ui.item.id); return false;
+	}
+
+}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( '<a><i class="' + icons[item.type] + '"></i> ' + item.text + ' <span>' + item.description + '</span></a>' )
+        .appendTo( ul );
+    }
+
+ $("#flowDropdown").autocomplete({
+  html: true,
+  minLength: 0,
+  source: function(request, fresponse) {
+    client.suggest({
+    index: 'openml',
+    type: 'flow',
+    body: {
+     mysuggester: {
+      text: request.term.split(/[, ]+/).pop(),
+      completion: {
+       field: 'suggest',
+       fuzzy : true,
+       size: 10
+      }
+     }
+    }
+   }, function (error, response) {
+       fresponse($.map(response['mysuggester'][0]['options'], function(item) {
+        if(item['payload']['type'] == 'flow')
+	return { 
+		type: item['payload']['type'], 
+		id: item['payload']['flow_id'], 
+		description: item['payload']['description'].substring(0,50), 
+		text: item['text'] 
+		};
+	}));
+   });
+  },
+  select: function( event, ui ) {
+	$val = $('#flowDropdown').val().split(/[, ]+/);
+	$val.pop();
+	$val = $val.join(", ");
+	if($val.length>0)
+		$val = $val + ", ";
+	$('#flowDropdown').val( $val + ui.item.id);  console.log(ui.item.id); return false;
+	}
+
+}).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( '<a><i class="' + icons[item.type] + '"></i> ' + item.text + ' <span>' + item.description + '</span></a>' )
+        .appendTo( ul );
+    }
+});
+
+
+</script>
+
 
       <div class="redheader">
       <h1>Compare flows</h1>
       <p>Compare how well different flows perform over several tasks.</p>
       </div>
-
-<form class="form-horizontal">
 	<div class="form-group">
 		<label class="col-md-2 control-label" for="datasetDropdown">Task type</label>
 		<div class="col-md-10">
-			<select class="selectpicker">
-			  <option>Supervised Classification</option>
-			</select>
+	    <select class="form-control input-small selectpicker" name="tasktype" id="ttDropDown">
+              <option value="">Any task type</option>
+	    <?php
+	      $taskparams['index'] = 'openml';
+	      $taskparams['type']  = 'task_type';
+	      $taskparams['body']['query']['match_all'] = array();
+	      $alltasks = $this->searchclient->search($taskparams)['hits']['hits'];
+	      foreach($alltasks as $h){?>
+	            <option value="<?php echo $h['_id']; ?>"><?php echo $h['_source']['name']; ?></option>
+            <?php } ?>
+  	    </select>
+  	    <span class="help-block"></span>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-md-2 control-label" for="algorithmDropdown">Flows</label>
+		<label class="col-md-2 control-label" for="flowDropdown">Flows</label>
 		<div class="col-md-10">
-			<input type="text" class="form-control" id="algorithmDropdown" placeholder="Include all algorithms" value="SVM, C4.5, " onblur="updateImplementations( '#implementationDropdown', '#algorithmDropdown' );">
+			<input type="text" class="form-control" id="flowDropdown" placeholder="Include all flows" value="">
 			<span class="help-block">A comma separated list of flows. Leave empty to include all flows.</span>
 		</div>
 	</div>
@@ -36,13 +138,6 @@
     </div>
     <div id="collapseOne" class="panel-collapse collapse">
       <div class="query-body">
-	<div class="form-group">
-		<label class="col-md-2 control-label" for="implementationDropdown">Implementation versions</label>
-		<div class="col-md-10">
-			<input type="text" class="form-control input-small" id="implementationDropdown" placeholder="Include all implementations of selected algorithms" value="" />
-			<span class="help-block">Further specify exactly which implementations you want. Leave empty to include all implementations of the selected algorithms.</span>
-		</div>
-	</div>
 	<div class="form-group">
 		<label class="col-md-2 control-label" for="algorithmDefault">Default settings</label>
 		<div class="col-md-10">
@@ -92,7 +187,7 @@
     </div>
 </div>
 	<div class="form-group">
-		<button id="wizardquery-btn" data-loading-text="Querying..." autocomplete="off" type="button" onclick="wizardQuery( $('#algorithmDropdown').val(), $('#implementationDropdown').val(), $('#algorithmDefault').prop('checked'), $('#datasetDropdown').val(), $('#evaluationmethodDropdown').val(), $('#evaluationmetricDropdown').val(), $('input:radio[name=crosstabulate]:checked').val() );showResultTab();" class="btn btn-primary">
+		<button id="wizardquery-btn" data-loading-text="Querying..." autocomplete="off" type="button" onclick="wizardQuery( $('#flowDropdown').val(), $('#algorithmDefault').prop('checked'), $('#datasetDropdown').val(), $('#evaluationmethodDropdown').val(), $('#evaluationmetricDropdown').val(), $('input:radio[name=crosstabulate]:checked').val() );showResultTab();" class="btn btn-primary">
 			Run Query
 		</button>
 	</div>

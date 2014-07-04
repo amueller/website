@@ -1,9 +1,7 @@
-<div class="sectionheader">
-<div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitlepurple"><a href="developers">Developers</a></div>
-</div>
-<div class="bs-docs-container topborder">
-    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
+<div class="container-fluid topborder">
+  <div class="row">
+    <div class="col-lg-10 col-sm-12 col-lg-offset-1">
+    <div class="col-sm-12 col-md-3 searchbar">
 
       <div class="bs-sidebar">
         <ul class="nav bs-sidenav">
@@ -55,22 +53,40 @@
       </div>
     </div> <!-- end col-2 -->
 
-    <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
+    <div class="col-sm-12 col-md-9 openmlsectioninfo">
       <div class="bs-docs-section">
         <div class="page-header">
           <h1 id="dev-start">Get started</h1>
         </div>
-        <p class="lead">Download OpenML data to use it in novel ways, or upload new data to increase their impact (and yours).</p>
-        <h3 id="dev-code">Latest source code</h3>
-        <p>Get the latest source code for all OpenML tools and plugins by downloading it directly from GitHub. We will soon add links to the developer versions of individual plugins.</p>
-        <a href="https://github.com/openml/OpenML/archive/master.zip" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Download OpenML</a>
-        <h3 id="dev-clone">Clone or fork via GitHub</h3>
-        <p>Clone the entire project or fork your own version of OpenML tools to make them your own by visiting us on GitHub. Or, join a <a href="https://github.com/organizations/openml/teams">team</a> working on an OpenML plugin.</p>
-        <a href="https://github.com/organizations/openml" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> OpenML on GitHub</a>
+	OpenML is an open source project, <a href="https://github.com/organizations/openml">hosted on GitHub</a>. We welcome everybody to help improve OpenML, and make it more useful for everyone. OpenML is divided into several modules, each run by a <a href="https://github.com/organizations/openml/teams">team of enthousiastic and wonderful people</a>. Join us.
+
+        <h2 id="dev-code">OpenML Core</h2>
+        <p>The Core contains everything done by the OpenML server. This includes the API services, but also functions such as model evaluation and dataset characterisation. Join the team or fork us on GitHub and improve OpenML with great new features.</p>
+        <a href="https://github.com/openml/OpenML" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> OpenML Core</a>
+
+        <h2 id="dev-code">Client APIs</h2>
+        <p>Several APIs are (being) built to connect to OpenML directly from your code. They talk to the server and make all services available as language-specific functions. Several programming language are already supported, such as <a href="plugins/#java">Java</a> and <a href="plugins/#r">R</a>, but more are needed. Join a team or fork us to work on an existing API, or start your own.</p>
+        <a href="https://github.com/openml/java" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Java API</a>
+        <a href="https://github.com/openml/r" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> R API</a>
+
+        <h2 id="dev-code">OpenML Plugins</h2>
+        <p>OpenML is even directly integrated in several machine learning environments, so you can use it from your favourite tools.</p>
+
+        <a href="https://github.com/openml/weka" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Weka plugin</a>
+        <a href="https://github.com/openml/java" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> MOA plugin</a>
+        <a href="https://github.com/openml/r" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> mlr plugin</a>
+
         <h3 id="dev-database">Database snapshots</h3>
-        <p>OpenML consists of two databases, a public database (the experiment database) and a private database (containing all user data, etc). The Snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. The Snapshot of the private database contains the table structure and important records, like usergroups. Both in SQL format (gzipped).</p>
+        <p>Everything uploaded to OpenML is available to the community. The snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. In SQL format (gzipped).</p>
+
         <a href="downloads/ExpDB_SNAPSHOT.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Download public database</a>
+
+        <h3 id="dev-database">Your own OpenML instance</h3>
+	If, for any reason, you want to set up your own instance of OpenML, you will need some additional resources, such as a second (private) database which 
+	contains all user data. This database contains the table structure and important records, like usergroups. More details on setting up your own instance are available in the <a href="https://github.com/openml/OpenML/wiki"> GitHub Wiki</a>.</p>
+
         <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Download private database</a>
+
         <h3 id="dev-feature">Feature requests</h3>
         <p>Feature request, as well as issues, can be posted in the <a href="community">community discussions</a>, or by directly opening an issue in our <a href="https://github.com/openml/OpenML/issues?state=open">GitHub project</a>.</p>
       </div>
@@ -79,15 +95,7 @@
           <h1 id="dev-tutorial">API Tutorial</h1>
         </div>
         <p class="lead">An overview of the most common use cases with working examples and links to the full documentation of the services involved.</p>
-        <h3 id="dev-searchdata">Search datasets</h3>
-        <p>Will be added soon</p>
-        <h3 id="dev-searchimpl">Search implementations</h3>
-        <p>Will be added soon</p>
-        <h3 id="dev-searchtask">Search tasks</h3>
-        <p>Will be added soon</p>
-        <h3 id="dev-searchresult">Search results</h3>
-        <p>Will be added soon</p>
-        <h3 id="dev-getdata">Download a dataset</h3>
+        <h2 id="dev-getdata">Download a dataset</h2>
         <img src="img/api_get_dataset.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for a dataset using the <a href="developers#openml_data_description">openml.data.description</a> service and a <code>dataset id</code>. The <code>dataset id</code> is typically part of a task, or returned when <a href="developers#dev-searchdata">searching for datasets</a>.</li>
@@ -1051,6 +1059,7 @@
       </div>
     </div>
     <!-- end col-md-9 -->
+    </div> <!-- end col-10 -->
   </div>
   <!-- end row -->
 </div>

@@ -1,4 +1,4 @@
-<?php $count = 0; $icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt', 'task' => 'fa fa-check' ); ?>
+<?php $count = 0; $icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt', 'task' => 'fa fa-trophy' ); ?>
 
 <div class="alert alert-info">Displaying <?php echo count($this->results); ?> popular results. Please use the <a href="search">search page</a> to search through all available entries. </div>
 

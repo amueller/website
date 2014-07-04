@@ -1,119 +1,20 @@
 <?php
-$this->initialMsgClass = '';
-$this->initialMsg = '';
-
-if (!$this->ion_auth->logged_in()) {
-	$this->initialMsgClass = 'alert alert-warning';
-	$this->initialMsg = 'Before submitting content, please login first!';
-}
 
 /// SEARCH
-$this->terms = safe($this->input->post('searchterms'));
-
-$this->implementation_count = 0;
-$this->results_all = array();
-$this->results_runcount = array();
-
-$this->implementation_total = $this->Implementation->numberOfRecords();
-
-$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cog', 'dataset' => 'fa fa-list-alt' );
-
-if( $this->terms != false and $this->terms != 'all') { // normal search
-	$eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
-	$res = array();
-	$code = 0;
-	$command = 'java -jar '.APPPATH.'third_party/OpenML/Java/luceneSearch.jar search -index '.DATA_PATH.'search_index -query "' . $this->terms . '"';
-	
-	exec( $command, $res, $code );
-	
-	$results = json_decode( implode( "\n", $res ) );
-  $this->total_count = 0;
-  
-  if( $results ) {
-    $this->time = $results->time;
-    $this->total_count = $results->nr_results;
-    
-    if($this->total_count > 0){	
-    
-      foreach( $results->results as $re ) {
-        $type = $re->type;
-        $name = $re->name;
-        $icon = $icons[$type];
-        $runs = 0;
-        $id = 0;
-        $description = '';
-        if ($type == 'implementation'){
-	  $i = $this->Implementation->query('select count(rid) as nbruns, i.id as id, i.description from cvrun r, algorithm_setup s, implementation i where r.learner = s.sid and s.implementation_id = i.id and i.fullName ="'.$name.'"');
-          if( $i != false ) {
-	  	$description = $i[0]->description;
-          	$runs = $i[0]->nbruns;
-          	$id = $i[0]->id;
-	  }
-          $this->implementation_count++;
-        }        
-        $result = array(
-          'type' => $type,
-          'id' => $id,
-          'name' => $name,
-          'icon' => $icon,
-          'description' => $description,
-          'runs' => $runs
-        );
-        $this->results_runcount[] = $runs;
-        $this->results_all[] = $result;
-      }
-      array_multisort($this->results_runcount, SORT_DESC, $this->results_all);
-    }
-  }
-} else if ($this->terms != false and $this->terms == 'all'){ // all implementations
-	$start_time = microtime(true);
-	
-	$implementation = $this->Implementation->query('SELECT i.id, i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id and i.fullName<>\'weka.Evaluation(1.86)\' GROUP BY s.implementation_id ORDER BY i.fullName');
-  if( $implementation != false ) {
-	  foreach( $implementation as $i ) {
-		  $result = array(
-			  'id' => $i->id,
-			  'type' => 'implementation',
-			  'name' => $i->fullName,
-			  'icon' => $icons['implementation'],
-			  'description' => $i->description,
-			  'runs' => $i->runs
-		  );
-		  $this->results_all[] = $result;
-		  $this->implementation_count++;
-    }
-	}
-		
-	$this->time = round(microtime(true) - $start_time,3);
-} else{ // Popular
-	$start_time = microtime(true);
-	
-	$implementation = $this->Implementation->query('SELECT i.id, i.fullName, i.description, COUNT(*) as runs FROM implementation i, cvrun r RIGHT JOIN algorithm_setup s ON r.learner = s.sid WHERE s.implementation_id = i.id and i.fullName<>\'weka.Evaluation(1.86)\' GROUP BY s.implementation_id ORDER BY runs DESC LIMIT 0,5');
-  if( $implementation != false ) {
-	  foreach( $implementation as $i ) {
-		  $result = array(
-			  'id' => $i->id,
-			  'type' => 'implementation',
-			  'name' => $i->fullName,
-			  'icon' => $icons['implementation'],
-			  'description' => $i->description,
-			  'runs' => $i->runs
-		  );
-		  $this->results_all[] = $result;
-		  $this->implementation_count++;
-    }
-	}
-		
-	$this->time = round(microtime(true) - $start_time,3);
-}
+$this->filtertype = 'flow';
+$this->sort = 'runs';
+if($this->input->get('sort'))
+	$this->sort = safe($this->input->get('sort'));
 
 /// DETAIL
 
 $this->type = 'implementation';
 $this->record = false;
 $this->displayName = false;
-$this->measures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
+$this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';
+$this->current_task = 1;
+
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));

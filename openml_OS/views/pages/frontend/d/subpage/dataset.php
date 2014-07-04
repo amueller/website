@@ -1,6 +1,6 @@
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
-	  <h1><i class="fa fa-database"></i> <?php echo $this->record->{'name'}; ?></h1>
+	  <h1><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
   </div>
   <div class="col-sm-12">
 
@@ -9,8 +9,8 @@
 	$desc = (strlen($desc) > 1003) ? substr($desc,0,1000).'...' : $desc;
 	echo $desc;  ?></p>
      <ul class="hotlinks">
-	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a><br>Data</li>
-	 <li><a><i class="fa fa-book fa-2x"></i></a><br>Paper/preprint</li>
+	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a><br>Download</li>
+	 <li><a><i class="fa fa-book fa-2x"></i></a><br>Paper</li>
 	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
 
 	 <li>   <div class="version" style="margin-bottom: -10px;">
@@ -29,7 +29,7 @@
 	    <tr><td>Contributor(s)</td><td><?php echo $this->record->{'contributor'} ?></td></tr>
 	    <tr><td>Uploader</td><td><?php echo $this->record->{'uploader'} ?></td></tr>	
 	    <tr><td>Licence</td><td><?php echo $this->record->{'licence'} ?></td></tr>
-	    <tr><td>Citation</td><td><a>Show</a></td></tr>    
+	    <tr><td>Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>    
 	    </tbody></table></div>
 
     </div> <!-- end col-md-6-->
@@ -88,7 +88,7 @@
 		<h2>Performance evaluation</h2>
 		Evaluation measure:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
-					<?php foreach($this->measures as $m): ?>
+					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 				</select>

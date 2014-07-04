@@ -1,201 +1,24 @@
 <?php
-$this->initialMsgClass = '';
-$this->initialMsg = '';
-
-if (!$this->ion_auth->logged_in()) {
-	$this->initialMsgClass = 'alert alert-warning';
-	$this->initialMsg = 'Before submitting content, please login first!';
-}
 
 /// SEARCH
-$this->terms = safe($this->input->post('searchterms'));
-
-// get max/min qualities
-$this->dqrange = array();
-$dqs = $this->Dataset->query('SELECT quality, floor(min(value*1)) as min , ceiling(max(value*1)) as max FROM data_quality where data in (select did from dataset where isOriginal=\'true\') group by quality');
-if ($dqs != false){
-      foreach( $dqs as $r ) {
-        $q = array(
-          'min' => $r->min,
-          'max' => $r->max
-        );
-        $this->dqrange[$r->quality] = $q;
-      }
-}
-
-// limit by user settings
-$nri = safe($this->input->post('numberinstances'));
-$nrf = safe($this->input->post('numberfeatures'));
-$nrc = safe($this->input->post('numberclasses'));
-$nrm = safe($this->input->post('numbermissing'));
-$nrm = safe($this->input->post('numbermissing'));
-
-if(!empty($nri)){
-$iarray = explode(',',$nri);
-$this->nrinstances_min = $iarray[0];
-$this->nrinstances_max = $iarray[1];} else {
-$this->nrinstances_min = $this->dqrange['NumberOfInstances']['min'];
-$this->nrinstances_max = $this->dqrange['NumberOfInstances']['max']; 
-}
-if(!empty($nrf)){
-$farray = explode(',',$nrf);
-$this->nrfeatures_min = $farray[0];
-$this->nrfeatures_max = $farray[1];} else {
-$this->nrfeatures_min = $this->dqrange['NumberOfFeatures']['min'];
-$this->nrfeatures_max = $this->dqrange['NumberOfFeatures']['max']; 
-}
-
-if(!empty($nrc)){
-$carray = explode(',',$nrc);
-$this->nrclasses_min = $carray[0];
-$this->nrclasses_max = $carray[1];} else {
-$this->nrclasses_min = $this->dqrange['NumberOfClasses']['min'];
-$this->nrclasses_max = $this->dqrange['NumberOfClasses']['max']; 
-}
-
-if(!empty($nrm)){
-$marray = explode(',',$nrm);
-$this->nrmissing_min = $marray[0];
-$this->nrmissing_max = $marray[1];} else {
-$this->nrmissing_min = $this->dqrange['NumberOfMissingValues']['min'];
-$this->nrmissing_max = $this->dqrange['NumberOfMissingValues']['max']; 
-}
-
-if( $this->terms == false && (!empty($nri) || !empty($nrf) || !empty($nrc) || !empty($nrm))){
- $this->terms = 'all';
-}
-
-
-$this->dataset_count = 0;
-$this->results_all = array();
-$this->results_runcount = array();
-
-$this->dataset_total = $this->Dataset->numberOfRecords();
-$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cogs', 'dataset' => 'fa fa-database', 'run' => 'fa fa-star' );
-
-
-if( $this->terms != false and $this->terms != 'all') { // normal search
-
-	$eval = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
-	$res = array();
-	$code = 0;
-	$command = 'java -jar '.APPPATH.'third_party/OpenML/Java/luceneSearch.jar search -index '.DATA_PATH.'search_index -query "' . $this->terms . '"';
-	
-	exec( $command, $res, $code );
-	
-	$results = json_decode( implode( "\n", $res ) );
-  $this->total_count = 0;
-  
-  if( $results ) {
-    $this->time = $results->time;
-    $this->total_count = $results->nr_results;
-    
-    if($this->total_count > 0){	
-    
-      foreach( $results->results as $re ) {
-        $type = $re->type;
-        $name = $re->name;
-        $icon = $icons[$type];
-        $nbruns = 0;
- 	$id = 0;
-        $description = '';
-        $nbruns = 0;
-	$nbinstances = 0;
-	$nbfeatures = 0;
-	$nbmissing = 0;
-	$nbclasses = 0;
-
-        if ($type == 'dataset'){
-	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and q.value >= '.$this->nrinstances_min .' and q.value <= '.$this->nrinstances_max .' and q2.value >= '.$this->nrfeatures_min .' and q2.value <= '.$this->nrfeatures_max .' and q3.value >= '.$this->nrmissing_min .' and q3.value <= '.$this->nrmissing_max .' and q4.value >= '.$this->nrclasses_min .' and q4.value <= '.$this->nrclasses_max .' and d.name="'.$name.'"  and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did');
-          if( $d != false ) {
-           $nbruns = $d[0]->nbruns;
-           $id = $d[0]->did;
-	   $nbinstances = $d[0]->instances;
-	   $nbfeatures = $d[0]->features;
-	   $nbmissing = $d[0]->missing;
-	   $nbclasses = $d[0]->classes;
-           $description = $d[0]->description;
-	  }
-          $this->dataset_count++;
-        }
-        
-        $result = array(
-          'type' => $type,
-          'id' => $id,
-          'name' => $name,
-          'icon' => $icon,
-          'description' => $description,
-          'runs' => $nbruns,
-	  'instances' => $nbinstances,
-	  'features' => $nbfeatures,
-	  'missing' => $nbmissing,
-	  'classes' => $nbclasses
-        );
-       	$this->results_runcount[] = $nbruns;
-       	$this->results_all[] = $result;
-      }
-      array_multisort($this->results_runcount, SORT_DESC, $this->results_all);
-    }
-  }
-} else if ($this->terms != false and $this->terms == 'all'){ // all dataset
-	$start_time = microtime(true);
-	
-	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\'  and q.value >= '.$this->nrinstances_min .' and q.value <= '.$this->nrinstances_max .' and q2.value >= '.$this->nrfeatures_min .' and q2.value <= '.$this->nrfeatures_max .' and q3.value >= '.$this->nrmissing_min .' and q3.value <= '.$this->nrmissing_max .' and q4.value >= '.$this->nrclasses_min .' and q4.value <= '.$this->nrclasses_max .'  and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did order by d.name');  if( $dataset != false ) {
-	  foreach( $dataset as $d ) {
-		  $result = array(
-			  'type' => 'dataset',
-			  'id' => $d->did,
-			  'name' => $d->name,
-			  'icon' => $icons['dataset'],
-			  'description' => $d->description,
-			  'runs' => $d->runs,
-			  'instances' => $d->instances,
-			  'features' => $d->features,
-			  'missing' => $d->missing,
-			  'classes' => $d->classes
-		  );
-		  $this->results_all[] = $result;
-		  $this->dataset_count++;
-    }
-	}
-		
-	$this->time = round(microtime(true) - $start_time,3);
-} elseif(false === strpos($_SERVER['REQUEST_URI'],'/d/')) { // Popular
-	$start_time = microtime(true);
-	
-	$dataset = $this->Dataset->query('select d.did, d.name, d.description, count(*) as runs, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, run r where q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.task_id in (SELECT t.task_id FROM task_type_inout ttio, task_inputs ti, task t WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=d.did and ti.task_id=t.task_id) group by d.did ORDER BY runs DESC LIMIT 0,5');
-  if( $dataset != false ) {
-	  foreach( $dataset as $d ) {
-		  $result = array(
-			  'type' => 'dataset',
-			  'id' => $d->did,
-			  'name' => $d->name,
-			  'icon' => $icons['dataset'],
-			  'description' => $d->description,
-			  'runs' => $d->runs,
-			  'instances' => $d->instances,
-			  'features' => $d->features,
-			  'missing' => $d->missing,
-			  'classes' => $d->classes
-		  );
-		  $this->results_all[] = $result;
-		  $this->dataset_count++;
-    }
-	}
-		
-	$this->time = round(microtime(true) - $start_time,3);
-}
+$this->filtertype = 'data';
+$this->sort = 'runs';
+if($this->input->get('sort'))
+	$this->sort = safe($this->input->get('sort'));
 
 /// DETAIL
 
 $this->type = 'dataset';
 $this->record = false;
 $this->displayName = false;
-$this->measures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
+$this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
-	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
+
+	$info = explode('/', $_SERVER['REQUEST_URI']);
+	$this->id = $info[array_search('d',$info)+1];
+
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
 	$author = $this->Author->getById($this->record->uploader);

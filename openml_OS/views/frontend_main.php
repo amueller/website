@@ -29,7 +29,6 @@
         <meta property="og:type" content="Science"/>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/github.css">
         <link rel="stylesheet" href="css/expdb.css">
         <link rel="stylesheet" href="css/share.css">
         <link rel="stylesheet" href="css/docs.css">
@@ -49,8 +48,8 @@
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery.validate.js"></script>
-         <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js" ></script>
+        <script type="text/javascript" src="js/libs/jquery.validate.js"></script>	
+        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js" ></script>
         <script type="text/javascript" src="js/libs/processing.js" ></script>
         <script type="text/javascript" src="js/libs/dat.gui.min.js" ></script>
         <script type="text/javascript" src="js/libs/codemirror.js" ></script>
@@ -64,6 +63,7 @@
         <script type="text/javascript" src="js/libs/bootstrap-select.js"></script>
         <script type="text/javascript" src="js/libs/bootstrap-slider.js" ></script>
         <script type="text/javascript" src="js/libs/rainbowvis.js"></script>
+        <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
         <script type="text/javascript" src="js/openml.js"></script>
         <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
         <script type="text/javascript" src="<?php echo $j; ?>"></script>
@@ -83,8 +83,15 @@
 		<a class="sectionheader sectionlogo" href="#"><img src="img/openmlicon.png"></a>
 	    <?php } ?>
 	      <div class="searchheader">
-		<form class="form-inline" method="get" action="search">
-		  <input type="text" class="form-control" id="openmlsearch" name="q" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, people,...'" value="<?php if( isset( $this->terms ) ) echo $this->terms; ?>" />
+		<form class="form-inline" method="get" id="searchform" action="search">
+		  <input type="hidden" name="type" value="<?php if(array_key_exists("type",$_GET)) echo safe($_GET["type"]);
+				elseif(false !== strpos($_SERVER['REQUEST_URI'],'/d')) echo 'data';
+				elseif(false !== strpos($_SERVER['REQUEST_URI'],'/t')) echo 'task';
+				elseif(false !== strpos($_SERVER['REQUEST_URI'],'/f')) echo 'flow';
+				elseif(false !== strpos($_SERVER['REQUEST_URI'],'/r')) echo 'run';
+				elseif(false !== strpos($_SERVER['REQUEST_URI'],'/a')) echo 'measure';				
+		  	  ?>"> 
+		  <input type="text" class="form-control" id="openmlsearch" name="q" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, tasks, people,... (leave empty to see all)'" value="<?php if( isset( $this->terms ) ) echo htmlentities($this->terms); ?>" />
 		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
 		</form>
 	       </div>
@@ -103,9 +110,9 @@
 		            <li class="divider"></li>
 			    <li><a href="new/run"><i class="fa fa-fw fa-star"></i> New run</a></li>
 		            <li class="divider"></li>
-			    <li><a href="new/task"><i class="fa fa-fw fa-check"></i> New task</a></li>
+			    <li><a href="new/task"><i class="fa fa-fw fa-trophy"></i> New task</a></li>
 		            <li class="divider"></li>
-			    <li><a href="new/tasktype"><i class="fa fa-fw fa-check-square"></i> New task type</a></li>
+			    <li><a href="new/tasktype"><i class="fa fa-fw fa-flag"></i> New task type</a></li>
 			  </ul>
 			</div>
 
@@ -134,7 +141,7 @@
 	<div id="openmllinks">
 	  <div class="iconrow">
 	  <a href="d"><div class="iconcell icongreen"><i class="fa fa-database fa-3x"></i><br><span>data</span></div></a>
-	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-flask fa-3x"></i><br><span>tasks</span></div></a>
+	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-trophy fa-3x"></i><br><span>tasks</span></div></a>
 	  <a href="f"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>flows</span></div></a>
 	  <a href="r"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>runs</span></div></a>
 	  </div><div class="iconrow">
@@ -195,11 +202,7 @@
             <div class="alert alert-info" style="text-align:center;margin-bottom:0px">
                 <?php echo $this->message; ?>
             </div>
-            <?php endif;
-
-            echo body();
-
-	    ?>
+            <?php endif; echo body(); ?>
         </div>
 
 	<div class="openmlfooter">

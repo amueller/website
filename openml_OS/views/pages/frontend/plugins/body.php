@@ -1,12 +1,25 @@
-<div class="sectionheader">
-<div class="sectionlogo"><a href="">OpenML</a></div>
-<div class="sectiontitlepurple"><a href="plugins">Plugins</a></div>
-</div>
-<div class="bs-docs-container topborder">
-    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
+<div class="container-fluid topborder">
+  <div class="row">
+    <div class="col-lg-10 col-sm-12 col-lg-offset-1">
+    <div class="col-sm-12 col-md-3 searchbar">
+
  <div class="bs-sidebar">
  <ul class="nav bs-sidenav">
-              
+      
+  <li><a href="#java">Java API</a>
+  <ul class="nav">
+    <li><a href="#java-plugin">Download Plugin</a></li>
+    <li><a href="#java-start">Quick Start</a></li>
+  </ul>
+  </li>
+  
+  <li><a href="#r">R API</a>
+  <ul class="nav">
+    <li><a href="#r-plugin">Download Plugin</a></li>
+    <li><a href="#r-start">Quick Start</a></li>
+  </ul>
+  </li>
+        
   <li><a href="#weka">WEKA</a>
   <ul class="nav">
     <li><a href="#weka-plugin">Download Plugin</a></li>
@@ -19,13 +32,6 @@
   <ul class="nav">
     <li><a href="#moa-plugin">Download Plugin</a></li>
     <li><a href="#moa-start">Quick Start</a></li>
-  </ul>
-  </li>
-
-  <li><a href="#r">R</a>
-  <ul class="nav">
-    <li><a href="#r-plugin">Download Plugin</a></li>
-    <li><a href="#r-start">Quick Start</a></li>
   </ul>
   </li>
 
@@ -46,21 +52,54 @@
           </div>
 
     </div> <!-- end col-2 -->
+    <div class="col-sm-12 col-md-9 openmlsectioninfo">
 
-    <div class="col-xs-12 col-sm-9 col-md-10 openmlsectioninfo">
+  <div class="bs-docs-section">
+          <div class="page-header">
+            <h1 id="java">Java API</h1>
+          </div>
+        The Java API allows you connect to OpenML from Java applications.
+	<h2 id="java-download">Download</h2>
+	The Java API is available from <a href="http://search.maven.org/#artifactdetails%7Corg.openml%7Capiconnector%7C0.9.17%7Cjar">Maven central</a>. Or, you can check it out from <a href="https://github.com/openml/r"> GitHub</a>.
+	<h2 id="java-maven">Maven Installation</h2>
+	How to include the Java API.
+	<h2 id="java-start">Quick Start</h2>
+	<p>Create an ApiConnector instance. All its functions are described in the <a href="docs">Java Docs.</a></p>
+	<pre>ApiConnector apiconnector = new ApiConnector();</pre>
+	<p>For instance, authenticate by sending your username and password. You'll get an Authenticate object (token) for uploading data to OpenML.</p>
+	<pre>Authenticate auth = apiconnector.openmlAuthenticate(username, password);</pre>
+			
+	<h2 id="java-issues">Issues</h2>
+	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/java/issues"> OpenML Java issue tracker</a>.
+	</div>
+
+
+  <div class="bs-docs-section">
+          <div class="page-header">
+            <h1 id="r">R API</h1>
+          </div>
+	The R package openML allows you to connect to the OpenML server from R scrips. Users can download and upload files, run their implementations on specific tasks, get predictions in the correct form, make SQL queries, etc. directly via R commands.
+	<h2 id="r-plugin">Download Plugin</h2>
+	The openML package can be downloaded from <a href="https://github.com/openml/r"> GitHub</a>.
+	<h2 id="r-start">Quick Start</h2>
+	In <a href="https://github.com/openml/r/blob/master/doc/knitted/1-Introduction.md">this tutorial</a>, we will show you the most important functions of this package and give you examples on standard workflows.
+	<h2 id="java-issues">Issues</h2>
+	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/r/issues"> OpenML R issue tracker</a>.
+	</div>
+
     <div class="bs-docs-section">
      <div class="page-header">
             <h1 id="weka">WEKA</h1>
           </div>
-	  	  <h3 id="weka-plugin">Download Plugin (Last major update: 07-02-2014)</h3> 
-		  OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Experimenter and the Command Line Interface. 
+OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Experimenter and the Command Line Interface. 
+	  	  <h2 id="weka-plugin">Download Plugin</h2>
       The current beta integration is available as a stand alone WEKA version which can be downloaded here:<br/>
 		  <br/>
 		  <a href="downloads/OpenWeka.beta.jar"><button class="btn btn-large btn-primary" type="button">Download Weka OpenML</button></a>
 		  <br/><br/>
 		  <img src="img/partners/Weka_logo.png" /><br/>
 
-			<h3 id="weka-start-exp">Quick Start Experimenter</h3>
+			<h2 id="weka-start-exp">Quick Start Experimenter</h2>
 			<div>
 			Open WEKA allows you to run OpenML Tasks in the Weka Experimenter. You can solve OpenML tasks locally and/or automatically upload your experiments to OpenML.
 			<ol>
@@ -78,7 +117,7 @@
 			</ol> 
 			</div>
       
-      <h3 id="weka-start-cli">Quick Start CommandLine interface</h3>
+      <h2 id="weka-start-cli">Quick Start CommandLine interface</h2>
       The Command Line interface is useful for running experiments automatically on a server, without the possibility of invoking a GUI.
       <ol>
         <li>Make sure a recent version of JRE is installed (version 1.6 or higher).</li>
@@ -95,18 +134,18 @@
       <div class="bs-docs-section">
           <div class="page-header">
             <h1 id="moa">MOA </h1>
-		  <br/>
-          <h3 id="moa-plugin">Download Plugin (Last major update: 14-05-2014)</h3>
-            OpenML features extensive support for MOA. However currently this is implemented as a stand alone MOA compilation, using the latest version (as of May, 2014). 
-          </div><br/>
-            
+          </div>
+
+          <h2 id="moa-plugin">Download Plugin</h2>
+            <p>OpenML features extensive support for MOA. However currently this is implemented as a stand alone MOA compilation, using the latest version (as of May, 2014). 
+            </p><br>
             <a href="downloads/openmlmoa.beta.jar">
               <button class="btn btn-large btn-primary" type="button">Download MOA for OpenML</button>
             </a>
             <br/>
             <br/>
           <img src="img/partners/moa.png" /><br/>
-          <h3 id="moa-start">Quick Start</h3>
+          <h2 id="moa-start">Quick Start</h2>
             Make sure a file called "openml.conf" (<a target="blank" href="downloads/openml.conf">example</a>) is present in the same directory. This file should contain two lines, indicating the username and password (server is optional).
             Launch the JAR file by double clicking on it, or use the following command:
             <pre>java -cp openmlmoa.beta.jar moa.gui.GUI</pre>
@@ -116,44 +155,20 @@
             Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:j.n.van.rijn@liacs.leidenuniv.nl">j.n.van.rijn@liacs.leidenuniv.nl</a>.
           </div>
       
-  <div class="bs-docs-section">
-          <div class="page-header">
-            <h1 id="r">R</h1>
-          </div>
-	<h3 id="r-plugin">Download Plugin</h3>
-	The R plugin is under development. It is best checked out from <a href="https://github.com/openml/r"> GitHub</a>.
-	<h3 id="r-start">Quick Start (for mlr package)</h3>
-	The R package openML is an interface to make interactions with the openML server as comfortable as possible. Users can download and upload files, run their implementations on specific tasks, get predictions in the correct form, make SQL queries, etc. directly via R commands. In <a href="https://github.com/openml/r/blob/master/doc/knitted/1-Introduction.md">this tutorial</a>, we will show you the most important functions of this package and give you examples on standard workflows.
-	<ul>
-	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/2-Download-a-task.md">Download a task</a></li>
-	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/3-Upload-an-implementation.md">Upload an implementation</a></li>
-	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/4-Upload-predictions.md">Upload predictions</a></li>
-	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/5-Download-performance-measures.md">Download performance measures</a></li>
-	<li><a href="https://github.com/openml/r/blob/master/doc/knitted/6-Browse-the-database.md">Browse the database</a></li>
-	</div>
-
-  <div class="bs-docs-section">
+         <div class="bs-docs-section">
           <div class="page-header">
             <h1 id="knime">KNIME</h1>
           </div>
-	<h3 id="knime-plugin">Download Plugin</h3>
-	You can design OpenML workflows in KNIME to directly interact with OpenML. The KNIME plugin is currently <a href="https://github.com/joaquinvanschoren/OpenML"> under development</a>.
-	<h3 id="knime-start">Quick Start</h3>
-	Stay tuned.
-
+	You can design OpenML workflows in KNIME to directly interact with OpenML. The KNIME plugin is currently <a href="https://github.com/openml/knime"> under development</a>.
 	</div>
 
-  <div class="bs-docs-section">
-
+         <div class="bs-docs-section">
           <div class="page-header">
             <h1 id="rapidminer">RapidMiner</h1>
           </div>
-	<h3 id="rm-plugin">Download Plugin</h3>
-	You can design OpenML workflows in RapidMiner to directly interact with OpenML. The RapidMiner plugin is currently <a href="https://github.com/joaquinvanschoren/OpenML"> under development</a>.
-	<h3 id="rm-start">Quick Start</h3>
-	Stay tuned.
-
+	You can design OpenML workflows in RapidMiner to directly interact with OpenML. The RapidMiner plugin is currently <a href="https://github.com/openml/rapidminer"> under development</a>.
 	</div>
       </div> <!-- end col-md-9 -->
+      </div> <!-- end col-md-10 -->
 </div> <!-- end row -->
 </div> <!-- end container -->

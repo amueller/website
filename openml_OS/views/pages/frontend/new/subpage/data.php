@@ -33,7 +33,7 @@
 		  <h2>Required information</h2>
 		  <div class="form-group">
 		    <label class="control-label" for="input_dataset_name">Name</label>
-		    <input type="text" class="form-control" id="input_dataset_name" placeholder="The name of the dataset" value=""/>
+		    <input type="text" class="form-control" id="input_dataset_name" placeholder="The name of the data set" value=""/>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_dataset_description">Description</label>
@@ -41,9 +41,8 @@
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Data</label>
-		    <div class="col-md-12 input-info-first">For data hosted elsewhere (data repositories).</div> 
-		    <input type="text" class="form-control" id="source_url" placeholder="URL where data is hosted." value="" /> 
-		    <div class="col-md-12 input-info">Or, upload the data, e.g. as an archive.</div>
+		    <input type="text" class="form-control" id="source_url" placeholder="URL where data can be downloaded" value="" /> 
+		    <div class="col-md-12 input-info">And/or, upload the data, e.g. as an archive.</div>
 		    <div class="input-group">
 			<span class="input-group-btn">
 				<button class="btn btn-primary btn-file">Upload&hellip;<input type="file" id="input_dataset_dataset" multiple></button>
@@ -53,7 +52,7 @@
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_dataset_version">Version</label>
-		    <input type="text" class="form-control" id="input_dataset_version" placeholder="Version number, hash, ..." value=""/>
+		    <input type="text" class="form-control" id="input_dataset_version" placeholder="Version number, id, ..." value=""/>
 		  </div>
 
 		</div>
@@ -70,7 +69,7 @@
 			placeholder="Other contributor(s) of the dataset" value="" />
 		  </div>
 		  <div class="form-group">
-		  <label class="control-label" for="input_dataset_licence">Licence</label> - <a href="http://creativecommons.org/licenses/?lang=en" target="_blank">Learn more</a>
+		  <label class="control-label" for="input_dataset_licence">Licence - <a href="http://creativecommons.org/licenses/?lang=en" target="_blank">Learn more</a></label>
 			  <select class="form-control">
 			  <option>Attribution (CC BY)</option>
 			  <option>Attribution-ShareAlike (CC BY-SA)</option>
@@ -82,7 +81,7 @@
 			</select>
 	          </div>
 		  <div class="form-group">
-			    <label class="control-label" for="input_dataset_citation">Citation</label>
+			    <label class="control-label" for="input_dataset_citation">Citation, DOI, ...</label>
 			    <textarea class="form-control" id="input_dataset_citation"  placeholder="How to reference this data in papers." value=""></textarea>			         		  		</div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Paper/preprint</label>
