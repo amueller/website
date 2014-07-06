@@ -24,39 +24,6 @@
       <div class="tab-pane <?php  if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) echo 'active';?>" id="runtab">
 		<?php o('run'); ?>
       </div>
-      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) { echo 'active'; } ?>" id="intro">
-      <?php 
-	if( $this->terms == false) { ?>
-      <div class="redheader">
-      <h1><i class="fa fa-star"></i> Runs</h1>
-      <p>A run is an application of a specific <a href="f">flow</a> on a specific <a href="t">task</a>, including all details such as parameter settings and all results. OpenML collects and organizes all runs from all users, so that their results can be easily compared over all tasks and flows, analyzed, visualized or simply downloaded.</p>
-      </div>
-      <h2>Recent runs</h2>
-      <?php } ?> 
-	<?php
-	if($this->total_count>0) {
-		echo '<div class="searchstats">Showing ' . $this->total_count . ' results (' . $this->time . ' seconds)</div>';	
-		
-		foreach( $this->results_all as $r ):?>
-			<div class="searchresult">
-				<i class="<?php echo $r['icon'] ?>"></i>
-				<?php if($r['type'] == 'run') { ?>
-
-				<a href="r/<?php echo $r['id'] ?>">Run <?php echo $r['id']; ?></a><br />
-				<div class="teaser">Runs <a href="f/<?php echo $r['flow'] ?>"><?php echo $r['flowname'] ?></a> on <a href="t/<?php echo $r['task'] ?>">task <?php echo $r['task'] ?></a>: <?php echo $r['taskname'] ?> on data set <a href="d/<?php echo $r['data'] ?>"><?php echo $r['dataname'] ?></a></div>
-				<div class="runStats">Uploaded by <?php echo $r['uploader'] ?> on <?php echo $r['time'];?></div>
-
-				<?php } ?>
-			</div> <?php
-		endforeach;
-	} else {
-		if( $this->terms != false ) {
-			o('no-search-results');
-		} else {
-	    o('no-results');
-	  }
-	}?> 
-     </div> <!-- end intro tab -->
         <!-- SHARE -->
         <div class="tab-pane fade sharing" id="runshare">
 	      <h1 class="modal-title" id="myModalLabel">Add runs</h1>
@@ -92,7 +59,39 @@
      <div class="tab-pane fade <?php if($this->active_tab == 'resultstab') echo 'active';?>" id="resultstab">
 		<?php subpage('results'); ?>
      </div>
+      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) { echo 'active'; } ?>" id="intro">
+      <?php 
+	if( $this->terms == false) { ?>
+      <div class="redheader">
+      <h1><i class="fa fa-star"></i> Runs</h1>
+      <p>A run is an application of a specific <a href="f">flow</a> on a specific <a href="t">task</a>, including all details such as parameter settings and all results. OpenML collects and organizes all runs from all users, so that their results can be easily compared over all tasks and flows, analyzed, visualized or simply downloaded.</p>
+      </div>
+      <h2>Recent runs</h2>
+      <?php } ?> 
+	<?php
+	if($this->total_count>0) {
+		echo '<div class="searchstats">Showing ' . $this->total_count . ' results (' . $this->time . ' seconds)</div>';	
+		
+		foreach( $this->results_all as $r ):?>
+			<div class="searchresult">
+				<i class="<?php echo $r['icon'] ?>"></i>
+				<?php if($r['type'] == 'run') { ?>
 
+				<a href="r/<?php echo $r['id'] ?>">Run <?php echo $r['id']; ?></a><br />
+				<div class="teaser">Runs <a href="f/<?php echo $r['flow'] ?>"><?php echo $r['flowname'] ?></a> on <a href="t/<?php echo $r['task'] ?>">task <?php echo $r['task'] ?></a>: <?php echo $r['taskname'] ?> on data set <a href="d/<?php echo $r['data'] ?>"><?php echo $r['dataname'] ?></a></div>
+				<div class="runStats">Uploaded by <?php echo $r['uploader'] ?> on <?php echo $r['time'];?></div>
+
+				<?php } ?>
+			</div> <?php
+		endforeach;
+	} else {
+		if( $this->terms != false ) {
+			o('no-search-results');
+		} else {
+	    o('no-results');
+	  }
+	}?> 
+     </div> <!-- end intro tab -->
      </div> <!-- end tabs content -->
 
 

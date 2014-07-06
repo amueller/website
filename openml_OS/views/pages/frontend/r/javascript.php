@@ -5,7 +5,6 @@ Main scripts for managing the data flow and interaction logic
 
 
 $(document).ready(function() { 
-	$('.pop').popover();
 	$('.selectpicker').selectpicker();
 });
 
