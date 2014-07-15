@@ -11,7 +11,7 @@ setlocale(LC_TIME, 'nl_NL');
  * of OpenML, this would be http://www.openml.org/. For an instance on
  * a localhost, this would be http://localhost/. 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/OpenML/' );
+define( 'BASE_URL', 'http://FILL_IN_WEB_ADDRESS/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DATA_URL: The subdirectory where the data can be accessed. Will be 
@@ -24,7 +24,7 @@ define( 'DATA_URL', BASE_URL . 'data/' );
  * can be found, with tailing slash. Typically, this would be 
  * something like /var/www/ (on Ubuntu installations)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'PATH', '/Library/WebServer/Documents/OpenML/' );
+define( 'PATH', '/var/www/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DATA_PATH: The directory on whether the uploaded data is stored.
@@ -35,6 +35,13 @@ define( 'PATH', '/Library/WebServer/Documents/OpenML/' );
  * the content of the data directory that was provided at installation.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DATA_PATH', PATH . 'data/' );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * TMP_PATH: Directory in which temporary files can be places. LOCK
+ * files are an example of these kind of files. /tmp/ is generally a
+ * good place on Unix based systems.
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+define( 'TMP_PATH', '/tmp/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * Configuration details for the experiment database
@@ -58,10 +65,10 @@ define( 'DATA_PATH', PATH . 'data/' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DB_NAME_EXPDB', 'openml_expdb' );
 define( 'DB_HOST_EXPDB', 'localhost' );
-define( 'DB_USER_EXPDB_READ', 'root' );
-define( 'DB_PASS_EXPDB_READ', 'MySQLQu1n0' );
-define( 'DB_USER_EXPDB_WRITE', 'root' );
-define( 'DB_PASS_EXPDB_WRITE', 'MySQLQu1n0' );
+define( 'DB_USER_EXPDB_READ', 'FILL_IN_USERNAME1' );
+define( 'DB_PASS_EXPDB_READ', 'FILL_IN_PASSWORD1' );
+define( 'DB_USER_EXPDB_WRITE', 'FILL_IN_USERNAME2' );
+define( 'DB_PASS_EXPDB_WRITE', 'FILL_IN_PASSWORD2' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * Configuration details for the OpenML database (User accounts, etc.)
@@ -77,14 +84,26 @@ define( 'DB_PASS_EXPDB_WRITE', 'MySQLQu1n0' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DB_NAME_OPENML', 'openml' );
 define( 'DB_HOST_OPENML', 'localhost' );
-define( 'DB_USER_OPENML', 'root' );
-define( 'DB_PASS_OPENML', 'MySQLQu1n0' );
+define( 'DB_USER_OPENML', 'FILL_IN_USERNAME2' );
+define( 'DB_PASS_OPENML', 'FILL_IN_PASSWORD2' );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * Configuration details for the OpenML API (Username, password)
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ * API_USERNAME: The username under which the system may perform API
+ * calls.
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * API_PASSWORD: The password that belongs to the username
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+define( 'API_USERNAME', 'FILL_IN_USERNAME' );
+define( 'API_PASSWORD', 'FILL_IN_PASSWORD' );
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * DEBUG: Will produce errors and warnings on the screen. Set this 
  * to true when developing. Set to false on the production server
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'DEBUG', TRUE );
+define( 'DEBUG', FALSE );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  * CMD_PREFIX: Adds a prefix to all shell commands; needed for bugfix

@@ -283,16 +283,29 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 434 );
       return;
     }
+    // prepare array for updating data object
+    $data = array( 'processed' => now() );
+    if( $xml->children('oml', true)->{'error'} ) { 
+      $data['error'] = "true";
+    }
     
     $this->db->trans_start();
     $success = true;
+    $current_index = -1;
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
       $feature->did = $did;
-      
       $this->Data_feature->insert_ignore( $feature );
+      
+      // if no specified attribute is the target, select the last one:
+      if( $dataset->default_target_attribute == false && $feature->index > $current_index ) {
+        $current_index = $feature->index;
+        $data['default_target_attribute'] = $feature->name;
+      }
     }
     $this->db->trans_complete();
+        
+    $this->Dataset->update( $did, $data );
     
     if( $success ) {
       $this->_xmlContents( 'data-features-upload', array( 'did' => $dataset->did ) );
@@ -403,6 +416,13 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 384 );
       return;
     }
+    
+    // prepare array for updating data object
+    $data = array( 'processed' => now() );
+    if( $xml->children('oml', true)->{'error'} ) { 
+      $data['error'] = "true";
+    }
+    $this->Dataset->update( $did, $data );
     
     $all_qualities = $this->Quality->getColumnWhere( 'name', '`type` = "DataQuality"' );
     
@@ -591,6 +611,7 @@ class Rest_api extends CI_Controller {
       'upload_date' => now(),
       'uploader' => $this->user_id,
       'isOriginal' => 'true',
+      'md5_checksum' => md5_file( $destinationUrl )
     );
     
     // TODO: We could check on this, but it will be generated anyway during the cronjob

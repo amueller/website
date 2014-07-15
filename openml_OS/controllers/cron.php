@@ -98,30 +98,6 @@ class Cron extends CI_Controller {
     }
   }
   
-  function process_run( $rid = false ) {
-    if( $rid == false ) {
-      $runs = $this->Run->getWhere( '`error` IS NULL AND `processed` IS NULL' );
-    } else {
-      $runs = $this->Run->getWhere( '`rid` = "'.$rid.'"');
-    }
-    
-    $processed = 0;
-    if( is_array( $runs ) ) {
-      foreach( $runs as $r ) {
-        if(++$processed > 5 )break;
-        $code = 0;
-        $message = false;
-        
-        $res = $this->Run->process( $r->rid, $code, $message );
-        if( $res == true ) {
-          $this->Log->cronjob( 'success', 'process_run', 'Rid ' . $r->rid . ' processed successfully. '  );
-        } else {
-          $this->_error( 'run', $r->rid, 'Error code ' . $code . ': ' . $message );
-        }
-      }
-    }
-  }
-  
   private function _error($type, $did, $message) {
     $this->Log->cronjob( 'error', 'process_' . $type, 'Id ' . $did . ' processed with error: ' . $message );
     // TODO: email user about the error that occurred. 
