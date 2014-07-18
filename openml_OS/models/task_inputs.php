@@ -10,9 +10,11 @@ class Task_inputs extends Database_write {
 	function getTaskValuesAssoc( $task_id ) {
 		$values = $this->getWhere( 'task_id = ' . $task_id );
 		$res = array();
-		foreach( $values as $value ) {
-			$res[$value->input] = $value->value;
-		}
+    if( is_array( $values ) ) {
+		  foreach( $values as $value ) {
+			  $res[$value->input] = $value->value;
+		  }
+    }
 		return $res;
 	}
 }

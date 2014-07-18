@@ -17,6 +17,7 @@ class Task_type_inout extends Database_read {
     $values = $this->Task_inputs->getTaskValuesAssoc( $task_id );
     
     list($variables, $variable_names) = $this->getVariables( $templates );
+    
     // find additional tables to fetch variables from
     $tables = array();
     foreach( $variable_names as $var ) {
@@ -45,6 +46,11 @@ class Task_type_inout extends Database_read {
         $replace[] = '';
       }
     }
+    
+    // add additional constants: // TODO: integrate this
+    $variables[] = '[TASK:id]';
+    $replace[] = $task_id;
+    
 		return str_replace( $variables, $replace, $templates );
 	}
   

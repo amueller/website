@@ -1,9 +1,80 @@
+<script type="text/javascript" src="javascript/page/data"></script>
+
 <div class="openmlsectioninfo">
-        <h1><a href="t"><i class="fa fa-trophy"></i></a> Create new task</h1>
-        <form method="post" id="datasetForm" action="api/?f=openml.data.upload" enctype="multipart/form-data">
-          <input type="hidden" id="generated_input_dataset_description" name="description" value="" />
-          <div class="row">
-            <p>Manual task creation is under development. Check back soon, it's on the top of our list.</p>
-          </div>
+  <h1><a href="t"><i class="fa fa-trophy"></i></a> Create new task</h1>
+  <div class="col-md-6">
+		<h2>Choose Task Type</h2>
+    <div class="form-group">
+		  <label class="control-label" for="input_dataset_licence">Task types</label>
+			<select id="selectTaskType" class="form-control">
+        <option name="0" selected="selected">Select a task type</option>
+			  <?php foreach( $this->task_types as $tt ): ?>
+        <option name="<?php echo $tt->ttid; ?>" <?php echo $tt->selected; ?>><?php echo $tt->name; ?></option>
+        <?php endforeach; ?>
+			</select>
+	  </div>
+    <div class="form-group">
+		  <label class="control-label">Overview</label>
+      <?php foreach( $this->task_types as $tt ): ?>
+        <br/><b><?php echo $tt->name; ?></b>
+        <?php echo $tt->description; ?>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <ul class="nav nav-tabs" id="form-task-type-tabs" style="display: none; ">
+      <li><a href="#task-type-0" role="tab" data-toggle="tab">Select task type</a></li>
+      <?php foreach( $this->task_types as $tt ): ?>
+        <li><a href="#task-type-<?php echo $tt->ttid; ?>" role="tab" data-toggle="tab"><?php echo $tt->name; ?></a></li>
+      <?php endforeach; ?>
+    </ul>
+    <div class="tab-content">
+    <?php foreach( $this->task_types as $tt ): ?>
+      <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>">
+        <h2><?php echo $tt->name; ?></h2>
+        <form method="post" action="">
+          <input type="hidden" name="ttid" value="<?php echo $tt->ttid; ?>" />
+          <?php 
+            foreach( $tt->in as $io ): 
+              $id = 'input_' . $tt->ttid . '-' . $io->name; 
+              $template_search = json_decode( $io->template_search );
+              $name = text_neat_ucwords( $io->name );
+              $default = '';
+              $placeholder = '';
+              if( $template_search ) {
+                if( property_exists( $template_search, 'name' ) ) { $name = $template_search->name; }
+                if( property_exists( $template_search, 'default' ) ) { $default = $template_search->default; }
+                if( property_exists( $template_search, 'placeholder' ) ) {  $placeholder = $template_search->placeholder; }
+              }
+          ?>
+		      <div class="form-group">
+		        <label class="control-label" for="<?php echo  $id ; ?>"><?php echo $name; ?></label>
+            <?php 
+              if( $template_search && property_exists( $template_search, 'type' ) && $template_search->type == 'select' ): // make a dropdown
+              $sql = 'SELECT * FROM `'.$template_search->table.'` WHERE ttid = ' . $io->ttid; 
+              $types = $this->Dataset->query( $sql ); ?>
+            <select class="form-control input-small selectpicker" name="<?php echo $io->name;?>">
+              <?php foreach($types as $type): ?>
+              <option value="<?php echo $type->{$template_search->key}; ?>"><?php echo $type->{$template_search->value}; ?></option>
+              <?php endforeach; ?>
+            </select>
+          <?php else: // makes a plain text input ?>
+		        <input type="text" class="form-control" id="<?php echo  $id; ?>" name="<?php echo $io->name;?>" placeholder="<?php echo $placeholder; ?>" value="<?php echo $default; ?>" />
+          <?php endif; ?>
+		      </div>
+          <?php endforeach; ?>
+          <div class="form-group">
+		        <input class="btn btn-primary" type="submit" value="Submit"/>
+		      </div>
         </form>
+      </div>
+    <?php endforeach; ?> 
+    </div>
+  </div>
+  <?php if( is_array( $this->task_ids ) && $this->task_ids ): ?>
+  <div class="col-md-12">
+    <h2>Created Tasks</h2>
+    <?php echo implode(', ' , $this->task_ids ); ?>
+  </div>
+  <?php endif; ?>
 </div> <!-- end container -->

@@ -58,8 +58,10 @@ class Dataset extends Database_write {
     foreach( $datasets as $dataset ) {
       $name = strstr( $dataset, '(', true );
       $version = substr( $dataset, strlen($name)+1, -1 );
-      $constraint_string .= 'OR (`'.$namespace.'`.`name` = "'.trim(safe($name)).
-                  '" AND `'.$namespace.'`.`version` = "'.trim(safe($version)).'") ';
+      if(trim(safe($name)) && trim(safe($version))) {
+        $constraint_string .= 'OR (`'.$namespace.'`.`name` = "'.trim(safe($name)).
+          '" AND `'.$namespace.'`.`version` = "'.trim(safe($version)).'") ';
+      }
     }
     $res = '(' . substr($constraint_string, 3) . ')';
     return $res;

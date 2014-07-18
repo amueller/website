@@ -629,11 +629,6 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 134 );
       return;
     }
-    
-    if( DEBUG ) { // for local purposes
-      // if result is false, do not mark this yet. Will try again in API
-      $this->Dataset->process( $id, false, $message );
-    }
 
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }

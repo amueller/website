@@ -27,6 +27,7 @@ class Task extends Database_write {
     $this->id_column = 'task_id';
     
     $this->load->model('Estimation_procedure');
+    $this->load->model('Task_inputs');
   }
   
   function getAllTasks() {
@@ -105,6 +106,50 @@ class Task extends Database_write {
       return end($task);
     else
       return false;
+  }
+  
+  function create_batch( $ttid, $task_batch ) {
+    $result = array();
+    $existing_tasks = $this->tasks_crosstabulated( $ttid );
+    foreach( $task_batch as $task ) {
+      $current_task_obj = json_decode(json_encode($task), false); // convert array to obj, using json lib
+      if( in_array( $current_task_obj, $existing_tasks ) == false ) {
+        $task_id = $this->insert( array( 'ttid' => $ttid ) );
+        foreach( $task as $key => $value ) {
+          $this->Task_inputs->insert( array( 'task_id' => $task_id, 'input' => $key, 'value' => $value ) );
+        }
+        $result[] = $task_id;
+      }
+    }
+    return $result;
+  }
+
+  function tasks_crosstabulated( $ttid, $task_id = false, $where_additional = array() ) {
+    $inputs = $this->Task_type_inout->getColumnWhere( 'name', '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "' . $ttid . '"' );
+    $select = array();
+    $from = array();
+    $where = array();
+    if( $task_id ) {
+      $select[] = '`' . $inputs[0] . '`.`task_id`';
+    }
+    foreach( $inputs as $in ) {
+      $select[] = '`' . $in . '`.`value` AS `' . $in . '`';
+      $from[] = '`task_inputs` AS `' . $in . '`';
+      $where[] = '`' . $in . '`.`task_id` = `'.$inputs[0].'`.`task_id` AND `' . $in . '`.`input` = "'.$in.'"';
+    }
+    foreach( $where_additional as $key => $value ) {
+      // we don't need to connect key.input to "key", since this is already done. 
+      if( is_array( $value ) ) {
+        // multiple possibilities, use WHERE ... IN
+        $where[] = '`' . $key . '`.`value` IN ("' . implode( '", "', $value ) . '")';
+      } else {
+        // only one possibility, use WHERE ... IS
+        $where[] = '`' . $key . '`.`value` = "'.$value.'"';
+      }
+    }
+    $sql = 'SELECT ' . implode( ', ', $select ) . ' FROM ' . implode( ', ', $from ) . ' WHERE ' . implode( ' AND ', $where );
+    
+    return $this->query( $sql );
   }
   
   // constructs a query, able to concatinate multiple entrees out of the task_values table

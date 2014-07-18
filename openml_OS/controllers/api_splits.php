@@ -16,21 +16,25 @@ class Api_splits extends CI_Controller {
     $this->evaluation = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
   }
   
-  function get( $task_id, $estimation_procedure_id ) {
-    $this->generate( $task_id, $estimation_procedure_id, false );
+  function get( $task_id ) {
+    $this->generate( $task_id, false );
   }
   
-  function md5( $task_id, $estimation_procedure_id ) {
-    $this->generate( $task_id, $estimation_procedure_id, true );
+  function md5( $task_i ) {
+    $this->generate( $task_id, true );
   }
   
-  private function generate( $task_id, $estimation_procedure_id, $md5 ) {
+  private function generate( $task_id, $md5 ) {
     $task = $this->Task->getById( $task_id );
     if( $task === false || in_array( $task->ttid, $this->task_types ) === false ) {
       die('Task not providing datasplits.');
     }
     $values = $this->Task_inputs->getTaskValuesAssoc( $task_id );
-    $estimation_procedure = $this->Estimation_procedure->getById( $estimation_procedure_id );
+    
+    $estimation_procedure = null;
+    if( array_key_exists( 'estimation_procedure', $values ) ) {
+      $estimation_procedure = $this->Estimation_procedure->getById( $values['estimation_procedure'] );
+    }
     
     if($estimation_procedure == false) {
       die('estimation procedure not found');
@@ -47,7 +51,7 @@ class Api_splits extends CI_Controller {
       header('Content-type: text/plain');
       system( CMD_PREFIX . $command );
     } else {
-      die('failed to generate arff file. ');
+      die('failed to generate arff file: php "system" function disabled. ');
     }
   }
 }
