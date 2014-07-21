@@ -55,11 +55,11 @@
               $types = $this->Dataset->query( $sql ); ?>
             <select class="form-control input-small selectpicker" name="<?php echo $io->name;?>">
               <?php foreach($types as $type): ?>
-              <option value="<?php echo $type->{$template_search->key}; ?>"><?php echo $type->{$template_search->value}; ?></option>
+              <option value="<?php echo $type->{$template_search->key}; ?>" <?php if($this->input->post($io->name) == $type->{$template_search->key}) echo 'selected="selected"'; ?>><?php echo $type->{$template_search->value}; ?></option>
               <?php endforeach; ?>
             </select>
           <?php else: // makes a plain text input ?>
-		        <input type="text" class="form-control" id="<?php echo  $id; ?>" name="<?php echo $io->name;?>" placeholder="<?php echo $placeholder; ?>" value="<?php echo $default; ?>" />
+		        <input type="text" class="form-control" id="<?php echo  $id; ?>" name="<?php echo $io->name;?>" placeholder="<?php echo $placeholder; ?>" value="<?php echo $this->input->post($io->name) ? $this->input->post($io->name) : $default; ?>" />
           <?php endif; ?>
 		      </div>
           <?php endforeach; ?>
@@ -73,8 +73,10 @@
   </div>
   <?php if( is_array( $this->task_ids ) && $this->task_ids ): ?>
   <div class="col-md-12">
-    <h2>Created Tasks</h2>
+    <h2>Tasks</h2>
     <?php echo implode(', ' , $this->task_ids ); ?>
+    <br/>
+    <?php echo $this->new_text; ?>
   </div>
   <?php endif; ?>
 </div> <!-- end container -->

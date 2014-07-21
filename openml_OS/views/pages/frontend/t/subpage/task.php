@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
 		<h1><a href="t"><i class="fa fa-trophy"></i></a> Task <?php echo $this->task_id; ?></h1>
 		<?php if (isset($this->record['task_id'])){ ?>		
-		<a href="http://openml.liacs.nl/api/?f=openml.task.search&task_id=<?php echo $this->task_id;?>">View XML</a>
+		<a href="api/?f=openml.task.search&task_id=<?php echo $this->task_id;?>">View XML</a>
 
 		<h2><?php echo $this->record['type_name'] ?></h2>
 		<p><?php echo $this->record['type_description'] ?></p>

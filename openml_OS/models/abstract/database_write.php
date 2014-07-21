@@ -12,6 +12,14 @@ class Database_write extends Database_read {
     return $this->db->insert_id();
   }
 
+  function insert_batch( $data ) {
+    if( $data ) {
+      return $this->db->insert_batch( $this->table, $data);
+    } else {
+      return false;
+    }
+  }
+
   function insert_ignore( $data ) {
     $insert_query = $this->db->insert_string( $this->table, $data );
     $insert_query = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $insert_query);

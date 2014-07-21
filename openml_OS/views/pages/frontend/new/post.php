@@ -10,6 +10,7 @@ $ttid = $this->input->post( 'ttid' );
 $required_inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "'.$ttid.'"' );
 $inputs = array();
 foreach( $required_inputs as $i ) {
+  if( $i->requirement == 'optional' && $this->input->post($i->name) == false ) { continue; }
   $inputs[$i->name] = $this->input->post($i->name);
 }
 
@@ -42,12 +43,15 @@ if( is_array( $datasets ) ) {
 }
 
 $inputs['source_data'] = $dids;
-
 $tasks = $this->Task->tasks_crosstabulated( $ttid, true, $inputs );
-$this->task_ids = array();
-foreach( $tasks as $task ) {
-  $new = ''; // TODO: in_array( $task->task_id, $new_tasks ) ? ' *' : '';
-  $this->task_ids[] = '<a href="t/' . $task->task_id . '">' . $task->task_id . '</a>' . $new;
+
+if( $tasks ) {
+  foreach( $tasks as $task ) {
+    $new = in_array( $task->task_id, $new_tasks ) ? '*' : '';
+    $this->task_ids[] = '<a href="t/' . $task->task_id . '">' . $task->task_id . '</a>' . $new;
+  }
 }
+
+if( $new_tasks ) { $this->new_text = '* new'; }
 
 ?>

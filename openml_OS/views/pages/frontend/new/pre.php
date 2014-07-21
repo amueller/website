@@ -3,6 +3,9 @@ if (!$this->ion_auth->logged_in()) {
 	header('Location: ' . BASE_URL . 'login');
 }
 
+$this->task_ids = array();
+$this->new_text = '';
+
 $ttid_sel = $this->input->post( 'ttid' );
 $this->task_types = $this->Task_type->get( );
 for( $i = 0; $i < count($this->task_types); ++$i ) {
