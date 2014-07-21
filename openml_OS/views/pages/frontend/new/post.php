@@ -22,7 +22,7 @@ if( trim( $this->input->post( 'target_feature' ) ) ) {
   unset( $inputs['target_feature'] );
 }
 
-$sql = 'SELECT `d`.`did`, `f`.`name` FROM `dataset` `d`,`data_feature` `f` WHERE `d`.`did` = `f`.`did` AND `f`.`name` = ' . $target_feature . ' AND ' . $constraints;
+$sql = 'SELECT `d`.`did`, `f`.`name` FROM `dataset` `d`,`data_feature` `f` WHERE `d`.`did` = `f`.`did` AND `f`.`name` = ' . $target_feature . ' AND ' . $constraints . ' ORDER BY `did`';
 
 $datasets = $this->Dataset->query( $sql );
 

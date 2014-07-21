@@ -1,6 +1,6 @@
 <?php
 
-class Frontend extends CI_Controller {
+class Backend extends CI_Controller {
   
   function __construct() {
     parent::__construct();
@@ -22,14 +22,18 @@ class Frontend extends CI_Controller {
     
     $this->load->helper('table');
     $this->load->helper('tasksearch');
+    $this->load->helper('directory');
     
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
     $this->data_controller = BASE_URL . 'files/';
     
     $this->page = 'home'; // default value
-
-    $this->searchclient = new Elasticsearch\Client();
+    
+    // login is mandatory
+    if (!$this->ion_auth->logged_in()) {
+	    header('Location: ' . BASE_URL . 'login');
+    } // TODO: also check on admin functionality
   }
   
   public function index() {
@@ -41,21 +45,14 @@ class Frontend extends CI_Controller {
     $exploded_page = explode('_',$indicator);
     $this->active = $exploded_page[0]; // can be overridden. 
     $this->message = $this->session->flashdata('message'); // can be overridden
+    
+    if(!loadpage($indicator,TRUE,'pre')) {
+      $this->error404();
+      return;
+    }
+    if($_POST) loadpage($indicator,TRUE,'post');
 
-    if(false === strpos($_SERVER['REQUEST_URI'],'/json')){
-      if(!loadpage($indicator,TRUE,'pre')) {
-        $this->error404();
-        return;
-      }
-      if($_POST) loadpage($indicator,TRUE,'post');
-    }
-    if(false !== strpos($_SERVER['REQUEST_URI'],'/html')){
-	    $this->load->view('html_main');
-    } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/json')){
-	    $this->load->view('json_main');
-    } else {
-	    $this->load->view('frontend_main');
-    }
+	  $this->load->view('frontend_main'); // frontend main will do fine for now. 
   }
   
   public function error404() {

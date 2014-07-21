@@ -144,7 +144,7 @@ class Task extends Database_write {
     $select = array();
     $left_join = array();
     $from = array();
-    $where = array( '1' );
+    $where = array( '`t`.`ttid` = ' . $ttid );
     if( $task_id ) {
       $select[] = '`t`.`task_id`';
     }
@@ -169,7 +169,6 @@ class Task extends Database_write {
       }
     }
     $sql = 'SELECT ' . implode( ', ', $select ) . ' FROM `task` `t` ' . implode( ' ', $left_join ) . ', ' . implode( ', ', $from ) . ' WHERE ' . implode( ' AND ', $where );
-    
     $result = $this->query( $sql );
     
     // remove "NULL" values

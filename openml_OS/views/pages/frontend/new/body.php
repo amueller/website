@@ -2,11 +2,11 @@
   <div class="container">
     <div class="col-sm-12">
 <?php
-    if(false === strpos($_SERVER['REQUEST_URI'],'/new/')) {
-	subpage('data');
-    } else {
-	subpage(end(explode('/', $_SERVER['REQUEST_URI'])));
-    }
+  if(false === strpos($_SERVER['REQUEST_URI'],'/new/')) {
+    subpage('data');
+  } else {
+    subpage(end(explode('/', $_SERVER['REQUEST_URI'])));
+  }
 ?>
    </div>
   </div>
