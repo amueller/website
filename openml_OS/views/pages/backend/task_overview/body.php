@@ -33,11 +33,11 @@
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-missing">
               <h4><?php echo $tt->name; ?> tasks with missing "required" values</h4>
-              <table class="taskstable"><?php echo generate_table( $tt->inputs, $tt->missing ); ?></table>
+              <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->missing ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-illegal">
               <h4><?php echo $tt->name; ?> tasks with illegal values</h4>
-              <table class="taskstable"><?php echo generate_table( $tt->inputs, $tt->illegal ); ?></table>
+              <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->illegal ); ?></table>
             </div>
           </div>
         </div>
