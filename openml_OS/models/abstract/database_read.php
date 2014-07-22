@@ -133,5 +133,26 @@ class Database_read extends CI_Model {
     $newVersion = explode( '.', $highest->version );
     return $newVersion[0] + 1;
   }
+  
+  protected function _where_clause_on_id($id_value) {
+		$where_clauses = array();
+		if(is_array($this->id_column)) {
+			if(is_array($id_value) && count($id_value) == count($id_value) ) {
+				for($i = 0; $i < count($this->id_column); $i++ ) {
+					$where_clauses[] = '`'.$this->id_column[$i].'` = "'.$id_value[$i].'"';
+				}
+			} else {
+				die('Function ' . get_class($this) . '::where_clause_on_id abused. Please fix. ');
+			}
+		} else {
+			if(is_array($id_value)) {
+				die('Function ' . get_class($this) . '::where_clause_on_id abused. Please fix. ');
+			} else {
+				$where_clauses[] = '`'.$this->id_column.'` = "'.$id_value.'"';
+			}
+		}
+		$res = implode( ' AND ', $where_clauses );
+    return $res;
+	}
 }
 ?>

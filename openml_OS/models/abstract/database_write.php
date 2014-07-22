@@ -28,7 +28,7 @@ class Database_write extends Database_read {
   }
   
   function update( $id, $data ) {
-    return $this->db->where( $this->id_column . ' = ' . $id )->update( $this->table, $data );
+    return $this->db->where( $this->_where_clause_on_id($id) )->update( $this->table, $data );
   }
   
   function delete( $id ) {

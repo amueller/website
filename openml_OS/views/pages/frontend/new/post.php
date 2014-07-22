@@ -7,6 +7,7 @@
  * * * * */
 
 $ttid = $this->input->post( 'ttid' );
+$datatype = array( 'nominal' );
 $required_inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "'.$ttid.'"' );
 $inputs = array();
 foreach( $required_inputs as $i ) {
@@ -22,7 +23,18 @@ if( trim( $this->input->post( 'target_feature' ) ) ) {
   unset( $inputs['target_feature'] );
 }
 
-$sql = 'SELECT `d`.`did`, `f`.`name` FROM `dataset` `d`,`data_feature` `f` WHERE `d`.`did` = `f`.`did` AND `f`.`name` = ' . $target_feature . ' AND ' . $constraints . ' ORDER BY `did`';
+if( $ttid == 2 ) { // exception. 
+  $datatype = array( 'numeric' );
+}
+
+$sql = 
+  'SELECT `d`.`did`, `f`.`name` ' . 
+  'FROM `dataset` `d`,`data_feature` `f` ' . 
+  'WHERE `d`.`did` = `f`.`did` ' .
+  'AND `f`.`name` = ' . $target_feature . ' ' .
+  'AND `f`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
+  'AND ' . $constraints . ' ' .
+  'ORDER BY `did`;';
 
 $datasets = $this->Dataset->query( $sql );
 

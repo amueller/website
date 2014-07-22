@@ -5,6 +5,7 @@ class Backend extends CI_Controller {
   function __construct() {
     parent::__construct();
     
+    $this->load->model('Algorithm_setup');
     $this->load->model('File');
     $this->load->model('Dataset');
     $this->load->model('Data_quality');

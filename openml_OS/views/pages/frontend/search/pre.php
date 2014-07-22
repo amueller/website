@@ -1,14 +1,16 @@
 <?php
 
 function addToGET($keyvalue){
-      $attr = $_GET;
-      foreach($keyvalue as $key => $value){
-		if(array_key_exists($key,$attr))
-			 unset($attr[$key]);
-		if($value)
-	        	$attr[$key]=$value;
-      }
-      return http_build_query($attr); 
+  $attr = $_GET;
+  foreach($keyvalue as $key => $value){
+    if(array_key_exists($key,$attr)) {
+      unset($attr[$key]);
+    }
+    if($value) {
+      $attr[$key]=$value;
+    }
+  }
+  return http_build_query($attr); 
 }
 
 /// SEARCH
