@@ -50,6 +50,8 @@ class Task_type_inout extends Database_read {
     // add additional constants: // TODO: integrate this
     $variables[] = '[TASK:id]';
     $replace[] = $task_id;
+    $variables[] = '[CONSTANT:base_url]';
+    $replace[] = BASE_URL;
     
 		return str_replace( $variables, $replace, $templates );
 	}
