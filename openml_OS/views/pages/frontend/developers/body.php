@@ -932,10 +932,6 @@
             <dd>Internal server error, please contact api administrators</dd>
           </dl>
           <dl>
-            <dt>209: Unable to store cvrun</dt>
-            <dd>Internal server error, please contact api administrators</dd>
-          </dl>
-          <dl>
             <dt>210: Unable to store run</dt>
             <dd>Internal server error, please contact api administrators</dd>
           </dl>
