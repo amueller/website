@@ -74,7 +74,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
 					<?php $runparams['body']['query']['match']['run_task.source_data.data_id'] = $r['_id'];
-					      echo $this->searchclient->search($runparams)['hits']['total'].' runs';
+                $searchclient = $this->searchclient->search($runparams);
+					      echo $searchclient['hits']['total'].' runs';
 					      if(array_key_exists('NumberOfInstances', $rs))    echo ' - '.$rs['NumberOfInstances'].' instances'; 
 					      if(array_key_exists('NumberOfFeatures', $rs))     echo ' - '.$rs['NumberOfFeatures'].' features'; 
 					      if(array_key_exists('NumberOfClasses', $rs))      echo ' - '.$rs['NumberOfClasses'].' classes';
@@ -85,7 +86,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 		   		<a href="t/type/<?php echo $r['_id']; ?>"><?php echo $rs['name']; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats"><?php $runparams['body']['query']['match']['task.task_type_id'] = $r['_id'];
-					      echo $this->searchclient->search($runparams)['hits']['total'];
+                $searchclient = $this->searchclient->search($runparams);
+					      echo $searchclient['hits']['total'];
 					?> runs</div>
 
 		   <?php } elseif($type == 'measure') { ?>
@@ -100,7 +102,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
 					<?php $runparams['body']['query']['match']['run_task.task_id'] = $r['_id'];
-					      echo $this->searchclient->search($runparams)['hits']['total'];
+                $searchclient = $this->searchclient->search($runparams);
+					      echo $searchclient['hits']['total'];
 					?> runs - <?php echo $rs['tasktype']['name'];?>
 					<?php foreach( $rs as $key => $value ) {
 						if($key == 'id' or $key == 'tasktype' or $key == 'data_splits' or !$value) {}
@@ -114,7 +117,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
 					<?php $runparams['body']['query']['match']['run_flow.flow_id'] = $r['_id'];
-					      echo $this->searchclient->search($runparams)['hits']['total'];
+                $searchclient = $this->searchclient->search($runparams);
+					      echo $searchclient['hits']['total'];
 					?> runs</div>
 		   <?php } ?>
 			</div>

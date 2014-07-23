@@ -27,6 +27,7 @@ class Task extends Database_write {
     $this->id_column = 'task_id';
     
     $this->load->model('Estimation_procedure');
+    $this->load->model('Task_inputs');
   }
   
   function getAllTasks() {
@@ -105,6 +106,80 @@ class Task extends Database_write {
       return end($task);
     else
       return false;
+  }
+  
+  function create_batch( $ttid, $task_batch ) {
+    $result = array();
+    $to_insert = array();
+    $existing_tasks = $this->tasks_crosstabulated( $ttid );
+    if( $existing_tasks == false ) { $existing_tasks = array(); }
+    foreach( $task_batch as $task ) {
+      $current_task_obj = json_decode(json_encode($task), false); // convert array to obj, using json lib
+      
+      if( in_array( $current_task_obj, $existing_tasks ) == false ) {
+        $task_id = $this->insert( array( 'ttid' => $ttid ) );
+        foreach( $task as $key => $value ) {
+          $to_insert[] = array( 'task_id' => $task_id, 'input' => $key, 'value' => $value );
+        }
+        // additional hidden inputs, specific for "official" OpenML inputs.
+        // TODO: integrate?
+        if( $ttid == 3 ) {
+          // "number_samples"
+          $numInstances = $this->Data_quality->getFeature( $task['source_data'], 'NumberOfInstances' );
+          $estimation_procedure = $this->Estimation_procedure->getById( $task['estimation_procedure'] );
+          $numSamples = $this->Estimation_procedure->number_of_samples(
+            $this->Estimation_procedure->trainingset_size( $numInstances, $estimation_procedure->folds ) 
+          );
+          $to_insert[] = array( 'task_id' => $task_id, 'input' => 'number_samples', 'value' => $numSamples );
+        }
+        $result[] = $task_id;
+      }
+    }
+    $this->Task_inputs->insert_batch( $to_insert );
+    return $result;
+  }
+
+  function tasks_crosstabulated( $ttid, $task_id = false, $where_additional = array() ) {
+    $inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "' . $ttid . '"' );
+    $select = array();
+    $left_join = array();
+    $from = array();
+    $where = array( '`t`.`ttid` = ' . $ttid );
+    if( $task_id ) {
+      $select[] = '`t`.`task_id`';
+    }
+    foreach( $inputs as $in ) {
+      $select[] = '`' . $in->name . '`.`value` AS `' . $in->name . '`';
+      // use a left join for the "optional" fields, since these might be missing. 
+      if( $in->requirement == 'optional' ) {
+        $left_join[] = ' LEFT JOIN `task_inputs` AS `' . $in->name . '` ON `' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';
+      } elseif( $in->requirement == 'required' ) {
+        $from[] = '`task_inputs` AS `' . $in->name . '`';
+        $where[] = '`' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';
+      }
+    }
+    foreach( $where_additional as $key => $value ) {
+      // we don't need to connect key.input to "key", since this is already done. 
+      if( is_array( $value ) ) {
+        // multiple possibilities, use WHERE ... IN
+        $where[] = '`' . $key . '`.`value` IN ("' . implode( '", "', $value ) . '")';
+      } else {
+        // only one possibility, use WHERE ... IS
+        $where[] = '`' . $key . '`.`value` = "'.$value.'"';
+      }
+    }
+    $sql = 'SELECT ' . implode( ', ', $select ) . ' FROM `task` `t` ' . implode( ' ', $left_join ) . ', ' . implode( ', ', $from ) . ' WHERE ' . implode( ' AND ', $where );
+    $result = $this->query( $sql );
+    
+    // remove "NULL" values
+    if( $result ) {
+      for( $i = 0; $i < count($result); ++$i ) {
+        foreach( $result[$i] as $key => $value ) {
+          if( $value == NULL ) unset( $result[$i]->{$key} );
+        }
+      }
+    }
+    return $result;
   }
   
   // constructs a query, able to concatinate multiple entrees out of the task_values table
