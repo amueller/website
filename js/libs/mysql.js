@@ -14,7 +14,7 @@ CodeMirror.defineMode("mysql", function(config) {
   }
   var ops = wordRegexp(["str", "lang", "langmatches", "datatype", "bound", "sameterm", "isiri", "isuri",
                         "isblank", "isliteral", "union", "a"]);
-  var attributes = wordRegexp([('ALGORITHM'),('ALGORITHM_QUALITY'),('ALGORITHM_SETUP'),('BVRUN'),('CVRUN'),('CONNECTION'),('DATA_CLASS'),('DATA_FEATURE'),('DATA_QUALITY'),('DATASET'),('EVALUATES_FUNCTION '),('EVALUATION'),('EVALUATION_STATISTICS'),('EXPERIMENT'),('EXPERIMENTAL_VARIABLE'),('FUNCTION_SETUP'),('IMPLEMENTATION '),('INPUT_DATA '),('MACHINE '),('MATH_FUNCTION'),('MODEL'),('OUTPUT_DATA '),('PPRUN '),('INPUT '),('PARAMETER_SETTING'),('QUALITY '),('RUN '),('WORKFLOW'),('WORKFLOW_SETUP')
+  var attributes = wordRegexp([('ALGORITHM'),('ALGORITHM_QUALITY'),('ALGORITHM_SETUP'),('BVRUN'),('CONNECTION'),('DATA_CLASS'),('DATA_FEATURE'),('DATA_QUALITY'),('DATASET'),('EVALUATES_FUNCTION '),('EVALUATION'),('EVALUATION_STATISTICS'),('EXPERIMENT'),('EXPERIMENTAL_VARIABLE'),('FUNCTION_SETUP'),('IMPLEMENTATION '),('INPUT_DATA '),('MACHINE '),('MATH_FUNCTION'),('MODEL'),('OUTPUT_DATA '),('PPRUN '),('INPUT '),('PARAMETER_SETTING'),('QUALITY '),('RUN '),('WORKFLOW'),('WORKFLOW_SETUP')
   ]);
   var keywords = wordRegexp([('ACCESSIBLE'),('ALTER'),('AS'),('BEFORE'),('BINARY'),('BY'),('CASE'),('CHARACTER'),('COLUMN'),('CONTINUE'),('CROSS'),('CURRENT_TIMESTAMP'),('DATABASE'),('DAY_MICROSECOND'),('DEC'),('DEFAULT'),
 	('DESC'),('DISTINCT'),('DOUBLE'),('EACH'),('ENCLOSED'),('EXIT'),('FETCH'),('FLOAT8'),('FOREIGN'),('GRANT'),('HIGH_PRIORITY'),('HOUR_SECOND'),('IN'),('INNER'),('INSERT'),('INT2'),('INT8'),

@@ -172,10 +172,6 @@ $this->apiErrors[208][0] = 'Error inserting setup record';
 $this->apiErrors[208][1] = 'Internal server error, please contact api administrators';
 
 // for function: openml.run.upload 
-$this->apiErrors[209][0] = 'Unable to store cvrun';
-$this->apiErrors[209][1] = 'Internal server error, please contact api administrators';
-
-// for function: openml.run.upload 
 $this->apiErrors[210][0] = 'Unable to store run';
 $this->apiErrors[210][1] = 'Internal server error, please contact api administrators';
 

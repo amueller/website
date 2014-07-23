@@ -359,29 +359,7 @@ setTimeout(function(){
     },1000);
 });
 
-$(document).on('click', '.openRunModal', function(){updateRunModal($(this).data('id'))});
-
-function updateRunModal(rid) {
-	var runq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=select r.uploader, r.task_id, r.start_time, c.inputData, c.learner, c.runType, c.nrFolds, c.nrIterations from run r, cvrun c where r.rid="+rid+" and r.rid=c.rid", "UTF-8");
-	$.getJSON(runq,function(jsonData){
-	        var data = jsonData.data;
-		$("#runinfo").empty();
-		$("#runinfo").append("<h3>Run details</h3>Run id: " + rid);
-		$("#runinfo").append("<br>Author: " + data[0][0]);
-		$("#runinfo").append("<br>Date: " + data[0][2]);
-		taskid = data[0][1];
-		dataid = data[0][3];
-		flowid = data[0][4];
-		$("#runinfo").append("<h3>Task</h3>Task id: " + taskid);
-		$("#runinfo").append("<br>Type: " + data[0][5]);
-		$("#runinfo").append("<br>Procedure: " + data[0][7] + " x " + data[0][6] + " cross-validation");
-
-		var dataq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=select name, version from dataset where did="+dataid, "UTF-8");
-		$.getJSON(dataq,function(jsonData){
-			var data = jsonData.data;
-			$("#runinfo").append("<br>Input data: <a href='d/" + dataid + "'>"+ data[0][0] + "</a>");
-
-			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE s.implementation_id=i.id and s.sid="+flowid, "UTF-8");
+var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE s.implementation_id=i.id and s.sid="+flowid, "UTF-8");
 			$.getJSON(flowq,function(jsonData){
 				var data = jsonData.data;
 				$("#runinfo").append("<h3>Flow</h3>Flow: <a href='f/" + data[0][3] + "'>"+ data[0][0] + "</a>");
