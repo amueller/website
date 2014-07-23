@@ -23,7 +23,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	
 	$this->dt_main['columns'] 		= array('r.rid','rid','sid','name','value');
 	$this->dt_main['column_widths']		= array(1,1,0,60,30);
-	$this->dt_main['column_content']	= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);
+	$this->dt_main['column_content']	= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);
 	$this->dt_main['column_source'] 	= array('wrapper','db','db','doublewrapper','db');
 	$this->dt_main['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(d.did, "~", d.name) as name, round(e.value,4) as value '.
 										'FROM algorithm_setup l, evaluation e, cvrun r, dataset d '.
@@ -36,7 +36,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 
 	$this->dt_main_all['columns'] 		= array('r.rid','rid','sid','name','value');
 	$this->dt_main_all['column_widths']		= array(1,1,0,60,30);
-	$this->dt_main_all['column_content']	= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);
+	$this->dt_main_all['column_content']	= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);
 	$this->dt_main_all['column_source'] 	= array('wrapper','db','db','doublewrapper','db');
 	
 	$this->dt_main_all['base_sql'] 		= 	'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(d.did, "~", d.name) as name, round(e.value,4) as value '.

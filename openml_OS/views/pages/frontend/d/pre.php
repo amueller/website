@@ -57,7 +57,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 										
 	$this->dt_main_all = array();
 	$this->dt_main_all['columns'] 		= array('r.rid','rid','sid','fullName','value');
-	$this->dt_main_all['column_content']= array('<a data-toggle="modal" data-id="[CONTENT]" data-target="#runModal" class="openRunModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
+	$this->dt_main_all['column_content']= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
 	$this->dt_main_all['column_source']	= array('wrapper','db','db','doublewrapper','db','db');
 	//$this->dt_main_all['group_by'] 	= 'l.implementation'; NONE
 	
