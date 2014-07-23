@@ -38,9 +38,12 @@
             <div class="form-group">
               <label class="control-label">Select Algorithms</label>
               <div class="row">
-                <?php if( $this->setups ): foreach( $this->setups as $setup ): ?>
+                <?php if( $this->setups ): foreach( $this->setups as $setup ): $alg = $setup->name . '(' . $setup->version . ')';?>
                   <div class="col-md-4">
-                    <span data-toggle="tooltip" data-placement="right" title="<?php echo htmlspecialchars( $setup->setup_string ); ?>"><input type="checkbox" name="setups[]" value="<?php echo $setup->sid; ?>" <?php if( in_array( $setup->sid, $this->active_setups ) ) echo 'checked'; ?> />&nbsp;<?php echo $setup->name . '(' . $setup->version . ')'; ?></span></div>
+                    <div data-toggle="tooltip" data-placement="right" title="<?php echo htmlspecialchars( $setup->setup_string ); ?>">
+                      <input type="checkbox" name="setups[]" value="<?php echo $setup->sid; ?>" <?php if( in_array( $setup->sid, $this->active_setups ) ) echo 'checked'; ?> />&nbsp;<?php echo cutoff( $alg, 40); ?>
+                    </div>
+                  </div>
                 <?php endforeach; else: ?>
                   <div class="col-md-4">No setups.</div> 
                 <?php endif; ?>

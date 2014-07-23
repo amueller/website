@@ -19,6 +19,12 @@ function is_safe( $unsafe ) {
   return !preg_match("/[^a-zA-Z0-9\s.,-_()]/", $unsafe );
 }
 
+function cutoff( $input, $length ) {
+  if( strlen( $input ) < $length + 5 ) return $input;
+  
+  return substr( $input, 0, $length ) . ' ...';
+}
+
 function rand_string( $length, $type='' ) {
   $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";  
   if( $type == 'C' ) {
