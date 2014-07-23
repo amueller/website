@@ -24,18 +24,6 @@
       <div class="tab-pane <?php  if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) echo 'active';?>" id="runtab">
 		<?php o('run'); ?>
       </div>
-        <!-- SHARE -->
-        <div class="tab-pane fade sharing" id="runshare">
-	      <h1 class="modal-title" id="myModalLabel">Add runs</h1>
-              <div id="responseImplementationTxt" class="<?php echo $this->initialMsgClass;?>"><?php echo $this->initialMsg; ?></div>
-	      <form method="post" id="datasetForm" action="api/?f=openml.data.upload" enctype="multipart/form-data">
-		  <input type="hidden" id="generated_input_dataset_description" name="description" value="" />
-	      <div class="row">
-	 	  <p>Manual run upload is under development.</p>
-		  <p>Psst... It is much easier to upload runs using the <a href="plugins">OpenML plugins</a>, or programmatically <a href="developers">using the API</a>.</p>
-	      </div>
-	      </form>
-        </div> <!-- end tab share -->
         <!-- ADVANCED -->     
 	<div class="tab-pane fade <?php if($this->active_tab == 'exampletab') echo 'active';?>" id="exampletab">
 		<?php subpage('examples'); ?>
@@ -60,14 +48,12 @@
 		<?php subpage('results'); ?>
      </div>
       <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) { echo 'active'; } ?>" id="intro">
-      <?php 
-	if( $this->terms == false) { ?>
+
       <div class="redheader">
       <h1><i class="fa fa-star"></i> Runs</h1>
       <p>A run is an application of a specific <a href="f">flow</a> on a specific <a href="t">task</a>, including all details such as parameter settings and all results. OpenML collects and organizes all runs from all users, so that their results can be easily compared over all tasks and flows, analyzed, visualized or simply downloaded.</p>
       </div>
       <h2>Recent runs</h2>
-      <?php } ?> 
 	<?php
 	if($this->total_count>0) {
 		echo '<div class="searchstats">Showing ' . $this->total_count . ' results (' . $this->time . ' seconds)</div>';	
