@@ -11,6 +11,7 @@ class Backend extends CI_Controller {
     $this->load->model('Data_quality');
     $this->load->model('Implementation');
     $this->load->model('Math_function');
+    $this->load->model('Schedule');
     $this->load->model('Task');
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');

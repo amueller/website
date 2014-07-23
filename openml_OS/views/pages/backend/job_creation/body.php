@@ -22,13 +22,13 @@
           <form method="post" action="">
             <div class="form-group">
 	            <label class="control-label" for="task-type-<?php echo $tt->ttid; ?>-experiment">Experiment</label>
-              <input type="text" id="task-type-<?php echo $tt->ttid; ?>-experiment" name="experiment" />
+              <input type="text" id="task-type-<?php echo $tt->ttid; ?>-experiment" name="experiment" value="<?php echo $this->experiment; ?>" <?php if($this->experiment) { echo 'readonly'; } ?> />
             </div>
             <div class="form-group">
               <label class="control-label">Select Tasks</label>
               <div class="row">
                 <?php if( $tt->tasks ): foreach( $tt->tasks as $task ): ?>
-                  <div class="col-md-4"><input type="checkbox" name="tasks[]" value="<?php echo $task->task_id; ?>">
+                  <div class="col-md-4"><input type="checkbox" name="tasks[]" value="<?php echo htmlspecialchars( $task->task_id ); ?>" <?php if( in_array( $task->task_id, $this->active_tasks ) ) echo 'checked'; ?>/>
                     &nbsp;Task <?php echo $task->task_id; ?> - <?php echo $this->datasets[$task->source_data]; ?></div>
                 <?php endforeach; else: ?>
                   <div class="col-md-4">No tasks.</div> 
@@ -40,7 +40,7 @@
               <div class="row">
                 <?php if( $this->setups ): foreach( $this->setups as $setup ): ?>
                   <div class="col-md-4">
-                    <span data-toggle="tooltip" data-placement="right" title="<?php echo $setup->setup_string; ?>"><input type="checkbox" name="setups[]" value="<?php echo $setup->sid; ?>">&nbsp;<?php echo $setup->name . '(' . $setup->version . ')'; ?></span></div>
+                    <span data-toggle="tooltip" data-placement="right" title="<?php echo htmlspecialchars( $setup->setup_string ); ?>"><input type="checkbox" name="setups[]" value="<?php echo $setup->sid; ?>" <?php if( in_array( $setup->sid, $this->active_setups ) ) echo 'checked'; ?> />&nbsp;<?php echo $setup->name . '(' . $setup->version . ')'; ?></span></div>
                 <?php endforeach; else: ?>
                   <div class="col-md-4">No setups.</div> 
                 <?php endif; ?>

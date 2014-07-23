@@ -7,4 +7,14 @@ $this->datasets = $this->Dataset->getAssociativeArray( 'did', 'name', '`did` IS 
 foreach( $this->task_types as $key => $value ) {
   $this->task_types[$key]->tasks = $this->Task->tasks_crosstabulated( $value->ttid, true );
 }
+
+$this->active_tasks = array();
+$this->active_setups = array();
+$this->experiment = '';
+
+if( gu('e') ) {
+  $this->experiment = gu('e');
+  $this->active_tasks = array_unique ( $this->Schedule->getColumnWhere( 'task_id', '`experiment` = "' . $this->experiment . '"' ) );
+  $this->active_setups = array_unique ( $this->Schedule->getColumnWhere( 'sid', '`experiment` = "' . $this->experiment . '"' ) );
+}
 ?>

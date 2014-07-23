@@ -13,8 +13,16 @@ class Database_write extends Database_read {
   }
 
   function insert_batch( $data ) {
+    $this->db->trans_start();
+    foreach ($data as $item) {
+      $insert_query = $this->db->insert_string( $this->table, $item);
+      $insert_query = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $insert_query);
+      $this->db->query($insert_query);
+    }
+    $this->db->trans_complete();
+    
     if( $data ) {
-      return $this->db->insert_batch( $this->table, $data);
+      return true;
     } else {
       return false;
     }
