@@ -7,7 +7,6 @@ class Run extends Database_write {
     $this->id_column = 'rid';
     
     $this->load->model('Algorithm');
-    $this->load->model('Cvrun');
     $this->load->model('Task');
     $this->load->model('Dataset');
     $this->load->model('Evaluation');

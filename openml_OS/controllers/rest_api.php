@@ -1346,7 +1346,6 @@ class Rest_api extends CI_Controller {
     
     if( $result ) {
       $result = $result && $this->Run->delete( $run->rid );
-      $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more sophisticated search on shortcut tables
     }
     
     if( $result == false ) {
@@ -1379,7 +1378,6 @@ class Rest_api extends CI_Controller {
     }
     
     $result = true;
-    $result = $result && $this->Cvrun->delete( $run->rid ); // TODO: more sophisticated search on shortcut tables
     
     $evalPlain    = $this->Evaluation->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');
     $evalFold     = $this->Evaluation_fold->getColumnWhere('did', '`source` = "' .  $run->rid. '" ');

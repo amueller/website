@@ -57,7 +57,7 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
 	$nbclasses = 0;
         
 	if ($type == 'implementation'){
-	  $i = $this->Implementation->query('select count(rid) as nbruns, i.id as id, i.description from cvrun r, algorithm_setup s, implementation i where r.learner = s.sid and s.implementation_id = i.id and i.fullName ="'.$name.'"');
+	  $i = $this->Implementation->query('select count(rid) as nbruns, i.id as id, i.description from run r, algorithm_setup s, implementation i where r.setup = s.sid and s.implementation_id = i.id and i.fullName ="'.$name.'"');
           if( $i != false ) {
 	  	$description = $i[0]->description;
           	$nbruns = $i[0]->nbruns;
@@ -67,7 +67,7 @@ if( $this->terms != false and $this->terms != 'all') { // normal search
           $this->implementation_count++;
         }
      	else if ($type == 'dataset'){
-	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, cvrun r where r.inputdata=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.inputData=d.did and d.name="'.$name.'" group by d.did');
+	  $d = $this->Dataset->query('select d.did, d.name, d.description, count(rid) as nbruns, q.value as instances, q2.value as features, q3.value as missing, q4.value as classes from dataset d left join data_quality q on d.did=q.data left join data_quality q2 on d.did=q2.data left join data_quality q3 on d.did=q3.data left join data_quality q4 on d.did=q4.data, input_data rd, run r where r.rid=rd.run and rd.data=d.did and q.quality=\'NumberOfInstances\' and q2.quality=\'NumberOfFeatures\' and q3.quality=\'NumberOfMissingValues\' and q4.quality=\'NumberOfClasses\' and r.inputData=d.did and d.name="'.$name.'" group by d.did');
           if( $d != false ) {
            $nbruns = $d[0]->nbruns;
            $id = $d[0]->did;
