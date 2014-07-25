@@ -647,7 +647,7 @@ class Rest_api extends CI_Controller {
     }
     
     $taskType = $this->Task_type->getById( $_GET['task_type_id'] );
-    $taskTypeIos = $this->Task_type_io->getByTaskType( $_GET['task_type_id'], 'io ASC, name ASC' );
+    $taskTypeIos = $this->Task_type_inout->getByTaskType( $_GET['task_type_id'], 'order ASC' );
     
     if( $taskType === false ) {
       $this->_returnError( 241 );
