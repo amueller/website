@@ -1012,7 +1012,7 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_evaluation_measures() {
-    $data->measures = $this->Math_function->getWhere( 'taskType = "EvaluationFunction"' );
+    $data->measures = $this->Math_function->getWhere( 'functionType = "EvaluationFunction"' );
     $this->_xmlContents( 'evaluation-measures', $data );
   }
   
