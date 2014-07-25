@@ -1,7 +1,7 @@
 <oml:task_type xmlns:oml="http://openml.org/openml">
 	<oml:id><?php echo $task_type->ttid; ?></oml:id>
 	<oml:name><?php echo $task_type->name; ?></oml:name>
-	<oml:description><?php echo $task_type->description; ?></oml:description>
+	<oml:description><?php echo htmlspecialchars( $task_type->description ); ?></oml:description>
 	<oml:creator><?php echo $task_type->creator; ?></oml:creator>
 	<?php foreach( getcsv($task_type->contributors) as $c ): ?>
 	<oml:contributor><?php echo $c; ?></oml:contributor>
