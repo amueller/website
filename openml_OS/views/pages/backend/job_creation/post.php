@@ -15,5 +15,7 @@ if( $experiment && $tasks && $setups ) {
   }
   $this->Schedule->insert_batch( $batch );
   su('backend/page/job_creation/e/'.$experiment);
+} else {
+  $this->message = 'Please select at least one task, one setup and decide on an experiment name. ';
 }
 ?>
