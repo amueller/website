@@ -69,6 +69,12 @@
               <li><a href="#openml_setup_delete">openml.setup.delete</a></li>
             </ul>
           </li>
+          <li>
+            <a href="#dev-misc">Misc</a>
+            <ul class="nav">
+              <li><a href="#free_query">Free SQL Query</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div> <!-- end col-2 -->
@@ -2192,7 +2198,36 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 
         
       </div>
+
+
+      <div class="bs-docs-section">
+        <div class="page-header">
+          <h1 id="dev-misc">Miscellaneous</h1>
+        </div>
+        <p class="lead">Miscellaneous API functions.</p>
+        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
+          <h4>Free SQL Queries</h4>
+          <p>Whenever the above API functions do not cover your needs, it is possible to do a direct SQL query towards the database. The result will be returned in JSON format. </p>
+          <p>The URL is 
+          <div class="highlight">
+            <pre class="pre-scrollable"><code class="html">http://www.openml.org/api_query/?q=&lt;urlencode(QUERY)&gt;</code></pre>
+          </div>
+          </p>
+          <p>For instance, to request the result of <code>SELECT name,did FROM dataset WHERE name LIKE "iris%"</code>, invoke like this:
+          <div class="highlight">
+            <pre class="pre-scrollable"><code class="html">http://openml.liacs.nl/api_query/?q=SELECT%20name,did%20FROM%20dataset%20WHERE%20name%20LIKE%20%22iris%%22</code></pre>
+          </div>
+          </p>
+          <p>Responses are always in JSON format, also when an error is returned. A typical response would be: 
+          <div class="highlight">
+            <pre class="pre-scrollable"><code class="html">{"status": "SQL was processed: 2 rows selected. ","id": "","time": 0.0020740032196045,"columns": [{"title":"name","datatype":"undefined"},{"title":"did","datatype":"undefined"},{"title":"url","datatype":"undefined"}],"data": [["iris","61","http:\/\/openml.liacs.nl\/files\/download\/61\/dataset_61_iris.arff"],["iris","282","http:\/\/openml.liacs.nl\/files\/download\/49033\/iris.arff"]]}
+</code></pre>
+          </div>
+          <p>Please first consider using regular API functions before using this function.</p>
+        </div>
+
     </div>
+
     <!-- end col-md-9 -->
     </div> <!-- end col-10 -->
   </div>
