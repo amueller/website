@@ -17,3 +17,7 @@ $(document).ready( function() {
     "bInfo": true
   } );
 } );
+
+function deletetask() {
+  alert( 'to implement' );
+}

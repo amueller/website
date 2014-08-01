@@ -680,6 +680,46 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
   }
   
+  private function _openml_task_delete() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 450 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 451 );
+        return;
+      }
+    }
+    
+    $task = $this->Task->getById( $this->input->post( 'task_id' ) );
+    if( $task == false ) {
+      $this->_returnError( 452 );
+      return;
+    }
+    
+    $runs = $this->Run->getWhere( 'task_id = "' . $task->id . '"' );
+    
+    if( $runs ) {
+      $this->_returnError( 454 );
+      return;
+    }
+    
+    
+    $result = true;
+    $result = $result && $this->Task_inputs->deleteWhere('task_id = ' . $task->task_id );
+    
+    if( $result ) {
+      $result = $this->Task->delete( $task->task_id );
+    }
+    
+    if( $result == false ) {
+      $this->_returnError( 455 );
+      return;
+    }
+    
+    $this->_xmlContents( 'task-delete', array( 'task' => $task ) );
+  }
+    
   private function _openml_estimationprocedure_get() {
     $id = $this->input->get( 'estimationprocedure_id' );
     if( $id == false ) {

@@ -54,14 +54,16 @@ $(function() {
 	      $taskparams['index'] = 'openml';
 	      $taskparams['type']  = 'task_type';
 	      $taskparams['body']['query']['match_all'] = array();
-	      $alltasks = $this->searchclient->search($taskparams)['hits']['hits'];
+        $searchclient = $this->searchclient->search($taskparams);
+	      $alltasks = $searchclient['hits']['hits'];
 
 	      $dataparams['index'] = 'openml';
 	      $dataparams['type']  = 'data';
 	      $dataparams['body']['fields'] = ['id','name','version'];
 	      $dataparams['body']['query']['match_all'] = array();
-	      echo print_r($dataparams['body']);	      
-	      $alldataresults = $this->searchclient->search($dataparams)['hits']['hits'];
+	      echo print_r($dataparams['body']);
+        $searchclient = $this->searchclient->search($dataparams);      
+	      $alldataresults = $searchclient['hits']['hits'];
 	      $alldata = array();
 	      foreach($alldataresults as $k => $v){
 		$alldata[] = $v['fields']['name'].' ('.$v['fields']['version'].')';
@@ -72,7 +74,8 @@ $(function() {
 	      $evalprocs['body']['query']['bool']['must'][]['match']['type'] = 'estimation_procedure';
 	      if(array_key_exists('tasktype.tt_id',$this->filters)) 
 		$evalprocs['body']['query']['bool']['must'][]['match']['task_type'] = $this->filters['tasktype.tt_id'];
-	      $allevalprocs = $this->searchclient->search($evalprocs)['hits']['hits'];
+        $searchclient = $this->searchclient->search($evalprocs);
+	      $allevalprocs = $searchclient['hits']['hits'];
 	      foreach($alltasks as $h){?>
 	            <option value="<?php echo $h['_id']; ?>" <?php if(array_key_exists('tasktype.tt_id',$this->filters) and $h['_id'] == $this->filters['tasktype.tt_id']) echo 'selected'; ?>><?php echo $h['_source']['name']; ?></option>
 	    <?php } ?>

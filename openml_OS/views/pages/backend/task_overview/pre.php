@@ -8,8 +8,28 @@ foreach( $this->task_types as $key => $value ) {
     array( 'task_id' => 'task_id'),
     $this->Task_type_inout->getAssociativeArray( 'name', 'name', '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "' . $value->ttid . '"', 'order ASC' )
   );
-  $this->task_types[$key]->tasks = $this->Task->tasks_crosstabulated( $value->ttid, true );
-  if( $this->task_types[$key]->tasks ) { foreach( $this->task_types[$key]->tasks as $t ) { $this->task_ids[] = $t->task_id; } }
+  $this->task_types[$key]->tasks = $this->Task->tasks_crosstabulated( $value->ttid, true, array(), true );
+  $this->task_types[$key]->duplicate_groups = array();
+  if( $this->task_types[$key]->tasks ) { 
+    $previous = null;
+    $previous_task_id = -1;
+    $grouped = array();
+    foreach( $this->task_types[$key]->tasks as $t ) { 
+      $this->task_ids[] = $t->task_id;
+      unset( $t->task_id ); // for comparing purposes. access it with end($this->task_ids);
+      
+      if( $t == $previous ) {
+        $grouped[] = $previous_task_id;
+      } elseif( $grouped ) {
+        $grouped[] = $previous_task_id;
+        $this->task_types[$key]->duplicate_groups[] = $grouped;
+        $grouped = array();
+      }
+      
+      $previous = $t; 
+      $previous_task_id = end( $this->task_ids );
+    } 
+  }
   
   $illegal_sql = 'SELECT `t`.`task_id`, `g`.`inputs` FROM `task_inputs` `i`, `task` `t` LEFT JOIN (SELECT `task_id`, GROUP_CONCAT(`input`) AS `inputs` FROM `task_inputs` GROUP BY `task_id`) AS `g` ON `t`.`task_id` = `g`.`task_id` WHERE `t`.`task_id` = `i`.`task_id` AND `i`.`input` NOT IN (SELECT `name` FROM `task_type_inout` `io` WHERE `io`.`ttid` = "' . $value->ttid . '") AND `t`.`ttid` = "' . $value->ttid . '"';
   

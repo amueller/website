@@ -23,6 +23,7 @@
             <li class="active"><a href="#task-type-<?php echo $tt->ttid; ?>-all" role="tab" data-toggle="tab">All</a></li>
             <li><a href="#task-type-<?php echo $tt->ttid; ?>-missing" role="tab" data-toggle="tab">Missing Values</a></li>
             <li><a href="#task-type-<?php echo $tt->ttid; ?>-illegal" role="tab" data-toggle="tab">Illegal Values</a></li>
+            <li><a href="#task-type-<?php echo $tt->ttid; ?>-duplicates" role="tab" data-toggle="tab">Duplicate Tasks</a></li>
           </ul>
 
           <!-- Tab panes -->
@@ -38,6 +39,16 @@
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-illegal">
               <h4><?php echo $tt->name; ?> tasks with illegal values</h4>
               <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->illegal ); ?></table>
+            </div>
+            <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-duplicates">
+              <h4><?php echo $tt->name; ?> groups of tasks with the same values</h4>
+              <?php foreach( $tt->duplicate_groups as $duplicates ): ?>
+                Task_id - # runs <br/>
+                <?php foreach( $duplicates as $d ): $runs = $this->Run->getColumnFunctionWhere( 'count(*)', 'task_id = ' . $d ); ?>
+                  <?php echo $d; ?> - <?php echo $runs[0]; ?><a onclick="deletetask(); ">Delete</a><br/>
+                <?php endforeach; ?>
+                <hr/>
+              <?php endforeach; ?>
             </div>
           </div>
         </div>

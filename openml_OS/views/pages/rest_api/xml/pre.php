@@ -548,4 +548,24 @@ $this->apiErrors[440][1] = 'Please provide estimationprocedure_id';
 $this->apiErrors[441][0] = 'estimationprocedure_id not valid';
 $this->apiErrors[441][1] = 'Please provide a valid estimationprocedure_id';
 
+// for function: openml.task.delete
+$this->apiErrors[450][0] = 'Please provide session_hash';
+$this->apiErrors[450][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.task.delete
+$this->apiErrors[451][0] = 'Authentication failed';
+$this->apiErrors[451][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.task.delete
+$this->apiErrors[452][0] = 'Task does not exists';
+$this->apiErrors[452][1] = 'The task id could not be linked to an existing task.';
+
+// for function: openml.task.delete
+$this->apiErrors[454][0] = 'Task is executed in some runs. Delete these first';
+$this->apiErrors[454][1] = 'The task is used in runs. Delete this other content before deleting this task. ';
+
+// for function: openml.task.delete
+$this->apiErrors[455][0] = 'Deleting task failed.';
+$this->apiErrors[455][1] = 'Deleting the task failed. Please contact support team. ';
+
 ?>
