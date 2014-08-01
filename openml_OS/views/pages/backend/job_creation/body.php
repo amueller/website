@@ -33,10 +33,10 @@
             </div>
             <div class="form-group">
               <label class="control-label" for="Workbench">Workbench</label>
-              <input type="text" class="form-control" id="Workbench" name="Workbench" placeholder="Weka_3.7.10, Moa_2014.03" value="<?php if(array_key_exists('NumberOfClasses',$this->setup_filters)){ echo $this->setup_filters['Workbench'];}?>" />
+              <input type="text" class="form-control" id="Workbench" name="Workbench" placeholder="Weka_3.7.10, Moa_2014.03" value="<?php if($this->input->post('Workbench')){ echo $this->input->post('Workbench');}?>" />
             </div>
             <div class="form-group">
-               <input type="checkbox" name="setup_default" value="true" <?php if(array_key_exists('setup_default',$this->setup_filters)){ echo 'checked';}?> />&nbsp;Default parameter settings only
+               <input type="checkbox" name="DefaultOnly" value="true" <?php if($this->input->post('DefaultOnly') == 'true' ){ echo 'checked';}?> />&nbsp;Default parameter settings only
             </div>
             <button class="btn btn-default btn-small" name="filter" value="true" style="width:100%; margin-top:10px;">Filter</button>
           </form>
