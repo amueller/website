@@ -62,10 +62,10 @@
                   <div class="container-fluid">
                     <div class="row">
                     <?php if( $tt->tasks ): foreach( $tt->tasks as $task ): $t = 'Task ' . $task->task_id . ' - ' . $this->datasets[$task->source_data]; ?>
-                      <div class="col-md-4"><input type="checkbox" class="check_tasks" name="tasks[]" value="<?php echo htmlspecialchars( $task->task_id ); ?>" <?php if( in_array( $task->task_id, $this->active_tasks ) ) echo 'checked'; ?>/>
+                      <div class="col-md-4"><input type="checkbox" class="check_tasks_ttid_<?php echo $tt->ttid; ?>" name="tasks[]" value="<?php echo htmlspecialchars( $task->task_id ); ?>" <?php if( in_array( $task->task_id, $this->active_tasks ) ) echo 'checked'; ?>/>
                         &nbsp;<?php echo cutoff( $t, 25); ?></div>
                     <?php endforeach; ?>
-                      <div class="col-md-4"><input type="checkbox" onclick="$('.check_tasks').prop('checked', this.checked);" /><b>&nbsp;Select all. </b></div>           
+                      <div class="col-md-4"><input type="checkbox" onclick="$('.check_tasks_ttid_<?php echo $tt->ttid; ?>').prop('checked', this.checked);" /><b>&nbsp;Select all. </b></div>           
                     <?php else: ?>
                       <div class="col-md-4">No tasks.</div> 
                     <?php endif; ?>
@@ -79,11 +79,11 @@
                     <?php if( $this->setups ): foreach( $this->setups as $setup ): $alg = $setup->name . '(' . $setup->version . ')';?>
                       <div class="col-md-4">
                         <div data-toggle="tooltip" data-placement="right" title="<?php echo htmlspecialchars( $setup->setup_string ); ?>">
-                          <input type="checkbox" class="check_setups" name="setups[]" value="<?php echo $setup->sid; ?>" <?php if( in_array( $setup->sid, $this->active_setups ) ) echo 'checked'; ?> />&nbsp;<?php echo cutoff( $alg, 25); ?>
+                          <input type="checkbox" class="check_setups_ttid_<?php echo $tt->ttid; ?>" name="setups[]" value="<?php echo $setup->sid; ?>" <?php if( in_array( $setup->sid, $this->active_setups ) ) echo 'checked'; ?> />&nbsp;<?php echo cutoff( $alg, 25); ?>
                         </div>
                       </div>
                     <?php endforeach; ?>
-                      <div class="col-md-4"><input type="checkbox" onclick="$('.check_setups').prop('checked', this.checked);" /><b>&nbsp;Select all. </b></div>  
+                      <div class="col-md-4"><input type="checkbox" onclick="$('.check_setups_ttid_<?php echo $tt->ttid; ?>').prop('checked', this.checked);" /><b>&nbsp;Select all. </b></div>  
                     <?php else: ?>
                       <div class="col-md-4">No setups.</div> 
                     <?php endif; ?>
