@@ -3,7 +3,10 @@
 class ElasticSearchLibrary {
   
   public function __construct() {
-    $this->searchclient = new Elasticsearch\Client();
+    $this->searchclient = null;
+    try {
+      $this->searchclient = new Elasticsearch\Client();
+    } catch( Exception $e ) {}
   }
   
   public function search( $params ) {

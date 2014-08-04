@@ -45,7 +45,7 @@
               <?php foreach( $tt->duplicate_groups as $duplicates ): ?>
                 Task_id - # runs <br/>
                 <?php foreach( $duplicates as $d ): $runs = $this->Run->getColumnFunctionWhere( 'count(*)', 'task_id = ' . $d ); ?>
-                  <div id="duplicate_task_<?php echo $d; ?>"<?php echo $d; ?> - <?php echo $runs[0]; ?><a onclick="deleteTask( <?php echo $d; ?> ); ">Delete</a><br/>
+                  <div id="duplicate_task_<?php echo $d; ?>"><?php echo $d; ?> - <?php echo $runs[0]; ?>&nbsp;<a onclick="deleteTask( <?php echo $d; ?> ); ">Delete</a></div>
                 <?php endforeach; ?>
                 <hr/>
               <?php endforeach; ?>
