@@ -28,7 +28,7 @@ function deleteTask( tid ) {
       
       id_field = $(resultdata).find("oml\\:id");
       
-      if( id_field ) {
+      if( id_field.length ) {
         $("#duplicate_task_" + id_field.text() ).remove();
         alert( "Task " + id_field.text() + " was deleted. " );
       } else {
