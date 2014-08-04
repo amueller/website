@@ -697,7 +697,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $runs = $this->Run->getWhere( 'task_id = "' . $task->id . '"' );
+    $runs = $this->Run->getWhere( 'task_id = "' . $task->task_id . '"' );
     
     if( $runs ) {
       $this->_returnError( 454 );

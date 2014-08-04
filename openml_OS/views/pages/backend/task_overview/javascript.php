@@ -18,6 +18,24 @@ $(document).ready( function() {
   } );
 } );
 
-function deletetask() {
-  alert( 'to implement' );
+function deleteTask( tid ) {
+  $.ajax({
+    type: "POST",
+    url: "<?php echo BASE_URL; ?>api/?f=openml.task.delete",
+    data: 'task_id='+tid,
+    dataType: "xml"
+  }).done( function( resultdata ) { 
+      
+      id_field = $(resultdata).find("oml\\:id");
+      
+      if( id_field ) {
+        $("#duplicate_task_" + id_field.text() ).remove();
+        alert( "Task " + id_field.text() + " was deleted. " );
+      } else {
+        code_field = $(resultdata).find("oml\\:code");
+        message_field = $(resultdata).find("oml\\:message");
+        alert( "Error " + code_field.text() + ": " + message_field.text() );
+      }
+    } );
 }
+
