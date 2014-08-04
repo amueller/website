@@ -19,6 +19,8 @@ if( $this->input->post('filter') ) {
   
   if( $hasConstraints ) {
     $params = array( 'type' => 'data', 'filters' => $filters );
+    // TODO: figure this out
+    $params['size'] = 10000;
     $result = $this->elasticsearchlibrary->search( $params );
     
     $dids = array( '-1' );
