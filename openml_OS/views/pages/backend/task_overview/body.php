@@ -29,19 +29,19 @@
           <!-- Tab panes -->
           <div class="tab-content">
             <div class="tab-pane active" id="task-type-<?php echo $tt->ttid; ?>-all">
-              <h4>All <?php echo $tt->name; ?> tasks (<?php echo size($tt->tasks); ?>)</h4>
+              <h4>All <?php echo $tt->name; ?> tasks (<?php echo count($tt->tasks); ?>)</h4>
               <table class="taskstable"><?php echo generate_table( $tt->inputs, $tt->tasks ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-missing">
-              <h4><?php echo $tt->name; ?> tasks with missing "required" values (<?php echo size($tt->missing); ?>)</h4>
+              <h4><?php echo $tt->name; ?> tasks with missing "required" values (<?php echo count($tt->missing); ?>)</h4>
               <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->missing ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-illegal">
-              <h4><?php echo $tt->name; ?> tasks with illegal values (<?php echo size($tt->illegal); ?>)</h4>
+              <h4><?php echo $tt->name; ?> tasks with illegal values (<?php echo count($tt->illegal); ?>)</h4>
               <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->illegal ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-duplicates">
-              <h4><?php echo $tt->name; ?> groups of tasks with the same values (<?php echo size($tt->duplicate_groups); ?>)</h4>
+              <h4><?php echo $tt->name; ?> groups of tasks with the same values (<?php echo count($tt->duplicate_groups); ?>)</h4>
               <?php foreach( $tt->duplicate_groups as $duplicates ): ?>
                 Task_id - # runs <br/>
                 <?php foreach( $duplicates as $d ): $runs = $this->Run->getColumnFunctionWhere( 'count(*)', 'task_id = ' . $d ); ?>
