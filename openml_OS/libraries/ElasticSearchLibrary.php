@@ -8,7 +8,7 @@ class ElasticSearchLibrary {
   
   public function search( $params ) {
     $from  = array_key_exists( 'from', $params ) ? safe($params['from']) : 0;
-    $size  = array_key_exists( 'size', $params ) ? safe($params['size']) : 10;
+    $size  = array_key_exists( 'size', $params ) ? safe($params['size']) : 0;
     $type  = array_key_exists( 'type', $params ) ? safe($params['type']) : 0;
     $sort  = array_key_exists( 'sort', $params ) ? safe($params['sort']) : 0;
     $order = array_key_exists( 'order', $params ) ? safe($params['order']) : 0;
@@ -44,7 +44,7 @@ class ElasticSearchLibrary {
     $search_params['body']  = 
       '{' . 
         '"from" : ' . $from . ",\n" .
-        '"size" : ' . $size . ",\n" . 
+        ($size ? '"size" : ' . $size . ",\n" : '') . 
         '"query" : {' . $query . '}, ' . 
         ($sort ? '"sort" : { "'.$sort.'" : "'.$order.'" },' : '') .
         ($fjson ? $fjson : '') . 
