@@ -135,7 +135,7 @@ class Task extends Database_write {
     return $result;
   }
 
-  function tasks_crosstabulated( $ttid, $task_id = false, $where_additional = array(), $order_by_values = false ) {
+  function tasks_crosstabulated( $ttid, $include_task_id = false, $where_additional = array(), $order_by_values = false, $single_task_id = false ) {
     $inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "' . $ttid . '"' );
     $select = array();
     $left_join = array();
@@ -143,12 +143,15 @@ class Task extends Database_write {
     $where = array( '`t`.`ttid` = ' . $ttid );
     $order_by = array();
     if( $order_by_values == false ) { $order_by[] = '`t`.`task_id` ASC';}
+    if( $single_task_id ) { $where[] = '`t`.`task_id` = "'.$single_task_id.'"'; }
 
     if( $task_id ) {
       $select[] = '`t`.`task_id`';
     }
     foreach( $inputs as $in ) {
       $select[] = '`' . $in->name . '`.`value` AS `' . $in->name . '`';
+      if( $single_task_id ) { $where[] = '`'.$in->name.'`.`task_id` = "'.$single_task_id.'"'; }
+      
       // use a left join for the "optional" fields, since these might be missing. 
       if( $in->requirement == 'optional' ) {
         $left_join[] = ' LEFT JOIN `task_inputs` AS `' . $in->name . '` ON `' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';

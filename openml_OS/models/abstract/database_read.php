@@ -75,8 +75,11 @@ class Database_read extends CI_Model {
     return $this->getColumnFunction( $function, $orderby );
   }
   
-  function getAssociativeArray( $key, $value, $where, $orderby = null ) {
+  function getAssociativeArray( $key, $value, $where, $group_by = null, $orderby = null ) {
     $this->db->select( $key . ' AS `key`, ' . $value . ' AS `value`', false );
+    if( $group_by ) {
+      $this->db->group_by( $group_by );
+    }
     $data = $this->getWhere( $where, $orderby );
     if($data === false) return false;
     

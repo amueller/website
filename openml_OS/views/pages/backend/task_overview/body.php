@@ -42,13 +42,28 @@
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-duplicates">
               <h4><?php echo $tt->name; ?> groups of tasks with the same values (<?php echo count($tt->duplicate_groups); ?>)</h4>
-              <?php foreach( $tt->duplicate_groups as $duplicates ): ?>
-                Task_id - # runs <br/>
-                <?php foreach( $duplicates as $d ): $runs = $this->Run->getColumnFunctionWhere( 'count(*)', 'task_id = ' . $d ); ?>
-                  <div id="duplicate_task_<?php echo $d; ?>"><?php echo $d; ?> - <?php echo $runs[0]; ?>&nbsp;<a onclick="deleteTask( <?php echo $d; ?> ); ">Delete</a></div>
+              <table>
+                <thead>
+                  <tr>
+                    <?php foreach( $tt->inputs as $i ): ?>
+                      <td><?php echo $i; ?></td>
+                    <?php endforeach; ?>
+                    <td>Runs</td>
+                  </tr>
+                </thead>
+                <tbody>
+              <?php foreach( $tt->duplicates as $duplicates ): ?>
+                <?php foreach( $duplicates as $d ):  ?>
+                  <tr>
+                  <?php foreach( $tt->inputs as $i ): ?>
+                      <td><?php echo $d->{$i}; ?></td>
+                    <?php endforeach; ?>
+                    <td><?php echo $d->nr_of_runs; ?></td>
+                  </tr>
                 <?php endforeach; ?>
-                <hr/>
               <?php endforeach; ?>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
