@@ -7,9 +7,17 @@ class Community extends CI_Model {
 	
 	function __construct() {
 		parent::__construct();
+    $this->load->model('Log');
 		$this->deleted_activated = 'deleted = "n" AND activated = "y" ';
 	}
-	
+  
+  function query( $sql ) {
+    $this->Log->sql( $sql);
+    $data = $this->db->query( $sql );
+    if($data === true || $data === false) return $data;
+    return ( $data->num_rows() > 0 ) ? $data->result() : false;
+  }
+  
 	function getById( $id, $orderby = null ) {
 		if( is_numeric( $id ) == false )
 			return false;
