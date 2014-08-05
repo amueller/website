@@ -4,6 +4,7 @@ $this->task_ids = array();
 $this->missingheader = array( 'task_id' => 'Task id', 'inputs' => 'inputs' );
 
 $runs_task = $this->Run->getAssociativeArray( 'task_id', 'COUNT(*)', 'rid IS NOT NULL', 'task_id' );
+if( $runs_task == false ) $runs_task = array();
 
 foreach( $this->task_types as $key => $value ) {
   $this->task_types[$key]->inputs = array_merge(
@@ -44,10 +45,10 @@ foreach( $this->task_types as $key => $value ) {
   for( $i = 0; $i < count($this->task_types[$key]->duplicate_groups); ++$i ) {
     $this->task_types[$key]->duplicates[$i] = array();
     for( $j = 0; $j < count($this->task_types[$key]->duplicate_groups[$i]); ++$j ) {
-      var_dump($this->task_types[$key]->duplicate_groups[$i][$j]);
-      $this->task_types[$key]->duplicates[$i][$j] = $this->Task->tasks_crosstabulated( $value->ttid, true, array(), false, $this->task_types[$key]->duplicate_groups[$i][$j] );
-      
-      $this->task_types[$key]->duplicates[$i][$j]->nr_of_runs = array_key_exists( $this->task_types[$key]->duplicates[$i][$j], $runs_task ) ? $runs_task[$this->task_types[$key]->duplicates[$i][$j]] : 0;
+      $result = $this->Task->tasks_crosstabulated( $value->ttid, true, array(), false, $this->task_types[$key]->duplicate_groups[$i][$j] );
+      $this->task_types[$key]->duplicates[$i][$j] = $result[0];
+
+      $this->task_types[$key]->duplicates[$i][$j]->nr_of_runs = array_key_exists( $this->task_types[$key]->duplicate_groups[$i][$j], $runs_task ) ? $runs_task[$this->task_types[$key]->duplicates[$i][$j]] : 0;
     }
   }
 }

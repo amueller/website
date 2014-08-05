@@ -145,12 +145,11 @@ class Task extends Database_write {
     if( $order_by_values == false ) { $order_by[] = '`t`.`task_id` ASC';}
     if( $single_task_id ) { $where[] = '`t`.`task_id` = "'.$single_task_id.'"'; }
 
-    if( $task_id ) {
+    if( $include_task_id ) {
       $select[] = '`t`.`task_id`';
     }
     foreach( $inputs as $in ) {
       $select[] = '`' . $in->name . '`.`value` AS `' . $in->name . '`';
-      if( $single_task_id ) { $where[] = '`'.$in->name.'`.`task_id` = "'.$single_task_id.'"'; }
       
       // use a left join for the "optional" fields, since these might be missing. 
       if( $in->requirement == 'optional' ) {
@@ -158,6 +157,8 @@ class Task extends Database_write {
       } elseif( $in->requirement == 'required' ) {
         $from[] = '`task_inputs` AS `' . $in->name . '`';
         $where[] = '`' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';
+        // this might speed up the query
+        if( $single_task_id ) { $where[] = '`'.$in->name.'`.`task_id` = "'.$single_task_id.'"'; }
       }
       
       // and order it by values

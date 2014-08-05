@@ -42,26 +42,31 @@
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-duplicates">
               <h4><?php echo $tt->name; ?> groups of tasks with the same values (<?php echo count($tt->duplicate_groups); ?>)</h4>
-              <table>
+              
+              <button type="button" class="btn btn-primary" onclick="selectDuplicateTasks();">Select duplicates</button>
+              <button type="button" class="btn btn-primary" onclick="removeSelectedTasks();">Delete selected</button>
+              
+              <table class="duplicatetable">
                 <thead>
                   <tr>
-                    <?php foreach( $tt->inputs as $i ): ?>
-                      <td><?php echo $i; ?></td>
+                    <td></td>
+                    <?php foreach( $tt->inputs as $input ): ?>
+                      <td><?php echo $input; ?></td>
                     <?php endforeach; ?>
                     <td>Runs</td>
                   </tr>
                 </thead>
                 <tbody>
-              <?php foreach( $tt->duplicates as $duplicates ): ?>
-                <?php foreach( $duplicates as $d ):  ?>
-                  <tr>
-                  <?php foreach( $tt->inputs as $i ): ?>
-                      <td><?php echo $d->{$i}; ?></td>
-                    <?php endforeach; ?>
-                    <td><?php echo $d->nr_of_runs; ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              <?php endforeach; ?>
+                  <?php foreach( $tt->duplicates as $group ): ?>
+                    <?php for( $i = 0; $i < count( $group ); ++$i ): $duplicate = $group[$i]; ?>
+                      <tr id="duplicate_task_<?php echo $duplicate->task_id; ?>">
+                        <td><input type="checkbox" data-task_id="<?php echo $duplicate->task_id; ?>" data-in_group_nr="<?php echo $i; ?>" data-runs="<?php echo $duplicate->nr_of_runs; ?>" class="duplicate_checkbox" id="duplicate_checkbox_<?php echo $duplicate->task_id; ?>" /></td>
+                        <?php foreach( array_merge( $tt->inputs, array('nr_of_runs') ) as $input ): ?>
+                          <td><?php if( property_exists ($duplicate, $input ) ) { echo $duplicate->$input; } ?></td>
+                        <?php endforeach; ?>
+                      </tr>
+                    <?php endfor; ?>
+                  <?php endforeach; ?>
                 </tbody>
               </table>
             </div>
