@@ -48,7 +48,7 @@ foreach( $this->task_types as $key => $value ) {
       $result = $this->Task->tasks_crosstabulated( $value->ttid, true, array(), false, $this->task_types[$key]->duplicate_groups[$i][$j] );
       $this->task_types[$key]->duplicates[$i][$j] = $result[0];
 
-      $this->task_types[$key]->duplicates[$i][$j]->nr_of_runs = array_key_exists( $this->task_types[$key]->duplicate_groups[$i][$j], $runs_task ) ? $runs_task[$this->task_types[$key]->duplicates[$i][$j]] : 0;
+      $this->task_types[$key]->duplicates[$i][$j]->nr_of_runs = array_key_exists( $this->task_types[$key]->duplicates[$i][$j]->task_id, $runs_task ) ? $runs_task[$this->task_types[$key]->duplicates[$i][$j]->task_id] : 0;
     }
   }
 }
