@@ -25,6 +25,8 @@ class Backend extends CI_Controller {
     $this->load->helper('table');
     $this->load->helper('tasksearch');
     $this->load->helper('directory');
+
+    $this->load->Library('elasticSearch');
     
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
