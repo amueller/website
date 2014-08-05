@@ -16,6 +16,7 @@ class Backend extends CI_Controller {
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');
     $this->load->model('Estimation_procedure');
+    $this->load->model('Run');
     
     
     $this->load->model('Thread');
@@ -27,6 +28,8 @@ class Backend extends CI_Controller {
     $this->load->helper('directory');
 
     $this->load->Library('elasticSearch');
+    
+    $this->load->Library('elasticSearchLibrary');
     
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
