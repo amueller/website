@@ -30,15 +30,15 @@
           <div class="tab-content">
             <div class="tab-pane active" id="task-type-<?php echo $tt->ttid; ?>-all">
               <h4>All <?php echo $tt->name; ?> tasks (<?php echo count($tt->tasks); ?>)</h4>
-              <table class="taskstable"><?php echo generate_table( $tt->inputs, $tt->tasks ); ?></table>
+              <table class="taskstable table table-striped"><?php echo generate_table( $tt->inputs, $tt->tasks ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-missing">
               <h4><?php echo $tt->name; ?> tasks with missing "required" values (<?php echo count($tt->missing); ?>)</h4>
-              <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->missing ); ?></table>
+              <table class="taskstable table table-striped"><?php echo generate_table( $this->missingheader, $tt->missing ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-illegal">
               <h4><?php echo $tt->name; ?> tasks with illegal values (<?php echo count($tt->illegal); ?>)</h4>
-              <table class="taskstable"><?php echo generate_table( $this->missingheader, $tt->illegal ); ?></table>
+              <table class="taskstable table table-striped"><?php echo generate_table( $this->missingheader, $tt->illegal ); ?></table>
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-duplicates">
               <h4><?php echo $tt->name; ?> groups of tasks with the same values (<?php echo count($tt->duplicate_groups); ?>)</h4>
@@ -46,7 +46,7 @@
               <button type="button" class="btn btn-primary" onclick="selectDuplicateTasks();">Select duplicates</button>
               <button type="button" class="btn btn-primary" onclick="removeSelectedTasks();">Delete selected</button>
               
-              <table class="duplicatetable">
+              <table class="table table-striped duplicatetable">
                 <thead>
                   <tr>
                     <td></td>

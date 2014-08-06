@@ -2,7 +2,7 @@
   <div class="col-sm-12">
      
 	<h1><?php echo $this->quality->quality; ?></h1>
-	<p>The <?php echo $this->quality->quality; ?> of dataset &quot;<a href="<?php echo BASE_URL; ?>d/<?php echo $this->data->did; ?>"><?php echo $this->data->name; ?></a>&quot; is <?php echo $this->quality->value; ?></p>
+	<p>The <a href="<?php echo BASE_URL; ?>a/data-qualities/<?php echo strtolower($this->quality->quality); ?>"><?php echo $this->quality->quality; ?></a> of <a href="<?php echo BASE_URL; ?>d/<?php echo $this->data->did; ?>"><?php echo $this->data->name; ?></a> is <?php echo $this->quality->value; ?></p>
 	<ul class="hotlinks">
 		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/features"><i class="fa fa-gears"></i> View code</a></li>
 	</ul>
