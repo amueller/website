@@ -85,9 +85,10 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 
 		   		<a href="t/type/<?php echo $r['_id']; ?>"><?php echo $rs['name']; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats"><?php $runparams['body']['query']['match']['task.task_type_id'] = $r['_id'];
-                $searchclient = $this->searchclient->search($runparams);
-					      echo $searchclient['hits']['total'];
+				<div class="runStats"><?php $runparams['type'] = 'task'; $runparams['body']['query']['match']['tasktype.tt_id'] = $r['_id'];
+                $searchclient = $this->searchclient->search($runparams); echo $searchclient['hits']['total'];
+					?> tasks, <?php $runparams['type'] = 'run'; $runparams['body'] = false; $runparams['body']['query']['match']['run_task.tasktype.tt_id'] = $r['_id'];
+                $searchclient = $this->searchclient->search($runparams); echo $searchclient['hits']['total'];
 					?> runs</div>
 
 		   <?php } elseif($type == 'measure') { ?>

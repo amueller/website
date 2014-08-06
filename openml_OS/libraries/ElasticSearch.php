@@ -447,7 +447,7 @@ class ElasticSearch {
 	$params['index']     = 'openml';
 	$params['type']      = 'task_type';
 
-	$types = $this->db->query('SELECT ttid, name, description FROM task_type');
+	$types = $this->db->query('SELECT tt. ttid, tt.name, tt.description, count(task_id) as tasks FROM task_type tt, task t where tt.ttid=t.ttid group by tt.ttid');
 
 	foreach( $types as $d ) {
 	    $params['body'][] = array(
@@ -469,6 +469,7 @@ class ElasticSearch {
 		    'tt_id' 		=> $d->ttid,
 		    'name'    		=> $d->name,
 		    'description' 	=> $d->description,
+		    'tasks'		=> $d->tasks,
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),
 						'output'=> $d->name,
@@ -479,7 +480,6 @@ class ElasticSearch {
 							'description' => substr($d->description, 0, 100) 
 						)
 					),
-		    'input'		=> array()
 		);
 
 	$inputs = $this->db->query('SELECT name, type, description, io, requirement FROM task_type_inout where ttid='.$d->ttid);
