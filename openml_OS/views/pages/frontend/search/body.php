@@ -2,10 +2,10 @@
   <div class="row">
     <div class="col-lg-10 col-sm-12 col-lg-offset-1">
 
-    <div class="col-sm-12 col-md-3 searchbar">
+    <div class="col-xs-12 col-sm-3 searchbar">
         <!-- Upload stuff -->
       <ul class="menu">
-	<li><a href="search?q=<?php echo $this->terms;?>" <?php if(!$this->filtertype) echo 'class="selected"';?>><i class="fa fa-fw fa-circle-thin"></i> Everything<span class="counter"><?php echo $this->results['facets']['type']['total'];?></span></a></li>
+	<li><a href="search?q=<?php echo $this->terms;?>" <?php if(!$this->filtertype) echo 'class="selected"';?>><i class="fa fa-fw fa-circle-thin"></i> All<span class="counter"><?php echo $this->results['facets']['type']['total'];?></span></a></li>
 	<?php
 	  $stack = array();
       	  foreach( $this->results['facets']['type']['terms'] as $f ) { array_push($stack,$f['term']); ?>
@@ -25,7 +25,7 @@
              else subpage("everything"); ?>
 
     </div> <!-- end col-2 -->
-    <div class="col-sm-12 col-md-9 openmlsectioninfo">
+    <div class="col-xs-12 col-sm-9 openmlsectioninfo">
       <h1>Results for <b><?php echo str_replace('match_','',$this->coreterms); if($this->coreterms=='') echo '*'?></b></h1>
 
       <?php if($this->filtertype and in_array($this->filtertype, array("run", "task", "data", "flow"))){ ?>

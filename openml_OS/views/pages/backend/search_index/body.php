@@ -13,7 +13,7 @@
 	Status: <?php if($this->elasticsearch->test()) echo 'Connection successful. Happy indexing!'; else echo 'Connection failed. Likely, Elasticsearch is not running.'; ?>
 </div>
 <div class="col-sm-6">
-	<h2>Build indices</h2>
+	<h2>Rebuild indices</h2>
 	<form method="post" action="">
 	<?php foreach( $this->types as $t ): ?>
                   <input type="checkbox" class="check_setups" name="types[]" value="<?php echo $t; ?>" <?php if(in_array($t,$this->index_types)) echo 'checked="yes";'?>/>&nbsp;<?php echo $t; ?><br>
@@ -30,6 +30,18 @@
 	<input class="btn btn-primary" type="submit" value="Reinitialize indexes"/>
         </form>
 </div>
+<div class="col-sm-12">
+	<h3>Add document</h2>
+	<form method="post" action="">
+	Type:
+	<?php foreach( $this->default_types as $t ): ?>
+                  <input type="radio" class="check_setups" name="type" value="<?php echo $t; ?>"/>&nbsp;<?php echo $t; ?>
+        <?php endforeach; ?><br />
+	ID: <input type="text" name="doc_id"/>
+	<input class="btn btn-primary" type="submit" value="index"/>
+        </form>
+</div>
+
     </div>
   </div>
 </div>

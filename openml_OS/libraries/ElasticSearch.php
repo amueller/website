@@ -192,17 +192,17 @@ class ElasticSearch {
 	return array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
   }
 
-  public function rebuild_index_for_type($t){
-	$method_name = 'rebuild_index_for_' . $t;
+  public function index($type, $id = false){
+	$method_name = 'index_' . $type;
 	if( method_exists( $this, $method_name ) ) {
-		return $this->$method_name();
+		return $this->$method_name($id);
 	}
 	else{
-	   return 'No function exists to rebuild index of type '.$t; 
+	   return 'No function exists to build index of type '.$type; 
 	}
   }
 
-  public function initialize_index_for_type($t){
+  public function initialize_index($t){
      
      $this->mapping_delete($t);
 
@@ -225,12 +225,15 @@ class ElasticSearch {
      }
   }
 
-  public function rebuild_index_for_user(){
+  public function index_user($id){
   
 	$params['index']     = 'openml';
 	$params['type']      = 'user';
-
-	$users = $this->userdb->query('select id, first_name, last_name, email, affiliation, country, image, created_on from users where active="1"');
+	
+	$users = $this->userdb->query('select id, first_name, last_name, email, affiliation, country, image, created_on from users where active="1"'.($id?' and id='.$id:''));
+	
+	if($id and !$users)
+		return 'Error: user '.$id.' is unknown';
 
 	foreach( $users as $d ) {
 	    $params['body'][] = array(
@@ -271,21 +274,25 @@ class ElasticSearch {
   }
 
  // Special case - tasks are pre-fetched because they are also needed to build the run index
- private function fetch_tasks(){
-	$tasks = $this->db->query('SELECT t.task_id, tt.ttid, tt.name, count(rid) as runs FROM task t left join run r on (r.task_id=t.task_id), task_type tt WHERE t.ttid=tt.ttid group by t.task_id');
-
-	foreach( $tasks as $d ) {
-	    $this->all_tasks[$d->task_id] = $this->build_task($d); 
-	}
+ private function fetch_tasks($id = false){
+	$tasks = $this->db->query('SELECT t.task_id, tt.ttid, tt.name, count(rid) as runs FROM task t left join run r on (r.task_id=t.task_id), task_type tt WHERE t.ttid=tt.ttid'.($id?' and t.task_id='.$id:'').' group by t.task_id');
+	
+	if($tasks)
+		foreach( $tasks as $d ) {
+		    $this->all_tasks[$d->task_id] = $this->build_task($d); 
+		}
  }
 
- public function rebuild_index_for_task(){
+ public function index_task($id){
   
 	$params['index']     = 'openml';
 	$params['type']      = 'task';
 
-	$this->fetch_tasks();
-
+	$this->fetch_tasks($id);
+	
+	if($id and !array_key_exists($id,$this->all_tasks))
+		return 'Error: task '.$id.' is unknown';
+		
 	foreach( $this->all_tasks as $k => $v ) {
 	    $params['body'][] = array(
 		'index' => array(
@@ -353,11 +360,13 @@ class ElasticSearch {
 	return $newdata;
   }
 
- private function fetch_setups(){
+ private function fetch_setups($id = false){
 	$index = array();
-	foreach( $this->db->query('SELECT setup, input, value FROM input_setting') as $v ) {
-		$index[$v->setup][$v->input] = $v->value;
-	}
+	$setups = $this->db->query('SELECT setup, input, value FROM input_setting'.($id?' where setup='.$id:''));
+	if($setups)
+		foreach($setups as $v ) {
+			$index[$v->setup][$v->input] = $v->value;
+		}
 	return $index;
  }
 
@@ -387,7 +396,29 @@ class ElasticSearch {
 	return $index;
  }
 
- public function rebuild_index_for_run(){
+ private function index_single_run($id){
+
+	$params['index']     = 'openml';
+	$params['type']      = 'run';
+	$params['id']        = $id;
+	
+	$run = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time FROM run r, algorithm_setup s where s.sid=r.setup and rid='.$id);
+	if(!$run)
+		return 'Error: run '.$id.' is unknown';
+	
+	$this->fetch_tasks($run[0]->task_id);
+	$setups = $this->fetch_setups($run[0]->setup);
+	$runfiles = $this->fetch_runfiles($id,$id+1);
+	$evals = $this->fetch_evaluations($id,$id+1);
+	$params['body'] = $this->build_run($run[0],$setups,$runfiles,$evals);
+	
+	$responses = $this->client->index($params);
+	return 'Successfully indexed '.sizeof($responses['_id']).' run(s).';
+ }
+
+ public function index_run($id){
+	if($id)
+		return $this->index_single_run($id);
   
 	$params['index']     = 'openml';
 	$params['type']      = 'run';
@@ -442,12 +473,15 @@ class ElasticSearch {
 		);
   }
 
-  public function rebuild_index_for_task_type(){
+  public function index_task_type($id){
   
 	$params['index']     = 'openml';
 	$params['type']      = 'task_type';
 
-	$types = $this->db->query('SELECT tt. ttid, tt.name, tt.description, count(task_id) as tasks FROM task_type tt, task t where tt.ttid=t.ttid group by tt.ttid');
+	$types = $this->db->query('SELECT tt.ttid, tt.name, tt.description, count(task_id) as tasks FROM task_type tt, task t where tt.ttid=t.ttid'.($id?' and tt.ttid='.$id:'').' group by tt.ttid');
+
+	if($id and !$types)
+		return 'Error: task type '.$id.' is unknown';
 
 	foreach( $types as $d ) {
 	    $params['body'][] = array(
@@ -497,12 +531,15 @@ class ElasticSearch {
 
 
 
-  public function rebuild_index_for_flow(){
+  public function index_flow($id){
   
 	$params['index']     = 'openml';
 	$params['type']      = 'flow';
 
-	$flows = $this->db->query('select i.id, i.name, i.version, i.uploader, i.creator, i.contributor, i.description, i.fullDescription, i.installationNotes, i.dependencies, i.uploadDate, count(rid) as runs from implementation i left join algorithm_setup s on (s.implementation_id=i.id) left join run r on (r.setup=s.sid) group by i.id');
+	$flows = $this->db->query('select i.id, i.name, i.version, i.uploader, i.creator, i.contributor, i.description, i.fullDescription, i.installationNotes, i.dependencies, i.uploadDate, count(rid) as runs from implementation i left join algorithm_setup s on (s.implementation_id=i.id) left join run r on (r.setup=s.sid)'.($id?' where i.id='.$id:'').' group by i.id');
+
+	if($id and !$flows)
+		return 'Error: flow '.$id.' is unknown';
 
 	foreach( $flows as $d ) {
 	    $params['body'][] = array(
@@ -551,64 +588,67 @@ class ElasticSearch {
 	return $new_data;
   }
 
-  public function rebuild_index_for_measure(){
+  public function index_measure($id){
   
 	$params['index']     = 'openml';
 	$params['type']      = 'measure';
 
-	$procs = $this->db->query('SELECT e.*, t.description FROM estimation_procedure e, estimation_procedure_type t WHERE e.type=t.name');
+	$procs = $this->db->query('SELECT e.*, t.description FROM estimation_procedure e, estimation_procedure_type t WHERE e.type=t.name'.($id?' and e.id='.$id:''));
+	if($procs)
+		foreach( $procs as $d ) {
+		    $params['body'][] = array(
+			'index' => array(
+			    '_id' => $d->id
+			)
+		    );	    
 
-	foreach( $procs as $d ) {
-	    $params['body'][] = array(
-		'index' => array(
-		    '_id' => $d->id
-		)
-	    );	    
+		    $params['body'][] = $this->build_procedure($d);
+		}
 
-	    $params['body'][] = $this->build_procedure($d);
-	}
+	$funcs = $this->db->query('SELECT * FROM math_function WHERE functionType="EvaluationFunction"'.($id?' and name="'.$id.'"':''));
+	if($funcs)
+		foreach( $funcs as $d ) {
+		    $nid = str_replace("_","-",$d->name);
+		    $params['body'][] = array(
+			'index' => array(
+			    '_id' => $nid
+			)
+		    );	    
 
-	$funcs = $this->db->query('SELECT * FROM math_function WHERE functionType="EvaluationFunction"');
+		    $params['body'][] = $this->build_function($d);
+		}
 
-	foreach( $funcs as $d ) {
-	    $id = str_replace("_","-",$d->name);
-	    $params['body'][] = array(
-		'index' => array(
-		    '_id' => $id
-		)
-	    );	    
+	$dataqs = $this->db->query('SELECT * FROM quality WHERE type="DataQuality"'.($id?' and name="'.$id.'"':''));
+	if($dataqs)
+		foreach( $dataqs as $d ) {
+		    $nid = str_replace("_","-",$d->name);
+		    $params['body'][] = array(
+			'index' => array(
+			    '_id' => $nid
+			)
+		    );	    
 
-	    $params['body'][] = $this->build_function($d);
-	}
+		    $params['body'][] = $this->build_dataq($d);
+		}
 
-	$dataqs = $this->db->query('SELECT * FROM quality WHERE type="DataQuality"');
+	$flowqs = $this->db->query('SELECT * FROM quality WHERE type="AlgorithmQuality"'.($id?' and name="'.$id.'"':''));
+	if($flowqs)
+		foreach( $flowqs as $d ) {
+		    $nid = str_replace("_","-",$d->name);
+		    $params['body'][] = array(
+			'index' => array(
+			    '_id' => $nid
+			)
+		    );	    
 
-	foreach( $dataqs as $d ) {
-	    $id = str_replace("_","-",$d->name);
-	    $params['body'][] = array(
-		'index' => array(
-		    '_id' => $id
-		)
-	    );	    
+		    $params['body'][] = $this->build_flowq($d);
+		}
 
-	    $params['body'][] = $this->build_dataq($d);
-	}
-
-	$flowqs = $this->db->query('SELECT * FROM quality WHERE type="AlgorithmQuality"');
-
-	foreach( $flowqs as $d ) {
-	    $id = str_replace("_","-",$d->name);
-	    $params['body'][] = array(
-		'index' => array(
-		    '_id' => $id
-		)
-	    );	    
-
-	    $params['body'][] = $this->build_flowq($d);
-	}
+	if($id and !array_key_exists('body',$params))
+		return "No measure found with id ".$id;		
 
 	$responses = $this->client->bulk($params);
-	return 'Successfully indexed '.sizeof($responses['items']).' out of '.(sizeof($procs)+sizeof($funcs)+sizeof($dataqs)+sizeof($flowqs)).' measures.';
+	return 'Successfully indexed '.sizeof($responses['items']).' out of '.(($procs?sizeof($procs):0)+($funcs?sizeof($funcs):0)+($dataqs?sizeof($dataqs):0)+($flowqs?sizeof($flowqs):0)).' measures ('.($procs?sizeof($procs):0).' procedures, '.($funcs?sizeof($funcs):0).' functions, '.($dataqs?sizeof($dataqs):0).' data qualities, '.($flowqs?sizeof($flowqs):0).' flow qualities).';
   }
 
   private function build_procedure($d){
@@ -691,12 +731,15 @@ class ElasticSearch {
 		);
   }
 
-  public function rebuild_index_for_data(){
+  public function index_data($id){
 
 	$params['index']     = 'openml';
 	$params['type']      = 'data';
 
-	$datasets = $this->db->query('select d.did, d.name, d.version, d.description, d.format, d.creator, d.contributor, d.collection, d.uploader, d.upload_date, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id) group by did');
+	$datasets = $this->db->query('select d.did, d.name, d.version, d.description, d.format, d.creator, d.contributor, d.collection, d.uploader, d.upload_date, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id)'.($id?' where did='.$id:'').' group by did');
+
+	if($id and !$datasets)
+		return 'Error: data set '.$id.' is unknown';
 
 	foreach( $datasets as $d ) {
 	    $params['body'][] = array(
