@@ -23,7 +23,10 @@
 		<div class="table-responsive"><table class="table table-striped">
 		<tbody>
 		<?php	foreach( $this->dataqvals as $r ):?>
-			<tr><td><a href="d/<?php echo $r['did'];?>"><?php echo $r['data_name'] . ' ('. $r['data_version'] . ')'; ?></a></td><td><?php echo $r['value'];?></td></tr>
+			<tr>
+        <td><a href="d/<?php echo $r['did'];?>"><?php echo $r['data_name'] . ' ('. $r['data_version'] . ')'; ?></a></td>
+        <td><a href="a/quality-values/<?php echo $this->record['name']; ?>/<?php echo $r['did'];?>"><?php echo $r['value'];?></a></td>
+      </tr>
 		<?php endforeach; ?>
 		</tbody> 
 		</table></div>
