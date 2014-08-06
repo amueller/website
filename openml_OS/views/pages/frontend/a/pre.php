@@ -219,7 +219,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER[
   $this->quality = $this->Data_quality->getById( array( $did, $quality, null ) );
   $this->data = $this->Dataset->getById( $this->quality->data );
   $sql = 'SELECT `d`.`did`, `d`.`name`, `d`.`version`, `q`.`quality`, `q`.`value` FROM `dataset` `d`, `data_quality` `q` ' .
-         'WHERE `d`.`did` = `q`.`data` AND `q`.`quality` = "ClassCount" ' .
+         'WHERE `d`.`did` = `q`.`data` AND `q`.`quality` = "'.$this->quality->quality.'" ' .
          'ORDER BY abs(CAST(`q`.`value` AS DECIMAL(20,5)) - ' . $this->quality->value . ') LIMIT 0,5 ;';
   
   $this->similar = $this->Data_quality->query( $sql );
