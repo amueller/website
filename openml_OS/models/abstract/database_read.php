@@ -33,7 +33,7 @@ class Database_read extends CI_Model {
   }
   
   function getById( $id, $orderby = null ) {
-    $data = $this->getWhere( $this->id_column . ' = "' . $id . '"', $orderby );
+    $data = $this->getWhere( $this->_where_clause_on_id( $id ) , $orderby );
     return ( $data !== false ) ? $data[0] : false;
   }
   

@@ -211,7 +211,21 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER[
 		}
 	}
 }
-
+if(false === strpos($_SERVER['REQUEST_URI'],'/a/') || false !== strpos($_SERVER['REQUEST_URI'],'/a/quality-value')) {
+	$parts = explode('/', $_SERVER['REQUEST_URI']);
+	$did = $parts[count($parts)-1];
+  $quality = $parts[count($parts)-2];
+  
+  $this->quality = $this->Data_quality->getById( array( $did, $quality, null ) );
+  $this->data = $this->Dataset->getById( $this->quality->data );
+  $sql = 'SELECT `d`.`did`, `d`.`name`, `d`.`version`, `q`.`quality`, `q`.`value`, (`q`.`value` - "' . $this->quality->value . '") AS `diff` FROM `dataset` `d`, `data_quality` `q`' .
+         'WHERE `d`.`did` = `q`.`data` AND `q`.`quality` = "ClassCount" ORDER BY abs(`q`.`value` - ' . $this->quality->value . ') LIMIT 0,5 ;';
+  
+  $this->similar = $this->Data_quality->query( $sql );
+  usort($this->similar, function($a, $b) {
+    return strcmp($a->value, $b->value);
+  });
+}
 
 
 ?>
