@@ -54,6 +54,12 @@ if($this->input->get('sort'))
 if(!isset($this->sort))
 	$this->sort = false;
 
+//default sort on number or runs, otherwise date
+if(!$this->terms and !$this->sort)
+	if($this->filtertype == 'data' or $this->filtertype == 'task' or $this->filtertype == 'flow')
+   		$this->sort =  'runs';
+	else
+   		$this->sort =  'date';
 
 $this->order = safe($this->input->get('order'));
 if($this->sort and !$this->order)
@@ -66,7 +72,7 @@ if($this->sort=='date')
 	$this->curr_sort = "most recent";
 if($this->order=='asc' and $this->sort=='runs')
 	$this->curr_sort = "fewest runs";
-if($this->order=='asc' and $this->sort=='runs')
+if($this->order=='asc' and $this->sort=='date')
 	$this->curr_sort = "least recent";
 
 $attrs = $_GET;
@@ -119,7 +125,7 @@ $params['body']  = '{
     "size" : '. $this->size .','.
     ($this->listids ? '"fields" : [],' : '').'
     "query" : {'.$query.'},'.
-    ($this->sort ? '"sort" : { "'.$this->sort.'" : "'.$this->order.'" },' : '').
+    (($this->sort and $this->sort!='match') ? '"sort" : { "'.$this->sort.'" : { "order": "'.$this->order.'"}},' : '').
     ($fjson ? $fjson : '').'
     "highlight" : {
         "fields" : {
@@ -133,7 +139,7 @@ $params['body']  = '{
     }
 }';
 
-// print_r($params);
+//print_r($params);
 
 try {
 	$this->results = $this->searchclient->search($params);

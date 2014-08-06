@@ -24,59 +24,17 @@ class ElasticSearch {
 	$this->user_names[$a->id] = $a->first_name.' '.$a->last_name;
     }
 
-  }
-  
-  public function test() {
-	return $this->client->ping();
-  }
-
-  public function get_types() {
-	$params['index'] = 'openml';
-	return array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
-  }
-
-  public function rebuild_index_for_type($t){
-	$method_name = 'rebuild_index_for_' . $t;
-	if( method_exists( $this, $method_name ) ) {
-		return $this->$method_name();
-	}
-	else{
-	   return 'No function exists to rebuild index of type '.$t; 
-	}
-  }
-
-  public function initialize_index_for_type($t){
-	$method_name = 'initialize_index_for_' . $t;
-	if( method_exists( $this, $method_name ) ) {
-		return $this->$method_name();
-	}
-	else{
-	   return 'No function exists to initialize index of type '.$t; 
-	}
-  }
-
-  public function mapping_delete($m){
-     $params['index'] = 'openml';
-     if(in_array($m,array_keys($this->client->indices()->getMapping($params)['openml']['mappings']))){
-	$params = [
-		'index' => 'openml',
-		'type'	=> $m	
-	];
-	$this->client->indices()->deleteMapping($params);
-     }
-  }
-
-  public function initialize_index_for_data(){
-     
-     $this->mapping_delete('data');  
-
-     $typeMapping = ['_all' => [
+    $this->mappings['data'] = ['_all' => [
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		],
                 'properties' => [
+		    'date' => [
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    ],
                     'description' => [
                         'type' => 'string',
 			'analyzer' => 'snowball'
@@ -94,25 +52,17 @@ class ElasticSearch {
                     ]
                 ]
             ];
-     $params['index'] = 'openml';
-     $params['type'] = 'data';
-     $params['body']['data'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for data';
-  }
-
-  public function initialize_index_for_flow(){
-     
-     $this->mapping_delete('flow');  
-
-     $typeMapping = ['_all' => [
+     $this->mappings['flow'] = ['_all' => [
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		],
                 'properties' => [
+		    'date' => [
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    ],
                     'description' => [
                         'type' => 'string',
 			'analyzer' => 'snowball'
@@ -135,20 +85,42 @@ class ElasticSearch {
                     ]
                 ]
             ];
-     $params['index'] = 'openml';
-     $params['type'] = 'flow';
-     $params['body']['flow'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for flows';
-  }
-
-
-  public function initialize_index_for_measure(){
-     
-     $this->mapping_delete('measure');  
-
-     $typeMapping = ['_all' => [
+       $this->mappings['user'] = ['_all' => [
+                	'enabled' => true,
+                	'stored' => 'yes',
+			'type' => 'string',
+			'analyzer' => 'snowball'
+		],
+                'properties' => [
+		    'date' => [
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    ],
+                    'suggest' => [
+                        'type' => 'completion',
+			'index_analyzer' => 'standard',
+			'search_analyzer' => 'standard',
+			'payloads' => true,
+			'max_input_length' => 100
+                    ]
+                ]
+            ];
+       $this->mappings['task'] = ['_all' => [
+                	'enabled' => true,
+                	'stored' => 'yes',
+			'type' => 'string',
+			'analyzer' => 'snowball'
+		],
+                'properties' => [
+                    'suggest' => [
+                        'type' => 'completion',
+			'index_analyzer' => 'standard',
+			'search_analyzer' => 'standard',
+			'payloads' => true,
+                    ]
+                ]
+            ];
+       $this->mappings['task_type'] = ['_all' => [
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
@@ -172,124 +144,86 @@ class ElasticSearch {
                     ]
                 ]
             ];
-     $params['index'] = 'openml';
-     $params['type'] = 'measure';
-     $params['body']['measure'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for measures';
-  }
-
-  public function initialize_index_for_task_type(){
-     
-     $this->mapping_delete('task_type');  
-
-     $typeMapping = ['_all' => [
+       $this->mappings['run'] = ['_all' => [
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		],
                 'properties' => [
-                    'description' => [
-                        'type' => 'string',
-			'analyzer' => 'snowball'
-                    ],
-                    'name' => [
-                        'type' => 'string',
-			'analyzer' => 'snowball'
-                    ],
-                    'suggest' => [
-                        'type' => 'completion',
-			'index_analyzer' => 'standard',
-			'search_analyzer' => 'standard',
-			'payloads' => true,
-			'max_input_length' => 100
-                    ]
-                ]
-            ];
-     $params['index'] = 'openml';
-     $params['type'] = 'task_type';
-     $params['body']['task_type'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for task types';
-  }
-
-  public function initialize_index_for_user(){
-     
-     $this->mapping_delete('user');  
-
-     $typeMapping = ['_all' => [
-                	'enabled' => true,
-                	'stored' => 'yes',
-			'type' => 'string',
-			'analyzer' => 'snowball'
-		],
-                'properties' => [
-                    'suggest' => [
-                        'type' => 'completion',
-			'index_analyzer' => 'standard',
-			'search_analyzer' => 'standard',
-			'payloads' => true,
-			'max_input_length' => 100
-                    ]
-                ]
-            ];
-     $params['index'] = 'openml';
-     $params['type'] = 'user';
-     $params['body']['user'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for users';
-  }
-
-  public function initialize_index_for_run(){
-     
-     $this->mapping_delete('run');  
-
-     $typeMapping = ['_all' => [
-                	'enabled' => true,
-                	'stored' => 'yes',
-			'type' => 'string',
-			'analyzer' => 'snowball'
+			'date' => [
+				'type' => 'date',
+				'format' => 'yyyy-MM-dd HH:mm:ss'
+				]
 		]
             ];
-     $params['index'] = 'openml';
-     $params['type'] = 'run';
-     $params['body']['run'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for runs';
-  }
-
-  public function initialize_index_for_task(){
-     
-     $this->mapping_delete('task');  
-
-     $typeMapping = ['_all' => [
+       $this->mappings['measure'] = ['_all' => [
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		],
                 'properties' => [
+                    'description' => [
+                        'type' => 'string',
+			'analyzer' => 'snowball'
+                    ],
+                    'name' => [
+                        'type' => 'string',
+			'analyzer' => 'snowball'
+                    ],
                     'suggest' => [
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
+			'max_input_length' => 100
                     ]
                 ]
             ];
-     $params['index'] = 'openml';
-     $params['type'] = 'task';
-     $params['body']['task'] = $typeMapping;
-     $this->client->indices()->putMapping($params);
-
-     return 'Successfully reinitialized index for tasks';
+  }
+  
+  public function test() {
+	return $this->client->ping();
   }
 
+  public function get_types() {
+	$params['index'] = 'openml';
+	return array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
+  }
+
+  public function rebuild_index_for_type($t){
+	$method_name = 'rebuild_index_for_' . $t;
+	if( method_exists( $this, $method_name ) ) {
+		return $this->$method_name();
+	}
+	else{
+	   return 'No function exists to rebuild index of type '.$t; 
+	}
+  }
+
+  public function initialize_index_for_type($t){
+     
+     $this->mapping_delete($t);
+
+     $params['index'] = 'openml';
+     $params['type'] = $t;
+     $params['body'][$t] = $this->mappings[$t];
+     $this->client->indices()->putMapping($params);
+
+     return 'Successfully reinitialized index for '.$t;
+  }
+
+  public function mapping_delete($m){
+     $params['index'] = 'openml';
+     if(in_array($m,array_keys($this->client->indices()->getMapping($params)['openml']['mappings']))){
+	$params = [
+		'index' => 'openml',
+		'type'	=> $m	
+	];
+	$this->client->indices()->deleteMapping($params);
+     }
+  }
 
   public function rebuild_index_for_user(){
   
@@ -322,7 +256,7 @@ class ElasticSearch {
 		    'affiliation' 	=> $d->affiliation,
 		    'country'	 	=> $d->country,
 		    'image'		=> $d->image,
-		    'date'		=> $d->created_on.' CET',
+		    'date'		=> $d->created_on,
 		    'suggest'		=> array(
 						'input' => array($d->first_name,$d->last_name),
 						'output'=> $d->first_name.' '.$d->last_name,
@@ -352,18 +286,18 @@ class ElasticSearch {
 
 	$this->fetch_tasks();
 
-	foreach( $this->all_tasks as $d ) {
+	foreach( $this->all_tasks as $k => $v ) {
 	    $params['body'][] = array(
 		'index' => array(
-		    '_id' => $d->task_id
+		    '_id' => $k
 		)
 	    );	    
-	    $params['body'][] = $this->all_tasks[$d->task_id];
+	    $params['body'][] = $v;
 	}
 
 	$responses = $this->client->bulk($params);
 	
-	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($tasks).' tasks.';
+	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($this->all_tasks).' tasks.';
   }
 
   private function build_task($d){
@@ -497,7 +431,7 @@ class ElasticSearch {
 		    'run_id' 		=> $r->rid,
 		    'uploader' 		=> array_key_exists($r->uploader,$this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
 		    'run_task'		=> $this->all_tasks[$r->task_id],
-		    'date'		=> $r->start_time.' CET',
+		    'date'		=> $r->start_time,
 		    'run_flow'		=> array(
 						'flow_id' => $r->implementation_id,
 						'name' => $this->flow_names[$r->implementation_id],
@@ -597,7 +531,7 @@ class ElasticSearch {
 		    'creator'		=> $d->creator,
 		    'contributor' 	=> $d->contributor,
 		    'dependencies' 	=> $d->dependencies,
-		    'date'		=> $d->uploadDate.' CET',
+		    'date'		=> $d->uploadDate,
 		    'runs' 		=> $this->checkNumeric($d->runs),
 		    'suggest'		=> array(
 						'input' => array(str_replace("weka.","",$d->name),$d->description),
@@ -616,10 +550,6 @@ class ElasticSearch {
 		$new_data = array_merge($new_data,array_map(array($this, 'checkNumeric'),$qualities));
 	return $new_data;
   }
-
-
-
-
 
   public function rebuild_index_for_measure(){
   
@@ -794,7 +724,7 @@ class ElasticSearch {
 		    'creator'		=> $d->creator,
 		    'contributor' 	=> $d->contributor,
 		    'collection' 	=> $d->collection,
-		    'date'		=> $d->upload_date.' CET',
+		    'date'		=> $d->upload_date,
 		    'runs' 		=> $this->checkNumeric($d->runs),
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),

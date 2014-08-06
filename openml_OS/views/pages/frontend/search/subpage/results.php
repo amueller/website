@@ -60,7 +60,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 
 				<a href="r/<?php echo  $r['_id'] ?>">Run <?php echo  $r['_id'] ?></a>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats">flow <a href="<?php echo $rs['run_flow']['flow_id'];?>"><?php echo $rs['run_flow']['name'] ?></a> - task <a href="<?php echo $rs['run_task']['task_id'];?>"><?php echo $rs['run_task']['task_id'];?> - <?php echo $rs['run_task']['tasktype']['name'];?> on <?php echo $rs['run_task']['source_data']['name']; ?></a> - uploaded <?php echo str_replace('.000Z','',str_replace('T',' ',$rs['date']));?> by <?php echo $rs['uploader'] ?></div>
+				<div class="runStats">flow <a href="<?php echo $rs['run_flow']['flow_id'];?>"><?php echo $rs['run_flow']['name'] ?></a> - task <a href="<?php echo $rs['run_task']['task_id'];?>"><?php echo $rs['run_task']['task_id'];?> - <?php echo $rs['run_task']['tasktype']['name'];?> on <?php echo $rs['run_task']['source_data']['name']; ?></a> - uploaded <?php echo str_replace('.000Z','',$rs['date']);?> by <?php echo $rs['uploader'] ?></div>
 
 		   <?php } elseif($type == 'user') { ?>
 
