@@ -49,6 +49,11 @@
 	<div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/data-qualities')) echo 'active';?>">
   		<?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/data-qualities')) subpage('data-qualities'); ?>
 	</div>
+  
+        <!-- Quality values -->     	
+	<div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/quality-value')) echo 'active';?>">
+  		<?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/quality-value')) subpage('quality-value'); ?>
+	</div>
         <!-- Flow qualities -->     	
 	<div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/flow-qualities')) echo 'active';?>">
   		<?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/flow-qualities')) subpage('flow-qualities'); ?>
