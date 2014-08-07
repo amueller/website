@@ -396,6 +396,33 @@ class ElasticSearch {
 	return $index;
  }
 
+ //update task, dataset, flow to make sure that their indexed run counts are up to date? Only needed for sorting on number of runs.
+ private function update_runcounts($run){
+	$runparams['index'] = 'openml';
+	$runparams['type'] = 'run'; 
+	$runparams['body']['query']['match']['run_task.task_id'] = $run->task_id;
+	$result = $this->client->search($runparams);
+        $runcount = $this->checkNumeric($result['hits']['total']);
+	
+	$params['index'] = 'openml';
+	$params['type'] = 'task'; 
+	$params['id'] = $run->task_id;
+	$params['body'] = [ 'doc' => [ 'runs' => $runcount ] ];
+	$this->client->update($params);
+
+	$runparams = array();
+	$runparams['index'] = 'openml';
+	$runparams['type'] = 'run'; 
+	$runparams['body']['query']['match']['run_flow.flow_id'] = $run->implementation_id;
+	$result = $this->client->search($runparams);
+        $runcount = $this->checkNumeric($result['hits']['total']);
+
+	$params['type'] = 'flow'; 
+	$params['id'] = $run->implementation_id;
+	$params['body'] = [ 'doc' => [ 'runs' => $runcount ] ];
+	$this->client->update($params);
+}
+
  private function index_single_run($id){
 
 	$params['index']     = 'openml';
@@ -413,6 +440,9 @@ class ElasticSearch {
 	$params['body'] = $this->build_run($run[0],$setups,$runfiles,$evals);
 	
 	$responses = $this->client->index($params);
+
+	$this->update_runcounts($run[0]);
+
 	return 'Successfully indexed '.sizeof($responses['_id']).' run(s).';
  }
 
@@ -453,7 +483,7 @@ class ElasticSearch {
 		$responses = $this->client->bulk($params);
 		$submitted += sizeof($responses['items']);
 	}
-
+	
 	return 'Successfully indexed '.$submitted.' out of '.$runcount.' runs.';
   }
 
