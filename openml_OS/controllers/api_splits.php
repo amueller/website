@@ -8,7 +8,6 @@ class Api_splits extends CI_Controller {
     $this->load->model('Task');
     $this->load->model('Task_inputs');
     $this->load->model('Estimation_procedure');
-    $this->load->model('Task_type_io');
     $this->load->model('Log');
     
     $this->db = $this->load->database('read',true);
