@@ -132,8 +132,8 @@ class Task extends Database_write {
   }
   
   function getTasksWithValue( $assoc ) {
-    $select = array( '`t`.`task_id`' );
-    $from = array('`task`');
+    $select = array();
+    $from = array();
     $where = array();
     
     foreach( $assoc as $key => $value ) {
@@ -141,7 +141,7 @@ class Task extends Database_write {
       $from[] = '`task_inputs` AS `' . $key . '`';
       $where[] = '`' . $key . '`.`task_id` = `t`.`task_id` AND `' . $key . '`.`input` = "' . $key . '" AND `' . $key . '`.`value` = "' . $value . '"';
     }
-    $sql = 'SELECT ' . implode( ', ', $select ) . ' FROM `task` `t`, ' . implode( ', ', $from ) . ' WHERE ' . implode( ' AND ', $where );
+    $sql = 'SELECT `t`.`task_id`, ' . implode( ', ', $select ) . ' FROM `task` `t`, ' . implode( ', ', $from ) . ' WHERE ' . implode( ' AND ', $where );
     return $this->query( $sql );
   }
   
