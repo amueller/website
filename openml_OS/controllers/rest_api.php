@@ -515,8 +515,10 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $task_ids = $this->Task->getTasksWithDid( $dataset->did );
-    
+    $tasks = $this->Task->getTasksWithValue( array( 'source_data' => $dataset->did ) );
+    $task_ids = array();
+    foreach( $tasks as $t ) { $task_ids[] = $t->task_id; }
+
     $runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
     
     
