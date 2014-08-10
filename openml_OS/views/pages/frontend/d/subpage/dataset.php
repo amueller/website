@@ -14,8 +14,10 @@
 	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
 
 	 <li>   <div class="version" style="margin-bottom: -10px;">
-		        <select class="selectpicker" data-width="auto">
-			  <option><?php echo $this->record->{'version'}; ?></option>
+		        <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
+			  <?php foreach( $this->versions as $k => $v ) { ?>
+				<option value="<?php echo 'd/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>><?php echo $v; ?></option>
+			  <?php } ?>
 			</select>		
 	        </div><br>Version</li>
      </ul>
