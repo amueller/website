@@ -747,8 +747,9 @@ class Rest_api extends CI_Controller {
     }
     
     $task = false;
-    if( $this->Task->getById( $task_id ) ) { // task actually exists
-      $task = $this->Task->getByIdWithValues( $task_id );
+    $taskRecord = $this->Task->getById( $task_id );
+    if( $taskRecord ) { // task actually exists
+      $task = $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id );
     }
     
     if( $task === false ) {
@@ -756,12 +757,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $repeats = property_exists( $task, 'repeats' ) ? $task->repeats : null;
-    $folds   = property_exists( $task, 'folds'   ) ? $task->folds   : null;
-    $percentage = property_exists( $task, 'percentage' ) ? $task->percentage : null;
-    $repeats = property_exists( $task, 'repeats' ) ? $task->repeats : null;
-    $stratified_sampling = property_exists( $task, 'stratified_sampling' ) ? $task->stratified_sampling : null;
-    $estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->type, $repeats, $folds, $percentage, $stratified_sampling );
+    $estimation_procedure = $this->Estimation_procedure->getById( $task[0]['estimation_procedure'] );
     
     $evaluation_table = 'evaluation';
     $evaluation_table_constraints = '';
@@ -811,7 +807,7 @@ class Rest_api extends CI_Controller {
         $previous = $key;
       }
     }
-    $this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results ) );
+    $this->_xmlContents( 'task-evaluations', array( 'task' => $task[0], 'estimation_procedure' => $estimation_procedure, 'results' => $results ) );
   }
   
   private function _openml_implementation_licences() {
@@ -1159,7 +1155,8 @@ class Rest_api extends CI_Controller {
     }
     
     // fetch task
-    $task = $this->Task->getByIdForEvaluation( $task_id );
+    $taskRecord = $this->Task->getById( $task_id );
+    $task = $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id );
     if( $task === false ) { 
       $this->_returnError( 204 );
       return;
@@ -1172,7 +1169,7 @@ class Rest_api extends CI_Controller {
       'rid' => $runId,
       'uploader' => $this->user_id,
       'setup' => $setupId,
-      'task_id' => $task_id,
+      'task_id' => $task->task_id,
       'start_time' => now(),
       'status' => ($error_message === false) ? 'OK' : 'error',
       'error' => ($error_message === false) ? null : $error_message,
@@ -1212,7 +1209,7 @@ class Rest_api extends CI_Controller {
     }
     
     // attach input data
-    $inputData = $this->Run->inputData( $runId, $task->did, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
+    $inputData = $this->Run->inputData( $runId, $task->source_data, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {
       $errorCode = 211;
       return false;

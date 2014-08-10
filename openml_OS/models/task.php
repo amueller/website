@@ -67,18 +67,6 @@ class Task extends Database_write {
     return $this->query( $sql );
   }
   
-  function getByIdWithValues( $id ) {
-    if(is_numeric($id) === false)
-      return false;
-    $record = $this->Task->getById( $id );
-    $ttid = $record->ttid;
-    $task = $this->query( $this->construct_sql( $ttid ) . ' AND `task`.`task_id` = ' . $id );
-    if($task)
-      return end($task);
-    else
-      return false;
-  }
-  
   function getTasksWithDid( $did ) {
     $sql = $this->construct_sql( 0, false ) . ' AND `vtable_did`.`value` = "'.$did.'"';
     $tasks = $this->query( $sql );
@@ -90,18 +78,6 @@ class Task extends Database_write {
       }
     }
     return $res;
-  }
-  
-  function getByIdForEvaluation( $id ) {
-    if(is_numeric($id) === false)
-      return false;
-    $record = $this->Task->getById( $id );
-    $ttid = $record->ttid;
-    $task = $this->query( $this->construct_sql( $ttid, true ) . ' AND `task`.`task_id` = ' . $id );
-    if($task)
-      return end($task);
-    else
-      return false;
   }
   
   function create_batch( $ttid, $task_batch ) {
