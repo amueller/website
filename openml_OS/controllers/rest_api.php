@@ -24,6 +24,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Evaluation_interval');
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
+    $this->load->model('Estimation_procedure');
     $this->load->model('Input');
     $this->load->model('Input_data');
     $this->load->model('Output_data');
@@ -42,6 +43,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');
     $this->load->model('Workflow_setup');
+    $this->load->model('Algorithm_setup');
     
     // community db
     $this->load->model('Api_session');
@@ -749,7 +751,7 @@ class Rest_api extends CI_Controller {
     $task = false;
     $taskRecord = $this->Task->getById( $task_id );
     if( $taskRecord ) { // task actually exists
-      $task = $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id );
+      $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
     }
     
     if( $task === false ) {
@@ -757,7 +759,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $estimation_procedure = $this->Estimation_procedure->getById( $task[0]['estimation_procedure'] );
+    $estimation_procedure = $this->Estimation_procedure->getById( $task->estimation_procedure );
     
     $evaluation_table = 'evaluation';
     $evaluation_table_constraints = '';
@@ -807,7 +809,7 @@ class Rest_api extends CI_Controller {
         $previous = $key;
       }
     }
-    $this->_xmlContents( 'task-evaluations', array( 'task' => $task[0], 'estimation_procedure' => $estimation_procedure, 'results' => $results ) );
+    $this->_xmlContents( 'task-evaluations', array( 'task' => $task, 'estimation_procedure' => $estimation_procedure, 'results' => $results ) );
   }
   
   private function _openml_implementation_licences() {
@@ -1156,11 +1158,11 @@ class Rest_api extends CI_Controller {
     
     // fetch task
     $taskRecord = $this->Task->getById( $task_id );
-    $task = $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id );
-    if( $task === false ) { 
+    if( $taskRecord === false ) { 
       $this->_returnError( 204 );
       return;
     }
+    $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
     
     // now create a run
     $runId = $this->Run->getHighestIndex( array('run'), 'rid' );
