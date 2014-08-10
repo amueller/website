@@ -59,7 +59,7 @@ class Algorithm_setup extends Database_write {
       }
       
       $setupData = array( 
-        'sid' => $this->Algorithm_setup->getHighestIndex( array( 'algorithm_setup','function_setup','workflow_setup' ), 'sid' ),
+        'sid' => $this->Algorithm_setup->getHighestIndex( array( 'algorithm_setup' ), 'sid' ),
   //      'parent' => '0',
         'algorithm' => $implementation->implements,
         'implementation_id' => $implementation->id,
