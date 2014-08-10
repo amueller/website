@@ -27,7 +27,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$this->tasks_all = array();
 	$this->current_task = false;
 
-
+	$this->versions = $this->Dataset->getAssociativeArray('did', 'version_label', 'name = "'.$this->record->name.'"');
+	ksort($this->versions);
 	$this->tasks = $this->Dataset->query('SELECT t.task_id, tt.name FROM task_type_inout ttio, task_inputs ti, task t, task_type tt WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=' . $this->id . ' and ti.task_id=t.task_id and t.ttid = tt.ttid and ttio.ttid=tt.ttid');
   	if( $this->tasks != false ) {
 	  foreach( $this->tasks as $t ) {
