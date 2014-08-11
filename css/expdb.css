@@ -419,6 +419,7 @@ width: 80pt;
   font-weight: 200 !important;
   margin-bottom: 20px;
   margin-top: 10px;
+  clear: both;
 }
 
 .openmlsectioninfo h1{
@@ -1674,4 +1675,16 @@ a:hover > .circlered{
 
 .hccategory{
 	z-index:-1 !important;
+}
+
+.hideContent {
+    overflow: hidden;
+    height: 8.7em;
+}
+
+.showContent {
+    height: auto;
+}
+.show-more {
+    float: left;
 }

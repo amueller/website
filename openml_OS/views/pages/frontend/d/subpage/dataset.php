@@ -4,10 +4,15 @@
   </div>
   <div class="col-sm-12">
 
-     <p><?php
-	$desc = $this->record->{'description'};
-	$desc = (strlen($desc) > 1003) ? substr($desc,0,1000).'...' : $desc;
-	echo $desc;  ?></p>
+     <p class="description <?php if(strlen($this->record->{'description'})>400) echo 'hideContent';?>"><?php
+	echo $this->record->{'description'} ? $this->record->{'description'} : 'No description.';
+	?></p>
+  </div>
+  <div class="col-sm-12" style="height:76px;"> <!-- Not sure why this is needed, but otherwise this element gets height of 1px. -->
+
+	<?php if(strlen($this->record->{'description'})>400) { ?>
+        <div class="show-more"><a onclick="showmore()"><i class="fa fa-chevron-circle-down"></i> More</a></div>
+	<?php } ?>
      <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a><br>Download</li>
 	 <li><a><i class="fa fa-book fa-2x"></i></a><br>Paper</li>
@@ -18,7 +23,7 @@
 			  <?php foreach( $this->versions as $k => $v ) { ?>
 				<option value="<?php echo 'd/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>><?php echo $v; ?></option>
 			  <?php } ?>
-			</select>		
+			</select>
 	        </div><br>Version</li>
      </ul>
 
