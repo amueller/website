@@ -425,6 +425,7 @@ class Rest_api extends CI_Controller {
       $data['error'] = "true";
     }
     $this->Dataset->update( $did, $data );
+
     
     $all_qualities = $this->Quality->getColumnWhere( 'name', '`type` = "DataQuality"' );
     
@@ -484,6 +485,9 @@ class Rest_api extends CI_Controller {
       }
     }
     $this->db->trans_complete();
+    
+    // add to elastic search index. 
+    $this->ElasticSearch->index('data', $dataset->did); 
     
     if( $success ) {
       $this->_xmlContents( 'data-qualities-upload', array( 'did' => $dataset->did ) );
@@ -629,6 +633,8 @@ class Rest_api extends CI_Controller {
      * THE ACTUAL INSERTION
      * * * */
     $id = $this->Dataset->insert( $dataset );
+    // update elastic search index. 
+    $this->ElasticSearch->index('data', $id);
     if( ! $id ) {
       $this->_returnError( 134 );
       return;
@@ -1217,7 +1223,10 @@ class Rest_api extends CI_Controller {
     if( $inputData === false ) {
       $errorCode = 211;
       return false;
-    }    
+    }
+    
+    // add to elastic search index. 
+    $this->ElasticSearch->index('run', $run->rid); 
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Now the stuff that needs to be done for the special     *
@@ -1345,6 +1354,9 @@ class Rest_api extends CI_Controller {
       }
     }
     $this->db->trans_complete();
+    
+    // update elastic search index. 
+    $this->ElasticSearch->index('run', $run_id ); 
     
     $this->_xmlContents( 'run-evaluate', array( 'run_id' => $run_id ) );
   }
