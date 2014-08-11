@@ -134,6 +134,9 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
     return false;
   }
   
+  // add to elastic search index. 
+  $this->ElasticSearch->index('flow', $res); 
+  
   // insert all important "components"
   foreach( $implementation_objects as $key => $value ) {
     

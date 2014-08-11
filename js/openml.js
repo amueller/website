@@ -176,3 +176,8 @@ function makeAutoComplete( selector, datasource ) {
 		source: datasource
 	});
 }
+
+function showmore(){
+    $('.description').switchClass("hideContent", "showContent", 400);
+    $('.show-more').hide();
+}
