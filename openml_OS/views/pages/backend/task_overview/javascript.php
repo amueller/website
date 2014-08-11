@@ -18,10 +18,9 @@ $(document).ready( function() {
   } );
   
   var oDuplicateTable = $('.duplicatetable').dataTable( {
-    "bPaginate": true,
-    "aLengthMenu": [[10, 50, 100, 250, -1], [10, 50, 100, 250, "All"]],
-    "iDisplayLength" : 50,
-    "bLengthChange": true,
+    "bPaginate": false,
+    "iDisplayLength" : -1,
+    "bLengthChange": false,
     "bFilter": false,
     "bSort": false,
     "aaSorting": [],

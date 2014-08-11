@@ -24,163 +24,163 @@ class ElasticSearch {
 	$this->user_names[$a->id] = $a->first_name.' '.$a->last_name;
     }
 
-    $this->mappings['data'] = ['_all' => [
+    $this->mappings['data'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-		    'date' => [
+		),
+                'properties' => array(
+		    'date' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ],
-                    'description' => [
+		    ),
+                    'description' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'name' => [
+                    ),
+                    'name' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'suggest' => [
+                    ),
+                    'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
 			'max_input_length' => 100
-                    ]
-                ]
-            ];
-     $this->mappings['flow'] = ['_all' => [
+                    )
+                )
+            );
+     $this->mappings['flow'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-		    'date' => [
+		),
+                'properties' => array(
+		    'date' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ],
-                    'description' => [
+		    ),
+                    'description' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'full_description' => [
+                    ),
+                    'full_description' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
+                    ),
 
-                    'name' => [
+                    'name' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'suggest' => [
+                    ),
+                    'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
 			'max_input_length' => 100
-                    ]
-                ]
-            ];
-       $this->mappings['user'] = ['_all' => [
+                    )
+                )
+            );
+       $this->mappings['user'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-		    'date' => [
+		),
+                'properties' => array(
+		    'date' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ],
-                    'suggest' => [
+		    ),
+                    'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
 			'max_input_length' => 100
-                    ]
-                ]
-            ];
-       $this->mappings['task'] = ['_all' => [
+                    )
+                )
+            );
+       $this->mappings['task'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-                    'suggest' => [
+		),
+                'properties' => array(
+                    'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
-                    ]
-                ]
-            ];
-       $this->mappings['task_type'] = ['_all' => [
+                    )
+                )
+            );
+       $this->mappings['task_type'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-                    'description' => [
+		),
+                'properties' => array(
+                    'description' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'name' => [
+                    ),
+                    'name' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'suggest' => [
+                    ),
+                    'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
 			'max_input_length' => 100
-                    ]
-                ]
-            ];
-       $this->mappings['run'] = ['_all' => [
+                    )
+                )
+            );
+       $this->mappings['run'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-			'date' => [
+		),
+                'properties' => array(
+			'date' => array(
 				'type' => 'date',
 				'format' => 'yyyy-MM-dd HH:mm:ss'
-				]
-		]
-            ];
-       $this->mappings['measure'] = ['_all' => [
+				)
+		)
+            );
+       $this->mappings['measure'] = array('_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
-		],
-                'properties' => [
-                    'description' => [
+		),
+                'properties' => array(
+                    'description' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'name' => [
+                    ),
+                    'name' => array(
                         'type' => 'string',
 			'analyzer' => 'snowball'
-                    ],
-                    'suggest' => [
+                    ),
+                    'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
 			'search_analyzer' => 'standard',
 			'payloads' => true,
 			'max_input_length' => 100
-                    ]
-                ]
-            ];
+                    )
+                )
+            );
   }
   
   public function test() {
@@ -189,7 +189,8 @@ class ElasticSearch {
 
   public function get_types() {
 	$params['index'] = 'openml';
-	return array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
+	$keys = array_keys($this->client->indices()->getMapping($params));
+  return $keys['openml']['mappings'];
   }
 
   public function index($type, $id = false){
@@ -216,11 +217,12 @@ class ElasticSearch {
 
   public function mapping_delete($m){
      $params['index'] = 'openml';
-     if(in_array($m,array_keys($this->client->indices()->getMapping($params)['openml']['mappings']))){
-	$params = [
+      $keys = array_keys($this->client->indices()->getMapping($params));
+     if(in_array($m,$keys['openml']['mappings'])){
+	$params = array(
 		'index' => 'openml',
 		'type'	=> $m	
-	];
+	);
 	$this->client->indices()->deleteMapping($params);
      }
   }
@@ -407,7 +409,7 @@ class ElasticSearch {
 	$params['index'] = 'openml';
 	$params['type'] = 'task'; 
 	$params['id'] = $run->task_id;
-	$params['body'] = [ 'doc' => [ 'runs' => $runcount ] ];
+	$params['body'] = array( 'doc' => array( 'runs' => $runcount ) );
 	$this->client->update($params);
 
 	$runparams = array();
@@ -419,7 +421,7 @@ class ElasticSearch {
 
 	$params['type'] = 'flow'; 
 	$params['id'] = $run->implementation_id;
-	$params['body'] = [ 'doc' => [ 'runs' => $runcount ] ];
+	$params['body'] = array( 'doc' => array( 'runs' => $runcount ) );
 	$this->client->update($params);
 }
 
@@ -454,8 +456,10 @@ class ElasticSearch {
 	$params['type']      = 'run';
 
 	$setups = $this->fetch_setups();
-	$runmax = intval($this->db->query('SELECT max(rid) as maxrun from run')[0]->maxrun);
-	$runcount = intval($this->db->query('SELECT count(rid) as runcount from run')[0]->runcount);
+  $runmaxquery = $this->db->query('SELECT max(rid) as maxrun from run');
+  $runcountquery = $this->db->query('SELECT count(rid) as runcount from run');
+	$runmax = intval($runmaxquery[0]->maxrun);
+	$runcount = intval($runcountquery[0]->runcount);
 	if(!$this->all_tasks)
 		$this->fetch_tasks();
 	
