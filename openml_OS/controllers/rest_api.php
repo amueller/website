@@ -24,6 +24,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Evaluation_interval');
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
+    $this->load->model('Estimation_procedure');
     $this->load->model('Input');
     $this->load->model('Input_data');
     $this->load->model('Output_data');
@@ -42,6 +43,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');
     $this->load->model('Workflow_setup');
+    $this->load->model('Algorithm_setup');
     
     // community db
     $this->load->model('Api_session');
@@ -513,8 +515,10 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $task_ids = $this->Task->getTasksWithDid( $dataset->did );
-    
+    $tasks = $this->Task->getTasksWithValue( array( 'source_data' => $dataset->did ) );
+    $task_ids = array();
+    foreach( $tasks as $t ) { $task_ids[] = $t->task_id; }
+
     $runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
     
     
@@ -747,8 +751,9 @@ class Rest_api extends CI_Controller {
     }
     
     $task = false;
-    if( $this->Task->getById( $task_id ) ) { // task actually exists
-      $task = $this->Task->getByIdWithValues( $task_id );
+    $taskRecord = $this->Task->getById( $task_id );
+    if( $taskRecord ) { // task actually exists
+      $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
     }
     
     if( $task === false ) {
@@ -756,12 +761,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $repeats = property_exists( $task, 'repeats' ) ? $task->repeats : null;
-    $folds   = property_exists( $task, 'folds'   ) ? $task->folds   : null;
-    $percentage = property_exists( $task, 'percentage' ) ? $task->percentage : null;
-    $repeats = property_exists( $task, 'repeats' ) ? $task->repeats : null;
-    $stratified_sampling = property_exists( $task, 'stratified_sampling' ) ? $task->stratified_sampling : null;
-    $estimation_procedure = $this->Estimation_procedure->get_by_parameters( $task->ttid, $task->type, $repeats, $folds, $percentage, $stratified_sampling );
+    $estimation_procedure = $this->Estimation_procedure->getById( $task->estimation_procedure );
     
     $evaluation_table = 'evaluation';
     $evaluation_table_constraints = '';
@@ -1159,11 +1159,12 @@ class Rest_api extends CI_Controller {
     }
     
     // fetch task
-    $task = $this->Task->getByIdForEvaluation( $task_id );
-    if( $task === false ) { 
+    $taskRecord = $this->Task->getById( $task_id );
+    if( $taskRecord === false ) { 
       $this->_returnError( 204 );
       return;
     }
+    $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
     
     // now create a run
     $runId = $this->Run->getHighestIndex( array('run'), 'rid' );
@@ -1172,7 +1173,7 @@ class Rest_api extends CI_Controller {
       'rid' => $runId,
       'uploader' => $this->user_id,
       'setup' => $setupId,
-      'task_id' => $task_id,
+      'task_id' => $task->task_id,
       'start_time' => now(),
       'status' => ($error_message === false) ? 'OK' : 'error',
       'error' => ($error_message === false) ? null : $error_message,
@@ -1212,7 +1213,7 @@ class Rest_api extends CI_Controller {
     }
     
     // attach input data
-    $inputData = $this->Run->inputData( $runId, $task->did, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
+    $inputData = $this->Run->inputData( $runId, $task->source_data, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {
       $errorCode = 211;
       return false;
