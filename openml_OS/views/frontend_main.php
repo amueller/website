@@ -191,7 +191,7 @@
                     <ul class="openml-contact">
 		<div id="social-bar">
 		  <div id="twitter" data-url="http://openml.org" data-text="#OpenML: Exploring machine learning better, together." data-title="twitter"></div>
-		  <div id="googleplus" data-url="openml.org" data-text="OpenML:  Exploring machine learning better, together." data-title="google-plus"></div>	
+		  <div id="googleplus" data-url="www.openml.org" data-text="OpenML:  Exploring machine learning better, together." data-title="google-plus"></div>	
 		  <div id="facebook" data-url="http://openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="facebook"></div>	
 		  <div id="linkedin" data-url="http://openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="linkedin"></div>  
 		  <!--<div id="pinterest" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="pinterest"></div>-->
