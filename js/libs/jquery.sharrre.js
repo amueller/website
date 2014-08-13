@@ -334,10 +334,10 @@
       window.open('http://www.delicious.com/save?v=5&noui&jump=close&url='+encodeURIComponent((opt.buttons.delicious.url !== '' ? opt.buttons.delicious.url : opt.url))+'&title='+opt.text, 'delicious', 'toolbar=no,width=550,height=550');
     },
     stumbleupon: function(opt){
-      window.open('http://www.stumbleupon.com/badge/?url='+encodeURIComponent((opt.buttons.delicious.url !== '' ? opt.buttons.delicious.url : opt.url)), 'stumbleupon', 'toolbar=no,width=550,height=550');
+      window.open('http://www.stumbleupon.com/badge/?url='+encodeURIComponent((opt.buttons.stumbleupon.url !== '' ? opt.buttons.stumbleupon.url : opt.url)), 'stumbleupon', 'toolbar=no,width=550,height=550');
     },
     linkedin: function(opt){
-      window.open('https://www.linkedin.com/cws/share?url='+encodeURIComponent((opt.buttons.delicious.url !== '' ? opt.buttons.delicious.url : opt.url))+'&token=&isFramed=true', 'linkedin', 'toolbar=no,width=550,height=550');
+      window.open('https://www.linkedin.com/cws/share?url='+encodeURIComponent((opt.buttons.linkedin.url !== '' ? opt.buttons.linkedin.url : opt.url))+'&token=&isFramed=true', 'linkedin', 'toolbar=no,width=550,height=550');
     },
     pinterest: function(opt){
       window.open('http://pinterest.com/pin/create/button/?url='+encodeURIComponent((opt.buttons.pinterest.url !== '' ? opt.buttons.pinterest.url : opt.url))+'&media='+encodeURIComponent(opt.buttons.pinterest.media)+'&description='+opt.buttons.pinterest.description, 'pinterest', 'toolbar=no,width=700,height=300');
@@ -508,11 +508,13 @@
     }
     else{ //template by defaults
       $(this.element).html(
-		    '<a class="share" href="#"><i class="fa fa-'+this.options.title+'"></i><br><div class="count">' + total + '</div></a>'
-		  );
-}
-};
-
+                            '<div class="box"><a class="count" href="#">' + total + '</a>' + 
+                            (this.options.title !== '' ? '<a class="share" href="#">' + this.options.title + '</a>' : '') +
+                            '</div>'
+                          );
+    }
+  };
+  
   /* format total numbers like 1.2k or 5M
   ================================================== */
   Plugin.prototype.shorterTotal = function (num) {
