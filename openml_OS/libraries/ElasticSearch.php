@@ -195,7 +195,11 @@ class ElasticSearch {
   public function index($type, $id = false){
 	$method_name = 'index_' . $type;
 	if( method_exists( $this, $method_name ) ) {
-		return $this->$method_name($id);
+    try {
+		  return $this->$method_name($id);
+    } catch( Exception $e ) {
+      // TODO: log?
+    }
 	}
 	else{
 	   return 'No function exists to build index of type '.$type; 

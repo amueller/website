@@ -19,7 +19,7 @@
                 <tr id="duplicate_run_<?php echo $entrees[$i]; ?>">
                   <td><input type="checkbox" data-run_id="<?php echo $entrees[$i]; ?>" data-in_group_nr="<?php echo $i; ?>" class="duplicate_checkbox" id="duplicate_checkbox_<?php echo $entrees[$i]; ?>" /></td>
                   <td><?php echo $entree; ?></td>
-                  <?php foreach( $tt->inputs as $input ): ?>
+                  <?php foreach( $this->inputs as $input ): ?>
                     <td><?php if( property_exists ($group, $input ) ) { echo $group->$input; } ?></td>
                   <?php endforeach; ?>
                 </tr>
