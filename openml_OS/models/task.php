@@ -77,7 +77,7 @@ class Task extends Database_write {
     $this->Task_inputs->insert_batch( $to_insert );
     // add to elastic search index. 
     foreach( $result as $r ) {
-      $this->ElasticSearch->index('task', $r ); 
+      //$this->elasticsearch->index('task', $r ); 
     }
     
     return $result;
