@@ -675,8 +675,10 @@ opacity:0.6;
 
 ul.openml-footer {
   list-style-type: none;
-  padding: 0;
+  padding-right:10px;
   margin-left: 0;
+  text-align:right;
+  clear:both;
 }
 
 ul.openml-contact {
@@ -695,11 +697,13 @@ ul.openml-contact {
 
 .openml-footer li{
   padding: 3px;
+  text-align:right;
 }
 
 .openml-footer a{
   color: #AEAEAE;
   text-decoration: none;
+  text-align:right;
 }
 
 .openml-footer a:hover{

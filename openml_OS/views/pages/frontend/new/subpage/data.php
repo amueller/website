@@ -38,7 +38,7 @@
 			</span>
 			<input type="text" class="form-control" readonly>
 		    </div>
-		    <div class="col-sm-12 input-info">And/or</div>
+		    <div class="col-sm-12 input-info">Or</div>
 		    <input type="text" class="form-control" id="source_url" placeholder="URL where the data is hosted (e.g. data repository)" value="" /> 
 		  </div>
 		  <div class="form-group">
@@ -102,21 +102,21 @@
 	      <div class="row">
 		<div class="col-sm-6">
 		  <div class="form-group">
+		    <label class="control-label" for="input_dataset_version">Original data URL</label>
+		    <input type="text" class="form-control" id="input_dataset_version" placeholder="For derived data, the URL to the original data set. E.g., http://openml.org/d/1" value=""/>
+		  </div>
+		  <div class="form-group">
 		    <label class="control-label" for="input_dataset_default_target_attribute">Target attribute</label>
 		    <input type="text" class="form-control" id="input_dataset_default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset." value="" onblur=""/> 
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_dataset_row_id_attribute">Row ID Attribute</label>
 		    <input type="text" class="form-control" id="input_dataset_row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="" onblur=""/>		  </div>
-		  <div class="form-group">
-		    <label class="control-label" for="input_dataset_version">Original data</label>
-		    <input type="text" class="form-control" id="input_dataset_version" placeholder="For derived data, the OpenML id of the original data set. Only upload data that is not trivially derived." value=""/>
-		  </div>
 		</div>
 		<div class="col-sm-6">
 
 		  <div class="form-group">
-		    <label class="control-label" for="input_dataset_contributor">Acknowledgements</label>
+		    <label class="control-label" for="input_dataset_contributor">Acknowledgements, contributors</label>
 		    <input type="text" class="form-control" id="input_dataset_contributor" 
 			placeholder="Thanks to..." value="" />
 		  </div>

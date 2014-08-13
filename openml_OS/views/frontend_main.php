@@ -175,10 +175,11 @@
         </div>
 
 	<div class="openmlfooter">
-		<div class="container-fluid corrected">
+
+		<div class="container-fluid">
 		<div class="row">
 
-		  <div class="col-xs-12 col-sm-6 col-md-6 pull-right-lg contactfooter">
+		  <div class="col-xs-12 col-sm-6 pull-right contactfooter">
                     <ul class="openml-contact">
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
                         <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
@@ -198,33 +199,23 @@
         	  <script type="text/javascript" src="js/share.js"></script>
 		</div>
 
+                    </ul><br>
+
+                    <ul class="openml-footer" class="pull-right">
+           		<li>Funded by: <a href="http://www.nwo.nl/" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
+                        <li>Hosted by: <a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden University</a>, <a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">Eindhoven University of Technology</a></li>
                     </ul>
+
 		  </div>
 
-		  <div class="col-xs-6 col-sm-3 col-md-2 pull-left-lg">
-                    <ul class="openml-footer">
-                        <li>Hosted by</li>
-                        <li><a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a></li>
-                        <li><a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
-                        <li><a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">Eindhoven University of Technology</a></li>
-                    </ul>
-		  </div>
-
-		  <div class="col-xs-6 col-sm-3 col-md-2 pull-left-lg">
-                    <ul class="openml-footer">
- 			<li>Funded by</li>
-                        <li><a href="http://www.nwo.nl/" target="_blank">NWO</a></li>
-                        <li><a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
-                    </ul>
-     	    	  </div>
-</div>
-<div class="row">
-<div class="col-lg-6"></div>
-<div class="col-lg-6" style="text-align:right;">
+		  <div class="col-xs-12 col-sm-6 pull-left">
 <a class="twitter-timeline" href="https://twitter.com/search?q=openml" data-widget-id="499561200019988481">Tweets about "openml"</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </div>
-		</div>
+
+
+</div>
+
 		</div>
 
 
