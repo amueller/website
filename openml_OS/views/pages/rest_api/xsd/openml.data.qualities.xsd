@@ -11,6 +11,7 @@
     <xs:sequence>
       <xs:element name="name" type="xs:string"/> <!-- The name of the quality that is set -->
       <xs:element name="value" type="xs:string"/> <!-- The value of the quality --> 
+      <xs:element name="description" minOccurs="0" type="xs:string"/> <!-- A description that can explain the value. Might be part of a publication. --> 
     </xs:sequence>
     <xs:attribute name="interval_start" type="xs:integer" />
     <xs:attribute name="interval_end" type="xs:integer" />

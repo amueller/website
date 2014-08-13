@@ -33,7 +33,7 @@ if ($this->form_validation->run() == true)
   if ( $user_id )
   {
     // add to index
-    $this->ElasticSearch->index('user', $user_id ); 
+    //$this->elasticsearch->index('user', $user_id ); 
     
     //check to see if we are creating the user
     //redirect them back to the admin page
