@@ -1140,7 +1140,7 @@ class Rest_api extends CI_Controller {
     
     // check whether uploaded files are present.
     if($error_message === false) {
-      if( count( $_FILES ) != 2 ) { // TODO: task type specific to task type 1, 2, 3, 4
+      if( count( $_FILES ) < 2 ) { 
         $this->_returnError( 206 );
         return;
       }
@@ -1196,7 +1196,8 @@ class Rest_api extends CI_Controller {
     
     // attach uploaded files as output to run
     foreach( $_FILES as $key => $value ) {
-      $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, 'predictions');
+      $file_type = ($value == 'predictions') ? 'predictions' : 'run_uploaded_file';
+      $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
       if(!$file_id) {
         $this->_returnError( 212 );
         return;
