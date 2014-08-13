@@ -40,38 +40,42 @@
 }
 
   .sharrre{
-    float:left;
-    margin-right: 20px;
-    margin-bottom: -20px;
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 7px;
   }
   .sharrre .count {
-    color:#525b67;
+    color:#aaaaaa;
     display:block;
-    font-size:14px;
+    font-size:12px;
     float: center;
     text-align:center;
+  }
+
+  .openml-share{
+  display: block;
+  clear: both;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
   }
 
 /* Create square icons, white logo on colored background */
 
 #social-bar {
-    height: 80px;
-    width: 260px;
-    clear: both;
-    padding-top: 7px;
 }
 
 #social-bar .fa {
     color: white;
     border-radius: 25px;
-    font-size:25px;
-    min-width: 45px;
-    line-height: 45px;
+    font-size:18px;
+    min-width: 35px;
+    line-height: 35px;
     text-align: center;
 }
 
 #social-bar a {
-    margin-right: 15px;
+    margin-right: 0px;
 }
 
 #social-bar a:first-child {

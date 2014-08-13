@@ -662,6 +662,7 @@ opacity:0.6;
 
 .openml-contact{
   display: block;
+  clear: both;
   margin-right: auto;
   margin-left: auto;
   text-align: center;
@@ -680,9 +681,17 @@ ul.openml-footer {
 
 ul.openml-contact {
   padding: 0;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 
+.contactfooter {
+  width: 380px;
+}
+
+.contactfooter > p {
+  clear:both;
+  float:right;
+}
 
 .openml-footer li{
   padding: 3px;

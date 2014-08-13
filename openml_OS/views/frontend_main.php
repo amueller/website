@@ -101,9 +101,6 @@
                     <a class="nav pull-right socialshare socialshareicon" id="popover">
                      <i class="fa fa-th fa-2x"></i>
                     </a>
-                    <a class="nav pull-right socialshare socialshareicon" id="popover2">
-                     <i class="fa fa-paper-plane fa-lg"></i>
-                    </a>
 			<div class="nav pull-right">
 			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-plus fa-2x"></i></a>
 			  <ul class="dropdown-menu newmenu">
@@ -154,37 +151,6 @@
 	  <a href="community"><div class="iconcell icongray"><i class="fa fa-comments fa-3x"></i><br><span>forum</span></div></a>
 	  </div>
 	</div>
-	<div id="sociallinks">
-		<div class="socialcontainer">
-		<div class="sharetitle">Spread the word</div>
-		<div id="social-bar">
-		  <div id="twitter" data-url="http://openml.org" data-text="Check out #OpenML at openml.org" data-title="twitter"></div>
-		  <div id="facebook" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="facebook"></div>
-		  <div id="googleplus" data-url="openml.org" data-text="Check out OpenML at openml.org" data-title="google-plus"></div>
-		  <div id="linkedin" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="linkedin"></div>
-		  <!--<div id="pinterest" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="pinterest"></div>-->
-        	  <script type="text/javascript" src="js/share.js"></script>
-		</div>
-		</div>
-		<div class="socialcontainer">
-		<div class="sharetitle">Follow us</div>
-		<div id="social-bar">
-                <a href="https://twitter.com/open_ml" target="_blank">
-                    <i class="fa fa-twitter"></i>
-                </a>
-                <a href="https://www.facebook.com/openml" target="_blank">
-                    <i class="fa fa-facebook"></i>
-                </a>
-                <a href="https://plus.google.com/communities/105075769838900568763" target="_blank">
-                    <i class="fa fa-google-plus"></i>
-                </a>
-                <a href="https://github.com/openml" target="_blank">
-                    <i class="fa fa-github"></i>
-                </a>
-            	</div>
-		</div>
-              </div>
-	</div><!-- /.sociallinks -->
         <script>
             $(document).ready(function(){ 
             	$("#loginForm").validate({ }); 
@@ -212,7 +178,7 @@
 		<div class="container-fluid corrected">
 		<div class="row">
 
-		  <div class="col-xs-12 col-sm-6 col-md-6 pull-right-lg">
+		  <div class="col-xs-12 col-sm-6 col-md-6 pull-right-lg contactfooter">
                     <ul class="openml-contact">
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
                         <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
@@ -220,6 +186,18 @@
                         <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-2x"></i><br />comment</a></li>
                         <li><a href="community"><i class="fa fa-comments-o fa-2x"></i><br />forum</a></li>
 			<li><a href="https://github.com/openml/OpenML/issues?state=open" target="_blank"><i class="fa fa-github fa-2x"></i><br />issues</a></li>
+                    </ul>
+		    <br>
+                    <ul class="openml-contact">
+		<div id="social-bar">
+		  <div id="twitter" data-url="http://openml.org" data-text="#OpenML: Exploring machine learning better, together. http://openml.org" data-title="twitter"></div>
+		  <div id="googleplus" data-url="openml.org" data-text="OpenML:  Exploring machine learning better, together. http://openml.org" data-title="google-plus"></div>	
+		  <div id="facebook" data-url="http://openml.org" data-text="OpenML: Exploring machine learning better, together. http://openml.org" data-title="facebook"></div>	
+		  <div id="linkedin" data-url="http://openml.org" data-text="OpenML: Exploring machine learning better, together. http://openml.org" data-title="linkedin"></div>  
+		  <!--<div id="pinterest" data-url="http://openml.org" data-text="Check out OpenML at openml.org" data-title="pinterest"></div>-->
+        	  <script type="text/javascript" src="js/share.js"></script>
+		</div>
+
                     </ul>
 		  </div>
 
