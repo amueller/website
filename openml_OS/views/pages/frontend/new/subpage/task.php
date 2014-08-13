@@ -1,5 +1,3 @@
-<script type="text/javascript" src="javascript/page/data"></script>
-
 <div class="openmlsectioninfo">
   <h1><a href="t"><i class="fa fa-trophy"></i></a> Create new task</h1>
   <div class="col-md-6">

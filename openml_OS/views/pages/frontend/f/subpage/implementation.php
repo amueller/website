@@ -1,6 +1,6 @@
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
-	  <h1><?php echo $this->record->{'name'}; ?></h1>
+	  <h1><a href="f"><i class="fa fa-cogs"></i></a> <?php echo $this->record->{'name'}; ?></h1>
   </div>
   <div class="col-sm-12">
 

@@ -92,6 +92,9 @@
 				elseif(false !== strpos($_SERVER['REQUEST_URI'],'/a')) echo 'measure';				
 		  	  ?>"> 
 		  <input type="text" class="form-control" id="openmlsearch" name="q" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, tasks, people,... (leave empty to see all)'" value="<?php if( isset( $this->terms ) ) echo htmlentities($this->terms); ?>" />
+		  <?php if(false !== strpos(BASE_URL, $_SERVER['REQUEST_URI'])) { ?>
+			<a href="search" class="searchall"><i class="fa fa-search"></i></a>
+		  <?php } ?>
 		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
 		</form>
 	       </div>

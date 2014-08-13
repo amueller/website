@@ -1184,7 +1184,7 @@ html, body {
       }
  
       .form-group label{
-   	font-weight: 200;
+   	font-weight: 300;
 	font-size: 11pt;
 	margin-bottom: 0px;
       }
@@ -1688,3 +1688,14 @@ a:hover > .circlered{
 .show-more {
     float: left;
 }
+
+.searchall {
+  color: #aeaeae;
+  text-decoration: none;
+  position: absolute;
+  top: 13px;
+  left: 188px;
+  z-index: 1000;
+  font-size: 12pt;
+  }
+

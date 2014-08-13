@@ -22,6 +22,6 @@
 		else if($this->filtertype=='user')
 			echo 'invite people to join OpenML.';
 		else
-			echo 'upload new <a href="new/data">data</a>, <a href="new/flow">flows</a>, <a href="new/run">runs</a>, <a href="new/task">tasks</a> or <a href="new/tasktype">task types</a>.'; 
+			echo 'upload new <a href="new/data">data</a>, <a href="new/flow">flows</a> and <a href="new/run">runs</a>.';
 	?>
 </div>

@@ -189,8 +189,7 @@ class ElasticSearch {
 
   public function get_types() {
 	$params['index'] = 'openml';
-	$keys = array_keys($this->client->indices()->getMapping($params));
-  return $keys['openml']['mappings'];
+	return array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
   }
 
   public function index($type, $id = false){
@@ -217,8 +216,8 @@ class ElasticSearch {
 
   public function mapping_delete($m){
      $params['index'] = 'openml';
-      $keys = array_keys($this->client->indices()->getMapping($params));
-     if(in_array($m,$keys['openml']['mappings'])){
+      $keys = array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
+     if(in_array($m,$keys)){
 	$params = array(
 		'index' => 'openml',
 		'type'	=> $m	
