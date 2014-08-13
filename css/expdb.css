@@ -676,9 +676,17 @@ opacity:0.6;
 ul.openml-footer {
   list-style-type: none;
   padding-right:10px;
-  margin-left: 0;
-  text-align:right;
   clear:both;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+  padding:0px;
+}
+
+.centerfooter{
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }
 
 ul.openml-contact {
@@ -687,7 +695,6 @@ ul.openml-contact {
 }
 
 .contactfooter {
-  width: 380px;
 }
 
 .contactfooter > p {
@@ -697,7 +704,6 @@ ul.openml-contact {
 
 .openml-footer li{
   padding: 3px;
-  text-align:right;
 }
 
 .openml-footer a{
@@ -1712,3 +1718,11 @@ a:hover > .circlered{
   font-size: 12pt;
   }
 
+
+@media screen and (min-width: 768px) {
+
+.openml-footer li{
+  padding: 3px;
+  text-align: right;
+}
+}
