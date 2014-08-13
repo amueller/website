@@ -229,7 +229,9 @@
           <p>The error codes and messages for each service are listed below.</p>
         </div>
         
-        <!-- [START] Api function description: openml.authenticate --> 
+       
+
+<!-- [START] Api function description: openml.authenticate --> 
 
 
 <h3 id=openml_authenticate>openml.authenticate</h3>
@@ -246,8 +248,8 @@
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;oml:authenticate xmlns:oml="http://openml.org/openml"&gt;
-  &lt;oml:session_hash&gt;GWVNALR3QJQ0UUQ8LVQ5ZRWJL7G24TBBGWPG86AO&lt;/oml:session_hash&gt;
-  &lt;oml:valid_until&gt;2014-07-28 14:24:48&lt;/oml:valid_until&gt;
+  &lt;oml:session_hash&gt;G9MPPN114ZCZNWW2VN3JE9VF1FMV8Y5FXHUDUL4P&lt;/oml:session_hash&gt;
+  &lt;oml:valid_until&gt;2014-08-13 20:01:29&lt;/oml:valid_until&gt;
   &lt;oml:timezone&gt;Europe/Berlin&lt;/oml:timezone&gt;
 &lt;/oml:authenticate&gt;
 
@@ -281,9 +283,10 @@
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;oml:authenticate xmlns:oml="http://openml.org/openml"&gt;
-  &lt;oml:valid_until&gt;2014-07-25 14:02:20&lt;/oml:valid_until&gt;
-&lt;/oml:authenticate&gt;
+&lt;oml:error xmlns:oml="http://openml.org/openml"&gt;
+  &lt;oml:code&gt;292&lt;/oml:code&gt;
+  &lt;oml:message&gt;Hash does not exist&lt;/oml:message&gt;
+&lt;/oml:error&gt;
 
 </code>
 </pre>
@@ -355,7 +358,7 @@ None
 <h5>openml.data.description</h5>
 
 This XSD schema is applicable for both uploading and downloading data. <br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/dataset.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.upload.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -366,7 +369,9 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
   &lt;oml:id&gt;1&lt;/oml:id&gt;
   &lt;oml:name&gt;anneal&lt;/oml:name&gt;
   &lt;oml:version&gt;1&lt;/oml:version&gt;
-  &lt;oml:description&gt;1. Title of Database: Annealing Data
+  &lt;oml:description&gt;This is a preprocessed version of the &lt;a href="d/2"&gt;anneal.ORIG&lt;/a&gt; dataset. All missing values are threated as a nominal value with label '?'. (Quotes for clarity). The original version of this dataset can be found with the name anneal.ORIG.
+
+1. Title of Database: Annealing Data
  
  2. Source Information: donated by David Sterling and Wray Buntine.
  
@@ -518,7 +523,7 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
 <h5>openml.data.upload</h5>
 
 This XSD schema is applicable for both uploading and downloading data, hence some fields are not used.<br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/dataset.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.upload.xsd">XSD Schema</a>
 </div>
 <h5>Error codes</h5>
 <div class='bs-callout bs-callout-danger'>
@@ -610,6 +615,13 @@ None
 <h5>Arguments</h5>
 <div class="bs-callout">
 <dl><dt><code>GET data_id</code> (Required)</dt><dd>The dataset id</dd></dl>
+</div>
+<h5>Schema's</h5>
+<div class="bs-callout bs-callout-info">
+<h5>openml.data.features</h5>
+
+-<br/>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.features.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -839,6 +851,13 @@ None
 <h5>Arguments</h5>
 <div class="bs-callout">
 <dl><dt><code>GET data_id</code> (Required)</dt><dd>The dataset id</dd></dl>
+</div>
+<h5>Schema's</h5>
+<div class="bs-callout bs-callout-info">
+<h5>openml.data.qualities</h5>
+
+-<br/>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.qualities.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -1247,7 +1266,7 @@ None
 <h5>openml.task.search</h5>
 
 A task description<br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/task.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.search.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -1266,8 +1285,7 @@ A task description<br/>
   &lt;oml:input name="estimation_procedure"&gt;
     &lt;oml:estimation_procedure&gt;
       &lt;oml:type&gt;crossvalidation&lt;/oml:type&gt;
-      &lt;oml:data_splits_url&gt;
-http://openml.liacs.nl/api_splits/get/1/Task_1_splits.arff&lt;/oml:data_splits_url&gt;
+      &lt;oml:data_splits_url&gt;http://openml.liacs.nl/api_splits/get/1/Task_1_splits.arff&lt;/oml:data_splits_url&gt;
       &lt;oml:parameter name="number_repeats"&gt;1&lt;/oml:parameter&gt;
       &lt;oml:parameter name="number_folds"&gt;10&lt;/oml:parameter&gt;
       &lt;oml:parameter name="percentage"/&gt;
@@ -1276,7 +1294,7 @@ http://openml.liacs.nl/api_splits/get/1/Task_1_splits.arff&lt;/oml:data_splits_u
   &lt;/oml:input&gt;
   &lt;oml:input name="evaluation_measures"&gt;
     &lt;oml:evaluation_measures&gt;
-      &lt;oml:evaluation_measure&gt;predictive_accuracy&lt;/oml:evaluation_measure&gt;
+      &lt;oml:evaluation_measure/&gt;
     &lt;/oml:evaluation_measures&gt;
   &lt;/oml:input&gt;
   &lt;oml:output name="predictions"&gt;
@@ -1319,10 +1337,13 @@ http://openml.liacs.nl/api_splits/get/1/Task_1_splits.arff&lt;/oml:data_splits_u
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;oml:error xmlns:oml="http://openml.org/openml"&gt;
-  &lt;oml:code&gt;301&lt;/oml:code&gt;
-  &lt;oml:message&gt;Unknown task&lt;/oml:message&gt;
-&lt;/oml:error&gt;
+&lt;oml:task_evaluations xmlns:oml="http://openml.org/openml"&gt;
+  &lt;oml:task_id/&gt;
+  &lt;oml:task_name/&gt;
+  &lt;oml:task_type_id/&gt;
+  &lt;oml:input_data&gt;1&lt;/oml:input_data&gt;
+  &lt;oml:estimation_procedure&gt;10-fold Crossvalidation&lt;/oml:estimation_procedure&gt;
+  &lt;oml:evaluation&gt;
 
 </code>
 </pre>
@@ -1412,7 +1433,7 @@ None
 <h5>openml.task.types.search</h5>
 
 A description of a task type<br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/task_type.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.types.search.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -1446,8 +1467,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
   &lt;oml:input name="estimation_procedure"&gt;
     &lt;oml:estimation_procedure&gt;
       &lt;oml:type&gt;[LOOKUP:estimation_procedure.type]&lt;/oml:type&gt;
-      &lt;oml:data_splits_url&gt;
-[CONSTANT:base_url]api_splits/get/[TASK:id]/Task_[TASK:id]_splits.arff&lt;/oml:data_splits_url&gt;
+      &lt;oml:data_splits_url&gt;[CONSTANT:base_url]api_splits/get/[TASK:id]/Task_[TASK:id]_splits.arff&lt;/oml:data_splits_url&gt;
       &lt;oml:parameter name="number_repeats"&gt;[LOOKUP:estimation_procedure.repeats]&lt;/oml:parameter&gt;
       &lt;oml:parameter name="number_folds"&gt;[LOOKUP:estimation_procedure.folds]&lt;/oml:parameter&gt;
       &lt;oml:parameter name="percentage"&gt;[LOOKUP:estimation_procedure.percentage]&lt;/oml:parameter&gt;
@@ -1538,7 +1558,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
 <h5>openml.implementation.get</h5>
 
 This XSD schema is applicable for both uploading and downloading a implementation. <br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/implementation.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.implementation.upload.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -1696,8 +1716,8 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <div class="bs-callout bs-callout-info">
 <h5>openml.implementation.upload</h5>
 
-Returns the description of an implementation (flow)<br/>
-<a type="button" class="btn btn-primary" href="This XSD schema is applicable for both uploading and downloading a implementation. (Some fields are ignored)">XSD Schema</a>
+This XSD schema is applicable for both uploading and downloading a implementation. (Some fields are ignored)<br/>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.implementation.upload.xsd">XSD Schema</a>
 </div>
 <h5>Error codes</h5>
 <div class='bs-callout bs-callout-danger'>
@@ -1900,7 +1920,7 @@ None
 <h5>openml.run.get</h5>
 
 This XSD schema is applicable for both uploading and downloading run details. <br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/run.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.run.upload.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
 <div class='highlight'>
@@ -2085,7 +2105,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <h5>openml.run.upload</h5>
 
 This XSD schema is applicable for both uploading and downloading run details. <br/>
-<a type="button" class="btn btn-primary" href="https://github.com/openml/OpenML/blob/master/XML/Schemas/run.xsd">XSD Schema</a>
+<a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.run.upload.xsd">XSD Schema</a>
 </div>
 <h5>Error codes</h5>
 <div class='bs-callout bs-callout-danger'>
@@ -2157,7 +2177,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;oml:job xmlns:oml="http://openml.org/openml"&gt;
   &lt;oml:learner&gt;weka.classifiers.rules.Ridor -- -F 3 -S 1 -N 2.0&lt;/oml:learner&gt;
-  &lt;oml:task_id&gt;2673&lt;/oml:task_id&gt;
+  &lt;oml:task_id&gt;1&lt;/oml:task_id&gt;
 &lt;/oml:job&gt;
 
 </code>
@@ -2195,6 +2215,10 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 </div>
 
 <!-- [END] Api function description: openml.setup.delete -->  
+
+
+
+
 
         
       </div>
