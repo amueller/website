@@ -8,6 +8,6 @@ $sql = 'SELECT `i`.*, `r`.`runs` '.
 
 $this->implementations = $this->Implementation->query( $sql );
 
-$this->inputs = array( 'id', 'name', 'version', 'external_version', 'nr_of_runs' );
+$this->inputs = array( 'id', 'name', 'version', 'external_version', 'runs' );
 
 ?>
