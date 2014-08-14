@@ -98,7 +98,7 @@
             </div>
 	    <div class="row">
 	      <div class="col-sm-12">
-		  <h2>Additional information</h2>
+		  <h2>Additional information (optional)</h2>
 	      <div class="row">
 		<div class="col-sm-6">
 		  <div class="form-group">

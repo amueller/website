@@ -85,8 +85,8 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
         console.log("Response: "+respstring);
 	var message = '';
 	var status = '';
-	if($('oml\\:id',responseText).length) {
-		message = type + ' uploaded with ID ' + $('oml\\:id',responseText).text();
+	if($('oml\\:id, id',responseText).text().length) {
+		message = type + ' uploaded with ID ' + $('oml\\:id, id',responseText).text();
 		status = 'alert-success';
 	} else {
 		var errorcode = $('oml\\:code, code',responseText).text();
