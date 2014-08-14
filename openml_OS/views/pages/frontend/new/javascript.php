@@ -46,7 +46,6 @@ function prepareDatasetDescriptionXML(form, options) {
 	var xml_content = prepareDescriptionXML('dataset',fields,implode);
 
 	$('#generated_input_dataset_description').val(xml_header+xml_content+xml_footer);
-        console.log(xml_header+xml_content+xml_footer);
 }
 
 
@@ -82,20 +81,19 @@ function datasetFormSubmitted(responseText,statusText,xhr,formElement) {
 
 function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) {
   	var respstring = new XMLSerializer().serializeToString(responseText.documentElement);
-        console.log("Response: "+respstring);
 	var message = '';
 	var status = '';
-	if($('oml\\:id, id',responseText).text().length) {
-		message = type + ' uploaded with ID ' + $('oml\\:id, id',responseText).text();
+	if($(responseText).find('id').text().length) {
+		message = type + ' uploaded with ID ' + $(responseText).find('id').text();
 		status = 'alert-success';
 	} else {
-		var errorcode = $('oml\\:code, code',responseText).text();
-		var errormessage = $('oml\\:message, message',responseText).text();
+		var errorcode = $(responseText).find('code').text();
+		var errormessage = $(responseText).find('message').text();
 		status = 'alert-warning';
 		if(errorcode in errorCodes) {
 			message = errorCodes[errorcode];
 		} else {
-			message = 'Errorcode ' + errorcode + ': ' + errormessage;
+			message = 'Errorcode ' + errorcode + ': ' + errormessage + " XML response: "+ respstring;
 		}
 	}
 	$('#response'+type+'Txt').removeClass();
