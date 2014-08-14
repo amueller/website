@@ -14,6 +14,7 @@ class Frontend extends CI_Controller {
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');
     $this->load->model('Estimation_procedure');
+    $this->load->model('Run');
     
     
     $this->load->model('Thread');
@@ -23,11 +24,14 @@ class Frontend extends CI_Controller {
     $this->load->helper('table');
     $this->load->helper('tasksearch');
     
+    $this->load->Library('dataOverview');
+    
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
     $this->data_controller = BASE_URL . 'files/';
     
     $this->page = 'home'; // default value
+    $this->subpage = false;
 
     $this->searchclient = new Elasticsearch\Client();
   }
@@ -36,8 +40,9 @@ class Frontend extends CI_Controller {
     $this->page( $this->page );
   }
   
-  public function page( $indicator ) {
+  public function page( $indicator, $subindicator = false ) {
     $this->page = $indicator;
+    $this->subpage = $subindicator;
     $exploded_page = explode('_',$indicator);
     $this->active = $exploded_page[0]; // can be overridden. 
     $this->message = $this->session->flashdata('message'); // can be overridden

@@ -128,7 +128,9 @@
 		                                <?php if ($this->ion_auth->user()->row()->external_source == false ): ?>
 		                                <li><a href="profile"><?php echo user_display_text(); ?></a></li>
 		                                <li class="divider"></li>
-		                                <li><a href="overview_runs">My runs</a></li>
+		                                <li><a href="overview/data">My data</a></li>
+		                                <li><a href="overview/flows">My flows</a></li>
+		                                <li><a href="overview/runs">My runs</a></li>
 		                                <li class="divider"></li>
 		                                <?php endif; ?>
                                     <li><a href="frontend/logout">Sign off</a></li>
