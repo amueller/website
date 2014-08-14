@@ -34,7 +34,7 @@
 		    <label class="control-label" for="sourcefile">Data files</label>
 		    <div class="input-group">
 			<span class="input-group-btn">
-				<button class="btn btn-primary btn-file">Upload&hellip;<input type="file" id="input_dataset_dataset" name="dataset" multiple></button>
+				<a class="btn btn-primary btn-file">Upload&hellip;<input type="file" id="input_dataset_dataset" name="dataset" multiple></a>
 			</span>
 			<input type="text" class="form-control" readonly>
 		    </div>
