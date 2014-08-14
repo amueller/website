@@ -28,8 +28,8 @@ class Backend extends CI_Controller {
     $this->load->helper('directory');
 
     $this->load->Library('elasticSearch');
-    
     $this->load->Library('elasticSearchLibrary');
+    $this->load->Library('dataOverview');
     
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
