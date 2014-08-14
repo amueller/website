@@ -6,7 +6,6 @@ $this->form_validation->set_rules('Country', 'Country', 'xss_clean');
 $this->form_validation->set_rules('affiliation', 'Affiliation', 'xss_clean');
 $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'required');
-$this->load->library('elasticSearch');
 
 if ($this->form_validation->run() == true)
 {
@@ -32,10 +31,7 @@ if ($this->form_validation->run() == true)
   }
   $user_id = $this->ion_auth->register($username, $password, $email, $additional_data);
   if ( $user_id )
-  {
-    // add to index
-    $this->elasticsearch->index('user', $user_id ); 
-    
+  {  
     //check to see if we are creating the user
     //redirect them back to the admin page
     $this->session->set_flashdata('message', $this->ion_auth->messages());
