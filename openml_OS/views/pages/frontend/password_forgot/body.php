@@ -1,16 +1,8 @@
-<div class="container bs-docs-container">
-  <div class="col-md-6">
-    <div class="bs-header">
-      <div class="container">
-        <div class="row">
-          <h2>Forgot password</h2>
-          <p>We will send you an email with instructions. </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6" style="margin-top:30px">
-    <?php echo form_open('frontend/page/password_forgot');?>
+<div class="container-fluid topborder">
+  <div class="row">
+   <div class="col-xs-12 col-sm-4 col-sm-offset-4 openmlsectioninfo">
+     <h1>Forgot password</h1>
+    <?php echo form_open('password_forgot');?>
     <fieldset>
       <div class="form-group">
         <label for="email">Email adress:</label>
@@ -21,3 +13,5 @@
     <?php echo form_close();?>
   </div>
 </div>
+</div>
+

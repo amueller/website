@@ -19,12 +19,12 @@ if ($activation)
 	
 	//redirect them to the auth page
 	$this->session->set_flashdata('message', $this->ion_auth->messages());
-	redirect('frontend/page/login', 'refresh');
+	redirect('login', 'refresh');
 }
 else
 {
 	//redirect them to the forgot password page
 	$this->session->set_flashdata('message', $this->ion_auth->errors());
-	redirect('frontend/page/login', 'refresh');
+	redirect('login', 'refresh');
 }
 ?>
