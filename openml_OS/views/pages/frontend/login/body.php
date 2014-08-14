@@ -1,15 +1,7 @@
-<div class="container bs-docs-container">
-  <div class="col-md-6">
-    <div class="bs-header">
-      <div class="container">
-        <div class="row">
-          <h2>Login</h2>
-          <p>Welcome back.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6" style="margin-top:30px">
+<div class="container-fluid topborder">
+  <div class="row">
+   <div class="col-xs-12 col-sm-4 col-sm-offset-4 openmlsectioninfo">
+   <h1>Log in</h1>
     <?php echo form_open("frontend/page/login");?>
     <div class="form-group">
       <label for="identity">Username or Email</label>
@@ -27,7 +19,9 @@
 
     Not registered yet? <a href="register">Join OpenML now!</a><br />
   </div>
+  </div>
 </div>
+
 <!--<div class="row">
   <div class="col-md-8">
   	<a href="frontend/oauth/twitter"><img src="img/community/icons/twitter.png" width="32" title="Twitter" /></a>
