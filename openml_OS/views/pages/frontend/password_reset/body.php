@@ -1,16 +1,8 @@
-<div class="container bs-docs-container">
-  <div class="col-md-6">
-    <div class="bs-header">
-      <div class="container">
-        <div class="row">
-          <h2>Reset password</h2>
-          <p>Enter a new password. </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6" style="margin-top:30px">
-    <?php echo form_open('frontend/page/password_reset?code='.$this->code);?>
+<div class="container-fluid topborder">
+  <div class="row">
+   <div class="col-xs-12 col-sm-4 col-sm-offset-4 openmlsectioninfo">
+    <h2>Reset password</h2>
+    <?php echo form_open('password_reset?code='.$this->code);?>
     <fieldset>
       <div class="form-group">
         <label for="email">New password:</label>
@@ -29,3 +21,5 @@
     <?php echo form_close();?>
   </div>
 </div>
+</div>
+
