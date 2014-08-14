@@ -55,7 +55,7 @@ $frontend_pages = array(
 					'home',
 					'learn_sql',
 					'login',
-					'overview_runs',
+					'overview',
           'password_forgot',
           'password_reset',
 					'plugins',
@@ -63,7 +63,6 @@ $frontend_pages = array(
 					'profile_activate',
 					'register',
 					'search',
-					'searchold',
 					'new',
 					'd',
 					'f',
@@ -76,7 +75,7 @@ $frontend_pages = array(
 
 foreach( $frontend_pages as $page ) {
 	$route[$page] 		= 'frontend/page/'.$page;
-	$route[$page.'/:any'] 	= 'frontend/page/'.$page.'/$1';
+	$route[$page.'/(:any)'] 	= 'frontend/page/'.$page.'/$1';
 }
 
 /* End of file routes.php */

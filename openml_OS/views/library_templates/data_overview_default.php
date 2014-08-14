@@ -2,7 +2,7 @@
   $(document).ready( function() {
     $('.data_overview_table').dataTable( {
       "bPaginate": true,
-      "iDisplayLength" : 100,
+      "iDisplayLength" : 30,
       "bLengthChange": false,
       "bFilter": false,
       "bSort": true,
@@ -47,7 +47,7 @@
           </tr>
         </thead>
         <tbody>
-          <?php foreach( $items as $item ): ?>
+          <?php if( is_array($items) ) foreach( $items as $item ): ?>
             
               <tr id="overviewtable_row_<?php echo $item->id; ?>">
                 <?php if($api_delete_function): ?>
