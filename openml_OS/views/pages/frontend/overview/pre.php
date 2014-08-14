@@ -46,14 +46,16 @@ if( $this->subpage == 'flows' ) {
   
 } elseif( $this->subpage == 'runs' ) {
   
-  $sql = 'SELECT `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name`, "1" AS `may_delete`, '.
+  $sql = 'SELECT `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name` AS `dataset`, `i`.`fullName` AS `flow`, "1" AS `may_delete`, '.
          'CONCAT(\'<a href="r/\', `r`.`rid`, \'">Run \', `r`.`rid`, \'</a>\') AS `name_link` ' .
-         'FROM `run` `r` ' .
+         'FROM `algorithm_setup` `s`, `implementation` `i`, `run` `r` ' .
          'LEFT JOIN `task_inputs` `t` ON `r`.`task_id` = `t`.`task_id` AND `t`.`input` = "source_data" ' .
          'LEFT JOIN `dataset` `d` ON `t`.`value` = `d`.`did` ' .
-         'WHERE `r`.`uploader` = ' . $this->ion_auth->get_user_id() . ';';
+         'WHERE `r`.`uploader` = ' . $this->ion_auth->get_user_id() . ' ' .
+         'AND `r`.`setup` = `s`.`sid` AND `s`.`implementation_id` = `i`.`id` ' .
+         'ORDER BY `r`.`start_time` DESC';
   
-  $this->keys = array( 'rid', 'start_time', 'name_link', 'error' );
+  $this->keys = array( 'rid', 'start_time', 'name_link', 'task_id', 'dataset', 'flow', 'status', 'error' );
   $this->items = $this->Run->query( $sql );
   $this->name = 'My runs';
 

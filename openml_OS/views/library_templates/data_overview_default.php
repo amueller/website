@@ -2,7 +2,7 @@
   $(document).ready( function() {
     $('.data_overview_table').dataTable( {
       "bPaginate": true,
-      "iDisplayLength" : 100,
+      "iDisplayLength" : 30,
       "bLengthChange": false,
       "bFilter": false,
       "bSort": true,
