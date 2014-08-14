@@ -71,8 +71,8 @@ function prepareDescriptionXML(type,fields,implode) {
 
 function datasetFormSubmitted(responseText,statusText,xhr,formElement) {
 	var errorCodes = new Array();
-	errorCodes[131] = 'Please make sure that all mandatory fields are filled in, don\'t use spaces in name or version fields. ';
-	errorCodes[135] = 'Please make sure that all mandatory fields are filled in, don\'t use spaces in name or version fields. ';
+	errorCodes[131] = 'Please make sure that all mandatory (red) fields are filled in. Don\'t use spaces in name or version fields. ';
+	errorCodes[135] = 'Please make sure that all mandatory (red) fields are filled in. Don\'t use spaces in name or version fields. ';
 	errorCodes[137] = 'Please login first.';
 	errorCodes[138] = 'Please login first.';
 	formSubmitted(responseText,statusText,xhr,formElement,'Dataset',errorCodes);
