@@ -6,6 +6,7 @@ $this->form_validation->set_rules('Country', 'Country', 'xss_clean');
 $this->form_validation->set_rules('affiliation', 'Affiliation', 'xss_clean');
 $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'required');
+$this->load->library('elasticSearch');
 
 if ($this->form_validation->run() == true)
 {
