@@ -16,7 +16,7 @@
         <?php echo form_input($this->emailField);?>
       </div>
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">Password (min 8 characters):</label>
         <?php echo form_input($this->password);?>
       </div>
       <div class="form-group">

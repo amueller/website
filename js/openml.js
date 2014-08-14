@@ -1,5 +1,5 @@
 var client = new $.es.Client({
-  hosts: 'localhost:9200'
+  hosts: 'http://openml.org:9200'
 });
 
 client.ping({
@@ -8,7 +8,7 @@ client.ping({
   hello: "elasticsearch!"
 }, function (error) {
   if (error) {
-    console.error('elasticsearch cluster is down!');
+    console.error('Javascript cannot reach search index!');
   } else {
     console.log('All is well');
   }
