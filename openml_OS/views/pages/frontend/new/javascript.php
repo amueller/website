@@ -80,20 +80,19 @@ function datasetFormSubmitted(responseText,statusText,xhr,formElement) {
 
 
 function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) {
-  	var respstring = new XMLSerializer().serializeToString(responseText.documentElement);
 	var message = '';
 	var status = '';
-	if($(responseText).find('id').text().length) {
-		message = type + ' uploaded with ID ' + $(responseText).find('id').text();
+	if($(responseText).find('oml\\:id').text().length) {
+		message = type + ' uploaded successfully. <a href="d\' + $(responseText).find('oml\\:id').text() + '">View online.</a>';
 		status = 'alert-success';
 	} else {
-		var errorcode = $(responseText).find('code').text();
-		var errormessage = $(responseText).find('message').text();
+		var errorcode = $(responseText).find('oml\\:code').text();
+		var errormessage = $(responseText).find('oml\\:message').text();
 		status = 'alert-warning';
 		if(errorcode in errorCodes) {
 			message = errorCodes[errorcode];
 		} else {
-			message = 'Errorcode ' + errorcode + ': ' + errormessage + " XML response: "+ respstring;
+			message = 'Errorcode ' + errorcode + ': ' + errormessage;
 		}
 	}
 	$('#response'+type+'Txt').removeClass();

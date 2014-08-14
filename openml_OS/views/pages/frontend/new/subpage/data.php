@@ -38,12 +38,12 @@
 			</span>
 			<input type="text" class="form-control" readonly>
 		    </div>
-		    <div class="col-sm-12 input-info">Or</div>
+		    <div class="col-sm-12 input-info">Or (not both)</div>
 		    <input type="text" class="form-control" id="source_url" placeholder="URL where the data is hosted (e.g. data repository)" value="" /> 
 		  </div>
 		  <div class="form-group">
 		    <div class="row">
-		    <div class="col-xs-6">
+		    <div class="col-xs-6 has-error" id="field_name">
 		    <label class="control-label" for="input_dataset_name">Name</label>
 		    <input type="text" class="form-control" id="input_dataset_name" placeholder="A good name (no spaces)" value=""/>
 		    </div>
@@ -53,11 +53,11 @@
 		    </div>
 		    </div>
 		  </div>
-		  <div class="form-group">
+		  <div class="form-group has-error">
 		    <label class="control-label" for="input_dataset_description">Description</label>
 		    <textarea class="form-control" id="input_dataset_description" rows="5" placeholder="What is this data all about? Use #tags to label it. Include changes from previous versions." value=""></textarea> 
 		  </div>
-		  <div class="form-group">
+		  <div class="form-group has-error">
 	            <label class="control-label" for="input_dataset_format">Data format</label>
 		    <input type="text" class="form-control" id="input_dataset_format" placeholder="The data format (e.g. ARFF)" value="" onblur=""/> 
 	          </div>
@@ -98,7 +98,7 @@
             </div>
 	    <div class="row">
 	      <div class="col-sm-12">
-		  <h2>Additional information (optional)</h2>
+		  <h2>Additional information</h2>
 	      <div class="row">
 		<div class="col-sm-6">
 		  <div class="form-group">
@@ -148,3 +148,38 @@
 
         <p><i>By submitting, you allow OpenML to index the data and link it to uploaded results. All rights remain with the original author(s) of the data.</i></p>
 </div> <!-- end container -->
+
+<script>
+	$('#input_dataset_name').bind('input', function() {
+	    var cname = $(this).val();
+	    if(cname.length > 0 && cname.split(" ").length == 1){
+	       $(this).parent().removeClass('has-error');
+	       $(this).parent().addClass('has-success');
+	    } else {
+	       $(this).parent().removeClass('has-success');
+	       $(this).parent().addClass('has-error');
+	    }
+	});
+	$('#input_dataset_description').bind('input', function() {
+	    var cname = $(this).val();
+	    if(cname.length > 0){
+	       $(this).parent().removeClass('has-error');
+	       $(this).parent().addClass('has-success');
+	    } else {
+	       $(this).parent().removeClass('has-success');
+	       $(this).parent().addClass('has-error');
+	    }
+	});
+	$('#input_dataset_format').bind('input', function() {
+	    var cname = $(this).val();
+	    if(cname.length > 0){
+	       $(this).parent().removeClass('has-error');
+	       $(this).parent().addClass('has-success');
+	    } else {
+	       $(this).parent().removeClass('has-success');
+	       $(this).parent().addClass('has-error');
+	    }
+	});
+
+
+</script>
