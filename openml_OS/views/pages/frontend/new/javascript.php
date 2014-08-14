@@ -82,12 +82,12 @@ function datasetFormSubmitted(responseText,statusText,xhr,formElement) {
 function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) {
 	var message = '';
 	var status = '';
-	if($(responseText).find('oml\\:id').text().length) {
-		message = type + ' uploaded successfully. <a href="d\' + $(responseText).find('oml\\:id').text() + '">View online.</a>';
+	if($(responseText).find('id, oml\\:id').text().length) {
+		message = type + ' uploaded successfully. <a href="d/' + $(responseText).find('id, oml\\:id').text() + '">View online.</a>';
 		status = 'alert-success';
 	} else {
-		var errorcode = $(responseText).find('oml\\:code').text();
-		var errormessage = $(responseText).find('oml\\:message').text();
+		var errorcode = $(responseText).find('code, oml\\:code').text();
+		var errormessage = $(responseText).find('message, oml\\:message').text();
 		status = 'alert-warning';
 		if(errorcode in errorCodes) {
 			message = errorCodes[errorcode];

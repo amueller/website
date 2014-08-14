@@ -21,7 +21,18 @@
 			}
 			
 		});
-	});		
+	});	
+
+	$(document).ready( function() {
+	    var cname = $('#input_dataset_name').val();
+	    console.log(cname);
+	    if(cname.length > 0 && cname.split(" ").length == 1){
+	       $('#input_dataset_name').parent().removeClass('has-error');
+	       $('#input_dataset_name').parent().addClass('has-success');
+	    }	
+	});
+
+	
 </script>
 
 <div class="openmlsectioninfo">
