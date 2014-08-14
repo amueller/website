@@ -1,6 +1,17 @@
-<?php if( $api_delete_function ): ?>
-
 <script>
+  $(document).ready( function() {
+    $('.data_overview_table').dataTable( {
+      "bPaginate": true,
+      "iDisplayLength" : 100,
+      "bLengthChange": false,
+      "bFilter": false,
+      "bSort": true,
+      "aaSorting": [],
+      "bInfo": true
+    } );
+  } );
+  
+  <?php if( $api_delete_function ): ?>
   function deleteItem( id, name, msg ) {
   $.ajax({
     type: "POST",
@@ -19,14 +30,14 @@
       }
     } );
   }
+  <?php endif; ?>
 </script>
-<?php endif; ?>
 
 <div class="bs-docs-container topborder">
   <div class="container">
     <div class="col-sm-12">
       <h2><?php echo $table_name; ?></h2>
-      <table class="table table-striped duplicatetable">
+      <table class="table table-striped data_overview_table">
         <thead>
           <tr>
             <?php if($api_delete_function): ?><td></td><?php endif; ?>
