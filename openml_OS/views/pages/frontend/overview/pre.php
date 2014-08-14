@@ -63,7 +63,7 @@ if( $this->subpage == 'flows' ) {
 
   $this->api_delete_function = array( 
     'function'        => 'openml.run.delete', 
-    'key'             => 'rid',
+    'key'             => 'run_id',
     'filter'          => 'may_delete',
     'id_field'        => 'rid',
     'identify_field'  => 'name' );
