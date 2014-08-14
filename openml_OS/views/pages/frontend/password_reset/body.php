@@ -1,7 +1,7 @@
 <div class="container-fluid topborder">
   <div class="row">
    <div class="col-xs-12 col-sm-4 col-sm-offset-4 openmlsectioninfo">
-    <h2>Reset password</h2>
+    <h1>Reset password</h1>
     <?php echo form_open('password_reset?code='.$this->code);?>
     <fieldset>
       <div class="form-group">
