@@ -2,7 +2,7 @@
 $id = gu('id');
 $code = gu('code');
 $this->load->library('elasticSearch');
-
+alert($code);
 if ($code !== false)
 {
 	$activation = $this->ion_auth->activate($id, $code);
@@ -11,6 +11,7 @@ else if ($this->ion_auth->is_admin())
 {
 	$activation = $this->ion_auth->activate($id);
 }
+alert($activation);
 
 if ($activation)
 {
