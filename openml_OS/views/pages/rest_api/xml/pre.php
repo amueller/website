@@ -568,4 +568,28 @@ $this->apiErrors[454][1] = 'The task is used in runs. Delete this other content 
 $this->apiErrors[455][0] = 'Deleting task failed.';
 $this->apiErrors[455][1] = 'Deleting the task failed. Please contact support team. ';
 
+// for function: openml.task.delete
+$this->apiErrors[460][0] = 'Please provide session_hash';
+$this->apiErrors[460][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
+
+// for function: openml.task.delete
+$this->apiErrors[461][0] = 'Authentication failed';
+$this->apiErrors[461][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+// for function: openml.task.delete
+$this->apiErrors[462][0] = 'Admin rights are required.';
+$this->apiErrors[462][1] = 'You can not execute this operation because you are not an admin.';
+
+// for function: openml.task.delete
+$this->apiErrors[463][0] = 'User not found. ';
+$this->apiErrors[463][1] = 'The user id could not be linked to an existing user.';
+
+// for function: openml.task.delete
+$this->apiErrors[464][0] = 'User has content';
+$this->apiErrors[464][1] = 'Delete the content before deleting this user. ';
+
+// for function: openml.task.delete
+$this->apiErrors[465][0] = 'Deleting user failed.';
+$this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
+
 ?>
