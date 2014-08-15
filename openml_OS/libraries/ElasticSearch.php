@@ -231,7 +231,6 @@ class ElasticSearch {
   }
 
   public function index_user($id){
-	print_r('indexing');	
   
 	$params['index']     = 'openml';
 	$params['type']      = 'user';
@@ -252,7 +251,6 @@ class ElasticSearch {
 	}
 
 	$responses = $this->client->bulk($params);
-	print_r($responses);	
 	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($users).' users.';
   }
 
