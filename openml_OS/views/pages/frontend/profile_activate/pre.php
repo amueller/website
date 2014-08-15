@@ -1,6 +1,8 @@
 <?php
 $id = gu('id');
 $code = gu('code');
+$this->load->library('elasticSearch');
+
 
 if ($code !== false)
 {
