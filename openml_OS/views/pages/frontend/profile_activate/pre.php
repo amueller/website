@@ -1,8 +1,6 @@
 <?php
 $id = gu('id');
 $code = gu('code');
-$this->load->library('elasticSearch');
-
 
 if ($code !== false)
 {
@@ -15,10 +13,6 @@ else if ($this->ion_auth->is_admin())
 
 if ($activation)
 {
-	//index the user
-        print_r('Registration Successful.');
-   	//print_r($this->elasticsearch->index('user', $id )); 
-	
 	//redirect them to the auth page
 	$this->session->set_flashdata('message', $this->ion_auth->messages());
 	redirect('login', 'refresh');
@@ -30,3 +24,4 @@ else
 	redirect('login', 'refresh');
 }
 ?>
+
