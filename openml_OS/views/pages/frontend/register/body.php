@@ -5,15 +5,14 @@
     <div class="col-xs-12 col-sm-4 searchbar">
 	<ul class="menu">		
 		<li><a style="font-size:17px;"><b>You'll love OpenML</b></a></li>
-		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Networked machine learning</a>
 		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Scalable, online collaboration</a>
-		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Share, find results in full detail</a>
+		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Analyse data better, together</a>
+		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Share results in full detail</a>
 		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Automate experimentation</a>
-		    <a><i class="fa fa-fw fa-check" style="color:green;"></i>Open science community</a>
 		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Connect to other scientists</a>
 		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Share data within teams</a>
 		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Organize your work online</a>
-		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Track your impact</a></li>
+		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Build trust, track your impact</a></li>
 	</ul>
     </div> <!-- end col-3 -->
 
