@@ -8,7 +8,7 @@
 	 <li>   <div class="version" style="margin-bottom: -17px;">
 		        <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
 			  <?php foreach( $this->versions as $k => $v ) { ?>
-				<option value="<?php echo 'd/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>>v. <?php echo $v; ?></option>
+				<option value="<?php echo 'f/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>>v. <?php echo $v; ?></option>
 			  <?php } ?>
 			</select>
 	        </div></li>
