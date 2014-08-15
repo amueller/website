@@ -13,6 +13,7 @@ else if ($this->ion_auth->is_admin())
 
 if ($activation)
 {
+  $this->elasticsearch->index('user', $id )
 	//redirect them to the auth page
 	$this->session->set_flashdata('message', $this->ion_auth->messages());
 	redirect('login', 'refresh');
