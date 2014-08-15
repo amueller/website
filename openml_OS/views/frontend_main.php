@@ -98,21 +98,37 @@
 		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
 		</form>
 	       </div>
-                    <a class="nav pull-right socialshare socialshareicon" id="popover">
-                     <i class="fa fa-th fa-2x"></i>
-                    </a>
+			<div class="nav pull-right">
+			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-bars fa-2x"></i></a>
+			  <ul class="dropdown-menu newmenu">
+			    <li><a href="d"><div class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i></div> Data</a></li>
+		            <li class="divider"></li>
+			    <li><a href="f"><div class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i></div> Flows</a></li>
+		            <li class="divider"></li>
+			    <li><a href="t"><div class="iconyellow"><i class="fa fa-fw fa-lg fa-trophy"></i></div> Tasks</a></li>
+		            <li class="divider"></li>
+			    <li><a href="r"><div class="iconred"><i class="fa fa-fw fa-lg fa-star"></i></div> Runs</a></li>
+		            <li class="divider"></li>
+			    <li><a href="a"><div class="icongray"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i></div> Analytics</a></li>
+		            <li class="divider"></li>
+			    <li><a href="plugins"><div class="icongray"><i class="fa fa-fw fa-lg fa-wrench"></i></div> Tools</a></li>
+		            <li class="divider"></li>
+			    <li><a href="developers"><div class="icongray"><i class="fa fa-fw fa-lg fa-users"></i></div> Developers</a></li>
+		            <li class="divider"></li>
+			    <li><a href="community"><div class="icongray"><i class="fa fa-fw fa-lg fa-comments"></i></div> Forum</a></li>
+			  </ul>
+			</div>
+
 			<div class="nav pull-right">
 			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-plus fa-2x"></i></a>
 			  <ul class="dropdown-menu newmenu">
-			    <li><a href="new/data"><i class="fa fa-fw fa-database"></i> New data</a></li>
+			    <li><a href="new/data"><div class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i></div> New data</a></li>
 		            <li class="divider"></li>
-			    <li><a href="new/flow"><i class="fa fa-fw fa-cogs"></i> New flow</a></li>
+			    <li><a href="new/flow"><div class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i></div> New flow</a></li>
 		            <li class="divider"></li>
-			    <li><a href="new/run"><i class="fa fa-fw fa-star"></i> New run</a></li>
+			    <li><a href="new/task"><div class="iconyellow"><i class="fa fa-fw fa-lg fa-trophy"></i></div> New task</a></li>
 		            <li class="divider"></li>
-			    <li><a href="new/task"><i class="fa fa-fw fa-trophy"></i> New task</a></li>
-		            <li class="divider"></li>
-			    <li><a href="new/tasktype"><i class="fa fa-fw fa-flag"></i> New task type</a></li>
+			    <li><a href="new/run"><div class="iconred"><i class="fa fa-fw fa-lg fa-star"></i></div> New run</a></li>
 			  </ul>
 			</div>
 

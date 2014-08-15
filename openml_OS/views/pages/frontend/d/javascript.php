@@ -9,6 +9,13 @@ var current_task = "<?php echo $this->current_task; ?>";
 
 var oTableRuns = false;
 
+$(document).ready(function() { 
+	$('.pop').popover();
+	$('.selectpicker').selectpicker();
+});
+
+
+
 $(document).ready(function() {
     <?php echo simple_datatable('oTableGeneral','#datatable_general'); ?>
     //Initialse DataTables, with no sorting on the 'details' column

@@ -564,8 +564,8 @@ h5{
 
 .hotlinks{
   display: block;
-  padding-top:20px;
   text-align:center;
+  color: #666;
   float: right;
   padding: 0px;
   margin: 0px;
@@ -573,7 +573,7 @@ h5{
 
 .hotlinks li{
   display: inline-block;
-  padding: 7px;
+  padding-right: 7px;
 }
 
 

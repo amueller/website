@@ -1,6 +1,19 @@
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
-	  <h1><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
+	  <h1 style="float:left"><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
+    <ul class="hotlinks">
+	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+	 <li><a><i class="fa fa-book fa-2x"></i></a></li>
+	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a></li>
+
+	 <li>   <div class="version" style="margin-bottom: -17px;">
+		        <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
+			  <?php foreach( $this->versions as $k => $v ) { ?>
+				<option value="<?php echo 'd/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>>v. <?php echo $v; ?></option>
+			  <?php } ?>
+			</select>
+	        </div></li>
+     </ul>
   </div>
   <div class="col-sm-12">
 
@@ -12,20 +25,7 @@
 
 	<?php if(strlen($this->record->{'description'})>400) { ?>
         <div class="show-more"><a onclick="showmore()"><i class="fa fa-chevron-circle-down"></i> More</a></div>
-	<?php } ?>
-     <ul class="hotlinks">
-	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a><br>Download</li>
-	 <li><a><i class="fa fa-book fa-2x"></i></a><br>Paper</li>
-	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-
-	 <li>   <div class="version" style="margin-bottom: -10px;">
-		        <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
-			  <?php foreach( $this->versions as $k => $v ) { ?>
-				<option value="<?php echo 'd/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>><?php echo $v; ?></option>
-			  <?php } ?>
-			</select>
-	        </div><br>Version</li>
-     </ul>
+	<?php } ?> 
 
   </div>
     <div class="col-sm-6">

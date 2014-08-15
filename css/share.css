@@ -204,20 +204,38 @@
 
 .icongreen {
   color: #5cb85c;
+  display: inline-block;
+  margin-right: 3px;
 }
 
 .iconblue {
   color: #428bca;
+  display: inline-block;
+  margin-right: 3px;
+
+
 }
 
 .iconyellow {
   color: #f0ad4e;
+  display: inline-block;
+  margin-right: 3px;
+
+
 }
 
 .iconred {
   color: #d9534f;
+  display: inline-block;
+  margin-right: 3px;
+
+
 }
 
 .icongray {
   color: #854AB8;
+  display: inline-block;
+  margin-right: 3px;
+
+
 }
