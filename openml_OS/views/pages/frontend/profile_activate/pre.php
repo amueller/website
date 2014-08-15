@@ -16,9 +16,7 @@ print_r($activation);
 if ($activation)
 {
 	//index the user
-	print_r('Indexing');
-   	$this->elasticsearch->index('user', $id ); 
-	print_r('Ok');
+   	print_r($this->elasticsearch->index('user', $id )); 
 	
 	//redirect them to the auth page
 	$this->session->set_flashdata('message', $this->ion_auth->messages());

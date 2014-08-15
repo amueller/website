@@ -418,7 +418,6 @@ class Ion_auth_model extends CI_Model
 	 **/
 	public function activate($id, $code = false)
 	{
-		print_r($code);
 
 		$this->trigger_events('pre_activate');
 
@@ -462,7 +461,6 @@ class Ion_auth_model extends CI_Model
 
 
 		$return = $this->db->affected_rows() == 1;
-		print_r($return);
 
 		if ($return)
 		{
