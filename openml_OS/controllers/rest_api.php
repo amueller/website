@@ -1581,19 +1581,19 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $user = $this->Author->get( $this->input->get( 'user_id' ) );
+    $user = $this->Author->getById( $this->input->post( 'user_id' ) );
     if( $user == false ) {
       $this->_returnError( 463 );
       return;
-    } else {
-      $user = end( $user );
-    }
-    
+    } 
+
     $datasets = $this->Dataset->getWhereSingle( 'uploader = ' . $user->id );
+    
     if( $datasets ) {
       $this->_returnError( 464 );
       return;
     }
+
     $flows = $this->Implementation->getWhereSingle( 'uploader = ' . $user->id );
     if( $flows ) {
       $this->_returnError( 464 );

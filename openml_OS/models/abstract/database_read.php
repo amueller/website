@@ -38,9 +38,9 @@ class Database_read extends CI_Model {
   }
   
   function getWhereSingle( $where, $orderby = null ) {
-    $this->db->limit(0,1);
+    $this->db->limit(1,0);
     $data = $this->getWhere( $where, $orderby );
-    return ( $data !== false ) ? $data[0] : false;
+    return ( $data !== false ) ? end( $data ) : false;
   }
   
   function getColumn( $column, $orderby = null) {
