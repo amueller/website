@@ -1565,6 +1565,55 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'setup-delete', array( 'setup' => $setup ) );
   }
   
+  private function _openml_user_delete() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 460 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 461 );
+        return;
+      }
+    }
+    
+    if( $this->ion_auth->is_admin($this->user_id) == false ) {
+      $this->_returnError( 462 );
+      return;
+    }
+    
+    $user = $this->Author->getById( $this->input->post( 'user_id' ) );
+    if( $user == false ) {
+      $this->_returnError( 463 );
+      return;
+    } 
+
+    $datasets = $this->Dataset->getWhereSingle( 'uploader = ' . $user->id );
+    
+    if( $datasets ) {
+      $this->_returnError( 464 );
+      return;
+    }
+
+    $flows = $this->Implementation->getWhereSingle( 'uploader = ' . $user->id );
+    if( $flows ) {
+      $this->_returnError( 464 );
+      return;
+    }
+    $runs = $this->Run->getWhereSingle( 'uploader = ' . $user->id );
+    if( $runs ) {
+      $this->_returnError( 464 );
+      return;
+    }
+    
+    $result = $this->ion_auth->delete_user( $user->id );
+    if( !$result ) {
+      $this->_returnError( 465 );
+      return;
+    }
+    
+    $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
+  }
+  
   /********************************* ALIAS FUNCTIONS *********************************/
   
   private function _openml_tasks_types() {
