@@ -8,7 +8,6 @@ $(document).ready(function() {
 		datatype: 'xml'
 	} );
 
-	$('.pop').popover();
 	$('.selectpicker').selectpicker();
 });
 

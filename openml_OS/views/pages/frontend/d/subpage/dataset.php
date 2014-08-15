@@ -1,6 +1,6 @@
 <div class="row openmlsectioninfo">
-  <div class="col-sm-12">
-	  <h1 style="float:left"><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
+  <div class="col-xs-12">
+    <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
     <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
 	 <li><a><i class="fa fa-book fa-2x"></i></a></li>
@@ -14,14 +14,15 @@
 			</select>
 	        </div></li>
      </ul>
+
   </div>
-  <div class="col-sm-12">
+  <div class="col-xs-12">
 
      <p class="description <?php if(strlen($this->record->{'description'})>400) echo 'hideContent';?>"><?php
 	echo $this->record->{'description'} ? $this->record->{'description'} : 'No description.';
 	?></p>
   </div>
-  <div class="col-sm-12" style="height:76px;"> <!-- Not sure why this is needed, but otherwise this element gets height of 1px. -->
+  <div class="col-xs-12" style="height:76px;"> <!-- Not sure why this is needed, but otherwise this element gets height of 1px. -->
 
 	<?php if(strlen($this->record->{'description'})>400) { ?>
         <div class="show-more"><a onclick="showmore()"><i class="fa fa-chevron-circle-down"></i> More</a></div>

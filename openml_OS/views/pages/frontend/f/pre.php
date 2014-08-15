@@ -20,6 +20,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
 	$this->record = $this->Implementation->getByID($this->id);
 	$this->displayName = $this->record->fullName;
+
+	$this->versions = $this->Implementation->getAssociativeArray('id', 'version', 'name = "'.$this->record->name.'"');
+	ksort($this->versions);
 	
 	$this->dt_main['columns'] 		= array('r.rid','rid','sid','name','value');
 	$this->dt_main['column_widths']		= array(1,1,0,60,30);

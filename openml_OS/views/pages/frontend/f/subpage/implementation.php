@@ -1,21 +1,23 @@
 <div class="row openmlsectioninfo">
-  <div class="col-sm-12">
-	  <h1><a href="f"><i class="fa fa-cogs"></i></a> <?php echo $this->record->{'name'}; ?></h1>
-  </div>
-  <div class="col-sm-12">
-
-     <p><?php echo $this->record->{'description'} ?></p>
+  <div class="col-xs-12">
+     <h1 class="pull-left"><a href="f"><i class="fa fa-cogs"></i></a> <?php echo $this->record->{'name'}; ?></h1>
      <ul class="hotlinks">
-	 <li><a><i class="fa fa-cloud-download fa-2x"></i></a><br>Download</li>
-	 <li><a><i class="fa fa-book fa-2x"></i></a><br>Paper</li>
-	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-	 <li>   <div class="version" style="margin-bottom: -10px;">
-		        <select class="selectpicker" data-width="auto">
-			  <option><?php echo $this->record->{'version'}; ?></option>
-			</select>		
-	        </div><br>Version</li>
+	 <li><a><i class="fa fa-cloud-download fa-2x"></i></a></li>
+	 <li><a><i class="fa fa-book fa-2x"></i></a></li>
+	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a></li>
+	 <li>   <div class="version" style="margin-bottom: -17px;">
+		        <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
+			  <?php foreach( $this->versions as $k => $v ) { ?>
+				<option value="<?php echo 'd/'.$k;?>" <?php echo $v == $this->record->{'version'} ? 'selected' : '';?>>v. <?php echo $v; ?></option>
+			  <?php } ?>
+			</select>
+	        </div></li>
      </ul>
-
+  </div>
+  <div class="col-xs-12">
+     <p class="description <?php if(strlen($this->record->{'description'})>400) echo 'hideContent';?>"><?php
+	echo $this->record->{'description'} ? $this->record->{'description'} : 'No description.';
+	?></p>
   </div>
     <div class="col-sm-6">
 	    <h2>Attribution</h2>
