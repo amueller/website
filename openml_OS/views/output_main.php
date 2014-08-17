@@ -21,6 +21,6 @@
 		exit;
 	}
   else{
-	echo "Oops, something went wrong. File not found.";
+	echo 'Oops, something went wrong. File should be available at '.$url.' We could not find it at '. $file;
 }
 ?>
