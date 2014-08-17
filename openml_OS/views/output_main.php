@@ -11,7 +11,7 @@
   $url = $searchclient['_source']['output_files'][$outputname];
   $urlparts = explode('/', $url);
   $outputid = $urlparts[array_search('download',$urlparts)+1];
-  $file = 'data/download/'.$outputid;
+  $file = 'http://openml.org/data/download/'.$outputid;
 
   if(file_exists($file))
 	{
