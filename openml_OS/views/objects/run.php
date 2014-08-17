@@ -106,7 +106,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     <h3>Results</h3>
     <ul class="list-unstyled">
     <?php foreach( $json_a['output_files'] as $k => $v ): ?>
-	<li><a href="r/output/<?php echo $k; ?>"><i class="fa fa-file-text-o"></i> <?php echo $k; ?></a></li>
+	<li><a href="r/<?php echo $this->run_id; ?>/output/<?php echo $k; ?>"><i class="fa fa-file-text-o"></i> <?php echo $k; ?></a></li>
     <?php endforeach; ?>
     </ul>
 
