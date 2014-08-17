@@ -3,7 +3,30 @@ $this->record = array();
 $this->runsetup = array();
 $this->runevaluations = array();
 
-if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
+if(false !== strpos($_SERVER['REQUEST_URI'],'output')) { // OUTPUT FILE
+  $info = explode('/', $_SERVER['REQUEST_URI']);
+  $outputname = $info[array_search('output',$info)+1];
+
+
+  $getParams = array();
+  $getParams['index'] = 'openml';
+  $getParams['type']  = 'run';
+  $getParams['id']    = $this->record['run_id'];
+  $searchclient = $this->searchclient->get($getParams);
+  $url = $searchclient['_source']['output_files'][$outputname];
+  $urlparts = explode('/', $url);
+  $outputid = $info[array_search('download',$urlparts)+1];
+  $file = 'data/download/'.$outputid;
+
+  if(file_exists($file))
+	{
+		header('Content-Type: text/plain');
+		header('Content-Disposition: inline; filename='.basename($file));
+		readfile($file);
+		exit;
+	}
+}
+elseif(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
   $info = explode('/', $_SERVER['REQUEST_URI']);
   $this->run_id = $info[array_search('r',$info)+1];
   $run = $this->Implementation->query('SELECT r.rid, r.uploader, d.did, d.name, d.version, r.setup, i.id, i.fullName, i.description, r.task_id, tt.name as taskname, r.start_time, r.status FROM run r left join task t on r.task_id=t.task_id left join task_type tt on t.ttid=tt.ttid left join task_inputs ti on (t.task_id=ti.task_id and ti.input=\'source_data\') left join dataset d on (ti.value = d.did), algorithm_setup s, implementation i WHERE rid='. $this->run_id .' and r.setup = s.sid and s.implementation_id = i.id');
@@ -60,7 +83,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     <?php if (isset($this->record['run_id'])){ ?>
   <ul class="hotlinks">
    <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-   <li><a href="http://openml.liacs.nl/api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+   <li><a href="http://openml.org/api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
         </ul>
   </div>
   <div class="col-sm-6">
@@ -106,7 +129,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     <h3>Results</h3>
     <ul class="list-unstyled">
     <?php foreach( $json_a['output_files'] as $k => $v ): ?>
-	<li><a href="<?php echo str_replace('http://openml.liacs.nl/','',$v); ?>" target="_blank" type="text/html"><i class="fa fa-file-text-o"></i> <?php echo $k; ?></a></li>
+	<li><a href="r/output/<?php echo $k; ?>"><i class="fa fa-file-text-o"></i> <?php echo $k; ?></a></li>
     <?php endforeach; ?>
     </ul>
 
