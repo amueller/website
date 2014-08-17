@@ -13,14 +13,13 @@
   $outputid = $urlparts[array_search('download',$urlparts)+1];
   $file = 'http://openml.org/data/download/'.$outputid;
 
-  if(!file_exists($file))
-	{
+  try{
 		header('Content-Type: text/plain');
 		header('Content-Disposition: inline; filename='.basename($file));
 		readfile($file);
 		exit;
 	}
-  else{
+  catch (Exception $e){
 	fopen($url);
-}
+  }
 ?>
