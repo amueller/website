@@ -11,6 +11,8 @@
   $getParams['id']    = $run_id;
   $searchclient = $this->searchclient->get($getParams);
   $url = $searchclient['_source']['output_files'][$outputname];
+  print_r($searchclient['_source']['output_files']);
+  print_r($url);
   $urlparts = explode('/', $url);
   $outputid = $info[array_search('download',$urlparts)+1];
   $file = 'data/download/'.$outputid;
