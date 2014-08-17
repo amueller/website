@@ -22,4 +22,7 @@
 		readfile($file);
 		exit;
 	}
+  else{
+	echo 'File available at '. $file;
+	}
 ?>
