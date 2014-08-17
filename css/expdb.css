@@ -578,6 +578,17 @@ h5{
   padding-right: 7px;
 }
 
+.nav-grey > li > a{
+  color: #999;
+  font-family: 'Roboto', sans-serif;
+  padding-right: 0px;
+}
+
+.nav-grey > li > a:hover{
+  background-color: #ffffff;
+  color: #666;  
+}
+
 
 .sharing{
   font-size: 14px !important;

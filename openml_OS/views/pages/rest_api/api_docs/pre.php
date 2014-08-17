@@ -1,3 +1,3 @@
 <?php
-$this->mirror_page = 'views/pages/frontend/developers';
+$this->mirror_page = 'views/pages/frontend/apis';
 ?>

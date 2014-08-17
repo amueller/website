@@ -36,6 +36,8 @@
   font-size: 21px;
 }
 
+
+
 /* Textual links */
 .bs-social {
   margin-top: 30px;
@@ -145,6 +147,10 @@
   position: relative;
 }
 
+.bs-docs-section > p > i{
+  margin-left: 30px;
+}
+
 /* Docs sidebar
 -------------------------------------------------- */
 
@@ -155,12 +161,11 @@
 
 /* First level of nav */
 .bs-sidenav {
-  margin-top: 30px;
+  margin-top: 0px;
   margin-bottom: 30px;
   padding-top:    10px;
   padding-bottom: 10px;
   text-shadow: 0 1px 0 #fff;
-  background-color: #f7f5fa;
   border-radius: 5px;
 }
 
@@ -182,7 +187,7 @@
   font-weight: bold;
   color: #563d7c;
   background-color: transparent;
-  border-right: 1px solid #563d7c;
+  border-left: 1px solid #563d7c;
 }
 
 /* Nav: second level (shown on .active) */
@@ -208,7 +213,7 @@
 
 /* First level of nav */
 .bs-sidenav-fixed {
-  margin-top: 30px;
+  margin-top: 0px;
   margin-bottom: 30px;
   padding-top:    10px;
   padding-bottom: 10px;
@@ -275,7 +280,14 @@
 .bs-callout-danger {
   background-color: #fcf2f2;
   border-color: #dFb5b4;
+  font-size: 12px;
 }
+
+.bs-callout-danger dl{  
+  margin-bottom: 0px;
+}
+
+
 .bs-callout-warning {
   background-color: #fefbed;
   border-color: #f1e7bc;
