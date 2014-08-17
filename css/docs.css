@@ -161,7 +161,7 @@
 
 /* First level of nav */
 .bs-sidenav {
-  margin-top: 0px;
+  margin-top: 30px;
   margin-bottom: 30px;
   padding-top:    10px;
   padding-bottom: 10px;
@@ -178,8 +178,7 @@
 .bs-sidebar .nav > li > a:hover,
 .bs-sidebar .nav > li > a:focus {
   text-decoration: none;
-  background-color: #e5e3e9;
-  border-right: 1px solid #dbd8e0;
+  background-color: #ffffff;
 }
 .bs-sidebar .nav > .active > a,
 .bs-sidebar .nav > .active:hover > a,
@@ -231,7 +230,7 @@
 .bs-sidebar-fixed .nav > li > a:hover,
 .bs-sidebar-fixed .nav > li > a:focus {
   text-decoration: none;
-  background-color: #e5e3e9;
+  background-color: #ffffff;
   border-right: 1px solid #dbd8e0;
 }
 .bs-sidebar-fixed .nav > .active > a,
@@ -278,7 +277,7 @@
 
 /* Themes for different contexts */
 .bs-callout-danger {
-  background-color: #fcf2f2;
+  background-color: #ffffff;
   border-color: #dFb5b4;
   font-size: 12px;
 }

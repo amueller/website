@@ -98,10 +98,10 @@
 		 <!-- <button class="btn btn-primary btn-small" type="submit" style="height: 30px; vertical-align:top; font-size: 8pt;"><i class="fa fa-search fa-lg"></i></button>-->
 		</form>
 	       </div>
-		      <!--<ul class="nav navbar-nav nav-grey">
-			<li><a href="plugins">Plugins</a></li>
+		      <ul class="nav navbar-nav nav-grey hidden-xs">
 			<li><a href="api">API</a></li>
-		      </ul>-->
+			<li><a href="plugins">Plugins</a></li>
+		      </ul>
 	       
 			<div class="nav pull-right">
 			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-bars fa-2x"></i></a>
@@ -114,13 +114,13 @@
 		            <li class="divider"></li>
 			    <li><a href="r"><div class="iconred"><i class="fa fa-fw fa-lg fa-star"></i></div> Runs</a></li>
 		            <li class="divider"></li>
-			    <li><a href="a"><div class="icongray"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i></div> Analytics</a></li>
+			    <li><a href="a"><div class="icongrayish"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i></div> Analytics</a></li>
 		            <li class="divider"></li>
-			    <li><a href="plugins"><div class="icongray"><i class="fa fa-fw fa-lg fa-flash"></i></div> Plugins</a></li>
+			    <li><a href="developers"><div class="icongray"><i class="fa fa-fw fa-lg fa-users"></i></div> Developers</a></li>
 		            <li class="divider"></li>
 			    <li><a href="api"><div class="icongray"><i class="fa fa-fw fa-lg fa-cubes"></i></div> API</a></li>
 		            <li class="divider"></li>
-			    <li><a href="developers"><div class="icongray"><i class="fa fa-fw fa-lg fa-users"></i></div> Developers</a></li>
+			    <li><a href="plugins"><div class="icongray"><i class="fa fa-fw fa-lg fa-flash"></i></div> Plugins</a></li>
 		            <li class="divider"></li>
 			    <li><a href="community"><div class="icongray"><i class="fa fa-fw fa-lg fa-comments"></i></div> Forum</a></li>
 			  </ul>

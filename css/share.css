@@ -232,10 +232,14 @@
 
 }
 
+.icongrayish {
+  color: #aeaeae;
+  display: inline-block;
+  margin-right: 3px;
+}
+
 .icongray {
   color: #854AB8;
   display: inline-block;
   margin-right: 3px;
-
-
 }
