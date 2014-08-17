@@ -102,9 +102,12 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     $searchclient = $this->searchclient->get($getParams);
     $json_a = $searchclient['_source'];
     ?>
-    <h3>Output files</h3>
-    <ul><li><a href="<?php echo $json_a['output_files']['description']; ?>">Full description (XML)</a></li>
-        <li><a href="<?php echo $json_a['output_files']['predictions']; ?>">Instance-level predictions (ARFF)</a></li>
+	
+    <h3>Results</h3>
+    <ul>
+    <?php foreach( $json_a->output_files as $k => $v ): ?>
+	<li><a href="<?php echo $v; ?>"><?php echo $k; ?></a></li>
+    <?php endforeach; ?>
     </ul>
 
   </div>
