@@ -59,6 +59,8 @@ class Frontend extends CI_Controller {
 	    $this->load->view('html_main');
     } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/json')){
 	    $this->load->view('json_main');
+    } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/output')){
+	    $this->load->view('output_main');
     } else {
 	    $this->load->view('frontend_main');
     }
