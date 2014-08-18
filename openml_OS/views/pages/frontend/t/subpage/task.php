@@ -11,10 +11,13 @@
 		<div class='table-responsive'><table class='table table-striped'>
 		<?php foreach( $this->taskio as $r ): if($r['category'] != 'input') continue; ?>
 		<tr><td><a class="pop" data-html="true" data-toggle="popover" data-placement="right" data-content="<?php echo $r['description']; ?>"><?php echo $r['name']; ?></td>
-		<td><?php if($r['type'] == 'Dataset') { echo '<a href="d/' . $r['value']. '">' . $r['value'] . ' - ' . $r['dataset'] . '</a>';}
-		elseif($r['type'] == 'EstimationProcedure') { echo '<a href="a/evalproc/' . $r['value']. '">' . $r['value'] . ' - ' . $r['evalproc'] . '</a>';}
-		elseif(strpos($r['value'], "http") === 0 ) { echo '<a href="' .$r['value']. '">' . $r['value'] . '</a>';}
-		else { echo $r['value']; } ?></td>
+		<td><?php if($r['type'] == 'Dataset') 
+				{ echo '<a href="d/' . $r['value']. '">' . $r['value'] . ' - ' . $r['dataset'] . '</a>';}
+			elseif($r['type'] == 'EstimationProcedure') 
+				{ echo '<a href="a/evalproc/' . $r['value']. '">' . $r['value'] . ' - ' . $r['evalproc'] . '</a>';}
+			elseif(strpos($r['value'], "http") === 0 ) 
+				{ echo '<a href="' .$r['value']. '">' . $r['value'] . '</a>';}
+			else { echo $r['value']; } ?></td>
 		<td><a class="pop" data-html="true" data-toggle="popover" data-placement="left" data-content="<?php echo $r['typedescription']; ?>"><?php echo $r['type']; ?></a> (<?php echo $r['requirement']; ?>)</td>
 		</tr>
 		<?php endforeach; ?>
