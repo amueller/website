@@ -71,6 +71,7 @@
 		  <div class="form-group">
 		  <label class="control-label" for="input_dataset_licence">Licence - <a href="http://creativecommons.org/licenses/?lang=en" target="_blank">Learn more</a></label>
 			  <select class="form-control" id="input_dataset_licence">
+			  <option value="Public Domain Mark">Already in public domain</option>
 			  <option value="Attribution (CC BY)">Attribution (CC BY)</option>
 			  <option value="Attribution-ShareAlike (CC BY-SA)">Attribution-ShareAlike (CC BY-SA)</option>
 			  <option value="Attribution-NoDerivs (CC BY-ND)">Attribution-NoDerivs (CC BY-ND)</option>
