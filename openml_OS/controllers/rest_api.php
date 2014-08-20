@@ -66,7 +66,7 @@ class Rest_api extends CI_Controller {
     
     // XML maintainance
     $this->xml_fields_dataset = array(
-      'string' => array('description','format','collection_date','language','licence','default_target_attribute','row_id_attribute','md5_checksum'),
+      'string' => array('description','format','collection_date','language','licence','default_target_attribute','row_id_attribute','version_label','citation','visibility','original_data_url','paper_url','md5_checksum'),
       'csv' => array('creator','contributor',)
     );
     $this->xml_fields_implementation = array(
