@@ -6,6 +6,7 @@
  * the datasets with the wrong target attribute. 
  * * * * */
 
+if(false !== strpos($_SERVER['REQUEST_URI'],'/new/task')) {
 $ttid = $this->input->post( 'ttid' );
 $datatype = array( 'nominal' );
 $required_inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "'.$ttid.'"' );
@@ -65,5 +66,82 @@ if( $tasks ) {
 }
 
 if( $new_tasks ) { $this->new_text = '* new'; }
+}
+
+if(false !== strpos($_SERVER['REQUEST_URI'],'/new/data')) {
+
+$fields =  ['name','description','format','creator','contributor','collection_date','licence','default_target_attribute','row_id_attribute','version_label','citation','visibility','original_data_url','paper_url'];
+$imploded = [false,false,false,true,true,false,false,false,false,false,false,false,false,false,false];
+
+$xml = new SimpleXMLElement('<oml:data_set_description xmlns:oml="http://openml.org/openml"/>');
+for($i = 0; $i < sizeof($fields); $i+=1) {
+	if(!$imploded[$i]){
+		$xml->addChild('oml:'.$fields[$i], $this->input->post($fields[$i]));
+	}
+	else{
+		$pieces = explode(',', $this->input->post($fields[$i]));
+		foreach($pieces as $element){
+			$xml->addChild('oml:'.$fields[$i], $element);
+		}			
+	}
+}
+
+$post_data = array(
+    "description" => $xml->asXML(),
+);
+
+
+$stream_options = array(
+    'http' => array(
+       'method'  => 'POST',
+       'header'  => "Content-type: text/xml",
+       'content' => http_build_query($post_data),
+    ),
+);
+
+$context  = stream_context_create($stream_options);
+$this->response = file_get_contents(BASE_URL.'/api/?f=openml.data.upload', null, $context);
+$this->responsetype = "alert success";
+if(strpos('code',$this->response)>0)
+	$this->responsetype = "alert error";
+	
+	
+/**
+$errorCodes = new array();
+$errorCodes[131] = 'Please make sure that all mandatory (red) fields are filled in. Don\'t use spaces in name or version fields. (Error 131) ';
+$errorCodes[135] = 'Please make sure that all mandatory (red) fields are filled in. Don\'t use spaces in name or version fields. (Error 135) ';
+$errorCodes[137] = 'Please login first.';
+$errorCodes[138] = 'Please login first.';
+
+var message = '';
+var status = '';
+if($(responseText).find('id, oml\\:id').text().length) {
+	message = type + ' uploaded successfully. <a href="d/' + $(responseText).find('id, oml\\:id').text() + '">View online.</a>';
+	status = 'alert-success';
+} else {
+	var errorcode = $(responseText).find('code, oml\\:code').text();
+	var errormessage = $(responseText).find('message, oml\\:message').text();
+	status = 'alert-warning';
+	if(errorcode in errorCodes) {
+		message = errorCodes[errorcode];
+	} else {
+		message = 'Errorcode ' + errorcode + ': ' + errormessage;
+	}
+}
+$('#response'+type+'Txt').removeClass();
+$('#response'+type+'Txt').addClass('alert');
+$('#response'+type+'Txt').addClass(status);
+$('#response'+type+'Txt').html(message);
+}
+**/
+
+
+
+
+
+
+
+
+}
 
 ?>

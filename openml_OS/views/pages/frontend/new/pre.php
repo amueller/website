@@ -15,4 +15,8 @@ for( $i = 0; $i < count($this->task_types); ++$i ) {
   $this->task_types[$i]->in = $this->Task_type_inout->getWhere( $clause, '`order` ASC' );
   $this->task_types[$i]->selected = ($ttid_sel == $this->task_types[$i]->ttid) ? 'selected="selected"' : '';
 }
+
+$this->responsetype = '';
+$this->response = '';
+
 ?>

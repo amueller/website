@@ -25,14 +25,7 @@ $(document).ready( function() {
 
 /// SHARING DATA
 
-$(document).ready(function() { 
-    // bind form using ajaxForm 
-    $('#datasetForm').ajaxForm( {
-		beforeSerialize: prepareDatasetDescriptionXML,
-		success: datasetFormSubmitted,
-		datatype: 'xml'
-	} );
-
+$(document).ready(function() {
 	$('.pop').popover();
 	$('.selectpicker').selectpicker();
 });
@@ -67,6 +60,55 @@ function prepareDescriptionXML(type,fields,implode) {
 	}
 	
 	return xml_content;
+}
+
+$(function() {
+
+  $("#addbutton").click(function() {
+    var eventXml = XmlCreate("<event/>");
+    var $event   = $(eventXml);
+
+    $event.attr("title", $("#titlefield").val());
+    $event.attr("start", [$("#bmonth").val(), $("#bday").val(), $("#byear").val()].join(" "));
+
+    if (parseInt($("#eyear").val()) > 0) {
+      $event.attr("end", [$("#emonth").val(), $("#eday").val(), $("#eyear").val()].join(" "));
+      $event.attr("isDuration", "true");
+    } else {
+      $event.attr("isDuration", "false");
+    }
+
+    $event.text( tinyMCE.activeEditor.getContent() );
+
+    $("#outputtext").val( XmlSerialize(eventXml) );
+  });
+
+});
+
+// helper function to create an XML DOM Document
+function XmlCreate(xmlString) {
+  var x;
+  if (typeof DOMParser === "function") {
+    var p = new DOMParser();
+    x = p.parseFromString(xmlString,"text/xml");
+  } else {
+    x = new ActiveXObject("Microsoft.XMLDOM");
+    x.async = false;
+    x.loadXML(xmlString);
+  }
+  return x.documentElement;
+}
+
+// helper function to turn an XML DOM Document into a string
+function XmlSerialize(xml) {
+  var s;
+  if (typeof XMLSerializer === "function") {
+    var x = new XMLSerializer();
+    s = x.serializeToString(xml);
+  } else {
+    s = xml.xml;
+  }
+  return s
 }
 
 function datasetFormSubmitted(responseText,statusText,xhr,formElement) {
