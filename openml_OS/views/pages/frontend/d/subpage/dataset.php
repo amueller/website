@@ -49,6 +49,7 @@
 	    <?php if($this->record->{'original_data_url'}){ ?>
 	    	<tr><td>Derived from</td><td><?php echo '<a href="'.$this->record->{'original_data_url'}.'">Original dataset</a>'; ?></td></tr>
 	    <?php } ?>     
+ 	    <tr><td>Who can see this?</td><td><?php echo $this->record->{'visibility'}; ?></td></tr>
 	    </tbody></table></div>
 
     </div> <!-- end col-md-6-->
