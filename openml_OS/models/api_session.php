@@ -14,17 +14,27 @@ class Api_session extends Community {
 		return ( $data->num_rows() > 0 ) ? $data->row() : false;
 	}
 	
-	function create( $username, $password ) {
+	function createByCredentials( $username, $password ) {
 		$users = $this->Author->getWhere('`username` = "'.$username.'" AND `password` = "'.$password.'"');
 		
 		if( $users == false || count($users) == 0 )
 			return false;
 		$user = $users[0];
 		
-		/*if( $this->ion_auth->hash_password_db($user->id, $password) == false ) {
-			return false;
-		}*/
+		return $this->create( $user );
 		
+	}
+  
+  function createByUserId( $user_id ) {
+    $user = $this->Author->getById( $user_id );
+    if( $user == false )
+			return false;
+      
+    return $this->create( $user );
+    
+  }
+	
+  private function create( $user ) {
 		$hash = rand_string( 40, 'CN' );
 		
 		$id = $this->insert( array( 
@@ -33,8 +43,8 @@ class Api_session extends Community {
 			'hash' => $hash ) );
 		
 		return ( $id !== false ) ? $hash : $false;
-	}
-	
+  }
+  
 	function isValidHash( $hash ) {
 		$data = $this->getByHash( $hash );
 		if( ! $data ) return false;

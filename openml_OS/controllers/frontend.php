@@ -20,6 +20,7 @@ class Frontend extends CI_Controller {
     $this->load->model('Thread');
     $this->load->model('Category');
     $this->load->model('Author');
+    $this->load->model('Api_session');
     
     $this->load->helper('table');
     $this->load->helper('tasksearch');

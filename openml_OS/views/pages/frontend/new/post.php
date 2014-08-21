@@ -86,21 +86,36 @@ for($i = 0; $i < sizeof($fields); $i+=1) {
 	}
 }
 
+
+// TODO: This is a temporarily fix
+
+$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
+
 $post_data = array(
-    "description" => $xml->asXML(),
+    'description' => $xml->asXML(),
+    'session_hash' => $session_hash
 );
 
+$url = BASE_URL.'/api/?f=openml.data.upload';
 
-$stream_options = array(
-    'http' => array(
-       'method'  => 'POST',
-       'header'  => "Content-type: text/xml",
-       'content' => http_build_query($post_data),
-    ),
-);
+// TODO: To library
 
-$context  = stream_context_create($stream_options);
-$this->response = file_get_contents(BASE_URL.'/api/?f=openml.data.upload', null, $context);
+// Get cURL resource
+$curl = curl_init();
+// Set some options - we are passing in a useragent too here
+curl_setopt_array($curl, array(
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLOPT_URL => $url,
+    CURLOPT_POST => 1,
+    CURLOPT_POSTFIELDS => $post_data
+));
+// Send the request & save response to $resp
+$this->response = curl_exec($curl);
+// Close request to clear up some resources
+curl_close($curl);
+
+//die($post_data['description']);
+
 $this->responsetype = "alert success";
 if(strpos('code',$this->response)>0)
 	$this->responsetype = "alert error";

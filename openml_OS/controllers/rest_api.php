@@ -140,7 +140,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $hash = $this->Api_session->create( $username, $password );
+    $hash = $this->Api_session->createByCredentials( $username, $password );
     
     if( $hash === false ) {
       $this->_returnError( 252 );
