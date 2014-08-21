@@ -3,7 +3,13 @@
     <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
     <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-	 <li><a><i class="fa fa-book fa-2x"></i></a></li>
+	 <li>
+	 <?php if($this->record->{'paper_url'}){ ?>
+		<a href="<?php echo $this->record->{'paper_url'}; ?>"><i class="fa fa-book fa-2x"></i></a>
+	 <?php } else {?>
+		<i class="fa fa-book fa-2x" style="color:#aeaeae;"></i>
+	 <?php } ?>
+	 </li>
 	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a></li>
 
 	 <li>   <div class="version" style="margin-bottom: -17px;">
@@ -34,10 +40,15 @@
             <div class="table-responsive">
 	    <table class="table table-striped"><tbody>
 	    <tr><td>Author(s)</td><td><?php echo $this->record->{'creator'} ?></td></tr>
-	    <tr><td>Contributor(s)</td><td><?php echo $this->record->{'contributor'} ?></td></tr>
-	    <tr><td>Uploader</td><td><?php echo $this->record->{'uploader'} ?></td></tr>	
-	    <tr><td>Licence</td><td><?php echo $this->record->{'licence'} ?></td></tr>
-	    <tr><td>Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>    
+	    <tr><td>Acknowledgements</td><td><?php echo $this->record->{'contributor'} ?></td></tr>
+	    <tr><td>Uploaded by</td><td><?php echo $this->record->{'uploader'} ?></td></tr>	
+	    <tr><td>Licence</td><td><?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?></td></tr>
+	    <?php if($this->record->{'original_data_url'}){ ?>
+	    <tr><td>Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>
+	    <?php } ?>
+	    <?php if($this->record->{'original_data_url'}){ ?>
+	    	<tr><td>Derived from</td><td><?php echo '<a href="'.$this->record->{'original_data_url'}.'">Original dataset</a>'; ?></td></tr>
+	    <?php } ?>     
 	    </tbody></table></div>
 
     </div> <!-- end col-md-6-->
@@ -85,7 +96,10 @@
 	</div>
 
 	        <div class="col-xs-12">
-		<h3>Results (per task)</h3> 
+		<h3>Results (per task)</h3>
+		<?php if(count($this->tasks_all)==0){ ?>
+				<p>There haven't been any tasks created on this dataset yet. <a href="new/task">Create a task on this data set.</a></p>
+		<?php } else { ?>
 				<select class="selectpicker" data-width="auto" onchange="current_task = this.value; oTableRuns.fnDraw(true); redrawchart();">
 					<?php foreach($this->tasks_all as $t): ?>
 					<option value="<?php echo $t['id'];?>" <?php echo ($t == $this->current_task) ? 'selected' : '';?>><?php echo 'Task ' . $t['id'] . ' (' . $t['name'] . ')';?></option>
@@ -114,6 +128,7 @@
 										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
 				</table></div>
 			</div>
+		<?php } ?>
 
 <div class="modal fade" id="runModal" role="dialog" tabindex="-1" aria-labelledby="Run detail" aria-hidden="true">
   <div class="modal-dialog">
