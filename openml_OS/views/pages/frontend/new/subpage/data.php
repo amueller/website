@@ -26,7 +26,8 @@
 
 <div class="openmlsectioninfo">
 	<h1><a href="d"><i class="fa fa-database"></i></a> Add data</h1>
-	<form method="post" action="">
+        <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
+	<form method="post" action="" enctype="multipart/form-data">
 	      <div class="row">
 		<div class="col-sm-6">
 		  <div class="form-group">
@@ -162,7 +163,6 @@
               </div>
            </div>
 	</form> 
-        <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
 
         <p><i>By submitting, you allow OpenML to index the data and link it to uploaded results. All rights remain with the original author(s) of the data.</i></p>
 </div> <!-- end container -->

@@ -51,8 +51,10 @@ class Rest_api extends CI_Controller {
     
     // helper
     $this->load->helper('api');
-
+    
     $this->load->library('elasticSearch');
+    
+    $this->config->load('openml_mappings');
     
     // paths
     $this->data_folders = array(
@@ -61,21 +63,12 @@ class Rest_api extends CI_Controller {
       'run'        => 'run/'
     );
     
-    // TODO: also in controllers/cron.php
-    $this->data_tables = array( 'dataset','evaluation','evaluation_fold', 'evaluation_sample', 'evaluation_interval', 'runfile');
+    $this->data_tables = $this->config->item('data_tables');
     
     // XML maintainance
-    $this->xml_fields_dataset = array(
-      'string' => array('description','format','collection_date','language','licence','default_target_attribute','row_id_attribute','version_label','citation','visibility','original_data_url','paper_url','md5_checksum'),
-      'csv' => array('creator','contributor',)
-    );
-    $this->xml_fields_implementation = array(
-      'string' => array('name','external_version','description','licence','language','fullDescription','installationNotes','dependencies',),
-      'csv' => array('creator','contributor',),
-      'array' => array('bibliographical_reference','parameter','component'),
-      'plain' => array()
-    );
-
+    $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');
+    $this->xml_fields_implementation = $this->config->item('xml_fields_implementation');
+    
     $this->data_controller = BASE_URL . 'files/';
     
     $this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');

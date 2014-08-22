@@ -27,6 +27,7 @@ class Frontend extends CI_Controller {
     
     $this->load->Library('dataOverview');
     $this->load->Library('elasticSearch');
+    $this->load->Library('curlHandler');
     
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
