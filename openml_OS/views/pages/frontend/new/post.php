@@ -89,6 +89,8 @@ for($i = 0; $i < sizeof($fields); $i+=1) {
 // TODO: This is a temporarily fix
 $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
+// TODO: handle url i.s.o. file
+
 $post_data = array(
     'description' => $xml->asXML(),
     'session_hash' => $session_hash,
@@ -111,7 +113,7 @@ if( property_exists( $xml->children('oml', true), 'code' ) ) {
   $this->responsecode = $xml->children('oml', true)->code;
   $this->responsemessage = $xml->children('oml', true)->message;
 } else {
-  $this->response .= $xml->children('oml', true)->id;
+  $this->response .= $xml->children('oml', true)->did;
 }
 
 // TODO: handle code and give special message
