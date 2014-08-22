@@ -113,7 +113,7 @@ if( property_exists( $xml->children('oml', true), 'code' ) ) {
   $this->responsecode = $xml->children('oml', true)->code;
   $this->response = $xml->children('oml', true)->message;
 } else {
-  $this->response .= $xml->children('oml', true)->did;
+  $this->response .= $xml->children('oml', true)->id;
 }
 
 // TODO: handle code and give special message
