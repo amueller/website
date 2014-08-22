@@ -111,7 +111,7 @@ $this->response = 'Data was uploaded with id: ';
 if( property_exists( $xml->children('oml', true), 'code' ) ) {
   $this->responsetype = 'alert error';
   $this->responsecode = $xml->children('oml', true)->code;
-  $this->responsemessage = $xml->children('oml', true)->message;
+  $this->response = $xml->children('oml', true)->message;
 } else {
   $this->response .= $xml->children('oml', true)->did;
 }
