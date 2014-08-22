@@ -196,7 +196,24 @@ class Rest_api extends CI_Controller {
     }
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
   }
-  
+
+  private function _openml_data_safe() {
+    $datasets = $this->Dataset->query( 'SELECT did, name, version FROM dataset WHERE `processed` IS NOT NULL AND `error` = "false" AND `safe` = "true" AND did in (select distinct did from data_feature)' );
+    if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
+      $this->_returnError( 110 );
+    }
+    $this->_xmlContents( 'data-safe', array( 'datasets' => $datasets ) );
+  }
+
+  private function _openml_task_classification_safe() {
+    $tasks = $this->Dataset->query( 'select t.task_id, d.name, d.version, p.name as pname from task t left join task_inputs ti1 on (t.task_id=ti1.task_id and ti1.input="source_data") left join dataset d on (ti1.value=d.did) left join task_inputs ti2 on (t.task_id=ti2.task_id and ti2.input="target_feature") left join task_inputs ti3 on (t.task_id=ti3.task_id and ti3.input="estimation_procedure") left join estimation_procedure p on (ti3.value=p.id) where t.ttid=1 and d.safe="true" and d.did in (select distinct did from data_feature) and ti2.value=d.default_target_attribute' );
+    if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
+      $this->_returnError( 110 );
+    }
+    $this->_xmlContents( 'task-classification-safe', array( 'tasks' => $tasks ) );
+  }
+
+
   private function _openml_data_description() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {
@@ -1612,6 +1629,37 @@ class Rest_api extends CI_Controller {
     }
     
     $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
+  }
+
+  private function _openml_data_description_update() {
+    if(!$this->authenticated) {
+      if(!$this->provided_hash) {
+        $this->_returnError( 470 );
+        return;
+      } else { // not provided valid hash
+        $this->_returnError( 471 );
+        return;
+      }
+    }
+        
+    $data = $this->Dataset->getById( $this->input->post( 'data_id' ) );
+    if( $data == false ) {
+      $this->_returnError( 472 );
+      return;
+    } 
+
+    $key = $this->input->post( 'key' );
+    $value = $this->input->post( 'value' );
+
+    if(in_array($key, array('default_target_feature','uploader','url','did','licence','visibility')) and $data->uploader !=  $this->user_id ){ // not owner of the dataset
+        $this->_returnError( 473 );
+        return;
+    }
+    
+    $this->Dataset->update( $this->input->post( 'data_id' ), array($key => $value));
+
+    
+    $this->_xmlContents( 'data-description-update', array( 'id' => $data->did, 'key' => $key, 'value' => $value ) );
   }
   
   /********************************* ALIAS FUNCTIONS *********************************/

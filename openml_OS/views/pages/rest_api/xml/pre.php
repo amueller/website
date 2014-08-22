@@ -592,4 +592,24 @@ $this->apiErrors[464][1] = 'Delete the content before deleting this user. ';
 $this->apiErrors[465][0] = 'Deleting user failed.';
 $this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
 
+// for function: openml.tasrrk.delete
+$this->apiErrors[465][0] = 'Deleting user failed.';
+$this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
+
+// for function: openml.data.description.delete
+$this->apiErrors[470][0] = 'Authentication failed.';
+$this->apiErrors[470][1] = 'Authentication failed. Username or password was not recognized or authentication has expired. Please try again.';
+
+$this->apiErrors[471][0] = 'Authentication failed.';
+$this->apiErrors[471][1] = 'Authentication failed. Username or password was not recognized or authentication has expired. Please try again.';
+
+$this->apiErrors[472][0] = 'Dataset not found.';
+$this->apiErrors[472][1] = 'The provided dataset id does not correspond to an existing data set.';
+
+$this->apiErrors[473][0] = 'User is not the owner of the dataset.';
+$this->apiErrors[473][1] = 'Only the uploader of the dataset can change this particular property.';
+
+
+
+
 ?>

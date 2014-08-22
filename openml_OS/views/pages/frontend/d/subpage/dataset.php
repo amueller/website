@@ -36,20 +36,20 @@
 
   </div>
     <div class="col-sm-6">
-	    <h2>Attribution</h2>
+	    <h2>General</h2>
             <div class="table-responsive">
-	    <table class="table table-striped"><tbody>
-	    <tr><td>Author(s)</td><td><?php echo $this->record->{'creator'} ?></td></tr>
-	    <tr><td>Acknowledgements</td><td><?php echo $this->record->{'contributor'} ?></td></tr>
-	    <tr><td>Uploaded by</td><td><?php echo $this->record->{'uploader'} ?></td></tr>	
-	    <tr><td>Licence</td><td><?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?></td></tr>
+	    <table class="table"><tbody>
+	    <tr><td><i class="fa fa-users"></i> Author(s)</td><td><?php echo $this->record->{'creator'} ?></td></tr>
+	    <tr><td><i class="fa fa-heart"></i> Acknowledgements</td><td><?php echo $this->record->{'contributor'} ?></td></tr>
+	    <tr><td><i class="fa fa-cloud-upload"></i> Uploaded by</td><td><?php echo $this->record->{'uploader'} ?></td></tr>	
+	    <tr><td><i class="fa fa-check"></i> Licence</td><td><?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?></td></tr>
 	    <?php if($this->record->{'original_data_url'}){ ?>
-	    <tr><td>Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>
+	    <tr><td><i class="fa fa-book"></i> Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>
 	    <?php } ?>
 	    <?php if($this->record->{'original_data_url'}){ ?>
-	    	<tr><td>Derived from</td><td><?php echo '<a href="'.$this->record->{'original_data_url'}.'">Original dataset</a>'; ?></td></tr>
+	    	<tr><td><i class="fa fa-link"></i> Derived from</td><td><?php echo '<a href="'.$this->record->{'original_data_url'}.'">Original dataset</a>'; ?></td></tr>
 	    <?php } ?>     
- 	    <tr><td>Who can see this?</td><td><?php echo $this->record->{'visibility'}; ?></td></tr>
+ 	    <tr><td><i class="fa fa-eye-slash"></i> Who can see this?</td><td><?php echo $this->record->{'visibility'}; ?></td></tr>
 	    </tbody></table></div>
 
     </div> <!-- end col-md-6-->
@@ -60,7 +60,8 @@
 				<?php $result = $this->Dataset->query("SELECT name, data_type, is_target, NumberOfDistinctValues, NumberOfMissingValues FROM `data_feature` WHERE did=" . $this->record->{'did'});
 				if (is_array($result)){
 				foreach( $result as $r ) {
-					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' (target)': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td></tr>";
+					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
+									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td></tr>";
 				}}
 				?>
 				</table>
