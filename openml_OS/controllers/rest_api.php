@@ -581,7 +581,7 @@ class Rest_api extends CI_Controller {
     // get correct description
     if( $this->input->post('description') ) {
       // get description from string upload
-      $description = $this->input->post('description');
+      $description = $this->input->post('description', false);
       if( validateXml( $description, xsd('openml.data.upload'), $xmlErrors, false ) == false ) {
         $this->_returnError( 131, $xmlErrors );
         return;
