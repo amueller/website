@@ -45,17 +45,38 @@
                 if( property_exists( $template_search, 'placeholder' ) ) {  $placeholder = $template_search->placeholder; }
               }
           ?>
-		      <div class="form-group">
+		      <div class="form-group" id="<?php echo  $id ; ?>_formgroup" <?php if($io->requirement == 'hidden') { echo 'style="display: none"; '; } ?>>
 		        <label class="control-label" for="<?php echo  $id ; ?>"><?php echo $name; ?></label>
             <?php 
               if( $template_search && property_exists( $template_search, 'type' ) && $template_search->type == 'select' ): // make a dropdown
               $sql = 'SELECT * FROM `'.$template_search->table.'` WHERE ttid = ' . $io->ttid; 
               $types = $this->Dataset->query( $sql ); ?>
-            <select class="form-control input-small selectpicker" name="<?php echo $io->name;?>">
-              <?php foreach($types as $type): ?>
-              <option value="<?php echo $type->{$template_search->key}; ?>" <?php if($this->input->post($io->name) == $type->{$template_search->key}) echo 'selected="selected"'; ?>><?php echo $type->{$template_search->value}; ?></option>
+            <select class="form-control input-small selectpicker" id="dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?>" name="<?php echo $io->name;?>">
+              <?php foreach($types as $type): 
+                // parses data to be used in javascript
+                $data_str = ''; foreach( get_object_vars( $type ) as $key => $value ) { $data_str .= "data-dbfield_$key=\"$value\" "; } ?>
+              <option value="<?php echo $type->{$template_search->key}; ?>" <?php echo $data_str; ?> <?php if($this->input->post($io->name) == $type->{$template_search->key}) echo 'selected="selected"'; ?>><?php echo $type->{$template_search->value}; ?></option>
               <?php endforeach; ?>
             </select>
+            <?php if( $template_search->table == 'estimation_procedure' ): ?>
+            <script>
+              $( "#dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?>" ).change(function () {
+                
+                var field = "<?php echo 'input_' . $tt->ttid . '-custom_testset'; ?>";
+                $( "#dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?> option:selected" ).each(function() {
+                  if( $( this ).data('dbfield_custom_testset') == true ) {
+                    $('#'+field).val('');
+                    $('#'+field).prop('disabled', false);
+                    $('#'+field+'_formgroup').css("display", "block");
+                  } else {
+                    $('#'+field).val('');
+                    $('#'+field).prop('disabled', true);
+                    $('#'+field+'_formgroup').css("display", "none");
+                  }
+                });
+              }).change();
+            </script>
+            <?php endif; ?>
           <?php else: // makes a plain text input ?>
 		        <input type="text" class="form-control" id="<?php echo  $id; ?>" name="<?php echo $io->name;?>" placeholder="<?php echo $placeholder; ?>" value="<?php echo $this->input->post($io->name) ? $this->input->post($io->name) : $default; ?>" />
           <?php endif; ?>

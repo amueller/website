@@ -19,6 +19,10 @@ function is_safe( $unsafe ) {
   return !preg_match("/[^a-zA-Z0-9\s.,-_()]/", $unsafe );
 }
 
+function is_cs_numeric( $unsafe ) { // is comma separated numeric
+  return !preg_match("/[^0-9\s.,-]/", $unsafe );
+}
+
 function cutoff( $input, $length ) {
   if( strlen( $input ) < $length + 5 ) return $input;
   

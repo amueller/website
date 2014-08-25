@@ -51,6 +51,7 @@ class Task extends Database_write {
     $result = array();
     $to_insert = array();
     $existing_tasks = $this->tasks_crosstabulated( $ttid );
+    
     if( $existing_tasks == false ) { $existing_tasks = array(); }
     foreach( $task_batch as $task ) {
       $current_task_obj = json_decode(json_encode($task), false); // convert array to obj, using json lib
@@ -84,7 +85,7 @@ class Task extends Database_write {
   }
 
   function tasks_crosstabulated( $ttid, $include_task_id = false, $where_additional = array(), $order_by_values = false, $single_task_id = false ) {
-    $inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "' . $ttid . '"' );
+    $inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `ttid` = "' . $ttid . '"' );
     $select = array();
     $left_join = array();
     $from = array();
@@ -100,14 +101,14 @@ class Task extends Database_write {
       $select[] = '`' . $in->name . '`.`value` AS `' . $in->name . '`';
       
       // use a left join for the "optional" fields, since these might be missing. 
-      if( $in->requirement == 'optional' ) {
-        $left_join[] = ' LEFT JOIN `task_inputs` AS `' . $in->name . '` ON `' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';
-      } elseif( $in->requirement == 'required' ) {
+      if( $in->requirement == 'required' ) {
         $from[] = '`task_inputs` AS `' . $in->name . '`';
         $where[] = '`' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';
         // this might speed up the query
         if( $single_task_id ) { $where[] = '`'.$in->name.'`.`task_id` = "'.$single_task_id.'"'; }
-      }
+      } else { // ( $in->requirement == optional or hidden  ) 
+        $left_join[] = ' LEFT JOIN `task_inputs` AS `' . $in->name . '` ON `' . $in->name . '`.`task_id` = `t`.`task_id` AND `' . $in->name . '`.`input` = "' . $in->name . '"';
+      } 
       
       // and order it by values
       if( $order_by_values ) { $order_by[] = '`' . $in->name . '`.`value` ASC';}

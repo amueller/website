@@ -41,8 +41,11 @@ class Api_splits extends CI_Controller {
     
     $dataset = $this->Dataset->getById( $values['source_data'] );
     $epstr = $this->Estimation_procedure->toString( $estimation_procedure );
-
-    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$values['target_feature'].'" -r "'.$dataset->row_id_attribute.'"';
+    
+    // TODO: very important. sanity check input
+    $testset_str = array_key_exists('custom_testset', $values) && is_cs_numeric($values['custom_testset']) ?  '-test "' . $values['custom_testset'] . '"' : '';
+    
+    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$values['target_feature'].'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str; 
     if( $md5 ) $command .= ' -m';
     $this->Log->cmd( 'API Splits::get(' . $task_id . ')', $command );
     

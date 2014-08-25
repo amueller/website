@@ -9,13 +9,15 @@
 if($this->subpage == 'task') {
   $ttid = $this->input->post( 'ttid' );
   $datatype = array( 'nominal' );
-  $required_inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `requirement` <> "hidden" AND `ttid` = "'.$ttid.'"' );
+  $required_inputs = $this->Task_type_inout->getWhere( '`io` = "input" AND `ttid` = "'.$ttid.'"' );
   $inputs = array();
+  // retrieve all inputs
   foreach( $required_inputs as $i ) {
     if( $i->requirement == 'optional' && $this->input->post($i->name) == false ) { continue; }
     $inputs[$i->name] = $this->input->post($i->name);
   }
-
+  
+  // special retrieve datasets and target feature
   $constraints = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data' ), 'd' );
   $target_feature = '`d`.`default_target_attribute`';
   if( trim( $this->input->post( 'target_feature' ) ) ) {
@@ -23,7 +25,8 @@ if($this->subpage == 'task') {
   } else {
     unset( $inputs['target_feature'] );
   }
-  // TODO: stupid mapping, add logic in DB instead of here. 
+  
+  // TODO: remove mapping, add logic in DB instead of here. 
   if( $ttid == 2 ) { // exception. 
     $datatype = array( 'numeric' );
   }
@@ -38,7 +41,28 @@ if($this->subpage == 'task') {
     'ORDER BY `did`;';
 
   $datasets = $this->Dataset->query( $sql );
-
+  
+  // sanity check input
+  $input_safe = true;
+  
+  // first sanitize custim testset
+  if( array_key_exists( 'custom_testset', $inputs ) ) {
+    if( is_cs_numeric( $inputs['custom_testset'] ) ) {
+      $custom_testset = explode( ',', $inputs['custom_testset'] );
+      sort( $custom_testset, SORT_NUMERIC );
+      foreach( $custom_testset as $key => $value ) {
+        $custom_testset[$key] = trim( $value );
+        if( is_numeric( $value ) == false ) {
+          unset($custom_testset[$key]);
+        }
+      }
+      $inputs['custom_testset'] = implode( ',', $custom_testset );
+    } else {
+      unset( $inputs['custom_testset'] );
+      $input_safe = false;
+    }
+  }
+  
   $results = array(); // resulting task configurations
   $dids = array(); // used dataset ids
   $new_tasks = array();
@@ -52,9 +76,13 @@ if($this->subpage == 'task') {
       $dids[] = $dataset->did;
     }
     
-    $new_tasks = $this->Task->create_batch( $ttid, $results );
+    if( count( $datasets ) > 1 && $this->input->post('custom_testset') ) {
+      // against the rules
+      
+    } elseif( $input_safe ) {
+      $new_tasks = $this->Task->create_batch( $ttid, $results );
+    }
   }
-
   $inputs['source_data'] = $dids;
   $tasks = $this->Task->tasks_crosstabulated( $ttid, true, $inputs );
 
@@ -69,8 +97,14 @@ if($this->subpage == 'task') {
   
 } elseif($this->subpage == 'data') {
 
-$fields =  ['name','description','format','creator','contributor','collection_date','licence','default_target_attribute','row_id_attribute','version_label','citation','visibility','original_data_url','paper_url'];
-$imploded = [false,false,false,true,true,false,false,false,false,false,false,false,false,false,false];
+$fields = array (
+  'name','description','format','creator','contributor','collection_date',
+  'licence','default_target_attribute','row_id_attribute','version_label',
+  'citation','visibility','original_data_url','paper_url');
+$imploded = array(
+  false,false,false,true,true,false,false,
+  false,false,false,false,false,false,false,false
+);
 
 $xml = new SimpleXMLElement('<oml:data_set_description xmlns:oml="http://openml.org/openml"/>');
 
