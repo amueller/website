@@ -26,7 +26,7 @@
 
 <div class="openmlsectioninfo">
 	<h1><a href="d"><i class="fa fa-database"></i></a> Add data</h1>
-        <?php if(strlen($this->response)>0) echo '<div class="alert alert-success">'. $this->response; . '</div>'; ?>
+        <?php if(strlen($this->response)>0){ echo '<div class="alert alert-success">'. $this->response; . '</div>'; }?>
 	<form method="post" action="" enctype="multipart/form-data">
 	      <div class="row">
 		<div class="col-sm-6">
