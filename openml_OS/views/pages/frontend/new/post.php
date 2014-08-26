@@ -145,7 +145,7 @@ if( property_exists( $xml->children('oml', true), 'code' ) ) {
   $this->responsecode = $xml->children('oml', true)->code;
   $this->response = $xml->children('oml', true)->message;
 } else {
-  $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. Thank you for helping machine learning research. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, and see all ensuing results.';
+  $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, watch its impact and see all ensuing results.';
 }
 } else{
 $this->responsetype = 'alert alert-danger';
