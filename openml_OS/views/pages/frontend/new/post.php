@@ -97,44 +97,45 @@ if($this->subpage == 'task') {
   
 } elseif($this->subpage == 'data') {
 
-$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
+  $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
-$description = $this->dataoverview->generate_xml(
-  'data_set_description',
-  $this->config->item('xml_fields_dataset')
-);
+  $description = $this->dataoverview->generate_xml(
+    'data_set_description',
+    $this->config->item('xml_fields_dataset')
+  );
 
-$post_data = array(
-    'description' => $description,
-    'session_hash' => $session_hash
-);
-if( $_FILES['dataset'] ) {
-    $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
-}
+  $post_data = array(
+      'description' => $description,
+      'session_hash' => $session_hash
+  );
+  if( $_FILES['dataset']['error'] == 0 ) {
+      $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
+  }
 
-$url = BASE_URL.'/api/?f=openml.data.upload';
+  $url = BASE_URL.'/api/?f=openml.data.upload';
 
-// Send the request & save response to $resp
+  // Send the request & save response to $resp
 
-$api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
-$xml = simplexml_load_string( $api_response );
-if(is_object($xml)){
-$this->responsetype = 'alert alert-success';
-$this->responsecode = -1;
-$this->response = 'Data was uploaded with id: ';
-if( property_exists( $xml->children('oml', true), 'code' ) ) {
-  $this->responsetype = 'alert alert-dange';
-  $this->responsecode = $xml->children('oml', true)->code;
-  $this->response = $xml->children('oml', true)->message;
-} else {
-  $this->response .= $xml->children('oml', true)->id;
-  sm($this->response);  
-  su('new/data');
-}
-} else{
-$this->responsetype = 'alert alert-danger';
-$this->response = 'Please fill in all required (red) fields. Also, please check the description for unusual characters.';
-}
+  $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
+  if($api_response !== false) {
+    $xml = simplexml_load_string( $api_response );
+
+    $this->responsetype = 'alert alert-success';
+    $this->responsecode = -1;
+    $this->response = 'Data was uploaded with id: ';
+    if( property_exists( $xml->children('oml', true), 'code' ) ) {
+      $this->responsetype = 'alert alert-dange';
+      $this->responsecode = $xml->children('oml', true)->code;
+      $this->response = $xml->children('oml', true)->message;
+    } else {
+      $this->response .= $xml->children('oml', true)->id;
+      sm($this->response);  
+      su('new/data');
+    }
+  } else{
+    $this->responsetype = 'alert alert-danger';
+    $this->response = 'Please fill in all required (red) fields. Also, please check the description for unusual characters.';
+  }
 }
 
 ?>
