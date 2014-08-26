@@ -126,9 +126,9 @@ if($this->subpage == 'task') {
     if( property_exists( $xml->children('oml', true), 'code' ) ) {
       $this->responsetype = 'alert alert-danger';
       $this->responsecode = $xml->children('oml', true)->code;
-      $this->response = $xml->children('oml', true)->message;
+      $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message . '. Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the dataset name.;
     } else {
-      $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, track its impact and see all ensuing results. You can also continue to add datasets below.';
+      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Thanks!</h2>Data was uploaded successfully.<br>You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, track its impact and see all ensuing results.<br><br>You can also continue to add datasets below.';
       sm($this->response);  
       su('new/data');
     }
