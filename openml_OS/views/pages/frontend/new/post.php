@@ -47,16 +47,8 @@ if($this->subpage == 'task') {
   
   // first sanitize custom testset
   if( array_key_exists( 'custom_testset', $inputs ) ) {
-    if( is_cs_numeric( $inputs['custom_testset'] ) ) {
-      $custom_testset = explode( ',', $inputs['custom_testset'] );
-      sort( $custom_testset, SORT_NUMERIC );
-      foreach( $custom_testset as $key => $value ) {
-        $custom_testset[$key] = trim( $value );
-        if( is_numeric( $value ) == false ) {
-          unset($custom_testset[$key]);
-        }
-      }
-      $inputs['custom_testset'] = implode( ',', $custom_testset );
+    if( is_cs_natural_numbers( $inputs['custom_testset'] ) ) {
+      $inputs['custom_testset'] = implode( ',', range_string_to_array( $inputs['custom_testset'] ) );
     } else {
       unset( $inputs['custom_testset'] );
       $input_safe = false;
