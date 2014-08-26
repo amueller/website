@@ -136,11 +136,8 @@ $url = BASE_URL.'/api/?f=openml.data.upload';
 // Send the request & save response to $resp
 
 $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
-print_r($xml);
-print_r($post_data);
-print_r($api_response);
 $xml = simplexml_load_string( $api_response );
-if($xml){
+if($xml->count()>0){
 $this->responsetype = 'alert alert-succes';
 $this->responsecode = -1;
 if( property_exists( $xml->children('oml', true), 'code' ) ) {
