@@ -45,7 +45,7 @@ if($this->subpage == 'task') {
   // sanity check input
   $input_safe = true;
   
-  // first sanitize custim testset
+  // first sanitize custom testset
   if( array_key_exists( 'custom_testset', $inputs ) ) {
     if( is_cs_numeric( $inputs['custom_testset'] ) ) {
       $custom_testset = explode( ',', $inputs['custom_testset'] );
@@ -138,18 +138,20 @@ $url = BASE_URL.'/api/?f=openml.data.upload';
 $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
 
 $xml = simplexml_load_string( $api_response );
-
-$this->responsetype = 'alert succes';
+if($xml){
+$this->responsetype = 'alert alert-succes';
 $this->responsecode = -1;
-$this->response = 'Data was uploaded with id: ';
 if( property_exists( $xml->children('oml', true), 'code' ) ) {
-  $this->responsetype = 'alert error';
+  $this->responsetype = 'alert alert-danger';
   $this->responsecode = $xml->children('oml', true)->code;
   $this->response = $xml->children('oml', true)->message;
 } else {
-  $this->response .= $xml->children('oml', true)->id;
+  $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. Thank you for helping machine learning research. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, and see all ensuing results.';
 }
-
+} else{
+$this->responsetype = 'alert alert-danger';
+$this->response = 'Please fill in all required (red) fields. Also, please check the description for unusual characters.';
+}
 // TODO: handle code and give special message
 
 /**

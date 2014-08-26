@@ -45,27 +45,27 @@
 		    <div class="row">
 		    <div class="col-xs-6 has-error" id="field_name">
 		    <label class="control-label" for="name">Name</label>
-		    <input type="text" class="form-control" name="name" id="name" placeholder="A good name (no spaces)" value=""/>
+		    <input type="text" class="form-control" name="name" id="name" placeholder="A good name (no spaces)" value="<?php echo $this->input->post('name'); ?>"/>
 		    </div>
 		    <div class="col-xs-6">
 		    <label class="control-label" for="version_label">Version</label>
-		    <input type="text" class="form-control" name="version_label" placeholder="Version number, id, date,..." value=""/>
+		    <input type="text" class="form-control" name="version_label" placeholder="Version number, id, date,..." value="<?php echo $this->input->post('version'); ?>"/>
 		    </div>
 		    </div>
 		  </div>
 		  <div class="form-group has-error">
 		    <label class="control-label" for="description">Description</label>
-		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="What is this data all about? Use #tags to label it. Include changes from previous versions." value=""></textarea> 
+		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="What is this data all about? Use #tags to label it. Include changes from previous versions." value=""><?php echo $this->input->post('description'); ?></textarea> 
 		  </div>
 		  <div class="form-group has-error">
 	            <label class="control-label" for="format">Data format</label>
-		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="" onblur=""/> 
+		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="<?php echo $this->input->post('format'); ?>" onblur=""/> 
 	          </div>
                 </div>
    		<div class="col-sm-6">
 		  <div class="form-group">
 		    <label class="control-label" for="creator">Author(s)</label>
-		    <input type="text" class="form-control" name="creator" placeholder="Firstname Lastname, Firstname Lastname,..." value="" />
+		    <input type="text" class="form-control" name="creator" placeholder="Firstname Lastname, Firstname Lastname,..." value="<?php echo $this->input->post('creator'); ?>" />
 		  </div>
 
 		  <div class="form-group">
@@ -101,7 +101,7 @@
 	          </div>
 		  <div class="form-group">
 			    <label class="control-label" for="citation">Citation requests</label>
-			    <textarea class="form-control" rows="4" name="citation"  placeholder="How to reference this data in future work (e.g., publication, DOI)." value=""></textarea>			         		  		
+			    <textarea class="form-control" rows="4" name="citation"  placeholder="How to reference this data in future work (e.g., publication, DOI)." value="<?php echo $this->input->post('citation'); ?>"></textarea>			         		  		
 		  </div>
 		  <div class="form-group">
 		  <label class="control-label" for="visibility">Who can view this data <span class="label label-danger">Under development</span></label>
@@ -122,30 +122,30 @@
 		<div class="col-sm-6">
 		  <div class="form-group">
 		    <label class="control-label" for="original_data_url">Original data URL</label>
-		    <input type="text" class="form-control" name="original_data_url" placeholder="For derived data, the URL to the original data set. E.g., http://openml.org/d/1" value=""/>
+		    <input type="text" class="form-control" name="original_data_url" placeholder="For derived data, the URL to the original data set. E.g., http://openml.org/d/1" value="<?php echo $this->input->post('original_data_url'); ?>"/>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="default_target_attribute">Target attribute</label>
-		    <input type="text" class="form-control" name="default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset." value="" onblur=""/> 
+		    <input type="text" class="form-control" name="default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset." value="<?php echo $this->input->post('default_target_attribute'); ?>" onblur=""/> 
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="row_id_attribute">Row ID Attribute</label>
-		    <input type="text" class="form-control" name="row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="" onblur=""/>		  </div>
+		    <input type="text" class="form-control" name="row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="<?php echo $this->input->post('row_id_attribute'); ?>" onblur=""/>		  </div>
 		</div>
 		<div class="col-sm-6">
 
 		  <div class="form-group">
 		    <label class="control-label" for="contributor">Acknowledgements, contributors</label>
 		    <input type="text" class="form-control" name="contributor" 
-			placeholder="Thanks to..." value="" />
+			placeholder="Thanks to..." value="<?php echo $this->input->post('contributor'); ?>" />
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="paper_url">Paper/preprint</label>
-		    <input type="text" class="form-control" name="paper_url" placeholder="URL to paper or preprint about this data." value="" /> 
+		    <input type="text" class="form-control" name="paper_url" placeholder="URL to paper or preprint about this data." value="<?php echo $this->input->post('paper_url'); ?>" /> 
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="collection_date">Collection date</label>
-		    <input type="text" class="form-control" name="collection_date" placeholder="When was this data collected?" value="" /> 
+		    <input type="text" class="form-control" name="collection_date" placeholder="When was this data collected?" value="<?php echo $this->input->post('collection_date'); ?>" /> 
 		  </div>
 		</div>
               </div>
