@@ -129,7 +129,7 @@ if( property_exists( $xml->children('oml', true), 'code' ) ) {
 } else {
   $this->response .= $xml->children('oml', true)->id;
   sm($this->response);  
-  su('new/task');
+  su('new/data');
 }
 } else{
 $this->responsetype = 'alert alert-danger';
