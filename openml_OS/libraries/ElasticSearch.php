@@ -19,7 +19,8 @@ class ElasticSearch {
     $this->procedure_names = $this->CI->Estimation_procedure->getAssociativeArray('id','name','name IS NOT NULL');
     $this->all_tasks = array();
     $this->user_names = array();
-    $author = $this->userdb->query('select id, first_name, last_name from users');
+    $author = $this->userdb->get();
+    if( is_array( $author ) )
     foreach( $author as $a ) {
 	$this->user_names[$a->id] = $a->first_name.' '.$a->last_name;
     }
@@ -189,7 +190,8 @@ class ElasticSearch {
 
   public function get_types() {
 	$params['index'] = 'openml';
-	return array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
+  $array_data = $this->client->indices()->getMapping($params);
+	return array_keys($array_data['openml']['mappings']);
   }
 
   public function index($type, $id = false){
@@ -220,7 +222,8 @@ class ElasticSearch {
 
   public function mapping_delete($m){
      $params['index'] = 'openml';
-      $keys = array_keys($this->client->indices()->getMapping($params)['openml']['mappings']);
+     $array_data = $this->client->indices()->getMapping($params);
+      $keys = array_keys($array_data['openml']['mappings']);
      if(in_array($m,$keys)){
 	$params = array(
 		'index' => 'openml',

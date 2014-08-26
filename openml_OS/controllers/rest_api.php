@@ -54,8 +54,6 @@ class Rest_api extends CI_Controller {
     
     $this->load->library('elasticSearch');
     
-    $this->config->load('openml_mappings');
-    
     // paths
     $this->data_folders = array(
       'dataset'       => 'dataset/api/',

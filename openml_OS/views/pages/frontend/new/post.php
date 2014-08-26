@@ -97,91 +97,45 @@ if($this->subpage == 'task') {
   
 } elseif($this->subpage == 'data') {
 
-$fields = array (
-  'name','description','format','creator','contributor','collection_date',
-  'licence','default_target_attribute','row_id_attribute','version_label',
-  'citation','visibility','original_data_url','paper_url');
-$imploded = array(
-  false,false,false,true,true,false,false,
-  false,false,false,false,false,false,false,false
-);
+  $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
-$xml = new SimpleXMLElement('<oml:data_set_description xmlns:oml="http://openml.org/openml"/>');
+  $description = $this->dataoverview->generate_xml(
+    'data_set_description',
+    $this->config->item('xml_fields_dataset')
+  );
 
-for($i = 0; $i < sizeof($fields); $i+=1) {
-	if(!$imploded[$i]){
-		$xml->addChild('oml:'.$fields[$i], $this->input->post($fields[$i]));
-	}
-	else{
-		$pieces = explode(',', $this->input->post($fields[$i]));
-		foreach($pieces as $element){
-			$xml->addChild('oml:'.$fields[$i], trim($element) );
-		}
-	}
-}
+  $post_data = array(
+      'description' => $description,
+      'session_hash' => $session_hash
+  );
+  if( $_FILES['dataset']['error'] == 0 ) {
+      $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
+  }
 
-// TODO: This is a temporarily fix
-$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
+  $url = BASE_URL.'/api/?f=openml.data.upload';
 
-// TODO: handle url i.s.o. file
+  // Send the request & save response to $resp
 
-$post_data = array(
-    'description' => $xml->asXML(),
-    'session_hash' => $session_hash,
-    'dataset' => '@' . $_FILES['dataset']['tmp_name']
-);
+  $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
+  if($api_response !== false) {
+    $xml = simplexml_load_string( $api_response );
 
-$url = BASE_URL.'/api/?f=openml.data.upload';
-
-// Send the request & save response to $resp
-
-$api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
-$xml = simplexml_load_string( $api_response );
-if(is_object($xml)){
-$this->responsetype = 'alert alert-success';
-$this->responsecode = -1;
-if( property_exists( $xml->children('oml', true), 'code' ) ) {
-  $this->responsetype = 'alert alert-danger';
-  $this->responsecode = $xml->children('oml', true)->code;
-  $this->response = $xml->children('oml', true)->message;
-} else {
-  $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, watch its impact and see all ensuing results.';
-}
-} else{
-$this->responsetype = 'alert alert-danger';
-$this->response = 'Please fill in all required (red) fields. Also, please check the description for unusual characters.';
-}
-// TODO: handle code and give special message
-
-/**
-$errorCodes = new array();
-$errorCodes[131] = 'Please make sure that all mandatory (red) fields are filled in. Don\'t use spaces in name or version fields. (Error 131) ';
-$errorCodes[135] = 'Please make sure that all mandatory (red) fields are filled in. Don\'t use spaces in name or version fields. (Error 135) ';
-$errorCodes[137] = 'Please login first.';
-$errorCodes[138] = 'Please login first.';
-
-var message = '';
-var status = '';
-if($(responseText).find('id, oml\\:id').text().length) {
-	message = type + ' uploaded successfully. <a href="d/' + $(responseText).find('id, oml\\:id').text() + '">View online.</a>';
-	status = 'alert-success';
-} else {
-	var errorcode = $(responseText).find('code, oml\\:code').text();
-	var errormessage = $(responseText).find('message, oml\\:message').text();
-	status = 'alert-warning';
-	if(errorcode in errorCodes) {
-		message = errorCodes[errorcode];
-	} else {
-		message = 'Errorcode ' + errorcode + ': ' + errormessage;
-	}
-}
-$('#response'+type+'Txt').removeClass();
-$('#response'+type+'Txt').addClass('alert');
-$('#response'+type+'Txt').addClass(status);
-$('#response'+type+'Txt').html(message);
-}
-**/
-
+    $this->responsetype = 'alert alert-success';
+    $this->responsecode = -1;
+    $this->response = 'Data was uploaded with id: ';
+    if( property_exists( $xml->children('oml', true), 'code' ) ) {
+      $this->responsetype = 'alert alert-danger';
+      $this->responsecode = $xml->children('oml', true)->code;
+      $this->response = $xml->children('oml', true)->message;
+    } else {
+      $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, watch its impact and see all ensuing results.';
+      sm($this->response);  
+      su('new/data');
+    }
+  } else{
+    $this->responsetype = 'alert alert-danger';
+    $this->response = 'Could not upload data. Please fill in all required (red) fields.';
+  }
 }
 
 ?>

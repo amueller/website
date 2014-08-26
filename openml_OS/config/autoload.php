@@ -80,7 +80,7 @@ $autoload['helper'] = array('url','array','form','cms','os','openml','email','da
 |
 */
 
-$autoload['config'] = array('openML');
+$autoload['config'] = array('openML', 'openml_mappings');
 
 
 /*
