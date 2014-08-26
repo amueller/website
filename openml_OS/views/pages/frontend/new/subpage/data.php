@@ -26,7 +26,7 @@
 
 <div class="openmlsectioninfo">
 	<h1><a href="d"><i class="fa fa-database"></i></a> Add data</h1>
-        <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
+        <div class="alert alert-success"><?php echo $this->response; ?></div>
 	<form method="post" action="" enctype="multipart/form-data">
 	      <div class="row">
 		<div class="col-sm-6">

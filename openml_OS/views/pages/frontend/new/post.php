@@ -128,7 +128,7 @@ if($this->subpage == 'task') {
       $this->responsecode = $xml->children('oml', true)->code;
       $this->response = $xml->children('oml', true)->message;
     } else {
-      $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, watch its impact and see all ensuing results.';
+      $this->response = '<i class="fa fa-thumbs-o-up"></i> Data was uploaded successfully. You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, track its impact and see all ensuing results. You can also continue to add datasets below.';
       sm($this->response);  
       su('new/data');
     }
