@@ -49,7 +49,7 @@ if( $this->subpage == 'flows' ) {
   
   $sql = 'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name` AS `dataset`, `i`.`fullName` AS `flow`, '.
          'CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`r`.`rid`,",\\\'run ",`r`.`rid`,"\\\')\\\\"></i>") AS `delete`, '.
-         'CONCAT("<a href=\\\\"r/", `r`.`rid`, "\\\\">Run ", `r`.`rid`, "</a>") AS `name_link`, ' .
+         'CONCAT("<a href=\\\\"r/", `r`.`rid`, "\\\\">", `r`.`rid`, "</a>") AS `name_link`, ' .
          'CONCAT("Run ", `r`.`rid`) AS `name` ' .
          'FROM `algorithm_setup` `s`, `implementation` `i`, `run` `r` ' .
          'LEFT JOIN `task_inputs` `t` ON `r`.`task_id` = `t`.`task_id` AND `t`.`input` = "source_data" ' .
@@ -57,8 +57,8 @@ if( $this->subpage == 'flows' ) {
          'WHERE `r`.`uploader` = ' . $this->ion_auth->get_user_id() . ' ' .
          'AND `r`.`setup` = `s`.`sid` AND `s`.`implementation_id` = `i`.`id` ';
   
-  $this->columns = array( 'rid', 'start_time', 'name_link', 'task_id', 'dataset', 'flow', 'status', 'error' );
-  $this->widths = array( 5, 10, 10, 10, 10, 10, 10, 10 );
+  $this->columns = array( 'delete', 'name_link', 'start_time', 'task_id', 'dataset', 'flow', 'status', 'error' );
+  $this->widths = array( 5, 5, 10, 10, 10, 10, 10, 10 );
   $this->sql = $sql;
   $this->name = 'My runs';
 
