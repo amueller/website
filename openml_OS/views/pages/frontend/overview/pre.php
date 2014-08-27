@@ -26,7 +26,7 @@ if( $this->subpage == 'flows' ) {
 
 } elseif( $this->subpage == 'data' ) {
   
-  $sql = 'SELECT `d`.`did`, `d`.`name`, `d`.`upload_date`, `d`.`format`, `t`.`tasks`, '.
+  $sql = 'SELECT SQL_CALC_FOUND_ROWS `d`.`did`, `d`.`name`, `d`.`upload_date`, `d`.`format`, `t`.`tasks`, '.
          'IF(`t`.`tasks` > 0,"",CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`d`.`did`,",\\\'",`d`.`name`,"\\\')\\\\"></i>")) AS `delete`, '.
          'CONCAT("<a href=\\\\"d/", `d`.`did`, "\\\\">", `d`.`name`, "</a>") AS `name_link`' .
          'FROM `dataset` `d` '.
@@ -47,7 +47,7 @@ if( $this->subpage == 'flows' ) {
   
 } elseif( $this->subpage == 'runs' ) {
   
-  $sql = 'SELECT `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name` AS `dataset`, `i`.`fullName` AS `flow`, '.
+  $sql = 'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name` AS `dataset`, `i`.`fullName` AS `flow`, '.
          'CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`r`.`rid`,",\\\'run ",`r`.`rid`,"\\\')\\\\"></i>") AS `delete`, '.
          'CONCAT("<a href=\\\\"r/", `r`.`rid`, "\\\\">Run ", `r`.`rid`, "</a>") AS `name_link`, ' .
          'CONCAT("Run ", `r`.`rid`) AS `name` ' .
