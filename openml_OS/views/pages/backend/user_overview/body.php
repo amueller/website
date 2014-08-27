@@ -1,8 +1,8 @@
 <?php
 
-echo $this->dataoverview->generate_table( 
+echo $this->dataoverview->generate_table_static( 
   $this->name, 
-  $this->keys, 
+  $this->columns, 
   $this->items, 
   $this->api_delete_function );
 

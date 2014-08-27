@@ -530,15 +530,18 @@ class Rest_api extends CI_Controller {
     }
     
     $tasks = $this->Task->getTasksWithValue( array( 'source_data' => $dataset->did ) );
-    $task_ids = array();
-    foreach( $tasks as $t ) { $task_ids[] = $t->task_id; }
+    
+    if( $tasks !== false ) { 
+      $task_ids = array();
+      foreach( $tasks as $t ) { $task_ids[] = $t->task_id; }
 
-    $runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
-    
-    
-    if( $runs ) {
-      $this->_returnError( 354 );
-      return;
+      $runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
+      
+      
+      if( $runs ) {
+        $this->_returnError( 354 );
+        return;
+      }
     }
     
     $result = $this->Dataset->delete( $dataset->did );
