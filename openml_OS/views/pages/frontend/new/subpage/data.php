@@ -70,7 +70,7 @@
 
 		  <div class="form-group">
 		  <label class="control-label" for="licence">Licence - <a href="http://creativecommons.org/licenses/?lang=en" target="_blank">Learn more</a></label>
-			  <select class="form-control" name="licence">
+			  <select class="form-control" id="licence" name="licence">
 			  <option value="Public">Publicly available</option>
 			  <option value="CC_BY">Attribution (CC BY)</option>
 			  <option value="CC_BY-SA">Attribution-ShareAlike (CC BY-SA)</option>
@@ -91,7 +91,7 @@
 
 <script>
     $(function() {
-        $('#input_dataset_licence').change(function(){
+        $('#licence').change(function(){
             $('.licences').hide();
             $('#' + $(this).val()).show();
         });
