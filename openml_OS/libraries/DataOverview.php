@@ -38,7 +38,7 @@ class DataOverview {
                 }
               } else { // TODO: add support for plain and array.
                 $value = $this->CI->input->post($tag_name);
-                $xml->addChild('oml:'.$tag_name, $value);
+                $xml->addChild('oml:'.$tag_name, htmlentities($value));
               }
             }
           }
