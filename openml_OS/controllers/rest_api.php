@@ -610,7 +610,12 @@ class Rest_api extends CI_Controller {
         $this->_returnError( 130, 'File dataset: ' . $message );
         return;
       }
-      $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset');
+      $access_control = 'public';
+      $access_control_option = $xml->children('oml', true)->{'visibility'};
+      if( $access_control_option != 'public' ) {
+        $access_control = 'private';
+      }
+      $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
       if($file_id === false) {
         $this->_returnError( 132 );
         return;
