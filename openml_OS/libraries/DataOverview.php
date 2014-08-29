@@ -6,14 +6,26 @@ class DataOverview {
     $this->CI = &get_instance();
   }
 
-  public function generate_table( $table_name, $keys, $items, $api_delete_function = null ) {
+  public function generate_table( $table_name, $columns, $column_widths, $sql, $api_delete_function = null, $sort = '[[1, \'desc\']]' ) {
     $variables = array();
     $variables['table_name'] = $table_name;
-    $variables['keys'] = $keys;
-    $variables['items'] = $items;
+    $variables['columns'] = $columns;
+    $variables['column_widths'] = $column_widths;
+    $variables['sql'] = $sql;
+    $variables['sort'] = $sort;
     $variables['api_delete_function'] = $api_delete_function;
     
     return $this->CI->load->view('library_templates/data_overview_default', $variables, true);
+  }
+  
+  public function generate_table_static( $table_name, $columns, $items, $api_delete_function = null ) {
+    $variables = array();
+    $variables['table_name'] = $table_name;
+    $variables['columns'] = $columns;
+    $variables['items'] = $items;
+    $variables['api_delete_function'] = $api_delete_function;
+    
+    return $this->CI->load->view('library_templates/data_overview_static', $variables, true);
   }
   
   public function generate_xml( $root, $tag_configuration ) {

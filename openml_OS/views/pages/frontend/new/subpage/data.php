@@ -106,9 +106,9 @@
 		  <div class="form-group">
 		  <label class="control-label" for="visibility">Who can view this data <span class="label label-danger">Under development</span></label>
 			  <select class="form-control" name="visibility">
-			  <option value="Everyone">Everyone</option>
-			  <option value="All my friends">All my friends</option>
-			  <option value="Only me">Only me</option>
+			  <option value="public">Everyone</option>
+			  <option value="friends">All my friends</option>
+			  <option value="private">Only me</option>
 			</select>
 	          </div>
 		</div>

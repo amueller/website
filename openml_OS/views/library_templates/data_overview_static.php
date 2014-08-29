@@ -1,30 +1,16 @@
 <script>
-var oTable;
-
-$(document).ready(function() {
-  oTable = $('.data_overview_table').dataTable({
-    "bServerSide": true,
-    "sAjaxSource": "api_query/table_feed",
-    "sServerMethod": "POST",
-    "fnServerParams": function ( aoData ) {
-      aoData.push( { 'value': '<?php echo implode(",",$columns); ?>', 'name' : 'columns' } );
-      aoData.push( { 'value': '<?php echo htmlspecialchars($sql); ?>', 'name' : 'base_sql' } );
-    },
-//    "fnDrawCallback": function( oSettings ) {
-//      for ( var i=0, iLen=oSettings.aoData.length ; i<iLen ; i++ ) {
-//        oSettings.aoData[i].nTr.className += " runTableRow_" + oSettings.aoData[i]._aData[3];
-//      }
-//    },
-    "aaSorting": <?php echo $sort; ?>,        
-    "bLengthChange": false,
-    "bFilter": false,
-    "iDisplayLength" : 30,
-    "bAutoWidth": true,
-    <?php echo column_widths($column_widths); ?>
-    "bPaginate": true
-  });
-});
-
+  $(document).ready( function() {
+    $('.data_overview_table').dataTable( {
+      "bPaginate": true,
+      "iDisplayLength" : 30,
+      "bLengthChange": false,
+      "bFilter": false,
+      "bSort": true,
+      "aaSorting": [],
+      "bInfo": true
+    } );
+  } );
+  
 <?php if( $api_delete_function ): ?>
 
 function askConfirmation( id, name ) {
@@ -43,7 +29,7 @@ $.ajax({
     id_field = $(resultdata).find("oml\\:id, id");
     
     if( id_field.length ) {
-      oTable.fnDraw();
+      $("#overviewtable_row_" + id_field.text() ).remove();
       if( msg ) { alert( name + " was deleted. " ); }
     } else {
       code_field = $(resultdata).find("oml\\:code, code");
@@ -68,7 +54,13 @@ $.ajax({
           </tr>
         </thead>
         <tbody>
-          
+          <?php if( is_array($items) ) foreach( $items as $item ): ?>
+              <tr id="overviewtable_row_<?php echo $item->id; ?>">
+                <?php foreach( $columns as $key ): ?>
+                  <td><?php if( property_exists ($item, $key ) ) { echo $item->$key; } ?></td>
+                <?php endforeach; ?>
+              </tr>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>

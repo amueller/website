@@ -43,7 +43,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type') || false !== strpos($_SER
 			  'contributors' => $type[0]->contributors
 			);
 
-	$io = $this->Implementation->query('SELECT i.name, i.description, i.type, i.io, i.requirement, t.description as typedescription  FROM task_type_inout i left join task_io_types t on i.type = t.name WHERE ttid=' . $this->id );
+	$io = $this->Implementation->query('SELECT i.name, i.description, i.type, i.io, i.requirement, t.description as typedescription  FROM task_type_inout i left join task_io_types t on i.type = t.name WHERE requirement <> "hidden" AND ttid=' . $this->id );
 	if( $io != false ) {
 	  foreach( $io as $i ) {
 		$inout = array(
