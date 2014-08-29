@@ -10,11 +10,12 @@ if ($this->form_validation->run() == false) {
 	redirect('password_reset/?code=' . $this->code);
 }
 
-if (valid_csrf_nonce() === FALSE || $this->user->id != $this->input->post('user_id')) {
+//if (valid_csrf_nonce() === FALSE || $this->user->id != $this->input->post('user_id')) {
   //something fishy might be up
-  $this->ion_auth->clear_forgotten_password_code($this->code);
-  $this->session->set_flashdata('message', $this->lang->line('error_csrf') );
-} else {
+//  $this->ion_auth->clear_forgotten_password_code($this->code);
+//  $this->session->set_flashdata('message', $this->lang->line('error_csrf') );
+//}
+else {
 	// finally change the password
 	$identity = $this->user->{$this->config->item('identity', 'ion_auth')};
   
