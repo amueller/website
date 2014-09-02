@@ -40,10 +40,14 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
 	$this->id = $info[array_search('d',$info)+1];
 
+	$this->prev_id = $this->Dataset->query('select max(did) as prev from dataset where did<'.$this->id)[0]->prev;
+	$this->next_id = $this->Dataset->query('select min(did) as next from dataset where did>'.$this->id)[0]->next;
+
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
 	$author = $this->Author->getById($this->record->uploader);
 	$this->record->{'uploader'} =  $author->first_name . ' ' . $author->last_name;
+	$this->uploader_id = $author->id;
 	$this->displayName = $this->record->name;
 	$this->tasks_all = array();
 	$this->current_task = false;

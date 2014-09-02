@@ -181,3 +181,8 @@ function showmore(){
     $('.description').switchClass("hideContent", "showContent", 400);
     $('.show-more').hide();
 }
+
+function showmorefeats(){
+    $('.features').switchClass("hideFeatures", "showFeatures", 400);
+    $('.show-more-features').hide();
+}

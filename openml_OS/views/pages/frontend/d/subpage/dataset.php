@@ -1,6 +1,5 @@
 <div class="row openmlsectioninfo">
   <div class="col-xs-12">
-    <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a> <a href="d/<?php echo $this->id; ?>"><?php echo $this->record->{'name'}; ?></a></h1>
     <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
 	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
@@ -12,7 +11,24 @@
 			  <?php } ?>
 			</select>
 	        </div></li>
-     </ul>
+    </ul>
+    <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a>
+	<?php if($this->prev_id){ ?><div class="previd"><a href="d/<?php echo $this->prev_id;?>"><i class="fa fa-angle-left"></i></a></div><?php } ?>
+	<a href="d/<?php echo $this->id; ?>"><?php echo $this->record->{'name'}; ?></a>
+	<?php if($this->next_id){ ?><div class="nextid"><a href="d/<?php echo $this->next_id;?>"><i class="fa fa-angle-right"></i></a></div><?php } ?>
+    </h1>
+
+    <div class="datainfo">
+       <i class="fa fa-cc"></i> <?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?> 	    
+       <?php if($this->record->{'citation'}){ ?>
+	    <i class="fa fa-book"></i> Please cite: <?php echo $this->record->{'citation'} ?>
+       <?php } ?>
+       <?php if($this->record->{'paper_url'}){ ?>
+	    <i class="fa fa-book"></i> <a href="<?php echo $this->record->{'paper_url'} ?>">Original paper</a>
+       <?php } ?>
+       <i class="fa fa-eye-slash"></i> Viewable by <?php echo strtolower($this->record->{'visibility'}); ?> 
+       <i class="fa fa-cloud-upload"></i> Uploaded by <a href="<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a> on <td><?php echo explode(" ",$this->record->{'upload_date'})[0];?>
+    </div>
   </div>
   <div class="col-xs-12">
      <div class="wiki-buttons" <?php if (!$this->wiki_ok) { echo 'style="display: none"'; } ?>>
@@ -28,43 +44,12 @@
 
 	<?php if($this->hidedescription) { ?>
         <div class="col-xs-12">
-	  <div class="show-more"><a onclick="showmore()"><i class="fa fa-chevron-circle-down"></i> More</a></div>
+	  <div class="show-more"><a onclick="showmore()"><i class="fa fa-caret-right"></i> Show more</a></div>
 	</div>
 	<?php } ?> 
 
   </div>  
   <div class="row">      
-    <div class="col-sm-6">
-	    <h2>General</h2>
-            <div class="table-responsive">
-	    <table class="table"><tbody>
-	    <tr><td><i class="fa fa-cloud-upload"></i> Uploaded by</td><td><?php echo $this->record->{'uploader'} ?></td></tr>
-	    <tr><td><i class="fa fa-calendar"></i> Upload date</td><td><?php echo $this->record->{'upload_date'} ?></td></tr>
- 	    <tr><td><i class="fa fa-eye-slash"></i> Who can see this?</td><td><?php echo $this->record->{'visibility'}; ?></td></tr>	
-	    <tr><td><i class="fa fa-licence"></i> Licence</td><td><?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?></td></tr>
-	    <?php if($this->record->{'citation'}){ ?>
-	    <tr><td><i class="fa fa-book"></i> Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>
-	    <?php } ?>
-	    <?php if($this->record->{'original_data_url'}){ ?>
-	    	<tr><td><i class="fa fa-link"></i> Derived from</td><td><?php echo '<a href="'.$this->record->{'original_data_url'}.'">Original dataset</a>'; ?></td></tr>
-	    <?php } ?>     
-	    </tbody></table></div>
-
-    </div> <!-- end col-md-6-->
-     <div class="col-sm-6">
-			<h2>Features</h2>
-			<div class="table-responsive">
-				<table class="table table-striped">
-				<?php $result = $this->Dataset->query("SELECT name, data_type, is_target, NumberOfDistinctValues, NumberOfMissingValues FROM `data_feature` WHERE did=" . $this->record->{'did'});
-				if (is_array($result)){
-				foreach( $result as $r ) {
-					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
-									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td></tr>";
-				}}
-				?>
-				</table>
-			</div>
-      </div> <!-- end col-md-6 -->
 
 	  <div class="qualities col-xs-12">
 		<h3>Properties</h3>
@@ -94,6 +79,27 @@
 				echo "<a data-toggle='collapse' href='#algoquals'><i class='fa fa-caret-right'></i> Show more</a><div id='algoquals' class='collapse'><div class='table-responsive'><table class='table table-striped'>" . $qtable . "</table></div></div>";}
 		 ?>
 	</div>
+
+	<div class="col-xs-12">
+			<h3>Features</h3>
+			<div class="features hideFeatures">
+			<div class="table-responsive">
+				<table class="table table-striped">
+				<?php $result = $this->Dataset->query("SELECT name, data_type, is_target, NumberOfDistinctValues, NumberOfMissingValues FROM `data_feature` WHERE did=" . $this->record->{'did'});
+				if (is_array($result)){
+				foreach( $result as $r ) {
+					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
+									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td></tr>";
+				}}
+				?>
+				</table>
+			</div>
+			</div>
+        </div> <!-- end col-md-12 -->
+        <div class="col-xs-12">
+	  <div class="show-more-features"><a onclick="showmorefeats()"><i class="fa fa-caret-right"></i> Show more</a></div>
+	</div>
+
 
 	        <div class="col-xs-12">
 		<h3>Results (per task)</h3>
