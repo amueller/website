@@ -27,8 +27,10 @@ class Backend extends CI_Controller {
     $this->load->helper('tasksearch');
     $this->load->helper('directory');
 
+    $this->load->Library('curlHandler');
     $this->load->Library('elasticSearch');
     $this->load->Library('elasticSearchLibrary');
+    $this->load->Library('wiki');
     $this->load->Library('dataOverview');
     
     $this->controller = strtolower(get_class ($this));

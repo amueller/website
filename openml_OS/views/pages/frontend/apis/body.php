@@ -133,22 +133,22 @@ System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
           <h4>Using REST services</h4>
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
           <p>The REST Endpoint URL is 
-          <div class="highlight">
+          <div class="codehighlight">
             <pre class="pre-scrollable"><code class="html">http://www.openml.org/api/</code></pre>
           </div>
           </p>
           <p>For instance, to request the <code>openml.data.description</code> service, invoke like this (e.g., in your browser):
-          <div class="highlight">
+          <div class="codehighlight">
             <pre class="pre-scrollable"><code class="html">http://www.openml.org/api/?f=openml.data.description&data_id=1</code></pre>
           </div>
           </p>
 	  <p>From your command-line, you can use curl:
-	  <div class="highlight">
+	  <div class="codehighlight">
 	   <pre class="pre-scrollable"><code class="html">curl -XGET 'http://www.openml.org/api/?f=openml.data.description&data_id=1'</code></pre>
 	  </div>
 	  </p>
           <p>Responses are always in XML format, also when an error is returned. Error messages will look like this:
-          <div class="highlight">
+          <div class="codehighlight">
             <pre class="pre-scrollable"><code class="html">&lt;oml:error xmlns:oml="http://openml.org/error"&gt;
   &lt;oml:code&gt;100&lt;/oml:code&gt;
   &lt;oml:message&gt;Please invoke legal function&lt;/oml:message&gt;
@@ -247,17 +247,17 @@ System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
           <h4>Free SQL Queries</h4>
           <p>Whenever the below API functions do not cover your needs, it is possible to use direct SQL SELECT queries. The result will be returned in JSON format. </p>
           <p>The URL is 
-          <div class="highlight">
+          <div class="codehighlight">
             <pre class="pre-scrollable"><code class="html">http://www.openml.org/api_query/?q=&lt;urlencode(QUERY)&gt;</code></pre>
           </div>
           </p>
           <p>For instance, to request the result of <code>SELECT name,did FROM dataset WHERE name LIKE "iris%"</code>, invoke like this:
-          <div class="highlight">
+          <div class="codehighlight">
             <pre class="pre-scrollable"><code class="html">http://openml.liacs.nl/api_query/?q=SELECT%20name,did%20FROM%20dataset%20WHERE%20name%20LIKE%20%22iris%%22</code></pre>
           </div>
           </p>
           <p>Responses are always in JSON format, also when an error is returned. A typical response would be: 
-          <div class="highlight">
+          <div class="codehighlight">
             <pre class="pre-scrollable"><code class="html">{"status": "SQL was processed: 2 rows selected. ","id": "","time": 0.0020740032196045,"columns": [{"title":"name","datatype":"undefined"},{"title":"did","datatype":"undefined"},{"title":"url","datatype":"undefined"}],"data": [["iris","61","http:\/\/openml.liacs.nl\/files\/download\/61\/dataset_61_iris.arff"],["iris","282","http:\/\/openml.liacs.nl\/files\/download\/49033\/iris.arff"]]}
 </code></pre>
           </div>

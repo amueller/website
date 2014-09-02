@@ -28,11 +28,12 @@
         <meta property="og:description" content="OpenML: exploring machine learning better, together. An open science platform for machine learning."/>
         <meta property="og:type" content="Science"/>
         <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/pygments-manni.css">
+        <link rel="stylesheet" href="css/gollum.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/expdb.css">
         <link rel="stylesheet" href="css/share.css">
         <link rel="stylesheet" href="css/docs.css">
-        <link rel="stylesheet" href="css/pygments-manni.css">
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/codemirror.css">
         <link rel="stylesheet" href="css/eclipse.css">
@@ -44,7 +45,7 @@
         <link rel="stylesheet" href="css/bootstrap-select.css">
         <link rel="stylesheet" href="css/bootstrap-slider.css">
         <link rel="shortcut icon" href="img/favicon.ico">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
@@ -64,6 +65,11 @@
         <script type="text/javascript" src="js/libs/bootstrap-slider.js" ></script>
         <script type="text/javascript" src="js/libs/rainbowvis.js"></script>
         <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
+        <script src="js/libs/mousetrap.min.js"></script>
+        <script src="js/libs/gollum.js"></script>
+        <script src="js/libs/gollum.dialog.js"></script>
+        <script src="js/libs/gollum.placeholder.js"></script>
+        <script src="js/libs/gollum.editor.js"></script>
         <script type="text/javascript" src="js/openml.js"></script>
         <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
         <script type="text/javascript" src="<?php echo $j; ?>"></script>

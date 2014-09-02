@@ -1,16 +1,9 @@
 <div class="row openmlsectioninfo">
   <div class="col-xs-12">
-    <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a> <?php echo $this->record->{'name'}; ?></h1>
+    <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a> <a href="d/<?php echo $this->id; ?>"><?php echo $this->record->{'name'}; ?></a></h1>
     <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-	 <li>
-	 <?php if($this->record->{'paper_url'}){ ?>
-		<a href="<?php echo $this->record->{'paper_url'}; ?>"><i class="fa fa-book fa-2x"></i></a>
-	 <?php } else {?>
-		<i class="fa fa-book fa-2x" style="color:#aeaeae;"></i>
-	 <?php } ?>
-	 </li>
-	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a></li>
+	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
 
 	 <li>   <div class="version" style="margin-bottom: -17px;">
 		        <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
@@ -20,36 +13,41 @@
 			</select>
 	        </div></li>
      </ul>
-
   </div>
   <div class="col-xs-12">
-
-     <p class="description <?php if(strlen($this->record->{'description'})>400) echo 'hideContent';?>"><?php
-	echo $this->record->{'description'} ? $this->record->{'description'} : 'No description.';
-	?></p>
+     <div class="wiki-buttons" <?php if (!$this->wiki_ok) { echo 'style="display: none"'; } ?>>
+     <a class="btn btn-success btn-sm pull-right" href="d/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
+     <?php if ($this->show_history) { ?>
+     <a class="btn btn-success btn-sm pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
+     <?php } ?>
+     </div>
+     <div class="description <?php if($this->hidedescription) echo 'hideContent';?>">
+	<?php echo $this->wikiwrapper; ?>  
+      </div>
   </div>
-  <div class="col-xs-12" style="height:76px;"> <!-- Not sure why this is needed, but otherwise this element gets height of 1px. -->
 
-	<?php if(strlen($this->record->{'description'})>400) { ?>
-        <div class="show-more"><a onclick="showmore()"><i class="fa fa-chevron-circle-down"></i> More</a></div>
+	<?php if($this->hidedescription) { ?>
+        <div class="col-xs-12">
+	  <div class="show-more"><a onclick="showmore()"><i class="fa fa-chevron-circle-down"></i> More</a></div>
+	</div>
 	<?php } ?> 
 
-  </div>
+  </div>  
+  <div class="row">      
     <div class="col-sm-6">
 	    <h2>General</h2>
             <div class="table-responsive">
 	    <table class="table"><tbody>
-	    <tr><td><i class="fa fa-users"></i> Author(s)</td><td><?php echo $this->record->{'creator'} ?></td></tr>
-	    <tr><td><i class="fa fa-heart"></i> Acknowledgements</td><td><?php echo $this->record->{'contributor'} ?></td></tr>
-	    <tr><td><i class="fa fa-cloud-upload"></i> Uploaded by</td><td><?php echo $this->record->{'uploader'} ?></td></tr>	
-	    <tr><td><i class="fa fa-check"></i> Licence</td><td><?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?></td></tr>
-	    <?php if($this->record->{'original_data_url'}){ ?>
+	    <tr><td><i class="fa fa-cloud-upload"></i> Uploaded by</td><td><?php echo $this->record->{'uploader'} ?></td></tr>
+	    <tr><td><i class="fa fa-calendar"></i> Upload date</td><td><?php echo $this->record->{'upload_date'} ?></td></tr>
+ 	    <tr><td><i class="fa fa-eye-slash"></i> Who can see this?</td><td><?php echo $this->record->{'visibility'}; ?></td></tr>	
+	    <tr><td><i class="fa fa-licence"></i> Licence</td><td><?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?></td></tr>
+	    <?php if($this->record->{'citation'}){ ?>
 	    <tr><td><i class="fa fa-book"></i> Please cite</td><td><?php echo $this->record->{'citation'} ?></td></tr>
 	    <?php } ?>
 	    <?php if($this->record->{'original_data_url'}){ ?>
 	    	<tr><td><i class="fa fa-link"></i> Derived from</td><td><?php echo '<a href="'.$this->record->{'original_data_url'}.'">Original dataset</a>'; ?></td></tr>
 	    <?php } ?>     
- 	    <tr><td><i class="fa fa-eye-slash"></i> Who can see this?</td><td><?php echo $this->record->{'visibility'}; ?></td></tr>
 	    </tbody></table></div>
 
     </div> <!-- end col-md-6-->
@@ -152,3 +150,27 @@
 	</div> <!-- end col-md-12 -->
 
 </div> <!-- end openmlsectioninfo -->
+
+<!-- redirect communication to gollum -->
+<script>
+$("#gollum-editor-message-field").val("Write a small message explaining the change.");
+$("#gollum-editor-submit").addClass("btn btn-success pull-left");
+$("#gollum-editor-preview").removeClass("minibutton");
+$("#gollum-editor-preview").addClass("btn btn-default padded-button");
+$("#gollum-editor-preview").attr("href","preview");
+$("#version-form").attr('action', "d/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
+$("a[title*='View commit']").each(function() {
+   var _href = $(this).attr("href"); 
+   $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
+});
+
+$( "#gollum-editor-preview" ).click(function() {
+	var $form = $($('#gollum-editor form').get(0));
+        $form.attr('action', '');
+});
+
+$("a[title*='View commit']").each(function() {
+   var _href = $(this).attr("href"); 
+   $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
+});
+</script>

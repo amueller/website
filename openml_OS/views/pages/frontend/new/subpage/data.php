@@ -55,7 +55,7 @@
 		  </div>
 		  <div class="form-group has-error">
 		    <label class="control-label" for="description">Description</label>
-		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="What is this data all about? Use #tags to label it. Include changes from previous versions." value=""><?php echo $this->input->post('description'); ?></textarea> 
+		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Short description (can still be edited online). Use #tags to label it." value=""><?php echo $this->input->post('description'); ?></textarea> 
 		  </div>
 		  <div class="form-group has-error">
 	            <label class="control-label" for="format">Data format</label>

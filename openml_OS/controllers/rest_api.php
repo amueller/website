@@ -53,6 +53,7 @@ class Rest_api extends CI_Controller {
     $this->load->helper('api');
     
     $this->load->library('elasticSearch');
+    $this->load->library('wiki');
     
     // paths
     $this->data_folders = array(
@@ -659,6 +660,9 @@ class Rest_api extends CI_Controller {
     }
 
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
+
+    // create initial wiki page
+    $this->wiki->export_to_wiki($id);
   }
   
   private function _openml_task_types() {

@@ -71,7 +71,7 @@ $frontend_pages = array(
 					'a',
 					'u',
 					'share',
-					'tour');
+					'preview');
 
 foreach( $frontend_pages as $page ) {
 	$route[$page] 		= 'frontend/page/'.$page;
