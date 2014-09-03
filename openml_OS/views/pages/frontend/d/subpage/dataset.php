@@ -25,8 +25,6 @@
        <?php } ?>
        <i class="fa fa-eye-slash"></i> Viewable by <?php echo strtolower($this->record->{'visibility'}); ?> 
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
-       <?php if($this->record->{'citation'}){ ?>
-	    <br><i class="fa fa-book"></i> Please cite: <?php echo $this->record->{'citation'} ?>
        <?php } ?>
 
     </div>
