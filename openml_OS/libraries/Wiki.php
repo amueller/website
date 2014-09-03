@@ -21,10 +21,10 @@ class Wiki {
 	$wikipage = $d->name.'-'.$d->version;
 	$preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
 	if($d->contributor)
-		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;		
-	$preamble .= '**Date**: '.$d->collection_date.'  '.PHP_EOL;
-	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : '').'  '.PHP_EOL.PHP_EOL;
-
+		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
+	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.$d->collection_date.'  '.PHP_EOL.PHP_EOL;
+	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL;
+	
 	$data = $d->description;
 
 	$post_data = array(
@@ -40,6 +40,7 @@ class Wiki {
   	$api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );
 	if(strlen($api_response)>0)
 		return $api_response;
+
 	return "Successfully added ".$wikipage;
   }
 }

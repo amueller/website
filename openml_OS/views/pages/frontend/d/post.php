@@ -25,6 +25,14 @@ if($this->input->post('versions')){
 //call gollum
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
 
+
+//update database TO DO
+  //$this->db->query('update dataset set description = "'.$data.'"');
+
+//update index
+  $this->elasticsearch->index('data', $this->id);
+
+
 //save successful, redirect to detail page
   if($this->input->post('content'))
   	header('Location: '.BASE_URL.'d/'.$this->id);

@@ -24,7 +24,7 @@
 	    <i class="fa fa-book"></i> <a href="<?php echo $this->record->{'paper_url'} ?>">Original paper</a>
        <?php } ?>
        <i class="fa fa-eye-slash"></i> Viewable by <?php echo strtolower($this->record->{'visibility'}); ?> 
-       <i class="fa fa-cloud-upload"></i> Uploaded by <a href="<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a> on <td><?php echo explode(" ",$this->record->{'upload_date'})[0];?>
+       <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
        <?php if($this->record->{'citation'}){ ?>
 	    <br><i class="fa fa-book"></i> Please cite: <?php echo $this->record->{'citation'} ?>
        <?php } ?>
