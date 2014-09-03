@@ -104,7 +104,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$this->dt_qualities['column_widths']	= array(25,50,25);	
 
 	//wiki import
-	$this->wikipage = $this->displayName.'-'.$this->record->version;
+	$this->wikipage = str_replace('_','-',$this->displayName.'-'.$this->record->version);
 
 	$url = $this->wikipage;
 	$this->show_history = true;
