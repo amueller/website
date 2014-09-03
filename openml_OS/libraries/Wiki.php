@@ -22,8 +22,8 @@ class Wiki {
 	$preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
 	if($d->contributor)
 		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
-	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.$d->collection_date.'  '.PHP_EOL.PHP_EOL;
-	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL;
+	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.$d->collection_date.'  '.PHP_EOL;
+	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL.PHP_EOL;
 	
 	$data = $d->description;
 

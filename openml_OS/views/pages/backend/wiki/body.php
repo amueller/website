@@ -13,7 +13,7 @@
 </div>
 <div class="col-sm-12">
 	<h3>Export database to wiki</h2>
-	<p>Warning. This will overwrite the wiki, possibly losing recent edits made by users.</p>
+	<p>Allows you to move descriptions from the database into the wiki manually. Throws error when attempting to overwrite an existing page. If you really want to overwrite it, first remove the wiki page from the (local) git repo (git rm).</p>
 	<form method="post" action="">
 		<input type="text" name="id" placeholder="Dataset id (or 'all' for all)"/>
 		<input class="btn btn-primary" type="submit" value="Export to wiki"/>
