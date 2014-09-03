@@ -32,7 +32,7 @@ $this->record = array();
 $this->taskio = array();
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type') || false !== strpos($_SERVER['REQUEST_URI'],'/t/search/type')) {
-	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
+	$this->id = explode("?",end(explode('/', $_SERVER['REQUEST_URI'])))[0];
 	$type = $this->Implementation->query('SELECT * FROM task_type WHERE ttid=' . $this->id );
 	if( $type != false ) {
 		$this->record = array(

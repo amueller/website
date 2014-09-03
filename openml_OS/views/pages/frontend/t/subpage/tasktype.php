@@ -40,5 +40,6 @@
 	    loadpage('search/subpage', true, 'results');
 	   } 
         ?> 
+	<div class="alert alert-info">You can also <a href="search?q=&type=task">search tasks in more detail</a>.</div>
    </div> <!-- end col-md-12 -->
 </div> <!-- end openmlsectioninfo -->
