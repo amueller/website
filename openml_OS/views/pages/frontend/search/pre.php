@@ -150,8 +150,6 @@ $params['body']  = '{
     }
 }';
 
-print_r($params);
-
 try {
 	$this->results = $this->searchclient->search($params);
 
