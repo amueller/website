@@ -7,16 +7,6 @@ if($this->input->get('sort'))
 	$this->sort = safe($this->input->get('sort'));
 
 /// DETAIL
-$this->licences = array();
-$this->licences['Public'] = array( "name" => 'Publicly available', "url" => 'https://creativecommons.org/choose/mark/' );
-$this->licences['CC_BY'] = array( "name" => 'Attribution (CC BY)', "url" => 'http://creativecommons.org/licenses/by/4.0/' );
-$this->licences['CC_BY-SA'] = array( "name" => 'Attribution-ShareAlike (CC BY-SA)', "url" => 'http://creativecommons.org/licenses/by-sa/4.0/' );
-$this->licences['CC_BY-ND'] = array( "name" => 'Attribution-NoDerivs (CC BY-ND)', "url" => 'http://creativecommons.org/licenses/by-nd/4.0/' );
-$this->licences['CC_BY-NC'] = array( "name" => 'Attribution-NonCommercial (CC BY-NC)', "url" => 'http://creativecommons.org/licenses/by-nc/4.0/' );
-$this->licences['CC_BY-NC-SA'] = array( "name" => 'Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', "url" => 'http://creativecommons.org/licenses/by-nc-sa/4.0/' );
-$this->licences['CC-BY-NC-ND'] = array( "name" => 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', "url" => 'http://creativecommons.org/licenses/by-nc-nd/4.0/' );
-$this->licences['CC0'] = array( "name" => 'Public Domain (CC0)', "url" => 'http://creativecommons.org/about/cc0' );
-
 $this->type = 'dataset';
 $this->record = false;
 $this->displayName = false;
@@ -40,11 +30,18 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
 	$this->id = $info[array_search('d',$info)+1];
 
-	$this->prev_id = $this->Dataset->query('select max(did) as prev from dataset where did<'.$this->id)[0]->prev;
-	$this->next_id = $this->Dataset->query('select min(did) as next from dataset where did>'.$this->id)[0]->next;
+	$this->prev_id = $this->Dataset->query('select max(did) as prev from dataset where did<'.$this->id.' and visibility="public"')[0]->prev;
+	$this->next_id = $this->Dataset->query('select min(did) as next from dataset where did>'.$this->id.' and visibility="public"')[0]->next;
 
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
+
+	// block unauthorized access
+	if($this->record->visibility == 'private' and (!$this->ion_auth->logged_in() or $this->ion_auth->user()->row()->id != $this->record->uploader)){
+		o('no-access');
+		exit();
+	}
+
 	$author = $this->Author->getById($this->record->uploader);
 	$this->record->{'uploader'} =  $author->first_name . ' ' . $author->last_name;
 	$this->uploader_id = $author->id;
@@ -67,7 +64,20 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		  }
     	}
 	}
-	
+
+	// licences
+	$this->licences = array();
+	$this->licences['Public'] = array( "name" => 'Publicly available', "url" => 'https://creativecommons.org/choose/mark/' );
+	$this->licences['CC_BY'] = array( "name" => 'Attribution (CC BY)', "url" => 'http://creativecommons.org/licenses/by/4.0/' );
+	$this->licences['CC_BY-SA'] = array( "name" => 'Attribution-ShareAlike (CC BY-SA)', "url" => 'http://creativecommons.org/licenses/by-sa/4.0/' );
+	$this->licences['CC_BY-ND'] = array( "name" => 'Attribution-NoDerivs (CC BY-ND)', "url" => 'http://creativecommons.org/licenses/by-nd/4.0/' );
+	$this->licences['CC_BY-NC'] = array( "name" => 'Attribution-NonCommercial (CC BY-NC)', "url" => 'http://creativecommons.org/licenses/by-nc/4.0/' );
+	$this->licences['CC_BY-NC-SA'] = array( "name" => 'Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', "url" => 'http://creativecommons.org/licenses/by-nc-sa/4.0/' );
+	$this->licences['CC-BY-NC-ND'] = array( "name" => 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', "url" => 'http://creativecommons.org/licenses/by-nc-nd/4.0/' );
+	$this->licences['CC0'] = array( "name" => 'Public Domain (CC0)', "url" => 'http://creativecommons.org/about/cc0' );
+
+
+	// datatables
 	$this->dt_main 				= array();
 	$this->dt_main['columns'] 		= array('r.rid','rid','sid','fullName','value');
 	$this->dt_main['column_widths']		= array(1,1,0,30,30);
