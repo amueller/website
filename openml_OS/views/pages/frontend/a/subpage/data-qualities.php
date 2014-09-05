@@ -2,7 +2,9 @@
   <div class="col-sm-12">
      <?php if(false === strpos($_SERVER['REQUEST_URI'], '/a/data-qualities/')){ ?>
 	<h1>Data qualities</h1>
-	<p>OpenML automatically computes a range of characteristics about each new dataset (for known data formats). This helps to study and understand under which conditions algorithms perform well (or badly).</p>
+	<p>OpenML automatically computes a range of characteristics (qualities) about each new dataset (for known data formats). This helps to study and understand under which conditions algorithms perform well (or badly).</p>
+	<p>To calculate these qualities, we provide an extensible Java library, called <a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/fantail/dc">FanTail</a>, which operates on ARFF datasets. If you want to add further data qualities, or provide wrappers to work with other data formats, don't hesitate to extend FanTail. Your new qualities can then be computed for all OpenML datasets. We also welcome new, useful libraries.</p>
+
 	<h2>All qualities</h2>
 	<?php	foreach( $this->dataqs as $r ):?>
 			<div class="searchresult">
@@ -17,7 +19,7 @@
 	<h1><?php echo $this->record['name']; ?></h1>
 	<p><?php echo $this->record['description']; ?></p>
 	<ul class="hotlinks">
-		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/features"><i class="fa fa-gears"></i> View code</a></li>
+		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/fantail/dc"><i class="fa fa-gears"></i> View code</a></li>
 	</ul>
 	<h2>Overview</h2>
 		<div class="table-responsive"><table class="table table-striped">
