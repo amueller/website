@@ -35,12 +35,12 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
-
+	
 	// block unauthorized access
+	$this->blocked = false; 
 	if($this->record->visibility == 'private' and (!$this->ion_auth->logged_in() or $this->ion_auth->user()->row()->id != $this->record->uploader)){
-		o('no-access');
-		exit();
-	}
+		$this->blocked = true; 
+	} else {
 
 	$author = $this->Author->getById($this->record->uploader);
 	$this->record->{'uploader'} =  $author->first_name . ' ' . $author->last_name;
@@ -150,6 +150,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$this->hidedescription = false;
 	if(strlen($this->wikiwrapper)>400 and $url==$this->wikipage and strlen($preamble)==0)
 		$this->hidedescription = true;
+	}
 }
 
 

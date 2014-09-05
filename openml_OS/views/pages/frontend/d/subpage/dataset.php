@@ -1,5 +1,10 @@
 <div class="row openmlsectioninfo">
   <div class="col-xs-12">
+    <?php if($this->blocked){
+		o('no-access');
+	  } else {
+    ?>
+
     <ul class="hotlinks">
 	 <li><a href="<?php echo $this->record->{'url'}; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
 	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
@@ -149,7 +154,8 @@
 
 
 		</div> <!-- end tab-runs -->
-		
+
+	<?php } ?>		
 	</div> <!-- end col-md-12 -->
 
 </div> <!-- end openmlsectioninfo -->
