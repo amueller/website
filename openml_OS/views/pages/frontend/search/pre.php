@@ -103,9 +103,9 @@ $jsonfilters = array();
 
 //visibility
 if (!$this->ion_auth->logged_in()) {
-	$jsonfilters[] = '{ "term" : { "visibility" : "Everyone" } }';
+	$jsonfilters[] = '{ "term" : { "visibility" : "public" } }';
 } else {
-	$jsonfilters[] = '{ "bool" : { "should" : [ { "term" : { "visibility" : "Everyone" } }, { "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } } ] } }';
+	$jsonfilters[] = '{ "bool" : { "should" : [ { "term" : { "visibility" : "public" } }, { "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } } ] } }';
 }
 
 //search filters
