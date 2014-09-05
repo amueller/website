@@ -775,7 +775,7 @@ class ElasticSearch {
 	$params['index']     = 'openml';
 	$params['type']      = 'data';
 
-	$datasets = $this->db->query('select d.did, d.name, d.version, d.description, d.format, d.creator, d.contributor, d.collection, d.uploader, d.upload_date, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id)'.($id?' where did='.$id:'').' group by did');
+	$datasets = $this->db->query('select d.did, d.name, d.version, d.description, d.format, d.creator, d.contributor, d.collection, d.uploader, d.upload_date, d.visibility, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id)'.($id?' where did='.$id:'').' group by did');
 
 	if($id and !$datasets)
 		return 'Error: data set '.$id.' is unknown';
@@ -803,6 +803,7 @@ class ElasticSearch {
 		    'description' 	=> $d->description,
 		    'format'		=> $d->format,
 		    'uploader' 		=> $this->user_names[$d->uploader],
+		    'visibility' 	=> $d->visibility,
 		    'creator'		=> $d->creator,
 		    'contributor' 	=> $d->contributor,
 		    'collection' 	=> $d->collection,
