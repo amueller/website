@@ -44,6 +44,15 @@ class ElasticSearch {
                         'type' => 'string',
 			'analyzer' => 'snowball'
                     ),
+                    'visibility' => array(
+                        'type' => 'string',
+			'index' => 'not_analyzed'
+                    ),
+                    'format' => array(
+                        'type' => 'string',
+			'index' => 'not_analyzed'
+                    ),
+
                     'suggest' => array(
                         'type' => 'completion',
 			'index_analyzer' => 'standard',
@@ -803,6 +812,7 @@ class ElasticSearch {
 		    'description' 	=> $d->description,
 		    'format'		=> $d->format,
 		    'uploader' 		=> $this->user_names[$d->uploader],
+		    'uploader_id'	=> intval($d->uploader),
 		    'visibility' 	=> $d->visibility,
 		    'creator'		=> $d->creator,
 		    'contributor' 	=> $d->contributor,

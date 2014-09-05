@@ -96,8 +96,19 @@ elseif($this->terms != 'match_all' and $this->coreterms != ''){
 	          }';
 }
 
+
+
 $this->active_tab = gu('tab');
 $jsonfilters = array();
+
+//visibility
+if (!$this->ion_auth->logged_in()) {
+	$jsonfilters[] = '{ "term" : { "visibility" : "Everyone" } }';
+} else {
+	$jsonfilters[] = '{ "bool" : { "should" : [ { "term" : { "visibility" : "Everyone" } }, { "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } } ] } }';
+}
+
+//search filters
 if($this->filtertype)
 	$jsonfilters[] = '{ "type" : { "value" : "'.$this->filtertype.'" } }';
 foreach($this->filters as $k => $v){
@@ -139,7 +150,7 @@ $params['body']  = '{
     }
 }';
 
-//print_r($params);
+print_r($params);
 
 try {
 	$this->results = $this->searchclient->search($params);
