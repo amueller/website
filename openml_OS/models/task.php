@@ -51,7 +51,7 @@ class Task extends Database_write {
     $result = array();
     $to_insert = array();
     $existing_tasks = $this->tasks_crosstabulated( $ttid );
-    
+ 
     if( $existing_tasks == false ) { $existing_tasks = array(); }
     foreach( $task_batch as $task ) {
       $current_task_obj = json_decode(json_encode($task), false); // convert array to obj, using json lib

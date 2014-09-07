@@ -26,6 +26,9 @@
         <li><a href="#task-type-<?php echo $tt->ttid; ?>" role="tab" data-toggle="tab"><?php echo $tt->name; ?></a></li>
       <?php endforeach; ?>
     </ul>
+
+    <!-- task creation form -->
+
     <div class="tab-content">
     <?php foreach( $this->task_types as $tt ): ?>
       <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>">

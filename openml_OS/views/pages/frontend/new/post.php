@@ -13,7 +13,7 @@ if($this->subpage == 'task') {
   $inputs = array();
   // retrieve all inputs
   foreach( $required_inputs as $i ) {
-    if( $i->requirement == 'optional' && $this->input->post($i->name) == false ) { continue; }
+    if($this->input->post($i->name) == false ) { continue; }
     $inputs[$i->name] = $this->input->post($i->name);
   }
   
@@ -44,14 +44,14 @@ if($this->subpage == 'task') {
   
   // sanity check input
   $input_safe = true;
-  
   // first sanitize custom testset
-  if( array_key_exists( 'custom_testset', $inputs ) ) {
+  if( $this->input->post('custom_testset') ) {
     if( is_cs_natural_numbers( $inputs['custom_testset'] ) ) {
       $inputs['custom_testset'] = implode( ',', range_string_to_array( $inputs['custom_testset'] ) );
     } else {
       unset( $inputs['custom_testset'] );
       $input_safe = false;
+      echo "Warning: Illegal custom test set!";
     }
   }
   
@@ -67,15 +67,17 @@ if($this->subpage == 'task') {
 
       $dids[] = $dataset->did;
     }
-    
     if( count( $datasets ) > 1 && $this->input->post('custom_testset') ) {
       // against the rules
-      
+      echo "Error: this task creation is not allowed.";
     } elseif( $input_safe ) {
       $new_tasks = $this->Task->create_batch( $ttid, $results );
+    } else {
+      echo "This task creation setup is not defined.";	
     }
   }
   $inputs['source_data'] = $dids;
+
   $tasks = $this->Task->tasks_crosstabulated( $ttid, true, $inputs );
 
   if( $tasks ) {
