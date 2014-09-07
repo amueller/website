@@ -102,10 +102,12 @@ $this->active_tab = gu('tab');
 $jsonfilters = array();
 
 //visibility
-if (!$this->ion_auth->logged_in()) {
-	$jsonfilters[] = '{ "term" : { "visibility" : "public" } }';
-} else {
-	$jsonfilters[] = '{ "bool" : { "should" : [ { "term" : { "visibility" : "public" } }, { "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } } ] } }';
+if ($this->filtertype == 'data'){
+	if (!$this->ion_auth->logged_in()) {
+		$jsonfilters[] = '{ "term" : { "visibility" : "public" } }';
+	} else {
+		$jsonfilters[] = '{ "or" : [ { "term" : { "visibility" : "public" } }, { "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } } ] }';
+	}
 }
 
 //search filters
@@ -149,6 +151,8 @@ $params['body']  = '{
         }
     }
 }';
+
+//print_r($params);
 
 try {
 	$this->results = $this->searchclient->search($params);
