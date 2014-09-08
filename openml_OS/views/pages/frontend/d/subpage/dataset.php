@@ -24,11 +24,12 @@
     </h1>
 
     <div class="datainfo">
+       <i class="fa fa-table"></i> <?php echo (strtolower($this->record->{'format'}) == 'arff' ? '<a href="http://weka.wikispaces.com/ARFF+%28developer+version%29" target="_blank">ARFF</a>' : $this->record->{'format'}); ?>
        <i class="fa fa-cc"></i> <?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?> 	    
        <?php if($this->record->{'paper_url'}){ ?>
 	    <i class="fa fa-book"></i> <a href="<?php echo $this->record->{'paper_url'} ?>">Original paper</a>
        <?php } ?>
-       <i class="fa fa-eye-slash"></i> Viewable by <?php echo strtolower($this->record->{'visibility'}); ?> 
+       <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->record->{'visibility'}); ?> 
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
     </div>
   </div>

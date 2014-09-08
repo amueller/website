@@ -1,9 +1,9 @@
 <?php
 function formatTeaser($r){
 	if(array_key_exists('highlight',$r))
-		return trim(preg_replace('/\s+/', ' ', $r['highlight']['_all'][0]));
+		return trim(preg_replace('/\s+/', ' ', preg_replace('/\*{2,}/', '', $r['highlight']['description'][0])));
 	elseif(array_key_exists('description',$r['_source']))
-		return truncate(trim(preg_replace('/\s+/', ' ', $r['_source']['description'])));
+		return truncate(trim(preg_replace('/\s+/',' ',preg_replace('/^\*{2,}.*/m', '', $r['_source']['description']))));
 	return '';
 }
 
@@ -69,7 +69,6 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="runStats"><?php echo $rs['affiliation'];?> - <?php echo $rs['country'];?></div>
 
 		   <?php } elseif($type == 'data') { ?>
-
 		   		<a href="d/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">

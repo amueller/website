@@ -43,4 +43,19 @@ class Wiki {
 
 	return "Successfully added ".$wikipage;
   }
+
+  public function import_from_wiki($id){
+
+        $d = $this->db->getByID($id);
+	$this->wikipage = str_replace('_','-',$d->name.'-'.$d->version);
+
+	$myFile = "/Library/WebServer/Documents/wiki/".$this->wikipage.".md";
+	$fh = fopen($myFile, 'r');
+	$theData = fread($fh, filesize($myFile));
+	fclose($fh);
+
+  	$this->db->query('update dataset set description = "'.addslashes($theData).'"');
+
+	return "Successfully imported ".$this->wikipage;
+  }
 }

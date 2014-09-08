@@ -135,7 +135,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		$this->show_history = false;
 
 	$this->wiki_ok = true;
-	$html = file_get_contents('http://localhost:4567/'.$url);
+	$html = @file_get_contents('http://localhost:4567/'.$url);
 	
 	if($html){ //check if Gollum working and not trying to create new page
 		preg_match('/<body>(.*)<\/body>/s',$html,$content_arr);

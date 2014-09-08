@@ -142,7 +142,7 @@ $params['body']  = '{
     ($fjson ? $fjson : '').'
     "highlight" : {
         "fields" : {
-            "_all" : {}
+            "description" : {}
         }
     },
     "facets" : {
