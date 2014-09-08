@@ -49,7 +49,7 @@ class Wiki {
         $d = $this->db->getByID($id);
 	$this->wikipage = str_replace('_','-',$d->name.'-'.$d->version);
 
-	$myFile = "/Library/WebServer/Documents/wiki/".$this->wikipage.".md";
+	$myFile = "/openmldata/webdata/wiki/".$this->wikipage.".md";
 	$fh = fopen($myFile, 'r');
 	$theData = fread($fh, filesize($myFile));
 	fclose($fh);
