@@ -276,6 +276,7 @@ class ElasticSearch {
 		    'country'	 	=> $d->country,
 		    'image'		=> $d->image,
 		    'date'		=> $d->created_on,
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array($d->first_name,$d->last_name),
 						'output'=> $d->first_name.' '.$d->last_name,
@@ -328,6 +329,7 @@ class ElasticSearch {
 	$newdata = array(
 		    'task_id' 		=> $d->task_id,
 		    'runs' 		=> $this->checkNumeric($d->runs),
+		    'visibility'	=> 'public',
 		    'tasktype'		=> array(
 						'tt_id' => $d->ttid,
 						'name' => $d->name
@@ -517,7 +519,8 @@ class ElasticSearch {
 						'parameters' => array_key_exists($r->setup,$setups) ? $setups[$r->setup] : array()
 					),
 		    'output_files'	=> array_key_exists($r->rid,$runfiles) ? $runfiles[$r->rid] : array(),
-		    'evaluations'	=> array_key_exists($r->rid,$evals) ? $evals[$r->rid] : array()
+		    'evaluations'	=> array_key_exists($r->rid,$evals) ? $evals[$r->rid] : array(),
+		    'visibility'	=> 'public'
 		);
   }
 
@@ -552,6 +555,7 @@ class ElasticSearch {
 		    'name'    		=> $d->name,
 		    'description' 	=> $d->description,
 		    'tasks'		=> $d->tasks,
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),
 						'output'=> $d->name,
@@ -618,6 +622,7 @@ class ElasticSearch {
 		    'dependencies' 	=> $d->dependencies,
 		    'date'		=> $d->uploadDate,
 		    'runs' 		=> $this->checkNumeric($d->runs),
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array(str_replace("weka.","",$d->name),$d->description),
 						'output'=> $d->name,
@@ -706,6 +711,7 @@ class ElasticSearch {
 		    'task_type'  	=> $d->ttid,
 		    'name'    		=> $d->name,
 		    'description' 	=> $d->description,
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),
 						'output'=> $d->name,
@@ -726,6 +732,7 @@ class ElasticSearch {
 		    'type'    		=> 'evaluation_measure',
 		    'name'    		=> $d->name,
 		    'description' 	=> $d->description,
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),
 						'output'=> $d->name,
@@ -746,6 +753,7 @@ class ElasticSearch {
 		    'type'    		=> 'data_quality',
 		    'name'    		=> $d->name,
 		    'description' 	=> $d->description,
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),
 						'output'=> $d->name,
@@ -766,6 +774,7 @@ class ElasticSearch {
 		    'type'    		=> 'flow_quality',
 		    'name'    		=> $d->name,
 		    'description' 	=> $d->description,
+		    'visibility'	=> 'public',
 		    'suggest'		=> array(
 						'input' => array($d->name,$d->description),
 						'output'=> $d->name,
