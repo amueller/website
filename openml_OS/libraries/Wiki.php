@@ -54,7 +54,7 @@ class Wiki {
 	$theData = fread($fh, filesize($myFile));
 	fclose($fh);
 
-  	$this->db->query('update dataset set description = "'.addslashes($theData).'"');
+  	$this->db->query('update dataset set description = "'.addslashes($theData).'" where did='.$id);
 
 	return "Successfully imported ".$this->wikipage;
   }
