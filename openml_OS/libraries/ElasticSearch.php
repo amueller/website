@@ -814,6 +814,7 @@ class ElasticSearch {
   }
 
   private function build_data($d){
+	$headless_description = trim(preg_replace('/\s+/',' ',preg_replace('/^\*{2,}.*/m', '', $d->description)));
 	$new_data = array(
 		    'data_id' 		=> $d->did,
 		    'name'    		=> $d->name,
@@ -829,13 +830,13 @@ class ElasticSearch {
 		    'date'		=> $d->upload_date,
 		    'runs' 		=> $this->checkNumeric($d->runs),
 		    'suggest'		=> array(
-						'input' => array($d->name,$d->description),
+						'input' => array($d->name,$headless_description),
 						'output'=> $d->name,
 						'weight'=> 5,
 						'payload' => array(
 							'type' => 'data',
 							'data_id' => $d->did,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($headless_description, 0, 100) 
 						)
 					)
 		);
