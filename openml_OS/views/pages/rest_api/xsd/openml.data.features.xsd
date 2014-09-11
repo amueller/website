@@ -24,6 +24,7 @@
       <xs:element minOccurs="0" name="MinimumValue" type="xs:double"/>
       <xs:element minOccurs="0" name="MeanValue" type="xs:double"/>
       <xs:element minOccurs="0" name="StandardDeviation" type="xs:double"/>
+      <xs:element minOccurs="0" name="ClassDistribution" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>
