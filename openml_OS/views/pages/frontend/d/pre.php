@@ -9,6 +9,7 @@ if($this->input->get('sort'))
 /// DETAIL
 $this->type = 'dataset';
 $this->record = false;
+
 $this->displayName = false;
 $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';

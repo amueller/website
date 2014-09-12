@@ -5,6 +5,8 @@
     <?php if($this->blocked){
 		o('no-access');
 	  } else {
+    $fgraphs = '';
+
     ?>
 
     <ul class="hotlinks">
@@ -102,19 +104,19 @@
 					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
 									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px'></div></td></tr>";
 			                if($r->{'data_type'} == "numeric"){
-						echo '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted: true},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).',',$r->{'MaximumValue'}.']]}]});});</script>';
+						$fgraphs .= '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted: true},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});});</script>';
 					} else if (strlen($r->{'ClassDistribution'})>0) {
 						$distro = json_decode($r->{'ClassDistribution'});
-						echo '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\'},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>5 ? 'enabled:false' : 'style:{fontSize:\'8px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,style:{fontSize:\'10px\'}}},legend:false,tooltip:{shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
+						$fgraphs .= '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\'},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
 
 						for($i=0; $i<count($classvalues); $i++){
-							echo '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+							$fgraphs .= '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
 							if($i!=count($classvalues)-1)
-								echo ',';
+								$fgraphs .= ',';
 						}
-						echo ']});});</script>';
+						$fgraphs .= ']});});</script>';
 											}
-						echo PHP_EOL;
+						$fgraphs .= PHP_EOL;
 				}  
 				}
 					?>
@@ -207,3 +209,6 @@ $("a[title*='View commit']").each(function() {
    $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
 });
 </script>
+<?php
+	echo $fgraphs;
+?>
