@@ -104,19 +104,19 @@
 					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
 									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px'></div></td></tr>";
 			                if($r->{'data_type'} == "numeric"){
-						$fgraphs .= '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted: true},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});});</script>';
+						$fgraphs = '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted: true},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});});</script>' . $fgraphs;
 					} else if (strlen($r->{'ClassDistribution'})>0) {
 						$distro = json_decode($r->{'ClassDistribution'});
-						$fgraphs .= '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\'},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
+						$fscript = '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\'},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
 
 						for($i=0; $i<count($classvalues); $i++){
-							$fgraphs .= '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+							$fscript .= '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
 							if($i!=count($classvalues)-1)
-								$fgraphs .= ',';
+								$fscript .= ',';
 						}
-						$fgraphs .= ']});});</script>';
-											}
-						$fgraphs .= PHP_EOL;
+						$fscript .= ']});});</script>';
+						$fgraphs = $fscript . PHP_EOL . $fgraphs;
+						}
 				}  
 				}
 					?>
