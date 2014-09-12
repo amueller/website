@@ -210,5 +210,5 @@ $("a[title*='View commit']").each(function() {
 });
 </script>
 <?php
-	echo $fgraphs;
+	$this->endjs = $fgraphs;
 ?>

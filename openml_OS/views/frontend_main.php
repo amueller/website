@@ -72,7 +72,9 @@
         <script type="text/javascript" src="js/openml.js"></script>
         <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
         <script type="text/javascript" src="<?php echo $j; ?>"></script>
-        <?php endforeach; endif; ?>
+        <?php endforeach; endif; 
+	$this->endjs = '';
+	?>
 
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>
@@ -326,7 +328,7 @@
             ga('create', 'UA-40902346-1', 'openml.org');
             ga('send', 'pageview');
         </script>
-
+	<?php echo $this->endjs; ?>
 
     </body>
 </html>
