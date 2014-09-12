@@ -55,7 +55,6 @@
         <script type="text/javascript" src="js/libs/dat.gui.min.js" ></script>
         <script type="text/javascript" src="js/libs/codemirror.js" ></script>
         <script type="text/javascript" src="js/libs/mysql.js" ></script>
-        <!-- <script type="text/javascript" src="js/libs/highcharts.js"></script> -->
         <script type="text/javascript" src="js/libs/jquery.dataTables.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.TableTools.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.bootstrap.js"></script>

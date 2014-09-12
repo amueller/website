@@ -1,3 +1,5 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
 <div class="row openmlsectioninfo">
   <div class="col-xs-12">
     <?php if($this->blocked){
@@ -87,14 +89,35 @@
 			<h3>Features</h3>
 			<div class="features hideFeatures">
 			<div class="table-responsive">
-				<table class="table table-striped">
-				<?php $result = $this->Dataset->query("SELECT name, data_type, is_target, NumberOfDistinctValues, NumberOfMissingValues FROM `data_feature` WHERE did=" . $this->record->{'did'});
+				<table class="table">
+				<?php $result = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_id, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE did=" . $this->record->{'did'});
 				if (is_array($result)){
+				//get target values
+				$classvalues = array();
+				foreach( $result as $r ) {
+					if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal")
+						$classvalues = json_decode($r->{'ClassDistribution'})[0];
+				}
 				foreach( $result as $r ) {
 					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
-									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td></tr>";
-				}}
-				?>
+									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px'></div></td></tr>";
+			                if($r->{'data_type'} == "numeric"){
+						echo '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted: true},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).',',$r->{'MaximumValue'}.']]}]});});</script>';
+					} else if (strlen($r->{'ClassDistribution'})>0) {
+						$distro = json_decode($r->{'ClassDistribution'});
+						echo '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\'},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>5 ? 'enabled:false' : 'style:{fontSize:\'8px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,style:{fontSize:\'10px\'}}},legend:false,tooltip:{shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
+
+						for($i=0; $i<count($classvalues); $i++){
+							echo '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+							if($i!=count($classvalues)-1)
+								echo ',';
+						}
+						echo ']});});</script>';
+											}
+						echo PHP_EOL;
+				}  
+				}
+					?>
 				</table>
 			</div>
 			</div>
