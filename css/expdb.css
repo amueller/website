@@ -1882,8 +1882,19 @@ a:hover > .circlered{
   overflow: visible !important;
 }
 
-#divContainerId .highcharts-container{
-    z-index: 1000 !important; /*If you have problems with the label hiding behind some other div or chart play with z-index*/
+.highcharts-tooltip {
+  overflow: visible !important;
+  z-index: 1000 !important;
+}
+
+
+.highcharts-tooltip span {
+  overflow: visible !important;
+  z-index: 1000 !important;
+}
+
+.svg {
+overflow: visible !important;
 }
 
 @media screen and (min-width: 768px) {

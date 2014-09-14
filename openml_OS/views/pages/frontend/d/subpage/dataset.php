@@ -6,6 +6,7 @@
 		o('no-access');
 	  } else {
     $fgraphs = '';
+    $fgraphs_all = '';
 
     ?>
 
@@ -100,23 +101,34 @@
 					if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal")
 						$classvalues = json_decode($r->{'ClassDistribution'})[0];
 				}
+				$zindex = 1000+count($result);
+				$featCount = 0;
 				foreach( $result as $r ) {
-					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '')
-									.( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px'></div></td></tr>";
+					$newGraph = ''; 
 			                if($r->{'data_type'} == "numeric"){
-						$fgraphs = '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});});</script>' . $fgraphs;
+						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});';
 					} else if (strlen($r->{'ClassDistribution'})>0) {
 						$distro = json_decode($r->{'ClassDistribution'});
-						$fscript = '<script>$(function(){$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
+						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
 
-						for($i=0; $i<count($classvalues); $i++){
-							$fscript .= '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
-							if($i!=count($classvalues)-1)
-								$fscript .= ',';
-						}
-						$fscript .= ']});});</script>';
-						$fgraphs = $fscript . PHP_EOL . $fgraphs;
-						}
+					for($i=0; $i<count($classvalues); $i++){
+						$newGraph .= '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+						if($i!=count($classvalues)-1)
+							$newGraph .= ',';
+					}
+					$newGraph .= ']});';
+					}
+					if($featCount<3)
+						$fgraphs = $newGraph . PHP_EOL . $fgraphs;
+					else
+						$fgraphs_all = $newGraph . PHP_EOL . $fgraphs_all;
+
+					
+					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '').( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px; z-index:".$zindex."'></div></td></tr>";
+
+
+					$zindex = $zindex - 1;
+					$featCount = $featCount + 1;
 				}  
 				}
 					?>
@@ -125,7 +137,8 @@
 			</div>
         </div> <!-- end col-md-12 -->
         <div class="col-xs-12">
-	  <div class="show-more-features"><a onclick="showmorefeats()"><i class="fa fa-caret-right"></i> Show more</a></div>
+	  <div class="show-more-features">
+		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($result); ?> features</a></div>
 	</div>
 
 
@@ -210,5 +223,7 @@ $("a[title*='View commit']").each(function() {
 });
 </script>
 <?php
-	$this->endjs = $fgraphs;
+	$this->endjs = '<script>$(function(){'.$fgraphs.'});</script>';
+	$this->endjs .= '<script>function visualize_all(){'.$fgraphs_all.'}</script>';
+
 ?>
