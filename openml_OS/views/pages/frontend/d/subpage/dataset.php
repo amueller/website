@@ -101,7 +101,6 @@
 					if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal")
 						$classvalues = json_decode($r->{'ClassDistribution'})[0];
 				}
-				$zindex = 1000+count($result);
 				$featCount = 0;
 				foreach( $result as $r ) {
 					$newGraph = ''; 
@@ -124,10 +123,9 @@
 						$fgraphs_all = $newGraph . PHP_EOL . $fgraphs_all;
 
 					
-					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '').( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px; z-index:".$zindex."'></div></td></tr>";
+					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '').( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px;'></div></td></tr>";
 
 
-					$zindex = $zindex - 1;
 					$featCount = $featCount + 1;
 				}  
 				}

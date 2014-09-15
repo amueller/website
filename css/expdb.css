@@ -1878,23 +1878,35 @@ a:hover > .circlered{
   padding-bottom: 0px !important;
   overflow: visible !important;
 }
+
 .highcharts-container{
   overflow: visible !important;
+  z-index:auto !important;
+  opacity:1;
 }
 
-.highcharts-tooltip {
-  overflow: visible !important;
-  z-index: 1000 !important;
+.highcharts-tooltip{
+  z-index:100 !important;
+  background-color: #FFFFFF;
+  opacity:1;
+}
+
+.highcharts-tooltip > span{
+  z-index:100 !important;
+  background-color: rgba(249, 249, 249, 0.85098);
+  border: solid 1px rgb(124, 181, 236);
+  opacity:1;
+  padding:8px !important;
+  margin:0px !important;
+}
+
+.highcharts-tooltip > path{
+  display: none;
 }
 
 
-.highcharts-tooltip span {
-  overflow: visible !important;
-  z-index: 1000 !important;
-}
-
-.svg {
-overflow: visible !important;
+svg:not(:root){
+  overflow: visible;
 }
 
 @media screen and (min-width: 768px) {
