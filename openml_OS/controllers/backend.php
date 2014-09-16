@@ -19,6 +19,7 @@ class Backend extends CI_Controller {
     $this->load->model('Run');
     
     
+    $this->load->model('Meta_dataset');    
     $this->load->model('Thread');
     $this->load->model('Category');
     $this->load->model('Author');

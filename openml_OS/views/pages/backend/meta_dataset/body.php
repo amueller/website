@@ -1,0 +1,37 @@
+<div class="container-fluid topborder">
+  <div class="row">
+    <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
+      <h2>Create Meta-dataset</h2>
+      <div class="form-group">
+        <form method="post" action="">
+          <div class="form-group">
+            <label class="col-md-2 control-label" for="datasetDropdown">Datasets</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" id="datasetDropdown" name="datasets" placeholder="Include all datasets" value="" />
+              <span class="help-block">A comma separated list of datasets. Leave empty to include all datasets.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-2 control-label" for="flowDropdown">Flows</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" id="flowDropdown" name="flows" placeholder="Include all flows" value="">
+              <span class="help-block">A comma separated list of flows. Leave empty to include all flows.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-2 control-label" for="functionSelect">Evaluation Measures</label>
+            <div class="col-md-10">
+              <?php foreach( $this->measures as $m ): ?>
+              <input type="checkbox" id="functionSelect" name="functions[]" value="<?php echo $m; ?>" />&nbsp;<?php echo str_replace( '_', ' ', $m ); ?><br/>
+              <?php endforeach; ?>
+              <span class="help-block">Select at least one evaluation measure you're interested in </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Submit"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
