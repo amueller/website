@@ -25,7 +25,7 @@ class Files extends CI_Controller {
     }
   }
   
-  function download($id,$name) {
+  function download($id,$name = 'undefined') {
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
@@ -37,7 +37,7 @@ class Files extends CI_Controller {
     } // else, an appropriate message is shown. 
   }
   
-  function view($id,$name) {
+  function view($id,$name = 'undefined') {
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
