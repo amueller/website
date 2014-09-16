@@ -15,11 +15,15 @@ if( $datasets && is_cs_natural_numbers( $datasets ) == false ) {
   su('backend/page/meta_dataset');
 }
 
+$illegal_value = array();
 foreach( $functions as $f ) {
   if( in_array( $f, $legal_functions ) == false ) {
-    sm('Illegal value in function list');
-    su('backend/page/meta_dataset');
+    $illegal_value[] = $f;
   }
+}
+if( $illigal_value ) {
+  sm('Illegal value in function list: ' . implode( ', ', $illegal_value ) );
+  su('backend/page/meta_dataset');
 }
 
 $functions = '"' . implode( '", "', $functions ) . '"';
