@@ -21,13 +21,17 @@ class Database_read extends CI_Model {
   function query( $sql ) {
     $this->Log->sql( $sql);
     $data = $this->db->query( $sql );
-    if($data === true || $data === false) return $data;
+    if($data === true || $data === false) { return $data; } 
+    // although the expression above doesn't seem to make sense, 
+    // it actually does. Since we used the === operator, we have 
+    // covered all boolean responses. Now let's cover the other 
+    // possibilities.
     return ( $data->num_rows() > 0 ) ? $data->result() : false;
   }
   
   function getWhere( $where, $orderby = null ) {
-    if( $orderby != null ) 
-      $this->db->order_by( $orderby );
+    if( $orderby != null ) {
+      $this->db->order_by( $orderby ); }
     $data = $this->db->where( $where )->get( $this->table );
     return ( $data->num_rows() > 0 ) ? $data->result() : false;
   }
