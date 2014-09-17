@@ -6,6 +6,10 @@ $this->sort = 'runs';
 if($this->input->get('sort'))
 	$this->sort = safe($this->input->get('sort'));
 
+/// UPDATE
+$this->responsetype = '';
+$this->response = '';
+
 /// DETAIL
 $this->type = 'dataset';
 $this->record = false;
@@ -16,6 +20,7 @@ $this->current_measure = 'predictive_accuracy';
 
 // Making sure we know who is editing
 $this->editor = 'Anonymous';
+$this->is_owner = false;
 if(false !== strpos($_SERVER['REQUEST_URI'],'/edit')){
   if (!$this->ion_auth->logged_in()) {
 	header('Location: ' . BASE_URL . 'login');
@@ -43,6 +48,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		$this->blocked = true; 
 	} else {
 
+	if($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->record->uploader)
+		$this->is_owner = true;
+
 	$author = $this->Author->getById($this->record->uploader);
 	$this->record->{'uploader'} =  $author->first_name . ' ' . $author->last_name;
 	$this->uploader_id = $author->id;
@@ -52,6 +60,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 
 	$this->versions = $this->Dataset->getAssociativeArray('did', 'version', 'name = "'.$this->record->name.'"');
 	ksort($this->versions);
+
+	// tasks
 	$this->tasks = $this->Dataset->query('SELECT t.task_id, tt.name FROM task_type_inout ttio, task_inputs ti, task t, task_type tt WHERE ttio.type=\'Dataset\' and ttio.name = ti.input and ti.value=' . $this->id . ' and ti.task_id=t.task_id and t.ttid = tt.ttid and ttio.ttid=tt.ttid');
   	if( $this->tasks != false ) {
 	  foreach( $this->tasks as $t ) {
@@ -65,6 +75,15 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		  }
     	}
 	}
+
+	// features
+	$this->features = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE did=" . $this->record->{'did'});
+	$this->classvalues = array();
+	if($this->features){
+	foreach( $this->features as $r ) {
+		if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal")
+			$this->classvalues = json_decode($r->{'ClassDistribution'})[0];
+	}}
 
 	// licences
 	$this->licences = array();
@@ -159,7 +178,7 @@ function cleanName($string){
 	return $safe = preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $string)));
 }
 
-//temp fix -> include in php 5.5
+//temp fix -> included in php 5.5
 if (!function_exists('array_column')) {
 
     /**

@@ -304,17 +304,23 @@ class Rest_api extends CI_Controller {
     
     $this->db->trans_start();
     $success = true;
-    $current_index = -1;
+    //$current_index = -1;
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
       $feature->did = $did;
+      // add target, row id
+      if($dataset->default_target_attribute == $feature->name)
+	$feature->is_target = 'true';
+      if($dataset->row_id_attribute == $feature->name)
+	$feature->is_row_identifier = 'true'; 
       $this->Data_feature->insert_ignore( $feature );
       
+      // NOTE: this is commented out because not all datasets have targets, or they can have multiple ones. Targets should also be set more carefully.
       // if no specified attribute is the target, select the last one:
-      if( $dataset->default_target_attribute == false && $feature->index > $current_index ) {
-        $current_index = $feature->index;
-        $data['default_target_attribute'] = $feature->name;
-      }
+      //if( $dataset->default_target_attribute == false && $feature->index > $current_index ) {
+      //  $current_index = $feature->index;
+      //  $data['default_target_attribute'] = $feature->name;
+      //}
     }
     $this->db->trans_complete();
         

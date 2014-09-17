@@ -17,10 +17,13 @@
      </div> <!-- end intro tab -->
 
      <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) { echo 'active'; } ?>" id="codedetail">
-     	<?php 
-	 if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
+     	<?php
+	 if(false !== strpos($_SERVER['REQUEST_URI'],'/update')) {
+		subpage('update');  
+	 }
+	 else if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		subpage('dataset'); 
-	}?>
+ 	 }?>
      </div>
      </div> <!-- end tabs content -->
     </div> <!-- end col-10 -->
