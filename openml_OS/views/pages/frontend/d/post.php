@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+// Description edit
+if($this->input->post('page')){
 // prepare to send data to gollum
   //$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
@@ -37,4 +40,15 @@ if($this->input->post('versions')){
 //save successful, redirect to detail page
   if($this->input->post('content'))
   	header('Location: '.BASE_URL.'d/'.$this->id);
+}
+
+
+// Dataset update
+else{
+
+
+
+
+}
+
 ?>

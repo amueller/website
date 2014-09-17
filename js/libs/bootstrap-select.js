@@ -859,8 +859,8 @@
         header: false,
         liveSearch: false,
         multipleSeparator: ', ',
-        iconBase: 'glyphicon',
-        tickIcon: 'glyphicon-ok'
+        iconBase: 'fa',
+        tickIcon: 'fa-check'
     };
 
     $(document)

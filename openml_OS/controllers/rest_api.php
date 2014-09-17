@@ -310,9 +310,9 @@ class Rest_api extends CI_Controller {
       $feature->did = $did;
       // add target, row id
       if($dataset->default_target_attribute == $feature->name)
-	$feature->is_target = 'true';
+	$feature['is_target'] = 'true';
       if($dataset->row_id_attribute == $feature->name)
-	$feature->is_row_identifier = 'true'; 
+	$feature['is_row_identifier'] = 'true';
       $this->Data_feature->insert_ignore( $feature );
       
       // NOTE: this is commented out because not all datasets have targets, or they can have multiple ones. Targets should also be set more carefully.
@@ -1638,37 +1638,6 @@ class Rest_api extends CI_Controller {
     }
     
     $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
-  }
-
-  private function _openml_data_description_update() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 470 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 471 );
-        return;
-      }
-    }
-        
-    $data = $this->Dataset->getById( $this->input->post( 'data_id' ) );
-    if( $data == false ) {
-      $this->_returnError( 472 );
-      return;
-    } 
-
-    $key = $this->input->post( 'key' );
-    $value = $this->input->post( 'value' );
-
-    if(in_array($key, array('default_target_feature','uploader','url','did','licence','visibility')) and $data->uploader !=  $this->user_id ){ // not owner of the dataset
-        $this->_returnError( 473 );
-        return;
-    }
-    
-    $this->Dataset->update( $this->input->post( 'data_id' ), array($key => $value));
-
-    
-    $this->_xmlContents( 'data-description-update', array( 'id' => $data->did, 'key' => $key, 'value' => $value ) );
   }
   
   /********************************* ALIAS FUNCTIONS *********************************/

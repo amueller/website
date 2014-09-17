@@ -13,5 +13,6 @@
     <oml:url><?php echo htmlspecialchars($url); ?></oml:url>
     <?php if ($default_target_attribute != null): ?><oml:default_target_attribute><?php echo htmlspecialchars($default_target_attribute); ?></oml:default_target_attribute><?php endif; ?>
     <?php if ($row_id_attribute != null): ?><oml:row_id_attribute><?php echo htmlspecialchars($row_id_attribute); ?></oml:row_id_attribute><?php endif; ?>
+    <?php if ($visibility != null): ?><oml:visibility><?php echo htmlspecialchars($visibility); ?></oml:visibility><?php endif; ?>
     <oml:md5_checksum><?php echo htmlspecialchars($md5_checksum); ?></oml:md5_checksum>
 </oml:data_set_description>
