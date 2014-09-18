@@ -1,7 +1,13 @@
 
-$(function() {
 
- $("#datasetDropdown").autocomplete({
+$(function() {
+  console.log(window.location.hash);
+  if ( window.location.hash ) {
+      $('.nav-tabs a[href='+window.location.hash+']').tab('show');
+      console.log($('.nav-tabs a[href='+window.location.hash+']'));
+  }
+
+$("#datasetDropdown").autocomplete({
   html: true,
   minLength: 0,
   source: function(request, fresponse) {

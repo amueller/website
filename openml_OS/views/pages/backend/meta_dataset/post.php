@@ -21,7 +21,7 @@ foreach( $functions as $f ) {
     $illegal_value[] = $f;
   }
 }
-if( $illigal_value ) {
+if( $illegal_value ) {
   sm('Illegal value in function list: ' . implode( ', ', $illegal_value ) );
   su('backend/page/meta_dataset');
 }
@@ -29,6 +29,7 @@ if( $illigal_value ) {
 $functions = '"' . implode( '", "', $functions ) . '"';
 
 $md = array( 
+  'request_date' => now(),
   'datasets' => $datasets ? $datasets : null,
   'flows' => $flows ? $flows : null,
   'functions' => $functions ? $functions : null,
@@ -37,6 +38,6 @@ $md = array(
 $res = $this->Meta_dataset->insert( $md );
 
 sm('Meta dataset will be created. It can take several minutes to be generated.');
-su('backend/page/meta_dataset');
+su('backend/page/meta_dataset#overview');
 
 ?>
