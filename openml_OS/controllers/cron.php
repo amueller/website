@@ -50,9 +50,11 @@ class Cron extends CI_Controller {
       
 
       $sql = 
+        'SELECT "run_id", "setup_id", "task_id", "repeat", "fold", "sample_size", "function", "value", "textual"' .
+        'UNION ALL ' .
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
-        'd.did AS dataset_id, i.id AS implementation_id, e.repeat, e.fold, '.
-        'e.sample_size, e.function, e.value, CONCAT(i.fullName, " on ", d.name) as textual '.
+        'e.repeat, e.fold, e.sample_size, e.function, e.value, '.
+        'CONCAT(i.fullName, " on ", d.name) as textual '.
         'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, evaluation_sample e '.
         'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
         'AND v.input = "source_data" AND v.value = d.did '.
@@ -72,9 +74,9 @@ class Cron extends CI_Controller {
       if( $success == false ) {
         $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'error_message' => 'Failed to export query to tmp directory. ' ) );
       }
-      $filename = getAvailableName( DATA_PATH . $this->dir_suffix, 'meta_dataset.arff' );
+      $filename = getAvailableName( DATA_PATH . $this->dir_suffix, 'meta_dataset.csv' );
       $filepath = DATA_PATH . $this->dir_suffix . $filename;
-      $success = rename( $tmp_path, $file_path );
+      $success = rename( $tmp_path, $filepath );
       
       if( $success == false ) {
         $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'error_message' => 'Failed to move csv to data directory. Filename: ' . $filename ) );
