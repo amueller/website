@@ -36,7 +36,7 @@
        <?php } ?>
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->record->{'visibility'}); ?> 
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
-       <?php if($this->is_owner)
+       <?php if($this->is_owner and $this->features != false)
 		echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>';
 	?>
     </div>
@@ -93,11 +93,12 @@
 
 	<div class="col-xs-12">
 			<h3>Features</h3>
+		<?php
+			if ($this->features != false){ ?>
 			<div class="features hideFeatures">
 			<div class="table-responsive">
 				<table class="table">
 				<?php
-				if ($this->features != false){
 				//get target values
 				$featCount = 0;
 				foreach( $this->features as $r ) {
@@ -106,7 +107,7 @@
 						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});';
 					} else if (strlen($r->{'ClassDistribution'})>0) {
 						$distro = json_decode($r->{'ClassDistribution'});
-						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false}'.(count($this->classvalues)>0 ? ',stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}' : '').'},legend:false,tooltip:{useHTML:true,shared:true}'.(count($this->classvalues)>0 ? ',plotOptions:{column:{stacking:\'normal\'}}' : '').',series:[';
+						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
 
 					for($i=0; $i<count($this->classvalues); $i++){
 						$newGraph .= '{name:\''.$this->classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
@@ -129,7 +130,6 @@
 
 					$featCount = $featCount + 1;
 				}  
-				}
 					?>
 				</table>
 			</div>
@@ -138,8 +138,10 @@
         <div class="col-xs-12">
 	  <div class="show-more-features">
 		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($this->features); ?> features</a></div>
+	<?php } else {
+			echo '<p>Data features are not analyzed yet. Check back in a few minutes.</p>'; 
+	      } ?>
 	</div>
-
 
 	        <div class="col-xs-12">
 		<h3>Results (per task)</h3>

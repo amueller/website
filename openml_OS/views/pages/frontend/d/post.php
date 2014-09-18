@@ -46,6 +46,54 @@ if($this->input->post('versions')){
 // Dataset update
 else{
 
+  $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
+
+  $description = $this->dataoverview->generate_xml(
+    'data_set_description',
+    $this->config->item('xml_fields_dataset_update')
+  );
+
+  $post_data = array(
+      'description' => $description,
+      'session_hash' => $session_hash
+  );
+  if( $_FILES['dataset']['error'] == 0 ) {
+      $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
+  }
+  //if data file didn't change, insert the old url
+  //if(!$this->input->post('url') && (!file_exists($_FILES['dataset']['tmp_name']) || !is_uploaded_file($_FILES['dataset']['tmp_name']))) {
+  //	$post_data['url'] = = $this->record->{'url'};
+  //}
+
+  $url = BASE_URL.'/api/?f=openml.data.upload';
+
+  // Send the request & save response to $resp
+
+  $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
+  
+  if($api_response !== false) {
+    $xml = simplexml_load_string( $api_response );
+
+    $this->responsetype = 'alert alert-success';
+    $this->responsecode = -1;
+    $this->response = 'Data was uploaded with id: ';
+    if( property_exists( $xml->children('oml', true), 'code' ) ) {
+      $this->responsetype = 'alert alert-danger';
+      $this->responsecode = $xml->children('oml', true)->code;
+      $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message . '. Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the dataset name.';
+    } else if($xml->children('oml', true)->id){
+      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Great!</h2>Your data set was updated successfully. OpenML is currently reanalyzing the data. Reload the page in a few minutes.';
+      sm($this->response);
+      su('d/'.$this->id);
+    } else {
+	print "Something went wrong. Server says:<br>";
+	print $api_response;
+    }
+  } else{
+    $this->responsetype = 'alert alert-danger';
+    $this->response = 'Could not upload data. Please fill in all required (red) fields.';
+  }
+
 
 
 

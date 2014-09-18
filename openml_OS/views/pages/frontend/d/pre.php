@@ -36,9 +36,11 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
 	$this->id = $info[array_search('d',$info)+1];
 
+	if(!$this->id)
+		su('d');
 	$this->prev_id = $this->Dataset->query('select max(did) as prev from dataset where did<'.$this->id.' and visibility="public"')[0]->prev;
 	$this->next_id = $this->Dataset->query('select min(did) as next from dataset where did>'.$this->id.' and visibility="public"')[0]->next;
-
+	
 	$this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
 	$this->record = $this->record[0];
 	
@@ -171,6 +173,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 	if(strlen($this->wikiwrapper)>400 and $url==$this->wikipage and strlen($preamble)==0)
 		$this->hidedescription = true;
 	}
+
 }
 
 
