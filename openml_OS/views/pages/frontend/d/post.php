@@ -82,7 +82,7 @@ else{
       $this->responsecode = $xml->children('oml', true)->code;
       $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message . '. Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the dataset name.';
     } else if($xml->children('oml', true)->id){
-      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Great!</h2>Your data set was updated successfully. OpenML is currently reanalyzing the data. Reload the page in a few minutes.';
+      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Great!</h2>Your data set was updated successfully. OpenML is currently reanalyzing the data. Refresh the page in a few minutes.';
       sm($this->response);
       su('d/'.$this->id);
     } else {

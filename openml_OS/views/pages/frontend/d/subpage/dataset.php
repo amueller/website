@@ -139,7 +139,10 @@
 	  <div class="show-more-features">
 		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($this->features); ?> features</a></div>
 	<?php } else {
-			echo '<p>Data features are not analyzed yet. Check back in a few minutes.</p>'; 
+			if($this->record->{'error'})
+			    echo '<p>Could not calculate features.</p>'; 
+			else
+			    echo '<p>Data features are not analyzed yet. Refresh the page in a few minutes.</p>'; 
 	      } ?>
 	</div>
 

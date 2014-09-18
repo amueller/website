@@ -698,7 +698,10 @@ class Rest_api extends CI_Controller {
     	$id = $this->Dataset->insert( $dataset );
     else{
     	$id =  '' . $xml->children('oml', true)->{'id'};
+
+        // ignore id, description (should not be altered)
 	unset($dataset['id']);
+	unset($dataset['description']);
 	
 	// resetting unset features
 	if(!array_key_exists('ignore_attributes',$dataset))

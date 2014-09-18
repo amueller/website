@@ -30,7 +30,7 @@
 	<form method="post" action="" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?php echo $this->record->{'did'}; ?>"/> 
         <input type="hidden" name="name" value="<?php echo $this->record->{'name'}; ?>"/> 
-        <input type="hidden" name="description" value="<?php echo $this->record->{'description'}; ?>"/> 
+        <input type="hidden" name="description" value="_"/>  <!-- will be ignored in update -->
         <input type="hidden" name="format" value="<?php echo $this->record->{'format'}; ?>"/> 
 	      <div class="row">
 		<div class="col-sm-6">
