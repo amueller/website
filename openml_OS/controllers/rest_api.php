@@ -1372,11 +1372,6 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $evaluation_global_did = null;
-    $evaluation_fold_dids = array();
-    $evaluation_sample_dids = array();
-    $evaluation_interval_dids = array();
-    
     $data = array( 'processed' => now() );
     if( isset( $xml->children('oml', true)->{'error'}) ) {
       $data['error'] = '' . $xml->children('oml', true)->{'error'};
@@ -1408,38 +1403,15 @@ class Rest_api extends CI_Controller {
       
       if( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) &&  array_key_exists( 'sample', $evaluation ) ) {
         // evaluation_sample 
-        $key = 'sample_' . $evaluation['repeat'] . '_' . $evaluation['fold'] . '_' . $evaluation['sample'];
-        if( array_key_exists( $key, $evaluation_sample_dids ) == false ) {
-          $evaluation_sample_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_sample_dids[$key], 'evaluation_sample' );
-        }
-        $evaluation['did'] = $evaluation_sample_dids[$key];
         $this->Evaluation_sample->insert( $evaluation );
       } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
         // evaluation_fold
-        $key = 'fold_' . $evaluation['repeat'] . '_' . $evaluation['fold'];
-        if( array_key_exists( $key, $evaluation_fold_dids ) == false ) {
-          $evaluation_fold_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_fold_dids[$key], 'evaluation_fold' );
-        }
-        $evaluation['did'] = $evaluation_fold_dids[$key];
         $this->Evaluation_fold->insert( $evaluation );
       } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
         // evaluation_interval
-        $key = 'interval_' .  $evaluation['interval_start'] . '_' . $evaluation['interval_end'];
-        if( array_key_exists( $key, $evaluation_interval_dids ) == false ) {
-          $evaluation_interval_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_interval_dids[$key], 'evaluation_interval' );
-        }
-        $evaluation['did'] = $evaluation_interval_dids[$key];
         $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
-        if( $evaluation_global_did == null ) {
-          $evaluation_global_did = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_global_did, 'evaluation' );
-        }
-        $evaluation['did'] = $evaluation_global_did;
         $this->Evaluation->insert( $evaluation );
       }
     }

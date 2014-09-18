@@ -12,7 +12,8 @@ class Cron extends CI_Controller {
     $this->load->model('Meta_dataset');
     $this->load->model('File');
     
-    $this->load->helper('File_upload');
+    $this->load->helper('file_upload');
+    $this->load->helper('text');
     $this->load->helper('directory');
     
     $this->dir_suffix = 'dataset/cron/';
@@ -36,46 +37,57 @@ class Cron extends CI_Controller {
     
     if( $meta_dataset ) {
       $meta_dataset = $meta_dataset[0];
-      $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'processed' => now() ) );
+      $this->Meta_dataset->update( $meta_dataset->id, array( 'processed' => now() ) );
       $dataset_constr = ( $meta_dataset->datasets ) ? 'AND d.did IN (' . $meta_dataset->datasets . ') ' : '';
       $flow_constr = ( $meta_dataset->flows ) ? 'AND i.id IN (' . $meta_dataset->flows . ') ' : '';
-      $function_constr = ( $meta_dataset->flows ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
+      $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
+      
+      if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
+        $this->Meta_dataset->update( $meta_dataset->id, array( 'error_message' => 'Failed to create data directory. ' ) );
+      }
+      
+      $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
       
       $sql = 
+        'SELECT "run_id", "setup_id", "task_id", "repeat", "fold", "sample_size", "function", "value", "textual"' .
+        'UNION ALL ' .
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
-        'd.did AS dataset_id, i.id AS implementation_id, e.repeat, e.fold, '.
-        'e.sample_size, e.value, CONCAT(i.fullName, " on ", d.did) as textual '.
+        'e.repeat, e.fold, e.sample_size, e.function, e.value, '.
+        'CONCAT(i.fullName, " on ", d.name) as textual '.
         'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, evaluation_sample e '.
         'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
         'AND v.input = "source_data" AND v.value = d.did '.
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
         'AND e.source = r.rid '.
          $dataset_constr . $flow_constr .  $function_constr .
-        'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample;';
-      $res = $this->Dataset->query( $sql );
-      if( $res ) {
-        if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
-          $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'error_message' => 'Failed to create data directory. ' ) );
-        }
-        $filepath = getAvailableName( DATA_PATH . $this->dir_suffix, 'meta_dataset.arff' );
-        $filename = end( explode( '/', $filepath ) );
-        $filepointer = fopen( DATA_PATH . $this->dir_suffix . $filepath, 'w');
-        if ( $filepointer == false ) {
-          $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'error_message' => 'Failed to create file: ' . $filename ) );
-        }
-
-        fputcsv( $filepointer, array_keys( get_object_vars( $res[0] ) ) );
-        foreach( $res as $r ) {
-          fputcsv( $filepointer, (array) $r );
-        }
-        fclose($filepointer);
-        $file_id = $this->File->register_created_file( $this->dir_suffix, $filename, $meta_dataset->user_id, 'dataset', 'text/csv', 'private' );
-        
-        $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'file_id' => $file_id ) );
-      } else {
-         $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'error_message' => 'Dataset does not contain any instances.' ) );
+//      'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample ' . 
+        'INTO OUTFILE "'. $tmp_path .'" ' .
+        'FIELDS TERMINATED BY "," ' .
+        'ENCLOSED BY "\"" ' .
+        'LINES TERMINATED BY "\n" ' .
+        ';';
+      
+      $this->Dataset->query( $sql ); 
+      $success = file_exists( $tmp_path );      
+      
+      if( $success == false ) {
+        $this->Meta_dataset->update( $meta_dataset->id, array( 'error_message' => 'Failed to export query to tmp directory. ' ) );
+        return;
       }
-    }
+      
+      $filename = getAvailableName( DATA_PATH . $this->dir_suffix, 'meta_dataset.csv' );
+      $filepath = DATA_PATH . $this->dir_suffix . $filename;
+      $success = rename( $tmp_path, $filepath );
+      
+      if( $success == false ) {
+        $this->Meta_dataset->update( $meta_dataset->id, array( 'error_message' => 'Failed to move csv to data directory. Filename: ' . $filename ) );
+        return;
+      }
+      
+      $file_id = $this->File->register_created_file( $this->dir_suffix, $filename, $meta_dataset->user_id, 'dataset', 'text/csv', 'private' );
+        
+      $this->Meta_dataset->update( $meta_dataset->id, array( 'file_id' => $file_id ) ); 
+    } 
   }
   
   private function _error($type, $did, $message) {
