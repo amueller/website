@@ -28,6 +28,8 @@ if( $illegal_value ) {
 
 $functions = '"' . implode( '", "', $functions ) . '"';
 
+
+// TODO: normalize functions, flows and datasets. No tailing comma's allowed!
 $md = array( 
   'request_date' => now(),
   'datasets' => $datasets ? $datasets : null,
