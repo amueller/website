@@ -44,14 +44,15 @@ class Cron extends CI_Controller {
       $sql = 
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
         'd.did AS dataset_id, i.id AS implementation_id, e.repeat, e.fold, '.
-        'e.sample_size, e.value, CONCAT(i.fullName, " on ", d.did) as textual '.
+        'e.sample_size, e.function, e.value, CONCAT(i.fullName, " on ", d.name) as textual '.
         'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, evaluation_sample e '.
         'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
         'AND v.input = "source_data" AND v.value = d.did '.
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
         'AND e.source = r.rid '.
          $dataset_constr . $flow_constr .  $function_constr .
-        'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample;';
+//      'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample ' . 
+        ';';
       $res = $this->Dataset->query( $sql );
       if( $res ) {
         if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
