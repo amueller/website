@@ -39,7 +39,7 @@ class Cron extends CI_Controller {
       $this->Meta_dataset->update( 'id = ' . $meta_dataset->id, array( 'processed' => now() ) );
       $dataset_constr = ( $meta_dataset->datasets ) ? 'AND d.did IN (' . $meta_dataset->datasets . ') ' : '';
       $flow_constr = ( $meta_dataset->flows ) ? 'AND i.id IN (' . $meta_dataset->flows . ') ' : '';
-      $function_constr = ( $meta_dataset->flows ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
+      $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
       $sql = 
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
