@@ -30,7 +30,7 @@
                 <label class="col-md-2 control-label" for="functionSelect">Evaluation Measures</label>
                 <div class="col-md-10">
                   <?php foreach( $this->measures as $m ): ?>
-                  <input type="checkbox" id="functionSelect" name="functions[]" value="<?php echo $m; ?>" />&nbsp;<?php echo str_replace( '_', ' ', $m ); ?><br/>
+                  <input type="checkbox" id="functionSelect" name="functions[]" value="<?php echo $m; ?>" checked />&nbsp;<?php echo str_replace( '_', ' ', $m ); ?><br/>
                   <?php endforeach; ?>
                   <span class="help-block">Select at least one evaluation measure you&#39;re interested in </span>
                 </div>

@@ -55,6 +55,7 @@ $frontend_pages = array(
 					'home',
 					'learn_sql',
 					'login',
+					'meta_dataset',
 					'overview',
           'password_forgot',
           'password_reset',
