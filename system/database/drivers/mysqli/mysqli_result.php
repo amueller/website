@@ -84,6 +84,17 @@ class CI_DB_mysqli_result extends CI_DB_result {
 	function field_data()
 	{
 		$retval = array();
+		$field_data = mysqli_fetch_fields($this->result_id);
+		for ($i = 0, $c = count($field_data); $i < $c; $i++)
+		{
+			$retval[$i]			= new stdClass();
+			$retval[$i]->name		= $field_data[$i]->name;
+			$retval[$i]->type		= $field_data[$i]->type;
+			$retval[$i]->max_length		= $field_data[$i]->max_length;
+			$retval[$i]->primary_key	= (int) ($field_data[$i]->flags & 2);
+			$retval[$i]->default		= '';
+		}
+/** Fixed from github commit. See https://github.com/EllisLab/CodeIgniter/commit/effd0133b3fa805e21ec934196e8e7d75608ba00
 		while ($field = mysqli_fetch_object($this->result_id))
 		{
 			preg_match('/([a-zA-Z]+)(\(\d+\))?/', $field->Type, $matches);
@@ -100,7 +111,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 
 			$retval[] = $F;
 		}
-
+**/
 		return $retval;
 	}
 	

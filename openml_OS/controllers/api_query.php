@@ -49,11 +49,17 @@ class Api_query extends CI_Controller {
     $types = array();
     $results = array();
     
-    $data = $result->list_fields();
+    $data = $result->field_data();
     for ($k = 0; $k < count($data); $k++) 
     {
-      $fname = $data[$k]; 
-      $type = 'undefined';
+      $fname = $data[$k]->name; 
+      $type = $data[$k]->type;
+
+      //if string, check if it can be cast
+      if($type == "string"){
+	$value = htmlentities($result->row()->$fname);
+	$type = $this->guessType($value);
+      }
 
       //make field names unique 
       $ctr=1;
@@ -82,6 +88,15 @@ class Api_query extends CI_Controller {
     }
     
     $this->load->view('json/free_query');
+  }
+
+  function guessType($v){
+	if($v == "0" or filter_var($v, FILTER_VALIDATE_INT))
+		return "integer";
+	else if(is_numeric($v))
+		return "double";
+	else
+		return "string";
   }
   
   function table_feed() {
