@@ -26,6 +26,11 @@ if( $illegal_value ) {
   su('backend/page/meta_dataset');
 }
 
+if( $functions ) {
+  sm('Please select at least one function. ' );
+  su('backend/page/meta_dataset');
+}
+
 $functions = '"' . implode( '", "', $functions ) . '"';
 
 $md = array( 
