@@ -14,4 +14,6 @@ $config['api_session_length'] = '1 hour';
 
 $config['java_heap_space_web'] = '128M';
 $config['java_heap_space_cli'] = '2G';
+
+$config['email_debug'] = 'Jan N. van Rijn <janvanrijn@gmail.com>, Joaquin Vanschoren <joaquinvanschoren@gmail.com>';
 ?>
