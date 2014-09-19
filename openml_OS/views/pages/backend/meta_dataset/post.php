@@ -26,7 +26,7 @@ if( $illegal_value ) {
   su('backend/page/meta_dataset');
 }
 
-if( $functions ) {
+if( $functions == false ) {
   sm('Please select at least one function. ' );
   su('backend/page/meta_dataset');
 }
