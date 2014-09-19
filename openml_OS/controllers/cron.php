@@ -16,6 +16,9 @@ class Cron extends CI_Controller {
     $this->load->helper('text');
     $this->load->helper('directory');
     
+    $this->load->library('email');
+    $this->email->from( EMAIL_FROM, 'The OpenML Team');
+    
     $this->dir_suffix = 'dataset/cron/';
   }
   
@@ -43,7 +46,8 @@ class Cron extends CI_Controller {
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
       if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
-        $this->Meta_dataset->update( $meta_dataset->id, array( 'error_message' => 'Failed to create data directory. ' ) );
+        $this->_error_meta_dataset( $meta_dataset->id, 'Failed to create data directory. ', $meta_dataset->user_id );
+        return;
       }
       
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
@@ -71,7 +75,7 @@ class Cron extends CI_Controller {
       $success = file_exists( $tmp_path );      
       
       if( $success == false ) {
-        $this->Meta_dataset->update( $meta_dataset->id, array( 'error_message' => 'Failed to export query to tmp directory. ' ) );
+        $this->_error_meta_dataset( $meta_dataset->id, 'Failed to export query to tmp directory. ', $meta_dataset->user_id );
         return;
       }
       
@@ -80,19 +84,27 @@ class Cron extends CI_Controller {
       $success = rename( $tmp_path, $filepath );
       
       if( $success == false ) {
-        $this->Meta_dataset->update( $meta_dataset->id, array( 'error_message' => 'Failed to move csv to data directory. Filename: ' . $filename ) );
+        $this->_error_meta_dataset( $meta_dataset->id, 'Failed to move csv to data directory. Filename: ' . $filename, $meta_dataset->user_id );
         return;
       }
       
       $file_id = $this->File->register_created_file( $this->dir_suffix, $filename, $meta_dataset->user_id, 'dataset', 'text/csv', 'private' );
         
       $this->Meta_dataset->update( $meta_dataset->id, array( 'file_id' => $file_id ) ); 
-    } 
+      
+      $this->email->subject('OpenML Meta Dataset');
+      $this->email->message("This is an automatically generated email. The your requested meta-dataset was created successfully and can be downloaded from the OpenML Control Panel. "); 
+      $this->email->send();
+    }
   }
   
-  private function _error($type, $did, $message) {
-    $this->Log->cronjob( 'error', 'process_' . $type, 'Id ' . $did . ' processed with error: ' . $message );
-    // TODO: email user about the error that occurred. 
+  private function _error_meta_dataset( $id, $msg, $user_id ) {
+    $user = $this->Ion_auth->user( $user_id );
+    $this->Meta_dataset->update( $id, array( 'error_message' => $msg ) );
+    
+    $this->email->subject('OpenML Meta Dataset');
+    $this->email->message("This is an automatically generated email. \n\nUnfortunatelly, the creation of the Meta Dataset was unsuccessfull. \n\nError message: $msg\n\nIn case of any questions, please don't hesitate to contact the OpenML Team. "); 
+    $this->email->send();
   }
 }
 ?>

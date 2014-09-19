@@ -32,8 +32,8 @@ $functions = '"' . implode( '", "', $functions ) . '"';
 // TODO: normalize functions, flows and datasets. No tailing comma's allowed!
 $md = array( 
   'request_date' => now(),
-  'datasets' => $datasets ? $datasets : null,
-  'flows' => $flows ? $flows : null,
+  'datasets' => $datasets ? clean_cs_natural_numbers($datasets) : null,
+  'flows' => $flows ? clean_cs_natural_numbers($flows) : null,
   'functions' => $functions ? $functions : null,
   'user_id' => $this->ion_auth->get_user_id() );
 
