@@ -93,10 +93,6 @@
 			  <option value="private" <?php ($this->record->{'visibility'}=='private' ? 'selected' : '') ?>>Only me</option>
 		  	  </select>
 	          </div>
-		  <div class="form-group">
-		    <label class="control-label" for="paper_url">Paper/preprint</label>
-		    <input type="text" class="form-control" name="paper_url" placeholder="URL to paper or preprint about this data." value="<?php echo $this->record->{'paper_url'}; ?>" /> 
-		  </div>
 		</div>
 
 	        <div class="col-sm-6">
@@ -130,6 +126,11 @@
             </div>
 	    <div class="row">
 	      <div class="col-sm-12">
+		  <h2>Submit</h2>
+		  <div class="form-group has-error">
+		    <input type="text" class="form-control" name="update_comment" id="comment" placeholder="State what changed and why this change was necessary" /> 
+		  </div>
+
 		  <div class="form-group">
 		    <input class="btn btn-primary" type="submit" name="submit" value="Submit"/>
 		  </div>
@@ -141,17 +142,7 @@
 </div> <!-- end container -->
 
 <script>
-	$('#name').bind('input', function() {
-	    var cname = $(this).val();
-	    if(cname.length > 0 && cname.split(" ").length == 1){
-	       $(this).parent().removeClass('has-error');
-	       $(this).parent().addClass('has-success');
-	    } else {
-	       $(this).parent().removeClass('has-success');
-	       $(this).parent().addClass('has-error');
-	    }
-	});
-	$('#description').bind('input', function() {
+	$('#comment').bind('input', function() {
 	    var cname = $(this).val();
 	    if(cname.length > 0){
 	       $(this).parent().removeClass('has-error');
@@ -161,16 +152,4 @@
 	       $(this).parent().addClass('has-error');
 	    }
 	});
-	$('#format').bind('input', function() {
-	    var cname = $(this).val();
-	    if(cname.length > 0){
-	       $(this).parent().removeClass('has-error');
-	       $(this).parent().addClass('has-success');
-	    } else {
-	       $(this).parent().removeClass('has-success');
-	       $(this).parent().addClass('has-error');
-	    }
-	});
-
-
 </script>

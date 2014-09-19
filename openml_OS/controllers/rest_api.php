@@ -665,17 +665,21 @@ class Rest_api extends CI_Controller {
       'version' => $version,
       'url' => $destinationUrl,
       'upload_date' => now(),
+      'last_update' => now(),
       'uploader' => $this->user_id,
       'isOriginal' => 'true',
       'md5_checksum' => md5_file( $destinationUrl )
      );
     } else if ($destinationUrl){
      $dataset = array(
+      'last_update' => now(),
       'url' => $destinationUrl,
       'md5_checksum' => md5_file( $destinationUrl )
      );
     } else {
-     $dataset = array();
+     $dataset = array(
+      'last_update' => now()
+     );
     }
     // TODO: We could check on this, but it will be generated anyway during the cronjob
     // if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
@@ -713,8 +717,9 @@ class Rest_api extends CI_Controller {
 	
         // reset data features so that they are recalculated
 	$dataset['processed'] = NULL; 
-	$dataset['error'] = 'false'; 
+	$dataset['error'] = 'false';
 	$this->Dataset->query('delete from data_feature where did='.$id);
+	$this->Dataset->query('delete from data_quality where data='.$id);
 
         // the actual update
 	$response = $this->Dataset->update( $id, $dataset );

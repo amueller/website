@@ -11,6 +11,7 @@
      <p></p>
      <hr>
      	<?php
+	    //$this->sort = 'last_update';
 	    loadpage('search', true, 'pre'); 
 	    loadpage('search/subpage', true, 'results'); 
         ?> 

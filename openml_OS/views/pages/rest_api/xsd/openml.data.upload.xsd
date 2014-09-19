@@ -32,6 +32,7 @@
     <xs:element name="visibility" minOccurs="0" type="xs:string"/> <!-- Who can see the dataset. Typical values: 'Everyone','All my friends','Only me'. Can also be any of the user's circles. -->
     <xs:element name="original_data_url" minOccurs="0" type="xs:string"/> <!-- For derived data, the url to the original dataset. This can be an OpenML dataset, e.g. 'http://openml.org/d/1'. -->
     <xs:element name="paper_url" minOccurs="0" type="xs:string"/> <!-- Link to a paper describing the dataset -->
+    <xs:element name="update_comment" minOccurs="0" type="xs:string"/> <!-- When the dataset is updated, add an explanation here. -->
     <xs:element name="md5_checksum" minOccurs="0" type="xs:string"/> <!-- MD5 checksum to check if the dataset is downloaded without corruption. -->
   </xs:sequence>
 </xs:complexType>

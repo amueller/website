@@ -31,9 +31,6 @@
     <div class="datainfo">
        <i class="fa fa-table"></i> <?php echo (strtolower($this->record->{'format'}) == 'arff' ? '<a href="http://weka.wikispaces.com/ARFF+%28developer+version%29" target="_blank">ARFF</a>' : $this->record->{'format'}); ?>
        <i class="fa fa-cc"></i> <?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?> 	    
-       <?php if($this->record->{'paper_url'}){ ?>
-	    <i class="fa fa-book"></i> <a href="<?php echo $this->record->{'paper_url'} ?>">Original paper</a>
-       <?php } ?>
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->record->{'visibility'}); ?> 
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
        <?php if($this->is_owner and $this->features != false)
@@ -139,7 +136,7 @@
 	  <div class="show-more-features">
 		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($this->features); ?> features</a></div>
 	<?php } else {
-			if($this->record->{'error'})
+			if($this->record->{'error'} == 'true')
 			    echo '<p>Could not calculate features.</p>'; 
 			else
 			    echo '<p>Data features are not analyzed yet. Refresh the page in a few minutes.</p>'; 
