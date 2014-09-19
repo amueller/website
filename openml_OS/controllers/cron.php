@@ -68,7 +68,7 @@ class Cron extends CI_Controller {
         'INTO OUTFILE "'. $tmp_path .'" ' .
         'FIELDS TERMINATED BY "," ' .
         'ENCLOSED BY "\"" ' .
-        'LINES TERMINATED BY "\n" ' .
+        'LINES TERMINATED BY "\n" ' . 
         ';';
       
       $this->Dataset->query( $sql ); 
@@ -103,7 +103,7 @@ class Cron extends CI_Controller {
   private function _error_meta_dataset( $id, $msg, $user_id ) {
     $this->Meta_dataset->update( $id, array( 'error_message' => $msg ) );
     
-    $user = $this->ion_auth->user( $user_id );
+    $user = $this->ion_auth->user( $user_id )->row();
     $this->email->to( $user->email );
     $this->email->bcc( $this->config->item( 'email_debug' ) );
     $this->email->subject('OpenML Meta Dataset');
