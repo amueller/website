@@ -8,15 +8,15 @@ function text_to_underscored($input) {
 }
 
 function punc2uc($input) { // punctuation to underscores
-  return preg_replace("/[^a-zA-Z0-9]+/", "_", $input );
+  return preg_replace('/[^a-zA-Z0-9]+/', '_', $input );
 }
 
 function safe( $unsafe ) {
-  return preg_replace("/[^a-zA-Z0-9\s.,-_()]/", "", $unsafe );
+  return preg_replace('/[^a-zA-Z0-9\s.,-_()]/', '', $unsafe );
 }
 
 function is_safe( $unsafe ) {
-  return !preg_match("/[^a-zA-Z0-9\s.,-_()]/", $unsafe );
+  return !preg_match('/[^a-zA-Z0-9\s.,-_()]/', $unsafe );
 }
 
 function is_natural_number( $query ) {
@@ -52,6 +52,18 @@ function range_string_to_array( $range_string ) {
     $result = array_unique( $result, SORT_NUMERIC );
   }
   return $result;
+}
+
+function clean_cs_natural_numbers( $input, $input_delim = ',', $output_delim = ',' ) {
+  $input = preg_replace('/[^0-9,]+/', '', $input);
+  $data = explode($input_delim, $input);
+  for( $i = count($data) - 1; $i >= 0; --$i ) {
+    // important test: we want to filter out empty values (because of tailing comma)
+    if( is_numeric( $data[$i] ) == false ) {
+      unset( $data[$i] );
+    }
+  }
+  return implode( $output_delim, $data );
 }
 
 function cutoff( $input, $length ) {
