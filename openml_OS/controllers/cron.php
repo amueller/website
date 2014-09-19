@@ -92,7 +92,7 @@ class Cron extends CI_Controller {
         
       $this->Meta_dataset->update( $meta_dataset->id, array( 'file_id' => $file_id ) ); 
       
-      $user = $this->ion_auth->user( $user_id );
+      $user = $this->ion_auth->user( $user_id )->row();
       $this->email->to( $user->email );
       $this->email->subject('OpenML Meta Dataset');
       $this->email->message("This is an automatically generated email. The your requested meta-dataset was created successfully and can be downloaded from the OpenML Control Panel. "); 
