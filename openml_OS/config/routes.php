@@ -46,6 +46,7 @@ $route['api/:any'] = 'rest_api/$1';
 
 
 $route['files'] = 'data';
+$route['files/:any'] = 'data/$1';
 
 $frontend_pages = array(
           'community',
