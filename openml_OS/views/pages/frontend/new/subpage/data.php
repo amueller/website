@@ -121,19 +121,23 @@
 	      <div class="row">
 		<div class="col-sm-6">
 		  <div class="form-group">
-		    <label class="control-label" for="original_data_url">Original data URL</label>
-		    <input type="text" class="form-control" name="original_data_url" placeholder="For derived data, the URL to the original data set. E.g., http://openml.org/d/1" value="<?php echo $this->input->post('original_data_url'); ?>"/>
-		  </div>
-		  <div class="form-group">
-		    <label class="control-label" for="default_target_attribute">Target attribute</label>
-		    <input type="text" class="form-control" name="default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset." value="<?php echo $this->input->post('default_target_attribute'); ?>" onblur=""/> 
+		    <label class="control-label" for="default_target_attribute">Target attribute(s)</label>
+		    <input type="text" class="form-control" name="default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset. Comma-separate if multiple values." value="<?php echo $this->input->post('default_target_attribute'); ?>" onblur=""/> 
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="row_id_attribute">Row ID Attribute</label>
-		    <input type="text" class="form-control" name="row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="<?php echo $this->input->post('row_id_attribute'); ?>" onblur=""/>		  </div>
+		    <input type="text" class="form-control" name="row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="<?php echo $this->input->post('row_id_attribute'); ?>" onblur=""/>		  
+                  </div>
+		  <div class="form-group">
+		    <label class="control-label" for="row_id_attribute">Ignore Attributes</label>
+		    <input type="text" class="form-control" name="ignore_attributes" placeholder="If present, the names of attributes that should be ignored when modelling the data (e.g. identifiers, indices)." value="<?php echo $this->input->post('ignore_attributes'); ?>" onblur=""/>		  
+		  </div>
 		</div>
 		<div class="col-sm-6">
-
+		  <div class="form-group">
+		    <label class="control-label" for="original_data_url">Original data URL</label>
+		    <input type="text" class="form-control" name="original_data_url" placeholder="For derived data, the URL to the original data set. E.g., http://openml.org/d/1" value="<?php echo $this->input->post('original_data_url'); ?>"/>
+		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="contributor">Acknowledgements, contributors</label>
 		    <input type="text" class="form-control" name="contributor" 

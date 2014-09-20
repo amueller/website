@@ -13,6 +13,8 @@
       <xs:element name="name" type="xs:string"/> <!-- The name of the quality that is set -->
       <xs:element name="data_type" type="xs:string"/> <!-- The value of the quality --> 
       <xs:element minOccurs="0" name="is_target" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="is_ignore" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="is_row_identifier" type="xs:boolean"/>
       <xs:element minOccurs="0" name="NumberOfDistinctValues" type="xs:integer"/>
       <xs:element minOccurs="0" name="NumberOfUniqueValues" type="xs:integer"/>
       <xs:element minOccurs="0" name="NumberOfMissingValues" type="xs:integer"/>

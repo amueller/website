@@ -17,14 +17,36 @@ $config['xml_fields_dataset'] = array(
      8 => 'url',
      9 => 'default_target_attribute',
     10 => 'row_id_attribute',
-    11 => 'version_label',
-    12 => 'citation',
-    13 => 'visibility',
-    14 => 'original_data_url',
-    15 => 'paper_url'),
+    11 => 'ignore_attributes',
+    12 => 'version_label',
+    13 => 'citation',
+    14 => 'visibility',
+    15 => 'original_data_url',
+    16 => 'paper_url'),
   'csv'     => array(
      3 => 'creator',
-     4 => 'contributor'),
+     4 => 'contributor',
+),
+  'array'   => array(),
+  'plain'   => array()
+);
+
+$config['xml_fields_dataset_update'] = array(
+  'string'  => array(
+     0 => 'id',
+     1 => 'name',
+     2 => 'description',
+     3 => 'format',
+     4 => 'licence',
+     5 => 'url',
+     6 => 'default_target_attribute',
+     7 => 'row_id_attribute',
+     8 => 'ignore_attributes',
+     9 => 'version_label',
+    10 => 'visibility',
+    11 => 'paper_url',
+    12 => 'update_comment'),
+  'csv'     => array(),
   'array'   => array(),
   'plain'   => array()
 );

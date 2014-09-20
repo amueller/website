@@ -66,6 +66,7 @@ class Rest_api extends CI_Controller {
     
     // XML maintainance
     $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');
+    $this->xml_fields_dataset_update = $this->config->item('xml_fields_dataset_update');
     $this->xml_fields_implementation = $this->config->item('xml_fields_implementation');
     
     $this->data_controller = $this->config->item('data_controller');
@@ -304,17 +305,36 @@ class Rest_api extends CI_Controller {
     
     $this->db->trans_start();
     $success = true;
-    $current_index = -1;
+    //$current_index = -1;
+
+    //copy special features into data_features
+    $targets = array_map('trim',explode(",",$dataset->default_target_attribute));
+    $rowids = array_map('trim',explode(",",$dataset->row_id_attribute));
+    $ignores = array_map('trim',explode(",",$dataset->ignore_attributes));
+
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
       $feature->did = $did;
+
+      // add special features 
+      if(in_array($feature->name,$targets))
+	$feature->is_target = 'true';
+      else //this is needed because the Java feature extractor still chooses a target when there isn't any
+	$feature->is_target = 'false';
+      if(in_array($feature->name,$rowids))
+	$feature->is_row_identifier = 'true';
+      if(in_array($feature->name,$ignores))
+	$feature->is_ignore = 'true';
+
+      //actual insert
       $this->Data_feature->insert_ignore( $feature );
-      
+
+      // NOTE: this is commented out because not all datasets have targets, or they can have multiple ones. Targets should also be set more carefully.
       // if no specified attribute is the target, select the last one:
-      if( $dataset->default_target_attribute == false && $feature->index > $current_index ) {
-        $current_index = $feature->index;
-        $data['default_target_attribute'] = $feature->name;
-      }
+      //if( $dataset->default_target_attribute == false && $feature->index > $current_index ) {
+      //  $current_index = $feature->index;
+      //  $data['default_target_attribute'] = $feature->name;
+      //}
     }
     $this->db->trans_complete();
         
@@ -595,11 +615,13 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 135 );
       return;
     }
+
+    //check if this is an update or a new dataset
+    $update = false;
+    if($xml->children('oml', true)->{'id'})
+	$update = true;
     
-    $name = '' . $xml->children('oml', true)->{'name'};
-    
-    $version = $this->Dataset->incrementVersionNumber( $name );
-    
+    //check and register the data files, return url
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
     $datasetFileProvided = isset( $_FILES['dataset'] );
     if( $datasetUrlProvided && $datasetFileProvided ) {
@@ -626,43 +648,96 @@ class Rest_api extends CI_Controller {
       
     } elseif( $datasetUrlProvided ) {
       $destinationUrl = '' . $xml->children('oml', true)->url;
+    } elseif($update) {
+      $destinationUrl = false;
     } else {
       $this->_returnError( 141 );
       return;
-    }
+    } 
     
-    $dataset = array(
+    //build dataset object with new fields to be stored
+    if(!$update){
+     $name = '' . $xml->children('oml', true)->{'name'};
+     $version = $this->Dataset->incrementVersionNumber( $name );
+
+     $dataset = array(
       'name' => $name,
       'version' => $version,
       'url' => $destinationUrl,
       'upload_date' => now(),
+      'last_update' => now(),
       'uploader' => $this->user_id,
       'isOriginal' => 'true',
       'md5_checksum' => md5_file( $destinationUrl )
-    );
-    
+     );
+    } else if ($destinationUrl){
+     $dataset = array(
+      'last_update' => now(),
+      'url' => $destinationUrl,
+      'md5_checksum' => md5_file( $destinationUrl )
+     );
+    } else {
+     $dataset = array(
+      'last_update' => now()
+     );
+    }
     // TODO: We could check on this, but it will be generated anyway during the cronjob
     // if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
     
-    $dataset = all_tags_from_xml( 
-      $xml->children('oml', true), 
-      $this->xml_fields_dataset, $dataset );
+    // extract all other necessary info from the XML description
+    if(!$update){
+	    $dataset = all_tags_from_xml( 
+	      $xml->children('oml', true), 
+	      $this->xml_fields_dataset, $dataset );
+    } else {
+	    $dataset = all_tags_from_xml( 
+	      $xml->children('oml', true), 
+	      $this->xml_fields_dataset_update, $dataset );
+    }
 
     /* * * * 
      * THE ACTUAL INSERTION
      * * * */
-    $id = $this->Dataset->insert( $dataset );
-    // update elastic search index. 
-    $this->elasticsearch->index('data', $id);
+    if(!$update)
+    	$id = $this->Dataset->insert( $dataset );
+    else{
+    	$id =  '' . $xml->children('oml', true)->{'id'};
+
+        // ignore id, description (should not be altered)
+	unset($dataset['id']);
+	unset($dataset['description']);
+	
+	// resetting unset features
+	if(!array_key_exists('ignore_attributes',$dataset))
+		$dataset['ignore_attributes'] = NULL; 
+	if(!array_key_exists('default_target_attribute',$dataset))
+		$dataset['default_target_attribute'] = NULL; 
+	if(!array_key_exists('row_id_attribute',$dataset))
+		$dataset['row_id_attribute'] = NULL; 
+	
+        // reset data features so that they are recalculated
+	$dataset['processed'] = NULL; 
+	$dataset['error'] = 'false';
+	$this->Dataset->query('delete from data_feature where did='.$id);
+	$this->Dataset->query('delete from data_quality where data='.$id);
+
+        // the actual update
+	$response = $this->Dataset->update( $id, $dataset );
+    }
+
     if( ! $id ) {
       $this->_returnError( 134 );
       return;
     }
 
-    $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
+    // update elastic search index. 
+    $this->elasticsearch->index('data', $id);
 
     // create initial wiki page
-    $this->wiki->export_to_wiki($id);
+    if(!$update)
+    	$this->wiki->export_to_wiki($id);
+
+    $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
   private function _openml_task_types() {
@@ -1305,11 +1380,6 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $evaluation_global_did = null;
-    $evaluation_fold_dids = array();
-    $evaluation_sample_dids = array();
-    $evaluation_interval_dids = array();
-    
     $data = array( 'processed' => now() );
     if( isset( $xml->children('oml', true)->{'error'}) ) {
       $data['error'] = '' . $xml->children('oml', true)->{'error'};
@@ -1341,38 +1411,15 @@ class Rest_api extends CI_Controller {
       
       if( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) &&  array_key_exists( 'sample', $evaluation ) ) {
         // evaluation_sample 
-        $key = 'sample_' . $evaluation['repeat'] . '_' . $evaluation['fold'] . '_' . $evaluation['sample'];
-        if( array_key_exists( $key, $evaluation_sample_dids ) == false ) {
-          $evaluation_sample_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_sample_dids[$key], 'evaluation_sample' );
-        }
-        $evaluation['did'] = $evaluation_sample_dids[$key];
         $this->Evaluation_sample->insert( $evaluation );
       } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
         // evaluation_fold
-        $key = 'fold_' . $evaluation['repeat'] . '_' . $evaluation['fold'];
-        if( array_key_exists( $key, $evaluation_fold_dids ) == false ) {
-          $evaluation_fold_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_fold_dids[$key], 'evaluation_fold' );
-        }
-        $evaluation['did'] = $evaluation_fold_dids[$key];
         $this->Evaluation_fold->insert( $evaluation );
       } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
         // evaluation_interval
-        $key = 'interval_' .  $evaluation['interval_start'] . '_' . $evaluation['interval_end'];
-        if( array_key_exists( $key, $evaluation_interval_dids ) == false ) {
-          $evaluation_interval_dids[$key] = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_interval_dids[$key], 'evaluation_interval' );
-        }
-        $evaluation['did'] = $evaluation_interval_dids[$key];
         $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
-        if( $evaluation_global_did == null ) {
-          $evaluation_global_did = $this->Dataset->getHighestIndex( $this->data_tables, 'did' );
-          $this->Run->outputData( $run_id, $evaluation_global_did, 'evaluation' );
-        }
-        $evaluation['did'] = $evaluation_global_did;
         $this->Evaluation->insert( $evaluation );
       }
     }
@@ -1632,37 +1679,6 @@ class Rest_api extends CI_Controller {
     }
     
     $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
-  }
-
-  private function _openml_data_description_update() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 470 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 471 );
-        return;
-      }
-    }
-        
-    $data = $this->Dataset->getById( $this->input->post( 'data_id' ) );
-    if( $data == false ) {
-      $this->_returnError( 472 );
-      return;
-    } 
-
-    $key = $this->input->post( 'key' );
-    $value = $this->input->post( 'value' );
-
-    if(in_array($key, array('default_target_feature','uploader','url','did','licence','visibility')) and $data->uploader !=  $this->user_id ){ // not owner of the dataset
-        $this->_returnError( 473 );
-        return;
-    }
-    
-    $this->Dataset->update( $this->input->post( 'data_id' ), array($key => $value));
-
-    
-    $this->_xmlContents( 'data-description-update', array( 'id' => $data->did, 'key' => $key, 'value' => $value ) );
   }
   
   /********************************* ALIAS FUNCTIONS *********************************/

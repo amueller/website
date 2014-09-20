@@ -31,11 +31,11 @@
     <div class="datainfo">
        <i class="fa fa-table"></i> <?php echo (strtolower($this->record->{'format'}) == 'arff' ? '<a href="http://weka.wikispaces.com/ARFF+%28developer+version%29" target="_blank">ARFF</a>' : $this->record->{'format'}); ?>
        <i class="fa fa-cc"></i> <?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?> 	    
-       <?php if($this->record->{'paper_url'}){ ?>
-	    <i class="fa fa-book"></i> <a href="<?php echo $this->record->{'paper_url'} ?>">Original paper</a>
-       <?php } ?>
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->record->{'visibility'}); ?> 
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
+       <?php if($this->is_owner and $this->features != false)
+		echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>';
+	?>
     </div>
   </div>
   <div class="col-xs-12">
@@ -90,19 +90,15 @@
 
 	<div class="col-xs-12">
 			<h3>Features</h3>
+		<?php
+			if ($this->features != false){ ?>
 			<div class="features hideFeatures">
 			<div class="table-responsive">
 				<table class="table">
-				<?php $result = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_id, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE did=" . $this->record->{'did'});
-				if (is_array($result)){
+				<?php
 				//get target values
-				$classvalues = array();
-				foreach( $result as $r ) {
-					if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal")
-						$classvalues = json_decode($r->{'ClassDistribution'})[0];
-				}
 				$featCount = 0;
-				foreach( $result as $r ) {
+				foreach( $this->features as $r ) {
 					$newGraph = ''; 
 			                if($r->{'data_type'} == "numeric"){
 						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:false,tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});';
@@ -110,10 +106,13 @@
 						$distro = json_decode($r->{'ClassDistribution'});
 						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", $distro[0]).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}},legend:false,tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
 
-					for($i=0; $i<count($classvalues); $i++){
-						$newGraph .= '{name:\''.$classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
-						if($i!=count($classvalues)-1)
+					for($i=0; $i<count($this->classvalues); $i++){
+						$newGraph .= '{name:\''.$this->classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+						if($i!=count($this->classvalues)-1)
 							$newGraph .= ',';
+					}
+					if(count($this->classvalues)==0){
+						$newGraph .= '{name:"count",data:['.implode(",",array_column($distro[1], 0)).']}';				
 					}
 					$newGraph .= ']});';
 					}
@@ -123,12 +122,11 @@
 						$fgraphs_all = $newGraph . PHP_EOL . $fgraphs_all;
 
 					
-					echo "<tr><td>" . $r->{'name'} . ( $this->record->{'default_target_attribute'} == $r->{'name'} ? ' <b>(target)</b>': '').( $this->record->{'row_id_attribute'} == $r->{'name'} ? ' <b>(unique id)</b>': '') . "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px;'></div></td></tr>";
+					echo "<tr><td>" . $r->{'name'} . ( $r->{'is_target'} == 'true' ? ' <b>(target)</b>': '').( $r->{'is_row_identifier'} == 'true' ? ' <b>(row identifier)</b>': '').( $r->{'is_ignore'} == 'true' ? ' <b>(ignore)</b>': ''). "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px;'></div></td></tr>";
 
 
 					$featCount = $featCount + 1;
 				}  
-				}
 					?>
 				</table>
 			</div>
@@ -136,9 +134,14 @@
         </div> <!-- end col-md-12 -->
         <div class="col-xs-12">
 	  <div class="show-more-features">
-		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($result); ?> features</a></div>
+		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($this->features); ?> features</a></div>
+	<?php } else {
+			if($this->record->{'error'} == 'true')
+			    echo '<p>Could not calculate features.</p>'; 
+			else
+			    echo '<p>Data features are not analyzed yet. Refresh the page in a few minutes.</p>'; 
+	      } ?>
 	</div>
-
 
 	        <div class="col-xs-12">
 		<h3>Results (per task)</h3>

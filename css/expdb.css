@@ -135,8 +135,18 @@ width: 80pt;
 }
 
 .teaser{
-  font-size: 16px !important;
   color: #666;
+}
+
+.update_date{
+  color: #acacac;
+  font-size: 12px;
+  float:right;
+}
+
+.update_comment{
+  color: #666;
+  font-style: italic;
 }
 
 .teaser > em{
@@ -409,7 +419,7 @@ width: 80pt;
 .openmlsectioninfo{
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  font-size: 17px;
+  font-size: 14px;
   margin-top: -3px;
 }
 
@@ -1458,7 +1468,9 @@ html, body {
 }
 
 .searchresult{
-  padding-bottom:30px;
+  padding-top:10px;
+  padding-bottom:10px;
+  /* border-bottom: 1px solid #dedede;*/
 }
 
 .searchresult a{
@@ -1469,19 +1481,23 @@ html, body {
   margin-right: 3px;
 }
 
-.searchresult > .teaser{
+.searchresult  .teaser{
   padding-left:24px;
-  font-size: 15px;
 }
 
-.searchresult > .runStats{
+.searchresult  .update_comment{
+  padding-left:24px;
+}
+
+
+.searchresult  .runStats{
   padding-top:0px;
   padding-left:24px;
   font-size: 13px;
   color: rgb(0, 153, 51);
 }
 
-.searchresult > .runStats > a{
+.searchresult  .runStats > a{
   color: rgb(0, 153, 51);
 }
 
@@ -1535,6 +1551,12 @@ html, body {
 	border: 1px solid #d4d4d4;
 }
   
+
+.search-result{
+	margin-left:20px;
+        padding: 10px;
+}
+
 /* Set an optional width for your button wrappers */
 .social span {
 	display:inline-block;
@@ -1795,7 +1817,7 @@ a:hover > .circlered{
 
 .hideContent {
     overflow: hidden;
-    height: 11em;
+    height: 12em;
 }
 
 .hideFeatures {

@@ -70,6 +70,8 @@ if($this->sort=='runs')
 	$this->curr_sort = "most runs";
 if($this->sort=='date')
 	$this->curr_sort = "most recent";
+if($this->sort=='last_update')
+	$this->curr_sort = "last update";
 if($this->order=='asc' and $this->sort=='runs')
 	$this->curr_sort = "fewest runs";
 if($this->order=='asc' and $this->sort=='date')

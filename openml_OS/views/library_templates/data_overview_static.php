@@ -44,7 +44,7 @@ $.ajax({
 <div class="bs-docs-container topborder">
   <div class="container">
     <div class="col-sm-12">
-      <h2><?php echo $table_name; ?></h2>
+      <?php if($table_name): ?><h2><?php echo $table_name; ?></h2><?php endif; ?>
       <table class="table table-striped data_overview_table">
         <thead>
           <tr>

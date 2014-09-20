@@ -11,16 +11,20 @@
      <p></p>
      <hr>
      	<?php
+	    //$this->sort = 'last_update';
 	    loadpage('search', true, 'pre'); 
 	    loadpage('search/subpage', true, 'results'); 
         ?> 
      </div> <!-- end intro tab -->
 
      <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) { echo 'active'; } ?>" id="codedetail">
-     	<?php 
-	 if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
+     	<?php
+	 if(false !== strpos($_SERVER['REQUEST_URI'],'/update')) {
+		subpage('update');  
+	 }
+	 else if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		subpage('dataset'); 
-	}?>
+ 	 }?>
      </div>
      </div> <!-- end tabs content -->
     </div> <!-- end col-10 -->

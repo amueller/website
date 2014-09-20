@@ -7,7 +7,7 @@ function formatTeaser($r){
 	return '';
 }
 
-function truncate($string,$length=100,$append="&hellip;") {
+function truncate($string,$length=200,$append="&hellip;") {
   $string = trim($string);
 
   if(strlen($string) > $length) {
@@ -30,6 +30,9 @@ function truncate($string,$length=100,$append="&hellip;") {
     <?php } ?>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'desc')); ?>">Most recent</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
+    <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'last_update', 'order' => 'desc')); ?>">Last update</a></li>
+    <?php } ?>
   </ul>
 </div>
 
@@ -55,20 +58,31 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 
 ?>
 	<div class="searchresult">
-		<i class="<?php echo $this->icons[$type];?>"></i>
-		   <?php if($type == 'run') { ?>
 
+		   <?php if ($this->curr_sort == 'last update'){
+			echo '<div class="update_date">'.$rs['last_update'].'</div><a href="u/'.$rs['uploader_id'].'">'.$rs['uploader'].'</a> ';
+			if($rs['update_comment'])
+				echo 'updated '.$type.':<div class="update_comment">'.$rs['update_comment'].'</div><div class="search-result">';
+			else
+				echo 'uploaded '.$type.':<div class="search-result">';
+			}
+			?>
+
+
+		   <?php if($type == 'run') { ?>
+				<i class="<?php echo $this->icons[$type];?>"></i>
 				<a href="r/<?php echo  $r['_id'] ?>">Run <?php echo  $r['_id'] ?></a>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">flow <a href="<?php echo $rs['run_flow']['flow_id'];?>"><?php echo $rs['run_flow']['name'] ?></a> - task <a href="<?php echo $rs['run_task']['task_id'];?>"><?php echo $rs['run_task']['task_id'];?> - <?php echo $rs['run_task']['tasktype']['name'];?> on <?php echo $rs['run_task']['source_data']['name']; ?></a> - uploaded <?php echo str_replace('.000Z','',$rs['date']);?> by <?php echo $rs['uploader'] ?></div>
 
 		   <?php } elseif($type == 'user') { ?>
-
+				<i class="<?php echo $this->icons[$type];?>"></i>
 		   		<a href="u/<?php echo $r['_id']; ?>"><?php echo $rs['first_name'].' '.$rs['last_name']; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats"><?php echo $rs['affiliation'];?> - <?php echo $rs['country'];?></div>
 
 		   <?php } elseif($type == 'data') { ?>
+				<i class="<?php echo $this->icons[$type];?>"></i>
 		   		<a href="d/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
@@ -79,9 +93,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					      if(array_key_exists('NumberOfFeatures', $rs))     echo ' - '.$rs['NumberOfFeatures'].' features'; 
 					      if(array_key_exists('NumberOfClasses', $rs))      echo ' - '.$rs['NumberOfClasses'].' classes';
 					      if(array_key_exists('NumberOfMissingValues', $rs))echo ' - '.$rs['NumberOfMissingValues'].' missing values';?></div>
-
 		   <?php } elseif($type == 'task_type') { ?>
-
+				<i class="<?php echo $this->icons[$type];?>"></i>
 		   		<a href="t/type/<?php echo $r['_id']; ?>"><?php echo $rs['name']; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats"><?php $runparams['type'] = 'task'; $runparams['body']['query']['match']['tasktype.tt_id'] = $r['_id'];
@@ -91,13 +104,13 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					?> runs</div>
 
 		   <?php } elseif($type == 'measure') { ?>
-
+				<i class="<?php echo $this->icons[$type];?>"></i>
 		   		<a href="<?php echo $this->measures[$rs['type']].'/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats"><?php echo str_replace('_',' ',$rs['type']); ?></div>
 
 		   <?php } elseif($type == 'task') { ?>
-
+				<i class="<?php echo $this->icons[$type];?>"></i>
 		   		<a href="t/<?php echo $r['_id']; ?>">Task <?php echo $r['_id']; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
@@ -112,7 +125,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					} ?> </div>
 
 		   <?php } elseif($type == 'flow') { ?>
-				
+				<i class="<?php echo $this->icons[$type];?>"></i>				
 				<a href="f/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a><br />
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
@@ -121,6 +134,10 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					      echo $searchresult['hits']['total'];
 					?> runs</div>
 		   <?php } ?>
+
+		   <?php if ($this->curr_sort == 'last update'){
+				echo '</div>';
+		   } ?>
 			</div>
 <?php }} ?>
 

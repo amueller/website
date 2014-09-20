@@ -25,14 +25,20 @@ class ElasticSearch {
 	$this->user_names[$a->id] = $a->first_name.' '.$a->last_name;
     }
 
-    $this->mappings['data'] = array('_all' => array(
+    $this->mappings['data'] = array(
+		'_all' => array(
                 	'enabled' => true,
                 	'stored' => 'yes',
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
 		    'date' => array(
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    ),		    
+		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
 		    ),
@@ -55,8 +61,8 @@ class ElasticSearch {
 
                     'suggest' => array(
                         'type' => 'completion',
-			'index_analyzer' => 'standard',
-			'search_analyzer' => 'standard',
+			'index_analyzer' => 'simple',
+			'search_analyzer' => 'simple',
 			'payloads' => true,
 			'max_input_length' => 100
                     )
@@ -68,8 +74,13 @@ class ElasticSearch {
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
 		    'date' => array(
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    ),		    
+		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
 		    ),
@@ -101,8 +112,13 @@ class ElasticSearch {
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
 		    'date' => array(
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    ),		    
+		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
 		    ),
@@ -121,6 +137,7 @@ class ElasticSearch {
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
                     'suggest' => array(
                         'type' => 'completion',
@@ -136,6 +153,7 @@ class ElasticSearch {
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
                     'description' => array(
                         'type' => 'string',
@@ -160,11 +178,16 @@ class ElasticSearch {
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
-			'date' => array(
+		    'date' => array(
 				'type' => 'date',
 				'format' => 'yyyy-MM-dd HH:mm:ss'
-				)
+		    ),		    
+		    'last_update' => array(
+			'type' => 'date',
+			'format' => 'yyyy-MM-dd HH:mm:ss'
+		    )
 		)
             );
        $this->mappings['measure'] = array('_all' => array(
@@ -173,6 +196,7 @@ class ElasticSearch {
 			'type' => 'string',
 			'analyzer' => 'snowball'
 		),
+		'_timestamp' => array( 'enabled' => true),
                 'properties' => array(
                     'description' => array(
                         'type' => 'string',
@@ -793,7 +817,7 @@ class ElasticSearch {
 	$params['index']     = 'openml';
 	$params['type']      = 'data';
 
-	$datasets = $this->db->query('select d.did, d.name, d.version, d.description, d.format, d.creator, d.contributor, d.collection, d.uploader, d.upload_date, d.visibility, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id)'.($id?' where did='.$id:'').' group by did');
+	$datasets = $this->db->query('select d.*, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id)'.($id?' where did='.$id:'').' group by did');
 
 	if($id and !$datasets)
 		return 'Error: data set '.$id.' is unknown';
@@ -819,6 +843,7 @@ class ElasticSearch {
 		    'data_id' 		=> $d->did,
 		    'name'    		=> $d->name,
 		    'version' 		=> $d->version,
+		    'version_label' 	=> $d->version_label,
 		    'description' 	=> $d->description,
 		    'format'		=> $d->format,
 		    'uploader' 		=> $this->user_names[$d->uploader],
@@ -826,11 +851,18 @@ class ElasticSearch {
 		    'visibility' 	=> $d->visibility,
 		    'creator'		=> $d->creator,
 		    'contributor' 	=> $d->contributor,
-		    'collection' 	=> $d->collection,
 		    'date'		=> $d->upload_date,
+		    'update_comment'	=> $d->update_comment,
+		    'last_update'	=> $d->last_update,
+		    'licence'		=> $d->licence,
+		    'visibility'	=> $d->visibility,
+		    'url'		=> $d->url,
+		    'default_target_attribute' => $d->default_target_attribute,
+		    'row_id_attribute' 	=> $d->row_id_attribute,
+		    'ignore_attributes' => $d->ignore_attributes,
 		    'runs' 		=> $this->checkNumeric($d->runs),
 		    'suggest'		=> array(
-						'input' => array($d->name,$headless_description),
+						'input' => array($d->name,substr($headless_description, 0, 100)),
 						'output'=> $d->name,
 						'weight'=> 5,
 						'payload' => array(
