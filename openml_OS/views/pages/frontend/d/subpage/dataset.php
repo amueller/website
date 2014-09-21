@@ -61,6 +61,8 @@
 
 	  <div class="qualities col-xs-12">
 		<h3>Properties</h3>
+		<?php
+			if ($this->features != false){ ?>
 
 		  <?php $result = $this->Implementation->query("SELECT aq.quality, q.description, aq.value, q.showonline from data_quality aq, quality q where aq.quality=q.name and data=" . $this->record->{'did'} . " order by quality asc");
 			$qtable = "";
@@ -86,6 +88,15 @@
 			if(strlen($qtable)>1){
 				echo "<a data-toggle='collapse' href='#algoquals'><i class='fa fa-caret-right'></i> Show more</a><div id='algoquals' class='collapse'><div class='table-responsive'><table class='table table-striped'>" . $qtable . "</table></div></div>";}
 		 ?>
+		<?php } else {
+
+			if($this->record->{'error'} == 'true')
+			    echo '<p>Could not calculate features.</p>'; 
+			else
+			    echo '<p>Data properties are not analyzed yet. Refresh the page in a few minutes.</p>'; 
+	      	} ?>
+
+
 	</div>
 
 	<div class="col-xs-12">

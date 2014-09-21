@@ -512,7 +512,7 @@ class Rest_api extends CI_Controller {
           'quality' => $quality->name,
           'value' => $quality->value
         );
-        $this->Data_quality->insert_ignore( $data );
+        $this->Data_quality->fa-check_ignore( $data );
       }
     }
     $this->db->trans_complete();
@@ -638,14 +638,46 @@ class Rest_api extends CI_Controller {
       if( $access_control_option != 'public' ) {
         $access_control = 'private';
       }
+      
       $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
       if($file_id === false) {
         $this->_returnError( 132 );
         return;
       }
       $file_record = $this->File->getById($file_id);
+
+
+      // if ARFF file, replace the file with a curated file 
+      if(strtolower($xml->children('oml', true)->{'format'}) == 'arff'){
+ 	    $newfile = validate_arff( $this->data_folders['dataset'], $file_record->filepath );
+	    if(!$newfile){
+		$this->_returnError( 136 );
+      		return;
+	    }
+	    $newfilepath = DATA_PATH . $newfile;
+	    $size = filesize($newfilepath);
+	    $md5_hash = md5_file($newfilepath);
+	    if($md5_hash === false) {
+	      return false;
+	    }
+	    $file_record = array(
+	      'creator' => $file_record->creator,
+	      'creation_date' => now(),
+	      'filepath' => $newfile,
+	      'filesize' => filesize($newfilepath),
+	      'filename_original' => 'openml_'.$file_record->filename_original,
+	      'extension' => $file_record->extension,
+	      'mime_type' => $file_record->mime_type,
+	      'md5_hash' => $md5_hash,
+	      'type' => $file_record->type,
+	      'access_policy' => $file_record->access_policy
+	    );
+
+   	    $file_id = $this->File->insert($file_record);
+            $file_record = $this->File->getById($file_id);
+      }
+
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
-      
     } elseif( $datasetUrlProvided ) {
       $destinationUrl = '' . $xml->children('oml', true)->url;
     } elseif($update) {

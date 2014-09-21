@@ -107,10 +107,8 @@ if($this->subpage == 'task') {
   }
 
   $url = BASE_URL.'/api/?f=openml.data.upload';
-
   // Send the request & save response to $resp
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
-
   if($api_response !== false) {
     $xml = simplexml_load_string( $api_response );
     $this->responsetype = 'alert alert-success';
@@ -119,7 +117,8 @@ if($this->subpage == 'task') {
     if( property_exists( $xml->children('oml', true), 'code' ) ) {
       $this->responsetype = 'alert alert-danger';
       $this->responsecode = $xml->children('oml', true)->code;
-      $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message . '. Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the dataset name.';
+      $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message;
+      if($this->responsecode=='131') $this->response .= ' Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the dataset name.';
     } else if($xml->children('oml', true)->id){
       $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Thanks!</h2>Data was uploaded successfully.<br>You can now <a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a>, track its impact and see all ensuing results.<br><br>You can also continue to add datasets below.';
       sm($this->response);  

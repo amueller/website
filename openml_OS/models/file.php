@@ -33,7 +33,7 @@ class File extends Community {
     if( move_uploaded_file( $file['tmp_name'], DATA_PATH . $to_folder . $newName ) === false ) {
       return false;
     }
-    
+ 
     $file_id = $this->insert($file_record);
     return $file_id;
   }

@@ -212,6 +212,36 @@ function get_arff_features( $datasetUrl, $class = false ) {
   }
 }
 
+// replaces a tmp uploaded file with one that has been imported and exported by weka
+function validate_arff( $to_folder, $filepath ) {
+  $ci = &get_instance();
+  $weka = PATH . APPPATH . 'third_party/OpenML/Java/weka.jar';
+  $res = array();
+  $code = 0;
+  $oldUrl = DATA_PATH . $filepath;
+  $newpath = strrev(implode(strrev('/openml_'), explode('/', strrev($filepath), 2)));
+  $newUrl = DATA_PATH . $newpath;
+  
+  $heap = '-Xmx' . ( $ci->input->is_cli_request() ? 
+    $ci->config->item('java_heap_space_cli') : 
+    $ci->config->item('java_heap_space_web') );
+  
+  $command = "java $heap -cp $weka weka.core.converters.ArffLoader $oldUrl > $newUrl";
+  $ci->Log->cmd( 'ARFF Validation', $command ); 
+
+  if(function_enabled('exec') === false ) {
+    return false;
+  }
+
+  exec( CMD_PREFIX . $command, $res, $code );
+  
+  if( $code == 0 ) {
+    return $newpath;
+  } else {
+    return false;
+  }
+}
+
 function features_array_contains( $value, $array, $case_insensitive = false ) {
   foreach( $array as $item ) {
     if( $item->name == $value ) {

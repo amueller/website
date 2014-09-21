@@ -40,8 +40,8 @@ $this->apiErrors[135][0] = 'Please provide description xml';
 $this->apiErrors[135][1] = 'Please provide description xml';
 
 // for function: openml.data.upload 
-$this->apiErrors[136][0] = 'Error slot open';
-$this->apiErrors[136][1] = 'Error slot open, will be filled by not yet defined error';
+$this->apiErrors[136][0] = 'File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.';
+$this->apiErrors[136][1] = 'The uploaded file and the specified file format do not match. Please check the file format specification and try again.';
 
 // for function: openml.data.upload 
 $this->apiErrors[137][0] = 'Please provide session_hash';
