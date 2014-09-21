@@ -50,7 +50,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		$this->blocked = true; 
 	} else {
 
-	if($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->record->uploader)
+	if(($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->record->uploader) || $this->ion_auth->is_admin($this->ion_auth->user()->row()->id))
 		$this->is_owner = true;
 
 	$author = $this->Author->getById($this->record->uploader);

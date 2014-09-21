@@ -236,7 +236,7 @@ function validate_arff( $to_folder, $filepath, $name, $did ) {
   exec( CMD_PREFIX . $command, $res, $code );
 
   //Guess the id of the dataset and add it to the top of the file
-  $info = '# Data set "'.$name.'". For more information, see http:\/\/openml.org\/d\/'.$did;
+  $info = '% Data set "'.$name.'". For more information, see http:\/\/openml.org\/d\/'.$did;
   $string = '1s/^/'.$info.'\n/';
   $command2 = "sed -i -e '$string' $newUrl";
   exec( CMD_PREFIX . $command2, $res, $code );
