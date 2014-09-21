@@ -69,7 +69,7 @@ class Rest_api extends CI_Controller {
     $this->xml_fields_dataset_update = $this->config->item('xml_fields_dataset_update');
     $this->xml_fields_implementation = $this->config->item('xml_fields_implementation');
     
-    $this->data_controller = BASE_URL . 'files/';
+    $this->data_controller = $this->config->item('data_controller');
     
     $this->supportedMetrics = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
     $this->supportedAlgorithms = $this->Algorithm->getColumn('name');

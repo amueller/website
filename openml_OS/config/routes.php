@@ -9,7 +9,7 @@
 | and its corresponding controller class/method. The segments in a
 | URL normally follow this pattern:
 |
-|	example.com/class/method/id/
+|  example.com/class/method/id/
 |
 | In some instances, however, you may want to remap this relationship
 | so that a different class/function is called than the one
@@ -17,7 +17,7 @@
 |
 | Please see the user guide for complete details:
 |
-|	http://codeigniter.com/user_guide/general/routing.html
+|  http://codeigniter.com/user_guide/general/routing.html
 |
 | -------------------------------------------------------------------------
 | RESERVED ROUTES
@@ -25,13 +25,13 @@
 |
 | There area two reserved routes:
 |
-|	$route['default_controller'] = 'welcome';
+|  $route['default_controller'] = 'welcome';
 |
 | This route indicates which controller class should be loaded if the
 | URI contains no data. In the above example, the "welcome" class
 | would be loaded.
 |
-|	$route['404_override'] = 'errors/page_missing';
+|  $route['404_override'] = 'errors/page_missing';
 |
 | This route will tell the Router what URI segments to use if those provided
 | in the URL cannot be matched to a valid route.
@@ -45,38 +45,49 @@ $route['api'] = 'rest_api';
 $route['api/:any'] = 'rest_api/$1';
 
 $frontend_pages = array(
-					'community',
-					'community_category',
-					'community_create',
-					'community_search',
-					'community_thread',
-					'detail',
-					'developers',
-					'home',
-					'learn_sql',
-					'login',
-					'meta_dataset',
-					'overview',
+          'community',
+          'community_category',
+          'community_create',
+          'community_search',
+          'community_thread',
+          'detail',
+          'developers',
+          'home',
+          'learn_sql',
+          'login',
+          'overview',
+          'community',
+          'community_category',
+          'community_create',
+          'community_search',
+          'community_thread',
+          'detail',
+          'developers',
+          'home',
+          'learn_sql',
+          'login',
+          'meta_dataset',
+          'overview',
           'password_forgot',
           'password_reset',
-					'plugins',
-					'profile',
-					'profile_activate',
-					'register',
-					'search',
-					'new',
-					'd',
-					'f',
-					'r',
-					't',
-					'a',
-					'u',
-					'share',
-					'preview');
+          'plugins',
+          'profile',
+          'profile_activate',
+          'register',
+          'search',
+          'new',
+          'd',
+          'f',
+          'r',
+          't',
+          'a',
+          'u',
+          'share',
+          'preview');
 
 foreach( $frontend_pages as $page ) {
-	$route[$page] 		= 'frontend/page/'.$page;
-	$route[$page.'/(:any)'] 	= 'frontend/page/'.$page.'/$1';
+  $route[$page]     = 'frontend/page/'.$page;
+  $route[$page.'/(:any)']   = 'frontend/page/'.$page.'/$1';
 }
 
 /* End of file routes.php */

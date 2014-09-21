@@ -32,7 +32,7 @@ class Frontend extends CI_Controller {
     
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);
-    $this->data_controller = BASE_URL . 'files/';
+    $this->data_controller = $this->config->item('data_controller');
     
     $this->page = 'home'; // default value
     $this->subpage = false;

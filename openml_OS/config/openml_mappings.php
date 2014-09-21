@@ -1,5 +1,7 @@
 <?php
 
+$config['data_controller'] = BASE_URL . 'data/';
+
 $config['data_tables'] = array( 
   'dataset','evaluation','evaluation_fold', 
   'evaluation_sample', 'evaluation_interval', 'runfile');
