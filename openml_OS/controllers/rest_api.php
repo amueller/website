@@ -649,7 +649,13 @@ class Rest_api extends CI_Controller {
 
       // if ARFF file, replace the file with a curated file 
       if(strtolower($xml->children('oml', true)->{'format'}) == 'arff'){
- 	    $newfile = validate_arff( $this->data_folders['dataset'], $file_record->filepath );
+	    // get or guess id to add to new file
+	    if($update)
+		$temp_id = $xml->children('oml', true)->{'id'};
+    	    else
+		$temp_id = $this->Dataset->query('select max(did) as max from dataset')[0]->max + 1;
+
+ 	    $newfile = validate_arff( $this->data_folders['dataset'], $file_record->filepath, $xml->children('oml', true)->{'name'}, $temp_id);
 	    if(!$newfile){
 		$this->_returnError( 136 );
       		return;

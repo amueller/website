@@ -213,7 +213,7 @@ function get_arff_features( $datasetUrl, $class = false ) {
 }
 
 // replaces a tmp uploaded file with one that has been imported and exported by weka
-function validate_arff( $to_folder, $filepath ) {
+function validate_arff( $to_folder, $filepath, $name, $did ) {
   $ci = &get_instance();
   $weka = PATH . APPPATH . 'third_party/OpenML/Java/weka.jar';
   $res = array();
@@ -234,6 +234,12 @@ function validate_arff( $to_folder, $filepath ) {
   }
 
   exec( CMD_PREFIX . $command, $res, $code );
+
+  //Guess the id of the dataset and add it to the top of the file
+  $info = '# Data set "'.$name.'". For more information, see http:\/\/openml.org\/d\/'.$did;
+  $string = '1s/^/'.$info.'\n/';
+  $command2 = "sed -i -e '$string' $newUrl";
+  exec( CMD_PREFIX . $command2, $res, $code );
   
   if( $code == 0 ) {
     return $newpath;
