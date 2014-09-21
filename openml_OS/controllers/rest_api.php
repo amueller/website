@@ -653,7 +653,7 @@ class Rest_api extends CI_Controller {
 	    if($update)
 		$temp_id = $xml->children('oml', true)->{'id'};
     	    else
-		$temp_id = $this->Dataset->query('select max(did) as max from dataset')[0]->max + 1;
+		$temp_id = $this->Dataset->query('SHOW TABLE STATUS WHERE name =  "dataset"')[0]->Auto_increment;
 
  	    $newfile = validate_arff( $this->data_folders['dataset'], $file_record->filepath, $xml->children('oml', true)->{'name'}, $temp_id);
 	    if(!$newfile){
