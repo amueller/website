@@ -512,7 +512,7 @@ class Rest_api extends CI_Controller {
           'quality' => $quality->name,
           'value' => $quality->value
         );
-        $this->Data_quality->fa-check_ignore( $data );
+        $this->Data_quality->insert_ignore( $data );
       }
     }
     $this->db->trans_complete();
