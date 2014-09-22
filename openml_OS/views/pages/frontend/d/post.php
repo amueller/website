@@ -31,7 +31,7 @@ if($this->input->post('versions')){
 //sync DB, search index
   if($this->input->post('content')){
 	//update database - TO DO: check if there is a better way
-  	$this->Dataset->query('update dataset set description = "'.addslashes($this->input->post('content')).'"');
+  	$this->Dataset->query('update dataset set description = "'.addslashes($this->input->post('content')).'" where did='.$this->id);
 
 	//update index
   	$this->elasticsearch->index('data', $this->id);
