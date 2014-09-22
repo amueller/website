@@ -33,7 +33,7 @@
        <i class="fa fa-cc"></i> <?php $l = $this->licences[$this->record->{'licence'}]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; ?> 	    
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->record->{'visibility'}); ?> 
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo explode(" ",$this->record->{'upload_date'})[0];?> by <a href="u/<?php echo $this->uploader_id; ?>"><?php echo $this->record->{'uploader'} ?></a>
-       <?php if($this->is_owner and $this->features != false)
+       <?php if($this->is_owner)
 		echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>';
 	?>
     </div>
