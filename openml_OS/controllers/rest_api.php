@@ -1289,7 +1289,16 @@ class Rest_api extends CI_Controller {
     
     $parameters = array();
     foreach( $parameter_objects as $p ) {
-      $component = property_exists($p, 'component') ? $p->component : $implementation->fullName;
+      // since 'component' is an optional XML field, we add a default option
+      $component = property_exists($p, 'component') ? $p->component : $implementation->id;
+      
+      // now find the input id
+      $input_id = $this->Input->getWhereSingle( '`implementation_id` = ' . $component . ' AND `name` = "' . $p->name . '"' );
+      if( $input_id === false ) {
+        $this->_returnError( 213 );
+        return;
+      }
+      
       $parameters[$component . '_' . $p->name] = $p->value . '';
     }
     // search setup ... // TODO: do something about the new parameters. Are still retrieved by ID, does not work with Weka plugin. 

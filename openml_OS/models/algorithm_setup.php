@@ -72,7 +72,7 @@ class Algorithm_setup extends Database_write {
       
       // and register the parameters
       foreach( $parameters as $key => $value ) {
-        $insert = array( 'setup' => $setupId, 'input' => $key, 'value' => $value );
+        $insert = array( 'setup' => $setupId, 'input' => $key, 'input_id' => $implementation->id, 'value' => $value );
         $this->Input_setting->insert( $insert );
         if(!$insert) return false;
       }// TODO: input setting was saved with key {implementation_id}_{name}. Make a better index for input_setting link
