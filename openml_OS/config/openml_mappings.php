@@ -17,7 +17,6 @@ $config['xml_fields_dataset'] = array(
      8 => 'url',
      9 => 'default_target_attribute',
     10 => 'row_id_attribute',
-    11 => 'ignore_attributes',
     12 => 'version_label',
     13 => 'citation',
     14 => 'visibility',
@@ -26,6 +25,7 @@ $config['xml_fields_dataset'] = array(
   'csv'     => array(
      3 => 'creator',
      4 => 'contributor',
+    11 => 'ignore_attribute',
 ),
   'array'   => array(),
   'plain'   => array()
@@ -41,12 +41,13 @@ $config['xml_fields_dataset_update'] = array(
      5 => 'url',
      6 => 'default_target_attribute',
      7 => 'row_id_attribute',
-     8 => 'ignore_attributes',
      9 => 'version_label',
     10 => 'visibility',
     11 => 'paper_url',
     12 => 'update_comment'),
-  'csv'     => array(),
+  'csv'     => array(
+     8 => 'ignore_attribute'
+),
   'array'   => array(),
   'plain'   => array()
 );
