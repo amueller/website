@@ -625,6 +625,7 @@ class Rest_api extends CI_Controller {
     }
     
     //check and register the data files, return url
+    $file_id = null;
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
     $datasetFileProvided = isset( $_FILES['dataset'] );
     if( $datasetUrlProvided && $datasetFileProvided ) {
@@ -672,6 +673,7 @@ class Rest_api extends CI_Controller {
         'last_update' => now(),
         'uploader' => $this->user_id,
         'isOriginal' => 'true',
+        'file_id' => $file_id,
         'md5_checksum' => md5_file( $destinationUrl )
       );
       // extract all other necessary info from the XML description
