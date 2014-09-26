@@ -55,7 +55,7 @@ class Data extends CI_Controller {
       return true;
     }
     
-    if( $this->ion_auth->is_admin( $user_id ) ) {
+    if( $this->ion_auth->is_admin( $this->user_id ) ) {
       return true;
     }
     

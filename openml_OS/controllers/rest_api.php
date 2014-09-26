@@ -219,8 +219,10 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 111 );
       return;
     }
-    $dataset->creator = getcsv( $dataset->creator );
-    $dataset->contributor = getcsv( $dataset->contributor );
+    
+    foreach( $this->xml_fields_dataset['csv'] as $field ) {
+      $dataset->{$field} = getcsv( $dataset->{$field} );
+    }
     
     $this->_xmlContents( 'data-description', $dataset );
   }
@@ -319,13 +321,13 @@ class Rest_api extends CI_Controller {
 
       // add special features 
       if(in_array($feature->name,$targets))
-	$feature->is_target = 'true';
+  $feature->is_target = 'true';
       else //this is needed because the Java feature extractor still chooses a target when there isn't any
-	$feature->is_target = 'false';
+  $feature->is_target = 'false';
       if(in_array($feature->name,$rowids))
-	$feature->is_row_identifier = 'true';
+  $feature->is_row_identifier = 'true';
       if(in_array($feature->name,$ignores))
-	$feature->is_ignore = 'true';
+  $feature->is_ignore = 'true';
 
       //actual insert
       $this->Data_feature->insert_ignore( $feature );
@@ -619,17 +621,19 @@ class Rest_api extends CI_Controller {
 
     //check if this is an update or a new dataset
     $update = false;
-    if($xml->children('oml', true)->{'id'})
-	$update = true;
+    if($xml->children('oml', true)->{'id'}) {
+      $update = true;
+    }
     
     //check and register the data files, return url
+    $file_id = null;
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
     $datasetFileProvided = isset( $_FILES['dataset'] );
     if( $datasetUrlProvided && $datasetFileProvided ) {
       $this->_returnError( 140 );
       return;
     } elseif( $datasetFileProvided ) {
-          $message = '';
+      $message = '';
       if( ! check_uploaded_file( $_FILES['dataset'], false, $message ) ) {
         $this->_returnError( 130, 'File dataset: ' . $message );
         return;
@@ -646,44 +650,6 @@ class Rest_api extends CI_Controller {
         return;
       }
       $file_record = $this->File->getById($file_id);
-
-
-      // if ARFF file, replace the file with a curated file 
-      if(strtolower($xml->children('oml', true)->{'format'}) == 'arff'){
-	    // get or guess id to add to new file
-	    if($update)
-		$temp_id = $xml->children('oml', true)->{'id'};
-    	    else
-		$temp_id = $this->Dataset->query('SHOW TABLE STATUS WHERE name =  "dataset"')[0]->Auto_increment;
-
- 	    $newfile = validate_arff( $this->data_folders['dataset'], $file_record->filepath, $xml->children('oml', true)->{'name'}, $temp_id);
-	    if(!$newfile){
-		$this->_returnError( 136 );
-      		return;
-	    }
-	    $newfilepath = DATA_PATH . $newfile;
-	    $size = filesize($newfilepath);
-	    $md5_hash = md5_file($newfilepath);
-	    if($md5_hash === false) {
-	      return false;
-	    }
-	    $file_record = array(
-	      'creator' => $file_record->creator,
-	      'creation_date' => now(),
-	      'filepath' => $newfile,
-	      'filesize' => filesize($newfilepath),
-	      'filename_original' => 'openml_'.$file_record->filename_original,
-	      'extension' => $file_record->extension,
-	      'mime_type' => $file_record->mime_type,
-	      'md5_hash' => $md5_hash,
-	      'type' => $file_record->type,
-	      'access_policy' => $file_record->access_policy
-	    );
-
-   	    $file_id = $this->File->insert($file_record);
-            $file_record = $this->File->getById($file_id);
-      }
-
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } elseif( $datasetUrlProvided ) {
       $destinationUrl = '' . $xml->children('oml', true)->url;
@@ -696,86 +662,82 @@ class Rest_api extends CI_Controller {
     
     //build dataset object with new fields to be stored
     if(!$update){
-     $name = '' . $xml->children('oml', true)->{'name'};
-     $version = $this->Dataset->incrementVersionNumber( $name );
-
-     $dataset = array(
-      'name' => $name,
-      'version' => $version,
-      'url' => $destinationUrl,
-      'upload_date' => now(),
-      'last_update' => now(),
-      'uploader' => $this->user_id,
-      'isOriginal' => 'true',
-      'md5_checksum' => md5_file( $destinationUrl )
-     );
-    } else if ($destinationUrl){
-     $dataset = array(
-      'last_update' => now(),
-      'url' => $destinationUrl,
-      'md5_checksum' => md5_file( $destinationUrl )
-     );
+      // ***** NEW DATASET ***** 
+      $name = '' . $xml->children('oml', true)->{'name'};
+      $version = $this->Dataset->incrementVersionNumber( $name );
+      
+      $dataset = array(
+        'name' => $name,
+        'version' => $version,
+        'url' => $destinationUrl,
+        'upload_date' => now(),
+        'last_update' => now(),
+        'uploader' => $this->user_id,
+        'isOriginal' => 'true',
+        'file_id' => $file_id,
+        'md5_checksum' => md5_file( $destinationUrl )
+      );
+      // extract all other necessary info from the XML description
+      $dataset = all_tags_from_xml( 
+        $xml->children('oml', true), 
+        $this->xml_fields_dataset, $dataset );
     } else {
-     $dataset = array(
-      'last_update' => now()
-     );
+      // ***** UPDATED DATASET *****
+      if ($destinationUrl){
+        $dataset = array(
+          'last_update' => now(),
+          'url' => $destinationUrl,
+          'md5_checksum' => md5_file( $destinationUrl )
+        );
+      } else {
+        $dataset = array(
+          'last_update' => now()
+        );
+      }
+      // extract all other necessary info from the XML description
+      $dataset = all_tags_from_xml( 
+        $xml->children('oml', true), 
+        $this->xml_fields_dataset_update, $dataset );
     }
-    // TODO: We could check on this, but it will be generated anyway during the cronjob
-    // if( isset( $md5_checksum ) ) $dataset['md5_checksum'] = $md5_checksum;
     
-    // extract all other necessary info from the XML description
-    if(!$update){
-	    $dataset = all_tags_from_xml( 
-	      $xml->children('oml', true), 
-	      $this->xml_fields_dataset, $dataset );
-    } else {
-	    $dataset = all_tags_from_xml( 
-	      $xml->children('oml', true), 
-	      $this->xml_fields_dataset_update, $dataset );
-    }
-
     /* * * * 
      * THE ACTUAL INSERTION
      * * * */
-    if(!$update)
-    	$id = $this->Dataset->insert( $dataset );
-    else{
-    	$id =  '' . $xml->children('oml', true)->{'id'};
+    if(!$update) {
+      // ***** NEW DATASET ***** 
+      $id = $this->Dataset->insert( $dataset );
+      
+      if( ! $id ) {
+        $this->_returnError( 134 );
+        return;
+      }
+    } else {
+      // ***** UPDATED DATASET *****
+      $id =  '' . $xml->children('oml', true)->{'id'};
 
-        // ignore id, description (should not be altered)
-	unset($dataset['id']);
-	unset($dataset['description']);
-	
-	// resetting unset features
-	if(!array_key_exists('ignore_attributes',$dataset))
-		$dataset['ignore_attributes'] = NULL; 
-	if(!array_key_exists('default_target_attribute',$dataset))
-		$dataset['default_target_attribute'] = NULL; 
-	if(!array_key_exists('row_id_attribute',$dataset))
-		$dataset['row_id_attribute'] = NULL; 
-	
-        // reset data features so that they are recalculated
-	$dataset['processed'] = NULL; 
-	$dataset['error'] = 'false';
-	$this->Dataset->query('delete from data_feature where did='.$id);
-	$this->Dataset->query('delete from data_quality where data='.$id);
+            // ignore id, description (should not be altered)
+      unset($dataset['id']);
+      unset($dataset['description']);
+      
+            // reset data features so that they are recalculated
+      $dataset['processed'] = NULL; 
+      $dataset['error'] = 'false';
+      $this->Data_feature->deleteWhere('`did` = "' . $id . '"');
+      $this->Data_quality->deleteWhere('`data` = "' . $id . '"');
 
-        // the actual update
-	$response = $this->Dataset->update( $id, $dataset );
-    }
-
-    if( ! $id ) {
-      $this->_returnError( 134 );
-      return;
+            // the actual update
+      $response = $this->Dataset->update( $id, $dataset );
     }
 
     // update elastic search index. 
     $this->elasticsearch->index('data', $id);
 
     // create initial wiki page
-    if(!$update)
-    	$this->wiki->export_to_wiki($id);
-
+    if(!$update) {
+      $this->wiki->export_to_wiki($id);
+    }
+    
+    // create 
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
@@ -1290,8 +1252,17 @@ class Rest_api extends CI_Controller {
     
     $parameters = array();
     foreach( $parameter_objects as $p ) {
-      $component = property_exists($p, 'component') ? $p->component : $implementation->fullName;
-      $parameters[$component . '_' . $p->name] = $p->value . '';
+      // since 'component' is an optional XML field, we add a default option
+      $component = property_exists($p, 'component') ? $p->component : $implementation->id;
+      
+      // now find the input id
+      $input_id = $this->Input->getWhereSingle( '`implementation_id` = ' . $component . ' AND `name` = "' . $p->name . '"' );
+      if( $input_id === false ) {
+        $this->_returnError( 213 );
+        return;
+      }
+      
+      $parameters[$input_id] = $p->value . '';
     }
     // search setup ... // TODO: do something about the new parameters. Are still retrieved by ID, does not work with Weka plugin. 
     $setupId = $this->Algorithm_setup->getSetupId( $implementation, $parameters, true, $setup_string );
