@@ -19,7 +19,7 @@ class Api_splits extends CI_Controller {
     $this->generate( $task_id, false );
   }
   
-  function md5( $task_i ) {
+  function md5( $task_id ) {
     $this->generate( $task_id, true );
   }
   
