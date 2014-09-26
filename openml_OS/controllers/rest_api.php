@@ -303,7 +303,7 @@ class Rest_api extends CI_Controller {
     $data = array( 'processed' => now() );
     if( $xml->children('oml', true)->{'error'} ) {
       $data['error'] = "true";
-      $data['error_message'] = $xml->children('oml', true)->{'error'};
+      $data['error_message'] = htmlentities($xml->children('oml', true)->{'error'});
     }
     
     $this->db->trans_start();
