@@ -86,6 +86,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 		if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal")
 			$this->classvalues = json_decode($r->{'ClassDistribution'})[0];
 	}}
+	else { // find out what's wrong
+		$this->feature_error = $this->Dataset->query("SELECT error_message FROM dataset WHERE did=" . $this->record->{'did'});
+ 	}
 
 	// licences
 	$this->licences = array();

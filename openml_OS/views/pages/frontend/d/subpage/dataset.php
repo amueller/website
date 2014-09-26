@@ -91,7 +91,7 @@
 		<?php } else {
 
 			if($this->record->{'error'} == 'true')
-			    echo '<p>Could not calculate features.</p>'; 
+			    echo '<p>Could not calculate features: '.$this->feature_error.'</p>'; 
 			else
 			    echo '<p>Data properties are not analyzed yet. Refresh the page in a few minutes.</p>'; 
 	      	} ?>

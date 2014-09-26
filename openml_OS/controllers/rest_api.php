@@ -299,8 +299,9 @@ class Rest_api extends CI_Controller {
     }
     // prepare array for updating data object
     $data = array( 'processed' => now() );
-    if( $xml->children('oml', true)->{'error'} ) { 
+    if( $xml->children('oml', true)->{'error'} ) {
       $data['error'] = "true";
+      $data['error_message'] = $xml->children('oml', true)->{'error'};
     }
     
     $this->db->trans_start();

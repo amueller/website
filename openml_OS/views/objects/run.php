@@ -24,11 +24,11 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
       'start_time' => $run[0]->start_time,
       'status' => $run[0]->status
     );
-  $setup = $this->Implementation->query('SELECT iss.input, i.description, iss.value FROM input_setting iss, input i WHERE iss.setup='.  $this->record['setup_id'] . ' and iss.input = concat(i.implementation_id,\'_\',i.name)');
+  $setup = $this->Implementation->query('SELECT i.name, i.description, iss.value FROM input_setting iss, input i WHERE iss.setup='.  $this->record['setup_id'] . ' and iss.input_id = i.id');
   if( $setup != false ) {
      foreach( $setup as $i ) {
     $rsetup = array(
-        'input' => $i->input,
+        'input' => $i->name,
         'description' => $i->description,
         'value' => $i->value
       );
