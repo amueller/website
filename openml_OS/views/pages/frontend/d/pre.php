@@ -89,7 +89,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
       }
     }
   } else { // find out what's wrong
-     $this->feature_error = $this->Dataset->query("SELECT error_message FROM dataset WHERE did=" . $this->record->{'did'});
+     $this->feature_error = $this->Dataset->query("SELECT error_message FROM dataset WHERE did=" . $this->record->{'did'}[0]->{'error_message'});
   }
 
 
