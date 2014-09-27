@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="col-xs-12">
-     <div class="wiki-buttons" <?php if (!$this->wiki_ok) { echo 'style="display: none"'; } ?>>
+     <div class="wiki-buttons">
      <a class="btn btn-success btn-sm pull-right" href="d/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
      <?php if ($this->show_history) { ?>
      <a class="btn btn-success btn-sm pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
