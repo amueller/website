@@ -86,12 +86,12 @@
 	<p>To install via Maven, follow the <a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">usual procedure</a> using the POM file available from <a href="http://search.maven.org/#artifactdetails%7Corg.openml%7Capiconnector%7C0.9.17%7Cjar">Maven central</a>.</p>
 
 	<h2 id="java-start">Quick Start</h2>
-	<p>Create an ApiConnector instance. All its functions are described in the <a href="docs" target="_blank">Java Docs.</a></p>
-	<pre>ApiConnector apiconnector = new ApiConnector();</pre>
+	<p>Create an OpenmlConnector instance. All its functions are described in the <a href="docs" target="_blank">Java Docs.</a></p>
+	<pre>OpenmlConnector openmlconnector = new OpenmlConnector();</pre>
 	<p>For instance, authenticate by sending your username and password. You'll get an Authenticate object (token) for uploading data to OpenML.</p>
-	<pre>Authenticate auth = apiconnector.openmlAuthenticate(username, password);</pre>
-	<p>All Web API functions (see below) have an equivalent Java function. For instance, the function <code>openml.data.upload</code> has an equivalent Java function <code>apiconnector.openmlDataUpload(File,File,String)</code>.</p>
-	<pre>UploadDataSet result = apiconnector.openmlDataUpload( descriptionXML, dataset, auth.getSessionHash() );</pre>
+	<pre>Authenticate auth = openmlconnector.openmlAuthenticate(username, password);</pre>
+	<p>All Web API functions (see below) have an equivalent Java function. For instance, the function <code>openml.data.upload</code> has an equivalent Java function <code>openmlconnector.openmlDataUpload(File,File,String)</code>.</p>
+	<pre>UploadDataSet result = openmlconnector.openmlDataUpload( descriptionXML, dataset, auth.getSessionHash() );</pre>
 
 
 	<h2 id="java-data-upload">Upload data</h2>
@@ -102,7 +102,7 @@
 File descriptionXML = Conversion.stringToTempFile(xstream.toXML(description), "description", "xml");</pre>
 	<p>Now upload the dataset file and description, and print the resulting OpenML dataset ID.</p>
 	<pre>File dataset = new File(DATA_LOCATION);
-UploadDataSet result = apiconnector.openmlDataUpload( descriptionXML, dataset, auth.getSessionHash() );
+UploadDataSet result = openmlconnector.openmlDataUpload( descriptionXML, dataset, auth.getSessionHash() );
 System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
 			
 	<h2 id="java-issues">Issues</h2>
