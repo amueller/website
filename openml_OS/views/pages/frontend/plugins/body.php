@@ -50,7 +50,7 @@ be included in WEKA (via the package manager) starting from the next version (3.
 	  	  <h2 id="weka-plugin">Download Plugin</h2>
       		  The current integration is available as a standalone WEKA version which can be downloaded here:<br/>
 		  <br/>
-		  <a href="downloads/openmlweka.jar"><button class="btn btn-large btn-primary" type="button">Download Weka OpenML</button></a>
+		  <a href="downloads/OpenWeka.beta.jar"><button class="btn btn-large btn-primary" type="button">Download Weka OpenML</button></a>
 		  <br/><br/>
 		  <img src="img/partners/Weka_logo.png" /><br/>
 
