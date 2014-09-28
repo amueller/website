@@ -160,6 +160,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
   $this->wikipage = str_replace('.','-dot-',$this->wikipage);
   $this->wikipage = str_replace('(','-',$this->wikipage);
   $this->wikipage = str_replace(')','-',$this->wikipage);
+  $this->wikipage = str_replace(',','-',$this->wikipage);
   $this->wikipage = str_replace('--','-',$this->wikipage);
 
   $url = $this->wikipage;
