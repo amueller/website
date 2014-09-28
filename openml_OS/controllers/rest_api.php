@@ -664,6 +664,7 @@ class Rest_api extends CI_Controller {
     if(!$update){
       // ***** NEW DATASET ***** 
       $name = '' . $xml->children('oml', true)->{'name'};
+      $name = str_replace('.','_',$name); //do not allow dots in the name, it breaks the wiki
       $version = $this->Dataset->incrementVersionNumber( $name );
       
       $dataset = array(
