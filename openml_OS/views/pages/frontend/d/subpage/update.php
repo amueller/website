@@ -112,8 +112,8 @@
 	  	    </select>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="ignore_attributes">Features to be ignored in predictive models - e.g. indices, identifiers,... </label>
-	            <select multiple class="form-control selectpicker" name="ignore_attributes">
+		    <label class="control-label" for="ignore_attribute">Features to be ignored in predictive models - e.g. indices, identifiers,... </label>
+	            <select multiple class="form-control selectpicker" name="ignore_attribute">
 		 	  <?php foreach( $this->features as $r ) {
 				    echo '<option value="'.$r->{'name'}.'" '.($r->{'is_ignore'} == 'true' ? 'selected' : '').'>'.$r->{'name'}.'</option>';} ?>
 	  	    </select>

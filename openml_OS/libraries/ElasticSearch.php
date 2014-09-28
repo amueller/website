@@ -859,7 +859,7 @@ class ElasticSearch {
 		    'url'		=> $d->url,
 		    'default_target_attribute' => $d->default_target_attribute,
 		    'row_id_attribute' 	=> $d->row_id_attribute,
-		    'ignore_attributes' => $d->ignore_attribute,
+		    'ignore_attribute'  => $d->ignore_attribute,
 		    'runs' 		=> $this->checkNumeric($d->runs),
 		    'suggest'		=> array(
 						'input' => array($d->name,substr($headless_description, 0, 100)),

@@ -70,7 +70,7 @@ else{
   // Send the request & save response to $resp
 
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
-  
+
   if($api_response !== false) {
     $xml = simplexml_load_string( $api_response );
 
