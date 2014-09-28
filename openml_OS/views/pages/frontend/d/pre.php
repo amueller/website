@@ -90,7 +90,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
   // features
   $this->targetfeatures = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE is_target='true' and did=" . $this->record->{'did'});
   $this->features = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE is_target='false' and did=" . $this->record->{'did'} . ($this->showallfeatures ? "" : " limit 0,100"));
-  $this->features = array_merge($this->targetfeatures,$this->features);
+  $this->features = array_merge((array)$this->targetfeatures,(array)$this->features);
   if($this->nrfeatures > count($this->features))
 	$this->highFeatureCount = true;
   $this->classvalues = array();
