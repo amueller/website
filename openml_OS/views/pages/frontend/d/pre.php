@@ -14,6 +14,10 @@ $this->response = '';
 $this->type = 'dataset';
 $this->record = false;
 
+$this->showallfeatures = false;
+if($this->input->get('show') and $this->input->get('show') == 'all')
+	$this->showallfeatures = true;
+
 $this->displayName = false;
 $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';
@@ -33,7 +37,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/edit')){
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
   $info = explode('/', $_SERVER['REQUEST_URI']);
-  $this->id = $info[array_search('d',$info)+1];
+  $this->id = explode('?',$info[array_search('d',$info)+1])[0];
 
   if(!$this->id) { su('d'); }
   $prev = $this->Dataset->getColumnFunctionWhere('max(did)', 'did < '.$this->id.' AND visibility="public"');
@@ -43,6 +47,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
   
   $this->record = $this->Dataset->getWhere('did = "' . $this->id . '"');
   $this->record = $this->record[0];
+  if(!$this->record->{'did'}) { su('d/'.$this->next_id); }
   
   // block unauthorized access
   $this->blocked = false; 
@@ -77,13 +82,21 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
       }
       }
   }
+
+  // properties
+  $this->properties = $this->Implementation->query("SELECT aq.quality, q.description, aq.value, q.showonline from data_quality aq, quality q where aq.quality=q.name and data=" . $this->record->{'did'} . " order by quality asc");
+  $this->nrfeatures = $this->Implementation->query("SELECT value from data_quality where quality='NumberOfFeatures' and data=" . $this->record->{'did'})[0]->{'value'};
   
   // features
-  $this->features = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE did=" . $this->record->{'did'});
+  $this->targetfeatures = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE is_target='true' and did=" . $this->record->{'did'});
+  $this->features = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE is_target='false' and did=" . $this->record->{'did'} . ($this->showallfeatures ? "" : " limit 0,100"));
+  $this->features = array_merge($this->targetfeatures,$this->features);
+  if($this->nrfeatures > count($this->features))
+	$this->highFeatureCount = true;
   $this->classvalues = array();
-  if($this->features){
-    foreach( $this->features as $r ) {
-      if($this->record->{'default_target_attribute'} == $r->{'name'} and $r->{'data_type'} == "nominal") {
+  if($this->targetfeatures){
+    foreach( $this->targetfeatures as $r ) {
+      if($r->{'data_type'} == "nominal") {
         $classvalues = json_decode($r->{'ClassDistribution'});      
         $this->classvalues = $classvalues[0];
       }

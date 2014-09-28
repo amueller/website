@@ -64,10 +64,9 @@
 		<?php
 			if ($this->features != false){ ?>
 
-		  <?php $result = $this->Implementation->query("SELECT aq.quality, q.description, aq.value, q.showonline from data_quality aq, quality q where aq.quality=q.name and data=" . $this->record->{'did'} . " order by quality asc");
-			$qtable = "";
-			if (is_array($result)){
-			foreach( $result as $r ) {
+		  <?php $qtable = "";
+			if (is_array($this->properties)){
+			foreach( $this->properties as $r ) {
 				if ($r->{'showonline'}=='true'){
 					if(is_numeric($r->{'value'})){
 						echo "<div class='qualcell col-xs-2'><span class='qualitynumeric'>" . round($r->{'value'},2) . "</span><br><a class='dataprop' href='a/data-qualities/".cleanName($r->{'quality'})."'>" . $r->{'quality'} . "</a></div>";
@@ -103,7 +102,7 @@
 			<h3>Features</h3>
 		<?php
 			if ($this->features != false){ ?>
-			<div class="features hideFeatures">
+			<div class="features <?php echo ($this->showallfeatures ? '' : 'hideFeatures'); ?>">
 			<div class="table-responsive">
 				<table class="table">
 				<?php
@@ -127,16 +126,16 @@
 					}
 					$newGraph .= ']});';
 					}
-					if($featCount<3)
+					if($featCount<3 or $this->showallfeatures){
 						$fgraphs = $newGraph . PHP_EOL . $fgraphs;
+						$featCount = $featCount + 1;
+					}
 					else
 						$fgraphs_all = $newGraph . PHP_EOL . $fgraphs_all;
 
 					
 					echo "<tr><td>" . $r->{'name'} . ( $r->{'is_target'} == 'true' ? ' <b>(target)</b>': '').( $r->{'is_row_identifier'} == 'true' ? ' <b>(row identifier)</b>': '').( $r->{'is_ignore'} == 'true' ? ' <b>(ignore)</b>': ''). "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " values, " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 200px;'></div></td></tr>";
 
-
-					$featCount = $featCount + 1;
 				}  
 					?>
 				</table>
@@ -144,8 +143,18 @@
 			</div>
         </div> <!-- end col-md-12 -->
         <div class="col-xs-12">
-	  <div class="show-more-features">
-		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show all <?php echo count($this->features); ?> features</a></div>
+	<div class="show-more-features">
+	<?php if(!$this->showallfeatures){ ?>
+		<a type="button" class="btn btn-primary btn-sm" onclick="showmorefeats()">Show <?php echo (count($this->features)<100 ? 'all '.count($this->features) : 'first 100'); ?> features</a>
+	<?php } ?>
+	</div>
+        <div class="show-all-features">
+	<?php if($this->highFeatureCount){ ?>
+		<a type="button" class="btn btn-primary btn-sm" href="d/<?php echo $this->id; ?>?show=all">Show all <?php echo $this->nrfeatures; ?> features.</a><br>This may take a while to load.
+	<?php } ?>
+	</div>
+
+	<!-- features unavailable --> 
 	<?php } else {
 			if($this->record->{'error'} == 'true')
 			    echo '<p>Could not calculate features.</p>'; 
@@ -153,6 +162,7 @@
 			    echo '<p>Data features are not analyzed yet. Refresh the page in a few minutes.</p>'; 
 	      } ?>
 	</div>
+ 
 
 	        <div class="col-xs-12">
 		<h3>Results (per task)</h3>

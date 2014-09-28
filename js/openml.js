@@ -186,4 +186,5 @@ function showmorefeats(){
     $('.features').switchClass("hideFeatures", "showFeatures", 400);
     visualize_all();
     $('.show-more-features').hide();
+    $('.show-all-features').show();
 }

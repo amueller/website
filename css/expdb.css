@@ -1822,7 +1822,7 @@ a:hover > .circlered{
 
 .hideFeatures {
     overflow: hidden;
-    height: 16em;
+    height: 20em;
 }
 
 .showContent {
@@ -1835,6 +1835,10 @@ a:hover > .circlered{
 
 .show-more {
     float: left;
+}
+
+.show-all-features {
+    display: none;
 }
 
 .previd{
