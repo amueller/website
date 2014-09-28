@@ -313,7 +313,7 @@ class Rest_api extends CI_Controller {
     //copy special features into data_features
     $targets = array_map('trim',explode(",",$dataset->default_target_attribute));
     $rowids = array_map('trim',explode(",",$dataset->row_id_attribute));
-    $ignores = array_map('trim',explode(",",$dataset->ignore_attributes));
+    $ignores = array_map('stripslashes',array_map('trim',explode(",",$dataset->ignore_attributes)));
 
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
