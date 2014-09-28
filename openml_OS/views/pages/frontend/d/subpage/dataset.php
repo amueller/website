@@ -40,8 +40,9 @@
   </div>
   <div class="col-xs-12">
      <div class="wiki-buttons">
+     <?php if ($this->ion_auth->logged_in()) { ?>
      <a class="btn btn-success btn-sm pull-right" href="d/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
-     <?php if ($this->show_history) { ?>
+     <?php } if ($this->show_history) { ?>
      <a class="btn btn-success btn-sm pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
      <?php } ?>
      </div>
