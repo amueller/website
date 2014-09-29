@@ -1,7 +1,7 @@
 <?php
 function formatTeaser($r){
 	if(array_key_exists('highlight',$r))
-		return trim(preg_replace('/\s+/', ' ', preg_replace('/\*{2,}/', '', $r['highlight']['description'][0])));
+		return trim(preg_replace('/\s+/', ' ', preg_replace('/^\*{2,}.*?\n/', '', $r['highlight']['description'][0])));
 	elseif(array_key_exists('description',$r['_source']))
 		return truncate(trim(preg_replace('/\s+/',' ',preg_replace('/^\*{2,}.*/m', '', $r['_source']['description']))));
 	return '';
