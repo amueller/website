@@ -1505,7 +1505,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    if($run->uploader != $this->user_id ) {
+    if($run->uploader != $this->user_id && $this->ion_auth->is_admin($this->user_id) == false ) {
       $this->_returnError( 413 );
       return;
     }
