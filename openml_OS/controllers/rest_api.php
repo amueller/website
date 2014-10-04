@@ -884,10 +884,9 @@ class Rest_api extends CI_Controller {
     
     $sql = '
       SELECT `r`.`task_id`, `r`.`rid`, `s`.`sid`, `s`.`implementation_id` AS `algorithm_implementation_id`, `i`.`fullName`, `e`.* 
-      FROM `run` `r`, `output_data` `od`, `algorithm_setup` `s`, `' . $evaluation_table . '` `e`, `implementation` `i`  
+      FROM `run` `r`, `algorithm_setup` `s`, `' . $evaluation_table . '` `e`, `implementation` `i`  
       WHERE `s`.`sid` = `r`.`setup` AND `r`.`task_id` = "'.$task_id.'" 
-      AND `od`.`run` = `r`.`rid` AND `e`.`did` = `od`.`data` 
-      AND `s`.`implementation_id` = `i`.`id` ' .
+      AND `e`.`source` = `r`.`rid` AND `s`.`implementation_id` = `i`.`id` ' .
       $evaluation_table_constraints. '
       ORDER BY `rid`, `s`.`implementation_id` ASC;';
     $runs = $this->Run->query( $sql );

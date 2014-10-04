@@ -1,6 +1,6 @@
 <oml:task_evaluations xmlns:oml="http://openml.org/openml">
-  <oml:task_id><?php echo $task->id; ?></oml:task_id>
-  <oml:task_name><?php echo $task->name; ?></oml:task_name>
+  <oml:task_id><?php echo $task->task_id; ?></oml:task_id>
+  <oml:task_name><?php echo 'Task '.$task->task_id; ?></oml:task_name>
   <oml:task_type_id><?php echo $task->ttid; ?></oml:task_type_id>
   <oml:input_data><?php echo $task->source_data; ?></oml:input_data>
   <oml:estimation_procedure><?php echo $estimation_procedure->name; ?></oml:estimation_procedure>

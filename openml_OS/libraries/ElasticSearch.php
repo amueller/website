@@ -241,6 +241,15 @@ class ElasticSearch {
 	}
   }
 
+  public function delete($type, $id = false){
+	$deleteParams = array();
+	$deleteParams['index'] = 'openml';
+	$deleteParams['type'] = $type;
+	$deleteParams['id'] = $id;
+	$response = $client->delete($deleteParams);
+	return $response;
+  }
+
   public function initialize_index($t){
      
      $this->mapping_delete($t);

@@ -96,6 +96,7 @@ class Task extends Database_write {
 
     if( $include_task_id ) {
       $select[] = '`t`.`task_id`';
+      $select[] = '`t`.`ttid`';
     }
     foreach( $inputs as $in ) {
       $select[] = '`' . $in->name . '`.`value` AS `' . $in->name . '`';

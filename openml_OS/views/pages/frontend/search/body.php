@@ -9,7 +9,7 @@
 	<?php
 	  $stack = array();
       	  foreach( $this->results['facets']['type']['terms'] as $f ) { array_push($stack,$f['term']); ?>
-          	<li><a href="search?q=<?php echo $this->terms . '&type=' . $f['term']; ?>" <?php if($this->filtertype == $f['term']) echo 'class="selected"';?>><i class="fa-fw <?php echo $this->icons[$f['term']];?>"></i> <?php echo str_replace('_',' ', ucfirst($f['term']));?><span class="counter"><?php echo $f['count'];?></span></a></li>	
+          	<li><a href="search?q=<?php echo $this->terms . '&type=' . $f['term']; ?>" <?php if($this->filtertype == $f['term']) echo 'class="selected"';?>><i class="fa-fw <?php echo $this->icons[$f['term']];?>"></i> <?php echo str_replace('User','People',str_replace('_',' ', ucfirst($f['term'])));?><span class="counter"><?php echo $f['count'];?></span></a></li>	
 	<?php }
 	  foreach( $this->icons as $f => $i ){
 		if(!in_array($f, $stack)){ ?>
