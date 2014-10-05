@@ -1261,12 +1261,12 @@ class Rest_api extends CI_Controller {
         return;
       }
       
-      $parameters[$input_id] = $p->value . '';
+      $parameters[$input_id->id] = $p->value . '';
     }
     // search setup ... // TODO: do something about the new parameters. Are still retrieved by ID, does not work with Weka plugin. 
     $setupId = $this->Algorithm_setup->getSetupId( $implementation, $parameters, true, $setup_string );
     if( $setupId === false ) {
-      $this->_returnError( 213 );
+      $this->_returnError( 214 );
       return;
     }
     

@@ -7,7 +7,7 @@ class Algorithm_setup extends Database_write {
     $this->id_column = 'sid';
   }
   
-  
+  //inputs: complete implementation record, mapping parameter_id->value, flag (typically true), setup string
   function getSetupId( $implementation, $parameters, $create, $setup_string = null ) {
     $paramString = '';
     $valueString = '';
@@ -20,7 +20,7 @@ class Algorithm_setup extends Database_write {
     }
     
     if(count($parameters)) {
-      $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters`,`parameters`,`values` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters`, GROUP_CONCAT(`input_setting`.`input`) AS `parameters`, GROUP_CONCAT(`input_setting`.`value`) AS `values` FROM `input_setting` GROUP BY `setup` ORDER BY `input`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation_id` = "'.$implementation->id.'" AND `p`.`parameters` = "'.substr( $paramString, 1 ).'" AND `p`.`values` = "'.substr( $valueString, 1 ).'" LIMIT 0,1;';
+      $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters`,`parameters`,`values` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters`, GROUP_CONCAT(`input_setting`.`input_id`) AS `parameters`, GROUP_CONCAT(`input_setting`.`value`) AS `values` FROM `input_setting` GROUP BY `setup` ORDER BY `input`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation_id` = "'.$implementation->id.'" AND `p`.`parameters` = "'.substr( $paramString, 1 ).'" AND `p`.`values` = "'.substr( $valueString, 1 ).'" LIMIT 0,1;';
     } else {
       $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation_id` = "'.$implementation->id.'" AND `nr_parameters` IS NULL LIMIT 0,1';
     }
@@ -34,7 +34,7 @@ class Algorithm_setup extends Database_write {
     } else {
       // CREATE THE NEW SETUP
       $components = array_merge( array($implementation->id), $this->Implementation->getComponentIds( $implementation->id ) );
-      $legal_parameters = $this->Input->getAssociativeArray('CONCAT(`implementation_id`,\'_\',`name`)','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
+      $legal_parameters = $this->Input->getAssociativeArray('id','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
       $isDefault = false; 
       
       if( is_array( $legal_parameters ) === false ) {
@@ -61,7 +61,7 @@ class Algorithm_setup extends Database_write {
       $setupData = array( 
         'sid' => $this->Algorithm_setup->getHighestIndex( array( 'algorithm_setup' ), 'sid' ),
   //      'parent' => '0',
-        'algorithm' => $implementation->implements,
+  //      'algorithm' => $implementation->implements,
         'implementation_id' => $implementation->id,
         'setup_string' => $setup_string,
         'isDefault' => $isDefault ? 'true' : 'false',
@@ -72,11 +72,10 @@ class Algorithm_setup extends Database_write {
       
       // and register the parameters
       foreach( $parameters as $key => $value ) {
-        $insert = array( 'setup' => $setupId, 'input' => $key, 'input_id' => $implementation->id, 'value' => $value );
+        $insert = array( 'setup' => $setupId, 'input_id' => $key, 'value' => $value );
         $this->Input_setting->insert( $insert );
         if(!$insert) return false;
-      }// TODO: input setting was saved with key {implementation_id}_{name}. Make a better index for input_setting link
-      return $setupId;
+      }      return $setupId;
     }
   }
 }
