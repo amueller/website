@@ -1575,7 +1575,7 @@ class Rest_api extends CI_Controller {
     $run->inputData = $this->Run->getInputData( $run->rid ); 
     $run->outputData = $this->Run->getOutputData( $run->rid ); 
     $run->setup = $this->Algorithm_setup->getById( $run->setup );
-    $run->inputSetting = $this->Input_setting->getWhere( 'setup = ' . $run->setup->sid );
+    $run->inputSetting = $this->Input_setting->query('SELECT i.name, s.value from input i, input_setting s where i.id=s.input_id and setup = ' . $run->setup->sid );
     
     $this->_xmlContents( 'run-get', array( 'source' => $run ) );
   }
