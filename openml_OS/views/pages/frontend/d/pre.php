@@ -15,7 +15,7 @@ $this->type = 'dataset';
 $this->record = false;
 
 $this->showallfeatures = false;
-if($this->input->get('show') and $this->input->get('show') == 'all')
+if(($this->input->get('show') and $this->input->get('show') == 'all') or false !== strpos($_SERVER['REQUEST_URI'],'/update'))
 	$this->showallfeatures = true;
 
 $this->displayName = false;
