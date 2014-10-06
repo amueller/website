@@ -44,7 +44,10 @@ class DataOverview {
           if( $tag_index == $index ) {
             if( $this->CI->input->post( $tag_name ) ) {
               if( $tag_type == 'csv' ) {
-                $values_exploded = explode( ',', $this->CI->input->post($tag_name) );
+		if(is_array($this->CI->input->post($tag_name)))
+		  $values_exploded = $this->CI->input->post($tag_name);
+		else
+		  $values_exploded = explode( ',', $this->CI->input->post($tag_name) );
                 foreach( $values_exploded as $value ) {
                   $xml->addChild('oml:'.$tag_name, $value);
                 }

@@ -314,6 +314,8 @@ class Rest_api extends CI_Controller {
     $targets = array_map('trim',explode(",",$dataset->default_target_attribute));
     $rowids = array_map('trim',explode(",",$dataset->row_id_attribute));
     $ignores = getcsv($dataset->ignore_attribute);
+    if(!$ignores)
+	$ignores = array();
 
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
@@ -698,8 +700,7 @@ class Rest_api extends CI_Controller {
       $dataset = all_tags_from_xml( 
         $xml->children('oml', true), 
         $this->xml_fields_dataset_update, $dataset );
-    }
-    
+      } 
     /* * * * 
      * THE ACTUAL INSERTION
      * * * */
@@ -718,6 +719,10 @@ class Rest_api extends CI_Controller {
             // ignore id, description (should not be altered)
       unset($dataset['id']);
       unset($dataset['description']);
+
+	   // remove ignore attributes if none specified
+      if(!array_key_exists('ignore_attribute', $dataset))
+	$dataset['ignore_attribute'] = NULL;
       
             // reset data features so that they are recalculated
       $dataset['processed'] = NULL; 

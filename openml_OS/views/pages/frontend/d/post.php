@@ -52,7 +52,6 @@ else{
     'data_set_description',
     $this->config->item('xml_fields_dataset_update')
   );
-
   $post_data = array(
       'description' => $description,
       'session_hash' => $session_hash
@@ -60,7 +59,7 @@ else{
   if( $_FILES['dataset']['error'] == 0 ) {
       $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
   }
-  //if data file didn't change, insert the old url
+  //if data file didn't change, §insert the old url
   //if(!$this->input->post('url') && (!file_exists($_FILES['dataset']['tmp_name']) || !is_uploaded_file($_FILES['dataset']['tmp_name']))) {
   //	$post_data['url'] = = $this->record->{'url'};
   //}
@@ -70,7 +69,6 @@ else{
   // Send the request & save response to $resp
 
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
-
   if($api_response !== false) {
     $xml = simplexml_load_string( $api_response );
 

@@ -85,7 +85,12 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
 
   // properties
   $this->properties = $this->Implementation->query("SELECT aq.quality, q.description, aq.value, q.showonline from data_quality aq, quality q where aq.quality=q.name and data=" . $this->record->{'did'} . " order by quality asc");
-  $this->nrfeatures = $this->Implementation->query("SELECT value from data_quality where quality='NumberOfFeatures' and data=" . $this->record->{'did'})[0]->{'value'};
+  $nrfeats = $this->Implementation->query("SELECT value from data_quality where quality='NumberOfFeatures' and data=" . $this->record->{'did'});
+  if($nrfeats){
+  	$this->nrfeatures = $nrfeats[0]->{'value'};
+  } else {
+	$this->nrfeatures = 0;
+  }
   
   // features
   $this->targetfeatures = $this->Dataset->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE is_target='true' and did=" . $this->record->{'did'});
