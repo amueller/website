@@ -109,6 +109,11 @@
 			<li><a href="api">API</a></li>
 			<li><a href="plugins">Plugins</a></li>
 		      </ul>
+ 
+  	 	      <ul class="nav navbar-nav nav-blue hidden-xs">
+			<li><a href="http://eindhoven2014.openml.org">Register now for OpenML 2014</a></li>
+		      </ul>
+
 	       
 			<div class="nav pull-right">
 			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-bars fa-2x"></i></a>

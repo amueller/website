@@ -680,6 +680,16 @@ h5{
   color: #666;  
 }
 
+.nav-blue > li > a{
+  color: #2a6496;
+  font-family: 'Roboto', sans-serif;
+  padding-right: 0px;
+}
+
+.nav-blue > li > a:hover{
+  background-color: #ffffff;
+  color: #666;  
+}
 
 .sharing{
   font-size: 14px !important;
