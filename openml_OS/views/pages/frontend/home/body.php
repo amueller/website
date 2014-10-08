@@ -12,13 +12,13 @@
 <div class="col-lg-10 col-lg-offset-1">
 <div class="stats">
  <div class="statrow">
-    <div class="col-sm-3 dotcontainer"><a href="d" class="numberCircle"><div class="arc circlegreen"></div><span class="number"><?php $count = $this->Implementation->query('select count(did) as count from dataset where isOriginal="true"'); echo($count[0]->count); ?></span><span class="label">data sets</span></a><div class="shortintro"><br>Find or add <a href="d" class="bold">data</a> challenging the community</div></div>
+    <div class="col-sm-3 dotcontainer"><a href="d" class="numberCircle"><div class="arc circlegreen"></div><span class="number" id="data_count"></span><span class="label">data sets</span></a><div class="shortintro"><br>Find or add <a href="d" class="bold">data</a> challenging the community</div></div>
 
-    <div class="col-sm-3 dotcontainer"><a href="t" class="numberCircle"><div class="arc circleyellow"></div><span class="number"><?php $count = $this->Implementation->query('select count(task_id) as count from task'); echo($count[0]->count); ?></span><span class="label">tasks</span></a><br><div class="shortintro">Download or create scientific <a href="t" class="bold">tasks</a> containing all data</div></div>
+    <div class="col-sm-3 dotcontainer"><a href="t" class="numberCircle"><div class="arc circleyellow"></div><span class="number" id="task_count"></span><span class="label">tasks</span></a><br><div class="shortintro">Download or create scientific <a href="t" class="bold">tasks</a> containing all data</div></div>
 
-    <div class="col-sm-3 dotcontainer"><a href="f" class="numberCircle"><div class="arc circleblue"></div><span class="number"><?php $count = $this->Implementation->query('select count(fullName) as count from implementation'); echo($count[0]->count); ?></span><span class="label">flows</span></a><br><div class="shortintro">Find or add <a href="f" class="bold">flows</a> (implementations) solving the tasks</div></div>
+    <div class="col-sm-3 dotcontainer"><a href="f" class="numberCircle"><div class="arc circleblue"></div><span class="number" id="flow_count"></span><span class="label">flows</span></a><br><div class="shortintro">Find or add <a href="f" class="bold">flows</a> (implementations) solving the tasks</div></div>
 
-    <div class="col-sm-3 dotcontainer"><a href="r" class="numberCircle"><div class="arc circlered"></div><span class="number"><?php $count = $this->Implementation->query('select count(rid) as count from run'); echo($count[0]->count); ?></span><span class="label">runs</span></a><br><div class="shortintro">OpenML collects and organizes all <a href="r" class="bold">results</a> online.</div></div>
+    <div class="col-sm-3 dotcontainer"><a href="r" class="numberCircle"><div class="arc circlered"></div><span class="number" id="run_count"></span><span class="label">runs</span></a><br><div class="shortintro">OpenML collects and organizes all <a href="r" class="bold">results</a> online.</div></div>
 
  </div>
 </div>
@@ -111,3 +111,25 @@
 
 </div>
 <!-- <div style="margin-bottom:-60px;"></div>  make footer visible on main page -->
+
+<script>
+  (function(){
+    function update(){
+	client.count({ index: 'openml', type: 'data' }, function (error, response) {
+	  $('#data_count').html(response.count);
+	});
+	client.count({ index: 'openml', type: 'task' }, function (error, response) {
+	  $('#task_count').html(response.count);
+	});
+	client.count({ index: 'openml', type: 'flow' }, function (error, response) {
+	  $('#flow_count').html(response.count);
+	});
+	client.count({ index: 'openml', type: 'run' }, function (error, response) {
+	  $('#run_count').html(response.count);
+	});
+    }
+    update();
+    //Run the update function once every 5 seconds
+    setInterval(update, 5000);
+  })();
+</script>
