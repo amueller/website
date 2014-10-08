@@ -8,7 +8,7 @@ class Schedule extends Database_write {
   }
   
   function getJob( $workbench, $task_type ) {
-    $sql = 'SELECT `s`.`sid`, `s`.`task_id`, `a`.`setup_string`, `s`.`last_assigned` FROM `schedule` `s`, `task` `t`, `algorithm_setup` `a`, `implementation` `i` WHERE `i`.`id` = `a`.`implementation_id` AND `a`.`sid` = `s`.`sid` AND `s`.`task_id` = `t`.`task_id` AND (`a`.`sid`,`t`.`task_id`) NOT IN (SELECT setup, task_id FROM run) AND `i`.`dependencies` = "' . $workbench . '" AND `t`.`ttid` = "' . $task_type . '" ORDER BY `last_assigned` ASC; ';
+    $sql = 'SELECT `s`.`sid`, `s`.`task_id`, `a`.`setup_string`, `s`.`last_assigned` FROM `schedule` `s`, `task` `t`, `algorithm_setup` `a`, `implementation` `i` WHERE `i`.`id` = `a`.`implementation_id` AND `a`.`sid` = `s`.`sid` AND `s`.`task_id` = `t`.`task_id` AND (`a`.`sid`,`t`.`task_id`) NOT IN (SELECT setup, task_id FROM run) AND `i`.`dependencies` = "' . $workbench . '" AND `t`.`ttid` = "' . $task_type . '";';
     
     $res = $this->query( $sql );
 
