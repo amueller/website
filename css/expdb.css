@@ -895,9 +895,10 @@ input[readonly] {
 
 #expdbschema, 
 #expdbschema2{
-  min-height: 630px;
-  width:970px;
-  background-image: url(../img/expdbschema.png);
+  min-height: 1500px;
+  width:100%;
+  background-image: url(../img/expdbschema2.png);
+  background-size: 100%;
   background-repeat: no-repeat;
   background-color: #fff;
   -webkit-backface-visibility:hidden;
