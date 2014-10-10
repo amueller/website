@@ -82,10 +82,36 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 		</table></div>
 
 		<h3>Runs</h3>
-		<h4><?php echo $this->record['runcount']; ?> completed runs</h4>	
-		<?php if(isset($this->sourcedata_id)) { ?>
-		See results for <a href="d/<?php echo $this->sourcedata_id; ?>"><?php echo $this->sourcedata_name; ?></a>
-		<?php } ?>		
+		<?php echo $this->record['runcount']; ?> completed runs
+
+		<h3>Performance evaluation</h3>
+		Evaluation measure:
+				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
+					<?php foreach($this->allmeasures as $m): ?>
+					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
+					<?php endforeach; ?>
+				</select>
+
+						
+			<div id="data_result_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
+
+			<div>   <div class="table-responsive">
+				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
+					<?php echo generate_table( 
+								array('img_open' => '', 
+										'rid' => 'Run', 
+										'sid' => 'setup id', 
+										'name' => 'Flow', 
+										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
+				</table></div>
+			</div>
+			<div class="modal fade" id="runModal" role="dialog" tabindex="-1" aria-labelledby="Run detail" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			    </div>
+			  </div>
+			</div>	
+
 
 		<h4>Run details</h4>		
 		<?php 
@@ -94,6 +120,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			<a href="r/<?php echo $r; ?>"><?php echo $r; ?></a> 
 		<?php	$prefix = ', ';
 			endforeach; ?>
+
 		<?php } else { ?>Sorry, this task is unknown.<?php } ?>		
 	</div> <!-- end col-md-12 -->
 

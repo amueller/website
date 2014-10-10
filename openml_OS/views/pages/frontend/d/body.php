@@ -11,9 +11,11 @@
      <p></p>
      <hr>
      	<?php
+	 if(false === strpos($_SERVER['REQUEST_URI'],'/d/')){
 	    //$this->sort = 'last_update';
 	    loadpage('search', true, 'pre'); 
 	    loadpage('search/subpage', true, 'results'); 
+  	}
         ?> 
      </div> <!-- end intro tab -->
 

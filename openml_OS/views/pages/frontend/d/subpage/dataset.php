@@ -152,7 +152,7 @@
 	<?php } ?>
 	</div>
         <div class="show-all-features">
-	<?php if($this->highFeatureCount){ ?>
+	<?php if(isset($this->highFeatureCount) and $this->highFeatureCount){ ?>
 		<a type="button" class="btn btn-primary btn-sm" href="d/<?php echo $this->id; ?>?show=all">Show all <?php echo $this->nrfeatures; ?> features.</a><br>This may take a while to load.
 	<?php } ?>
 	</div>
@@ -168,54 +168,19 @@
  
 
 	        <div class="col-xs-12">
-		<h3>Results (per task)</h3>
+		<h3>Tasks</h3>
 		<?php if(count($this->tasks_all)==0){ ?>
 				<p>There haven't been any tasks created on this dataset yet. <a href="new/task">Create a task on this data set.</a></p>
-		<?php } else { ?>
-				<select class="selectpicker" data-width="auto" onchange="current_task = this.value; oTableRuns.fnDraw(true); redrawchart();">
-					<?php foreach($this->tasks_all as $t): ?>
-					<option value="<?php echo $t['id'];?>" <?php echo ($t == $this->current_task) ? 'selected' : '';?>><?php echo 'Task ' . $t['id'] . ' (' . $t['name'] . ')';?></option>
-					<?php endforeach; ?>
-				</select>
+		<?php } else {
+			$this->filtertype = 'task';
+			$this->sort = 'runs';
+			if($this->input->get('sort'))
+			  $this->sort = safe($this->input->get('sort'));
+			$this->specialterms = 'source_data.data_id:61';
+	    		loadpage('search', true, 'pre'); 
+	    		loadpage('search/subpage', true, 'results'); ?>
 
-		<a onclick="$('#taskModal').modal({remote: 't/' + current_task + '/html'}); $('#taskModal').modal('show');">view task details</a>
-		<h2>Performance evaluation</h2>
-		Evaluation measure:
-				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
-					<?php foreach($this->allmeasures as $m): ?>
-					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
-					<?php endforeach; ?>
-				</select>
-
-						
-			<div id="data_result_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
-
-			<div>   <div class="table-responsive">
-				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
-					<?php echo generate_table( 
-								array('img_open' => '', 
-										'rid' => 'Run', 
-										'sid' => 'setup id', 
-										'name' => 'Flow', 
-										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
-				</table></div>
-			</div>
 		<?php } ?>
-
-<div class="modal fade" id="runModal" role="dialog" tabindex="-1" aria-labelledby="Run detail" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="taskModal" role="dialog" tabindex="-1" aria-labelledby="Task detail" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div>
-  </div>
-</div>
-
-
 
 		</div> <!-- end tab-runs -->
 

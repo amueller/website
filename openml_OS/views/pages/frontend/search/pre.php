@@ -14,7 +14,10 @@ function addToGET($keyvalue){
 }
 
 /// SEARCH
-$this->terms = safe($this->input->get('q'));
+if(isset ($this->specialterms))
+	$this->terms = $this->specialterms;
+else
+	$this->terms = safe($this->input->get('q'));
 $this->coreterms = "";
 $this->filters = array();
 

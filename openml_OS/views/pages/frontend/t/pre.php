@@ -65,4 +65,33 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	$info = explode('/', $_SERVER['REQUEST_URI']);
 	$this->task_id = $info[array_search('t',$info)+1];
 }
+// evaluations
+$this->current_measure = 'predictive_accuracy';
+$this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
+
+// datatables
+  $this->dt_main         = array();
+  $this->dt_main['columns']     = array('r.rid','rid','sid','fullName','value');
+  $this->dt_main['column_widths']    = array(1,1,0,30,30);
+  $this->dt_main['column_content']  = array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
+  $this->dt_main['column_source']    = array('wrapper','db','db','doublewrapper','db','db');
+  $this->dt_main['group_by']     = 'l.implementation_id';
+  
+  $this->dt_main['base_sql']     =   'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
+                    'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
+                    'WHERE `r`.`setup`=`l`.`sid` ' .
+                    'AND `l`.`implementation_id` = `i`.`id` ' . 
+                    'AND `e`.`source`=`r`.`rid` ';
+                    
+  $this->dt_main_all = array();
+  $this->dt_main_all['columns']     = array('r.rid','rid','sid','fullName','value');
+  $this->dt_main_all['column_content']= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
+  $this->dt_main_all['column_source']  = array('wrapper','db','db','doublewrapper','db','db');
+  //$this->dt_main_all['group_by']   = 'l.implementation'; NONE
+  
+  $this->dt_main_all['base_sql']   =   'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(`e`.`value`,4) AS `value` ' .
+                    'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
+                    'WHERE `r`.`setup`=`l`.`sid` ' .
+                    'AND `l`.`implementation_id` = `i`.`id` ' . 
+                    'AND `e`.`source`=`r`.`rid` ';
 ?>
