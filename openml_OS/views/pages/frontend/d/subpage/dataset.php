@@ -176,7 +176,7 @@
 			$this->sort = 'runs';
 			if($this->input->get('sort'))
 			  $this->sort = safe($this->input->get('sort'));
-			$this->specialterms = 'source_data.data_id:61';
+			$this->specialterms = 'source_data.data_id:'.$this->id;
 	    		loadpage('search', true, 'pre'); 
 	    		loadpage('search/subpage', true, 'results'); ?>
 
