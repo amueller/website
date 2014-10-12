@@ -191,7 +191,7 @@ class Rest_api extends CI_Controller {
   }
 
   private function _openml_data_safe() {
-    $datasets = $this->Dataset->query( 'SELECT did, name, version FROM dataset WHERE `processed` IS NOT NULL AND `error` = "false" AND `safe` = "true" AND did in (select distinct did from data_feature)' );
+    $datasets = $this->Dataset->query( 'SELECT did, name, version FROM dataset WHERE `processed` IS NOT NULL AND `licence`= "Public" AND `error` = "false" AND `safe` = "true" AND did in (select distinct did from data_feature)' );
     if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
       $this->_returnError( 110 );
     }
@@ -199,7 +199,7 @@ class Rest_api extends CI_Controller {
   }
 
   private function _openml_task_classification_safe() {
-    $tasks = $this->Dataset->query( 'select t.task_id, d.name, d.version, p.name as pname from task t left join task_inputs ti1 on (t.task_id=ti1.task_id and ti1.input="source_data") left join dataset d on (ti1.value=d.did) left join task_inputs ti2 on (t.task_id=ti2.task_id and ti2.input="target_feature") left join task_inputs ti3 on (t.task_id=ti3.task_id and ti3.input="estimation_procedure") left join estimation_procedure p on (ti3.value=p.id) where t.ttid=1 and d.safe="true" and d.did in (select distinct did from data_feature) and ti2.value=d.default_target_attribute' );
+    $tasks = $this->Dataset->query( 'select t.task_id, d.name, d.version, p.name as pname from task t left join task_inputs ti1 on (t.task_id=ti1.task_id and ti1.input="source_data") left join dataset d on (ti1.value=d.did) left join task_inputs ti2 on (t.task_id=ti2.task_id and ti2.input="target_feature") left join task_inputs ti3 on (t.task_id=ti3.task_id and ti3.input="estimation_procedure") left join estimation_procedure p on (ti3.value=p.id) where t.ttid=1 and d.safe="true" and d.licence= "Public" and d.did in (select distinct did from data_feature) and ti2.value=d.default_target_attribute' );
     if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
       $this->_returnError( 110 );
     }
