@@ -22,7 +22,7 @@
               <div class="form-group">
                 <label class="col-md-2 control-label" for="taskDropdown">Tasks</label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" id="taskDropdown" name="datasets" placeholder="Include all tasks" value="" />
+                  <input type="text" class="form-control" id="taskDropdown" name="tasks" placeholder="Include all tasks" value="" />
                   <span class="help-block">A comma separated list of tasks. Leave empty to include all tasks on the specified datasets.</span>
                 </div>
               </div>
@@ -36,7 +36,7 @@
               <div class="form-group">
                 <label class="col-md-2 control-label" for="setupDropdown">Setups</label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" id="setupDropdown" name="flows" placeholder="Include all setups" value="">
+                  <input type="text" class="form-control" id="setupDropdown" name="setups" placeholder="Include all setups" value="">
                   <span class="help-block">A comma separated list of setups. Leave empty to include all setups on the specified flows.</span>
                 </div>
               </div>
