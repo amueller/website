@@ -42,7 +42,9 @@ class Cron extends CI_Controller {
       $meta_dataset = $meta_dataset[0];
       $this->Meta_dataset->update( $meta_dataset->id, array( 'processed' => now() ) );
       $dataset_constr = ( $meta_dataset->datasets ) ? 'AND d.did IN (' . $meta_dataset->datasets . ') ' : '';
+      $task_constr = ( $meta_dataset->tasks ) ? 'AND t.task_id IN (' . $meta_dataset->tasks . ') ' : '';
       $flow_constr = ( $meta_dataset->flows ) ? 'AND i.id IN (' . $meta_dataset->flows . ') ' : '';
+      $setup_constr = ( $meta_dataset->setups ) ? 'AND s.sid IN (' . $meta_dataset->setups . ') ' : '';
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
       if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
@@ -65,7 +67,7 @@ class Cron extends CI_Controller {
         'AND v.input = "source_data" AND v.value = d.did '.
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
         'AND e.source = r.rid '.
-         $dataset_constr . $flow_constr .  $function_constr .
+         $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
 //      'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample ' . 
         'INTO OUTFILE "'. $tmp_path .'" ' .
         'FIELDS TERMINATED BY "," ' .
