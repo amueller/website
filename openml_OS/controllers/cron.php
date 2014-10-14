@@ -56,11 +56,12 @@ class Cron extends CI_Controller {
       
       $sql = 
         'SELECT "run_id", "setup_id", "task_id", "repeat", "fold", "sample",' . 
-        '"sample_size", "function", "value", "dataset_name", "implementation_name", "textual"' .
+        '"sample_size", "function", "value", "task_name", "setup_name", "textual"' .
         'UNION ALL ' .
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
         'e.repeat, e.fold, e.sample, e.sample_size, e.function, e.value, '.
-        'd.name, i.fullName, ' . 
+        'CONCAT("Task_", t.task_id, "_", d.name),'.
+        's.setup_string, ' . 
         'CONCAT(i.fullName, " on ", d.name) as textual '.
         'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, evaluation_sample e '.
         'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
