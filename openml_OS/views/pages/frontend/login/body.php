@@ -1,7 +1,7 @@
 <div class="container-fluid topborder">
   <div class="row">
    <div class="col-xs-12 col-sm-4 col-sm-offset-4 openmlsectioninfo">
-   <h1>Log in</h1>
+   <h1>Sign in</h1>
     <?php echo form_open("frontend/page/login");?>
     <div class="form-group">
       <label for="identity">Username or Email</label>
@@ -14,10 +14,9 @@
     </div>
     <div class="form-group">
       <?php echo form_submit('submit', 'Login');?>
+      <a href="register" class="btn pull-right">Create an account</a>
     </div>
     <?php echo form_close();?>
-
-    Not registered yet? <a href="register">Join OpenML now!</a><br />
   </div>
   </div>
 </div>

@@ -3,12 +3,26 @@
     <div class="col-lg-10 col-sm-12 col-lg-offset-1">
     <div class="col-sm-12 col-md-3 searchbar">
 
-      <div class="bs-sidebar">
+      <div class="bs-sidebar affix">
         <ul class="nav bs-sidenav">
 	  <li><a href="#java">Java API</a>
 	  <ul class="nav">
 	    <li><a href="#java-download">Download</a></li>
 	    <li><a href="#java-start">Quick Start</a></li>
+	    <li><a href="#java-data-download">Data download</a></li>
+	    <li><a href="#java-data-upload">Data upload</a></li>
+	    <li><a href="#java-flow-download">Flow download</a></li>
+	    <li><a href="#java-flow-mgm">Flow management</a></li>
+	    <li><a href="#java-flow-upload">Flow upload</a></li>
+	    <li><a href="#java-task-download">Task download</a></li>
+	    <li><a href="#java-run-download">Run download</a></li>
+	    <li><a href="#java-run-mgm">Run management</a></li>
+	    <li><a href="#java-run-upload">Run upload</a></li>
+
+	    <li><a href="#java-sql">Free SQL query</a></li>
+	    <li><a href="#java-issues">Issues and requests</a></li>
+
+
 	  </ul>
 	  </li>
 	  
@@ -19,7 +33,7 @@
 	  </ul>
 	  </li>
 	  <li>
-            <a href="#dev-tutorial">Web API</a>
+            <a href="#dev-tutorial">REST tutorial</a>
             <ul class="nav">
               <li><a href="#dev-getdata">Download a dataset</a></li>
               <li><a href="#dev-getimpl">Download an implementation</a></li>
@@ -30,11 +44,10 @@
             </ul>
           </li>
           <li>
-            <a href="#dev-docs">REST Services</a>
+            <a href="#dev-docs">REST services</a>
             <ul class="nav">
               <li><a href="#openml_authenticate">openml.authenticate</a></li>
               <li><a href="#openml_authenticate_check">openml.authenticate.check</a></li>
-
               <li><a href="#openml_data">openml.data</a></li>
               <li><a href="#openml_data_description">openml.data.description</a></li>
               <li><a href="#openml_data_upload">openml.data.upload</a></li>
@@ -69,6 +82,16 @@
               <li><a href="#openml_setup_delete">openml.setup.delete</a></li>
             </ul>
           </li>
+          <li>
+            <a href="#json-docs">JSON endpoints</a>
+	    <ul class="nav">
+              <li><a href="#json_data">Get data</a></li>
+              <li><a href="#json_flow">Get flow</a></li>
+              <li><a href="#json_task">Get task</a></li>
+              <li><a href="#json_run">Get run</a></li>
+              <li><a href="#json_sql">Free SQL query</a></li>
+	    </ul>
+          </li>
         </ul>
       </div>
     </div> <!-- end col-2 -->
@@ -80,31 +103,176 @@
           </div>
         The Java API allows you connect to OpenML from Java applications.
 	<h2 id="java-download">Download</h2>
-	<p>The Java API is available from <a href="http://search.maven.org/#artifactdetails%7Corg.openml%7Capiconnector%7C0.9.17%7Cjar">Maven central</a>. Or, you can check it out from <a href="https://github.com/openml/r"> GitHub</a>. Include the jar in your project as usual.</p>
-
-	<h2 id="java-download">Maven install</h2>
-	<p>To install via Maven, follow the <a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">usual procedure</a> using the POM file available from <a href="http://search.maven.org/#artifactdetails%7Corg.openml%7Capiconnector%7C0.9.17%7Cjar">Maven central</a>.</p>
+	<p>Stable releases of the Java API are available from <a href="http://search.maven.org/#search%7Cga%7C1%7Copenml">Maven central</a>. Or, you can check out the developer version from <a href="https://github.com/openml/java"> GitHub</a>. Include the jar file in your projects as usual, or <a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">install via Maven</a></p>
 
 	<h2 id="java-start">Quick Start</h2>
-	<p>Create an OpenmlConnector instance. All its functions are described in the <a href="docs" target="_blank">Java Docs.</a></p>
-	<pre>OpenmlConnector openmlconnector = new OpenmlConnector();</pre>
-	<p>For instance, authenticate by sending your username and password. You'll get an Authenticate object (token) for uploading data to OpenML.</p>
-	<pre>Authenticate auth = openmlconnector.openmlAuthenticate(username, password);</pre>
-	<p>All Web API functions (see below) have an equivalent Java function. For instance, the function <code>openml.data.upload</code> has an equivalent Java function <code>openmlconnector.openmlDataUpload(File,File,String)</code>.</p>
-	<pre>UploadDataSet result = openmlconnector.openmlDataUpload( descriptionXML, dataset, auth.getSessionHash() );</pre>
+	<p>Create an <code>OpenmlConnector</code> instance with your username and password. This will create a client with all OpenML functionalities.</p>
+	<pre>OpenmlConnector client = new OpenmlConnector(username, password);</pre>
+	<p>All functions are described in the <a href="docs" target="_blank">Java Docs</a>, and they mirror the functions from the Web API functions described below. For instance, the API function <a href="api#openml_data_description"><code>openml.data.description</code></a> has an equivalent Java function <code>openmlDataDescription(String data_id)</code>.</p>
+
+	<h4>Downloading things</h4>
+	<p>To download data, flows, tasks, runs, etc. you need the unique <b>id</b> of that resource. The id is shown on each item's webpage and in the corresponding url. For instance, let's download <a href="d/1">Data set 1</a>. The following returns a DataSetDescription object that contains all information about that data set.</p>
+	<pre>DataSetDescription data = client.openmlDataDescription(1);</pre>
+        <p>You can also <a href="search">search</a> for the items you need online, and click the <i class="fa fa-list-ol" style="margin-left:0px;"></i> icon to get all id's that match a search.</p>
+
+	<h4>Uploading things</h4>
+	<p>To upload data, flows, runs, etc. you need to provide a description of the object. We provide wrapper classes to provide this information, e.g. <code>DataSetDescription</code>, as well as to capture the server response, e.g. <code>UploadDataSet</code>, which always includes the generated id for reference:</p>
+	<pre>
+DataSetDescription description = new DataSetDescription( "iris", "The famous iris dataset", "arff", "class");
+UploadDataSet result = client.openmlDataUpload( description, datasetFile );
+int data_id = result.getId();</pre>
+	<p>More details are given in the corresponding functions below. Also see the <a href="docs" target="_blank">Java Docs</a> for all possible inputs and return values.</p>
+
+	<h2 id="java-data-download">Data download</h2>
+	<br><code>openmlDataGet(int data_id)</code><br>
+	<p>Retrieves the description of a specified data set.</p>
+	<pre>DataSetDescription data = client.openmlDataGet(1);
+String name = data.getName();
+String version = data.getVersion();
+String description = data.getDescription();
+String url = data.getUrl();
+</pre>
+
+	<br><code>openmlDataFeatures(int data_id)</code><br>
+	<p>Retrieves the description of the features of a specified data set.</p>
+	<pre>DataFeature reponse = client.openmlDataFeatures(1);
+DataFeature.Feature[] features = reponse.getFeatures();
+String name = features[0].getName();
+String type = features[0].getDataType();
+boolean	isTarget = features[0].getIs_target();
+</pre>
+
+	<br><code>openmlDataQuality(int data_id)</code><br>
+	<p>Retrieves the description of the qualities (meta-features) of a specified data set.</p>
+	<pre>DataQuality response = client.openmlDataQuality(1);
+DataQuality.Quality[] qualities = reponse.getQualities();
+String name = qualities[0].getName();
+String value = qualities[0].getValue();
+</pre>
+
+	<br><code>openmlDataQuality(int data_id, int interval_start, int interval_end, int interval_size)</code><br>
+	<p>For data streams. Retrieves the description of the qualities (meta-features) of a specified portion of a data stream.</p>
+	<pre>DataQuality qualities = client.openmlDataQuality(1,0,10000,null);</pre>
+
+	<br><code>openmlData()</code><br>
+	<p>Retrieves an array of id's of all valid public data sets on OpenML.</p>
+	<pre>Data response = client.openmlData();
+Integer[] ids = response.getDid();</pre>
+
+	<br><code>openmlDataQualityList()</code><br>
+	<p>Retrieves a list of all data qualities known to OpenML.</p>
+	<pre>DataQualityList response = client.openmlDataQualityList();
+String[] qualities = response.getQualities();</pre>
+
+	<h2 id="java-data-upload">Data upload</h2>
+	<br><code>openmlDataUpload(DataSetDescription description, File dataset)</code><br>
+	<p>Uploads a data set file to OpenML given a description. Throws an exception if the upload failed, see <a href="#openml_data_upload">openml.data.upload</a> for error codes.</p>
+	<pre>
+DataSetDescription dataset = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
+UploadDataSet data = client.openmlDataUpload( dataset, new File("data/path"));
+int data_id = result.getId();
+</pre>
+
+	<br><code>openmlDataUpload(DataSetDescription description)</code><br>
+	<p>Registers an existing dataset (hosted elsewhere). The description needs to include the url of the data set. Throws an exception if the upload failed, see <a href="#openml_data_upload">openml.data.upload</a> for error codes.</p>
+	<pre>
+DataSetDescription description = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
+description.setUrl("http://datarepository.org/mydataset");
+UploadDataSet data = client.openmlDataUpload( description );
+int data_id = result.getId();
+</pre>
+
+	<h2 id="java-flow-download">Flow download</h2>
+	<br><code>openmlImplementationGet(int flow_id)</code><br>
+	<p>Retrieves the description of the flow/implementation with the given id.</p>
+	<pre>Implementation flow = client.openmlImplementationGet(100);
+String name = flow.getName();
+String version = flow.getVersion();
+String description = flow.getDescription();
+String binary_url = flow.getBinary_url();
+String source_url = flow.getSource_url();
+Parameter[] parameters = flow.getParameter();
+</pre>
+
+	<h2 id="java-flow-mgm">Flow management</h2>
+	<br><code>openmlImplementationOwned()</code><br>
+	<p>Retrieves an array of id's of all flows/implementations owned by you.</p>
+	<pre>ImplementationOwned response = client.openmlImplementationOwned();
+Integer[] ids = response.getIds();</pre>
+
+	<br><code>openmlImplementationExists(String name, String version)</code><br>
+	<p>Checks whether an implementation with the given name and version is already registered on OpenML.</p>
+	<pre>ImplementationExists check = client.openmlImplementationExists("weka.j48", "3.7.12");
+boolean exists = check.exists();
+int flow_id = check.getId();
+</pre>
+
+	<br><code>openmlImplementationDelete(int id)</code><br>
+	<p>Removes the flow with the given id (if you are its owner).</p>
+	<pre>ImplementationDelete response = client.openmlImplementationDelete(100);</pre>
+
+	<h2 id="java-flow-upload">Flow upload</h2>
+	<br><code>openmlImplementationUpload(Implementation description, File binary, File source)</code><br>
+	<p>Uploads implementation files (binary and/or source) to OpenML given a description.</p>
+	<pre>Implementation flow = new Implementation("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12") 
+UploadImplementation response = client.openmlImplementationUpload( flow, new File("code.jar"), new File("source.zip"));
+int flow_id = response.getId();
+</pre>
+
+	<h2 id="java-task-download">Task download</h2>
+	<br><code>openmlTaskGet(int task_id)</code><br>
+	<p>Retrieves the description of the task with the given id.</p>
+	<pre>Task task = client.openmlTaskGet(1);
+String task_type = task.getTask_type();
+Input[] inputs = task.getInputs();
+Output[] outputs = task.getOutputs();
+</pre>
+
+	<br><code>openmlTaskEvaluations(int task_id)</code><br>
+	<p>Retrieves all evaluations for the task with the given id.</p>
+	<pre>TaskEvaluations response = client.openmlTaskEvaluations(1);
+Evaluation[] evaluations = response.getEvaluation();
+</pre>
+
+	<br><code>openmlTaskEvaluations(int task_id, int start, int end, int interval_size)</code><br>
+	<p>For data streams. Retrieves all evaluations for the task over the specified window of the stream.</p>
+	<pre>TaskEvaluations response = client.openmlTaskEvaluations(1);
+Evaluation[] evaluations = response.getEvaluation();
+</pre>
+
+	<h2 id="java-run-download">Run download</h2>
+	<br><code>openmlRunGet(int run_id)</code><br>
+	<p>Retrieves the description of the run with the given id.</p>
+	<pre>Run run = client.openmlRunGet(1);
+int task_id = run.getTask_id();
+int flow_id = run.getImplementation_id();
+Parameter_setting[] settings = run.getParameter_settings() 
+EvaluationScore[] scores = run.getOutputEvaluation();
+</pre>
+
+	<h2 id="java-run-mgm">Run management</h2>
+	<br><code>openmlRunDelete(int run_id)</code><br>
+	<p>Deletes the run with the given id (if you are its owner).</p>
+	<pre>RunDelete response = client.openmlRunDelete(1);</pre>
+
+	<h2 id="java-run-upload">Run upload</h2>
+	<br><code>openmlRunUpload(Run description, Map&lt;String,File&gt; output_files)</code><br>
+	<p>Uploads a run to OpenML, including a description and a set of output files depending on the task type.</p>
+	<pre>Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
+parameter_settings[0] = Run.Parameter_setting(null, "M", "2");
+Run run = new Run("1", null, "100", "setup_string", parameter_settings);
+Map<String,File> outputs = new HashMap&lt;String,File&gt;();
+outputs.add("predictions",new File("predictions.arff"));
+UploadRun response = client.openmlRunUpload( run, outputs);
+int run_id = response.getRun_id();
+</pre>
 
 
-	<h2 id="java-data-upload">Upload data</h2>
-	<p>Create a description for the new data set, including a name, description, format and target feature.</p>
-	<pre>DataSetDescription description = new DataSetDescription( "iris", "An instance of the iris dataset", "arff", "class");</pre>
-	<p>We use XStream to create an XML file.</p>
-	<pre>XStream xstream = XstreamXmlMapping.getInstance();
-File descriptionXML = Conversion.stringToTempFile(xstream.toXML(description), "description", "xml");</pre>
-	<p>Now upload the dataset file and description, and print the resulting OpenML dataset ID.</p>
-	<pre>File dataset = new File(DATA_LOCATION);
-UploadDataSet result = openmlconnector.openmlDataUpload( descriptionXML, dataset, auth.getSessionHash() );
-System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
-			
+	<h2 id="java-sql">Free SQL Query</h2>
+	<br><code>openmlFreeQuery(String sql)</code><br>
+	<p>Executes the given SQL query and returns the result in JSON format.</p>
+	<pre>org.json.JSONObject json = client.openmlFreeQuery("SELECT name FROM dataset");</pre>
+
 	<h2 id="java-issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/java/issues"> OpenML Java issue tracker</a>.
 	</div>
@@ -126,7 +294,7 @@ System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
  
       <div class="bs-docs-section">
         <div class="page-header">
-          <h1 id="dev-tutorial">Web API</h1>
+          <h1 id="dev-tutorial">REST tutorial</h1>
         </div>
        <p>OpenML offers a RESTful Web API for uploading and downloading machine learning resources. Below is a list of common use cases.
        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
@@ -236,6 +404,7 @@ System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
           <li><a href="api#openml_authenticate">openml.authenticate</a></li>
           <li><a href="api#openml_run_upload">openml.run.upload</a></li>
         </ul>
+
       </div>
       <div class="bs-docs-section">
         <div class="page-header">
@@ -243,29 +412,6 @@ System.out.println( "New dataset has dataset id: " + result.getId() );</pre>
         </div>
         <p class="lead">Details of all OpenML services, with their expected arguments, file formats, responses and error codes.</p>
                
-        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
-          <h4>Free SQL Queries</h4>
-          <p>Whenever the below API functions do not cover your needs, it is possible to use direct SQL SELECT queries. The result will be returned in JSON format. </p>
-          <p>The URL is 
-          <div class="codehighlight">
-            <pre class="pre-scrollable"><code class="html">http://www.openml.org/api_query/?q=&lt;urlencode(QUERY)&gt;</code></pre>
-          </div>
-          </p>
-          <p>For instance, to request the result of <code>SELECT name,did FROM dataset WHERE name LIKE "iris%"</code>, invoke like this:
-          <div class="codehighlight">
-            <pre class="pre-scrollable"><code class="html">http://openml.liacs.nl/api_query/?q=SELECT%20name,did%20FROM%20dataset%20WHERE%20name%20LIKE%20%22iris%%22</code></pre>
-          </div>
-          </p>
-          <p>Responses are always in JSON format, also when an error is returned. A typical response would be: 
-          <div class="codehighlight">
-            <pre class="pre-scrollable"><code class="html">{"status": "SQL was processed: 2 rows selected. ","id": "","time": 0.0020740032196045,"columns": [{"title":"name","datatype":"undefined"},{"title":"did","datatype":"undefined"},{"title":"url","datatype":"undefined"}],"data": [["iris","61","http:\/\/openml.liacs.nl\/files\/download\/61\/dataset_61_iris.arff"],["iris","282","http:\/\/openml.liacs.nl\/files\/download\/49033\/iris.arff"]]}
-</code></pre>
-          </div>
-          <p>Please first consider using regular API functions before using this function. The database structure will likely evolve over time, which may break your code. If you need further API functions, simply let us know, or <a href="https://github.com/openml/OpenML/issues">open a new issue</a>.</p>
-        </div>
-
-
-
 <!-- [START] Api function description: openml.authenticate --> 
 
 
@@ -2250,10 +2396,51 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 </div>
 
 <!-- [END] Api function description: openml.setup.delete -->  
-
-
-        
       </div>
+  <div class="bs-docs-section">
+        <div class="page-header">
+          <h1 id="json-docs">JSON Endpoints</h1>
+        </div>
+        <p class="lead">OpenML also allows you to retrieve most information in JSON format using a predictable URL scheme. It does not allow you to upload data (yet).</p>
+
+	<h2 id="json_data">Get data</h2>
+	<p>Get a JSON description of a dataset with <code>www.openml.org/d/id/json</code> (or add <code>/json</code> to the dataset page's url).</p>
+	<p>Example: <a href="d/1/json"><code>www.openml.org/d/1/json</code></a></p>
+
+	<h3 id="json_flow">Get flows</h3>
+	<p>Get a JSON description of a flow with <code>www.openml.org/f/id/json</code> (or add <code>/json</code> to the flow page's url).</p>
+	<p>Example: <a href="f/100/json"><code>www.openml.org/f/100/json</code></a></p>
+
+	<h3 id="json_task">Get tasks</h3>
+	<p>Get a JSON description of a task with <code>www.openml.org/t/id/json</code> (or add <code>/json</code> to the task page's url).</p>
+	<p>Example: <a href="t/1/json"><code>www.openml.org/t/1/json</code></a></p>
+
+	<h3 id="json_run">Get runs</h3>
+	<p>Get a JSON description of a run with <code>www.openml.org/r/id/json</code> (or add <code>/json</code> to the run page's url).</p>
+	<p>Example: <a href="r/1/json"><code>www.openml.org/r/1/json</code></a></p>
+
+	<h3 id="json_sql">Free SQL Queries</h3>
+        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
+          <p>Whenever the existing API functions do not cover your needs, it is possible to use direct SQL SELECT queries. The result will be returned in JSON format. </p>
+          <p>The URL is 
+          <div class="codehighlight">
+            <pre class="pre-scrollable"><code class="html">http://www.openml.org/api_query/?q=&lt;urlencode(QUERY)&gt;</code></pre>
+          </div>
+          </p>
+          <p>For instance, to request the result of <code>SELECT name,did FROM dataset WHERE name LIKE "iris%"</code>, invoke like this:
+          <div class="codehighlight">
+            <pre class="pre-scrollable"><code class="html">http://openml.liacs.nl/api_query/?q=SELECT%20name,did%20FROM%20dataset%20WHERE%20name%20LIKE%20%22iris%%22</code></pre>
+          </div>
+          </p>
+          <p>Responses are always in JSON format, also when an error is returned. A typical response would be: 
+          <div class="codehighlight">
+            <pre class="pre-scrollable"><code class="html">{"status": "SQL was processed: 2 rows selected. ","id": "","time": 0.0020740032196045,"columns": [{"title":"name","datatype":"undefined"},{"title":"did","datatype":"undefined"},{"title":"url","datatype":"undefined"}],"data": [["iris","61","http:\/\/openml.liacs.nl\/files\/download\/61\/dataset_61_iris.arff"],["iris","282","http:\/\/openml.liacs.nl\/files\/download\/49033\/iris.arff"]]}
+</code></pre>
+          </div>
+          <p>Please first consider using regular API functions before using this function. The database structure will likely evolve over time, which may break your code. If you need further API functions, simply let us know, or <a href="https://github.com/openml/OpenML/issues">open a new issue</a>.</p>
+        </div>
+      </div>
+
 
     <!-- end col-md-9 -->
     </div> <!-- end col-10 -->

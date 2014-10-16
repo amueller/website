@@ -79,7 +79,7 @@
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>
     </head>
-    <body onresize="try{updateCanvasDimensions()}catch(err){}">
+    <body onresize="try{updateCanvasDimensions()}catch(err){}" data-spy="scroll">
         <!--[if lt IE 7]>
         <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
         <![endif]-->
@@ -137,7 +137,7 @@
 			    <li><a href="community"><div class="icongray"><i class="fa fa-fw fa-lg fa-comments"></i></div> Forum</a></li>
 			  </ul>
 			</div>
-
+			<?php if ($this->ion_auth->logged_in()) { ?>
 			<div class="nav pull-right">
 			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-plus fa-2x"></i></a>
 			  <ul class="dropdown-menu newmenu">
@@ -150,10 +150,12 @@
 			    <li><a href="new/run"><div class="iconred"><i class="fa fa-fw fa-lg fa-star"></i></div> New run</a></li>
 			  </ul>
 			</div>
+			<?php } ?>
 
                     <!-- <a class="brand" href="" style="float:left">OpenML</a> -->
+			<?php if ($this->ion_auth->logged_in()) { ?>
 			<div class="nav pull-right">
-                                <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><?php if ($this->ion_auth->logged_in()) echo '<i class="fa fa-graduation-cap fa-2x" style="color:green;"></i>'; else echo '<i class="fa fa-user fa-2x"></i>' ?></a>
+                                <a href="#" class="dropdown-toggle socialshare" data-toggle="dropdown"><i class="fa fa-graduation-cap fa-2x" style="color:green;"></i></a>
                                 <ul class="dropdown-menu">
                                     <?php if (!$this->ion_auth->logged_in()): ?>
                                     <li><a href="login">Sign in</a></li>
@@ -172,6 +174,13 @@
                                     <?php endif; ?>
                                 </ul>
                         </div>
+			<?php } else { ?>
+			<div class="nav pull-right">
+                                <a href="login" class="socialshare" style="padding-right:25px;text-decoration:none;">Sign in</a>
+                        </div>
+			<?php } ?>
+
+
                     <!--/.nav-collapse -->
             </div>
         </div>
@@ -246,7 +255,7 @@
 		  </div>
 
 		  <div class="col-xs-12 col-sm-6 pull-left centerfooter">
-<a class="twitter-timeline" href="https://twitter.com/search?q=openml" data-widget-id="499561200019988481">Tweets about "openml"</a>
+<a class="twitter-timeline" href="https://twitter.com/search?q=openml+-machlearnbot" data-widget-id="499561200019988481">Tweets about "openml"</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </div>
 

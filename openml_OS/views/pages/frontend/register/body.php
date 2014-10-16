@@ -1,7 +1,8 @@
 <div class="container-fluid topborder">
   <div class="row">
     <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
-    <h1>Register</h1>
+    <h1>Sign up</h1>
+    <p>Access more data, (re)organize data online, upload your own data, share data privately, and more.</p> 
     <div class="col-xs-12 col-sm-4 searchbar">
 	<ul class="menu">		
 		<li><a style="font-size:17px;"><b>You'll love OpenML</b></a></li>

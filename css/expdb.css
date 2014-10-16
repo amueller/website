@@ -155,12 +155,9 @@ width: 80pt;
 
 .searchbar{
   margin-top: 10px;
-  font-size: 15px;
-  line-height: 20px;
 }
 
 .searchbar i{
-  font-size: 18px;
   color: #888;
   margin-right: 5px;
 }
@@ -1595,7 +1592,7 @@ html, body {
   display: inline-block;
   line-height: 18px;
   color: #999999;
-  padding-top:100px;
+  padding-top:70px;
   padding-bottom:10px;
 }
 

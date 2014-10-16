@@ -3,7 +3,7 @@
     <div class="col-lg-10 col-xs-12 col-lg-offset-1">
     <div class="col-xs-12 col-md-3 searchbar">
 
- <div class="bs-sidebar">
+ <div class="bs-sidebar affix">
  <ul class="nav bs-sidenav">
       
   <li><a href="#weka">WEKA</a>

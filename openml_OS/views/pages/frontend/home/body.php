@@ -7,7 +7,7 @@
 <div class="col-md-12">
 <div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
-<div id="catchphrase">Exploring machine learning better, together</div>
+<div id="catchphrase">Exploring machine learning better, together</div><br>
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
 <div class="stats">
@@ -22,6 +22,7 @@
 
  </div>
 </div>
+
 </div>
 
 </div>
