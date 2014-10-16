@@ -1,3 +1,4 @@
+org.openml.apiconnector
 org.openml.apiconnector.algorithms
 org.openml.apiconnector.io
 org.openml.apiconnector.models
