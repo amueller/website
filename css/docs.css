@@ -89,34 +89,6 @@
 }
 
 
-.codehighlight {
-  padding: 9px 14px;
-  margin-bottom: 14px;
-  background-color: #f7f7f9;
-  border: 1px solid #e1e1e8;
-  border-radius: 4px;
-}
-.codehighlight pre {
-  padding: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  border: 0;
-  white-space: nowrap;
-}
-.codehighlight pre code {
-  font-size: inherit;
-  color: #333; /* Effectively the base text color */
-}
-.codehighlight pre .lineno {
-  display: inline-block;
-  width: 22px;
-  padding-right: 5px;
-  margin-right: 10px;
-  text-align: right;
-  color: #bebec5;
-}
-
 /* callout */
 
 .searchcontainer {
@@ -1384,3 +1356,23 @@ form.bs-docs-example {
     float: none;
   }
 }
+
+.codehighlight pre .lineno {
+  display: inline-block;
+  width: 22px;
+  padding-right: 5px;
+  margin-right: 10px;
+  text-align: right;
+  color: #bebec5;
+}
+
+.codehighlight{margin:-15px -15px 15px;border-width:0 0 1px;border-radius:0}
+@media (min-width:768px){
+.codehighlight{margin-top:-16px;margin-right:0;margin-left:0;border-width:1px;border-bottom-right-radius:4px;border-bottom-left-radius:4px}
+}
+.codehighlight{padding:9px 14px;margin-bottom:14px;background-color:#f7f7f9;border:1px solid #e1e1e8;border-radius:4px}
+.codehighlight pre{padding:0;margin-top:0;margin-bottom:0;word-break:normal;word-wrap:nowrap;white-space:nowrap;background-color:transparent;border:0}
+.codehighlight pre code{font-size:inherit;color:#333}
+.codehighlight pre code:first-child{display:inline-block;padding-right:45px}
+.codehighlight pre{white-space:normal}
+

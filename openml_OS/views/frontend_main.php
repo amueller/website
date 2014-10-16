@@ -47,6 +47,9 @@
         <link rel="shortcut icon" href="img/favicon.ico">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/highlight.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.validate.js"></script>	

@@ -18,11 +18,8 @@
 	    <li><a href="#java-run-download">Run download</a></li>
 	    <li><a href="#java-run-mgm">Run management</a></li>
 	    <li><a href="#java-run-upload">Run upload</a></li>
-
 	    <li><a href="#java-sql">Free SQL query</a></li>
 	    <li><a href="#java-issues">Issues and requests</a></li>
-
-
 	  </ul>
 	  </li>
 	  
@@ -47,39 +44,39 @@
             <a href="#dev-docs">REST services</a>
             <ul class="nav">
               <li><a href="#openml_authenticate">openml.authenticate</a></li>
-              <li><a href="#openml_authenticate_check">openml.authenticate.check</a></li>
+              <!--<li><a href="#openml_authenticate_check">openml.authenticate.check</a></li>-->
               <li><a href="#openml_data">openml.data</a></li>
-              <li><a href="#openml_data_description">openml.data.description</a></li>
+              <!--<li><a href="#openml_data_description">openml.data.description</a></li>
               <li><a href="#openml_data_upload">openml.data.upload</a></li>
               <li><a href="#openml_data_delete">openml.data.delete</a></li>
               <li><a href="#openml_data_licences">openml.data.licences</a></li>
               <li><a href="#openml_data_features">openml.data.features</a></li>
               <li><a href="#openml_data_qualities">openml.data.qualities</a></li>
-              <li><a href="#openml_data_qualities_list">openml.data.qualities.list</a></li>
+              <li><a href="#openml_data_qualities_list">openml.data.qualities.list</a></li>-->
 
-              <li><a href="#openml_task_search">openml.task.search</a></li>
-              <li><a href="#openml_task_evaluations">openml.task.evaluations</a></li>
+              <li><a href="#openml_task_search">openml.task</a></li>
+              <!--<li><a href="#openml_task_evaluations">openml.task.evaluations</a></li>
               <li><a href="#openml_task_types">openml.task.types</a></li>
-              <li><a href="#openml_task_types_search">openml.task.types.search</a></li>
+              <li><a href="#openml_task_types_search">openml.task.types.search</a></li>-->
 
-              <li><a href="#openml_estimationprocedure_get">openml.estimationprocedure.get</a></li>
+              <li><a href="#openml_estimationprocedure_get">openml.estimationprocedure</a></li>
 
-              <li><a href="#openml_implementation_get">openml.implementation.get</a></li>
-              <li><a href="#openml_implementation_exists">openml.implementation.exists</a></li>
+              <li><a href="#openml_implementation_get">openml.implementation</a></li>
+              <!--<li><a href="#openml_implementation_exists">openml.implementation.exists</a></li>
               <li><a href="#openml_implementation_upload">openml.implementation.upload</a></li>
               <li><a href="#openml_implementation_owned">openml.implementation.owned</a></li>
               <li><a href="#openml_implementation_delete">openml.implementation.delete</a></li>
-              <li><a href="#openml_implementation_licences">openml.implementation.licences</a></li>
+              <li><a href="#openml_implementation_licences">openml.implementation.licences</a></li>-->
 
               <li><a href="#openml_evaluation_measures">openml.evaluation.measures</a></li>
 
-              <li><a href="#openml_run_get">openml.run.get</a></li>
-              <li><a href="#openml_run_upload">openml.run.upload</a></li>
-              <li><a href="#openml_run_delete">openml.run.delete</a></li>
+              <li><a href="#openml_run_get">openml.run</a></li>
+              <!--<li><a href="#openml_run_upload">openml.run.upload</a></li>
+              <li><a href="#openml_run_delete">openml.run.delete</a></li>-->
 
-              <li><a href="#openml_job_get">openml.job.get</a></li>
+              <li><a href="#openml_job_get">openml.job</a></li>
 
-              <li><a href="#openml_setup_delete">openml.setup.delete</a></li>
+              <li><a href="#openml_setup_delete">openml.setup</a></li>
             </ul>
           </li>
           <li>
@@ -105,175 +102,172 @@
 	<h2 id="java-download">Download</h2>
 	<p>Stable releases of the Java API are available from <a href="http://search.maven.org/#search%7Cga%7C1%7Copenml">Maven central</a>. Or, you can check out the developer version from <a href="https://github.com/openml/java"> GitHub</a>. Include the jar file in your projects as usual, or <a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">install via Maven</a>. You can also separately download <a href="downloads/apiconnector-dependencies.zip">all dependencies</a> and a <a href="downloads/apiconnector-fat.jar">fat jar</a> with all dependencies included.</p>
 
-	<h2 id="java-start">Quick Start</h2>
+	<h3 id="java-start">Quick Start</h3>
 	<p>Create an <code>OpenmlConnector</code> instance with your username and password. This will create a client with all OpenML functionalities.</p>
-	<pre>OpenmlConnector client = new OpenmlConnector(username, password);</pre>
+	<div class="codehighlight"><pre><code class="java">OpenmlConnector client = new OpenmlConnector("username", "password");</code></pre></div>
 	<p>All functions are described in the <a href="docs" target="_blank">Java Docs</a>, and they mirror the functions from the Web API functions described below. For instance, the API function <a href="api#openml_data_description"><code>openml.data.description</code></a> has an equivalent Java function <code>openmlDataDescription(String data_id)</code>.</p>
 
-	<h4>Downloading things</h4>
+	<h4>Downloading</h4>
 	<p>To download data, flows, tasks, runs, etc. you need the unique <b>id</b> of that resource. The id is shown on each item's webpage and in the corresponding url. For instance, let's download <a href="d/1">Data set 1</a>. The following returns a DataSetDescription object that contains all information about that data set.</p>
-	<pre>DataSetDescription data = client.openmlDataDescription(1);</pre>
+	<div class="codehighlight"><pre><code class="java">DataSetDescription data = client.openmlDataDescription(1);</code></pre></div>
         <p>You can also <a href="search">search</a> for the items you need online, and click the <i class="fa fa-list-ol" style="margin-left:0px;"></i> icon to get all id's that match a search.</p>
 
-	<h4>Uploading things</h4>
+	<h4>Uploading</h4>
 	<p>To upload data, flows, runs, etc. you need to provide a description of the object. We provide wrapper classes to provide this information, e.g. <code>DataSetDescription</code>, as well as to capture the server response, e.g. <code>UploadDataSet</code>, which always includes the generated id for reference:</p>
-	<pre>
-DataSetDescription description = new DataSetDescription( "iris", "The famous iris dataset", "arff", "class");
+	<div class="codehighlight"><pre><code class="java">DataSetDescription description = new DataSetDescription( "iris", "The famous iris dataset", "arff", "class");
 UploadDataSet result = client.openmlDataUpload( description, datasetFile );
-int data_id = result.getId();</pre>
+int data_id = result.getId();</code></pre></div>
 	<p>More details are given in the corresponding functions below. Also see the <a href="docs" target="_blank">Java Docs</a> for all possible inputs and return values.</p>
 
-	<h2 id="java-data-download">Data download</h2>
-	<br><code>openmlDataGet(int data_id)</code><br>
+	<h3 id="java-data-download">Data download</h3>
+	<h5><code>openmlDataGet(int data_id)</code></h5>
 	<p>Retrieves the description of a specified data set.</p>
-	<pre>DataSetDescription data = client.openmlDataGet(1);
+	<div class="codehighlight"><pre><code class="java">DataSetDescription data = client.openmlDataGet(1);
 String name = data.getName();
 String version = data.getVersion();
 String description = data.getDescription();
 String url = data.getUrl();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlDataFeatures(int data_id)</code><br>
+	<br><h5><code>openmlDataFeatures(int data_id)</code></h5>
 	<p>Retrieves the description of the features of a specified data set.</p>
-	<pre>DataFeature reponse = client.openmlDataFeatures(1);
+	<div class="codehighlight"><pre><code class="java">DataFeature reponse = client.openmlDataFeatures(1);
 DataFeature.Feature[] features = reponse.getFeatures();
 String name = features[0].getName();
 String type = features[0].getDataType();
 boolean	isTarget = features[0].getIs_target();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlDataQuality(int data_id)</code><br>
+	<br><h5><code>openmlDataQuality(int data_id)</code></h5>
 	<p>Retrieves the description of the qualities (meta-features) of a specified data set.</p>
-	<pre>DataQuality response = client.openmlDataQuality(1);
+	<div class="codehighlight"><pre><code class="java">DataQuality response = client.openmlDataQuality(1);
 DataQuality.Quality[] qualities = reponse.getQualities();
 String name = qualities[0].getName();
 String value = qualities[0].getValue();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlDataQuality(int data_id, int interval_start, int interval_end, int interval_size)</code><br>
+	<br><h5><code>openmlDataQuality(int data_id, int start, int end, int interval_size)</code></h5>
 	<p>For data streams. Retrieves the description of the qualities (meta-features) of a specified portion of a data stream.</p>
-	<pre>DataQuality qualities = client.openmlDataQuality(1,0,10000,null);</pre>
+	<div class="codehighlight"><pre><code class="java">DataQuality qualities = client.openmlDataQuality(1,0,10000,null);</code></pre></div>
 
-	<br><code>openmlData()</code><br>
+	<br><h5><code>openmlData()</code></h5>
 	<p>Retrieves an array of id's of all valid public data sets on OpenML.</p>
-	<pre>Data response = client.openmlData();
-Integer[] ids = response.getDid();</pre>
+	<div class="codehighlight"><pre><code class="java">Data response = client.openmlData();
+Integer[] ids = response.getDid();</code></pre></div>
 
-	<br><code>openmlDataQualityList()</code><br>
+	<br><h5><code>openmlDataQualityList()</code></h5>
 	<p>Retrieves a list of all data qualities known to OpenML.</p>
-	<pre>DataQualityList response = client.openmlDataQualityList();
-String[] qualities = response.getQualities();</pre>
+	<div class="codehighlight"><pre><code class="java">DataQualityList response = client.openmlDataQualityList();
+String[] qualities = response.getQualities();</code></pre></div>
 
-	<h2 id="java-data-upload">Data upload</h2>
-	<br><code>openmlDataUpload(DataSetDescription description, File dataset)</code><br>
+	<h3 id="java-data-upload">Data upload</h3>
+	<h5><code>openmlDataUpload(DataSetDescription description, File dataset)</code></h5>
 	<p>Uploads a data set file to OpenML given a description. Throws an exception if the upload failed, see <a href="#openml_data_upload">openml.data.upload</a> for error codes.</p>
-	<pre>
-DataSetDescription dataset = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
+	<div class="codehighlight"><pre><code class="java">DataSetDescription dataset = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
 UploadDataSet data = client.openmlDataUpload( dataset, new File("data/path"));
 int data_id = result.getId();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlDataUpload(DataSetDescription description)</code><br>
+	<br><h5><code>openmlDataUpload(DataSetDescription description)</code></h5>
 	<p>Registers an existing dataset (hosted elsewhere). The description needs to include the url of the data set. Throws an exception if the upload failed, see <a href="#openml_data_upload">openml.data.upload</a> for error codes.</p>
-	<pre>
-DataSetDescription description = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
+	<div class="codehighlight"><pre><code class="java">DataSetDescription description = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
 description.setUrl("http://datarepository.org/mydataset");
 UploadDataSet data = client.openmlDataUpload( description );
 int data_id = result.getId();
-</pre>
+</code></pre></div>
 
-	<h2 id="java-flow-download">Flow download</h2>
-	<br><code>openmlImplementationGet(int flow_id)</code><br>
+	<h3 id="java-flow-download">Flow download</h3>
+	<h5><code>openmlImplementationGet(int flow_id)</code></h5>
 	<p>Retrieves the description of the flow/implementation with the given id.</p>
-	<pre>Implementation flow = client.openmlImplementationGet(100);
+	<div class="codehighlight"><pre><code class="java">Implementation flow = client.openmlImplementationGet(100);
 String name = flow.getName();
 String version = flow.getVersion();
 String description = flow.getDescription();
 String binary_url = flow.getBinary_url();
 String source_url = flow.getSource_url();
 Parameter[] parameters = flow.getParameter();
-</pre>
+</code></pre></div>
 
-	<h2 id="java-flow-mgm">Flow management</h2>
-	<br><code>openmlImplementationOwned()</code><br>
+	<h3 id="java-flow-mgm">Flow management</h3>
+	<h5><code>openmlImplementationOwned()</code></h5>
 	<p>Retrieves an array of id's of all flows/implementations owned by you.</p>
-	<pre>ImplementationOwned response = client.openmlImplementationOwned();
-Integer[] ids = response.getIds();</pre>
+	<div class="codehighlight"><pre><code class="java">ImplementationOwned response = client.openmlImplementationOwned();
+Integer[] ids = response.getIds();</code></pre></div>
 
-	<br><code>openmlImplementationExists(String name, String version)</code><br>
+	<br><h5><code>openmlImplementationExists(String name, String version)</code></h5>
 	<p>Checks whether an implementation with the given name and version is already registered on OpenML.</p>
-	<pre>ImplementationExists check = client.openmlImplementationExists("weka.j48", "3.7.12");
+	<div class="codehighlight"><pre><code class="java">ImplementationExists check = client.openmlImplementationExists("weka.j48", "3.7.12");
 boolean exists = check.exists();
 int flow_id = check.getId();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlImplementationDelete(int id)</code><br>
+	<br><h5><code>openmlImplementationDelete(int id)</code></h5>
 	<p>Removes the flow with the given id (if you are its owner).</p>
-	<pre>ImplementationDelete response = client.openmlImplementationDelete(100);</pre>
+	<div class="codehighlight"><pre><code class="java">ImplementationDelete response = client.openmlImplementationDelete(100);</code></pre></div>
 
-	<h2 id="java-flow-upload">Flow upload</h2>
-	<br><code>openmlImplementationUpload(Implementation description, File binary, File source)</code><br>
+	<h3 id="java-flow-upload">Flow upload</h3>
+	<h5><code>openmlImplementationUpload(Implementation description, File binary, File source)</code></h5>
 	<p>Uploads implementation files (binary and/or source) to OpenML given a description.</p>
-	<pre>Implementation flow = new Implementation("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12") 
+	<div class="codehighlight"><pre><code class="java">Implementation flow = new Implementation("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12") 
 UploadImplementation response = client.openmlImplementationUpload( flow, new File("code.jar"), new File("source.zip"));
 int flow_id = response.getId();
-</pre>
+</code></pre></div>
 
-	<h2 id="java-task-download">Task download</h2>
-	<br><code>openmlTaskGet(int task_id)</code><br>
+	<h3 id="java-task-download">Task download</h3>
+	<h5><code>openmlTaskGet(int task_id)</code></h5>
 	<p>Retrieves the description of the task with the given id.</p>
-	<pre>Task task = client.openmlTaskGet(1);
+	<div class="codehighlight"><pre><code class="java">Task task = client.openmlTaskGet(1);
 String task_type = task.getTask_type();
 Input[] inputs = task.getInputs();
 Output[] outputs = task.getOutputs();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlTaskEvaluations(int task_id)</code><br>
+	<br><h5><code>openmlTaskEvaluations(int task_id)</code></h5>
 	<p>Retrieves all evaluations for the task with the given id.</p>
-	<pre>TaskEvaluations response = client.openmlTaskEvaluations(1);
+	<div class="codehighlight"><pre><code class="java">TaskEvaluations response = client.openmlTaskEvaluations(1);
 Evaluation[] evaluations = response.getEvaluation();
-</pre>
+</code></pre></div>
 
-	<br><code>openmlTaskEvaluations(int task_id, int start, int end, int interval_size)</code><br>
+	<br><h5><code>openmlTaskEvaluations(int task_id, int start, int end, int interval_size)</code></h5>
 	<p>For data streams. Retrieves all evaluations for the task over the specified window of the stream.</p>
-	<pre>TaskEvaluations response = client.openmlTaskEvaluations(1);
+	<div class="codehighlight"><pre><code class="java">TaskEvaluations response = client.openmlTaskEvaluations(1);
 Evaluation[] evaluations = response.getEvaluation();
-</pre>
+</code></pre></div>
 
-	<h2 id="java-run-download">Run download</h2>
-	<br><code>openmlRunGet(int run_id)</code><br>
+	<h3 id="java-run-download">Run download</h3>
+	<h5><code>openmlRunGet(int run_id)</code></h5>
 	<p>Retrieves the description of the run with the given id.</p>
-	<pre>Run run = client.openmlRunGet(1);
+	<div class="codehighlight"><pre><code class="java">Run run = client.openmlRunGet(1);
 int task_id = run.getTask_id();
 int flow_id = run.getImplementation_id();
 Parameter_setting[] settings = run.getParameter_settings() 
 EvaluationScore[] scores = run.getOutputEvaluation();
-</pre>
+</code></pre></div>
 
-	<h2 id="java-run-mgm">Run management</h2>
-	<br><code>openmlRunDelete(int run_id)</code><br>
+	<h3 id="java-run-mgm">Run management</h3>
+	<h5><code>openmlRunDelete(int run_id)</code></h5>
 	<p>Deletes the run with the given id (if you are its owner).</p>
-	<pre>RunDelete response = client.openmlRunDelete(1);</pre>
+	<div class="codehighlight"><pre><code class="java">RunDelete response = client.openmlRunDelete(1);</code></pre></div>
 
-	<h2 id="java-run-upload">Run upload</h2>
-	<br><code>openmlRunUpload(Run description, Map&lt;String,File&gt; output_files)</code><br>
+	<h3 id="java-run-upload">Run upload</h3>
+	<h5><code>openmlRunUpload(Run description, Map&lt;String,File&gt; output_files)</code></h5>
 	<p>Uploads a run to OpenML, including a description and a set of output files depending on the task type.</p>
-	<pre>Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
+	<div class="codehighlight"><pre><code class="java">Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
 parameter_settings[0] = Run.Parameter_setting(null, "M", "2");
 Run run = new Run("1", null, "100", "setup_string", parameter_settings);
 Map<String,File> outputs = new HashMap&lt;String,File&gt;();
 outputs.add("predictions",new File("predictions.arff"));
 UploadRun response = client.openmlRunUpload( run, outputs);
 int run_id = response.getRun_id();
-</pre>
+</code></pre></div>
 
 
-	<h2 id="java-sql">Free SQL Query</h2>
-	<br><code>openmlFreeQuery(String sql)</code><br>
+	<h3 id="java-sql">Free SQL Query</h3>
+	<h5><code>openmlFreeQuery(String sql)</code></h5>
 	<p>Executes the given SQL query and returns the result in JSON format.</p>
-	<pre>org.json.JSONObject json = client.openmlFreeQuery("SELECT name FROM dataset");</pre>
+	<div class="codehighlight"><pre><code class="java">org.json.JSONObject json = client.openmlFreeQuery("SELECT name FROM dataset");</code></pre></div>
 
-	<h2 id="java-issues">Issues</h2>
+	<h3 id="java-issues">Issues</h3>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/java/issues"> OpenML Java issue tracker</a>.
 	</div>
 
@@ -301,18 +295,17 @@ int run_id = response.getRun_id();
           <h4>Using REST services</h4>
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
           <p>The REST Endpoint URL is 
-          <div class="codehighlight">
-            <pre class="pre-scrollable"><code class="html">http://www.openml.org/api/</code></pre>
+          <div class="codehighlight"><pre><code class="http">http://www.openml.org/api/</code>
           </div>
           </p>
           <p>For instance, to request the <code>openml.data.description</code> service, invoke like this (e.g., in your browser):
           <div class="codehighlight">
-            <pre class="pre-scrollable"><code class="html">http://www.openml.org/api/?f=openml.data.description&data_id=1</code></pre>
+            <pre class="pre-scrollable"><code class="http">http://www.openml.org/api/?f=openml.data.description&data_id=1</code>
           </div>
           </p>
 	  <p>From your command-line, you can use curl:
 	  <div class="codehighlight">
-	   <pre class="pre-scrollable"><code class="html">curl -XGET 'http://www.openml.org/api/?f=openml.data.description&data_id=1'</code></pre>
+	   <pre class="pre-scrollable"><code class="http">curl -XGET 'http://www.openml.org/api/?f=openml.data.description&data_id=1'</code>
 	  </div>
 	  </p>
           <p>Responses are always in XML format, also when an error is returned. Error messages will look like this:
@@ -424,7 +417,7 @@ int run_id = response.getRun_id();
 <dl><dt><code>POST password</code> (Required)</dt><dd>An md5 hash of the password, corresponding to the username</dd></dl>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -460,7 +453,7 @@ int run_id = response.getRun_id();
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash to be checked</dd></dl>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -495,7 +488,7 @@ int run_id = response.getRun_id();
 None
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -542,7 +535,7 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.upload.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -562,111 +555,7 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
     -- Explanation: I suspect this was left by Ross Quinlan in 1987 at the
        4th Machine Learning Workshop.  I'd have to check with Jeff Schlimmer
        to double check this.
- 
- 5. Number of Instances: 898
- 
- 6. Number of Attributes: 38
-    -- 6 continuously-valued
-    -- 3 integer-valued
-    -- 29 nominal-valued
- 
- 7. Attribute Information:
-     1. family:          --,GB,GK,GS,TN,ZA,ZF,ZH,ZM,ZS
-     2. product-type:    C, H, G
-     3. steel:           -,R,A,U,K,M,S,W,V
-     4. carbon:          continuous
-     5. hardness:        continuous
-     6. temper_rolling:  -,T
-     7. condition:       -,S,A,X
-     8. formability:     -,1,2,3,4,5
-     9. strength:        continuous
-    10. non-ageing:      -,N
-    11. surface-finish:  P,M,-
-    12. surface-quality: -,D,E,F,G
-    13. enamelability:   -,1,2,3,4,5
-    14. bc:              Y,-
-    15. bf:              Y,-
-    16. bt:              Y,-
-    17. bw/me:           B,M,-
-    18. bl:              Y,-
-    19. m:               Y,-
-    20. chrom:           C,-
-    21. phos:            P,-
-    22. cbond:           Y,-
-    23. marvi:           Y,-
-    24. exptl:           Y,-
-    25. ferro:           Y,-
-    26. corr:            Y,-
-    27. blue/bright/varn/clean:          B,R,V,C,-
-    28. lustre:          Y,-
-    29. jurofm:          Y,-
-    30. s:               Y,-
-    31. p:               Y,-
-    32. shape:           COIL, SHEET
-    33. thick:           continuous
-    34. width:           continuous
-    35. len:             continuous
-    36. oil:             -,Y,N
-    37. bore:            0000,0500,0600,0760
-    38. packing: -,1,2,3
-    classes:        1,2,3,4,5,U
-  
-    -- The '-' values are actually 'not_applicable' values rather than
-       'missing_values' (and so can be treated as legal discrete
-       values rather than as showing the absence of a discrete value).
- 
- 8. Missing Attribute Values: Signified with "?"
-    Attribute:  Number of instances missing its value:
-    1           0
-    2           0
-    3           70
-    4           0
-    5           0
-    6           675
-    7           271
-    8           283
-    9           0
-   10           703
-   11           790
-   12           217
-   13           785
-   14           797
-   15           680
-   16           736
-   17           609
-   18           662
-   19           798
-   20           775
-   21           791
-   22           730
-   23           798
-   24           796
-   25           772
-   26           798
-   27           793
-   28           753
-   29           798
-   30           798
-   31           798
-   32           0
-   33           0
-   34           0
-   35           0
-   36           740
-   37           0
-   38           789
-   39           0
- 
- 9. Distribution of Classes
-      Class Name:   Number of Instances:
-      1               8
-      2              88
-      3             608
-      4               0
-      5              60
-      U              34
-                    ---
-                    798&lt;/oml:description&gt;
+  &lt;/oml:description&gt;
   &lt;oml:format&gt;ARFF&lt;/oml:format&gt;
   &lt;oml:upload_date&gt;2014-04-06 23:19:20&lt;/oml:upload_date&gt;
   &lt;oml:licence&gt;public domain&lt;/oml:licence&gt;
@@ -764,7 +653,7 @@ This XSD schema is applicable for both uploading and downloading data, hence som
 None
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -805,7 +694,7 @@ None
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.features.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1041,7 +930,7 @@ None
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.qualities.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1340,7 +1229,7 @@ None
 None
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1450,7 +1339,7 @@ A task description<br/>
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.search.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1514,7 +1403,7 @@ A task description<br/>
 <dl><dt><code>GET task_id</code> (Required)</dt><dd>the task id</dd></dl>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1550,7 +1439,7 @@ A task description<br/>
 None
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1617,7 +1506,7 @@ A description of a task type<br/>
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.types.search.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1697,7 +1586,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
 <dl><dt><code>GET estimationprocedure_id</code> (Required)</dt><dd>The id of the estimation procedure</dd></dl>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1742,7 +1631,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.implementation.upload.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1859,7 +1748,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <dl><dt><code>GET external_version</code> (Required)</dt><dd>The (workbench) version of the implementation. This is generally based on conventions per workbench</dd></dl>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -1977,7 +1866,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 None
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -2012,7 +1901,7 @@ None
 None
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -2104,7 +1993,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.run.upload.xsd">XSD Schema</a>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -2352,7 +2241,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <dl><dt><code>GET task_type_id</code> (Required)</dt><dd>The task type of which the job should be.</dd></dl>
 </div>
 <h5>Example Response</h5>
-<div class='highlight'>
+<div class='codehighlight'>
 <pre class='pre-scrollable'>
 <code class='html'>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
