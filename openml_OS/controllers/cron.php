@@ -42,7 +42,9 @@ class Cron extends CI_Controller {
       $meta_dataset = $meta_dataset[0];
       $this->Meta_dataset->update( $meta_dataset->id, array( 'processed' => now() ) );
       $dataset_constr = ( $meta_dataset->datasets ) ? 'AND d.did IN (' . $meta_dataset->datasets . ') ' : '';
+      $task_constr = ( $meta_dataset->tasks ) ? 'AND t.task_id IN (' . $meta_dataset->tasks . ') ' : '';
       $flow_constr = ( $meta_dataset->flows ) ? 'AND i.id IN (' . $meta_dataset->flows . ') ' : '';
+      $setup_constr = ( $meta_dataset->setups ) ? 'AND s.sid IN (' . $meta_dataset->setups . ') ' : '';
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
       if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
@@ -53,17 +55,20 @@ class Cron extends CI_Controller {
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
       
       $sql = 
-        'SELECT "run_id", "setup_id", "task_id", "repeat", "fold", "sample", "sample_size", "function", "value", "textual"' .
+        'SELECT "run_id", "setup_id", "task_id", "repeat", "fold", "sample",' . 
+        '"sample_size", "function", "value", "task_name", "setup_name", "textual"' .
         'UNION ALL ' .
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
         'e.repeat, e.fold, e.sample, e.sample_size, e.function, e.value, '.
+        'CONCAT("Task_", t.task_id, "_", d.name),'.
+        's.setup_string, ' . 
         'CONCAT(i.fullName, " on ", d.name) as textual '.
         'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, evaluation_sample e '.
         'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
         'AND v.input = "source_data" AND v.value = d.did '.
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
         'AND e.source = r.rid '.
-         $dataset_constr . $flow_constr .  $function_constr .
+         $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
 //      'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample ' . 
         'INTO OUTFILE "'. $tmp_path .'" ' .
         'FIELDS TERMINATED BY "," ' .
