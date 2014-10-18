@@ -1662,14 +1662,16 @@ a.bold:hover{
 
 .arc {
 	height: 76px;
+	width: 76px;
 	left: 0;
 	top: 0;
 	position: absolute;
-	width: 76px;
 
+
+	/*
 	content: "";
   	animation: spin 0.5s 3 linear;
-  	-webkit-animation: spin 0.5s 3 linear;
+  	-webkit-animation: spin 0.5s 3 linear;*/
 }
 
 @keyframes spin {
@@ -1682,7 +1684,7 @@ a.bold:hover{
 }
 
 .circlegreen{
-	border-width: 2px 2px 0 0;
+	border-width: 0px 0px 0 0;
 	border-style: solid;
 	border-color: #3d8b3d;
 	border-radius: 50%;
@@ -1694,9 +1696,9 @@ a:hover > .circlegreen{
 }
 
 .circleblue {
-	border-width: 2px 2px 0 0;
+	border-width: 0px 0px 0 0;
 	border-style: solid;
-	border-color: #2a6496;
+	/*border-color: #2a6496;*/
 	border-radius: 50%;
 	background: #428bca;
 }
@@ -1706,9 +1708,9 @@ a:hover > .circleblue{
 }
 
 .circleyellow {
-	border-width: 2px 2px 0 0;
+	border-width: 0px 0px 0 0;
 	border-style: solid;
-	border-color: #df8a13;
+	/*border-color: #df8a13;*/
 	border-radius: 50%;
   	background: #f0ad4e;
 }
@@ -1719,9 +1721,9 @@ a:hover > .circleyellow{
 
 
 .circlered {
-	border-width: 2px 2px 0 0;
+	border-width: 0px 0px 0 0;
 	border-style: solid;
-	border-color: #b52b27;
+	/*border-color: #b52b27;*/
 	border-radius: 50%;
   	background: #d9534f;
 }

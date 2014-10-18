@@ -47,6 +47,13 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 }
 ?>
 
+
+<?php
+     foreach( $this->taskio as $r ): 
+	if($r['category'] != 'input') continue;
+	if($r['type'] == 'Dataset') $dataset = $r['dataset'];
+     endforeach; ?>
+
 <div class="row openmlsectioninfo">
 	<div class="col-sm-12">
 		<h1>Task <?php echo $this->task_id; ?></h1>
@@ -55,7 +62,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 		 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
 		 <li><a href="api/?f=openml.tasks.search&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
 		</ul>
-		<h2><?php echo $this->record['type_name'] ?></h2>
+		<h2><?php echo $this->record['type_name'].( $dataset ? ' on '.$dataset : '')?></h2>
 		<p><?php echo $this->record['type_description'] ?></p>
 
 		<h3>Given inputs</h3>
@@ -71,7 +78,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 		<?php endforeach; ?>
 		</table></div>
 
-		<h3>Required outputs</h3>
+		<h3>Expected outputs</h3>
 		<div class='table-responsive'><table class='table table-striped'>
 		<?php foreach( $this->taskio as $r ): if($r['category'] != 'output' || $r['requirement'] == 'hidden') continue; ?>
 		<tr><td><?php echo $r['name']; ?></td>
@@ -81,11 +88,9 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 		<?php endforeach; ?>
 		</table></div>
 
-		<h3>Runs</h3>
-		<?php echo $this->record['runcount']; ?> completed runs
+		<h3><?php echo $this->record['runcount']; ?> runs completed</h3>
 
-		<h3>Performance evaluation</h3>
-		Evaluation measure:
+		All runs, scored by:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
@@ -111,7 +116,6 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			    </div>
 			  </div>
 			</div>	
-
 
 		<h4>Run details</h4>		
 		<?php 
