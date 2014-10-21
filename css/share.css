@@ -17,7 +17,7 @@
    text-decoration: none;
 }
 
-.socialshare {
+.soc {
   margin-left: 0px;
   padding-left: 5px;
   padding-right: 15px;
@@ -30,12 +30,12 @@
   margin-bottom: 0px;
 }
 
-.socialshareicon {
+.socicon {
   padding-top: 12px;
 }
 
 
-.socialshare .bs-icon2 {
+.soc .bs-icon2 {
   opacity: .6;
 }
 
