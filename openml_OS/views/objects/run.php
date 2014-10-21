@@ -56,15 +56,14 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
 
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
-    <h1>Run <?php echo $this->run_id ?></h1>
+    <h1>Run <?php echo $this->run_id; ?></h1>
     <?php if (isset($this->record['run_id'])){ ?>
   <ul class="hotlinks">
    <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-   <li><a href="http://openml.org/api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+   <li><a href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
         </ul>
   </div>
   <div class="col-sm-6">
-
     <h2>Task</h2>
     <div class='table-responsive'><table class='table table-striped'>
     <tr><td>Task</td><td><a href="t/<?php echo $this->record['task_id']; ?>">Task <?php echo $this->record['task_id']; ?> (<?php echo $this->record['task_name']; ?>)</a></td></tr>
@@ -122,5 +121,11 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     </table></div>
     <?php } else { ?>Sorry, this run is unknown.<?php } ?>
   </div>
-
+  
+  <h3>ROC Charts</h3>
+  <!-- show here the ROC Charts -->
+  <?php 
+    $this->load->model('vipercharts'); 
+    $charts = $this->Vipercharts->getWhere( 'rid = ' . $this->record['rid'] );
+  ?>
 </div> <!-- end openmlsectioninfo -->
