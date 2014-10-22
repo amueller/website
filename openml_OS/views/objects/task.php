@@ -51,7 +51,10 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 <?php
      foreach( $this->taskio as $r ): 
 	if($r['category'] != 'input') continue;
-	if($r['type'] == 'Dataset') $dataset = $r['dataset'];
+	if($r['type'] == 'Dataset'){ 
+		$dataset = $r['dataset'];
+		$dataset_id = $r['value'];
+	}
      endforeach; ?>
 
 <div class="row openmlsectioninfo">
@@ -90,7 +93,9 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 
 		<h3><?php echo $this->record['runcount']; ?> runs completed</h3>
 
-		All runs, scored by:
+
+		<?php if($this->record['type_name'] != 'Learning Curve'){ ?>
+		        Order runs by score:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
@@ -116,6 +121,10 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			    </div>
 			  </div>
 			</div>	
+		<?php } else { ?>
+			<div id="learning_curve_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
+		<?php } ?>
+
 
 		<h4>Run details</h4>		
 		<?php 

@@ -119,7 +119,7 @@
 
 	       
 			<div class="nav pull-right">
-			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-bars fa-2x"></i></a>
+			  <a href="#" class="dropdown-toggle soc socicon" data-toggle="dropdown"><i class="fa fa-bars fa-2x"></i></a>
 			  <ul class="dropdown-menu newmenu">
 			    <li><a href="d"><div class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i></div> Data</a></li>
 		            <li class="divider"></li>
@@ -142,7 +142,7 @@
 			</div>
 			<?php if ($this->ion_auth->logged_in()) { ?>
 			<div class="nav pull-right">
-			  <a href="#" class="dropdown-toggle socialshare socialshareicon" data-toggle="dropdown"><i class="fa fa-plus fa-2x"></i></a>
+			  <a href="#" class="dropdown-toggle soc socicon" data-toggle="dropdown"><i class="fa fa-plus fa-2x"></i></a>
 			  <ul class="dropdown-menu newmenu">
 			    <li><a href="new/data"><div class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i></div> New data</a></li>
 		            <li class="divider"></li>
@@ -158,7 +158,7 @@
                     <!-- <a class="brand" href="" style="float:left">OpenML</a> -->
 			<?php if ($this->ion_auth->logged_in()) { ?>
 			<div class="nav pull-right">
-                                <a href="#" class="dropdown-toggle socialshare" data-toggle="dropdown"><i class="fa fa-graduation-cap fa-2x" style="color:green;"></i></a>
+                                <a href="#" class="dropdown-toggle soc" data-toggle="dropdown"><i class="fa fa-graduation-cap fa-2x" style="color:green;"></i></a>
                                 <ul class="dropdown-menu">
                                     <?php if (!$this->ion_auth->logged_in()): ?>
                                     <li><a href="login">Sign in</a></li>
@@ -179,7 +179,7 @@
                         </div>
 			<?php } else { ?>
 			<div class="nav pull-right">
-                                <a href="login" class="socialshare" style="padding-right:25px;text-decoration:none;">Sign in</a>
+                                <a href="login" class="soc" style="padding-right:25px;text-decoration:none;">Sign in</a>
                         </div>
 			<?php } ?>
 
