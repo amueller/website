@@ -289,27 +289,16 @@ function redrawCurves( renderto, type ){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 var linechart;
 $(document).ready(function() {
         redrawchart();
 
-	Highcharts.visualizeLine = function(table, options) {
-		linechart = new Highcharts.Chart(options);
-	}
-	learningCurveQuery();
-   	fullRedrawLine();
-}
+//	Highcharts.visualizeLine = function(table, options) {
+//		linechart = new Highcharts.Chart(options);
+//	}
+//	learningCurveQuery();
+//  	fullRedrawLine();
+});
 
 // launches a query
 function runQuery(theQuery) {
@@ -325,54 +314,7 @@ function runQuery(theQuery) {
 	window.idle = false;
 	$.getJSON(query,processResult).error( jsonFailed );
 }
-function jsonFailed(data, textStatus) {
-	qi_waiting = false;
-	window.idle = true;
-	$('.sqlmessage').css({"display":"inline-block"});
-	$('#query-btn').button('reset');
-	$('#sqlquery-btn').button('reset');
-	$('#wizardquery-btn').button('reset');
-	if(textStatus=="error")
-		$('.sqlmessage').html('Error. Data could not be returned. Possibly, the result list is too long, try adding a LIMIT constraint (e.g., limit 0,1000) to your query. If that does not help, please contact the system administrator.'); 
-	else
-		$('.sqlmessage').html('Please contact the system administrator: ' + textStatus); 
-}
-	   $('.sqlmessage').css({"display":"inline-block"});
-	   $('.sqlmessage').html(data.status);
-	   $('#sqlquery-btn').button('reset');
-	   $('#wizardquery-btn').button('reset');
-	   return;
-	}
-	//var btn = document.getElementById('query-btn');
-	$('#query-btn').button('reset');
-	$('#sqlquery-btn').button('reset');
-	$('#wizardquery-btn').button('reset');
-	
-        $('#x'+localStorage.runningExample).button('reset')
-	//localStorage.results=JSON.stringify(data);
-	$('#qtabs a[href="#resultstab"]').tab('show');
-	$('#vtabs a[href="#tabletab"]').tab('show');
-	
-	data_orig = data;
-	
-	if( data.columns.length == 3 ) {
-		data_cross = crossTabulate( jQuery.extend(true, {}, data), 0, 1, 2 ); // hardcopy of data
-		$('#crosstabulateBtn').css( 'display', 'block' );
-	} else {
-		$('#crosstabulateBtn').css( 'display', 'none' );
-	}
-	
-	if( data.columns.length == 3 && autocrosstabulate ) {
-		readRows( data_cross );
-		show_original_data = false;
-		autocrosstabulate = false;
-		//$('#crosstabulateBtn').click(function() {toggleResultTables(false); });
-	} else {
-		show_original_data = true;
-		readRows( data_orig );
-		//$('#crosstabulateBtn').click(function() {toggleResultTables(true); });
-	}
-}
+
 function readRows(data) {
 		
 	$('#tablemain').html(buildTable(data));
