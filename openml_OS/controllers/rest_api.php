@@ -685,6 +685,13 @@ class Rest_api extends CI_Controller {
         $this->xml_fields_dataset, $dataset );
     } else {
       // ***** UPDATED DATASET *****
+      $id = $xml->children('oml', true)->{'id'};
+      $dataset = $this->Dataset->getById( $id );
+      if( $dataset === false ) {
+        $this->_returnError( 144 );
+        return;
+      }
+      
       if ($destinationUrl){
         $dataset = array(
           'last_update' => now(),
@@ -716,15 +723,16 @@ class Rest_api extends CI_Controller {
       // ***** UPDATED DATASET *****
       $id =  '' . $xml->children('oml', true)->{'id'};
 
-            // ignore id, description (should not be altered)
+      // ignore id, description (should not be altered)
       unset($dataset['id']);
       unset($dataset['description']);
 
-	   // remove ignore attributes if none specified
-      if(!array_key_exists('ignore_attribute', $dataset))
-	$dataset['ignore_attribute'] = NULL;
+	    // remove ignore attributes if none specified
+      if(!array_key_exists('ignore_attribute', $dataset)) {
+        $dataset['ignore_attribute'] = NULL;
+      }
       
-            // reset data features so that they are recalculated
+      // reset data features so that they are recalculated
       $dataset['processed'] = NULL; 
       $dataset['error'] = 'false';
       $this->Data_feature->deleteWhere('`did` = "' . $id . '"');

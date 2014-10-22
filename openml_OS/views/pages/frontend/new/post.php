@@ -36,6 +36,7 @@ if($this->subpage == 'task') {
     'FROM `dataset` `d`,`data_feature` `f` ' . 
     'WHERE `d`.`did` = `f`.`did` ' .
     'AND `f`.`name` = ' . $target_feature . ' ' .
+    'AND `f`.`NumberOfMissingValues` = 0 ' . // MAKE TASKS WITH NO MISSING VALUES IN TARGET, FOR NOW
     'AND `f`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
     'AND ' . $constraints . ' ' .
     'ORDER BY `did`;';
@@ -124,8 +125,8 @@ if($this->subpage == 'task') {
       sm($this->response);  
       su('new/data');
     } else {
-	print "Something went wrong. Server says:<br>";
-	print $api_response;
+      print "Something went wrong. Server says:<br>";
+      print $api_response;
     }
   } else{
     $this->responsetype = 'alert alert-danger';

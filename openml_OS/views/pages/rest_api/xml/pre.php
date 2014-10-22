@@ -71,6 +71,11 @@ $this->apiErrors[142][1] = 'For now, we only check on arff files. If a dataset i
 $this->apiErrors[143][0] = 'Suggested target feature not legal ';
 $this->apiErrors[143][1] = 'It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data. ';
 
+// for function: openml.data.upload 
+$this->apiErrors[144][0] = 'Unable to update dataset ';
+$this->apiErrors[144][1] = 'The dataset with this id could not be found in the database. If you upload a new dataset, unset the id. ';
+
+
 // for function: openml.tasks.search 
 $this->apiErrors[150][0] = 'Please provide task_id';
 $this->apiErrors[150][1] = 'Please provide task_id';
