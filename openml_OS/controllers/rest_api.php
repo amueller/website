@@ -183,30 +183,30 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $datasets = $this->Dataset->getWhere( '`processed` IS NOT NULL AND `error` = "false"' );
+    $datasets = $this->Task->query( 'SELECT `did`, `status` FROM `dataset` `d` WHERE 1; ' );
     if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
-      $this->_returnError( 110 );
+      $this->_returnError( 490 );
     }
+    $dids = array();
+    foreach( $datasets as $d ) { $dids[] = $d->did; }
+    
+    $data_qualities = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
+    
+    // DIRTY HACK. CAN BE DONE FASTER???
+    for( $i = 0; $i < count($datasets); ++$i ) {
+      for( $j = 0; $j < count($data_qualities); ++$j ) {
+        if($datasets[$i]->did == $data_qualities[$j]->data) {
+          if( property_exists( $datasets[$i], 'qualities' ) == false ) {
+            $datasets[$i]->qualities = array();
+          }
+          $datasets[$i]->qualities[$data_qualities[$j]->quality] = $data_qualities[$j]->value;
+        }
+      }
+    }
+    
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
   }
-
-  private function _openml_data_safe() {
-    $datasets = $this->Dataset->query( 'SELECT did, name, version FROM dataset WHERE `processed` IS NOT NULL AND `licence`= "Public" AND `error` = "false" AND `safe` = "true" AND did in (select distinct did from data_feature)' );
-    if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
-      $this->_returnError( 110 );
-    }
-    $this->_xmlContents( 'data-safe', array( 'datasets' => $datasets ) );
-  }
-
-  private function _openml_task_classification_safe() {
-    $tasks = $this->Dataset->query( 'select t.task_id, d.name, d.version, p.name as pname from task t left join task_inputs ti1 on (t.task_id=ti1.task_id and ti1.input="source_data") left join dataset d on (ti1.value=d.did) left join task_inputs ti2 on (t.task_id=ti2.task_id and ti2.input="target_feature") left join task_inputs ti3 on (t.task_id=ti3.task_id and ti3.input="estimation_procedure") left join estimation_procedure p on (ti3.value=p.id) where t.ttid=1 and d.safe="true" and d.licence= "Public" and d.did in (select distinct did from data_feature) and ti2.value=d.default_target_attribute' );
-    if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
-      $this->_returnError( 110 );
-    }
-    $this->_xmlContents( 'task-classification-safe', array( 'tasks' => $tasks ) );
-  }
-
-
+  
   private function _openml_data_description() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {
@@ -314,22 +314,23 @@ class Rest_api extends CI_Controller {
     $targets = array_map('trim',explode(",",$dataset->default_target_attribute));
     $rowids = array_map('trim',explode(",",$dataset->row_id_attribute));
     $ignores = getcsv($dataset->ignore_attribute);
-    if(!$ignores)
-	$ignores = array();
-
+    if(!$ignores) {
+      $ignores = array();
+    }
+    
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
       $feature->did = $did;
 
       // add special features 
       if(in_array($feature->name,$targets))
-  $feature->is_target = 'true';
+        $feature->is_target = 'true';
       else //this is needed because the Java feature extractor still chooses a target when there isn't any
-  $feature->is_target = 'false';
+        $feature->is_target = 'false';
       if(in_array($feature->name,$rowids))
-  $feature->is_row_identifier = 'true';
+        $feature->is_row_identifier = 'true';
       if(in_array($feature->name,$ignores))
-  $feature->is_ignore = 'true';
+        $feature->is_ignore = 'true';
 
       //actual insert
       $this->Data_feature->insert_ignore( $feature );
@@ -752,6 +753,37 @@ class Rest_api extends CI_Controller {
     
     // create 
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
+  }
+  
+  private function _openml_tasks() {
+    $task_type_id = $this->input->get( 'task_type_id' );
+    if( $task_type_id == false ) {
+      $this->_returnError( 480 );
+      return;
+    }
+    
+    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
+    if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
+      $this->_returnError( 481 );
+    }
+    $dids = array();
+    foreach( $tasks as $task ) { $dids[] = $task->did; }
+    
+    $data_qualities = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY data');
+    
+    // DIRTY HACK. CAN BE DONE FASTER???
+    for( $i = 0; $i < count($tasks); ++$i ) {
+      for( $j = 0; $j < count($data_qualities); ++$j ) {
+        if($tasks[$i]->did == $data_qualities[$j]->data) {
+          if( property_exists( $tasks[$i], 'qualities' ) == false ) {
+            $tasks[$i]->qualities = array();
+          }
+          $tasks[$i]->qualities[$data_qualities[$j]->quality] = $data_qualities[$j]->value;
+        }
+      }
+    }
+    
+    $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
   
   private function _openml_task_types() {

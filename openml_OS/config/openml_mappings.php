@@ -61,4 +61,8 @@ $config['xml_fields_implementation'] = array(
   'plain'   => array()
 );
 
+$config['basic_qualities'] = array(
+  "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues", "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures"
+);
+
 ?>
