@@ -17,7 +17,7 @@
    text-decoration: none;
 }
 
-.soc {
+.openmlsoc {
   margin-left: 0px;
   padding-left: 5px;
   padding-right: 15px;
@@ -30,12 +30,12 @@
   margin-bottom: 0px;
 }
 
-.socicon {
+.openmlsocicon {
   padding-top: 12px;
 }
 
 
-.soc .bs-icon2 {
+.openmlsoc .bs-icon2 {
   opacity: .6;
 }
 
