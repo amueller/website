@@ -614,6 +614,16 @@ $this->apiErrors[472][1] = 'The provided dataset id does not correspond to an ex
 $this->apiErrors[473][0] = 'User is not the owner of the dataset.';
 $this->apiErrors[473][1] = 'Only the uploader of the dataset can change this particular property.';
 
+// openml.tasks
+$this->apiErrors[480][0] = 'Please provide task_type_id';
+$this->apiErrors[480][1] = 'In order to view task overview, please provide task_type_id. ';
+// openml.tasks
+$this->apiErrors[481][0] = 'No results';
+$this->apiErrors[481][1] = 'There where no matches for this task type id. Check whether some tasks exists. ';
+// openml.tasks
+$this->apiErrors[490][0] = 'No results';
+$this->apiErrors[490][1] = 'There where no matches. ';
+
 
 
 
