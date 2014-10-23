@@ -84,7 +84,6 @@ class Rest_api extends CI_Controller {
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
-    $this->authenticated = true; // TODO: turn this off!!
     $this->openmlGeneralErrorCode = 450;
   }
   
