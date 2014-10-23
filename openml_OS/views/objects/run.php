@@ -6,6 +6,7 @@ $this->runevaluations = array();
 if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
   $info = explode('/', $_SERVER['REQUEST_URI']);
   $this->run_id = $info[array_search('r',$info)+1];
+  if(!$this->run_id)  {  su('r'); }
   $run = $this->Implementation->query('SELECT r.rid, r.uploader, d.did, d.name, d.version, r.setup, i.id, i.fullName, i.description, r.task_id, tt.name as taskname, r.start_time, r.status FROM run r left join task t on r.task_id=t.task_id left join task_type tt on t.ttid=tt.ttid left join task_inputs ti on (t.task_id=ti.task_id and ti.input=\'source_data\') left join dataset d on (ti.value = d.did), algorithm_setup s, implementation i WHERE rid='. $this->run_id .' and r.setup = s.sid and s.implementation_id = i.id');
      if( $run != false ) {
         $author = $this->Author->getById($run[0]->uploader);
@@ -56,8 +57,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
 
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
+    <?php if (isset($this->run_id)){ ?>
     <h1>Run <?php echo $this->run_id; ?></h1>
-    <?php if (isset($this->record['run_id'])){ ?>
   <ul class="hotlinks">
    <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
    <li><a href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
@@ -119,12 +120,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     <td><?php echo $r['array_data']; ?></td>
     <?php endforeach; ?>
     </table></div>
-    <?php } else { ?>Sorry, this run is unknown.<?php } ?>
-  </div>
-  
-  
+    
   <!-- show here the ROC Charts -->
-  <?php 
+  <?php
     $charts = $this->Vipercharts->getWhere( 'run_id = ' . $this->record['run_id'] );
     
     if( $charts ) {
@@ -145,4 +143,11 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
       </div><?php
     }
   ?>
+
+
+
+
+
+    <?php } else { ?>Sorry, this run is unknown.<?php } ?>
+  </div>
 </div> <!-- end openmlsectioninfo -->

@@ -83,6 +83,7 @@ $frontend_pages = array(
           'a',
           'u',
           'share',
+	  'guide',
           'preview');
 
 foreach( $frontend_pages as $page ) {

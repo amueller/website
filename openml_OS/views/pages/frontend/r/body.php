@@ -20,10 +20,12 @@
 
     <div class="col-sm-12 col-md-9 openmlsectioninfo">
      <div class="tab-content">
-      <!-- DETAIL -->     
-      <div class="tab-pane <?php  if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) echo 'active';?>" id="runtab">
+      <!-- DETAIL -->    
+	<?php if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')){ ?>
+        <div class="tab-pane active" id="runtab">
 		<?php o('run'); ?>
-      </div>
+        </div>
+	<?php } ?>
         <!-- ADVANCED -->     
 	<div class="tab-pane fade <?php if($this->active_tab == 'exampletab') echo 'active';?>" id="exampletab">
 		<?php subpage('examples'); ?>
@@ -85,6 +87,3 @@
     </div> <!-- end col-10 -->
   </div> <!-- end row -->
 </div> <!-- end container -->
-<script>
-//	window.onload = initData;
-</script>
