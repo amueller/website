@@ -129,17 +129,19 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     
     if( $charts ) {
       ?><h3>ROC Charts</h3>
-      <ul class="nav nav-tabs" role="tablist">
-      <?php for( $i = 0; $i < count($charts); ++$i ): ?>
-        <li class="<?php if($i == 0) echo 'active';?>"><a href="#roc-chart-<?php echo $charts[$i]->class; ?>" role="tab" data-toggle="tab"><?php echo $charts[$i]->{'class'}; ?></a></li>
-      <?php endfor;?>
-      </ul>
-      <div class="tab-content">
-      <?php for( $i = 0; $i < count($charts); ++$i ): ?>
-        <div class="tab-pane<?php if($i == 0) echo ' active';?>" id="roc-chart-<?php echo $charts[$i]->class; ?>">
-           <iframe src="<?php echo $this->config->item('api_vipercharts') . $charts[$i]->viper_id . '/'; ?>" width="600" height="600"></iframe>
+      <div>
+        <ul class="nav nav-tabs" role="tablist">
+        <?php for( $i = 0; $i < count($charts); ++$i ): ?>
+          <li class="<?php if($i == 0) echo 'active';?>"><a href="#roc-chart-<?php echo $charts[$i]->class; ?>" role="tab" data-toggle="tab"><?php echo $charts[$i]->{'class'}; ?></a></li>
+        <?php endfor;?>
+        </ul>
+        <div class="tab-content">
+        <?php for( $i = 0; $i < count($charts); ++$i ): ?>
+          <div class="tab-pane<?php if($i == 0) echo ' active';?>" id="roc-chart-<?php echo $charts[$i]->class; ?>">
+            <iframe src="<?php echo $this->config->item('api_vipercharts') . $charts[$i]->viper_id . '/'; ?>" width="600" height="600"></iframe>
+          </div>
+        <?php endfor; ?>
         </div>
-      <?php endfor; ?>
       </div><?php
     }
   ?>
