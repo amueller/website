@@ -32,6 +32,25 @@
 	    </tbody></table></div>
 
     </div> <!-- end col-md-6-->
+
+     <?php
+          $components = $this->Implementation->getComponents($this->record);
+	  if (is_array($components) && sizeof($components)>0){
+     ?>
+     <div class="col-sm-6">
+			<h2>Components</h2>
+			<div class="table-responsive">
+				<table class="table table-striped">
+				<?php 
+					foreach( $components as $c ){
+						echo "<tr><td>" . $c->{'identifier'} . "</td><td><a href='f/" . $c->{'implementation'}->{'id'} . "'>" . $c->{'implementation'}->{'fullName'} . "</a></td></tr>";
+					}
+				?>
+				</table>
+			</div>
+      </div> <!-- end col-md-6 -->
+      <?php } /*endif components*/ ?>
+
      <div class="col-sm-6">
 			<h2>Parameters</h2>
 			<div class="table-responsive">

@@ -75,8 +75,8 @@ class Rest_api extends CI_Controller {
     $this->supportedAlgorithms = $this->Algorithm->getColumn('name');
     
     // some user authentication things. 
-    $this->provided_hash = $this->input->post('session_hash') != false;
-    $this->provided_valid_hash = $this->Api_session->isValidHash( $this->input->post('session_hash') );
+    $this->provided_hash = $this->input->get_post('session_hash') != false;
+    $this->provided_valid_hash = $this->Api_session->isValidHash( $this->input->get_post('session_hash') );
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     if($this->provided_valid_hash) {
@@ -84,6 +84,8 @@ class Rest_api extends CI_Controller {
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
+    $this->authenticated = true; // TODO: turn this off!!
+    $this->openmlGeneralErrorCode = 450;
   }
   
   public function index() {
@@ -98,9 +100,17 @@ class Rest_api extends CI_Controller {
       $api_function = '_' . str_replace( '.', '_', $this->requested_function );
       
       if( method_exists( $this, $api_function ) ) {
-        $this->$api_function();
+        if( $this->authenticated || substr( $this->requested_function, 0, 17 ) == 'openml.authenticate' ) {
+          $this->$api_function();
+        } else {
+          if( $this->provided_hash ) { // user authenticated, but failed
+            $this->_returnError( 103, 401 );
+          } else { // user should authenticate
+            $this->_returnError( 102, 401 );
+          }
+        }
       } else {
-        $this->_returnError( 100 );
+        $this->_returnError( 100, 404 );
       }
     }
   }
@@ -152,8 +162,8 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_authenticate_check() {
-    $username     = $this->input->post( 'username' );
-    $session_hash  = $this->input->post( 'session_hash' );
+    $username     = $this->input->getpost( 'username' );
+    $session_hash  = $this->input->getpost( 'session_hash' );
     
     if( $username == false ) {
       $this->_returnError( 290 );
@@ -185,7 +195,7 @@ class Rest_api extends CI_Controller {
   private function _openml_data() {
     $datasets = $this->Task->query( 'SELECT `did`, `status` FROM `dataset` `d` WHERE 1; ' );
     if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
-      $this->_returnError( 490 );
+      $this->_returnError( 370 );
     }
     $dids = array();
     foreach( $datasets as $d ) { $dids[] = $d->did; }
@@ -268,17 +278,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data_features_upload() {
-    // authentication check. Real check is done in the constructor.
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 430 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 431 );
-        return;
-      }
-    }
-    
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
       $this->_returnError( 432 );
@@ -288,7 +287,7 @@ class Rest_api extends CI_Controller {
     // get description from string upload
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.features'), $xmlErrors ) == false ) {
-      $this->_returnError( 433, $xmlErrors );
+      $this->_returnError( 433, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -424,16 +423,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data_qualities_upload() {
-    // authentication check. Real check is done in the constructor.
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 380 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 381 );
-        return;
-      }
-    }
     
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
@@ -444,7 +433,7 @@ class Rest_api extends CI_Controller {
     // get description from string upload
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.qualities'), $xmlErrors ) == false ) {
-      $this->_returnError( 383, $xmlErrors );
+      $this->_returnError( 383, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -474,15 +463,15 @@ class Rest_api extends CI_Controller {
       $quality = xml2object( $q, true );
       
       /*if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
-        $this->_returnError( 385, $quality->name );
+        $this->_returnError( 385, $this->openmlGeneralErrorCode, $quality->name );
         return;
       } elseif( $qualities != false && array_key_exists( $quality->name, $qualities ) ) { // prior to this run, we already got this quality
         if( abs( $qualities[$quality->name] - $quality->value ) > $this->config->item('double_epsilon') ) {
-          $this->_returnError( 386, $quality->name );
+          $this->_returnError( 386, $this->openmlGeneralErrorCode, $quality->name );
           return;
         }
       } else*/if( is_array( $all_qualities ) == false || in_array( $quality->name, $all_qualities ) == false ) {
-        $this->_returnError( 387, $quality->name );
+        $this->_returnError( 387, $this->openmlGeneralErrorCode, $quality->name );
         return;
       } else {
         $newQualities[] = $quality;
@@ -535,15 +524,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data_delete() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 350 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 351 );
-        return;
-      }
-    }
     
     $dataset = $this->Dataset->getById( $this->input->post( 'data_id' ) );
     if( $dataset == false ) {
@@ -588,23 +568,13 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data_upload() {
-    // authentication check. Real check is done in the constructor.
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 137 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 138 );
-        return;
-      }
-    }
     
     // get correct description
     if( $this->input->post('description') ) {
       // get description from string upload
       $description = $this->input->post('description', false);
       if( validateXml( $description, xsd('openml.data.upload'), $xmlErrors, false ) == false ) {
-        $this->_returnError( 131, $xmlErrors );
+        $this->_returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_string( $description );
@@ -613,7 +583,7 @@ class Rest_api extends CI_Controller {
       $description = $_FILES['description'];
       
       if( validateXml( $description['tmp_name'], xsd('openml.data.upload'), $xmlErrors ) == false ) {
-        $this->_returnError( 131, $xmlErrors );
+        $this->_returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_file( $description['tmp_name'] );
@@ -638,7 +608,7 @@ class Rest_api extends CI_Controller {
     } elseif( $datasetFileProvided ) {
       $message = '';
       if( ! check_uploaded_file( $_FILES['dataset'], false, $message ) ) {
-        $this->_returnError( 130, 'File dataset: ' . $message );
+        $this->_returnError( 130, $this->openmlGeneralErrorCode, 'File dataset: ' . $message );
         return;
       }
       $access_control = 'public';
@@ -786,13 +756,13 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
   
-  private function _openml_task_types() {
+  private function _openml_task_type() {
     $data = new stdClass();
     $data->task_types = $this->Task_type->get();
     $this->_xmlContents( 'task-types', $data );
   }
   
-  private function _openml_task_types_search() {
+  private function _openml_task_type_get() {
     $task_type_id = $this->input->get( 'task_type_id' );
     if( $task_type_id == false ) {
       $this->_returnError( 240 );
@@ -810,7 +780,7 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'task-types-search', array( 'task_type' => $taskType, 'io' => $taskTypeIos ) );
   }
   
-  private function _openml_task_search() {
+  private function _openml_task_get() {
     $task_id = $this->input->get( 'task_id' );
     if( $task_id == false ) {
       $this->_returnError( 150 );
@@ -834,15 +804,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_task_delete() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 450 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 451 );
-        return;
-      }
-    }
     
     $task = $this->Task->getById( $this->input->post( 'task_id' ) );
     if( $task == false ) {
@@ -968,16 +929,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_implementation_upload() {
-    // authentication check. Real check is done in the constructor.
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 169 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 170 );
-        return;
-      }
-    }
     
     if(isset($_FILES['source']) && $_FILES['source']['error'] == 0) {
       $source = true;
@@ -1011,7 +962,7 @@ class Rest_api extends CI_Controller {
       $description = $this->input->post('description');
       $xmlErrors = "";
       if( validateXml( $description, xsd('openml.implementation.upload'), $xmlErrors, false ) == false ) {
-        $this->_returnError( 163, $xmlErrors );
+        $this->_returnError( 163, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_string( $description );
@@ -1020,13 +971,13 @@ class Rest_api extends CI_Controller {
       $description = $_FILES['description'];
       
       if( validateXml( $description['tmp_name'], xsd('openml.implementation.upload'), $xmlErrors ) == false ) {
-        $this->_returnError( 163, $xmlErrors );
+        $this->_returnError( 163, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_file( $description['tmp_name'] );
       $similar = $this->Implementation->compareToXML( $xml );
       if( $similar ) {
-        $this->_returnError( 171, 'implementation_id:' . $similar );
+        $this->_returnError( 171, $this->openmlGeneralErrorCode, 'implementation_id:' . $similar );
         return;
       }
     } else {
@@ -1098,15 +1049,6 @@ class Rest_api extends CI_Controller {
   }
 
   private function _openml_implementation_delete() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 320 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 321 );
-        return;
-      }
-    }
     
     $implementation = $this->Implementation->getById( $this->input->post( 'implementation_id' ) );
     if( $implementation == false ) {
@@ -1181,15 +1123,6 @@ class Rest_api extends CI_Controller {
   }
 
   private function _openml_implementation_owned() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 310 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 311 );
-        return;
-      }
-    }
     
     $implementations = $this->Implementation->getColumnWhere( 'id', '`uploader` = "'.$this->user_id.'"' );
     if( $implementations == false ) {
@@ -1209,19 +1142,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_run_upload() {
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * authentication check. Real check is done in the         *
-     * constructor.                                            *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 200 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 201 );
-        return;
-      }
-    }
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Everything that needs to be done for EVERY task,        *
@@ -1236,7 +1156,7 @@ class Rest_api extends CI_Controller {
     }
     // validate xml
     if( validateXml( $description['tmp_name'], xsd('openml.run.upload'), $xmlErrors ) == false ) {
-      $this->_returnError( 203, $xmlErrors );
+      $this->_returnError( 203, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     
@@ -1289,7 +1209,7 @@ class Rest_api extends CI_Controller {
       
       $message = '';
       if( ! check_uploaded_file( $_FILES['predictions'], false, $message ) ) {
-        $this->_returnError( 207, 'File predictions: ' . $message );
+        $this->_returnError( 207, $this->openmlGeneralErrorCode, 'File predictions: ' . $message );
         return;
       }
     }
@@ -1390,15 +1310,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_run_evaluate() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 420 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 421 );
-        return;
-      }
-    }
     
     // check uploaded file
     $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
@@ -1409,7 +1320,7 @@ class Rest_api extends CI_Controller {
     
     // validate xml
     if( validateXml( $description['tmp_name'], xsd('openml.run.evaluate'), $xmlErrors ) == false ) {
-      $this->_returnError( 423, $xmlErrors );
+      $this->_returnError( 423, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     
@@ -1486,15 +1397,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_run_delete() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 390 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 391 );
-        return;
-      }
-    }
     
     $run = $this->Run->getById( $this->input->post( 'run_id' ) );
     if( $run == false ) {
@@ -1533,15 +1435,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_run_reset() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 410 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 411 );
-        return;
-      }
-    }
     
     $run = $this->Run->getById( $this->input->post( 'run_id' ) );
     if( $run == false ) {
@@ -1646,15 +1539,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_setup_delete() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 400 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 401 );
-        return;
-      }
-    }
     
     $setup = $this->Algorithm_setup->getById( $this->input->post( 'setup_id' ) );
     if( $setup == false ) {
@@ -1687,15 +1571,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_user_delete() {
-    if(!$this->authenticated) {
-      if(!$this->provided_hash) {
-        $this->_returnError( 460 );
-        return;
-      } else { // not provided valid hash
-        $this->_returnError( 461 );
-        return;
-      }
-    }
     
     if( $this->ion_auth->is_admin($this->user_id) == false ) {
       $this->_returnError( 462 );
@@ -1737,20 +1612,11 @@ class Rest_api extends CI_Controller {
   
   /********************************* ALIAS FUNCTIONS *********************************/
   
-  private function _openml_tasks_types() {
-    $this->_openml_task_types();
-  }
-  
-  private function _openml_tasks_types_search() {
-    $this->_openml_task_types_search();
-  }
-  
-  private function _openml_tasks_search() {
-    $this->_openml_task_search();
-  }
-  
   private function _openml_run_getjob() {
     $this->_openml_job_get();
+  }
+  private function _openml_task_search() {
+    $this->_openml_task_get();
   }
   
   /************************************* DISPLAY *************************************/
@@ -1763,16 +1629,21 @@ class Rest_api extends CI_Controller {
     $this->load->view('frontend_main');
   }
   
-  private function _returnError( $code, $additionalInfo = null ) {
+  private function _returnError( $code, $httpErrorCode = 450, $additionalInfo = null ) {
     $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $this->requested_function, $this->load->apiErrors[$code][0] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
     $error['additional'] = htmlentities( $additionalInfo );
-    $this->_xmlContents( 'error-message', $error );
+    
+    $httpHeaders = array( 'header("HTTP/1.0 ' . $httpErrorCode );
+    $this->_xmlContents( 'error-message', $error, $httpHeaders );
   }
   
-  private function _xmlContents( $xmlFile, $source ) {
+  private function _xmlContents( $xmlFile, $source, $httpHeaders = array() ) {
     header('Content-type: text/xml; charset=utf-8');
+    foreach( $httpHeaders as $header ) {
+      header( $header );
+    }
     $view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
     $data = $this->load->view( $view, $source, true );
     header('Content-length: ' . strlen($data) );
