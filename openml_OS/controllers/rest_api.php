@@ -99,7 +99,7 @@ class Rest_api extends CI_Controller {
       $api_function = '_' . str_replace( '.', '_', $this->requested_function );
       
       if( method_exists( $this, $api_function ) ) {
-        if( $this->authenticated || substr( $this->requested_function, 0, 17 ) == 'openml.authenticate' ) {
+        if( $this->authenticated || substr( $this->requested_function, 0, 19 ) == 'openml.authenticate' ) {
           $this->$api_function();
         } else {
           if( $this->provided_hash ) { // user authenticated, but failed
