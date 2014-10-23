@@ -1,4 +1,4 @@
-<oml:task xmlns:oml="http://openml.org/openml">
+<oml:tasks xmlns:oml="http://openml.org/openml">
 	<?php foreach( $tasks as $task ): ?>
   <oml:task>
     <oml:task_id><?php echo $task->task_id; ?></oml:task_id>
@@ -10,4 +10,4 @@
     <?php endforeach; ?>
   </oml:task>
 	<?php endforeach; ?>
-</oml:task>
+</oml:tasks>
