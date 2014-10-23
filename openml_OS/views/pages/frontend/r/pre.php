@@ -54,7 +54,7 @@ if($this->active_tab == false) $this->active_tab = 'intro';
 if(false === strpos($_SERVER['REQUEST_URI'],'/r/')){ // Popular
 	$start_time = microtime(true);
 
-	$runs = $this->Dataset->query('SELECT r.rid, r.uploader, i.id, i.fullName, r.task_id, tt.name as taskname, d.did, d.name as dataname, r.start_time FROM run r, algorithm_setup als, implementation i, task t, task_type tt, task_inputs ti left join dataset d on ti.value = d.did WHERE status=\'OK\' and r.task_id=t.task_id and t.ttid=tt.ttid and t.task_id = ti.task_id and ti.input=\'source_data\' and r.setup = als.sid and als.implementation_id=i.id order by r.start_time desc limit 0,30');
+	$runs = $this->Dataset->query('SELECT r.rid, r.uploader, i.id, i.fullName, r.task_id, tt.name as taskname, d.did, d.name as dataname, r.start_time FROM run r, algorithm_setup als, implementation i, task t, task_type tt, task_inputs ti left join dataset d on ti.value = d.did WHERE r.status=\'OK\' and r.task_id=t.task_id and t.ttid=tt.ttid and t.task_id = ti.task_id and ti.input=\'source_data\' and r.setup = als.sid and als.implementation_id=i.id order by r.start_time desc limit 0,30');
   if( $runs != false ) {
 	  foreach( $runs as $r ) {
 		  $author = $this->Author->getById($r->uploader);
