@@ -84,7 +84,7 @@ class Rest_api extends CI_Controller {
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
-    
+    $this->authenticated = true; // TODO: turn this off!!
     $this->openmlGeneralErrorCode = 450;
   }
   
@@ -1615,6 +1615,9 @@ class Rest_api extends CI_Controller {
   private function _openml_run_getjob() {
     $this->_openml_job_get();
   }
+  private function _openml_task_search() {
+    $this->_openml_task_get();
+  }
   
   /************************************* DISPLAY *************************************/
   
@@ -1631,7 +1634,9 @@ class Rest_api extends CI_Controller {
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
     $error['additional'] = htmlentities( $additionalInfo );
-    $this->_xmlContents( 'error-message', array( $httpErrorCode ), $httpHeaders );
+    
+    $httpHeaders = array( 'header("HTTP/1.0 ' . $httpErrorCode );
+    $this->_xmlContents( 'error-message', $error, $httpHeaders );
   }
   
   private function _xmlContents( $xmlFile, $source, $httpHeaders = array() ) {
