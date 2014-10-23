@@ -52,7 +52,6 @@ if($this->subpage == 'task') {
     } else {
       unset( $inputs['custom_testset'] );
       $input_safe = false;
-      echo "Warning: Illegal custom test set!";
     }
   }
   
@@ -70,12 +69,9 @@ if($this->subpage == 'task') {
     }
     if( count( $datasets ) > 1 && $this->input->post('custom_testset') ) {
       // against the rules
-      echo "Error: this task creation is not allowed.";
     } elseif( $input_safe ) {
       $new_tasks = $this->Task->create_batch( $ttid, $results );
-    } else {
-      echo "This task creation setup is not defined.";	
-    }
+    } 
   }
   $inputs['source_data'] = $dids;
 
