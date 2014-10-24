@@ -788,12 +788,11 @@ h2 + .row {
   margin: 0 auto;
 }
 
-.scrollspy-example {
-  height: 200px;
-  overflow: auto;
+.scrollspy-enable {
+  height: 1000px;
+  overflow: scroll;
   position: relative;
 }
-
 
 /* Fake the :focus state to demo it */
 .focused {
@@ -1111,7 +1110,7 @@ form.bs-docs-example {
   }
   .bs-sidebar.affix {
     position: fixed; /* Undo the static from mobile first approach */
-    top: 80px;
+    top: 120px;
   }
   .bs-sidebar.affix-bottom {
     position: absolute; /* Undo the static from mobile first approach */

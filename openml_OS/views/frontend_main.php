@@ -82,7 +82,7 @@
         <!-- page dependent javascript code -->
         <script type="text/javascript"><?php echo script();?></script>
     </head>
-    <body onresize="try{updateCanvasDimensions()}catch(err){}" data-spy="scroll">
+    <body onresize="try{updateCanvasDimensions()}catch(err){}">
         <!--[if lt IE 7]>
         <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
         <![endif]-->
@@ -109,14 +109,8 @@
 		</form>
 	       </div>
 		      <ul class="nav navbar-nav nav-grey hidden-xs">
-			<li><a href="api">API</a></li>
-			<li><a href="plugins">Plugins</a></li>
+			<li><a href="guide">Guide</a></li>
 		      </ul>
- 
-  	 	      <ul class="nav navbar-nav nav-blue hidden-xs">
-			<li><a href="http://eindhoven2014.openml.org">Register now for OpenML 2014</a></li>
-		      </ul>
-
 	       
 			<div class="nav pull-right">
 			  <a href="#" class="dropdown-toggle openmlsoc openmlsocicon" data-toggle="dropdown"><i class="fa fa-bars fa-2x"></i></a>
@@ -187,27 +181,6 @@
                     <!--/.nav-collapse -->
             </div>
         </div>
-	<div id="openmllinks">
-	  <div class="iconrow">
-	  <a href="d"><div class="iconcell icongreen"><i class="fa fa-database fa-3x"></i><br><span>data</span></div></a>
-	  <a href="t"><div class="iconcell iconyellow"><i class="fa fa-trophy fa-3x"></i><br><span>tasks</span></div></a>
-	  <a href="f"><div class="iconcell iconblue"><i class="fa fa-cogs fa-3x"></i><br><span>flows</span></div></a>
-	  <a href="r"><div class="iconcell iconred"><i class="fa fa-star fa-3x"></i><br><span>runs</span></div></a>
-	  </div><div class="iconrow">
-	  <a href="a"><div class="iconcell icongray"><i class="fa fa-bar-chart-o fa-3x"></i><br><span>analytics</span></div></a>
-	  <a href="plugins"><div class="iconcell icongray"><i class="fa fa-wrench fa-3x"></i><br><span>tools</span></div></a>
-	  <a href="developers"><div class="iconcell icongray"><i class="fa fa-users fa-3x"></i><br><span>developers</span></div></a>
-	  <a href="community"><div class="iconcell icongray"><i class="fa fa-comments fa-3x"></i><br><span>forum</span></div></a>
-	  </div>
-	</div>
-        <script>
-            $(document).ready(function(){ 
-            	$("#loginForm").validate({ }); 
-            	$('#loginModal').on('shown', function () {
-            		$("#inputEmail").focus();
-            	})
-            });
-        </script>
 
         <div id="wrap">
             <!-- USER MESSAGE -->
