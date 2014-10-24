@@ -32,7 +32,7 @@
     <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="oml:parameter"/> <!-- Statement of the (global/top-level) parameters of the workflow (see below). -->
     <xs:element name="component" minOccurs="0" maxOccurs="unbounded" type="oml:quality"/> <!-- Sub-components of this implementation -->
     <!-- qualities -->
-    <xs:element name="quality" minOccurs="0" maxOccurs="unbound" type="xs:string"/> <!-- Format in which the binary code was uploaded.  -->
+    <xs:element name="quality" minOccurs="0" maxOccurs="unbounded" type="xs:string"/> <!-- Qualities of the algorithm  -->
     <!-- download -->
     <xs:element name="source_url" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Url from which the source code can be downloaded. Added by the server. Ignored when uploaded manually. -->
     <xs:element name="binary_url" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Url from which the binary can be downloaded. Added by the server. Ignored when uploaded manually. -->
