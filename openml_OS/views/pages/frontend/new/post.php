@@ -30,7 +30,7 @@ if($this->subpage == 'task') {
   if( $ttid == 2 ) { // exception. 
     $datatype = array( 'numeric' );
   }
-
+  
   $sql = 
     'SELECT `d`.`did`, `f`.`name` ' . 
     'FROM `dataset` `d`,`data_feature` `f` ' . 
@@ -38,10 +38,14 @@ if($this->subpage == 'task') {
     'AND `f`.`name` = ' . $target_feature . ' ' .
     'AND `f`.`NumberOfMissingValues` = 0 ' . // MAKE TASKS WITH NO MISSING VALUES IN TARGET, FOR NOW
     'AND `f`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
-    'AND ' . $constraints . ' ' .
-    'ORDER BY `did`;';
+    'AND ' . $constraints . ' ';
+    
+  // TODO: remove this mapping in a good way
+  if( $ttid == 5 ) {
+    $sql = 'SELECT `d`.`did` FROM `dataset` `d` WHERE ' . $constraints . ' ';
+  }  
 
-  $datasets = $this->Dataset->query( $sql );
+  $datasets = $this->Dataset->query( $sql . 'ORDER BY `did`;' );
   
   // sanity check input
   $input_safe = true;
@@ -62,7 +66,9 @@ if($this->subpage == 'task') {
     foreach( $datasets as $dataset ) {
       $current = $inputs;
       $current['source_data'] = $dataset->did;
-      $current['target_feature'] = $dataset->name;
+      if( property_exists( $dataset, 'name' ) ) {
+        $current['target_feature'] = $dataset->name;
+      }
       $results[] = $current;
 
       $dids[] = $dataset->did;
