@@ -29,6 +29,7 @@
     <xs:element name="ignore_attribute" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>  <!-- Attributes that should be excluded in modelling, such as identifiers and indexes. -->
     <xs:element name="version_label" minOccurs="0" type="xs:string"/> <!-- Version label provided by user, something relevant to the user. Can also be a date, hash, or some other type of id. -->
     <xs:element name="citation" minOccurs="0" type="xs:string"/> <!-- Reference(s) that should be cited when building on this data -->
+    <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="xs:string"/> <!-- Tags, describing the algorithms  -->
     <xs:element name="visibility" minOccurs="0" type="xs:string"/> <!-- Who can see the dataset. Typical values: 'Everyone','All my friends','Only me'. Can also be any of the user's circles. -->
     <xs:element name="original_data_url" minOccurs="0" type="xs:string"/> <!-- For derived data, the url to the original dataset. This can be an OpenML dataset, e.g. 'http://openml.org/d/1'. -->
     <xs:element name="paper_url" minOccurs="0" type="xs:string"/> <!-- Link to a paper describing the dataset -->
