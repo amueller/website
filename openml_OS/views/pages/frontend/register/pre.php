@@ -42,6 +42,13 @@ $this->country = array(
 	'value' => $this->input->post('country'),
 );
 
+$this->bio = array(
+	'name' => 'bio',
+	'id' => 'bio',
+	'type' => 'text',
+	'value' => $this->input->post('bio'),
+);
+
 $this->affiliation = array(
 	'name' => 'affiliation',
 	'id' => 'affiliation',

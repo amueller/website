@@ -52,6 +52,13 @@ $this->country = array(
 	'value' => $this->user->country,
 );
 
+$this->bio = array(
+	'name' => 'bio',
+	'id' => 'bio',
+	'type' => 'text',
+	'value' => $this->user->bio,
+);
+
 $this->affiliation = array(
 	'name' => 'affiliation',
 	'id' => 'affiliation',

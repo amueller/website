@@ -43,6 +43,11 @@
          <label for="country">Country:</label>
          <?php echo form_input($this->country);?>
       </p>
+<hr>
+      <p>
+         <label for="country">Short bio:</label>
+         <?php echo form_input($this->bio);?>
+      </p>
       <p>
          <label for="country">Image:</label>
          <img src="<?php echo htmlentities( authorImage( $this->user->image ) ); ?>" width="80" class="img-circle" style="padding: 10px;" alt="<?php echo $this->user->first_name . ' ' . $this->user->last_name; ?>" /><br/>

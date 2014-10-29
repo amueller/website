@@ -49,6 +49,10 @@
         <?php echo form_input($this->country);?>
       </div>
       <div class="form-group">
+        <label for="country">Short bio:</label>
+        <?php echo form_input($this->bio);?>
+      </div>
+      <div class="form-group">
         <label for="image">Image:</label>
         <?php echo form_input_nostyle($this->image);?>
       </div>

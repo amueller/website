@@ -18,6 +18,7 @@ if ($this->form_validation->run() == true)
     'last_name'  => $this->input->post('last_name'),
     'affiliation'=> $this->input->post('affiliation'),
     'country'    => $this->input->post('country'),
+    'bio'    	 => $this->input->post('bio'),
     'external_source' => null,
     'external_id' => null
   );
