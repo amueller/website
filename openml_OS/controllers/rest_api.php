@@ -12,6 +12,7 @@ class Rest_api extends CI_Controller {
     
     // for writing
     $this->load->model('Dataset');
+    $this->load->model('Dataset_tag');
     $this->load->model('Data_feature');
     $this->load->model('Data_quality');
     $this->load->model('Data_quality_interval');
@@ -104,12 +105,15 @@ class Rest_api extends CI_Controller {
         } else {
           if( $this->provided_hash ) { // user authenticated, but failed
             $this->_returnError( 103, 401 );
+            return;
           } else { // user should authenticate
             $this->_returnError( 102, 401 );
+            return;
           }
         }
       } else {
         $this->_returnError( 100, 404 );
+        return;
       }
     }
   }
@@ -722,6 +726,35 @@ class Rest_api extends CI_Controller {
     
     // create 
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
+  }
+  
+  private function _openml_data_tag( $data_id = false, $tag = false ) {
+    // tags can also be set as parameter. 
+    if( $did == false || $tag == false ) {
+      $did = $this->Input->get( 'data_id' );
+      $tag = $this->Input->get( 'tag' );
+    }
+    // if not set as parameter, they should be in url
+    if( $did == false || $tag == false ) {
+      $this->_returnError( 470 );
+      return;
+    }
+    
+    $dataset = $this->Dataset->getById( $did );
+    if( !$dataset ) {
+      $this->_returnError( 471 );
+      return;
+    }
+    
+    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'did = ' . $dataset->did );
+    if( in_array( $tag, $tags ) ) {
+      $this->_returnError( 471 );
+      return;
+    }
+    $tag_data = array(
+      '' => '',
+    );
+    $this->Dataset_tag->insert( $tag_data );
   }
   
   private function _openml_tasks() {
@@ -1639,13 +1672,13 @@ class Rest_api extends CI_Controller {
   }
   
   private function _xmlContents( $xmlFile, $source, $httpHeaders = array() ) {
+    $view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
+    $data = $this->load->view( $view, $source, true );
+    header('Content-length: ' . strlen($data) );
     header('Content-type: text/xml; charset=utf-8');
     foreach( $httpHeaders as $header ) {
       header( $header );
     }
-    $view = 'pages/'.$this->controller.'/'.$this->page.'/'.$xmlFile.'.tpl.php';
-    $data = $this->load->view( $view, $source, true );
-    header('Content-length: ' . strlen($data) );
     echo $data;
   }
 }
