@@ -23,7 +23,7 @@
 	In <a href="https://github.com/openml/r/blob/master/doc/knitted/1-Introduction.md" target="_blank">this tutorial</a>, we will show you the most important functions of this package and give you examples of standard use cases.
 
 	<h2 id="r-reference">Reference</h2>
-	Full documentation on the packages is available from <a href="http://www.rdocumentation.org/packages/OpenML" target="_blank">R Docomentation</a>.
+	Full documentation on the packages is available from <a href="http://www.rdocumentation.org/packages/OpenML" target="_blank">R Documentation</a>.
 
 	<h2 id="r-issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/r/issues"> OpenML R issue tracker</a>.
