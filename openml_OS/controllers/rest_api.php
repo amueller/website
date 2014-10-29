@@ -19,6 +19,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('File');
     $this->load->model('Algorithm_setup');
     $this->load->model('Implementation');
+    $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
     $this->load->model('Run');
     $this->load->model('Evaluation');
@@ -32,6 +33,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input_setting');
     $this->load->model('Runfile');
+    $this->load->model('Run_tag');
 
     // only for reading
     $this->load->model('Algorithm');
@@ -232,6 +234,8 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 111 );
       return;
     }
+    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'did = ' . $dataset->did );
+    $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
     
     foreach( $this->xml_fields_dataset['csv'] as $field ) {
       $dataset->{$field} = getcsv( $dataset->{$field} );
@@ -426,7 +430,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data_qualities_upload() {
-    
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
       $this->_returnError( 382 );
@@ -681,18 +684,32 @@ class Rest_api extends CI_Controller {
       $dataset = all_tags_from_xml( 
         $xml->children('oml', true), 
         $this->xml_fields_dataset_update, $dataset );
-      } 
+    }
+    
+    // handle tags 
+    $tags = array();
+    if( array_key_exists( 'tag', $dataset ) ) {
+      $tags = str_getcsv( $dataset['tag'] );
+      unset( $dataset['tag'] );
+    }
+    
     /* * * * 
      * THE ACTUAL INSERTION
      * * * */
     if(!$update) {
-      // ***** NEW DATASET ***** 
-      $id = $this->Dataset->insert( $dataset );
+      // ***** NEW DATASET *****
       
+      $id = $this->Dataset->insert( $dataset );
       if( ! $id ) {
         $this->_returnError( 134 );
         return;
       }
+      // insert tags.
+      foreach( $tags as $tag ) {
+        $error = -1;
+        tag_item( 'dataset', $id, $tag, $this->user_id, $error );
+      }
+      // TODO: handle tags for updated data sets as well.
     } else {
       // ***** UPDATED DATASET *****
       $id =  '' . $xml->children('oml', true)->{'id'};
@@ -728,33 +745,39 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
-  private function _openml_data_tag( $data_id = false, $tag = false ) {
-    // tags can also be set as parameter. 
-    if( $did == false || $tag == false ) {
-      $did = $this->Input->get( 'data_id' );
-      $tag = $this->Input->get( 'tag' );
-    }
-    // if not set as parameter, they should be in url
-    if( $did == false || $tag == false ) {
-      $this->_returnError( 470 );
-      return;
+  private function _openml_data_tag( $id = false, $tag = false ) {
+    // tags can also be set as parameter. In this case, don't use stdout
+    
+    if( $id == false || $tag == false ) {
+      $id = $this->input->get( 'data_id' );
+      $tag = $this->input->get( 'tag' );
     }
     
-    $dataset = $this->Dataset->getById( $did );
-    if( !$dataset ) {
-      $this->_returnError( 471 );
-      return;
+    $error = -1;
+    $result = tag_item( 'dataset', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'data' ) ); 
+    }
+  }
+  
+  private function _openml_data_untag( $id = false, $tag = false ) {
+    // tags can also be set as parameter. In this case, don't use stdout
+    if( $id == false || $tag == false ) {
+      $id = $this->input->get( 'data_id' );
+      $tag = $this->input->get( 'tag' );
     }
     
-    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'did = ' . $dataset->did );
-    if( in_array( $tag, $tags ) ) {
-      $this->_returnError( 471 );
-      return;
+    $error = -1;
+    $result = untag_item( 'dataset', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'data' ) ); 
     }
-    $tag_data = array(
-      '' => '',
-    );
-    $this->Dataset_tag->insert( $tag_data );
   }
   
   private function _openml_tasks() {
@@ -1059,6 +1082,42 @@ class Rest_api extends CI_Controller {
     $implementation = $this->Implementation->getById( $impl );
     
     $this->_xmlContents( 'implementation-upload', $implementation );
+  }
+
+
+  
+  private function _openml_implementation_tag( $id = false, $tag = false ) {
+    // tags can also be set as parameter. In this case, don't use stdout
+    if( $id == false || $tag == false ) {
+      $id = $this->input->get( 'implementation_id' );
+      $tag = $this->input->get( 'tag' );
+    }
+    
+    $error = -1;
+    $result = tag_item( 'implementation', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'implementation' ) ); 
+    }
+  }
+  
+  private function _openml_implementation_untag( $id = false, $tag = false ) {
+    // tags can also be set as parameter. In this case, don't use stdout
+    if( $id == false || $tag == false ) {
+      $id = $this->input->get( 'implementation_id' );
+      $tag = $this->input->get( 'tag' );
+    }
+    
+    $error = -1;
+    $result = untag_item( 'implementation', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'implementation' ) ); 
+    }
   }
   
   private function _openml_implementation_exists() {
@@ -1667,7 +1726,7 @@ class Rest_api extends CI_Controller {
     $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
     $error['additional'] = htmlentities( $additionalInfo );
     
-    $httpHeaders = array( 'header("HTTP/1.0 ' . $httpErrorCode );
+    $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
     $this->_xmlContents( 'error-message', $error, $httpHeaders );
   }
   

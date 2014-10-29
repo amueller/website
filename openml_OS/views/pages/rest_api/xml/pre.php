@@ -610,32 +610,44 @@ $this->apiErrors[465][0] = 'Deleting user failed.';
 $this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
 
 // for function: openml.data.tag
-$this->apiErrors[470][0] = 'Please give data_id and tag.';
-$this->apiErrors[470][1] = 'In order to add a tag, please upload data_id (the id of the dataset) and tag (the tag name).';
+$this->apiErrors[470][0] = 'Please give entity_id {data_id, implementation_id, run_id} and tag.';
+$this->apiErrors[470][1] = 'In order to add a tag, please upload the entity id (either data_id, implementation_id, run_id) and tag (the name of the tag).';
 
 // for function: openml.data.tag
-$this->apiErrors[471][0] = 'Dataset not found.';
-$this->apiErrors[471][1] = 'The provided dataset id does not correspond to an existing data set.';
+$this->apiErrors[471][0] = 'Entity not found.';
+$this->apiErrors[471][1] = 'The provided entity_id {data_id, implementation_id, run_id} does not correspond to an existing entity.';
 
 // for function: openml.data.tag
-$this->apiErrors[472][0] = 'Dataset already tagged by this tag. ';
-$this->apiErrors[472][1] = 'The dataset already had this tag. Probably tagged by another user. ';
+$this->apiErrors[472][0] = 'Entity already tagged by this tag. ';
+$this->apiErrors[472][1] = 'The entity {dataset, implementation, run} already had this tag. Probably tagged by another user. ';
+
+// for function: openml.data.tag
+$this->apiErrors[473][0] = 'Database problem inserting tag. ';
+$this->apiErrors[473][1] = 'Something went wrong inserting the tag. Please contact OpenML Team. ';
+
+// for function: openml.data.tag
+$this->apiErrors[474][0] = 'Internal error tagging the entity. ';
+$this->apiErrors[474][1] = 'Something technical went wrong inserting the tag. Please contact OpenML Team. ';
 
 // for function: openml.data.untag
-$this->apiErrors[475][0] = 'Please give data_id and tag.';
-$this->apiErrors[475][1] = 'In order to add a tag, please upload data_id (the id of the dataset) and tag (the tag name).';
+$this->apiErrors[475][0] = 'Please give entity_id {data_id, implementation_id, run_id} and tag.';
+$this->apiErrors[475][1] = 'In order to remove a tag, please upload the entity id (either data_id, implementation_id, run_id) and tag (the name of the tag).';
 
 // for function: openml.data.untag
-$this->apiErrors[476][0] = 'Dataset not found.';
-$this->apiErrors[476][1] = 'The provided dataset id does not correspond to an existing data set.';
+$this->apiErrors[476][0] = 'Entity {dataset, implementation, run} not found.';
+$this->apiErrors[476][1] = 'The provided entity_id {data_id, implementation_id, run_id} does not correspond to an existing entity.';
 
 // for function: openml.data.untag
 $this->apiErrors[477][0] = 'Tag not found.';
-$this->apiErrors[477][1] = 'The provided tag is not associated with the dataset.';
+$this->apiErrors[477][1] = 'The provided tag is not associated with the entity {dataset, implementation, run}.';
 
 // for function: openml.data.untag
 $this->apiErrors[478][0] = 'Tag is not owned by you';
-$this->apiErrors[478][1] = 'The dataset was tagged by another user. Hence you cannot delete it (admin rights required).';
+$this->apiErrors[478][1] = 'The entity {dataset, implementation, run} was tagged by another user. Hence you cannot delete it.';
+
+// for function: openml.data.tag
+$this->apiErrors[479][0] = 'Internal error removing the tag. ';
+$this->apiErrors[479][1] = 'Something technical went wrong removing the tag. Please contact OpenML Team. ';
 
 // openml.tasks
 $this->apiErrors[480][0] = 'Please provide task_type_id';

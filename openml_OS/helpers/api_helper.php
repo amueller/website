@@ -79,6 +79,90 @@ function all_tags_from_xml( $xml, $configuration = array(), $return_array = arra
   return $return_array;
 }
 
+
+function tag_item( $type, $id, $tag, $user_id, &$error ) {
+  $ci = &get_instance();
+  $taggable = $ci->config->item( 'taggable_entities' );
+  if( !in_array( $type, array_keys( $taggable ) ) ) {
+    $error = 474;
+    return false;
+  }
+  
+  $model_name_entity = ucfirst( $type );
+  $model_name_tag = ucfirst( $taggable[$type] );
+  
+  // if not set as parameter, they should be in url
+  if( $id == false || $tag == false ) {
+    $error = 470;
+    return false;
+  }
+  
+  $entity = $ci->{$model_name_entity}->getById( $id );
+  if( !$entity ) {
+    $error = 471;
+    return false;
+  }
+  
+  $tags = $ci->{$model_name_tag}->getColumnWhere( 'tag', 'id = ' . $id );
+  if( $tags != false && in_array( $tag, $tags ) ) {
+    $error = 472;
+    return;
+  }
+  
+  $tag_data = array(
+    'id' => $id,
+    'tag' => $tag,
+    'uploader' => $user_id,
+    'date' => now()
+  );
+  
+  $res = $ci->{$model_name_tag}->insert( $tag_data );
+  if( $res == false ) {
+    $error = 473;
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function untag_item( $type, $id, $tag, $user_id, &$error ) {
+  $ci = &get_instance();
+  $taggable = $ci->config->item( 'taggable_entities' );
+  if( !in_array( $type, array_keys( $taggable ) ) ) {
+    $error = 479;
+    return false;
+  }
+  
+  $model_name_entity = ucfirst( $type );
+  $model_name_tag = ucfirst( $taggable[$type] );
+  
+  // if not set as parameter, they should be in url
+  if( $id == false || $tag == false ) {
+    $error = 475;
+    return false;
+  }
+  
+  $entity = $ci->{$model_name_entity}->getById( $id );
+  if( !$entity ) {
+    $error = 476;
+    return false;
+  }
+  
+  $tag_record = $ci->{$model_name_tag}->getWhereSingle( 'id = ' . $id . ' AND tag = "' . $tag . '"' );
+  if( $tag_record == false ) {
+    $error = 477;
+    return false;
+  }
+  
+  if( $tag_record->uploader != $user_id ) {
+    $error = 478;
+    return false;
+  }
+  
+  $ci->{$model_name_tag}->delete( array( $id, $tag ) );
+  return true;
+}
+
 function xsd( $name ) {
   return APPPATH.'views/pages/rest_api/xsd/' . $name . '.xsd';
 }
@@ -100,7 +184,6 @@ function underscoresToCammelcase( $string ) {
 
 function insertImplementationFromXML( $xml, $configuration, $implementation_base = array() ) {
   $ci = &get_instance();
-  
   $implementation_objects = all_tags_from_xml( $xml, array_custom_filter($configuration, array('plain','array')) );
   $implementation = all_tags_from_xml( $xml, array_custom_filter($configuration, array('string','csv')), $implementation_base );
   
@@ -129,9 +212,20 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
   // information illegal to insert
   unset($implementation['source_md5']);
   unset($implementation['binary_md5']);
+  
+  // tags also not insertable. but handled differently.
+  $tags = array();
+  if( array_key_exists( 'tag', $implementation ) ) {
+    $tags = str_getcsv( $implementation['tag'] );
+    unset( $implementation['tag'] );
+  }
   $res = $ci->Implementation->insert( $implementation );
   if( $res === false ) {
     return false;
+  }
+  foreach( $tags as $tag ) {
+    $error = -1;
+    tag_item( 'implementation', $res, $tag, $implementation_base['uploader'], $error );
   }
   
   // add to elastic search index. 
