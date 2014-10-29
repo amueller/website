@@ -57,8 +57,8 @@ class Api_query extends CI_Controller {
 
       //if string, check if it can be cast
       if($type == "string"){
-	$value = htmlentities($result->row()->$fname);
-	$type = $this->guessType($value);
+        $value = htmlentities($result->row()->$fname);
+        $type = $this->guessType($value);
       }
 
       //make field names unique 
@@ -91,12 +91,12 @@ class Api_query extends CI_Controller {
   }
 
   function guessType($v){
-	if($v == "0" or filter_var($v, FILTER_VALIDATE_INT))
-		return "integer";
-	else if(is_numeric($v))
-		return "double";
-	else
-		return "string";
+  if($v == "0" or filter_var($v, FILTER_VALIDATE_INT))
+    return "integer";
+  else if(is_numeric($v))
+    return "double";
+  else
+    return "string";
   }
   
   function table_feed() {

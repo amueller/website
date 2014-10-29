@@ -605,34 +605,48 @@ $this->apiErrors[464][1] = 'Delete the content before deleting this user. ';
 $this->apiErrors[465][0] = 'Deleting user failed.';
 $this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
 
-// for function: openml.tasrrk.delete
+// for function: openml.task.delete
 $this->apiErrors[465][0] = 'Deleting user failed.';
 $this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
 
-// for function: openml.data.description.delete
-$this->apiErrors[470][0] = 'Authentication failed.';
-$this->apiErrors[470][1] = 'Authentication failed. Username or password was not recognized or authentication has expired. Please try again.';
+// for function: openml.data.tag
+$this->apiErrors[470][0] = 'Please give data_id and tag.';
+$this->apiErrors[470][1] = 'In order to add a tag, please upload data_id (the id of the dataset) and tag (the tag name).';
 
-$this->apiErrors[471][0] = 'Authentication failed.';
-$this->apiErrors[471][1] = 'Authentication failed. Username or password was not recognized or authentication has expired. Please try again.';
+// for function: openml.data.tag
+$this->apiErrors[471][0] = 'Dataset not found.';
+$this->apiErrors[471][1] = 'The provided dataset id does not correspond to an existing data set.';
 
-$this->apiErrors[472][0] = 'Dataset not found.';
-$this->apiErrors[472][1] = 'The provided dataset id does not correspond to an existing data set.';
+// for function: openml.data.tag
+$this->apiErrors[472][0] = 'Dataset already tagged by this tag. ';
+$this->apiErrors[472][1] = 'The dataset already had this tag. Probably tagged by another user. ';
 
-$this->apiErrors[473][0] = 'User is not the owner of the dataset.';
-$this->apiErrors[473][1] = 'Only the uploader of the dataset can change this particular property.';
+// for function: openml.data.untag
+$this->apiErrors[475][0] = 'Please give data_id and tag.';
+$this->apiErrors[475][1] = 'In order to add a tag, please upload data_id (the id of the dataset) and tag (the tag name).';
+
+// for function: openml.data.untag
+$this->apiErrors[476][0] = 'Dataset not found.';
+$this->apiErrors[476][1] = 'The provided dataset id does not correspond to an existing data set.';
+
+// for function: openml.data.untag
+$this->apiErrors[477][0] = 'Tag not found.';
+$this->apiErrors[477][1] = 'The provided tag is not associated with the dataset.';
+
+// for function: openml.data.untag
+$this->apiErrors[478][0] = 'Tag is not owned by you';
+$this->apiErrors[478][1] = 'The dataset was tagged by another user. Hence you cannot delete it (admin rights required).';
 
 // openml.tasks
 $this->apiErrors[480][0] = 'Please provide task_type_id';
 $this->apiErrors[480][1] = 'In order to view task overview, please provide task_type_id. ';
+
 // openml.tasks
 $this->apiErrors[481][0] = 'No results';
 $this->apiErrors[481][1] = 'There where no matches for this task type id. Check whether some tasks exists. ';
+
 // openml.tasks
 $this->apiErrors[490][0] = 'No results';
 $this->apiErrors[490][1] = 'There where no matches. ';
-
-
-
 
 ?>
