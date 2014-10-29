@@ -110,6 +110,7 @@
 	       </div>
 		      <ul class="nav navbar-nav nav-grey hidden-xs">
 			<li><a href="guide">Guide</a></li>
+			<li><a href="guide/#!terms">Honor code</a></li>
 		      </ul>
 	       
 			<div class="nav pull-right">
