@@ -29,7 +29,7 @@
 
         <h2 id="terms-cite">Citing OpenML</h2>
 <p>The OpenML team and the active community of contributing researchers have invested countless hours of time and resources in creating OpenML as it is today. You are free to use OpenML under the <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY</a> licence. If you have used OpenML in your work, please cite the following paper:</p>
-<p style="font-family: monospace;">Joaquin Vanschoren, Jan N. van Rijn, Bernd Bischl, and Luis Torgo. OpenML: networked science in machine learning. SIGKDD Explorations 15(2), pp 49-60, 2013.<br/><a data-toggle="collapse" data-target="#demo">Show BibTeX</a>
+<p style="font-family: monospace;">Joaquin Vanschoren, Jan N. van Rijn, Bernd Bischl, and Luis Torgo. OpenML: networked science in machine learning. SIGKDD Explorations 15(2), pp 49-60, 2013.<br/><a data-toggle="collapse" data-target="#demo">Show BibTeX</a> - <a href="http://arxiv.org/abs/1407.7722" target="_blank">Read on arXiv</a>
 
 <div id="demo" class="collapse" style="font-family: monospace;">
 @article{Vanschoren:2013:2641190.2641198,<br>
