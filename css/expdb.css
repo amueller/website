@@ -1941,6 +1941,10 @@ a:hover > .circlered{
   display: none;
 }
 
+.codehighlight{
+  padding-right:2px;
+}
+
 
 svg:not(:root){
   overflow: visible;

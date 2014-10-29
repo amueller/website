@@ -18,7 +18,7 @@
 	The Python module is under development. Code will be pushed to <a href="https://github.com/openml/python"> GitHub</a>.
 
 	<h2 id="issues">Issues</h2>
-	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/r/issues"> OpenML R issue tracker</a>.
+	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/python/issues"> OpenML Python issue tracker</a>.
 
    </div>
 </div>

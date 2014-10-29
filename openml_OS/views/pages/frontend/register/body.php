@@ -2,7 +2,6 @@
   <div class="row">
     <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
     <h1>Sign up</h1>
-    <p>Access more data, (re)organize data online, upload your own data, share data privately, and more.</p> 
     <div class="col-xs-12 col-sm-4 searchbar">
 	<ul class="menu">		
 		<li><a style="font-size:17px;"><b>You'll love OpenML</b></a></li>
@@ -15,6 +14,7 @@
 		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Organize your work online</a>
 		    <a><i class="fa fa-fw fa-wrench" style="color:orange;"></i>Build trust, track your impact</a></li>
 	</ul>
+        <p><i class="fa fa-warning" style="color:red;"></i> By signing up, you agree that you will follow the OpenML <a href="http://localhost/OpenML/guide/#!terms">Honor Code and Terms of Use</a>.</p>
     </div> <!-- end col-3 -->
 
     <div class="col-xs-12 col-sm-8">

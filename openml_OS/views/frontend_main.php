@@ -110,6 +110,7 @@
 	       </div>
 		      <ul class="nav navbar-nav nav-grey hidden-xs">
 			<li><a href="guide">Guide</a></li>
+			<li><a href="guide/#!terms">Honor code</a></li>
 		      </ul>
 	       
 			<div class="nav pull-right">
@@ -125,12 +126,7 @@
 		            <li class="divider"></li>
 			    <li><a href="a"><div class="icongrayish"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i></div> Analytics</a></li>
 		            <li class="divider"></li>
-			    <li><a href="developers"><div class="icongray"><i class="fa fa-fw fa-lg fa-users"></i></div> Developers</a></li>
-		            <li class="divider"></li>
-			    <li><a href="api"><div class="icongray"><i class="fa fa-fw fa-lg fa-cubes"></i></div> API</a></li>
-		            <li class="divider"></li>
-			    <li><a href="plugins"><div class="icongray"><i class="fa fa-fw fa-lg fa-flash"></i></div> Plugins</a></li>
-		            <li class="divider"></li>
+			    <li><a href="guide"><div class="icongray"><i class="fa fa-fw fa-lg fa-book"></i></div>Guide</a></li>					            <li class="divider"></li>
 			    <li><a href="community"><div class="icongray"><i class="fa fa-fw fa-lg fa-comments"></i></div> Forum</a></li>
 			  </ul>
 			</div>
@@ -140,9 +136,9 @@
 			  <ul class="dropdown-menu newmenu">
 			    <li><a href="new/data"><div class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i></div> New data</a></li>
 		            <li class="divider"></li>
-			    <li><a href="new/flow"><div class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i></div> New flow</a></li>
-		            <li class="divider"></li>
 			    <li><a href="new/task"><div class="iconyellow"><i class="fa fa-fw fa-lg fa-trophy"></i></div> New task</a></li>
+		            <li class="divider"></li>
+			    <li><a href="new/flow"><div class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i></div> New flow</a></li>
 		            <li class="divider"></li>
 			    <li><a href="new/run"><div class="iconred"><i class="fa fa-fw fa-lg fa-star"></i></div> New run</a></li>
 			  </ul>

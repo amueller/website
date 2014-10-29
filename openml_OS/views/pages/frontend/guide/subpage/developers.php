@@ -1,20 +1,12 @@
-<div class="container-fluid topborder">
-  <div class="row">
-    <div class="col-lg-10 col-sm-12 col-lg-offset-1">
     <div class="col-sm-12 col-md-3 searchbar">
 
-      <div class="bs-sidebar">
+      <div class="bs-sidebar affix">
         <ul class="nav bs-sidenav">
-          <li>
-            <a href="#dev-start">OpenML @ Github</a>
-            <ul class="nav">
               <li><a href="#dev-code">Web services</a></li>
               <li><a href="#dev-clients">Client APIs</a></li>
               <li><a href="#dev-plugins">OpenML plugins</a></li>
               <li><a href="#dev-database">Database snapshots</a></li>
               <li><a href="#dev-feature">Feature requests</a></li>
-            </ul>
-          </li>
         </ul>
       </div>
     </div> <!-- end col-2 -->
@@ -53,10 +45,3 @@
       </div>
 
     </div>
-
-    <!-- end col-md-9 -->
-    </div> <!-- end col-10 -->
-  </div>
-  <!-- end row -->
-</div>
-<!-- end container -->

@@ -53,7 +53,6 @@
           </div>
           <p>Please first consider using regular API functions before using this function. The database structure will likely evolve over time, which may break your code. If you need further API functions, simply let us know, or <a href="https://github.com/openml/OpenML/issues">open a new issue</a>.</p>
         </div>
-      </div>
 
   </div>
   <!-- end row -->
