@@ -200,7 +200,7 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $datasets = $this->Task->query( 'SELECT `did`, `status` FROM `dataset` `d` WHERE 1; ' );
+    $datasets = $this->Task->query( 'SELECT `did`, `name`, `status` FROM `dataset` `d` WHERE 1; ' );
     if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
       $this->_returnError( 370 );
     }
@@ -782,7 +782,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
+    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
     if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
       $this->_returnError( 481 );
     }
