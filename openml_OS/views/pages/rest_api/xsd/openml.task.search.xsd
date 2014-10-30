@@ -7,6 +7,7 @@
 		<xs:element name="input" minOccurs="1" maxOccurs="unbounded" type="oml:task_input" />		<!-- The inputs given for this task (e.g. datasets) -->
 		<xs:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="oml:task_parameter" />	<!-- Parameter settings for this task (depends on the task type -->
 		<xs:element name="output" minOccurs="0" maxOccurs="unbounded" type="oml:task_output" />		<!-- Outputs expected after running this task -->
+		<xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="oml:system_string" />		<!-- Tags, describing the (data of the) task -->
 	</xs:sequence>
 </xs:complexType>
 <xs:complexType name="task_parameter">
@@ -69,5 +70,10 @@
 	<xs:attribute name="type" type="xs:string" />		<!-- The data type of the feature. Can be integer, numeric, string, array, matrix, object. -->
 	<xs:attribute name="required" type="xs:boolean" />	<!-- Whether this feature is required in the output or not. E.g., class confidences are optional because not all models return them. -->
 </xs:complexType>
+<xs:simpleType name="system_string"> <!-- Subset on xs:string. Highly restricted form of string. URL-friendly -->
+  <xs:restriction base="xs:string">
+     <xs:pattern value="([a-zA-Z0-9_\-\.])+"/>
+  </xs:restriction>
+</xs:simpleType>
 </xs:schema>
 

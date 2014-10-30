@@ -850,7 +850,8 @@ class Rest_api extends CI_Controller {
     }
     
     $parsed_io = $this->Task_type_inout->getParsed( $task_id );
-    $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
+    $tags = $this->Task_tag->getColumnWhere( 'tag', 'id = ' . $task_id );
+    $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io, 'tags' => $tags ) );
   }
   
   private function _openml_task_tag() {

@@ -9,4 +9,7 @@
 		<?php echo $item; ?>
   </oml:<?php echo $inout[0]->io; ?>>
 	<?php endforeach; ?>
+  <?php if(is_array($tags)) foreach( $tags as $tag ): ?>
+  <oml:tag><?php echo $tag;?></oml:tag>
+  <?php endforeach; ?>
 </oml:task>
