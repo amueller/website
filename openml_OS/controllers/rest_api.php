@@ -1288,8 +1288,8 @@ class Rest_api extends CI_Controller {
     $tags = array_key_exists( 'tag', $run_xml ) ? str_getcsv ( $run_xml['tag'] ) : array();
     
     // the user can specify his own metrics. here we check whether these exists in the database. 
-    if( $output_data != false && $output_data->children('oml', true)->{'evaluation'} != false ) {
-      foreach( $output_data->children('oml', true)->{'evaluation'} as $eval ) {
+    if( $output_data != false && array_key_exists('evaluation', $output_data ) ) {
+      foreach( $output_data->children('oml',true)->{'evaluation'} as $eval ) {
         $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->implementation.'" AND `implements` = "'.$eval->name.'"');
         if( $measure_id == false ) {
           $this->_returnError( 217 );

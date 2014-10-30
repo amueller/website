@@ -65,8 +65,8 @@ $config['xml_fields_implementation'] = array(
 $config['xml_fields_run'] = array(
   'string'  => array( 'task_id', 'implementation_id', 'setup_string', 'error_message' ),
   'csv' => array( 'tag' ),
-  'array'   => array( 'parameter_setting', 'output_data' ),
-  'plain'   => array(  )
+  'array'   => array( 'parameter_setting' ),
+  'plain'   => array( 'output_data' )
 );
 
 $config['basic_qualities'] = array(
