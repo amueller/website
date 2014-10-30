@@ -35,6 +35,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Runfile');
     $this->load->model('Run_tag');
     $this->load->model('Task_tag');
+    $this->load->model('Setup_tag');
 
     // only for reading
     $this->load->model('Algorithm');
@@ -1720,7 +1721,7 @@ class Rest_api extends CI_Controller {
     $tag = $this->input->get( 'tag' );
     
     $error = -1;
-    $result = tag_item( 'setup', $id, $tag, $this->user_id, $error );
+    $result = tag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
     
     if( $result == false ) {
       $this->_returnError( $error );
@@ -1734,7 +1735,7 @@ class Rest_api extends CI_Controller {
     $tag = $this->input->get( 'tag' );
     
     $error = -1;
-    $result = untag_item( 'setup', $id, $tag, $this->user_id, $error );
+    $result = untag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
     
     if( $result == false ) {
       $this->_returnError( $error );
