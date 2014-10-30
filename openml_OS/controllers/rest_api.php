@@ -786,6 +786,7 @@ class Rest_api extends CI_Controller {
     $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
     if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
       $this->_returnError( 481 );
+      return;
     }
     $dids = array();
     foreach( $tasks as $task ) { $dids[] = $task->did; }
@@ -803,6 +804,7 @@ class Rest_api extends CI_Controller {
         }
       }
     }
+    
     
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
