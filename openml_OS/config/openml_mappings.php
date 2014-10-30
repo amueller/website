@@ -76,7 +76,8 @@ $config['basic_qualities'] = array(
 $config['taggable_entities'] = array(
   'dataset' => 'Dataset_tag',
   'implementation' => 'Implementation_tag',
-  'run' => 'Run_tag'
+  'run' => 'Run_tag',
+  'task' => 'Task_tag'
 );
 
 ?>

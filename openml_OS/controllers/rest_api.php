@@ -34,6 +34,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Input_setting');
     $this->load->model('Runfile');
     $this->load->model('Run_tag');
+    $this->load->model('Task_tag');
 
     // only for reading
     $this->load->model('Algorithm');
@@ -852,6 +853,34 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
   }
   
+  private function _openml_task_tag() {
+    $id = $this->input->get( 'task_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = tag_item( 'task', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'task' ) ); 
+    }
+  }
+  
+  private function _openml_task_untag() {
+    $id = $this->input->get( 'task_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'task', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'task' ) ); 
+    }
+  }
+  
   private function _openml_task_delete() {
     
     $task = $this->Task->getById( $this->input->post( 'task_id' ) );
@@ -1395,8 +1424,6 @@ class Rest_api extends CI_Controller {
     // and present result, in effect only a run_id. 
     $this->_xmlContents( 'run-upload', $result );
   }
-
-  
   
   private function _openml_run_tag() {
     $id = $this->input->get( 'run_id' );
