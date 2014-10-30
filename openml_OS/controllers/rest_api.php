@@ -782,7 +782,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
+    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
     if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
       $this->_returnError( 481 );
     }
@@ -851,7 +851,7 @@ class Rest_api extends CI_Controller {
     
     $parsed_io = $this->Task_type_inout->getParsed( $task_id );
     $tags = $this->Task_tag->getColumnWhere( 'tag', 'id = ' . $task_id );
-    $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io, 'tags' => $tags ) );
+    $this->_xmlContents( 'task-get', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io, 'tags' => $tags ) );
   }
   
   private function _openml_task_tag() {

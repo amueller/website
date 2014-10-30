@@ -2,6 +2,7 @@
   <?php foreach( $datasets as $data ): ?>
   <oml:dataset>
     <oml:did><?php echo $data->did; ?></oml:did>
+    <oml:name><?php echo $data->name; ?></oml:name>
     <oml:status><?php echo $data->status; ?></oml:status>
     <?php foreach( $data->qualities as $quality => $value ): ?>
     <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
