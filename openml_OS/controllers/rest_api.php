@@ -224,7 +224,7 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
   }
   
-  private function _openml_data_description() {
+  private function _openml_data_get() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {
       $this->_returnError( 110 );
@@ -1759,6 +1759,11 @@ class Rest_api extends CI_Controller {
   private function _openml_run_getjob() {
     $this->_openml_job_get();
   }
+  
+  private function _openml_data_description() {
+    $this->_openml_data_get();
+  }
+  
   private function _openml_task_search() {
     $this->_openml_task_get();
   }
