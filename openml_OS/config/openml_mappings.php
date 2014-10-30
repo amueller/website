@@ -77,7 +77,8 @@ $config['taggable_entities'] = array(
   'dataset' => 'Dataset_tag',
   'implementation' => 'Implementation_tag',
   'run' => 'Run_tag',
-  'task' => 'Task_tag'
+  'task' => 'Task_tag',
+  'algorithm_setup' => 'Setup_tag',
 );
 
 ?>

@@ -1714,6 +1714,34 @@ class Rest_api extends CI_Controller {
     
     $this->_xmlContents( 'setup-delete', array( 'setup' => $setup ) );
   }
+
+  private function _openml_setup_tag() {
+    $id = $this->input->get( 'setup_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = tag_item( 'setup', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'setup' ) ); 
+    }
+  }
+  
+  private function _openml_setup_untag() {
+    $id = $this->input->get( 'setup_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'setup', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'setup' ) ); 
+    }
+  }
   
   private function _openml_user_delete() {
     
