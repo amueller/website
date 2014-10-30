@@ -12,7 +12,7 @@
       <oml:value><?php echo $parameter->value;?></oml:value>
     </oml:parameter_setting>
   <?php endforeach; ?>
-  <?php if(is_array($source->tag)) foreach( $source->tag as $tag ): ?>
+  <?php if(is_array($source->tags)) foreach( $source->tags as $tag ): ?>
     <oml:tag><?php echo $tag;?></oml:tag>
   <?php endforeach; ?>
   <?php if(is_array($source->inputData)): ?>
