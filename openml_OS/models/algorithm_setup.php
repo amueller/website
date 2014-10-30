@@ -15,8 +15,8 @@ class Algorithm_setup extends Database_write {
     ksort( $parameters );
     
     foreach( $parameters as $key => $value ) {
-      $paramString .= ',' . $key;
-      $valueString .= ',' . $value;
+      $paramString .= ',' . $this->db->real_escape_string( $key );
+      $valueString .= ',' . $this->db->real_escape_string( $value );
     }
     
     if(count($parameters)) {
