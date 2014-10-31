@@ -1,10 +1,9 @@
 <?php
-class Setup_tag extends Database_write {
+class Setup_tag extends Tag {
   
   function __construct() {
     parent::__construct();
     $this->table = 'setup_tag';
-    $this->id_column = array( 'id', 'tag' );
   }
 }
 ?>

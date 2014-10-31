@@ -1,10 +1,9 @@
 <?php
-class Run_tag extends Database_write {
+class Run_tag extends Tag {
   
   function __construct() {
     parent::__construct();
     $this->table = 'run_tag';
-    $this->id_column = array( 'id', 'tag' );
   }
 }
 ?>

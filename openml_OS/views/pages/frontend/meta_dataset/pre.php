@@ -15,4 +15,7 @@ $sql = 'SELECT `m`.`id`, `m`.`request_date`, `m`.`datasets`, `m`.`tasks`, `m`.`f
 $this->columns = array( 'id', 'request_date', 'datasets', 'tasks', 'flows', 'setups', 'functions', 'download' );
 $this->items = $this->Author->query( $sql );
 $this->name = false;
+
+$this->check = false;
+
 ?>
