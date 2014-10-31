@@ -69,7 +69,8 @@ if( $this->input->post('create') == true ) {
   $this->check = true; 
     
   if( $result == false ) {
-    $message = 'No results for these tags.';
+    
+    
   } else {
     $setups = array();
     $tasks = array();
@@ -81,15 +82,15 @@ if( $this->input->post('create') == true ) {
     asort($tasks);
     asort($setups);
     
-    foreach( $tasks as $t ) {
-      $this->data[$t] = array();
-      foreach( $setups as $s ) {
-        $this->data[$t][$s] = false;
+    foreach( $setups as $s ) {
+      $this->data[$s] = array();
+      foreach( $tasks as $t ) {
+        $this->data[$s][$t] = false;
       }
     }
     
     foreach( $result as $res ) {
-      $this->data[$res->task_id][$res->setup] = true;
+      $this->data[$res->setup][$res->task_id] = true;
     }
   }
 }

@@ -66,7 +66,28 @@
           ?>
         </div>
         <div class="tab-pane<?php if( $this->check ) echo ' active'; ?>" id="check">
-          Check overview. 
+          <div>
+            <?php if( $this->data == false ): ?>
+              No runs.
+            <?php else: ?>
+              <table>
+                <tr>
+                  <td>&nbsp;</td>
+                  <?php foreach( end($this->data) as $task => $value ) : ?>
+                    <td><?php echo $task; ?></td>
+                  <?php endforeach; ?>
+                </tr>
+                <?php foreach( $this->data as $setup_id => $tasks ) : ?>
+                <tr>
+                  <td><?php echo $setup_id; ?></td>
+                  <?php foreach( $tasks as $task => $present ): ?>
+                    <td style="width: 20px; " class="table-<?php echo $present ? 'present' : 'absent'; ?>">&nbsp;</td>
+                  <?php endforeach; ?>
+                </tr>
+                <?php endforeach; ?>
+              </table>
+            <?php endif; ?>
+          </div>
         </div>
       </div>
     </div>
