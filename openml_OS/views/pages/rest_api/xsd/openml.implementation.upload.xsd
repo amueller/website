@@ -32,13 +32,13 @@
     <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="oml:parameter"/> <!-- Statement of the (global/top-level) parameters of the workflow (see below). -->
     <xs:element name="component" minOccurs="0" maxOccurs="unbounded" type="oml:quality"/> <!-- Sub-components of this implementation -->
     <!-- qualities -->
-    <xs:element name="quality" minOccurs="0" maxOccurs="unbounded" type="xs:string"/> <!-- Qualities of the algorithm  -->
-    <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="xs:string"/> <!-- Tags, describing the algorithms  -->
+    <xs:element name="quality" minOccurs="0" maxOccurs="unbounded" type="oml:system_string"/> <!-- Qualities of the algorithm  -->
+    <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="oml:system_string"/> <!-- Tags, describing the algorithms  -->
     <!-- download -->
     <xs:element name="source_url" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Url from which the source code can be downloaded. Added by the server. Ignored when uploaded manually. -->
     <xs:element name="binary_url" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Url from which the binary can be downloaded. Added by the server. Ignored when uploaded manually. -->
-    <xs:element name="source_format" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Format in which the source code was uploaded. -->
-    <xs:element name="binary_format" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Format in which the binary code was uploaded.  -->
+    <xs:element name="source_format" minOccurs="0" maxOccurs="1" type="oml:system_string"/> <!-- Format in which the source code was uploaded. -->
+    <xs:element name="binary_format" minOccurs="0" maxOccurs="1" type="oml:system_string"/> <!-- Format in which the binary code was uploaded.  -->
     <xs:element name="source_md5" minOccurs="0" maxOccurs="1" type="oml:system_string"/> <!-- MD5 checksum to check if the source code was correctly downloaded -->
     <xs:element name="binary_md5" minOccurs="0" maxOccurs="1" type="oml:system_string"/> <!-- MD5 checksum to check if the binary code was correctly downloaded -->
   </xs:sequence>
@@ -58,8 +58,8 @@
 <xs:complexType name="parameter">
   <xs:sequence>
     <xs:element name="name" type="xs:string"/>  <!-- The name of the parameter -->
-    <xs:element name="data_type" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Data type of the parameter. Should be either integer, numeric, string, vector, matrix, object. -->
-    <xs:element name="default_value" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Default value of the parameter. -->
+    <xs:element name="data_type" minOccurs="0" maxOccurs="1" type="oml:basic_latin"/> <!-- Data type of the parameter. Should be either integer, numeric, string, vector, matrix, object. -->
+    <xs:element name="default_value" minOccurs="0" maxOccurs="1" type="oml:basic_latin"/> <!-- Default value of the parameter. -->
     <xs:element name="description" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Description of what this parameter does. -->
     <xs:element name="recommendedRange" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Describes minimum value, maximun value and/or a recommended range of values. -->
   </xs:sequence>
@@ -74,5 +74,10 @@
   <xs:restriction base="xs:string">
      <xs:pattern value="([a-zA-Z0-9_\-\.])+"/>
   </xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="basic_latin">
+    <xs:restriction base="xs:string">
+        <xs:pattern value="\p{IsBasicLatin}*"/>
+    </xs:restriction>
 </xs:simpleType>
 </xs:schema>

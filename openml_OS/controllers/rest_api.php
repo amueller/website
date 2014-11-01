@@ -19,6 +19,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('File');
     $this->load->model('Algorithm_setup');
     $this->load->model('Implementation');
+    $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
     $this->load->model('Run');
     $this->load->model('Evaluation');
@@ -32,6 +33,9 @@ class Rest_api extends CI_Controller {
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input_setting');
     $this->load->model('Runfile');
+    $this->load->model('Run_tag');
+    $this->load->model('Task_tag');
+    $this->load->model('Setup_tag');
 
     // only for reading
     $this->load->model('Algorithm');
@@ -69,6 +73,7 @@ class Rest_api extends CI_Controller {
     $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');
     $this->xml_fields_dataset_update = $this->config->item('xml_fields_dataset_update');
     $this->xml_fields_implementation = $this->config->item('xml_fields_implementation');
+    $this->xml_fields_run = $this->config->item('xml_fields_run');
     
     $this->data_controller = $this->config->item('data_controller');
     
@@ -196,7 +201,7 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $datasets = $this->Task->query( 'SELECT `did`, `status` FROM `dataset` `d` WHERE 1; ' );
+    $datasets = $this->Task->query( 'SELECT `did`, `name`, `status` FROM `dataset` `d` WHERE 1 ORDER BY did; ' );
     if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
       $this->_returnError( 370 );
     }
@@ -220,7 +225,7 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
   }
   
-  private function _openml_data_description() {
+  private function _openml_data_get() {
     $data_id = $this->input->get( 'data_id' );
     if( $data_id == false ) {
       $this->_returnError( 110 );
@@ -232,6 +237,8 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 111 );
       return;
     }
+    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'id = ' . $dataset->did );
+    $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
     
     foreach( $this->xml_fields_dataset['csv'] as $field ) {
       $dataset->{$field} = getcsv( $dataset->{$field} );
@@ -426,7 +433,6 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data_qualities_upload() {
-    
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
       $this->_returnError( 382 );
@@ -681,18 +687,32 @@ class Rest_api extends CI_Controller {
       $dataset = all_tags_from_xml( 
         $xml->children('oml', true), 
         $this->xml_fields_dataset_update, $dataset );
-      } 
+    }
+    
+    // handle tags 
+    $tags = array();
+    if( array_key_exists( 'tag', $dataset ) ) {
+      $tags = str_getcsv( $dataset['tag'] );
+      unset( $dataset['tag'] );
+    }
+    
     /* * * * 
      * THE ACTUAL INSERTION
      * * * */
     if(!$update) {
-      // ***** NEW DATASET ***** 
-      $id = $this->Dataset->insert( $dataset );
+      // ***** NEW DATASET *****
       
+      $id = $this->Dataset->insert( $dataset );
       if( ! $id ) {
         $this->_returnError( 134 );
         return;
       }
+      // insert tags.
+      foreach( $tags as $tag ) {
+        $error = -1;
+        tag_item( 'dataset', $id, $tag, $this->user_id, $error );
+      }
+      // TODO: handle tags for updated data sets as well.
     } else {
       // ***** UPDATED DATASET *****
       $id =  '' . $xml->children('oml', true)->{'id'};
@@ -728,33 +748,32 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
-  private function _openml_data_tag( $data_id = false, $tag = false ) {
-    // tags can also be set as parameter. 
-    if( $did == false || $tag == false ) {
-      $did = $this->Input->get( 'data_id' );
-      $tag = $this->Input->get( 'tag' );
-    }
-    // if not set as parameter, they should be in url
-    if( $did == false || $tag == false ) {
-      $this->_returnError( 470 );
-      return;
-    }
+  private function _openml_data_tag() {
+    $id = $this->input->get( 'data_id' );
+    $tag = $this->input->get( 'tag' );
     
-    $dataset = $this->Dataset->getById( $did );
-    if( !$dataset ) {
-      $this->_returnError( 471 );
-      return;
-    }
+    $error = -1;
+    $result = tag_item( 'dataset', $id, $tag, $this->user_id, $error );
     
-    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'did = ' . $dataset->did );
-    if( in_array( $tag, $tags ) ) {
-      $this->_returnError( 471 );
-      return;
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'data' ) ); 
     }
-    $tag_data = array(
-      '' => '',
-    );
-    $this->Dataset_tag->insert( $tag_data );
+  }
+  
+  private function _openml_data_untag() {
+    $id = $this->input->get( 'data_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'dataset', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'data' ) ); 
+    }
   }
   
   private function _openml_tasks() {
@@ -764,9 +783,10 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'"; ' );
+    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'" ORDER BY task_id; ' );
     if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
       $this->_returnError( 481 );
+      return;
     }
     $dids = array();
     foreach( $tasks as $task ) { $dids[] = $task->did; }
@@ -784,6 +804,7 @@ class Rest_api extends CI_Controller {
         }
       }
     }
+    
     
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
@@ -832,7 +853,36 @@ class Rest_api extends CI_Controller {
     }
     
     $parsed_io = $this->Task_type_inout->getParsed( $task_id );
-    $this->_xmlContents( 'task', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io ) );
+    $tags = $this->Task_tag->getColumnWhere( 'tag', 'id = ' . $task_id );
+    $this->_xmlContents( 'task-get', array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io, 'tags' => $tags ) );
+  }
+  
+  private function _openml_task_tag() {
+    $id = $this->input->get( 'task_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = tag_item( 'task', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'task' ) ); 
+    }
+  }
+  
+  private function _openml_task_untag() {
+    $id = $this->input->get( 'task_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'task', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'task' ) ); 
+    }
   }
   
   private function _openml_task_delete() {
@@ -1060,6 +1110,36 @@ class Rest_api extends CI_Controller {
     
     $this->_xmlContents( 'implementation-upload', $implementation );
   }
+
+
+  
+  private function _openml_implementation_tag() {
+    $id = $this->input->get( 'implementation_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = tag_item( 'implementation', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'implementation' ) ); 
+    }
+  }
+  
+  private function _openml_implementation_untag() {
+    $id = $this->input->get( 'implementation_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'implementation', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'implementation' ) ); 
+    }
+  }
   
   private function _openml_implementation_exists() {
     $name = $this->input->get( 'name' );
@@ -1199,27 +1279,29 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $task_id = (string) $xml->children('oml', true)->{'task_id'}->{0};
-    $implementation_id = (string) $xml->children('oml', true)->{'implementation_id'}->{0};
-    $setup_string = (string) $xml->children('oml', true)->{'setup_string'}->{0};
-    $parameter_objects = $xml->children('oml', true)->{'parameter_setting'};
-    $output_data = array();
-    if( $xml->children('oml', true)->{'output_data'} != false ) {
-      foreach( $xml->children('oml', true)->{'output_data'}->children('oml', true) as $out ) {
-        $output_data[] = $out;
-        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$out->implementation.'" AND `implements` = "'.$out->name.'"');
+    $run_xml = all_tags_from_xml( 
+      $xml->children('oml', true), 
+      $this->xml_fields_run );
+
+    $task_id = $run_xml['task_id'];
+    $implementation_id = $run_xml['implementation_id'];
+    $setup_string = array_key_exists( 'setup_string', $run_xml ) ? $run_xml['setup_string'] : null;
+    $error_message = array_key_exists( 'error_message', $run_xml ) ? $run_xml['error_message'] : false;
+    $parameter_objects = array_key_exists( 'parameter_setting', $run_xml ) ? $run_xml['parameter_setting'] : array();
+    $output_data = array_key_exists( 'output_data', $run_xml ) ? $run_xml['output_data'] : array();
+    $tags = array_key_exists( 'tag', $run_xml ) ? str_getcsv ( $run_xml['tag'] ) : array();
+    
+    // the user can specify his own metrics. here we check whether these exists in the database. 
+    if( $output_data != false && array_key_exists('evaluation', $output_data ) ) {
+      foreach( $output_data->children('oml',true)->{'evaluation'} as $eval ) {
+        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->implementation.'" AND `implements` = "'.$eval->name.'"');
         if( $measure_id == false ) {
           $this->_returnError( 217 );
           return;
         }
       }
     }
-    $error_message     = false;
     $predictionsUrl   = false;
-    
-    if( property_exists( $xml->children('oml', true), 'error_message' ) ) {
-      $error_message  = (string) $xml->children('oml', true)->{'error_message'}->{0};
-    }
     
     // fetch implementation
     $implementation = $this->Implementation->getById( $implementation_id );
@@ -1233,7 +1315,7 @@ class Rest_api extends CI_Controller {
     }
     
     // check whether uploaded files are present.
-    if($error_message === false) {
+    if($error_message == false) {
       if( count( $_FILES ) < 2 ) { 
         $this->_returnError( 206 );
         return;
@@ -1284,8 +1366,8 @@ class Rest_api extends CI_Controller {
       'setup' => $setupId,
       'task_id' => $task->task_id,
       'start_time' => now(),
-      'status' => ($error_message === false) ? 'OK' : 'error',
-      'error' => ($error_message === false) ? null : $error_message,
+      'status' => ($error_message == false) ? 'OK' : 'error',
+      'error' => ($error_message == false) ? null : $error_message,
       'experiment' => '-1',
     );
     if( $this->Run->insert( $runData ) === false ) {
@@ -1329,6 +1411,12 @@ class Rest_api extends CI_Controller {
       return false;
     }
     
+    // tag it, if neccessary
+    foreach( $tags as $tag ) {
+      $error = -1;
+      tag_item( 'run', $runId, $tag, $this->user_id, $error );
+    }
+    
     // add to elastic search index. 
     $this->elasticsearch->index('run', $run->rid); 
     
@@ -1339,6 +1427,34 @@ class Rest_api extends CI_Controller {
     
     // and present result, in effect only a run_id. 
     $this->_xmlContents( 'run-upload', $result );
+  }
+  
+  private function _openml_run_tag() {
+    $id = $this->input->get( 'run_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = tag_item( 'run', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'run' ) ); 
+    }
+  }
+  
+  private function _openml_run_untag() {
+    $id = $this->input->get( 'run_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'run', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'run' ) ); 
+    }
   }
   
   private function _openml_run_evaluate() {
@@ -1467,7 +1583,7 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_run_reset() {
-    
+
     $run = $this->Run->getById( $this->input->post( 'run_id' ) );
     if( $run == false ) {
       $this->_returnError( 412 );
@@ -1499,7 +1615,6 @@ class Rest_api extends CI_Controller {
     $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation_interval->deleteWhere('`source` = "' . $run->rid . '" ');
-    
     
     $update = array( 'error' => null, 'processed' => null );
     $this->Run->update( $run->rid, $update );
@@ -1545,6 +1660,7 @@ class Rest_api extends CI_Controller {
     $run->inputData = $this->Run->getInputData( $run->rid ); 
     $run->outputData = $this->Run->getOutputData( $run->rid ); 
     $run->setup = $this->Algorithm_setup->getById( $run->setup );
+    $run->tags = $this->Run_tag->getColumnWhere( 'tag', 'id = ' . $run->rid );
     $run->inputSetting = $this->Input_setting->query('SELECT i.name, s.value from input i, input_setting s where i.id=s.input_id and setup = ' . $run->setup->sid );
     
     $this->_xmlContents( 'run-get', array( 'source' => $run ) );
@@ -1601,6 +1717,34 @@ class Rest_api extends CI_Controller {
     
     $this->_xmlContents( 'setup-delete', array( 'setup' => $setup ) );
   }
+
+  private function _openml_setup_tag() {
+    $id = $this->input->get( 'setup_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = tag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'setup' ) ); 
+    }
+  }
+  
+  private function _openml_setup_untag() {
+    $id = $this->input->get( 'setup_id' );
+    $tag = $this->input->get( 'tag' );
+    
+    $error = -1;
+    $result = untag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
+    
+    if( $result == false ) {
+      $this->_returnError( $error );
+    } else {
+      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'setup' ) ); 
+    }
+  }
   
   private function _openml_user_delete() {
     
@@ -1647,6 +1791,11 @@ class Rest_api extends CI_Controller {
   private function _openml_run_getjob() {
     $this->_openml_job_get();
   }
+  
+  private function _openml_data_description() {
+    $this->_openml_data_get();
+  }
+  
   private function _openml_task_search() {
     $this->_openml_task_get();
   }
@@ -1667,7 +1816,7 @@ class Rest_api extends CI_Controller {
     $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
     $error['additional'] = htmlentities( $additionalInfo );
     
-    $httpHeaders = array( 'header("HTTP/1.0 ' . $httpErrorCode );
+    $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
     $this->_xmlContents( 'error-message', $error, $httpHeaders );
   }
   

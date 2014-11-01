@@ -29,12 +29,12 @@
     <xs:element name="ignore_attribute" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>  <!-- Attributes that should be excluded in modelling, such as identifiers and indexes. -->
     <xs:element name="version_label" minOccurs="0" type="xs:string"/> <!-- Version label provided by user, something relevant to the user. Can also be a date, hash, or some other type of id. -->
     <xs:element name="citation" minOccurs="0" type="xs:string"/> <!-- Reference(s) that should be cited when building on this data -->
-    <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="xs:string"/> <!-- Tags, describing the algorithms  -->
+    <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="oml:system_string"/> <!-- Tags, describing the algorithms  -->
     <xs:element name="visibility" minOccurs="0" type="xs:string"/> <!-- Who can see the dataset. Typical values: 'Everyone','All my friends','Only me'. Can also be any of the user's circles. -->
     <xs:element name="original_data_url" minOccurs="0" type="xs:string"/> <!-- For derived data, the url to the original dataset. This can be an OpenML dataset, e.g. 'http://openml.org/d/1'. -->
     <xs:element name="paper_url" minOccurs="0" type="xs:string"/> <!-- Link to a paper describing the dataset -->
     <xs:element name="update_comment" minOccurs="0" type="xs:string"/> <!-- When the dataset is updated, add an explanation here. -->
-    <xs:element name="md5_checksum" minOccurs="0" type="xs:string"/> <!-- MD5 checksum to check if the dataset is downloaded without corruption. -->
+    <xs:element name="md5_checksum" minOccurs="0" type="oml:system_string"/> <!-- MD5 checksum to check if the dataset is downloaded without corruption. -->
   </xs:sequence>
 </xs:complexType>
 <xs:simpleType name="system_string"> <!-- Subset on xs:string. Highly restricted form of string. URL-friendly -->

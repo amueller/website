@@ -19,13 +19,14 @@ $config['xml_fields_dataset'] = array(
     10 => 'row_id_attribute',
     12 => 'version_label',
     13 => 'citation',
-    14 => 'visibility',
-    15 => 'original_data_url',
-    16 => 'paper_url'),
+    15 => 'visibility',
+    16 => 'original_data_url',
+    17 => 'paper_url'),
   'csv'     => array(
      3 => 'creator',
      4 => 'contributor',
     11 => 'ignore_attribute',
+    14 => 'tag'
 ),
   'array'   => array(),
   'plain'   => array()
@@ -56,13 +57,28 @@ $config['xml_fields_implementation'] = array(
   'string'  => array(
     'name','external_version','description','licence',
     'language','fullDescription','installationNotes','dependencies',),
-  'csv'     => array('creator','contributor',),
+  'csv'     => array('creator','contributor','tag'),
   'array'   => array('bibliographical_reference','parameter','component'),
   'plain'   => array()
 );
 
+$config['xml_fields_run'] = array(
+  'string'  => array( 'task_id', 'implementation_id', 'setup_string', 'error_message' ),
+  'csv' => array( 'tag' ),
+  'array'   => array( 'parameter_setting' ),
+  'plain'   => array( 'output_data' )
+);
+
 $config['basic_qualities'] = array(
   "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues", "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures"
+);
+
+$config['taggable_entities'] = array(
+  'dataset' => 'Dataset_tag',
+  'implementation' => 'Implementation_tag',
+  'run' => 'Run_tag',
+  'task' => 'Task_tag',
+  'algorithm_setup' => 'Setup_tag',
 );
 
 ?>

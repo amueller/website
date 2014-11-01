@@ -3,41 +3,42 @@
     <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
       <h2>Meta-dataset</h2>
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#create" role="tab" data-toggle="tab">Create</a></li>
-        <li><a href="#overview" role="tab" data-toggle="tab">Overview</a></li>
+        <li<?php if( $this->check == false ) echo ' class="active"'; ?>><a href="#create" role="tab" data-toggle="tab">Create</a></li>
+        <li><a href="#overview" role="tab" data-toggle="tab">Meta datasets</a></li>
+        <?php if( $this->check ) echo '<li class="active"><a href="#check" role="tab" data-toggle="tab">Check</a></li>'; ?>
       </ul>
       
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane active" id="create">
+        <div class="tab-pane<?php if( $this->check == false ) echo ' active'; ?>" id="create">
           <div class="form-group">
             <form method="post" action="">
               <div class="form-group">
                 <label class="col-md-2 control-label" for="datasetDropdown">Datasets</label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" id="datasetDropdown" name="datasets" placeholder="Include all datasets" value="" />
-                  <span class="help-block">A comma separated list of datasets. Leave empty to include all datasets.</span>
+                  <input type="text" class="form-control" id="datasetDropdown" name="datasets" placeholder="Include all datasets" value="<?php echo $this->input->post('datasets'); ?>" />
+                  <span class="help-block">A comma separated list of dataset tags. Leave empty to include all datasets.</span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-2 control-label" for="taskDropdown">Tasks</label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" id="taskDropdown" name="tasks" placeholder="Include all tasks" value="" />
-                  <span class="help-block">A comma separated list of tasks. Leave empty to include all tasks on the specified datasets.</span>
+                  <input type="text" class="form-control" id="taskDropdown" name="tasks" placeholder="Include all tasks" value="<?php echo $this->input->post('tasks'); ?>" />
+                  <span class="help-block">A comma separated list of task tags. Leave empty to include all tasks on the specified datasets.</span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-2 control-label" for="flowDropdown">Flows</label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" id="flowDropdown" name="flows" placeholder="Include all flows" value="">
-                  <span class="help-block">A comma separated list of flows. Leave empty to include all flows.</span>
+                  <input type="text" class="form-control" id="flowDropdown" name="flows" placeholder="Include all flows" value="<?php echo $this->input->post('flows'); ?>">
+                  <span class="help-block">A comma separated list of flow tags. Leave empty to include all flows.</span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-2 control-label" for="setupDropdown">Setups</label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" id="setupDropdown" name="setups" placeholder="Include all setups" value="">
-                  <span class="help-block">A comma separated list of setups. Leave empty to include all setups on the specified flows.</span>
+                  <input type="text" class="form-control" id="setupDropdown" name="setups" placeholder="Include all setups" value="<?php echo $this->input->post('setups'); ?>">
+                  <span class="help-block">A comma separated list of setups tags. Leave empty to include all setups on the specified flows.</span>
                 </div>
               </div>
               <div class="form-group">
@@ -50,7 +51,8 @@
                 </div>
               </div>
               <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="Submit"/>
+                <input class="btn btn-primary" type="submit" name="check" value="Check"/>
+                <input class="btn btn-primary" type="submit" name="create" value="Create"/>
               </div>
             </form>
           </div>
@@ -62,6 +64,30 @@
               $this->columns, 
               $this->items );
           ?>
+        </div>
+        <div class="tab-pane<?php if( $this->check ) echo ' active'; ?>" id="check">
+          <div>
+            <?php if( $this->data == false ): ?>
+              No runs.
+            <?php else: ?>
+              <table>
+                <tr>
+                  <td>&nbsp;</td>
+                  <?php foreach( end($this->data) as $task => $value ) : ?>
+                    <td><?php echo $task; ?></td>
+                  <?php endforeach; ?>
+                </tr>
+                <?php foreach( $this->data as $setup_id => $tasks ) : ?>
+                <tr>
+                  <td><?php echo $setup_id; ?></td>
+                  <?php foreach( $tasks as $task => $present ): ?>
+                    <td style="width: 20px; " class="table-<?php echo $present ? 'present' : 'absent'; ?>">&nbsp;</td>
+                  <?php endforeach; ?>
+                </tr>
+                <?php endforeach; ?>
+              </table>
+            <?php endif; ?>
+          </div>
         </div>
       </div>
     </div>

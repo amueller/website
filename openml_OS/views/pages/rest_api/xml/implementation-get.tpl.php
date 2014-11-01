@@ -17,6 +17,7 @@ $mapping = array(
   'bibliographical_reference' => 'bibliographicalReference',
   'parameters' => 'parameterSetting',
   'components' => 'components',
+  'tag' => 'tag',
   'source_url' => 'sourceUrl',
   'binary_url' => 'binaryUrl',
   'source_format' => 'sourceFormat',

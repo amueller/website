@@ -14,4 +14,5 @@ INSERT INTO `estimation_procedure` (`id`, `ttid`, `name`, `type`, `repeats`, `fo
 (13, 3, '10-fold Learning Curve', 'learningcurve', 1, 10, NULL, 'true', 'false'),
 (14, 3, '10 times 10-fold Learning Curve', 'learningcurve', 10, 10, NULL, 'true', 'false'),
 (15, 4, 'Interleaved Test then Train', 'testthentrain', NULL, NULL, NULL, NULL, 'false'),
-(16, 1, 'Custom Holdout', 'customholdout', 1, 1, NULL, 'false', 'true');
+(16, 1, 'Custom Holdout', 'customholdout', 1, 1, NULL, 'false', 'true'),
+(17, 5, '50 times Clustering', 'testontrainingdata', 50, NULL, NULL, NULL, 'false');

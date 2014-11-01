@@ -8,8 +8,13 @@ class Database_write extends Database_read {
   }
 
   function insert( $data ) {
-    $this->db->insert( $this->table, $data);
-    return $this->db->insert_id();
+    $res = $this->db->insert( $this->table, $data);
+    $insert_id = $this->db->insert_id();
+    if( $insert_id ) {
+      return $insert_id;
+    } else {
+      return $res;
+    }
   }
 
   function insert_batch( $data ) {
@@ -40,7 +45,7 @@ class Database_write extends Database_read {
   }
   
   function delete( $id ) {
-    return $this->db->delete( $this->table, array( $this->id_column => $id ) );
+    return $this->db->delete( $this->table, $this->_where_clause_on_id($id) );
   }
   
   function deleteWhere( $clause ) {

@@ -69,7 +69,7 @@ class Implementation extends Database_write {
   }
   
   public function compareToXML( $xml, $implementation_id = false ) {
-    $relevant = array('name','creator','contributor','description','fullDescription','installationNotes','dependencies','implements');
+    $relevant = array('name','external_version'/*,'creator','contributor','description','fullDescription','installationNotes','dependencies','implements'*/);
     $where = array();
     if($implementation_id !== false)
       $where['id'] = $implementation_id;
@@ -128,6 +128,7 @@ class Implementation extends Database_write {
 		$implementation->parameterSetting = $this->Input->getWhere( 'implementation_id = "' . $implementation->id . '"' );
 		$implementation->bibliographicalReference = $this->Bibliographical_reference->getWhere( 'implementation_id = "' . $implementation->id . '"' );
 		$implementation->components = $this->getComponents( $implementation );
+		$implementation->tag = $this->Implementation_tag->getColumnWhere( 'tag', 'id = ' . $implementation->id );
     
     foreach( array('binary','source') as $type ) {
       if( $implementation->{$type.'_file_id'} != false ) {
