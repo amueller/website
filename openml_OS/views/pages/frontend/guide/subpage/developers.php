@@ -2,11 +2,10 @@
 
       <div class="bs-sidebar affix">
         <ul class="nav bs-sidenav">
-              <li><a href="#dev-code">Web services</a></li>
-              <li><a href="#dev-clients">Client APIs</a></li>
-              <li><a href="#dev-plugins">OpenML plugins</a></li>
+              <li><a href="#dev-repos">GitHub repo's</a></li>
+              <li><a href="#dev-issues">Issues and feature requests</a></li>
+              <li><a href="#dev-wiki">GitHub wiki</a></li>
               <li><a href="#dev-database">Database snapshots</a></li>
-              <li><a href="#dev-feature">Feature requests</a></li>
         </ul>
       </div>
     </div> <!-- end col-2 -->
@@ -14,34 +13,35 @@
     <div class="col-sm-12 col-md-9 openmlsectioninfo">
       <div class="bs-docs-section">
         <div class="page-header">
-          <h1 id="dev-start">OpenML @ Github</h1>
+          <h2 id="dev-start">OpenML <i class="fa fa-heart"></i> Open Source</h2>
         </div>
-	OpenML is an open source project, <a href="https://github.com/organizations/openml">hosted on GitHub</a>. We welcome everybody to help improve OpenML, and make it more useful for everyone. OpenML is divided into several modules, each run by a <a href="https://github.com/organizations/openml/teams">team of enthousiastic and wonderful people</a>. Join us.
+	OpenML is an open source project, <a href="https://github.com/organizations/openml">hosted on GitHub</a>. We welcome everybody to help improve OpenML, and make it more useful for everyone. Fork us on GitHub.
 
-        <h2 id="dev-code">Web services</h2>
-        <p>Everything done by the OpenML server. This includes the API services, but also functions such as model evaluation and dataset characterisation. More details are explained in the <a href="https://github.com/openml/OpenML/wiki"> GitHub Wiki</a>.</p>
-        <a href="https://github.com/openml/OpenML" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> OpenML Core</a>
-        <a href="https://github.com/openml/website" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Website</a>
+        <h2 id="dev-repos">GitHub repo's</h2>
+        <a href="https://github.com/openml/OpenML"><i class="fa fa-github fa-lg"></i> OpenML Core</a> - Everything done by the OpenML server. This includes dataset feature calculations and server-side model evaluations.<br><br>
+        <a href="https://github.com/openml/website"><i class="fa fa-github fa-lg"></i> Website</a> - The website and REST API<br><br>
+        <a href="https://github.com/openml/metafeatures"><i class="fa fa-github fa-lg"></i> Meta-feature</a> - New repo for meta-feature calculation tool.<br><br>
+        <a href="https://github.com/openml/java"><i class="fa fa-github fa-lg"></i> Java API</a> - The Java API and Java-based plugins<br><br>
+        <a href="https://github.com/openml/r"><i class="fa fa-github fa-lg"></i> R API</a> - The OpenML R package<br><br>
+        <a href="https://github.com/openml/python"><i class="fa fa-github fa-lg"></i> Python API</a> - The Python API
 
-        <h2 id="dev-clients">Client APIs</h2>
-        <p>Several APIs are (being) built to connect to OpenML directly from your code. They talk to the server and make all services available as language-specific functions. Several programming language are already supported, such as <a href="plugins/#java">Java</a> and <a href="plugins/#r">R</a>, but more are needed. Join a team or fork us to work on an existing API, or start your own.</p>
-        <a href="https://github.com/openml/java" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Java API</a>
-        <a href="https://github.com/openml/r" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> R API</a>
+        <h3 id="dev-issues">Issues and feature requests</h3>
+        <p>You can post issues (e.g. bugs) and feature requests on the relevant issue tracker:</p>
+	<a href="https://github.com/openml/OpenML/issues"><i class="fa fa-github fa-lg"></i> OpenML tracker</a> - All general issues and feature requests. This is all organized on <a href="https://waffle.io/openml/openml">Waffle</a>.<br><br>
+	<a href="https://github.com/openml/website/issues"><i class="fa fa-github fa-lg"></i> Website tracker</a> - Smaller issues related to the website.<br><br>
+	<a href="https://github.com/openml/r/issues"><i class="fa fa-github fa-lg"></i> R tracker</a> - Issues related to the openml R package.<br><br>
 
-        <h2 id="dev-plugins">OpenML plugins</h2>
-        <p>OpenML is directly integrated in several machine learning environments, so you can use it from your favourite tools.</p>
-
-        <a href="https://github.com/openml/weka" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> Weka plugin</a>
-        <a href="https://github.com/openml/java" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> MOA plugin</a>
-        <a href="https://github.com/openml/r" class="btn btn-primary"><i class="fa fa-github fa-lg"></i> mlr plugin</a>
+        <h3 id="dev-wiki">GitHub wiki</h3>
+        <p>The <a href="https://github.com/openml/OpenML/wiki"> GitHub Wiki</a> contains more information on how to set up your environment to work on OpenML locally, on the structure of the backend and frontend, and working documents.</p>
 
         <h3 id="dev-database">Database snapshots</h3>
-        <p>Everything uploaded to OpenML is available to the community. The snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. In SQL format (gzipped).</p>
+        <p>Everything uploaded to OpenML is available to the community. The nightly snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. In SQL format (gzipped).</p>
+        <a href="downloads/ExpDB_SNAPSHOT.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Nightly database SNAPSHOT</a><br><br>
 
-        <a href="downloads/ExpDB_SNAPSHOT.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Download public database</a>
+	<p>If you want to work on the website locally, you'll also need the schema for the 'private' database with non-public information.</p>
+        <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Private database schema</a>
 
-        <h3 id="dev-feature">Feature requests</h3>
-        <p>Feature request, as well as issues, can be posted in the <a href="community">community discussions</a>, or by directly opening an issue in our <a href="https://github.com/openml/OpenML/issues?state=open">GitHub project</a>.</p>
-      </div>
+   
+        </div>
 
     </div>

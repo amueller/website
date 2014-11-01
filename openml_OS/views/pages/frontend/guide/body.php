@@ -28,7 +28,8 @@
     <li><a href="#json" role="tab" data-toggle="tab">JSON endpoints</a></li>
    </ul>
   </li>
-  <li><a href="#devels" role="tab" data-toggle="tab">Developers</a></li>
+  <li><a href="#devels" role="tab" data-toggle="tab">Open Source</a></li>
+  <li><a href="#team" role="tab" data-toggle="tab">Our Team</a></li>
   <li><a href="#terms" role="tab" data-toggle="tab">Honor Code</a></li>
 </ul>
 
@@ -73,7 +74,9 @@
   <div class="tab-pane" id="terms">
 	<?php subpage('terms'); ?>
   </div>
-
+  <div class="tab-pane" id="team">
+	<?php subpage('team'); ?>
+  </div>
 
 
 </div>

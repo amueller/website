@@ -23,7 +23,7 @@
 <li><b>Give back to the community</b> by sharing your own data as openly and as soon as possible, or by helping the community in other ways. In doing so, you gain visibility and impact (citations).</li>
 <li><b>Share data according to your best efforts</b>. <i>Everybody</i> make mistakes, but we trust you to correct them as soon as possible. Remove or flag data that cannot be trusted.</li>
 <li><b>Be polite and constructive</b> in all discussions. Criticism of methods is welcomed, but personal criticisms should be avoided.</li>
-<li><b>Respect circles of trust</b> when you are included in collaborations. Be considerate in sharing data with people outside this circle.</li>
+<li><b>Respect circles of trust</b>. OpenML allows you to collaborate in 'circles' of trusted people to share unpublished results. Be considerate in sharing data with people outside this circle.</li>
 <li><b>Do not steal</b> the work of people who openly share it. OpenML makes it easy to find all shared data (and when it was shared), thus everybody will know if you do this.</li>
 </ul>
 
