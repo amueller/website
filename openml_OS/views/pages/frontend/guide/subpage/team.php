@@ -8,7 +8,7 @@
     foreach( $this->team as $t ) { ?>
 			<div class="col-md-4 head">
 				<img src="<?php echo htmlentities( authorImage( $t->image ) );?>" class="img-circle" width="70" /><br/><br/>
-				<span class="membername"><?php echo $t->first_name.' '.$t->last_name; ?></span><br>
+				<span class="membername"><a href="u/<?php echo $t->id.'">'.$t->first_name.' '.$t->last_name; ?></a></span><br>
 				<span class="memberline"><?php echo $t->bio; ?></span>
 			</div>
 <?php }}?>
