@@ -244,7 +244,8 @@
         <script src="js/plugins.js"></script>
         <script src="js/application.js"></script>
 	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
-        <script type="text/javascript" src="js/libs/modules/exporting.js"></script>
+	<script type="text/javascript" src="http://code.highcharts.com/highcharts-more.js"></script>
+	<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
 	<script type="text/javascript">$('.tip').tooltip();</script>
         <script>
 			$(document).ready(function(){
