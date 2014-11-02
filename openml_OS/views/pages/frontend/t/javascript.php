@@ -219,18 +219,18 @@ function redrawCurves(){
 	options.tooltip = {formatter: function() {return '<b>'+ this.series.name +'</b><br/>'+	this.x +' '+ this.y;}};
 	
   var implementationConstraint = '';
-  var selectLatest = '';
-  if(latestOnly)
-	selectLatest = ' AND i.version = (select max(version) from implementation where name = i.name)'
-	
   
   var sql = 
-    'SELECT `e`.`sample_size`, concat_ws("_",`i`.`name`,`i`.`version`)  AS `name`, `r`.`setup`, avg(`e`.`value`) as `score`, stddev(`e`.`value`) as `stdev` FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t` WHERE `e`.`function` = "'+evaluation_measure+'" AND `t`.`ttid` = 3 AND `r`.`rid` = `e`.`source` AND `r`.`setup` = `a`.`sid` AND `a`.`implementation_id` = `i`.`id` AND `r`.`task_id` = `t`.`task_id` AND `t`.`task_id` = '+<?php echo $this->task_id; ?>+selectLatest+' GROUP BY `e`.`sample`, `r`.`setup` ORDER BY `sample`, `name` ASC';
-    
-var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+sql, "UTF-8");
-console.log(query);
+    'SELECT `e`.`sample_size`, concat_ws("_",`i`.`name`,`i`.`version`)  AS `name`, `r`.`setup`, avg(`e`.`value`) as `score`, stddev(`e`.`value`) as `stdev`, `i`.`name` as `iname` FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t` WHERE `e`.`function` = "'+evaluation_measure+'" AND `t`.`ttid` = 3 AND `r`.`rid` = `e`.`source` AND `r`.`setup` = `a`.`sid` AND `a`.`implementation_id` = `i`.`id` AND `r`.`task_id` = `t`.`task_id` AND `t`.`task_id` = '+<?php echo $this->task_id; ?>+' GROUP BY `e`.`sample`, `r`.`setup` ORDER BY `sample` ASC, `name` DESC';
 
-$.getJSON(query,function(jsonData){
+  if(latestOnly){
+    sql = 'select * from ('+sql+') as a group by iname, sample_size order by sample_size';
+  }
+    
+  var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+sql, "UTF-8");
+console.log(sql);
+
+  $.getJSON(query,function(jsonData){
         var data = jsonData.data;
 	var setupcount = 0;
 	var map = {}; // setup -> name
