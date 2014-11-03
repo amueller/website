@@ -79,6 +79,9 @@ function authorImage( $image ) {
   if( $image == '' || $image == false || $image == null )
     return 'img/community/misc/anonymousMan.png';
   else 
+    $image = str_replace('http://openml.org/','',$image);
+    $image = str_replace('http://www.openml.org/','',$image);
+    $image = str_replace('http://expdb.cs.kuleuven.be/expdb/','',$image);
     return $image;
 }
 
