@@ -42,10 +42,10 @@ if( $this->input->post('create') == true ) {
   
   $md = array(
     'request_date' => now(),
-    'datasets' => $dataset_ids ? implode( ',', $dataset_ids ) : null,
-    'tasks' => $task_ids ? implode( ',', $task_ids ) : null,
-    'flows' => $flow_ids ? implode( ',', $flow_ids ) : null,
-    'setups' => $setup_ids ? implode( ',', $setup_ids ) : null,
+    'datasets' => $dataset_ids ? implode( ', ', $dataset_ids ) : null,
+    'tasks' => $task_ids ? implode( ', ', $task_ids ) : null,
+    'flows' => $flow_ids ? implode( ', ', $flow_ids ) : null,
+    'setups' => $setup_ids ? implode( ', ', $setup_ids ) : null,
     'functions' => $functions ? $functions : null,
     'user_id' => $this->ion_auth->get_user_id() );
 
@@ -56,18 +56,23 @@ if( $this->input->post('create') == true ) {
   
 } elseif( $this->input->post('check') == true ) {
   
-  $sql = 'SELECT DISTINCT `r`.`task_id`,`r`.`setup` ' .
-         'FROM `run` `r`, `task_inputs` `d` ' .
+  // TODO: implementations
+  $sql = 'SELECT `r`.`task_id`,`r`.`setup`, `s`.`setup_string`, `i`.`dependencies`, `t`.`ttid` ' .
+         'FROM `run` `r`, `task` `t`, `task_inputs` `d`, `algorithm_setup` `s`, `implementation` `i` ' .
          'WHERE `r`.`task_id` = `d`.`task_id` ' . 
+         'AND `t`.`task_id` = `r`.`task_id` ' . 
+         'AND `r`.`setup` = `s`.`sid` ' . 
+         'AND `s`.`implementation_id` = `i`.`id` ' .
          'AND `d`.`input` = "source_data" ' .
-         (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ')') : '' ) . 
-         (($task_ids) ? ('AND `r`.`task_id` IN (' . implode( ',', $task_ids ) . ')') : '' ) . 
-         (($setup_ids) ? ('AND `r`.`setup` IN (' . implode( ',', $setup_ids ) . ')') : '' ) . 
-         ';';
+         (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
+         (($task_ids) ? ('AND `r`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' ) . 
+         (($setup_ids) ? ('AND `r`.`setup` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
+         (($flow_ids) ? ('AND `i`.`id` IN (' . implode( ',', $flow_ids ) . ') ') : '' ) . 
+         'GROUP BY `r`.`task_id`, `r`.`setup`;';
   $result = $this->Dataset->query( $sql );
   $this->data = array();
-  $this->check = true; 
-    
+  $this->check = true;
+  
   if( $result == false ) {
     
     
@@ -75,9 +80,22 @@ if( $this->input->post('create') == true ) {
     $setups = array();
     $tasks = array();
     
+    $tasks_reference = array();
+    $setup_reference = array();
+    
     foreach( $result as $res ) {
-      if( in_array( $res->setup, $setups ) == false ) { $setups[] = $res->setup; }
-      if( in_array( $res->task_id, $tasks ) == false ) { $tasks[] = $res->task_id; }
+      if( in_array( $res->setup, $setups ) == false ) { 
+        $setups[] = $res->setup; 
+        $setup_reference[$res->setup] = array( 
+          'dependencies' => $res->dependencies, 
+          'setup_string' => $res->setup_string );
+      }
+      if( in_array( $res->task_id, $tasks ) == false ) { 
+        $tasks[] = $res->task_id; 
+        $tasks_reference[$res->task_id] = array(
+          'ttid' => $res->ttid
+        );
+      }
     }
     asort($tasks);
     asort($setups);
@@ -91,6 +109,26 @@ if( $this->input->post('create') == true ) {
     
     foreach( $result as $res ) {
       $this->data[$res->setup][$res->task_id] = true;
+    }
+    
+    if( $this->input->post('schedule') && $this->ion_auth->is_admin() ) {
+      $schedule = array();
+      foreach( $setups as $s ) {
+        foreach( $tasks as $t ) {
+          if( $this->data[$s][$t] == false ) {
+            $schedule[] = array( 
+              'sid' => $s,
+              'task_id' => $t,
+              'experiment' => 'form_request',
+              'active' => true,
+              'ttid' => $tasks_reference[$t]['ttid'],
+              'dependencies' => $setup_reference[$s]['dependencies'],
+              'setup_string' => $setup_reference[$s]['setup_string'] 
+            );
+          }
+        }
+      }
+      $this->Schedule->insert_batch( $schedule );
     }
   }
 }
