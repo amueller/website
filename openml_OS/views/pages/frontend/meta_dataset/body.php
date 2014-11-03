@@ -50,6 +50,15 @@
                   <span class="help-block">Select at least one evaluation measure you&#39;re interested in </span>
                 </div>
               </div>
+              <?php if( $this->ion_auth->is_admin() ): ?> 
+              <div class="form-group">
+                <label class="col-md-2 control-label" for="scheduke">Schedule</label>
+                <div class="col-md-10">
+                   <input type="checkbox" id="schedule" name="schedule" />&nbsp;Schedule absent runs to be performed.<br/>
+                  <span class="help-block">Only check this box prior to clicking on the check button. Will be ignored for the create button.  </span>
+                </div>
+              </div>
+              <?php endif; ?> 
               <div class="form-group">
                 <input class="btn btn-primary" type="submit" name="check" value="Check"/>
                 <input class="btn btn-primary" type="submit" name="create" value="Create"/>

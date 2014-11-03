@@ -18,4 +18,6 @@ $this->name = false;
 
 $this->check = false;
 
+$this->task_types = $this->Task_type->get( );
+
 ?>
