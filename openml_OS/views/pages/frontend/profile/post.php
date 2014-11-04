@@ -16,7 +16,7 @@ if ($this->form_validation->run() == true) {
 	
 	if( check_uploaded_file( $_FILES['image'] ) ) {
 		resize_image_squared($_FILES['image']['tmp_name'], $this->config->item('max_avatar_size') );
-		$file_id = $this->File->register_uploaded_file($_FILES['image'], 'userdata/', -1, 'userimage');
+		$file_id = $this->File->register_uploaded_file($_FILES['image'], 'userdata/', $this->ion_auth->user()->row()->id, 'userimage');
 		if($file_id) {
 			$user['image'] = $this->data_controller . 'view/' . $file_id . '/' . $_FILES['image']['name'];
 		}

@@ -2,7 +2,7 @@
 var oTable;
 
 $(document).ready(function() {
-  oTable = $('.data_overview_table').dataTable({
+  oTable = $('.data_overview_table_<?php echo $counter; ?>').dataTable({
     "bServerSide": true,
     "sAjaxSource": "api_query/table_feed",
     "sServerMethod": "POST",
@@ -10,11 +10,6 @@ $(document).ready(function() {
       aoData.push( { 'value': '<?php echo implode(",",$columns); ?>', 'name' : 'columns' } );
       aoData.push( { 'value': '<?php echo htmlspecialchars($sql); ?>', 'name' : 'base_sql' } );
     },
-//    "fnDrawCallback": function( oSettings ) {
-//      for ( var i=0, iLen=oSettings.aoData.length ; i<iLen ; i++ ) {
-//        oSettings.aoData[i].nTr.className += " runTableRow_" + oSettings.aoData[i]._aData[3];
-//      }
-//    },
     "aaSorting": <?php echo $sort; ?>,        
     "bLengthChange": false,
     "bFilter": false,
@@ -59,7 +54,7 @@ $.ajax({
   <div class="container">
     <div class="col-sm-12">
       <h2><?php echo $table_name; ?></h2>
-      <table class="table table-striped data_overview_table">
+      <table class="table table-striped data_overview_table_<?php echo $counter; ?>">
         <thead>
           <tr>
             <?php foreach( $columns as $key ): ?>
