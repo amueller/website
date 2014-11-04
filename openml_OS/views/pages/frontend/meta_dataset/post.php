@@ -55,73 +55,78 @@ if( $this->input->post('create') == true ) {
   su('frontend/page/meta_dataset#overview');
   
 } elseif( $this->input->post('check') == true ) {
+  $sql_setups = 
+    'SELECT `s`.`sid`, `i`.`dependencies`, `s`.`setup_string` ' . 
+    'FROM `algorithm_setup` `s`, `implementation` `i` '.
+    'WHERE `s`.`implementation_id` = `i`.`id` ' . 
+    (($setup_ids) ? ('AND `s`.`sid` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
+    (($flow_ids) ? ('AND `i`.`id` IN (' . implode( ',', $flow_ids ) . ') ') : '' );
+  $res_setups = $this->Algorithm_setup->query( $sql_setups );
+  
+  $sql_tasks = 
+    'SELECT `t`.* FROM `task` `t`, `task_inputs` `d` ' .
+    'WHERE `t`.`task_id` = `d`.`task_id` ' . 
+    'AND `d`.`input` = "source_data" ' .
+    (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
+    (($task_ids) ? ('AND `t`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' );
+  $res_tasks = $this->Task->query( $sql_tasks );
   
   // TODO: implementations
-  $sql = 'SELECT `r`.`task_id`,`r`.`setup`, `s`.`setup_string`, `i`.`dependencies`, `t`.`ttid` ' .
-         'FROM `run` `r`, `task` `t`, `task_inputs` `d`, `algorithm_setup` `s`, `implementation` `i` ' .
-         'WHERE `r`.`task_id` = `d`.`task_id` ' . 
-         'AND `t`.`task_id` = `r`.`task_id` ' . 
-         'AND `r`.`setup` = `s`.`sid` ' . 
-         'AND `s`.`implementation_id` = `i`.`id` ' .
-         'AND `d`.`input` = "source_data" ' .
-         (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
-         (($task_ids) ? ('AND `r`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' ) . 
-         (($setup_ids) ? ('AND `r`.`setup` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
-         (($flow_ids) ? ('AND `i`.`id` IN (' . implode( ',', $flow_ids ) . ') ') : '' ) . 
-         'GROUP BY `r`.`task_id`, `r`.`setup`;';
-  $result = $this->Dataset->query( $sql );
+  $sql_runs = 
+    'SELECT `r`.`task_id`,`r`.`setup` ' .
+    'FROM `run` `r`, `task_inputs` `d` ' .
+    'WHERE `r`.`task_id` = `d`.`task_id` ' . 
+    'AND `d`.`input` = "source_data" ' .
+    (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
+    (($task_ids) ? ('AND `r`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' ) . 
+    (($setup_ids) ? ('AND `r`.`setup` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
+    'GROUP BY `r`.`task_id`, `r`.`setup`;';
+  $res_runs = $this->Run->query( $sql_runs );
   $this->data = array();
   $this->check = true;
   
-  if( $result == false ) {
+  if( $res_runs == false || $res_tasks == false || $res_setups == false ) {
     
     
   } else {
-    $setups = array();
-    $tasks = array();
-    
-    $tasks_reference = array();
+    $task_reference = array();
     $setup_reference = array();
     
-    foreach( $result as $res ) {
-      if( in_array( $res->setup, $setups ) == false ) { 
-        $setups[] = $res->setup; 
-        $setup_reference[$res->setup] = array( 
-          'dependencies' => $res->dependencies, 
-          'setup_string' => $res->setup_string );
-      }
-      if( in_array( $res->task_id, $tasks ) == false ) { 
-        $tasks[] = $res->task_id; 
-        $tasks_reference[$res->task_id] = array(
-          'ttid' => $res->ttid
-        );
-      }
+    foreach( $res_setups as $setup ) {
+      $setup_reference[$setup->sid] = array( 
+        'dependencies' => $setup->dependencies, 
+        'setup_string' => $setup->setup_string );
     }
-    asort($tasks);
-    asort($setups);
+    foreach( $res_tasks as $task ) {
+      $task_reference[$task->task_id] = array(
+        'ttid' => $task->ttid
+      );
+    }
+    ksort($task_reference);
+    ksort($setup_reference);
     
-    foreach( $setups as $s ) {
+    foreach( array_keys( $setup_reference ) as $s ) {
       $this->data[$s] = array();
-      foreach( $tasks as $t ) {
+      foreach( array_keys( $task_reference ) as $t ) {
         $this->data[$s][$t] = false;
       }
     }
     
-    foreach( $result as $res ) {
+    foreach( $res_runs as $res ) {
       $this->data[$res->setup][$res->task_id] = true;
     }
     
     if( $this->input->post('schedule') && $this->ion_auth->is_admin() ) {
       $schedule = array();
-      foreach( $setups as $s ) {
-        foreach( $tasks as $t ) {
+      foreach( array_keys( $setup_reference ) as $s ) {
+        foreach( array_keys( $task_reference ) as $t ) {
           if( $this->data[$s][$t] == false ) {
             $schedule[] = array( 
               'sid' => $s,
               'task_id' => $t,
               'experiment' => 'form_request',
               'active' => true,
-              'ttid' => $tasks_reference[$t]['ttid'],
+              'ttid' => $task_reference[$t]['ttid'],
               'dependencies' => $setup_reference[$s]['dependencies'],
               'setup_string' => $setup_reference[$s]['setup_string'] 
             );
