@@ -55,6 +55,9 @@ if( $this->input->post('create') == true ) {
   su('frontend/page/meta_dataset#overview');
   
 } elseif( $this->input->post('check') == true ) {
+  $this->runs_done = 0;
+  $this->runs_total = 0;
+  
   $sql_setups = 
     'SELECT `s`.`sid`, `i`.`dependencies`, `s`.`setup_string` ' . 
     'FROM `algorithm_setup` `s`, `implementation` `i` '.
@@ -83,8 +86,10 @@ if( $this->input->post('create') == true ) {
     'GROUP BY `r`.`task_id`, `r`.`setup`;';
   $res_runs = $this->Run->query( $sql_runs );
   $this->data = array();
-  $this->check = true;
-  
+  $this->check = true;  
+  $this->runs_total = count($res_tasks) * count($res_setups);
+  $this->runs_done = count($res_runs);
+
   if( $res_runs == false || $res_tasks == false || $res_setups == false ) {
     
     

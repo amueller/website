@@ -95,6 +95,7 @@
                 </tr>
                 <?php endforeach; ?>
               </table>
+              <div>Done: <?php echo $this->runs_done; ?> / <?php echo $this->runs_total; ?></div>
             <?php endif; ?>
           </div>
         </div>
