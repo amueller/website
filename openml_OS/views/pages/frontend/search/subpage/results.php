@@ -143,11 +143,11 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 
 
 <ul class="pagination" style="margin-bottom:50px">
-  <li><a href="<?php echo basename($_SERVER['PHP_SELF']) . "?" . addToGET(array( 'from' => max(0,$this->from-10))); ?>">&laquo;</a></li>
+  <li><a href="<?php echo basename($_SERVER['REQUEST_URI']) . "?" . addToGET(array( 'from' => max(0,$this->from-10))); ?>">&laquo;</a></li>
 <?php for ($x=$this->from; $x<min($this->from+(10*$this->size),$this->results['hits']['total']); $x+=$this->size) { ?>
-  <li><a href="<?php echo basename($_SERVER['PHP_SELF']) . "?" . addToGET(array( 'from' => $x)); ?>"><?php echo floor($x/$this->size) +1; ?></a></li>
+  <li><a href="<?php echo basename($_SERVER['REQUEST_URI']) . "?" . addToGET(array( 'from' => $x)); ?>"><?php echo floor($x/$this->size) +1; ?></a></li>
 <?php } ?>
-  <li><a href="<?php echo basename($_SERVER['PHP_SELF']) . "?" . addToGET(array( 'from' => $this->from+10)); ?>">&raquo;</a></li>
+  <li><a href="<?php echo basename($_SERVER['REQUEST_URI']) . "?" . addToGET(array( 'from' => $this->from+10)); ?>">&raquo;</a></li>
 </ul>
 
 <?php	} else {
