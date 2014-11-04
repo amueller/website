@@ -17,11 +17,15 @@ class File extends Community {
     create_dir( DATA_PATH . $to_folder );
     $newName = getAvailableName( DATA_PATH . $to_folder, $file['name'] );
     
+    if( move_uploaded_file( $file['tmp_name'], DATA_PATH . $to_folder . $newName ) === false ) {
+      return false;
+    }
+    
     $file_record = array(
       'creator' => $creator_id,
       'creation_date' => now(),
       'filepath' => $to_folder . $newName,
-      'filesize' => filesize( $file['tmp_name'] ),
+      'filesize' => filesize( DATA_PATH . $to_folder . $newName ),
       'filename_original' => $file['name'],
       'extension' => pathinfo($file['name'], PATHINFO_EXTENSION),
       'mime_type' => $file['type'],
@@ -29,10 +33,6 @@ class File extends Community {
       'type' => $type,
       'access_policy' => $access_policy
     );
-    
-    if( move_uploaded_file( $file['tmp_name'], DATA_PATH . $to_folder . $newName ) === false ) {
-      return false;
-    }
  
     $file_id = $this->insert($file_record);
     return $file_id;
