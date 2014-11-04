@@ -25,6 +25,7 @@ $pieces = str_getcsv($this->terms, ' ');
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type')) {
 	$tasktypeid = end(explode('/', $_SERVER['REQUEST_URI']));
+	$tasktypeid = explode('?',$tasktypeid)[0];
 	$pieces[] = "tasktype.tt_id:".$tasktypeid;
 }
 
