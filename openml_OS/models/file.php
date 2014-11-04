@@ -21,7 +21,7 @@ class File extends Community {
       'creator' => $creator_id,
       'creation_date' => now(),
       'filepath' => $to_folder . $newName,
-      'filesize' => $file['size'],
+      'filesize' => filesize( $file['tmp_name'] ),
       'filename_original' => $file['name'],
       'extension' => pathinfo($file['name'], PATHINFO_EXTENSION),
       'mime_type' => $file['type'],
