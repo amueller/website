@@ -244,7 +244,7 @@ class Rest_api extends CI_Controller {
       $dataset->{$field} = getcsv( $dataset->{$field} );
     }
     
-    $this->_xmlContents( 'data-description', $dataset );
+    $this->_xmlContents( 'data-get', $dataset );
   }
   
   private function _openml_data_features() {

@@ -20,5 +20,6 @@
   <?php if ($visibility != null): ?><oml:visibility><?php echo htmlspecialchars($visibility); ?></oml:visibility><?php endif; ?>
   <?php if ($original_data_url != null): ?><oml:original_data_url><?php echo htmlspecialchars($original_data_url); ?></oml:original_data_url><?php endif; ?>
   <?php if ($paper_url != null): ?><oml:paper_url><?php echo htmlspecialchars($paper_url); ?></oml:paper_url><?php endif; ?>
+  <oml:status><?php echo htmlspecialchars($status); ?></oml:status>
   <oml:md5_checksum><?php echo htmlspecialchars($md5_checksum); ?></oml:md5_checksum>
 </oml:data_set_description>
