@@ -1,6 +1,6 @@
-<div class="container-fluid topborder">
+<div class="container topborder">
   <div class="row">
-    <div class="col-lg-10 col-sm-12 col-lg-offset-1">
+    <div class="col-md-12">
 
 
 
