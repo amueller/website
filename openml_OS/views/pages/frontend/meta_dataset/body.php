@@ -88,7 +88,7 @@
                 </tr>
                 <?php foreach( $this->data as $setup_id => $tasks ) : ?>
                 <tr>
-                  <td><?php echo $setup_id; ?></td>
+                  <td>Setup <?php echo $setup_id; ?>: <?php echo $this->setup_reference[$setup_id]['name']; ?></td>
                   <?php foreach( $tasks as $task => $present ): ?>
                     <td style="width: 20px; " class="table-<?php echo $present ? 'present' : 'absent'; ?>">&nbsp;</td>
                   <?php endforeach; ?>

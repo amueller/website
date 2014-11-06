@@ -59,7 +59,7 @@ if( $this->input->post('create') == true ) {
   $this->runs_total = 0;
   
   $sql_setups = 
-    'SELECT `s`.`sid`, `i`.`dependencies`, `s`.`setup_string` ' . 
+    'SELECT `s`.`sid`, `i`.`dependencies`, `i`.`name`, `s`.`setup_string` ' . 
     'FROM `algorithm_setup` `s`, `implementation` `i` '.
     'WHERE `s`.`implementation_id` = `i`.`id` ' . 
     (($setup_ids) ? ('AND `s`.`sid` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
@@ -94,25 +94,26 @@ if( $this->input->post('create') == true ) {
     
     
   } else {
-    $task_reference = array();
-    $setup_reference = array();
+    $this->task_reference = array();
+    $this->setup_reference = array();
     
     foreach( $res_setups as $setup ) {
-      $setup_reference[$setup->sid] = array( 
+      $this->setup_reference[$setup->sid] = array( 
+        'name' => $setup->name,
         'dependencies' => $setup->dependencies, 
         'setup_string' => $setup->setup_string );
     }
     foreach( $res_tasks as $task ) {
-      $task_reference[$task->task_id] = array(
+      $this->task_reference[$task->task_id] = array(
         'ttid' => $task->ttid
       );
     }
-    ksort($task_reference);
-    ksort($setup_reference);
+    ksort($this->task_reference);
+    ksort($this->setup_reference);
     
-    foreach( array_keys( $setup_reference ) as $s ) {
+    foreach( array_keys( $this->setup_reference ) as $s ) {
       $this->data[$s] = array();
-      foreach( array_keys( $task_reference ) as $t ) {
+      foreach( array_keys( $this->task_reference ) as $t ) {
         $this->data[$s][$t] = false;
       }
     }
@@ -123,17 +124,17 @@ if( $this->input->post('create') == true ) {
     
     if( $this->input->post('schedule') && $this->ion_auth->is_admin() ) {
       $schedule = array();
-      foreach( array_keys( $setup_reference ) as $s ) {
-        foreach( array_keys( $task_reference ) as $t ) {
+      foreach( array_keys( $this->setup_reference ) as $s ) {
+        foreach( array_keys( $this->task_reference ) as $t ) {
           if( $this->data[$s][$t] == false ) {
             $schedule[] = array( 
               'sid' => $s,
               'task_id' => $t,
               'experiment' => 'form_request',
               'active' => true,
-              'ttid' => $task_reference[$t]['ttid'],
-              'dependencies' => $setup_reference[$s]['dependencies'],
-              'setup_string' => $setup_reference[$s]['setup_string'] 
+              'ttid' => $this->task_reference[$t]['ttid'],
+              'dependencies' => $this->setup_reference[$s]['dependencies'],
+              'setup_string' => $this->setup_reference[$s]['setup_string'] 
             );
           }
         }
