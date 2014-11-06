@@ -82,8 +82,8 @@
               <table>
                 <tr>
                   <td>&nbsp;</td>
-                  <?php foreach( end($this->data) as $task => $value ) : ?>
-                    <td data-toggle="tooltip" data-placement="top" title="Task <?php echo $task; ?> - <?php echo $this->task_reference[$task]['task_type']; ?> on <?php echo $this->task_reference[$task]['dataset']; ?>">T</td>
+                  <?php foreach( end($this->data) as $task => $value ) : // TODO: remove center tag and replace by css identifier ?>
+                    <td data-toggle="tooltip" data-placement="top" title="Task <?php echo $task; ?> - <?php echo $this->task_reference[$task]['task_type']; ?> on <?php echo $this->task_reference[$task]['dataset']; ?>"><center>T</center></td>
                   <?php endforeach; ?>
                 </tr>
                 <?php foreach( $this->data as $setup_id => $tasks ) : ?>
