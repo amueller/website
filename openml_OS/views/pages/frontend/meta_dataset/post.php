@@ -67,10 +67,13 @@ if( $this->input->post('create') == true ) {
   $res_setups = $this->Algorithm_setup->query( $sql_setups );
   
   $sql_tasks = 
-    'SELECT `t`.* FROM `task` `t`, `task_inputs` `d` ' .
-    'WHERE `t`.`task_id` = `d`.`task_id` ' . 
-    'AND `d`.`input` = "source_data" ' .
-    (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
+    'SELECT `t`.*, d.name, tt.name AS task_type ' .
+    'FROM `task` `t`, `task_type` `tt`, `task_inputs` `i`, `dataset` `d` ' .
+    'WHERE `t`.`task_id` = `i`.`task_id` ' . 
+    'AND `i`.`input` = "source_data" ' .
+    'AND `i`.`value` = `d`.`did` ' .
+    'AND `t`.`ttid` = `tt`.`ttid` ' .
+    (($dataset_ids) ? ('AND `i`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
     (($task_ids) ? ('AND `t`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' );
   $res_tasks = $this->Task->query( $sql_tasks );
   
@@ -105,7 +108,9 @@ if( $this->input->post('create') == true ) {
     }
     foreach( $res_tasks as $task ) {
       $this->task_reference[$task->task_id] = array(
-        'ttid' => $task->ttid
+        'ttid' => $task->ttid,
+        'dataset' => $task->name,
+        'task_type' => $task->task_type
       );
     }
     ksort($this->task_reference);

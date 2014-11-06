@@ -83,12 +83,12 @@
                 <tr>
                   <td>&nbsp;</td>
                   <?php foreach( end($this->data) as $task => $value ) : ?>
-                    <td><?php echo $task; ?></td>
+                    <td data-toggle="tooltip" data-placement="top" title="Task <?php echo $task; ?> - <?php echo $this->task_reference[$task]['task_type']; ?> on <?php echo $this->task_reference[$task]['dataset']; ?>">T</td>
                   <?php endforeach; ?>
                 </tr>
                 <?php foreach( $this->data as $setup_id => $tasks ) : ?>
                 <tr>
-                  <td>Setup <?php echo $setup_id; ?>: <?php echo $this->setup_reference[$setup_id]['name']; ?></td>
+                  <td data-toggle="tooltip" data-placement="top" title="<?php echo $this->setup_reference[$setup_id]['setup_string']; ?>">Setup <?php echo $setup_id; ?>: <span><?php echo cutoff( $this->setup_reference[$setup_id]['name'], 20 ); ?></span></td>
                   <?php foreach( $tasks as $task => $present ): ?>
                     <td style="width: 20px; " class="table-<?php echo $present ? 'present' : 'absent'; ?>">&nbsp;</td>
                   <?php endforeach; ?>
