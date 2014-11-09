@@ -132,7 +132,6 @@ $(document).ready(function() {
 			aoData.push( { 'value': 'AND function = "'+evaluation_measure+'"', 'name' : 'base_sql_additional' } );
 		},
         "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [ 0 ] },
             { "bSearchable": false, "bVisible":    false, "aTargets": [ 1, 2 ] }
         ],
 		"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
@@ -150,7 +149,6 @@ $(document).ready(function() {
                 }
             ]
 		},
-        "aaSorting": [[5, 'desc']],
 		"aLengthMenu": [[10, 50, 100, 250], [10, 50, 100, 250]],
 		"iDisplayLength" : 50,
 		"bAutoWidth": false,
@@ -165,7 +163,6 @@ $(document).ready(function() {
 		"fnServerParams": function ( aoData ) {
 		  <?php echo array_to_parsed_string($this->dt_qualities, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
 		},
-		"aaSorting": [[0, 'asc']],
 		"iDisplayLength" : 50,
 		"bAutoWidth": false,
 		<?php echo column_widths($this->dt_qualities['column_widths']); ?>
