@@ -1,6 +1,6 @@
 <script>
   $(document).ready( function() {
-    $('.data_overview_table').dataTable( {
+    $('.data_overview_table_<?php echo $counter; ?>').dataTable( {
       "bPaginate": true,
       "iDisplayLength" : 30,
       "bLengthChange": false,
@@ -45,7 +45,7 @@ $.ajax({
   <div class="container">
     <div class="col-sm-12">
       <?php if($table_name): ?><h2><?php echo $table_name; ?></h2><?php endif; ?>
-      <table class="table table-striped data_overview_table">
+      <table class="table table-striped data_overview_table_<?php echo $counter; ?>">
         <thead>
           <tr>
             <?php foreach( $columns as $key ): ?>

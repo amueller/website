@@ -19,6 +19,7 @@ class Frontend extends CI_Controller {
     $this->load->model('Estimation_procedure');
     $this->load->model('Run');
     $this->load->model('Schedule');
+    $this->load->model('Algorithm_setup');
     
     $this->load->model('Dataset_tag');
     $this->load->model('Implementation_tag');

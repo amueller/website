@@ -2,6 +2,8 @@
 
 class DataOverview {
   
+  private $counter;
+
   public function __construct() {
     $this->CI = &get_instance();
   }
@@ -14,6 +16,7 @@ class DataOverview {
     $variables['sql'] = $sql;
     $variables['sort'] = $sort;
     $variables['api_delete_function'] = $api_delete_function;
+    $variables['counter'] = $this->counter++;
     
     return $this->CI->load->view('library_templates/data_overview_default', $variables, true);
   }
@@ -24,6 +27,7 @@ class DataOverview {
     $variables['columns'] = $columns;
     $variables['items'] = $items;
     $variables['api_delete_function'] = $api_delete_function;
+    $variables['counter'] = $this->counter++;
     
     return $this->CI->load->view('library_templates/data_overview_static', $variables, true);
   }

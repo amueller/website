@@ -82,19 +82,20 @@
               <table>
                 <tr>
                   <td>&nbsp;</td>
-                  <?php foreach( end($this->data) as $task => $value ) : ?>
-                    <td><?php echo $task; ?></td>
+                  <?php foreach( end($this->data) as $task => $value ) : // TODO: remove center tag and replace by css identifier ?>
+                    <td data-toggle="tooltip" data-placement="top" title="Task <?php echo $task; ?> - <?php echo $this->task_reference[$task]['task_type']; ?> on <?php echo $this->task_reference[$task]['dataset']; ?>"><center>T</center></td>
                   <?php endforeach; ?>
                 </tr>
                 <?php foreach( $this->data as $setup_id => $tasks ) : ?>
                 <tr>
-                  <td><?php echo $setup_id; ?></td>
+                  <td data-toggle="tooltip" data-placement="top" title="<?php echo $this->setup_reference[$setup_id]['setup_string']; ?>">Setup <?php echo $setup_id; ?>: <span><?php echo cutoff( $this->setup_reference[$setup_id]['name'], 20 ); ?></span></td>
                   <?php foreach( $tasks as $task => $present ): ?>
                     <td style="width: 20px; " class="table-<?php echo $present ? 'present' : 'absent'; ?>">&nbsp;</td>
                   <?php endforeach; ?>
                 </tr>
                 <?php endforeach; ?>
               </table>
+              <div>Done: <?php echo $this->runs_done; ?> / <?php echo $this->runs_total; ?></div>
             <?php endif; ?>
           </div>
         </div>

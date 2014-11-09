@@ -42,7 +42,11 @@ class Backend extends CI_Controller {
     // login is mandatory
     if (!$this->ion_auth->logged_in()) {
 	    header('Location: ' . BASE_URL . 'login');
-    } // TODO: also check on admin functionality
+    } 
+    
+    if(!$this->ion_auth->is_admin()) {
+      die('Backend pages only available for admin users.');
+    }
   }
   
   public function index() {
