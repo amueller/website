@@ -1,6 +1,6 @@
 /// DETAIL
 <?php  
-if(false !== strpos($_SERVER['REQUEST_URI'],'/t/')) {
+if(false !== strpos($_SERVER['REQUEST_URI'],'/t/') and false === strpos($_SERVER['REQUEST_URI'],'/t/type')) {
 ?>
 
 var oTableRunsShowAll = false;
@@ -51,7 +51,6 @@ $(document).ready(function() {
                 }
             ]
 		},
-        "aaSorting": [[5, 'desc']],
 		"aLengthMenu": [[10, 50, 100, 250], [10, 50, 100, 250]],
 		"iDisplayLength" : 50,
 		"bAutoWidth": false,
@@ -82,6 +81,126 @@ $(document).ready(function() {
 function updateTableHeader(){
 	$("#value").html(evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' '));
 }
+
+function redrawtimechart(){
+var colors = ['rgba(166, 206, 227, .6)','rgba(51, 160, 44, .6)','rgba(251, 154, 153, .6)','rgba(253, 191, 111, .6)','rgba(202, 178, 214, .6)','rgba(255, 255, 153, .6)','rgba(177, 89, 40, .6)','rgba(31, 120, 180, .6)','rgba(178, 223, 138, .6)','rgba(227, 26, 28, .6)','rgba(255, 127, 0, .5)','rgba(106, 61, 154, .6)'];
+
+options2 = {
+            chart: {
+                renderTo: 'data_result_time',
+                type: 'scatter',
+		pinchType: 'x',
+		spacingTop: 40,
+                events: {
+                    load: function (event) {
+                        $('.tip').tooltip();
+                    }
+                }
+            },
+	    title: {
+	        text: 'Contributions over time'
+	    },
+	    subtitle: {
+	        text: 'every point is a run, click for details'
+	    },
+	    xAxis: {
+		type: 'datetime',
+                title: {
+                    text: 'Date'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' ')
+                }
+            },
+            credits: {
+                 enabled: false
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        },
+			symbol: 'diamond'
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    }                
+		}
+            },
+            tooltip:{
+                followTouchMove: false,
+    		backgroundColor: '#FFFFFF',
+		useHTML: true,
+                formatter:function(){
+                    return '<div>Flow:<b> '+this.point.options.f+'</b><br>'+ this.series.yAxis.axisTitle.element.textContent + '<b>: ' + this.y+'</b><br>'+ ((typeof this.point.options.t !== 'undefined') ? 'Training time (seconds): <b>'+this.point.options.t+'</b><br>': '')+'Uploader: ' + this.point.options.u +'<br>' + ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
+                }
+            },
+            series: []
+        };
+
+client.search({
+  index: 'openml',
+  type: 'run',
+  size: '100000',
+  body: {
+    filter: {
+      term: {
+        'run_task.task_id': current_task
+      }
+    },
+    sort: { 'date' : 'asc' }
+  }
+}).then(function (resp) {
+        var data = resp.hits.hits;
+	var usercount = 0;
+	var map = {};
+	var d=[];
+	var names=[];
+	for(var i=0;i<data.length;i++){
+		var run = data[i]['_source'];
+		var evals = run['evaluations'];
+		
+		if (!(run['uploader'] in map)){
+			map[run['uploader']] = usercount++;
+			d[map[run['uploader']]] = [];
+			names[map[run['uploader']]] = run['uploader'];
+		}	
+		if(typeof evals[evaluation_measure] !== 'undefined'){
+			d[map[run['uploader']]].push({x: Date.parse(run['date']), y: parseFloat(evals[evaluation_measure]), f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
+		}
+	}
+	
+	options2.chart.height = 500;
+	for(var i=0;i<usercount;i++){
+		options2.series[i] = {};
+		options2.series[i].turboThreshold = 0;	
+		options2.series[i].name = names[i];
+		options2.series[i].data = d[i];
+		options2.series[i].color = colors[i%9];
+		options2.series[i].fillOpacity = 0.25;
+		options2.series[i].point = {
+                    events: {
+                        click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
+                    }
+                };
+	}
+	timechart = new Highcharts.Chart(options2);
+
+}, function (err) {
+    console.trace(err.message);
+});
+}
+
 
 function redrawchart(){
 categoryMap = {};
@@ -154,8 +273,10 @@ options = {
             },
             tooltip:{
                 followTouchMove: false,
+    		backgroundColor: '#FFFFFF',
+		useHTML: true,
                 formatter:function(){
-                    return '<div>Flow:<b> '+this.series.yAxis.categories[this.y]+'</b><br>'+ this.series.xAxis.axisTitle.element.textContent + '<b>: ' + this.x+'</b><br>'+ ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
+                    return '<div>Flow:<b> '+this.series.yAxis.categories[this.y]+'</b><br>'+ this.series.xAxis.axisTitle.element.textContent + '<b>: ' + this.x+'</b><br>'+ ((typeof this.point.options.t !== 'undefined') ? 'Training time (seconds): <b>'+this.point.options.t+'</b><br>': '')+'Uploader: ' + this.point.options.u +'<br>' + ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
                 }
             },
             series: [{
@@ -170,22 +291,38 @@ options = {
             }]
         };
 
-var theQuery = 'select distinct i.fullname, round(e.value,4) as value, r.rid, i.id from algorithm_setup l, evaluation e, run r, implementation i  where r.setup=l.sid AND l.implementation_id=i.id AND e.source=r.rid AND e.function="'+evaluation_measure+'" AND r.task_id = '+ current_task + ' order by value desc';
+sorts = {};
+sorts['evaluations.'+evaluation_measure] = 'desc';
 
-var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+theQuery, "UTF-8");
-$.getJSON(query,function(jsonData){
-        var data = jsonData.data;
+client.search({
+  index: 'openml',
+  type: 'run',
+  size: '100000',
+  body: {
+    filter: {
+      term: {
+        'run_task.task_id': current_task
+      }
+    },
+    sort: sorts
+  }
+}).then(function (resp) {
+        var data = resp.hits.hits;
 	var catcount = 0;
 	var map = {};
 	var d=[];
 	var c=[];
 	for(var i=0;i<data.length;i++){
-		if (!(data[i][0] in map)){
-			map[data[i][0]] = catcount++;
-			categoryMap[data[i][0]]= data[i][3]; 
-			c.push(data[i][0]);
+		var run = data[i]['_source'];
+		var flow = run['run_flow'];
+		var evals = run['evaluations'];
+
+		if (!(flow['name'] in map)){
+			map[flow['name']] = catcount++;
+			categoryMap[flow['name']]= flow['flow_id']; 
+			c.push(flow['name']);
 		}
-		d.push({x: parseFloat(data[i][1]), y: map[data[i][0]], r: data[i][2]});
+		d.push({x: parseFloat(evals[evaluation_measure]), y: map[flow['name']], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
 	}
 
 	options.yAxis.categories = c;
@@ -194,7 +331,9 @@ $.getJSON(query,function(jsonData){
 
 	coderesultchart = new Highcharts.Chart(options);
 
-}).fail(function(){ console.log('failure', arguments); });
+}, function (err) {
+    console.trace(err.message);
+});
 }
 
 function redrawCurves(){
@@ -216,7 +355,10 @@ function redrawCurves(){
 	options.yAxis = {};
 	options.legend = {};
 		
-	options.tooltip = {formatter: function() {return '<b>'+ this.series.name +'</b><br/>'+	this.x +' '+ this.y;}};
+	options.tooltip = {
+    		backgroundColor: '#FFFFFF',
+		useHTML: true,
+		formatter: function() {return '<b>'+ this.series.name +'</b><br/>'+	this.x +' '+ this.y;}};
 	
   var implementationConstraint = '';
   
@@ -228,7 +370,6 @@ function redrawCurves(){
   }
     
   var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+sql, "UTF-8");
-console.log(sql);
 
   $.getJSON(query,function(jsonData){
         var data = jsonData.data;
@@ -278,7 +419,7 @@ $(document).ready(function() {
         <?php if($this->record['type_name'] == 'Learning Curve')
 		echo 'redrawCurves();';
 	      else
-		echo 'redrawchart();';
+		echo 'redrawchart(); redrawtimechart();';
 	?>
 });
 

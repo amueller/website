@@ -58,7 +58,7 @@
         <script type="text/javascript" src="js/libs/dat.gui.min.js" ></script>
         <script type="text/javascript" src="js/libs/codemirror.js" ></script>
         <script type="text/javascript" src="js/libs/mysql.js" ></script>
-        <script type="text/javascript" src="js/libs/jquery.dataTables.js"></script>
+        <script src="http://cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.TableTools.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.dataTables.bootstrap.js"></script>
         <script type="text/javascript" src="js/libs/jquery.form.js"></script>

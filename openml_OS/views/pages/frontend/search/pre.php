@@ -41,6 +41,7 @@ foreach($pieces as $t){
 $this->filterstring=implode(" ",$this->filters);
 
 $this->listids = safe($this->input->get('listids'));
+$this->table = safe($this->input->get('table'));
 $this->size = (safe($this->input->get('size')) ? safe($this->input->get('size')) : 10);
 
 // some fields can be set beforehand. If not, set them to appropriate defaults.
@@ -102,8 +103,6 @@ elseif($this->terms != 'match_all' and $this->coreterms != ''){
 	          }';
 }
 
-
-
 $this->active_tab = gu('tab');
 $jsonfilters = array();
 
@@ -160,7 +159,6 @@ $params['body']  = '{
 
 try {
 	$this->results = $this->searchclient->search($params);
-
 } catch (Exception $e) {
 	$this->results = array();
 	$this->results['hits'] = array();

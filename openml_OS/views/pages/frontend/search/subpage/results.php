@@ -48,15 +48,117 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
           </div>
         </div>
 
-      <?php } else {
+    <?php } else if($this->table) {
+      $this->tableview = [];
+      foreach( $this->results['hits']['hits'] as $r ) {
+	$rs = $r['_source'];
+	$newrow = array();
+	$id=0;
+	foreach( $rs as $k => $v ) {
+		if(!in_array($k,array('suggest','description','creator','contributor','update_comment','last_update',
+			'default_target_attribute','row_id_attribute','ignore_attribute','version_label','url','uploader',
+			'uploader_id','visibility','date','licence','format'))){
+			if($k == 'data_id')
+			   $id = $v;
+			elseif($k == 'name')
+			   $newrow[$k] = '<a href="d/'.$id.'">'.$v.'</a>';
+			elseif($k == 'version')
+			   $newrow['name'] = str_replace('</a>',' ('.$v.')</a>',$newrow['name']);
+			else
+			   $newrow[$k] = $v;
+		}	
+	}
+	$this->tableview[] = $newrow;
+	$cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "");
+	} ?>
+	<div class="topmenu"></div>
+	<table id="tableview" class="table table-striped table-bordered table-condensed dataTable no-footer">
+	<thead><tr>
+        <?php   foreach( $cols as $k => $v ) {
+			echo '<th>'.$k.'</th>';
+		}
+		foreach( $this->tableview[0] as $k => $v ) {
+			if(!array_key_exists($k,$cols))
+				echo '<th>'.$k.'</th>';
+	} ?>
+	</tr></thead>
+	<tbody></tbody>
+	</table>
+	<script>
+	$('#tableview').dataTable( {
+		"aaData": <?php echo json_encode($this->tableview); ?>,
+		"bPaginate": true,
+			"aLengthMenu": [[10, 50, 100, 250, -1], [10, 50, 100, 250, "All"]],
+			"iDisplayLength" : 50,
+		"bSort" : true,
+		"aaSorting" : [],
+		"aoColumns": [
+	          <?php $cnt = sizeOf($cols);
+			foreach( $this->tableview[0] as $k => $v ) {
+			$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
+			if(is_numeric($v))
+				$newcol .= '"sType":"numeric", ';
+			if($cnt<6)
+				$newcol .= '"bVisible":true},';
+			else
+				$newcol .= '"bVisible":false},';
+			if(array_key_exists($k,$cols)){
+				$cols[$k] = $newcol;
+			} else {
+				$cols[] = $newcol;
+				$cnt++;
+			}
+		  	}
+			foreach( $cols as $k => $v ) {
+ 				echo $v; 		
+			}?>
+
+		]
+	    } );
+
+	// create controls to show other columns 
+	var colcount = <?php echo $cnt; ?>;
+	var colmax = 6;
+	var columnmenu = '';
+	var columnmenutop = '';
+	var columnmenubottom = '';
+
+	if( colcount > colmax + 1 ) {
+		columnmenutop = '<div style="float:right; position:relative;z-index:1019">Columns <div class="btn-group">';
+
+		for( var i = 0; i < Math.ceil(colcount - 1) / colmax; i++ ) {
+			columnmenu += '<button type="button" class="btn btn-default" onclick="toggleResults('+i+')">'+(i+1)+'</button>';
+			if( (i + 1) % 20 == 20 ) l+='</div><div class="btn-group">';
+		}
+		columnmenu +='</div></div>';
+	}
+	
+	$('.topmenu').show();
+	$('.topmenu').html(columnmenutop + columnmenu);
+
+function toggleResults( resultgroup ) {
+	var oDatatable = $('#tableview').dataTable(); // is not reinitialisation, see docs. 
+	
+	redrawScatterRequest = true;
+	redrawLineRequest = true;
+	for( var i = 1; i < colcount; i++) {
+		if( i > colmax * resultgroup && i <= colmax * (resultgroup+1) )
+			oDatatable.fnSetColumnVis( i, true );
+		else 
+			oDatatable.fnSetColumnVis( i, false );
+	}
+}
+
+   
+	</script>
+     <?php } else { 
       $runparams['index'] = 'openml';
       $runparams['type']  = 'run';
       foreach( $this->results['hits']['hits'] as $r ) {
         $type = $r['_type'];
 	$rs = $r['_source'];
         $runparams['body'] = false;
-
-?>
+	?>
 	<div class="searchresult">
 
 		   <?php if ($this->curr_sort == 'last update'){
@@ -150,7 +252,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
   <li><a href="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from+10)); ?>">&raquo;</a></li>
 </ul>
 
-<?php	} else {
+<?php
+	} else {
 		if( $this->terms != false ) {
 			o('no-search-results');
 		} else {

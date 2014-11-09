@@ -362,8 +362,8 @@ table.display tr.odd.row_selected td {
 
 /*
  * Sorting classes for columns
- */
-/* For the standard odd/even */
+ *
+/* For the standard odd/even *
 tr.odd td.sorting_1 {
 	background-color: #D3D6FF;
 }
@@ -398,7 +398,7 @@ tr.even td.sorting_3 {
 	Level 2:
 	  dd > d1
 	  ee > e2
- */
+ *
 tr.odd.gradeA td.sorting_1 {
 	background-color: #c4ffc4;
 }
@@ -498,7 +498,7 @@ tr.even.gradeU td.sorting_3 {
 
 /*
  * Row highlighting example
- */
+ *
 .ex_highlight #example tbody tr.even:hover, #example tbody tr.even td.highlighted {
 	background-color: #ECFFB3;
 }

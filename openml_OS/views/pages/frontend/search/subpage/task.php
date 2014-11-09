@@ -61,12 +61,12 @@ $(function() {
 	      $dataparams['type']  = 'data';
 	      $dataparams['body']['fields'] = ['id','name','version'];
 	      $dataparams['body']['query']['match_all'] = array();
-	      echo print_r($dataparams['body']);
-        $searchclient = $this->searchclient->search($dataparams);      
-	      $alldataresults = $searchclient['hits']['hits'];
+        $searchclient = $this->searchclient->search($dataparams); 
+     	      $alldataresults = $searchclient['hits']['hits'];
+	      echo print_r($alldataresults);
 	      $alldata = array();
 	      foreach($alldataresults as $k => $v){
-		$alldata[] = $v['fields']['name'].' ('.$v['fields']['version'].')';
+		$alldata[] = $v['fields']['name'][0].' ('.$v['fields']['version'][0].')';
 	      }
 	      $evalprocs['index'] = 'openml';
 	      $evalprocs['type'] = 'measure';

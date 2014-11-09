@@ -33,9 +33,9 @@
 
     </div> <!-- end col-md-6-->
 
-     <?php
+    <?php
           $components = $this->Implementation->getComponents($this->record);
-	  if (is_array($components) && sizeof($components)>0){
+	  if (is_array($components) and sizeof($components)>0){
      ?>
      <div class="col-sm-6">
 			<h2>Components</h2>
@@ -49,7 +49,7 @@
 				</table>
 			</div>
       </div> <!-- end col-md-6 -->
-      <?php } /*endif components*/ ?>
+      <?php } /*endif components*/ ?> 
 
      <div class="col-sm-6">
 			<h2>Parameters</h2>
@@ -149,5 +149,22 @@
 		</div> <!-- end tab-runs -->
 		
 	</div> <!-- end col-md-12 -->
+
+    <div id="disqus_thread">Loading discussions...</div>
+    <script type="text/javascript">
+        var disqus_shortname = 'openml'; // forum name
+	var disqus_category_id = '3353608'; // Data category
+	var disqus_title = '<?php echo $this->record->{'name'}; ?>'; // Data name
+	var disqus_url = 'http://openml.org/f/<?php echo $this->id; ?>'; // Data url
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+ 
+
 
 </div> <!-- end openmlsectioninfo -->

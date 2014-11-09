@@ -25,7 +25,6 @@ if( $types != false ) {
 	  }
 }
 
-
 /// TYPE DETAIL
 
 $this->record = array();

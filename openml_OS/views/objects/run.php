@@ -144,10 +144,24 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
     }
   ?>
 
+    <div id="disqus_thread">Loading discussions...</div>
+    <script type="text/javascript">
+        var disqus_shortname = 'openml'; // forum name
+	var disqus_category_id = '3353606'; // Data category
+	var disqus_title = '<?php echo 'Run '.$this->run_id; ?>'; // Data name
+	var disqus_url = 'http://openml.org/r/<?php echo $this->run_id; ?>'; // Data url
 
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
 
 
 
     <?php } else { ?>Sorry, this run is unknown.<?php } ?>
   </div>
+
 </div> <!-- end openmlsectioninfo -->

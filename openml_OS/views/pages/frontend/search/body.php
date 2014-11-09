@@ -1,8 +1,8 @@
 <div class="container-fluid topborder">
   <div class="row">
-    <div class="col-lg-10 col-sm-12 col-lg-offset-1">
+    <div class="col-sm-12">
 
-    <div class="col-xs-12 col-sm-3 searchbar">
+    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
         <!-- Upload stuff -->
       <ul class="menu">
 	<li><a href="search?q=<?php echo $this->terms;?>" <?php if(!$this->filtertype) echo 'class="selected"';?>><i class="fa fa-fw fa-circle-thin"></i> All<span class="counter"><?php echo $this->results['facets']['type']['total'];?></span></a></li>
@@ -25,18 +25,28 @@
              else subpage("everything"); ?>
 
     </div> <!-- end col-2 -->
-    <div class="col-xs-12 col-sm-9 openmlsectioninfo">
+    <div class="col-xs-12 col-sm-10 openmlsectioninfo">
       <h1>Results for <b><?php echo str_replace('match_','',$this->coreterms); if($this->coreterms=='') echo '*'?></b></h1>
+
+      <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
+        <a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
+	<?php
+		if($this->table) // toggle off
+			$att = addToGET(array( 'table' => false, 'listids' => false, 'size' => false));	
+		else // toggle on
+			$att = addToGET(array( 'table' => '1', 'listids' => false, 'size' => $this->results['hits']['total']));		
+		echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->table ? 'fa-align-justify' : 'fa-table');?>"></i></a>
+      <?php } ?>		
 
       <?php if($this->filtertype and in_array($this->filtertype, array("run", "task", "data", "flow"))){ ?>
         <a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
 	<?php
 		if($this->listids) // toggle off
-			$att = addToGET(array( 'listids' => false, 'size' => false));	
+			$att = addToGET(array( 'listids' => false, 'table' => false, 'size' => false));	
 		else // toggle on
-			$att = addToGET(array( 'listids' => '1', 'size' => $this->results['hits']['total']));		
-		echo 'search?'.$att; ?>"><i class="fa fa-list-ol"></i></a><?php } ?>	
-
+			$att = addToGET(array( 'listids' => '1', 'table' => false, 'size' => $this->results['hits']['total']));		
+		echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-justify' : 'fa-list-ol');?>"></i></a>
+        <?php } ?>
 
       <?php subpage('results');?> 
     </div>

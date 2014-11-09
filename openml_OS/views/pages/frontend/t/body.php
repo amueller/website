@@ -2,6 +2,7 @@
   <div class="row">
    <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
     <div class="tab-content">
+
       <div class="tab-pane  <?php if(false === strpos($_SERVER['REQUEST_URI'],'/t/')) { echo 'active'; } ?>" id="intro">
         <div class="yellowheader">
           <h1><a href="t"><i class="fa fa-trophy"></i></a> Tasks</h1>
