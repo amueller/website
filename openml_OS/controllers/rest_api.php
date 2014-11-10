@@ -1389,17 +1389,18 @@ class Rest_api extends CI_Controller {
       $file_record = $this->File->getById($file_id);
       $filename = getAvailableName( DATA_PATH . $this->data_folders['run'], $value['name'] );
       
-      $did = $this->Runfile->getHighestIndex( $this->data_tables, 'did' );
       $record = array(
-        'did' => $did,
         'source' => $run->rid,
         'field' => $key,
         'name' => $value['name'],
         'format' => $file_record->extension,
         'file_id' => $file_id );
       
-      $this->Runfile->insert( $record ); 
-      
+      $did = $this->Runfile->insert( $record ); 
+      if( $did == false ) {
+        $this->_returnError( 212 );
+        return;
+      } 
       $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
     

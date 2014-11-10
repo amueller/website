@@ -149,12 +149,12 @@ $this->apiErrors[181][0] = 'Unknown implementation';
 $this->apiErrors[181][1] = 'The implementation with this ID was not found in the database';
 
 // for function: openml.run.upload 
-$this->apiErrors[200][0] = 'Please provide session_hash';
-$this->apiErrors[200][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
+//$this->apiErrors[200][0] = 'Please provide session_hash';
+//$this->apiErrors[200][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
 
 // for function: openml.run.upload 
-$this->apiErrors[201][0] = 'Authentication failed';
-$this->apiErrors[201][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+//$this->apiErrors[201][0] = 'Authentication failed';
+//$this->apiErrors[201][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
 // for function: openml.run.upload 
 $this->apiErrors[202][0] = 'Please provide run xml';
