@@ -1358,10 +1358,8 @@ class Rest_api extends CI_Controller {
     $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
     
     // now create a run
-    $runId = $this->Run->getHighestIndex( array('run'), 'rid' );
     
     $runData = array(
-      'rid' => $runId,
       'uploader' => $this->user_id,
       'setup' => $setupId,
       'task_id' => $task->task_id,
@@ -1370,7 +1368,8 @@ class Rest_api extends CI_Controller {
       'error' => ($error_message == false) ? null : $error_message,
       'experiment' => '-1',
     );
-    if( $this->Run->insert( $runData ) === false ) {
+    $runId = $this->Run->insert( $runData );
+    if( $runId === false ) {
       $this->_returnError( 210 );
       return;
     }
