@@ -35,12 +35,12 @@ $this->task_items = $this->Algorithm_setup->query( $task_sql );
 $this->task_name = 'Tasks' . $with_tag;
 
 $run_sql = 
-  'SELECT r.rid, r.error, i.id, i.name '.
-  'FROM `run` `r`, `algorithm_setup` `s`, `setup_tag` `st`, `task` `t`, task_tag `tt`, `implementation` `i` '.
+  'SELECT r.rid, i.id, i.name, r.task_id, r.error '.
+  'FROM `run` `r`, `algorithm_setup` `s`, `setup_tag` `st`, task_tag `tt`, `implementation` `i` '.
   'WHERE `i`.`id` = `s`.`implementation_id` AND `r`.`task_id` = `tt`.`id` '.
   'AND `r`.`setup` = `s`.`sid` AND `s`.`sid` = `st`.`id` ' .
   $where_tag_task . $where_tag_setup ;
-$this->run_columns = array( 'rid', 'id', 'name', 'error' );
+$this->run_columns = array( 'rid', 'task_id', 'id', 'name', 'error' );
 $this->run_items = $this->Run->query( $run_sql );
 $this->run_name = 'Runs ' . $with_tag;
 ?>
