@@ -30,9 +30,9 @@
     <xs:element name="implements" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Ontological reference -->
     <!-- structure -->
     <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="oml:parameter"/> <!-- Statement of the (global/top-level) parameters of the workflow (see below). -->
-    <xs:element name="component" minOccurs="0" maxOccurs="unbounded" type="oml:quality"/> <!-- Sub-components of this implementation -->
+    <xs:element name="component" minOccurs="0" maxOccurs="unbounded" type="oml:component"/> <!-- Sub-components of this implementation -->
     <!-- qualities -->
-    <xs:element name="quality" minOccurs="0" maxOccurs="unbounded" type="oml:system_string"/> <!-- Qualities of the algorithm  -->
+    <xs:element name="quality" minOccurs="0" maxOccurs="unbounded" type="oml:quality"/> <!-- Qualities of the algorithm  -->
     <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="oml:system_string"/> <!-- Tags, describing the algorithms  -->
     <!-- download -->
     <xs:element name="source_url" minOccurs="0" maxOccurs="1" type="xs:string"/> <!-- Url from which the source code can be downloaded. Added by the server. Ignored when uploaded manually. -->
