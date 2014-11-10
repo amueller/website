@@ -6,6 +6,7 @@
         <ul class="nav nav-tabs" role="tablist">
           <li class="active"><a href="#task" role="tab" data-toggle="tab">Tasks</a></li>
           <li><a href="#setup" role="tab" data-toggle="tab">Setups</a></li>
+          <li><a href="#run" role="tab" data-toggle="tab">Runs</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -24,6 +25,14 @@
                 $this->setup_name, 
                 $this->setup_columns, 
                 $this->setup_items );
+              ?>
+          </div>
+          <div class="tab-pane" id="run">
+            <?php
+              echo $this->dataoverview->generate_table_static( 
+                $this->run_name, 
+                $this->run_columns, 
+                $this->run_items );
               ?>
           </div>
         </div>
