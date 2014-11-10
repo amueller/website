@@ -1420,6 +1420,9 @@ class Rest_api extends CI_Controller {
     // add to elastic search index. 
     $this->elasticsearch->index('run', $run->rid); 
     
+    // remove scheduled task
+    $this->Schedule->deleteWhere( 'task_id = "' . $task->task_id . '" AND sid = "' . $setupId . '"' );
+    
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Now the stuff that needs to be done for the special     *
      * supported tasks, like classification, regression        *
