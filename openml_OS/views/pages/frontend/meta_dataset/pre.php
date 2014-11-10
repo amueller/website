@@ -7,10 +7,10 @@ if (!$this->ion_auth->logged_in()) {
 $this->measures = array("predictive_accuracy", "build_cpu_time", "area_under_roc_curve");
 
 $sql = 'SELECT `m`.`id`, `m`.`request_date`, ' .
-       'IF(CHAR_LENGTH(`m`.`datasets`)>20, CONCAT( SUBSTR(`m`.`datasets`, 0, 15), " ... "), `m`.`datasets`) AS `datasets`, ' .
-       'IF(CHAR_LENGTH(`m`.`tasks`)>20, CONCAT( SUBSTR(`m`.`tasks`, 0, 15), " ... "), `m`.`tasks`) AS `tasks`, ' . 
-       'IF(CHAR_LENGTH(`m`.`flows`)>20, CONCAT( SUBSTR(`m`.`flows`, 0, 15), " ... "), `m`.`flows`) AS `flows`, ' . 
-       'IF(CHAR_LENGTH(`m`.`setups`)>20, CONCAT( SUBSTR(`m`.`setups`, 0, 15), " ... "), `m`.`setups`) AS `setups`, ' . 
+       'IF(CHAR_LENGTH(`m`.`datasets`)>20, CONCAT( SUBSTRING(`m`.`datasets`, 0, 15), " ... "), `m`.`datasets`) AS `datasets`, ' .
+       'IF(CHAR_LENGTH(`m`.`tasks`)>20, CONCAT( SUBSTRING(`m`.`tasks`, 0, 15), " ... "), `m`.`tasks`) AS `tasks`, ' . 
+       'IF(CHAR_LENGTH(`m`.`flows`)>20, CONCAT( SUBSTRING(`m`.`flows`, 0, 15), " ... "), `m`.`flows`) AS `flows`, ' . 
+       'IF(CHAR_LENGTH(`m`.`setups`)>20, CONCAT( SUBSTRING(`m`.`setups`, 0, 15), " ... "), `m`.`setups`) AS `setups`, ' . 
        '`m`.`functions`, ' .
        'IF(`f`.`id` IS NOT NULL, CONCAT("<a href=\"'.DATA_URL.'download/", `f`.`id`, "/", `f`.`filename_original`, "\" target=\"_blank\"><i class=\"fa fa-file-excel-o\"></i></a>"), "") AS `download` ' .
        'FROM `meta_dataset` `m` LEFT JOIN `file` `f` ON `m`.`file_id` = `f`.`id` ' .
