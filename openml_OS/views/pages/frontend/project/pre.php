@@ -39,8 +39,9 @@ $run_sql =
   'FROM `run` `r`, `algorithm_setup` `s`, `setup_tag` `st`, task_tag `tt`, `implementation` `i` '.
   'WHERE `i`.`id` = `s`.`implementation_id` AND `r`.`task_id` = `tt`.`id` '.
   'AND `r`.`setup` = `s`.`sid` AND `s`.`sid` = `st`.`id` ' .
+  'AND `error` NOT IS NULL '
   $where_tag_task . $where_tag_setup ;
 $this->run_columns = array( 'rid', 'task_id', 'id', 'name', 'error' );
 $this->run_items = $this->Run->query( $run_sql );
-$this->run_name = 'Runs ' . $with_tag;
+$this->run_name = 'Runs (errors) ' . $with_tag;
 ?>
