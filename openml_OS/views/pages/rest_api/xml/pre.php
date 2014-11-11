@@ -657,8 +657,15 @@ $this->apiErrors[480][1] = 'In order to view task overview, please provide task_
 $this->apiErrors[481][0] = 'No results';
 $this->apiErrors[481][1] = 'There where no matches for this task type id. Check whether some tasks exists. ';
 
-// openml.tasks
-$this->apiErrors[490][0] = 'No results';
-$this->apiErrors[490][1] = 'There where no matches. ';
+// openml.file.upload
+$this->apiErrors[490][0] = 'Authentication failed';
+$this->apiErrors[490][1] = 'Admin rights required for this function. ';
 
+// openml.file.upload
+$this->apiErrors[491][0] = 'File upload error';
+$this->apiErrors[491][1] = 'Something went wrong uploading the file. Might be filesize problem. ';
+
+// openml.file.upload
+$this->apiErrors[492][0] = 'File register error';
+$this->apiErrors[492][1] = 'Something went wrong registering the file. Please contact OpenML team. ';
 ?>

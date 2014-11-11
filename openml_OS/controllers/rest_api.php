@@ -64,7 +64,8 @@ class Rest_api extends CI_Controller {
     $this->data_folders = array(
       'dataset'       => 'dataset/api/',
       'implementation'   => 'implementation/',
-      'run'        => 'run/'
+      'run'        => 'run/',
+      'misc' => 'misc/'
     );
     
     $this->data_tables = $this->config->item('data_tables');
@@ -1380,7 +1381,7 @@ class Rest_api extends CI_Controller {
     
     // attach uploaded files as output to run
     foreach( $_FILES as $key => $value ) {
-      $file_type = ($value == 'predictions') ? 'predictions' : 'run_uploaded_file';
+      $file_type = ($key == 'predictions') ? 'predictions' : 'run_uploaded_file';
       $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
       if(!$file_id) {
         $this->_returnError( 212 );
@@ -1627,6 +1628,27 @@ class Rest_api extends CI_Controller {
       return;
     }
     $this->_xmlContents( 'run-reset', array( 'run' => $run ) );
+  }
+  
+  private function _openml_file_upload() {
+    if( $this->ion_auth->is_admin($this->user_id) == false ) {
+      $this->_returnError( 490 );
+      return;
+    }
+    
+    $file = isset( $_FILES['file'] ) ? $_FILES['file'] : false;
+    if( ! check_uploaded_file( $file ) ) {
+      $this->_returnError( 491 );
+      return;
+    }
+    
+    $file_id = $this->File->register_uploaded_file($file, $this->data_folders['misc'], $this->user_id, 'run_uploaded_file');
+    if( $file_id == false ) {
+      $this->_returnError( 492 );
+      return;
+    }
+    
+    $this->_xmlContents( 'file-upload', array( 'file_id' => $file_id, 'filename' => $file['name'] ) );
   }
   
   private function _openml_job_get() {
