@@ -1276,7 +1276,7 @@ class Rest_api extends CI_Controller {
     
     $where_task = $task_id == false ? '' : ' AND task_id = ' . $task_id;
     $where_setup = $setup_id == false ? '' : ' AND setup = ' . $setup_id;
-    $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $setup_id;
+    $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $implementation_id;
     
     $sql = 
       'SELECT r.rid, r.uploader, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
