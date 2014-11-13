@@ -1279,7 +1279,7 @@ class Rest_api extends CI_Controller {
     $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $setup_id;
     
     $sql = 
-      'SELECT r.rid, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
+      'SELECT r.rid, r.uploader, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
       'FROM run r, algorithm_setup s WHERE r.setup = s.sid ' . $where_task . $where_setup . $where_impl;
     $res = $this->Run->query( $sql );
     

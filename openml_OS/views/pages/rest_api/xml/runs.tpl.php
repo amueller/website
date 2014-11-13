@@ -5,6 +5,7 @@
     <oml:task_id><?php echo $r->task_id; ?></oml:task_id>
     <oml:setup_id><?php echo $r->setup; ?></oml:setup_id>
     <oml:implementation_id><?php echo $r->implementation_id; ?></oml:implementation_id>
+    <oml:uploader><?php echo $r->uploader; ?></oml:uploader>
   </oml:run>
   <?php endforeach; ?>
 </oml:runs>
