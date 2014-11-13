@@ -27,6 +27,7 @@
 		<xs:element name="data_set" type="oml:data_set" />	<!-- A data set. For now, this is an ARFF file. -->
 		<xs:element name="estimation_procedure" type="oml:estimation_procedure" />	<!-- An estimation procedure description, e.g. cross-validation -->
 		<xs:element name="evaluation_measures" type="oml:evaluation_measures" />	<!-- A list of evaluation measures to optimise for in this task -->
+		<xs:element name="cost_matrix" type="oml:array_string" />	<!-- A list of evaluation measures to optimise for in this task -->
 	</xs:choice>
 	</xs:extension>
     </xs:complexContent>
@@ -59,6 +60,7 @@
 		<xs:element name="target_feature" minOccurs="0" maxOccurs="unbounded" type="xs:string" />	<!-- Any target features of the dataset to be used in this task. Depending on the task type there may be none, exactly one, or multiple, task features -->
 	</xs:sequence>
 </xs:complexType>
+
 <xs:complexType name="predictions">
 	<xs:sequence>
 		<xs:element name="format" type="xs:string" />	<!-- The format of the predictions file, this is always ARFF for now -->
@@ -73,6 +75,11 @@
 <xs:simpleType name="system_string"> <!-- Subset on xs:string. Highly restricted form of string. URL-friendly -->
   <xs:restriction base="xs:string">
      <xs:pattern value="([a-zA-Z0-9_\-\.])+"/>
+  </xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="array_string"> <!-- Subset on xs:string. Should contain an array. (TODO: improve check) -->
+  <xs:restriction base="xs:string">
+     <xs:pattern value="([0-9\s\[\],])+"/>
   </xs:restriction>
 </xs:simpleType>
 </xs:schema>

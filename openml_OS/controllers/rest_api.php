@@ -171,8 +171,8 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_authenticate_check() {
-    $username     = $this->input->getpost( 'username' );
-    $session_hash  = $this->input->getpost( 'session_hash' );
+    $username     = $this->input->get_post( 'username' );
+    $session_hash  = $this->input->get_post( 'session_hash' );
     
     if( $username == false ) {
       $this->_returnError( 290 );
@@ -1235,6 +1235,16 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'implementation-get', array( 'source' => $implementation ) );
   }
 
+  private function _openml_implementations() {
+    
+    $implementations = $this->Implementation->get();
+    if( $implementations == false ) {
+      $this->_returnError( 500 );
+      return;
+    }
+    $this->_xmlContents( 'implementations', array( 'implementations' => $implementations ) );
+  }
+
   private function _openml_implementation_owned() {
     
     $implementations = $this->Implementation->getColumnWhere( 'id', '`uploader` = "'.$this->user_id.'"' );
@@ -1252,6 +1262,33 @@ class Rest_api extends CI_Controller {
   
   private function _openml_evaluation_methods() {
     $this->_returnError( 101 );
+  }
+  
+  private function _openml_runs() {
+    $task_id = $this->input->get_post('task_id');
+    $setup_id = $this->input->get_post('setup_id');
+    $implementation_id = $this->input->get_post('implementation_id');
+    
+    if( $task_id == false && $setup_id == false && $implementation_id == false ) {
+      $this->_returnError( 510 );
+      return;
+    }
+    
+    $where_task = $task_id == false ? '' : ' AND task_id = ' . $task_id;
+    $where_setup = $setup_id == false ? '' : ' AND setup = ' . $setup_id;
+    $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $setup_id;
+    
+    $sql = 
+      'SELECT r.rid, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
+      'FROM run r, algorithm_setup s WHERE r.setup = s.sid ' . $where_task . $where_setup . $where_impl;
+    $res = $this->Run->query( $sql );
+    
+    if($res == false) {
+      $this->_returnError( 511 );
+      return;
+    }
+    
+    $this->_xmlContents( 'runs', array( 'runs' => $res ) );
   }
   
   private function _openml_run_upload() {

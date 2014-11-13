@@ -668,4 +668,18 @@ $this->apiErrors[491][1] = 'Something went wrong uploading the file. Might be fi
 // openml.file.upload
 $this->apiErrors[492][0] = 'File register error';
 $this->apiErrors[492][1] = 'Something went wrong registering the file. Please contact OpenML team. ';
+
+
+// openml.implementations
+$this->apiErrors[500][0] = 'No results';
+$this->apiErrors[500][1] = 'There where no results. Check whether there are implementations. ';
+
+// openml.runs
+$this->apiErrors[510][0] = 'Please provide at least task_id, implementation_id or setup_id. ';
+$this->apiErrors[510][1] = 'The number of runs is huge. Please limit the result space. ';
+
+// openml.implementations
+$this->apiErrors[511][0] = 'No results';
+$this->apiErrors[511][1] = 'There where no results. Check whether there are runs under this constraint. ';
+
 ?>
