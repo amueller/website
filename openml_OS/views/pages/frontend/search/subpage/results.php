@@ -241,7 +241,7 @@ function toggleResults( resultgroup ) {
 				echo '</div>';
 		   } ?>
 			</div>
-<?php }} ?>
+<?php } if(!$this->table) {?>
 
 
 <ul class="pagination" style="margin-bottom:50px">
@@ -252,7 +252,7 @@ function toggleResults( resultgroup ) {
   <li><a href="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from+10)); ?>">&raquo;</a></li>
 </ul>
 
-<?php
+<?php }}
 	} else {
 		if( $this->terms != false ) {
 			o('no-search-results');

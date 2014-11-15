@@ -22,7 +22,7 @@
           <h4>Using REST services</h4>
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
           <p>The REST Endpoint URL is 
-          <div class="codehighlight"><pre><code class="http">http://www.openml.org/api/</code>
+          <div class="codehighlight"><pre><code class="http"><?php echo BASE_URL;?>api/</code>
           </div>
           </p>
           <p>For instance, to request the <code>openml.data.description</code> service, invoke like this (e.g., in your browser):
@@ -51,7 +51,7 @@
         <img src="img/api_get_dataset.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for a dataset using the <a href="api#openml_data_description">openml.data.description</a> service and a <code>dataset id</code>. The <code>dataset id</code> is typically part of a task, or returned when searching for datasets.</li>
-          <li>OpenML returns a description of the dataset as an XML file. <a href="http://www.openml.org/api/?f=openml.data.description&amp;data_id=1" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
+          <li>OpenML returns a description of the dataset as an XML file. <a href="<?php echo BASE_URL;?>api/?f=openml.data.description&amp;data_id=1" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
           <li>The dataset description contains the URL where the dataset can be downloaded. The user calls that URL to download the dataset.</li>
           <li>The dataset is returned by the server hosting the dataset. This can be OpenML, but also any other data repository. <a href="http://expdb.cs.kuleuven.be/expdb/data/uci/nominal/anneal.arff" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
         </ol>
