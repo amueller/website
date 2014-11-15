@@ -149,12 +149,12 @@ $this->apiErrors[181][0] = 'Unknown implementation';
 $this->apiErrors[181][1] = 'The implementation with this ID was not found in the database';
 
 // for function: openml.run.upload 
-$this->apiErrors[200][0] = 'Please provide session_hash';
-$this->apiErrors[200][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
+//$this->apiErrors[200][0] = 'Please provide session_hash';
+//$this->apiErrors[200][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
 
 // for function: openml.run.upload 
-$this->apiErrors[201][0] = 'Authentication failed';
-$this->apiErrors[201][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+//$this->apiErrors[201][0] = 'Authentication failed';
+//$this->apiErrors[201][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
 // for function: openml.run.upload 
 $this->apiErrors[202][0] = 'Please provide run xml';
@@ -657,8 +657,29 @@ $this->apiErrors[480][1] = 'In order to view task overview, please provide task_
 $this->apiErrors[481][0] = 'No results';
 $this->apiErrors[481][1] = 'There where no matches for this task type id. Check whether some tasks exists. ';
 
-// openml.tasks
-$this->apiErrors[490][0] = 'No results';
-$this->apiErrors[490][1] = 'There where no matches. ';
+// openml.file.upload
+$this->apiErrors[490][0] = 'Authentication failed';
+$this->apiErrors[490][1] = 'Admin rights required for this function. ';
+
+// openml.file.upload
+$this->apiErrors[491][0] = 'File upload error';
+$this->apiErrors[491][1] = 'Something went wrong uploading the file. Might be filesize problem. ';
+
+// openml.file.upload
+$this->apiErrors[492][0] = 'File register error';
+$this->apiErrors[492][1] = 'Something went wrong registering the file. Please contact OpenML team. ';
+
+
+// openml.implementations
+$this->apiErrors[500][0] = 'No results';
+$this->apiErrors[500][1] = 'There where no results. Check whether there are implementations. ';
+
+// openml.runs
+$this->apiErrors[510][0] = 'Please provide at least task_id, implementation_id or setup_id. ';
+$this->apiErrors[510][1] = 'The number of runs is huge. Please limit the result space. ';
+
+// openml.implementations
+$this->apiErrors[511][0] = 'No results';
+$this->apiErrors[511][1] = 'There where no results. Check whether there are runs under this constraint. ';
 
 ?>

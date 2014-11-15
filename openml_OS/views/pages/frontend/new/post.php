@@ -5,7 +5,7 @@
  * It converts a dataset name into an id and filters
  * the datasets with the wrong target attribute. 
  * * * * */
- 
+
 if($this->subpage == 'task') {
   $ttid = $this->input->post( 'ttid' );
   $datatype = array( 'nominal' );
@@ -59,6 +59,8 @@ if($this->subpage == 'task') {
     }
   }
   
+  // TODO: Check input $this->input->post('cost_matrix')
+  
   $results = array(); // resulting task configurations
   $dids = array(); // used dataset ids
   $new_tasks = array();
@@ -73,7 +75,7 @@ if($this->subpage == 'task') {
 
       $dids[] = $dataset->did;
     }
-    if( count( $datasets ) > 1 && $this->input->post('custom_testset') ) {
+    if( count( $datasets ) > 1 && ($this->input->post('custom_testset') || $this->input->post('cost_matrix') ) ) {
       // against the rules
     } elseif( $input_safe ) {
       $new_tasks = $this->Task->create_batch( $ttid, $results );

@@ -64,7 +64,8 @@ class Rest_api extends CI_Controller {
     $this->data_folders = array(
       'dataset'       => 'dataset/api/',
       'implementation'   => 'implementation/',
-      'run'        => 'run/'
+      'run'        => 'run/',
+      'misc' => 'misc/'
     );
     
     $this->data_tables = $this->config->item('data_tables');
@@ -170,8 +171,8 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_authenticate_check() {
-    $username     = $this->input->getpost( 'username' );
-    $session_hash  = $this->input->getpost( 'session_hash' );
+    $username     = $this->input->get_post( 'username' );
+    $session_hash  = $this->input->get_post( 'session_hash' );
     
     if( $username == false ) {
       $this->_returnError( 290 );
@@ -1234,6 +1235,16 @@ class Rest_api extends CI_Controller {
     $this->_xmlContents( 'implementation-get', array( 'source' => $implementation ) );
   }
 
+  private function _openml_implementations() {
+    
+    $implementations = $this->Implementation->get();
+    if( $implementations == false ) {
+      $this->_returnError( 500 );
+      return;
+    }
+    $this->_xmlContents( 'implementations', array( 'implementations' => $implementations ) );
+  }
+
   private function _openml_implementation_owned() {
     
     $implementations = $this->Implementation->getColumnWhere( 'id', '`uploader` = "'.$this->user_id.'"' );
@@ -1251,6 +1262,33 @@ class Rest_api extends CI_Controller {
   
   private function _openml_evaluation_methods() {
     $this->_returnError( 101 );
+  }
+  
+  private function _openml_runs() {
+    $task_id = $this->input->get_post('task_id');
+    $setup_id = $this->input->get_post('setup_id');
+    $implementation_id = $this->input->get_post('implementation_id');
+    
+    if( $task_id == false && $setup_id == false && $implementation_id == false ) {
+      $this->_returnError( 510 );
+      return;
+    }
+    
+    $where_task = $task_id == false ? '' : ' AND task_id = ' . $task_id;
+    $where_setup = $setup_id == false ? '' : ' AND setup = ' . $setup_id;
+    $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $implementation_id;
+    
+    $sql = 
+      'SELECT r.rid, r.uploader, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
+      'FROM run r, algorithm_setup s WHERE r.setup = s.sid ' . $where_task . $where_setup . $where_impl;
+    $res = $this->Run->query( $sql );
+    
+    if($res == false) {
+      $this->_returnError( 511 );
+      return;
+    }
+    
+    $this->_xmlContents( 'runs', array( 'runs' => $res ) );
   }
   
   private function _openml_run_upload() {
@@ -1358,10 +1396,8 @@ class Rest_api extends CI_Controller {
     $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
     
     // now create a run
-    $runId = $this->Run->getHighestIndex( array('run'), 'rid' );
     
     $runData = array(
-      'rid' => $runId,
       'uploader' => $this->user_id,
       'setup' => $setupId,
       'task_id' => $task->task_id,
@@ -1370,7 +1406,8 @@ class Rest_api extends CI_Controller {
       'error' => ($error_message == false) ? null : $error_message,
       'experiment' => '-1',
     );
-    if( $this->Run->insert( $runData ) === false ) {
+    $runId = $this->Run->insert( $runData );
+    if( $runId === false ) {
       $this->_returnError( 210 );
       return;
     }
@@ -1381,7 +1418,7 @@ class Rest_api extends CI_Controller {
     
     // attach uploaded files as output to run
     foreach( $_FILES as $key => $value ) {
-      $file_type = ($value == 'predictions') ? 'predictions' : 'run_uploaded_file';
+      $file_type = ($key == 'predictions') ? 'predictions' : 'run_uploaded_file';
       $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
       if(!$file_id) {
         $this->_returnError( 212 );
@@ -1390,17 +1427,18 @@ class Rest_api extends CI_Controller {
       $file_record = $this->File->getById($file_id);
       $filename = getAvailableName( DATA_PATH . $this->data_folders['run'], $value['name'] );
       
-      $did = $this->Runfile->getHighestIndex( $this->data_tables, 'did' );
       $record = array(
-        'did' => $did,
         'source' => $run->rid,
         'field' => $key,
         'name' => $value['name'],
         'format' => $file_record->extension,
         'file_id' => $file_id );
       
-      $this->Runfile->insert( $record ); 
-      
+      $did = $this->Runfile->insert( $record ); 
+      if( $did == false ) {
+        $this->_returnError( 212 );
+        return;
+      } 
       $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
     
@@ -1419,6 +1457,9 @@ class Rest_api extends CI_Controller {
     
     // add to elastic search index. 
     $this->elasticsearch->index('run', $run->rid); 
+    
+    // remove scheduled task
+    $this->Schedule->deleteWhere( 'task_id = "' . $task->task_id . '" AND sid = "' . $setupId . '"' );
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Now the stuff that needs to be done for the special     *
@@ -1552,7 +1593,7 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    if($run->uploader != $this->user_id ) {
+    if($run->uploader != $this->user_id && $this->ion_auth->is_admin($this->user_id) == false ) {
       $this->_returnError( 393 );
       return;
     }
@@ -1624,6 +1665,27 @@ class Rest_api extends CI_Controller {
       return;
     }
     $this->_xmlContents( 'run-reset', array( 'run' => $run ) );
+  }
+  
+  private function _openml_file_upload() {
+    if( $this->ion_auth->is_admin($this->user_id) == false ) {
+      $this->_returnError( 490 );
+      return;
+    }
+    
+    $file = isset( $_FILES['file'] ) ? $_FILES['file'] : false;
+    if( ! check_uploaded_file( $file ) ) {
+      $this->_returnError( 491 );
+      return;
+    }
+    
+    $file_id = $this->File->register_uploaded_file($file, $this->data_folders['misc'], $this->user_id, 'run_uploaded_file');
+    if( $file_id == false ) {
+      $this->_returnError( 492 );
+      return;
+    }
+    
+    $this->_xmlContents( 'file-upload', array( 'file_id' => $file_id, 'filename' => $file['name'] ) );
   }
   
   private function _openml_job_get() {

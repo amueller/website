@@ -15,7 +15,7 @@ class Schedule extends Database_write {
 
     // pick up abandoned jobs
     if(is_array($res) == false) {
-	$sql = 'SELECT * FROM `schedule` WHERE `dependencies` = "' . $workbench . '" AND `active` = "true" AND `ttid` = "' . $task_type . '" ORDER BY last_assigned ASC limit 0,1;';
+	    $sql = 'SELECT * FROM `schedule` WHERE `dependencies` = "' . $workbench . '" AND `active` = "true" AND `ttid` = "' . $task_type . '" ORDER BY last_assigned ASC limit 0,1;';
 
     	$res = $this->query( $sql );
     }
