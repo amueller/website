@@ -18,6 +18,8 @@
           <h1 id="dev-tutorial">REST tutorial</h1>
         </div>
        <p>OpenML offers a RESTful Web API for uploading and downloading machine learning resources. Below is a list of common use cases.
+
+       <div class="alert alert-warning" role="alert">You need to be <a href="login">signed in</a> to use the examples below.</div>
        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
           <h4>Using REST services</h4>
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
@@ -27,12 +29,12 @@
           </p>
           <p>For instance, to request the <code>openml.data.description</code> service, invoke like this (e.g., in your browser):
           <div class="codehighlight">
-            <pre class="pre-scrollable"><code class="http">http://www.openml.org/api/?f=openml.data.description&data_id=1</code>
+            <pre class="pre-scrollable"><code class="http"><?php echo BASE_URL;?>api/?f=openml.data.description&data_id=1</code>
           </div>
           </p>
 	  <p>From your command-line, you can use curl:
 	  <div class="codehighlight">
-	   <pre class="pre-scrollable"><code class="http">curl -XGET 'http://www.openml.org/api/?f=openml.data.description&data_id=1'</code>
+	   <pre class="pre-scrollable"><code class="http">curl -XGET '<?php echo BASE_URL;?>api/?f=openml.data.description&data_id=1'</code>
 	  </div>
 	  </p>
           <p>Responses are always in XML format, also when an error is returned. Error messages will look like this:
@@ -63,7 +65,7 @@
         <img src="img/api_get_implementation.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for an implementation using the <a href="api#openml_implementation_get">openml.implementation.get</a> service and a <code>implementation id</code>. The <code>implementation id</code> is typically returned when searching for implementations.</li>
-          <li>OpenML returns a description of the implementation as an XML file. <a href="http://www.openml.org/api/?f=openml.implementation.get&amp;implementation_id=65" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
+          <li>OpenML returns a description of the implementation as an XML file. <a href="<?php echo BASE_URL;?>api/?f=openml.implementation.get&amp;implementation_id=65" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
           <li>The implementation description contains the URL where the implementation can be downloaded, either as source, binary or both, as well as additional information on history, dependencies and licence. The user calls the right URL to download it.</li>
           <li>The implementation is returned by the server hosting it. This can be OpenML, but also any other code repository. <a href="http://sourceforge.net/projects/weka/files/weka-3-4/3.4.8/weka-3-4-8a.zip/download" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
         </ol>
@@ -75,13 +77,13 @@
         <img src="img/api_get_task.png" style="display: block;margin-left:auto;margin-right:auto;width:480px;padding:10px">
         <ol>
           <li>User asks for a task using the <a href="api#openml_tasks_search">openml.tasks.search</a> service and a <code>task id</code>. The <code>task id</code> is typically returned when searching for tasks.</li>
-          <li>OpenML returns a description of the task as an XML file. <a href="http://www.openml.org/api/?f=openml.tasks.search&amp;task_id=1" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
+          <li>OpenML returns a description of the task as an XML file. <a href="<?php echo BASE_URL;?>api/?f=openml.tasks.search&amp;task_id=1" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
           <li>The task description contains the <code>dataset id</code>(s) of the datasets involved in this task. The user asks for the dataset using the <a href="api#openml_data_description">openml.data.description</a> service and the <code>dataset id</code>.</li>
-          <li>OpenML returns a description of the dataset as an XML file. <a href="http://www.openml.org/api/?f=openml.data.description&amp;data_id=61" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
+          <li>OpenML returns a description of the dataset as an XML file. <a href="<?php echo BASE_URL;?>api/?f=openml.data.description&amp;data_id=61" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
           <li>The dataset description contains the URL where the dataset can be downloaded. The user calls that URL to download the dataset.</li>
           <li>The dataset is returned by the server hosting it. This can be OpenML, but also any other data repository. <a href="http://openml.liacs.nl/files/download/61/dataset_61_iris.arff" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
           <li>(Optional) The task description may also contain links to other resources, such as the train-test splits to be used in cross-validation. The user calls that URL to download the train-test splits.</li>
-          <li>(Optional) The train-test splits are returned by OpenML. <a href="http://www.openml.org/api_splits/get/1/Task_1_splits.arff" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
+          <li>(Optional) The train-test splits are returned by OpenML. <a href="<?php echo BASE_URL;?>api_splits/get/1/Task_1_splits.arff" type="button" class="btn btn-primary btn-xs">Try it now</a></li>
         </ol>
         <h5>Services:</h5>
         <ul>
