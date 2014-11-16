@@ -23,7 +23,7 @@
        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
           <h4>Using REST services</h4>
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
-          <p>The REST Endpoint URL is 
+          <p>The REST Endpoint URL is
           <div class="codehighlight"><pre><code class="http"><?php echo BASE_URL;?>api/</code>
           </div>
           </p>
@@ -34,8 +34,16 @@
           </p>
 	  <p>From your command-line, you can use curl:
 	  <div class="codehighlight">
-	   <pre class="pre-scrollable"><code class="http">curl -XGET '<?php echo BASE_URL;?>api/?f=openml.data.description&data_id=1'</code>
-	  </div>
+	   <pre class="pre-scrollable"><code class="http"># First, we need to authenticate with the openml.authenticate service
+USER=YOURACCOUNTNAME
+PASS=$(echo -n YOURPASSWORD | md5)
+RES=$(curl --data "username=$USER&password=$PASS" http://openml.org/api/?f=openml.authenticate)
+
+# We now extract the session hash from the XML response
+HASH=$(echo $RES | xmllint --xpath "string(//*[local-name()='authenticate']/*[local-name()='session_hash'])" -)
+
+# now you can call any function you want
+curl -XGET "<?php echo BASE_URL;?>api/?f=openml.data.description&data_id=1&session_hash=$HASH"</code></div>
 	  </p>
           <p>Responses are always in XML format, also when an error is returned. Error messages will look like this:
           <div class="codehighlight">
