@@ -5,9 +5,9 @@
     <?php // TODO: hack. fix this!!
       $inout = $this->Task_type_inout->getWhere( 'ttid = ' . $task_type->ttid . ' AND name = "' . $key . '"' ); 
     ?>
-  <oml:<?php echo $inout[0]->io; ?> name="<?php echo $key; ?>">
-		<?php echo $item; ?>
-  </oml:<?php echo $inout[0]->io; ?>>
+  <?php if( $item != false ): ?>
+  <oml:<?php echo $inout[0]->io; ?> name="<?php echo $key; ?>"><?php echo $item; ?></oml:<?php echo $inout[0]->io; ?>>
+  <?php endif; ?>
 	<?php endforeach; ?>
   <?php if(is_array($tags)) foreach( $tags as $tag ): ?>
   <oml:tag><?php echo $tag;?></oml:tag>
