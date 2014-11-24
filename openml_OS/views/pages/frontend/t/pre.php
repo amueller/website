@@ -111,7 +111,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			$inout['evalproc'] = $ep[0]->name;
 		}
 		if($inout['name'] == 'evaluation_measures')
-				$this->default_measure = $inout['name'];
+				$this->default_measure = $inout['value'];
 
 		$this->taskio[] = $inout;
 	  }
