@@ -87,7 +87,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	$this->record['runcount'] = $count[0]->count;
 	$this->record['runs'] = $count[0]->runs;
 
-
+	$this->default_measure = false;
 	$io = $this->Implementation->query('SELECT io.name, io.type, io.description, tt.description as typedescription, io.io, io.requirement, ti.value FROM task_type_inout io left join task_inputs ti on (io.name = ti.input and ti.task_id=' . $this->task_id . ") left join task_io_types tt on io.type=tt.name WHERE io.ttid=" . $this->record['type_id'] );
 	if( $io != false ) {
 	  foreach( $io as $i ) {
@@ -110,7 +110,6 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			$ep = $this->Implementation->query('SELECT name FROM estimation_procedure where id=' . $i->value);
 			$inout['evalproc'] = $ep[0]->name;
 		}
-		$this->default_measure = false;
 		if($inout['name'] == 'evaluation_measures')
 				$this->default_measure = $inout['name'];
 
