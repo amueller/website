@@ -81,12 +81,12 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			  'task_id' => $task[0]->task_id,
 			  'type_id' => $task[0]->ttid,
 			  'type_name' => $task[0]->name,
-			  'type_description' => $task[0]->description			
+			  'type_description' => $task[0]->description
 			);
 	$count = $this->Implementation->query('SELECT group_concat(rid) as runs, count(rid) as count from run where task_id=' . $this->task_id );
 	$this->record['runcount'] = $count[0]->count;
 	$this->record['runs'] = $count[0]->runs;
-	
+
 
 	$io = $this->Implementation->query('SELECT io.name, io.type, io.description, tt.description as typedescription, io.io, io.requirement, ti.value FROM task_type_inout io left join task_inputs ti on (io.name = ti.input and ti.task_id=' . $this->task_id . ") left join task_io_types tt on io.type=tt.name WHERE io.ttid=" . $this->record['type_id'] );
 	if( $io != false ) {
@@ -101,15 +101,18 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			  'requirement' => $i->requirement
 			);
 		if($i->type == 'Dataset' && is_numeric($i->value)){
-			$dataset = $this->Implementation->query('SELECT name, version FROM dataset where did=' . $i->value); 
+			$dataset = $this->Implementation->query('SELECT name, version FROM dataset where did=' . $i->value);
 			$inout['dataset'] = $dataset[0]->name . " (" . $dataset[0]->version . ")";
 			$this->sourcedata_id = $i->value;
 			$this->sourcedata_name = $inout['dataset'];
 		}
 		elseif($i->type == 'Estimation Procedure'){
-			$ep = $this->Implementation->query('SELECT name FROM estimation_procedure where id=' . $i->value); 
+			$ep = $this->Implementation->query('SELECT name FROM estimation_procedure where id=' . $i->value);
 			$inout['evalproc'] = $ep[0]->name;
 		}
+		$this->default_measure = false;
+		if($inout['name'] == 'evaluation_measures')
+				$this->default_measure = $inout['name'];
 
 		$this->taskio[] = $inout;
 	  }
@@ -119,6 +122,8 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 
 // evaluations
 $this->current_measure = 'predictive_accuracy';
+if($this->default_measure)
+	$this->current_measure = $this->default_measure;
 $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 
 // datatables
@@ -128,22 +133,22 @@ $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType =
   $this->dt_main['column_content']  = array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
   $this->dt_main['column_source']    = array('wrapper','db','db','doublewrapper','db','db');
   $this->dt_main['group_by']     = 'l.implementation_id';
-  
+
   $this->dt_main['base_sql']     =   'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
                     'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
                     'WHERE `r`.`setup`=`l`.`sid` ' .
-                    'AND `l`.`implementation_id` = `i`.`id` ' . 
+                    'AND `l`.`implementation_id` = `i`.`id` ' .
                     'AND `e`.`source`=`r`.`rid` ';
-                    
+
   $this->dt_main_all = array();
   $this->dt_main_all['columns']     = array('r.rid','rid','sid','fullName','value');
   $this->dt_main_all['column_content']= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
   $this->dt_main_all['column_source']  = array('wrapper','db','db','doublewrapper','db','db');
   //$this->dt_main_all['group_by']   = 'l.implementation'; NONE
-  
+
   $this->dt_main_all['base_sql']   =   'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(`e`.`value`,4) AS `value` ' .
                     'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
                     'WHERE `r`.`setup`=`l`.`sid` ' .
-                    'AND `l`.`implementation_id` = `i`.`id` ' . 
+                    'AND `l`.`implementation_id` = `i`.`id` ' .
                     'AND `e`.`source`=`r`.`rid` ';
 ?>
