@@ -52,7 +52,7 @@ class Task_type_inout extends Database_read {
     $replace[] = $task_id;
     $variables[] = '[CONSTANT:base_url]';
     $replace[] = BASE_URL;
-    
+    // TODO: remove entrees of $templates with no content. (e.g., cost_matrix)
 		return str_replace( $variables, $replace, $templates );
 	}
   
