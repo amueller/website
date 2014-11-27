@@ -1,7 +1,7 @@
 <?php
-     foreach( $this->taskio as $r ): 
+     foreach( $this->taskio as $r ):
 	if($r['category'] != 'input') continue;
-	if($r['type'] == 'Dataset'){ 
+	if($r['type'] == 'Dataset'){
 		$dataset = $r['dataset'];
 		$dataset_id = $r['value'];
 	}
@@ -9,7 +9,7 @@
 
 <div class="row openmlsectioninfo">
 	<div class="col-sm-12">
-		<?php if (isset($this->record['task_id'])){ ?>		
+		<?php if (isset($this->record['task_id'])){ ?>
 		<ul class="hotlinks">
 		 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
 		 <li><a href="api/?f=openml.task.get&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
@@ -54,18 +54,17 @@
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 				</select>
-
 			<div id="data_result_time" style="width: 100%">Plotting contribution timeline <i class="fa fa-spinner fa-spin"></i></div>
-						
+
 			<div id="data_result_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
 
 			<div class="table-responsive">
 				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
-					<?php echo generate_table( 
-								array('img_open' => '', 
-										'rid' => 'Run', 
-										'sid' => 'setup id', 
-										'name' => 'Flow', 
+					<?php echo generate_table(
+								array('img_open' => '',
+										'rid' => 'Run',
+										'sid' => 'setup id',
+										'name' => 'Flow',
 										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
 				</table>
 			</div>
@@ -74,7 +73,7 @@
 			    <div class="modal-content">
 			    </div>
 			  </div>
-			</div>	
+			</div>
 		<?php } else { ?>
 		        Plot learning curves for score:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; redrawCurves();">
@@ -85,23 +84,23 @@
 				<div class="checkbox"><label>
 				<input type="checkbox" name="latestOnly" checked onchange="latestOnly = this.checked; redrawCurves();"> Only newest flow versions</label></div>
 
-						
+
 			<div id="learning_curve_visualize" style="width: 100%">Plotting curves <i class="fa fa-spinner fa-spin"></i></div>
 
 			<div>   <div class="table-responsive">
 				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
-					<?php echo generate_table( 
-								array('img_open' => '', 
-										'rid' => 'Run', 
-										'sid' => 'setup id', 
-										'name' => 'Flow', 
+					<?php echo generate_table(
+								array('img_open' => '',
+										'rid' => 'Run',
+										'sid' => 'setup id',
+										'name' => 'Flow',
 										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
 				</table></div>
 			</div>
 
 		<?php } ?>
-		
-		<?php } else { ?>Sorry, this task is unknown.<?php } ?>		
+
+		<?php } else { ?>Sorry, this task is unknown.<?php } ?>
 
     <div id="disqus_thread">Loading discussions...</div>
     <script type="text/javascript">
