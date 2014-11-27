@@ -69,7 +69,8 @@ class Cron extends CI_Controller {
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
         'AND e.source = r.rid '.
          $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
-//      'GROUP BY s.sid, t.task_id, e.repeat, e.fold, e.sample ' . 
+         /* the GROUP BY line makes stuff slower, we might want to comment it out. */
+        'GROUP BY r.setup, r.task_id, e.function, e.repeat, e.fold, e.sample ' . 
         'INTO OUTFILE "'. $tmp_path .'" ' .
         'FIELDS TERMINATED BY "," ' .
         'ENCLOSED BY "\"" ' .
