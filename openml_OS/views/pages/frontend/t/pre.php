@@ -110,8 +110,8 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 			$ep = $this->Implementation->query('SELECT name FROM estimation_procedure where id=' . $i->value);
 			$inout['evalproc'] = $ep[0]->name;
 		}
-		if($inout['name'] == 'evaluation_measures')
-				$this->default_measure = $inout['value'];
+		if($inout['name'] == 'evaluation_measures' and strlen($inout['value'])>0)
+				$this->default_measure = str_replace(' ','_',$inout['value']);
 
 		$this->taskio[] = $inout;
 	  }
@@ -123,6 +123,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 $this->current_measure = 'predictive_accuracy';
 if($this->default_measure)
 	$this->current_measure = $this->default_measure;
+
 $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 
 // datatables
