@@ -31,12 +31,17 @@ if($this->subpage == 'task') {
     $datatype = array( 'numeric' );
   }
   
+  $missingValuesConstr = 'AND `f`.`NumberOfMissingValues` = 0 '; // MAKE TASKS WITH NO MISSING VALUES IN TARGET, FOR NOW
+  if( $ttid == 6 ) {
+    $missingValuesConstr = '';
+  }
+  
   $sql = 
     'SELECT `d`.`did`, `f`.`name` ' . 
     'FROM `dataset` `d`,`data_feature` `f` ' . 
     'WHERE `d`.`did` = `f`.`did` ' .
     'AND `f`.`name` = ' . $target_feature . ' ' .
-    'AND `f`.`NumberOfMissingValues` = 0 ' . // MAKE TASKS WITH NO MISSING VALUES IN TARGET, FOR NOW
+    $missingValuesConstr .
     'AND `f`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
     'AND ' . $constraints . ' ';
     
