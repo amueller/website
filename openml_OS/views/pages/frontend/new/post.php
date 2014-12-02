@@ -47,7 +47,7 @@ if($this->subpage == 'task') {
   }
   if( $ttid == 6 ) {
     // data mining challange. labeled data set and dataset with missing labels
-    $constraints1 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data_labeled' ), 'd1' );
+    $constraints1 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data' ), 'd1' );
     $constraints2 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data_labeled' ), 'd2' );
     
     $sql = 
