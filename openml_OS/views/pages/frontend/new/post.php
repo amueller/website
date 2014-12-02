@@ -47,6 +47,7 @@ if($this->subpage == 'task') {
   }
   if( $ttid == 6 ) {
     // data mining challange. labeled data set and dataset with missing labels
+    $constraints1 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data_labeled' ), 'd1' );
     $constraints2 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data_labeled' ), 'd2' );
     
     $sql = 
@@ -59,7 +60,7 @@ if($this->subpage == 'task') {
       'AND `f2`.`NumberOfMissingValues` = 0 ' .
       'AND `f1`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
       'AND `f2`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
-      'AND ' . $constraints . ' AND ' . $constraints2;
+      'AND ' . $constraints1 . ' AND ' . $constraints2;
   }
   
 
