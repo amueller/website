@@ -21,7 +21,7 @@ if($this->subpage == 'task') {
   $constraints = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data' ), 'd' );
   $target_feature = '`d`.`default_target_attribute`';
   if( trim( $this->input->post( 'target_feature' ) ) ) {
-    $target_feature = '"'.trim( $this->input->post( 'target_feature' ) ).'"';
+    $target_feature = trim( $this->input->post( 'target_feature' ) );
   } else {
     unset( $inputs['target_feature'] );
   }
@@ -59,7 +59,7 @@ if($this->subpage == 'task') {
       'AND `f2`.`NumberOfMissingValues` = 0 ' .
       'AND `f1`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
       'AND `f2`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
-      'AND ' . $constraints . ' ' . $constraints2;
+      'AND ' . $constraints . ' AND ' . $constraints2;
   }
   
 
