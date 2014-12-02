@@ -51,7 +51,7 @@ if($this->subpage == 'task') {
     $constraints2 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data_labeled' ), 'd2' );
     
     $sql = 
-      'SELECT `d1`.`did` AS source_data, `d2`.`did` AS `source_data_labeleled`, `f1`.`name` AS `target_feature` '.
+      'SELECT `d1`.`did` AS source_data, `d2`.`did` AS `source_data_labeled`, `f1`.`name` AS `target_feature` '.
       'FROM `dataset` `d1`, `dataset` `d2`, `data_feature` `f1`, `data_feature` `f2` '.
       'WHERE `d1`.`did` = `f1`.`did` '.
       'AND `d2`.`did` = `f2`.`did` '.
