@@ -80,7 +80,7 @@ if($this->subpage == 'task') {
         'LEFT JOIN `data_feature` `fl` ON `d`.`did` = `fl`.`did` AND `fl`.`name` = "' . $tfl . '" ' .
         'LEFT JOIN `data_feature` `fr` ON `d`.`did` = `fr`.`did` AND `fr`.`name` = "' . $tfr . '" ' .
         'WHERE `d`.`did` = `fe`.`did` AND `fe`.`name` = "' . $tfe . '" ' . 
-        'AND ' . $constraints . '; ';
+        'AND ' . $constraints . ' ';
     }
   }
   
