@@ -62,8 +62,28 @@ if($this->subpage == 'task') {
       'AND `f2`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
       'AND ' . $constraints1 . ' AND ' . $constraints2;
   }
+  if( $ttid == 7 ) {
+    $tfl = $this->input->post( 'target_feature_left' );
+    $tfr = $this->input->post( 'target_feature_right' );
+    $tfe = $this->input->post( 'target_feature_event' );
+    $source_data = $this->input->post( 'source_data' );
+    
+    if( ($tfl == false && $tfr == false) || $tfe == false || $source_data == false ) {
+      // illegal request, return nothing
+      $sql = 'SELECT * FROM dataset WHERE 0;';
+    } else {
+      $sql = 
+        'SELECT `d`.`did` AS `source_data`, `fl`.`name` AS `target_feature_left`, ' .
+          '`fr`.`name` AS `target_feature_right`, '.
+          '`fe`.`name` AS `target_feature_event` ' .
+        'FROM `target_feature` `fe`, `dataset` `d` ' .
+        'LEFT JOIN `target_feature` `fl` ON `d`.`did` = `fl`.`did` AND `fl`.`name` = "' . $tfl . '" ' .
+        'LEFT JOIN `target_feature` `fr` ON `d`.`did` = `fr`.`did` AND `fr`.`name` = "' . $tfr . '" ' .
+        'WHERE `d`.`did` = `fe`.`did` AND `fe`.`name` = "' . $tfe . '" ' . 
+        'AND ' . $constraints . '; ';
+    }
+  }
   
-
   $datasets = $this->Dataset->query( $sql . 'ORDER BY `source_data`;' );
   
   // sanity check input
@@ -81,20 +101,15 @@ if($this->subpage == 'task') {
   // TODO: Check input $this->input->post('cost_matrix')
   
   $results = array(); // resulting task configurations
-  $dids = array(); // used dataset ids
+  $dids = array();    // used dataset ids
   $new_tasks = array();
   if( is_array( $datasets ) ) {
     foreach( $datasets as $dataset ) {
       $current = $inputs;
-      $current['source_data'] = $dataset->source_data;
-      if( property_exists( $dataset, 'source_data_labeled' ) ) {
-        $current['source_data_labeled'] = $dataset->source_data_labeled;
-      }
-      if( property_exists( $dataset, 'name' ) ) {
-        $current['target_feature'] = $dataset->target_feature;
+      foreach( get_object_vars($dataset) as $key => $value ) {
+        $current[$key] = $value;
       }
       $results[] = $current;
-
       $dids[] = $dataset->source_data;
     }
     if( count( $datasets ) > 1 && ($this->input->post('custom_testset') || $this->input->post('cost_matrix') ) ) {
