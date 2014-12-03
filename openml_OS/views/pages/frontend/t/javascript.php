@@ -144,7 +144,7 @@ options2 = {
     		backgroundColor: '#FFFFFF',
 		useHTML: true,
                 formatter:function(){
-                    return '<div>'+((current_task_type==6) ? '': 'Flow:<b> '+this.point.options.f+'</b><br>')+this.series.yAxis.axisTitle.element.textContent + '<b>: ' + this.y+'</b><br>'+ ((typeof this.point.options.t !== 'undefined') ? 'Training time (seconds): <b>'+this.point.options.t+'</b><br>': '')+'Uploader: ' + this.point.options.u +'<br>' + ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
+                    return '<div>'+((current_task_type==6) ? '': 'Flow:<b> '+this.point.options.f+'</b><br>')+this.series.yAxis.axisTitle.element.textContent + '<b>: ' + this.y+'</b><br>'+ ((typeof this.point.options.t !== 'undefined') ? 'Training time (seconds): <b>'+this.point.options.t+'</b><br>': '')+'Uploader: ' + this.point.options.u +'<br>' + ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : ((current_task_type==6) ? '' : '<i>Click for more info</i>')) + '</div>';
                 }
             },
             series: []
