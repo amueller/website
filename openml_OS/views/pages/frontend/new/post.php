@@ -74,11 +74,11 @@ if($this->subpage == 'task') {
     } else {
       $sql = 
         'SELECT `d`.`did` AS `source_data`, `fl`.`name` AS `target_feature_left`, ' .
-          '`fr`.`name` AS `data_feature_right`, '.
-          '`fe`.`name` AS `data_feature_event` ' .
+          '`fr`.`name` AS `target_feature_right`, '.
+          '`fe`.`name` AS `target_feature_event` ' .
         'FROM `data_feature` `fe`, `dataset` `d` ' .
-        'LEFT JOIN `target_feature` `fl` ON `d`.`did` = `fl`.`did` AND `fl`.`name` = "' . $tfl . '" ' .
-        'LEFT JOIN `target_feature` `fr` ON `d`.`did` = `fr`.`did` AND `fr`.`name` = "' . $tfr . '" ' .
+        'LEFT JOIN `data_feature` `fl` ON `d`.`did` = `fl`.`did` AND `fl`.`name` = "' . $tfl . '" ' .
+        'LEFT JOIN `data_feature` `fr` ON `d`.`did` = `fr`.`did` AND `fr`.`name` = "' . $tfr . '" ' .
         'WHERE `d`.`did` = `fe`.`did` AND `fe`.`name` = "' . $tfe . '" ' . 
         'AND ' . $constraints . '; ';
     }
