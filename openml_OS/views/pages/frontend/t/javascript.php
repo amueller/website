@@ -164,10 +164,14 @@ client.search({
   }
 }).then(function (resp) {
         var data = resp.hits.hits;
-	var usercount = 0;
+	var usercount = 1;
 	var map = {};
 	var d=[];
 	var names=[];
+
+	d[0] = [];
+	names[0] = 'frontier';
+
 	for(var i=0;i<data.length;i++){
 		var run = data[i]['_source'];
 		var evals = run['evaluations'];
@@ -178,13 +182,19 @@ client.search({
 			names[map[run['uploader']]] = run['uploader'];
 		}
 		if(typeof evals[evaluation_measure] !== 'undefined'){
-			d[map[run['uploader']]].push({x: Date.parse(run['date']), y: parseFloat(evals[evaluation_measure]), f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
-		}
+			var dat = Date.parse(run['date']);
+			var e = parseFloat(evals[evaluation_measure]);
+			d[map[run['uploader']]].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
+			if(d[0].length==0 || e > d[0][d[0].length-1]['y']){
+				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']});
+			}
+			}
 	}
-
 	options2.chart.height = 500;
+
 	for(var i=0;i<usercount;i++){
 		options2.series[i] = {};
+		if(i==0){options2.series[i].type= 'line';}
 		options2.series[i].turboThreshold = 0;
 		options2.series[i].name = names[i];
 		options2.series[i].data = d[i];
