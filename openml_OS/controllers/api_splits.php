@@ -11,7 +11,7 @@ class Api_splits extends CI_Controller {
     $this->load->model('Log');
     
     $this->db = $this->load->database('read',true);
-    $this->task_types = array( 1, 2, 3, 6 );
+    $this->task_types = array( 1, 2, 3, 6, 7 );
     $this->evaluation = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
   }
   
