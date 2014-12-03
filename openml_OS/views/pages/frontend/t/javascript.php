@@ -1,5 +1,5 @@
 /// DETAIL
-<?php  
+<?php
 if(false !== strpos($_SERVER['REQUEST_URI'],'/t/') and false === strpos($_SERVER['REQUEST_URI'],'/t/type')) {
 ?>
 
@@ -7,10 +7,12 @@ var oTableRunsShowAll = false;
 var evaluation_measure = "<?php echo $this->current_measure; ?>";
 var latestOnly = true;
 var current_task = "<?php echo $this->task_id; ?>";
+var current_task_type = "<?php echo $this->record['type_id']; ?>";
+
 
 var oTableRuns = false;
 
-$(document).ready(function() { 
+$(document).ready(function() {
 	$('.pop').popover();
 	$('.selectpicker').selectpicker();
 });
@@ -56,7 +58,7 @@ $(document).ready(function() {
 		"bAutoWidth": false,
 		<?php echo column_widths($this->dt_main['column_widths']); ?>
         "bPaginate": true
-    });	
+    });
 
     /* Add event listener for opening and closing details
      * Note that the indicator for showing which row is open is not controlled by DataTables, rather it is done here
@@ -65,7 +67,7 @@ $(document).ready(function() {
         var nTr = $(this).parents('tr')[0];
         if ( oTableRuns.fnIsOpen(nTr) )
         {
-            // This row is already open - close it 
+            // This row is already open - close it
             this.src = "img/datatables/details_open.png";
             oTableRuns.fnClose( nTr );
         }
@@ -134,7 +136,7 @@ options2 = {
                                 enabled: false
                             }
                         }
-                    }                
+                    }
 		}
             },
             tooltip:{
@@ -142,7 +144,7 @@ options2 = {
     		backgroundColor: '#FFFFFF',
 		useHTML: true,
                 formatter:function(){
-                    return '<div>Flow:<b> '+this.point.options.f+'</b><br>'+ this.series.yAxis.axisTitle.element.textContent + '<b>: ' + this.y+'</b><br>'+ ((typeof this.point.options.t !== 'undefined') ? 'Training time (seconds): <b>'+this.point.options.t+'</b><br>': '')+'Uploader: ' + this.point.options.u +'<br>' + ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : '<i>Click for more info</i>') + '</div>';
+                    return '<div>'+((current_task_type==6) ? '': 'Flow:<b> '+this.point.options.f+'</b><br>')+this.series.yAxis.axisTitle.element.textContent + '<b>: ' + this.y+'</b><br>'+ ((typeof this.point.options.t !== 'undefined') ? 'Training time (seconds): <b>'+this.point.options.t+'</b><br>': '')+'Uploader: ' + this.point.options.u +'<br>' + ((typeof this.point.options.z !== 'undefined') ? 'Parameter '+selected_parameter+': <b>'+this.point.options.z+'</b>' : ((current_task_type==6) ? '' : '<i>Click for more info</i>')) + '</div>';
                 }
             },
             series: []
@@ -169,30 +171,32 @@ client.search({
 	for(var i=0;i<data.length;i++){
 		var run = data[i]['_source'];
 		var evals = run['evaluations'];
-		
+
 		if (!(run['uploader'] in map)){
 			map[run['uploader']] = usercount++;
 			d[map[run['uploader']]] = [];
 			names[map[run['uploader']]] = run['uploader'];
-		}	
+		}
 		if(typeof evals[evaluation_measure] !== 'undefined'){
 			d[map[run['uploader']]].push({x: Date.parse(run['date']), y: parseFloat(evals[evaluation_measure]), f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
 		}
 	}
-	
+
 	options2.chart.height = 500;
 	for(var i=0;i<usercount;i++){
 		options2.series[i] = {};
-		options2.series[i].turboThreshold = 0;	
+		options2.series[i].turboThreshold = 0;
 		options2.series[i].name = names[i];
 		options2.series[i].data = d[i];
 		options2.series[i].color = colors[i%9];
 		options2.series[i].fillOpacity = 0.25;
+		<?php if($this->record['type_id']!=6){ ?>
 		options2.series[i].point = {
                     events: {
                         click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
                     }
                 };
+		<?php } ?>
 	}
 	timechart = new Highcharts.Chart(options2);
 
@@ -268,7 +272,7 @@ options = {
                                 enabled: false
                             }
                         }
-                    }                
+                    }
 		}
             },
             tooltip:{
@@ -280,7 +284,7 @@ options = {
                 }
             },
             series: [{
-		turboThreshold: 0,		
+		turboThreshold: 0,
 		color: 'rgba(119, 152, 191, .5)',
                 data: [],
 		point: {
@@ -319,7 +323,7 @@ client.search({
 
 		if (!(flow['name'] in map)){
 			map[flow['name']] = catcount++;
-			categoryMap[flow['name']]= flow['flow_id']; 
+			categoryMap[flow['name']]= flow['flow_id'];
 			c.push(flow['name']);
 		}
 		d.push({x: parseFloat(evals[evaluation_measure]), y: map[flow['name']], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
@@ -339,7 +343,7 @@ client.search({
 function redrawCurves(){
 	var options = [];
 	var colors = ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE', '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92'];
-			   
+
         //build options
 	options.chart = {};
 	options.chart.renderTo='learning_curve_visualize';
@@ -354,21 +358,21 @@ function redrawCurves(){
 	options.series = [];
 	options.yAxis = {};
 	options.legend = {};
-		
+
 	options.tooltip = {
     		backgroundColor: '#FFFFFF',
 		useHTML: true,
 		formatter: function() {return '<b>'+ this.series.name +'</b><br/>'+	this.x +' '+ this.y;}};
-	
+
   var implementationConstraint = '';
-  
-  var sql = 
+
+  var sql =
     'SELECT `e`.`sample_size`, concat_ws("_",`i`.`name`,`i`.`version`)  AS `name`, `r`.`setup`, avg(`e`.`value`) as `score`, stddev(`e`.`value`) as `stdev`, `i`.`name` as `iname` FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t` WHERE `e`.`function` = "'+evaluation_measure+'" AND `t`.`ttid` = 3 AND `r`.`rid` = `e`.`source` AND `r`.`setup` = `a`.`sid` AND `a`.`implementation_id` = `i`.`id` AND `r`.`task_id` = `t`.`task_id` AND `t`.`task_id` = '+<?php echo $this->task_id; ?>+' GROUP BY `e`.`sample`, `r`.`setup` ORDER BY `sample` ASC, `name` DESC';
 
   if(latestOnly){
     sql = 'select * from ('+sql+') as a group by iname, sample_size order by sample_size';
   }
-    
+
   var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+sql, "UTF-8");
 
   $.getJSON(query,function(jsonData){
@@ -423,7 +427,6 @@ $(document).ready(function() {
 	?>
 });
 
-<?php  
+<?php
 }
 ?>
-

@@ -56,6 +56,7 @@
 				</select>
 			<div id="data_result_time" style="width: 100%">Plotting contribution timeline <i class="fa fa-spinner fa-spin"></i></div>
 
+      <?php if($this->record['type_id'] != 6){ ?>
 			<div id="data_result_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
 
 			<div class="table-responsive">
@@ -74,7 +75,7 @@
 			    </div>
 			  </div>
 			</div>
-		<?php } else { ?>
+		<?php }} else { ?>
 		        Plot learning curves for score:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; redrawCurves();">
 					<?php foreach($this->allmeasures as $m): ?>
