@@ -21,7 +21,7 @@ if($this->subpage == 'task') {
   $constraints = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data' ), 'd' );
   $target_feature = '`d`.`default_target_attribute`';
   if( trim( $this->input->post( 'target_feature' ) ) ) {
-    $target_feature = '"'.trim( $this->input->post( 'target_feature' ) ).'"';
+    $target_feature = trim( $this->input->post( 'target_feature' ) );
   } else {
     unset( $inputs['target_feature'] );
   }
@@ -32,20 +32,39 @@ if($this->subpage == 'task') {
   }
   
   $sql = 
-    'SELECT `d`.`did`, `f`.`name` ' . 
+    'SELECT `d`.`did` AS `source_data`, `f`.`name` AS `target_feature` ' . 
     'FROM `dataset` `d`,`data_feature` `f` ' . 
     'WHERE `d`.`did` = `f`.`did` ' .
-    'AND `f`.`name` = ' . $target_feature . ' ' .
-    'AND `f`.`NumberOfMissingValues` = 0 ' . // MAKE TASKS WITH NO MISSING VALUES IN TARGET, FOR NOW
+    'AND `f`.`name` = "' . $target_feature . '" ' .
+    'AND `f`.`NumberOfMissingValues` = 0 ' .
     'AND `f`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
     'AND ' . $constraints . ' ';
-    
-  // TODO: remove this mapping in a good way
+  
+  // TODO: remove these mappings in a good way.
   if( $ttid == 5 ) {
-    $sql = 'SELECT `d`.`did` FROM `dataset` `d` WHERE ' . $constraints . ' ';
-  }  
+    // clustering. no target feature
+    $sql = 'SELECT `d`.`did` AS `source_data` FROM `dataset` `d` WHERE ' . $constraints . ' ';
+  }
+  if( $ttid == 6 ) {
+    // data mining challange. labeled data set and dataset with missing labels
+    $constraints1 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data' ), 'd1' );
+    $constraints2 = $this->Dataset->nameVersionConstraints( $this->input->post( 'source_data_labeled' ), 'd2' );
+    
+    $sql = 
+      'SELECT `d1`.`did` AS source_data, `d2`.`did` AS `source_data_labeled`, `f1`.`name` AS `target_feature` '.
+      'FROM `dataset` `d1`, `dataset` `d2`, `data_feature` `f1`, `data_feature` `f2` '.
+      'WHERE `d1`.`did` = `f1`.`did` '.
+      'AND `d2`.`did` = `f2`.`did` '.
+      'AND `f1`.`name` = "' . $target_feature . '" ' .
+      'AND `f2`.`name` = "' . $target_feature . '" ' .
+      'AND `f2`.`NumberOfMissingValues` = 0 ' .
+      'AND `f1`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
+      'AND `f2`.`data_type` IN ("' . implode( '","', $datatype ) . '") ' . 
+      'AND ' . $constraints1 . ' AND ' . $constraints2;
+  }
+  
 
-  $datasets = $this->Dataset->query( $sql . 'ORDER BY `did`;' );
+  $datasets = $this->Dataset->query( $sql . 'ORDER BY `source_data`;' );
   
   // sanity check input
   $input_safe = true;
@@ -67,13 +86,16 @@ if($this->subpage == 'task') {
   if( is_array( $datasets ) ) {
     foreach( $datasets as $dataset ) {
       $current = $inputs;
-      $current['source_data'] = $dataset->did;
+      $current['source_data'] = $dataset->source_data;
+      if( property_exists( $dataset, 'source_data_labeled' ) ) {
+        $current['source_data_labeled'] = $dataset->source_data_labeled;
+      }
       if( property_exists( $dataset, 'name' ) ) {
-        $current['target_feature'] = $dataset->name;
+        $current['target_feature'] = $dataset->target_feature;
       }
       $results[] = $current;
 
-      $dids[] = $dataset->did;
+      $dids[] = $dataset->source_data;
     }
     if( count( $datasets ) > 1 && ($this->input->post('custom_testset') || $this->input->post('cost_matrix') ) ) {
       // against the rules
