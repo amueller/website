@@ -168,7 +168,10 @@ client.search({
 	var map = {};
 	var d=[];
 	var names=[];
-
+	var leaders=[];
+	var sortedLeaders=[];
+	var rankedLeaders=[];
+  var pairs = new Set();
 	d[0] = [];
 	names[0] = 'frontier';
 
@@ -180,6 +183,7 @@ client.search({
 			map[run['uploader']] = usercount++;
 			d[map[run['uploader']]] = [];
 			names[map[run['uploader']]] = run['uploader'];
+			leaders.push({rank: Infinity, name: run['uploader'], topScore: 0, entries: 0, highRank: Infinity});
 		}
 		if(typeof evals[evaluation_measure] !== 'undefined'){
 			var dat = Date.parse(run['date']);
@@ -188,9 +192,26 @@ client.search({
 			if(d[0].length==0 || e > d[0][d[0].length-1]['y']){
 				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']});
 			}
+
+			if(!pairs.has(run['run_flow']['name']+e)){ //check if submission is new
+				pairs.add(run['run_flow']['name']+e);
+				var l = leaders[map[run['uploader']]-1];
+				l.entries = l.entries+1;
+				if(l.topScore<e){ //if new best score for this person
+					l.topScore = e;
+					sortedLeaders = leaders.slice().sort(function(a,b){return b.topScore-a.topScore})
+					rankedLeaders = leaders.slice().map(function(v){ return sortedLeaders.indexOf(v)+1 });
+					if(l.highRank > rankedLeaders[map[run['uploader']]-1])
+						l.highRank = rankedLeaders[map[run['uploader']]-1];
+				}
 			}
+		}
 	}
 	options2.chart.height = 500;
+
+	for(var i=1;i<usercount;i++){
+		 sortedLeaders[i-1].rank = i;
+  }
 
 	for(var i=0;i<usercount;i++){
 		options2.series[i] = {};
@@ -209,12 +230,68 @@ client.search({
 		<?php } ?>
 	}
 	timechart = new Highcharts.Chart(options2);
+	leaderboard(sortedLeaders);
 
 }, function (err) {
     console.trace(err.message);
 });
 }
+function leaderboard(data){
+	console.log(data);
+	$('#leaderboard').dataTable( {
+		"processing": true,
+		"scrollY": "600px",
+		"scrollCollapse": true,
+		"paging":         false,
+		"iDisplayLength" : 10,
+		"bSort" : true,
+		"bInfo": false,
+		"data": data,
+		"columns": [
+		{ "data" : "rank" },
+		{ "data" : "name" },
+		{ "data" : "topScore" },
+		{ "data" : "entries" },
+		{ "data" : "highRank" }
+		]
+	} );
+}
 
+/**
+$('#tableview').dataTable( {
+	"aaData": data,
+	"scrollY": "600px",
+	"scrollCollapse": true,
+	"paging":         false,
+	"aLengthMenu": [[10, 50, 100, 250, -1], [10, 50, 100, 250, "All"]],
+	"iDisplayLength" : 50,
+	"bSort" : true,
+	"bInfo": false,
+	"aaSorting" : [],
+	"aoColumns": [
+	<?php $cnt = sizeOf($cols);
+	foreach( $this->tableview[0] as $k => $v ) {
+		$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
+			if(is_numeric($v))
+			$newcol .= '"sType":"numeric", ';
+			if($cnt<6)
+			$newcol .= '"bVisible":true},';
+			else
+			$newcol .= '"bVisible":false},';
+			if(array_key_exists($k,$cols)){
+				$cols[$k] = $newcol;
+			} else {
+				$cols[] = $newcol;
+				$cnt++;
+			}
+		}
+		foreach( $cols as $k => $v ) {
+			echo $v;
+		}?>
+
+		]
+	} );
+}**/
 
 function redrawchart(){
 categoryMap = {};

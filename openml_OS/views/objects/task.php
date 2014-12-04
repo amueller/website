@@ -54,9 +54,29 @@
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 				</select>
+
+      <h4>Timeline</h4>
+
 			<div id="data_result_time" style="width: 100%">Plotting contribution timeline <i class="fa fa-spinner fa-spin"></i></div>
 
+      <h4>Leaderboard</h4>
+
+      <div class='table-responsive'><table id="leaderboard" class='table table-striped'>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Top Score</th>
+            <th>Entries</th>
+            <th>Highest rank</th>
+          </tr>
+        </thead>
+      </table></div>
+      <p>Note: The leaderboard ignores resubmissions of previous solutions</p>
+
       <?php if($this->record['type_id'] != 6){ ?>
+      <h4>Flows</h4>
+
 			<div id="data_result_visualize" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
 
 			<div class="table-responsive">
