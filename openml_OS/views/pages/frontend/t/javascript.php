@@ -8,8 +8,7 @@ var evaluation_measure = "<?php echo $this->current_measure; ?>";
 var latestOnly = true;
 var current_task = "<?php echo $this->task_id; ?>";
 var current_task_type = "<?php echo $this->record['type_id']; ?>";
-
-
+var higherIsBetter = true;
 var oTableRuns = false;
 
 $(document).ready(function() {
@@ -82,6 +81,10 @@ $(document).ready(function() {
 
 function updateTableHeader(){
 	$("#value").html(evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' '));
+	if(evaluation_measure.indexOf("error") > -1 || evaluation_measure.indexOf("cost") > -1)
+		higherIsBetter = false;
+	else
+		higherIsBetter = true;
 }
 
 function redrawtimechart(){
@@ -183,13 +186,16 @@ client.search({
 			map[run['uploader']] = usercount++;
 			d[map[run['uploader']]] = [];
 			names[map[run['uploader']]] = run['uploader'];
-			leaders.push({rank: Infinity, name: run['uploader'], topScore: 0, entries: 0, highRank: Infinity});
+			if(higherIsBetter)
+				leaders.push({rank: Infinity, name: run['uploader'], topScore: 0, entries: 0, highRank: Infinity});
+			else
+				leaders.push({rank: Infinity, name: run['uploader'], topScore: Infinity, entries: 0, highRank: Infinity});
 		}
 		if(typeof evals[evaluation_measure] !== 'undefined'){
 			var dat = Date.parse(run['date']);
 			var e = parseFloat(evals[evaluation_measure]);
 			d[map[run['uploader']]].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
-			if(d[0].length==0 || e > d[0][d[0].length-1]['y']){
+			if(d[0].length==0 || (higherIsBetter && e > d[0][d[0].length-1]['y']) || (!higherIsBetter && e < d[0][d[0].length-1]['y'])){
 				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']});
 			}
 
@@ -197,10 +203,10 @@ client.search({
 				pairs.add(run['run_flow']['name']+e);
 				var l = leaders[map[run['uploader']]-1];
 				l.entries = l.entries+1;
-				if(l.topScore<e){ //if new best score for this person
+				if((higherIsBetter && l.topScore<e) || (!higherIsBetter && l.topScore>e)){ //if new best score for this person
 					l.topScore = e;
-					sortedLeaders = leaders.slice().sort(function(a,b){return b.topScore-a.topScore})
-					rankedLeaders = leaders.slice().map(function(v){ return sortedLeaders.indexOf(v)+1 });
+					sortedLeaders = leaders.slice().sort(function(a,b){if(higherIsBetter){return b.topScore-a.topScore;}else{return a.topScore-b.topScore;}});
+					rankedLeaders = leaders.slice().map(function(v){return sortedLeaders.indexOf(v)+1 });
 					if(l.highRank > rankedLeaders[map[run['uploader']]-1])
 						l.highRank = rankedLeaders[map[run['uploader']]-1];
 				}
@@ -209,8 +215,8 @@ client.search({
 	}
 	options2.chart.height = 500;
 
-	for(var i=1;i<usercount;i++){
-		 sortedLeaders[i-1].rank = i;
+	for(var i=0;i<sortedLeaders.length;i++){
+		 sortedLeaders[i].rank = i+1;
   }
 
 	for(var i=0;i<usercount;i++){
@@ -247,6 +253,7 @@ function leaderboard(data){
 		"bSort" : true,
 		"bInfo": false,
 		"data": data,
+		"bDestroy" : true,
 		"columns": [
 		{ "data" : "rank" },
 		{ "data" : "name" },
