@@ -187,9 +187,9 @@ client.search({
 			d[map[run['uploader']]] = [];
 			names[map[run['uploader']]] = run['uploader'];
 			if(higherIsBetter)
-				leaders.push({rank: Infinity, name: run['uploader'], topScore: 0, entries: 0, highRank: Infinity});
+				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: 0, entries: 0, highRank: Infinity});
 			else
-				leaders.push({rank: Infinity, name: run['uploader'], topScore: Infinity, entries: 0, highRank: Infinity});
+				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: Infinity, entries: 0, highRank: Infinity});
 		}
 		if(typeof evals[evaluation_measure] !== 'undefined'){
 			var dat = Date.parse(run['date']);
@@ -217,7 +217,8 @@ client.search({
 
 	for(var i=0;i<sortedLeaders.length;i++){
 		 sortedLeaders[i].rank = i+1;
-  }
+		 sortedLeaders[i].name = '<a href=u/'+sortedLeaders[i].userId+'>'+sortedLeaders[i].name+'</a>';
+		}
 
 	for(var i=0;i<usercount;i++){
 		options2.series[i] = {};
