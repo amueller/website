@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class ElasticSearch {
-  
+
   public function __construct() {
     $this->CI = &get_instance();
     $this->CI->load->model('Dataset');
@@ -37,7 +37,7 @@ class ElasticSearch {
 		    'date' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ),		    
+		    ),
 		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
@@ -79,7 +79,7 @@ class ElasticSearch {
 		    'date' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ),		    
+		    ),
 		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
@@ -117,7 +117,7 @@ class ElasticSearch {
 		    'date' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ),		    
+		    ),
 		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
@@ -183,7 +183,7 @@ class ElasticSearch {
 		    'date' => array(
 				'type' => 'date',
 				'format' => 'yyyy-MM-dd HH:mm:ss'
-		    ),		    
+		    ),
 		    'last_update' => array(
 			'type' => 'date',
 			'format' => 'yyyy-MM-dd HH:mm:ss'
@@ -216,7 +216,7 @@ class ElasticSearch {
                 )
             );
   }
-  
+
   public function test() {
 	return $this->client->ping();
   }
@@ -237,7 +237,7 @@ class ElasticSearch {
     }
 	}
 	else{
-	   return 'No function exists to build index of type '.$type; 
+	   return 'No function exists to build index of type '.$type;
 	}
   }
 
@@ -251,7 +251,7 @@ class ElasticSearch {
   }
 
   public function initialize_index($t){
-     
+
      $this->mapping_delete($t);
 
      $params['index'] = 'openml';
@@ -269,19 +269,19 @@ class ElasticSearch {
      if(in_array($m,$keys)){
 	$params = array(
 		'index' => 'openml',
-		'type'	=> $m	
+		'type'	=> $m
 	);
 	$this->client->indices()->deleteMapping($params);
      }
   }
 
   public function index_user($id){
-  
+
 	$params['index']     = 'openml';
 	$params['type']      = 'user';
-	
+
 	$users = $this->userdb->query('select id, first_name, last_name, email, affiliation, country, image, created_on from users where active="1"'.($id?' and id='.$id:''));
-	
+
 	if($id and !$users)
 		return 'Error: user '.$id.' is unknown';
 
@@ -290,7 +290,7 @@ class ElasticSearch {
 		'index' => array(
 		    '_id' => $d->id
 		)
-	    );	    
+	    );
 
 	    $params['body'][] = $this->build_user($d);
 	}
@@ -317,7 +317,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'user',
 							'user_id' => $d->id,
-							'description' => substr($d->affiliation, 0, 100) 
+							'description' => substr($d->affiliation, 0, 100)
 						)
 					)
 		);
@@ -326,34 +326,34 @@ class ElasticSearch {
  // Special case - tasks are pre-fetched because they are also needed to build the run index
  private function fetch_tasks($id = false){
 	$tasks = $this->db->query('SELECT t.task_id, tt.ttid, tt.name, count(rid) as runs FROM task t left join run r on (r.task_id=t.task_id), task_type tt WHERE t.ttid=tt.ttid'.($id?' and t.task_id='.$id:'').' group by t.task_id');
-	
+
 	if($tasks)
 		foreach( $tasks as $d ) {
-		    $this->all_tasks[$d->task_id] = $this->build_task($d); 
+		    $this->all_tasks[$d->task_id] = $this->build_task($d);
 		}
  }
 
  public function index_task($id){
-  
+
 	$params['index']     = 'openml';
 	$params['type']      = 'task';
 
 	$this->fetch_tasks($id);
-	
+
 	if($id and !array_key_exists($id,$this->all_tasks))
 		return 'Error: task '.$id.' is unknown';
-		
+
 	foreach( $this->all_tasks as $k => $v ) {
 	    $params['body'][] = array(
 		'index' => array(
 		    '_id' => $k
 		)
-	    );	    
+	    );
 	    $params['body'][] = $v;
 	}
 
 	$responses = $this->client->bulk($params);
-	
+
 	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($this->all_tasks).' tasks.';
   }
 
@@ -405,7 +405,7 @@ class ElasticSearch {
 				'payload' => array(
 					'type' => 'task',
 					'task_id' => $d->task_id,
-					'description' => substr(implode(' ',$description), 0, 100) 
+					'description' => substr(implode(' ',$description), 0, 100)
 				)
 			);
 	return $newdata;
@@ -450,25 +450,25 @@ class ElasticSearch {
  //update task, dataset, flow to make sure that their indexed run counts are up to date? Only needed for sorting on number of runs.
  private function update_runcounts($run){
 	$runparams['index'] = 'openml';
-	$runparams['type'] = 'run'; 
+	$runparams['type'] = 'run';
 	$runparams['body']['query']['match']['run_task.task_id'] = $run->task_id;
 	$result = $this->client->search($runparams);
         $runcount = $this->checkNumeric($result['hits']['total']);
-	
+
 	$params['index'] = 'openml';
-	$params['type'] = 'task'; 
+	$params['type'] = 'task';
 	$params['id'] = $run->task_id;
 	$params['body'] = array( 'doc' => array( 'runs' => $runcount ) );
 	$this->client->update($params);
 
 	$runparams = array();
 	$runparams['index'] = 'openml';
-	$runparams['type'] = 'run'; 
+	$runparams['type'] = 'run';
 	$runparams['body']['query']['match']['run_flow.flow_id'] = $run->implementation_id;
 	$result = $this->client->search($runparams);
         $runcount = $this->checkNumeric($result['hits']['total']);
 
-	$params['type'] = 'flow'; 
+	$params['type'] = 'flow';
 	$params['id'] = $run->implementation_id;
 	$params['body'] = array( 'doc' => array( 'runs' => $runcount ) );
 	$this->client->update($params);
@@ -479,17 +479,17 @@ class ElasticSearch {
 	$params['index']     = 'openml';
 	$params['type']      = 'run';
 	$params['id']        = $id;
-	
+
 	$run = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time FROM run r, algorithm_setup s where s.sid=r.setup and rid='.$id);
 	if(!$run)
 		return 'Error: run '.$id.' is unknown';
-	
+
 	$this->fetch_tasks($run[0]->task_id);
 	$setups = $this->fetch_setups($run[0]->setup);
 	$runfiles = $this->fetch_runfiles($id,$id+1);
 	$evals = $this->fetch_evaluations($id,$id+1);
 	$params['body'] = $this->build_run($run[0],$setups,$runfiles,$evals);
-	
+
 	$responses = $this->client->index($params);
 
 	$this->update_runcounts($run[0]);
@@ -500,7 +500,7 @@ class ElasticSearch {
  public function index_run($id){
 	if($id)
 		return $this->index_single_run($id);
-  
+
 	$params['index']     = 'openml';
 	$params['type']      = 'run';
 
@@ -511,7 +511,7 @@ class ElasticSearch {
 	$runcount = intval($runcountquery[0]->runcount);
 	if(!$this->all_tasks)
 		$this->fetch_tasks();
-	
+
 	$rid = 0;
 	$submitted = 0;
 	$incr = 1000;
@@ -522,21 +522,21 @@ class ElasticSearch {
 		$runfiles = $this->fetch_runfiles($rid,$rid+$incr);
 		$evals = $this->fetch_evaluations($rid,$rid+$incr);
 
-		$params['body'] = array();		
+		$params['body'] = array();
 		foreach( $runs as $r ) {
 			$params['body'][] = array(
 				'index' => array(
 				    '_id' => $r->rid
 				)
-			    );	
+			    );
 			$params['body'][] = $this->build_run($r,$setups,$runfiles,$evals);
 			$rid = max($rid,intval($r->rid));
 		}
-		
+
 		$responses = $this->client->bulk($params);
 		$submitted += sizeof($responses['items']);
 	}
-	
+
 	return 'Successfully indexed '.$submitted.' out of '.$runcount.' runs.';
   }
 
@@ -544,6 +544,7 @@ class ElasticSearch {
 	return array(
 		    'run_id' 		=> $r->rid,
 		    'uploader' 		=> array_key_exists($r->uploader,$this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
+        'uploader_id' => $r->uploader,
 		    'run_task'		=> $this->all_tasks[$r->task_id],
 		    'date'		=> $r->start_time,
 		    'run_flow'		=> array(
@@ -558,7 +559,7 @@ class ElasticSearch {
   }
 
   public function index_task_type($id){
-  
+
 	$params['index']     = 'openml';
 	$params['type']      = 'task_type';
 
@@ -572,13 +573,13 @@ class ElasticSearch {
 		'index' => array(
 		    '_id' => $d->ttid
 		)
-	    );	    
+	    );
 
 	    $params['body'][] =$this->build_task_type($d);
 	}
 
 	$responses = $this->client->bulk($params);
-	
+
 	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($types).' task types.';
   }
 
@@ -596,7 +597,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'task_type',
 							'tt_id' => $d->ttid,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($d->description, 0, 100)
 						)
 					),
 		);
@@ -617,7 +618,7 @@ class ElasticSearch {
 
 
   public function index_flow($id){
-  
+
 	$params['index']     = 'openml';
 	$params['type']      = 'flow';
 
@@ -631,13 +632,13 @@ class ElasticSearch {
 		'index' => array(
 		    '_id' => $d->id
 		)
-	    );	    
+	    );
 
 	    $params['body'][] =$this->build_flow($d);
 	}
 
 	$responses = $this->client->bulk($params);
-	
+
 	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($flows).' flows.';
   }
 
@@ -663,7 +664,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'flow',
 							'flow_id' => $d->id,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($d->description, 0, 100)
 						)
 					)
 		);
@@ -675,7 +676,7 @@ class ElasticSearch {
   }
 
   public function index_measure($id){
-  
+
 	$params['index']     = 'openml';
 	$params['type']      = 'measure';
 
@@ -686,7 +687,7 @@ class ElasticSearch {
 			'index' => array(
 			    '_id' => $d->id
 			)
-		    );	    
+		    );
 
 		    $params['body'][] = $this->build_procedure($d);
 		}
@@ -699,7 +700,7 @@ class ElasticSearch {
 			'index' => array(
 			    '_id' => $nid
 			)
-		    );	    
+		    );
 
 		    $params['body'][] = $this->build_function($d);
 		}
@@ -712,7 +713,7 @@ class ElasticSearch {
 			'index' => array(
 			    '_id' => $nid
 			)
-		    );	    
+		    );
 
 		    $params['body'][] = $this->build_dataq($d);
 		}
@@ -725,13 +726,13 @@ class ElasticSearch {
 			'index' => array(
 			    '_id' => $nid
 			)
-		    );	    
+		    );
 
 		    $params['body'][] = $this->build_flowq($d);
 		}
 
 	if($id and !array_key_exists('body',$params))
-		return "No measure found with id ".$id;		
+		return "No measure found with id ".$id;
 
 	$responses = $this->client->bulk($params);
 	return 'Successfully indexed '.sizeof($responses['items']).' out of '.(($procs?sizeof($procs):0)+($funcs?sizeof($funcs):0)+($dataqs?sizeof($dataqs):0)+($flowqs?sizeof($flowqs):0)).' measures ('.($procs?sizeof($procs):0).' procedures, '.($funcs?sizeof($funcs):0).' functions, '.($dataqs?sizeof($dataqs):0).' data qualities, '.($flowqs?sizeof($flowqs):0).' flow qualities).';
@@ -752,7 +753,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'estimation_procedure',
 							'proc_id' => $d->id,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($d->description, 0, 100)
 						)
 					)
 		);
@@ -773,7 +774,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'evaluation_measure',
 							'eval_id' => $id,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($d->description, 0, 100)
 						)
 					)
 		);
@@ -794,7 +795,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'data_quality',
 							'quality_id' => $id,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($d->description, 0, 100)
 						)
 					)
 		);
@@ -815,7 +816,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'data_quality',
 							'quality_id' => $id,
-							'description' => substr($d->description, 0, 100) 
+							'description' => substr($d->description, 0, 100)
 						)
 					)
 		);
@@ -836,13 +837,13 @@ class ElasticSearch {
 		'index' => array(
 		    '_id' => $d->did
 		)
-	    );	    
+	    );
 
 	    $params['body'][] = $this->build_data($d);
 	}
 
 	$responses = $this->client->bulk($params);
-	
+
 	return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($datasets).' datasets.';
   }
 
@@ -877,7 +878,7 @@ class ElasticSearch {
 						'payload' => array(
 							'type' => 'data',
 							'data_id' => $d->did,
-							'description' => substr($headless_description, 0, 100) 
+							'description' => substr($headless_description, 0, 100)
 						)
 					)
 		);
