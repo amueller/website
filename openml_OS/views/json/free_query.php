@@ -8,5 +8,6 @@ if ($this->error){
 	echo ',"time": '.json_encode($this->msc).',';
 }
 echo '"columns": '.json_encode($this->columns).',';
+echo '"query": '.json_encode($this->query).',';
 echo '"data": '.json_encode($this->rows).'}';
 ?>

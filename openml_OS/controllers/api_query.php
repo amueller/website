@@ -22,6 +22,7 @@ class Api_query extends CI_Controller {
     
     $this->myStatus = '';
     $this->error = false;
+    $this->query = $query;
     
     $partialCommand = ltrim($query); // strip leading characters eg. spaces
     $partialCommand = substr ($partialCommand, 0, 4); /* get first 4 characters for switch()*/
