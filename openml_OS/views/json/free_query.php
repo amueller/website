@@ -1,7 +1,7 @@
 <?php 
 echo '{"status": ' . json_encode($this->myStatus);
-echo '"query": '.json_encode($this->query).',';
-if(isset($this->id)) echo ',"id": '.json_encode($this->id);
+echo ",\r\n\"query\": ".json_encode($this->query);
+if(isset($this->id)) echo ",\r\n\"id\": ".json_encode($this->id);
 if ($this->error){ 
 	echo '}';
 	return;
