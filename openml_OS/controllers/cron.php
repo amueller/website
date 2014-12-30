@@ -47,7 +47,7 @@ class Cron extends CI_Controller {
       $setup_constr = ( $meta_dataset->setups ) ? 'AND s.sid IN (' . $meta_dataset->setups . ') ' : '';
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
-      $evaluation_fields = array( 'function' => 'e.function' );
+      $evaluation_keys = array( 'function' => 'e.function' );
       if( $task_type == 3 ) {
         $evaluation_keys = array(
           'repeat' => 'e.repeat',
