@@ -47,6 +47,17 @@ class Cron extends CI_Controller {
       $setup_constr = ( $meta_dataset->setups ) ? 'AND s.sid IN (' . $meta_dataset->setups . ') ' : '';
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
+      $evaluation_fields = array( 'function' => 'e.function' );
+      if( $task_type == 3 ) {
+        $evaluation_keys = array(
+          'repeat' => 'e.repeat',
+          'fold' => 'e.fold',
+          'sample' => 'e.sample',
+          'sample_size' => 'e.sample_size',
+          'function' => 'e.function'
+        ); 
+      }
+      
       if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
         $this->_error_meta_dataset( $meta_dataset->id, 'Failed to create data directory. ', $meta_dataset->user_id );
         return;
@@ -55,11 +66,11 @@ class Cron extends CI_Controller {
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
       
       $sql = 
-        'SELECT "run_id", "setup_id", "task_id", "repeat", "fold", "sample",' . 
-        '"sample_size", "function", "value", "task_name", "setup_name", "textual"' .
+        'SELECT "run_id", "setup_id", "task_id", ' . implode( ',', array_keys( $evaluation_keys ) ) . 
+        ', "value", "task_name", "setup_name", "textual"' .
         'UNION ALL ' .
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
-        'e.repeat, e.fold, e.sample, e.sample_size, e.function, e.value, '.
+        implode( ',', $evaluation_keys ) . ', e.value, '.
         'CONCAT("Task_", t.task_id, "_", d.name),'.
         's.setup_string, ' . 
         'CONCAT(i.fullName, " on ", d.name) as textual '.
@@ -68,9 +79,10 @@ class Cron extends CI_Controller {
         'AND v.input = "source_data" AND v.value = d.did '.
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
         'AND e.source = r.rid '.
-         $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
+        'AND t.ttid = "' . $meta_dataset->task_type . '"' .
+        $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
          /* the GROUP BY line makes stuff slower, we might want to comment it out. */
-        'GROUP BY r.setup, r.task_id, e.function, e.repeat, e.fold, e.sample ' . 
+        'GROUP BY r.setup, r.task_id, ' . implode( ',', $evaluation_keys ) .
         'INTO OUTFILE "'. $tmp_path .'" ' .
         'FIELDS TERMINATED BY "," ' .
         'ENCLOSED BY "\"" ' .

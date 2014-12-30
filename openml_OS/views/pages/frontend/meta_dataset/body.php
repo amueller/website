@@ -14,6 +14,17 @@
           <div class="form-group">
             <form method="post" action="">
               <div class="form-group">
+                <label class="col-md-2 control-label" for="tasktypeDropdown">Task type</label>
+                <div class="col-md-10">
+                  <select id="tasktypeDropdown" name="task_type" class="form-control">
+                    <?php foreach( $this->task_types as $tt ): ?>
+                    <option name="<?php echo $tt->ttid; ?>"><?php echo $tt->name; ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                  <span class="help-block">Select the task type the results should cover.</span>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-md-2 control-label" for="datasetDropdown">Datasets</label>
                 <div class="col-md-10">
                   <input type="text" class="form-control" id="datasetDropdown" name="datasets" placeholder="Include all datasets" value="<?php echo $this->input->post('datasets'); ?>" />

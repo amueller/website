@@ -23,10 +23,16 @@ $this->name = false;
 $this->task_types = $this->Task_type->get( );
 $this->check = false;
 
+$legal_task_types = array();
+foreach( $this->task_types as $tt ) {
+  $legal_task_types[] = $tt->ttid;
+}
+
 /* previously: post.php */
 if( $_POST || $this->input->get('check') ) {
   $this->check = $this->input->post('check');
-
+  
+  $task_type=$this->input->post('task_type');
   $datasets= $this->input->post('datasets');
   $flows   = $this->input->post('flows');
   $setups  = $this->input->post('setups');
@@ -69,13 +75,17 @@ if( $_POST || $this->input->get('check') ) {
       sm('Please select at least one function. ' );
       su('frontend/page/meta_dataset');
     }
-
-
+    
+    if( in_array( $task_type, $legal_task_types ) == false ) {
+      sm('Task type illegal. Please fill in the form correctly. ' );
+      su('frontend/page/meta_dataset');
+    }
 
     $functions = '"' . implode( '", "', $functions ) . '"';
     
     $md = array(
       'request_date' => now(),
+      'task_type' => $task_type, 
       'datasets' => $dataset_ids ? implode( ', ', $dataset_ids ) : null,
       'tasks' => $task_ids ? implode( ', ', $task_ids ) : null,
       'flows' => $flow_ids ? implode( ', ', $flow_ids ) : null,
