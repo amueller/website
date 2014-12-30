@@ -48,7 +48,7 @@ class Cron extends CI_Controller {
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
       $evaluation_keys = array( 'function' => 'e.function' );
-      if( $task_type == 3 ) {
+      if( $meta_dataset->task_type == 3 ) {
         $evaluation_keys = array(
           'repeat' => 'e.repeat',
           'fold' => 'e.fold',
@@ -70,7 +70,7 @@ class Cron extends CI_Controller {
         ', "value", "task_name", "setup_name", "textual"' .
         'UNION ALL ' .
         'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
-        implode( ',', $evaluation_keys ) . ', e.value, '.
+        '"' . implode( '","', $evaluation_keys ) . '", e.value, '.
         'CONCAT("Task_", t.task_id, "_", d.name),'.
         's.setup_string, ' . 
         'CONCAT(i.fullName, " on ", d.name) as textual '.
