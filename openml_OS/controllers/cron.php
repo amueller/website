@@ -47,6 +47,7 @@ class Cron extends CI_Controller {
       $setup_constr = ( $meta_dataset->setups ) ? 'AND s.sid IN (' . $meta_dataset->setups . ') ' : '';
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
+      $evaluation_column = 'evaluation';
       $evaluation_keys = array( 'function' => 'e.function' );
       if( $meta_dataset->task_type == 3 ) {
         $evaluation_keys = array(
@@ -55,7 +56,9 @@ class Cron extends CI_Controller {
           'sample' => 'e.sample',
           'sample_size' => 'e.sample_size',
           'function' => 'e.function'
-        ); 
+        );
+        
+        $evaluation_column = 'evaluation_sample';
       }
       
       if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
@@ -74,7 +77,7 @@ class Cron extends CI_Controller {
         'CONCAT("Task_", t.task_id, "_", d.name),'.
         's.setup_string, ' . 
         'CONCAT(i.fullName, " on ", d.name) as textual '.
-        'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, evaluation_sample e '.
+        'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, '. $evaluation_column .' e '.
         'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
         'AND v.input = "source_data" AND v.value = d.did '.
         'AND r.setup = s.sid AND s.implementation_id = i.id '.
