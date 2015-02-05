@@ -7,7 +7,7 @@ class Api_splits extends CI_Controller {
     $this->directory = DATA_PATH . 'splits/';
     
     if( file_exists( $this->directory ) == false ) {
-      mkdir( $this->directory, '775', true );
+      mkdir( $this->directory, 775, true );
     }
     
     $this->load->model('Dataset');
