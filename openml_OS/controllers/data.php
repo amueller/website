@@ -13,6 +13,8 @@ class Data extends CI_Controller {
     $this->load->Model('Author');
     $this->load->Model('Api_session');
     
+    $this->load->helper('file_upload');
+    
     // authentication
     $this->provided_hash = $this->input->get_post('session_hash') != false;
     $this->provided_valid_hash = $this->Api_session->isValidHash( $this->input->get_post('session_hash') );
@@ -32,7 +34,7 @@ class Data extends CI_Controller {
         $this->_error404();
       } else {
         $this->_header_download($file);
-        $this->_readfile_chunked(DATA_PATH . $file->filepath);
+        readfile_chunked(DATA_PATH . $file->filepath);
       }
     } // else, an appropriate message is shown. 
   }
@@ -95,31 +97,6 @@ class Data extends CI_Controller {
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
     header('Content-Length: ' . $file->filesize);
-  }
-  
-  private function _readfile_chunked($filename,$retbytes=true) {
-    $chunksize = 1*(1024*1024); // how many bytes per chunk
-    $buffer = '';
-    $cnt =0;
-    
-    $handle = fopen($filename, 'rb');
-    if ($handle === false) {
-      return false;
-    }
-    while (!feof($handle)) {
-      $buffer = fread($handle, $chunksize);
-      echo $buffer;
-      @ob_flush();
-      flush();
-      if ($retbytes) {
-        $cnt += strlen($buffer);
-      }
-    }
-    $status = fclose($handle);
-    if ($retbytes && $status) {
-      return $cnt; // return num. bytes delivered like readfile() does.
-    }
-    return $status;
   }
 }
 ?>

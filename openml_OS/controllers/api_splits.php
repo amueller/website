@@ -4,11 +4,19 @@ class Api_splits extends CI_Controller {
   function __construct() {
     parent::__construct();
     
+    $this->directory = DATA_PATH . 'splits/';
+    
+    if( file_exists( $this->directory ) == false ) {
+      mkdir( $this->directory, '775', true );
+    }
+    
     $this->load->model('Dataset');
     $this->load->model('Task');
     $this->load->model('Task_inputs');
     $this->load->model('Estimation_procedure');
     $this->load->model('Log');
+    
+    $this->load->helper('file_upload');
     
     $this->db = $this->load->database('read',true);
     $this->task_types = array( 1, 2, 3, 6, 7 );
@@ -16,11 +24,23 @@ class Api_splits extends CI_Controller {
   }
   
   function get( $task_id ) {
-    $this->generate( $task_id, false );
+    $file = $this->directory . '/' . $task_id . '.arff';
+    if( file_exists( $file ) == false ) {
+      $this->generate( $task_id, false );
+    }
+    
+    header('Content-type: ');
+    header('Content-Length: ' . filesize( $file ) );
+    read_file_chunked( $file );
   }
   
   function md5( $task_id ) {
-    $this->generate( $task_id, true );
+    $file = $this->directory . '/' . $task_id . '.arff';
+    if( file_exists( $file ) == false ) {
+      $this->generate( $task_id, false );
+    }
+    
+    echo md5_file( $file );
   }
   
   private function generate( $task_id, $md5 ) {
