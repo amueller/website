@@ -24,26 +24,26 @@ class Api_splits extends CI_Controller {
   }
   
   function get( $task_id ) {
-    $file = $this->directory . '/' . $task_id . '.arff';
-    if( file_exists( $file ) == false ) {
-      $this->generate( $task_id, false );
+    $filepath = $this->directory . '/' . $task_id . '.arff';
+    if( file_exists( $filepath ) == false ) {
+      $this->generate( $task_id, $filepath );
     }
     
     header('Content-type: ');
-    header('Content-Length: ' . filesize( $file ) );
-    read_file_chunked( $file );
+    header('Content-Length: ' . filesize( $filepath ) );
+    read_file_chunked( $filepath );
   }
   
   function md5( $task_id ) {
-    $file = $this->directory . '/' . $task_id . '.arff';
-    if( file_exists( $file ) == false ) {
-      $this->generate( $task_id, false );
+    $filepath = $this->directory . '/' . $task_id . '.arff';
+    if( file_exists( $filepath ) == false ) {
+      $this->generate( $task_id, $filepath );
     }
     
-    echo md5_file( $file );
+    echo md5_file( $filepath );
   }
   
-  private function generate( $task_id, $md5 ) {
+  private function generate( $task_id, $filepath = false ) {
     $task = $this->Task->getById( $task_id );
     if( $task === false || in_array( $task->ttid, $this->task_types ) === false ) {
       die('Task not providing datasplits.');
@@ -66,9 +66,10 @@ class Api_splits extends CI_Controller {
     // TODO: very important. sanity check input
     $testset_str = array_key_exists('custom_testset', $values) && is_cs_natural_numbers($values['custom_testset']) ?  '-test "' . $values['custom_testset'] . '"' : '';
     
-    // TODO: remove admin account from bitbucket, set in settings
-    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . " -config 'server=http://www.openml.org/;username=".API_USERNAME.";password=".API_PASSWORD."'"; 
-    if( $md5 ) $command .= ' -m';
+    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . " -config 'server=http://www.openml.org/;username=".API_USERNAME.";password=".API_PASSWORD."' "; 
+    
+    if( $filepath ) $command .= ' -o ' . $filepath;
+    //if( $md5 ) $command .= ' -m';
     $this->Log->cmd( 'API Splits::get(' . $task_id . ')', $command );
     
     if( function_enabled('system') ) {
