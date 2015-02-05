@@ -238,8 +238,10 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 111 );
       return;
     }
+    $file = $this->File->getById( $dataset->file_id );
     $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'id = ' . $dataset->did );
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
+    $dataset->md5_checksum = $file->md5_hash;
     
     foreach( $this->xml_fields_dataset['csv'] as $field ) {
       $dataset->{$field} = getcsv( $dataset->{$field} );
@@ -657,8 +659,7 @@ class Rest_api extends CI_Controller {
         'last_update' => now(),
         'uploader' => $this->user_id,
         'isOriginal' => 'true',
-        'file_id' => $file_id,
-        'md5_checksum' => md5_file( $destinationUrl )
+        'file_id' => $file_id
       );
       // extract all other necessary info from the XML description
       $dataset = all_tags_from_xml( 
@@ -677,7 +678,7 @@ class Rest_api extends CI_Controller {
         $dataset = array(
           'last_update' => now(),
           'url' => $destinationUrl,
-          'md5_checksum' => md5_file( $destinationUrl )
+          'file_id' => $file_id
         );
       } else {
         $dataset = array(
