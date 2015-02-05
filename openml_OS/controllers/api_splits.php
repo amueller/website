@@ -31,7 +31,7 @@ class Api_splits extends CI_Controller {
     
     header('Content-type: ');
     header('Content-Length: ' . filesize( $filepath ) );
-    read_file_chunked( $filepath );
+    readfile_chunked( $filepath );
   }
   
   function md5( $task_id ) {
