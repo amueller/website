@@ -60,6 +60,16 @@ class Cron extends CI_Controller {
         
         $evaluation_column = 'evaluation_sample';
       }
+      if( $meta_dataset->task_type == 4 ) {
+        $evaluation_keys = array(
+          'interval_start' => 'e.interval_start',
+          'interval_end'   => 'e.interval_end',
+          'function' => 'e.function'
+        );
+        
+        $evaluation_column = 'evaluation_interval';
+      
+      }
       
       if ( create_dir(DATA_PATH . $this->dir_suffix) == false ) {
         $this->_error_meta_dataset( $meta_dataset->id, 'Failed to create data directory. ', $meta_dataset->user_id );
