@@ -6,7 +6,7 @@ if (!$this->ion_auth->logged_in()) {
 
 $this->measures = array("predictive_accuracy", "build_cpu_time", "area_under_roc_curve");
 
-$sql = 'SELECT `m`.`id`, `m`.`request_date`, ' .
+$sql = 'SELECT `m`.`id`, `m`.`request_date`, `type`, ' .
        'IF(CHAR_LENGTH(`m`.`datasets`)>20, CONCAT( "<span>", SUBSTRING(`m`.`datasets`, 1, 15), "...</span>"), `m`.`datasets`) AS `datasets`, ' .
        'IF(CHAR_LENGTH(`m`.`tasks`)>20, CONCAT( "<span>", SUBSTRING(`m`.`tasks`, 1, 15), "...</span>"), `m`.`tasks`) AS `tasks`, ' . 
        'IF(CHAR_LENGTH(`m`.`flows`)>20, CONCAT( "<span>", SUBSTRING(`m`.`flows`, 1, 15), "...</span>"), `m`.`flows`) AS `flows`, ' . 
@@ -17,7 +17,7 @@ $sql = 'SELECT `m`.`id`, `m`.`request_date`, ' .
        'WHERE user_id = ' . $this->ion_auth->get_user_id() . ' ' .
        'ORDER BY request_date DESC; ';
 
-$this->columns = array( 'id', 'request_date', 'datasets', 'tasks', 'flows', 'setups', 'functions', 'download' );
+$this->columns = array( 'id', 'request_date', 'type', 'datasets', 'tasks', 'flows', 'setups', 'functions', 'download' );
 $this->items = $this->Author->query( $sql );
 $this->name = false;
 $this->task_types = $this->Task_type->get( );
