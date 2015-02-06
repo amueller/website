@@ -50,7 +50,8 @@ if( $_POST || $this->input->get('check') ) {
   $flow_ids    = ($flows)   ? $this->Implementation_tag->get_ids( explode( ',', $flows ) ) : null;
   $task_ids    = ($tasks)   ? $this->Task_tag->get_ids( explode( ',', $tasks ) ) : null;
   $setup_ids   = ($setups)  ? $this->Setup_tag->get_ids( explode( ',', $setups ) ) : null;
-
+  
+  // TODO: this check can be less restrictive if type = qualities
   if( $dataset_ids === false || $flow_ids === false || $task_ids === false || $setup_ids === false ) {
     sm('Wrong input: Either of the input fields (datasets, implementations, setups, tasks) had no results. ' );
     su('frontend/page/meta_dataset');
@@ -83,7 +84,7 @@ if( $_POST || $this->input->get('check') ) {
     }
 
     $functions = '"' . implode( '", "', $functions ) . '"';
-    
+    // TODO: don't store evaluation stuff if type = qualities
     $md = array(
       'request_date' => now(),
       'type' => $type,

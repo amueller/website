@@ -50,6 +50,8 @@ class Cron extends CI_Controller {
       $quality_colum = 'data_quality';
       $evaluation_column = 'evaluation';
       $evaluation_keys = array( 'function' => 'e.function' );
+      $quality_keys = array();
+      
       if( $meta_dataset->task_type == 3 ) {
         $evaluation_keys = array(
           'repeat' => 'e.repeat',
@@ -67,7 +69,10 @@ class Cron extends CI_Controller {
           'interval_end'   => 'e.interval_end',
           'function' => 'e.function'
         );
-        
+        $quality_keys = array(
+          'interval_start' => 'q.interval_start',
+          'interval_end'   => 'q.interval_end'
+        );
         $quality_colum = 'data_quality_interval';
         $evaluation_column = 'evaluation_interval';
       
@@ -81,8 +86,15 @@ class Cron extends CI_Controller {
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
       
       if( $meta_dataset->type == 'qualities' ) {
+        $quality_keys_string = '';
+        if( $quality_keys ) {
+          $quality_keys_string = implode( ', ', $quality_keys ) . ',';
+          $quality_keys_key_string = '"' . implode( '", "', array_keys( $quality_keys ) ) . '",';
+        }
         $sql = 
-          'SELECT d.did, t.task_id, q.quality, q.value ' .
+          'SELECT "data_id", "task_id", "quality", "' . $quality_keys_key_string . '", "value"' .
+          'UNION ALL ' .
+          'SELECT d.did, t.task_id, q.quality, ' . $quality_keys_string . 'q.value ' .
           'FROM dataset d, data_quality q, task t, task_inputs i ' .
           'WHERE t.task_id = i.task_id ' .
           'AND i.input = "source_data" ' .
