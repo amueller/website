@@ -51,9 +51,13 @@ if( $_POST || $this->input->get('check') ) {
   $task_ids    = ($tasks)   ? $this->Task_tag->get_ids( explode( ',', $tasks ) ) : null;
   $setup_ids   = ($setups)  ? $this->Setup_tag->get_ids( explode( ',', $setups ) ) : null;
   
-  // TODO: this check can be less restrictive if type = qualities
-  if( $dataset_ids === false || $flow_ids === false || $task_ids === false || $setup_ids === false ) {
-    sm('Wrong input: Either of the input fields (datasets, implementations, setups, tasks) had no results. ' );
+  
+  if( $dataset_ids === false || $flow_ids === false ) {
+    sm('Wrong input: Either of the input fields (datasets, tasks) had no results. ' );
+    su('frontend/page/meta_dataset');
+  }
+  if( $type == 'evaluations' && ( $flow_ids === false || $setup_ids === false ) ) {
+    sm('Wrong input: Either of the input fields (implementations, setups) had no results. ' );
     su('frontend/page/meta_dataset');
   }
 
@@ -95,7 +99,8 @@ if( $_POST || $this->input->get('check') ) {
       'setups' => $setup_ids ? implode( ', ', $setup_ids ) : null,
       'functions' => $functions ? $functions : null,
       'user_id' => $this->ion_auth->get_user_id() );
-
+    if( $type == 'qualities' ) unset( $md['functions'] );  
+      
     $res = $this->Meta_dataset->insert( $md );
 
     sm('Meta dataset will be created. It can take several minutes to be generated.');
