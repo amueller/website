@@ -100,7 +100,7 @@ class Cron extends CI_Controller {
           'AND i.input = "source_data" ' .
           'AND i.value = q.data ' .
           'AND d.did = q.data ' .
-          'AND t.ttid = "' . $meta_dataset->task_type . '"' .
+          'AND t.ttid = "' . $meta_dataset->task_type . '" ' .
           $dataset_constr . $task_constr .
           'INTO OUTFILE "'. $tmp_path .'" ' .
           'FIELDS TERMINATED BY "," ' .
