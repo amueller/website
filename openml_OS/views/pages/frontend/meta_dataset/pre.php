@@ -32,6 +32,7 @@ foreach( $this->task_types as $tt ) {
 if( $_POST || $this->input->get('check') ) {
   $this->check = $this->input->post('check');
   
+  $type    = $this->input->post('type');
   $task_type=$this->input->post('task_type');
   $datasets= $this->input->post('datasets');
   $flows   = $this->input->post('flows');
@@ -85,6 +86,7 @@ if( $_POST || $this->input->get('check') ) {
     
     $md = array(
       'request_date' => now(),
+      'type' => $type,
       'task_type' => $task_type, 
       'datasets' => $dataset_ids ? implode( ', ', $dataset_ids ) : null,
       'tasks' => $task_ids ? implode( ', ', $task_ids ) : null,

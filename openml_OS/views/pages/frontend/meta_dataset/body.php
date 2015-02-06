@@ -14,6 +14,14 @@
           <div class="form-group">
             <form method="post" action="">
               <div class="form-group">
+                <label class="col-md-2 control-label">Meta dataset type</label>
+                <div class="col-md-10">
+                  <input type="radio" name="type" value="evaluations" checked="checked" /> Evaluations 
+                  <input type="radio" name="type" value="qualities" /> Meta-features
+                  <span class="help-block">Select output: meta-features per dataset or evaluations per run.</span>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-md-2 control-label" for="tasktypeDropdown">Task type</label>
                 <div class="col-md-10">
                   <select id="tasktypeDropdown" name="task_type" class="form-control">

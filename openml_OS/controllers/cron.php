@@ -47,6 +47,7 @@ class Cron extends CI_Controller {
       $setup_constr = ( $meta_dataset->setups ) ? 'AND s.sid IN (' . $meta_dataset->setups . ') ' : '';
       $function_constr = ( $meta_dataset->functions ) ? 'AND e.function IN (' . $meta_dataset->functions . ') ' : '';
       
+      $quality_colum = 'data_quality';
       $evaluation_column = 'evaluation';
       $evaluation_keys = array( 'function' => 'e.function' );
       if( $meta_dataset->task_type == 3 ) {
@@ -67,6 +68,7 @@ class Cron extends CI_Controller {
           'function' => 'e.function'
         );
         
+        $quality_colum = 'data_quality_interval';
         $evaluation_column = 'evaluation_interval';
       
       }
@@ -78,29 +80,46 @@ class Cron extends CI_Controller {
       
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
       
-      $sql = 
-        'SELECT "run_id", "setup_id", "task_id", "' . implode( '", "', array_keys( $evaluation_keys ) ) . '" ' . 
-        ', "value", "task_name", "setup_name", "textual"' .
-        'UNION ALL ' .
-        'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
-        implode( ', ', $evaluation_keys ) . ', e.value, '.
-        'CONCAT("Task_", t.task_id, "_", d.name),'.
-        's.setup_string, ' . 
-        'CONCAT(i.fullName, " on ", d.name) as textual '.
-        'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, '. $evaluation_column .' e '.
-        'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
-        'AND v.input = "source_data" AND v.value = d.did '.
-        'AND r.setup = s.sid AND s.implementation_id = i.id '.
-        'AND e.source = r.rid '.
-        'AND t.ttid = "' . $meta_dataset->task_type . '"' .
-        $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
-         /* the GROUP BY line makes stuff slower, we might want to comment it out. */
-        'GROUP BY r.setup, r.task_id, ' . implode( ',', $evaluation_keys ) . ' ' .
-        'INTO OUTFILE "'. $tmp_path .'" ' .
-        'FIELDS TERMINATED BY "," ' .
-        'ENCLOSED BY "\"" ' .
-        'LINES TERMINATED BY "\n" ' . 
-        ';';
+      if( $meta_dataset->type == 'qualities' ) {
+        $sql = 
+          'SELECT d.did, t.task_id, q.quality, q.value ' .
+          'FROM dataset d, data_quality q, task t, task_inputs i ' .
+          'WHERE t.task_id = i.task_id ' .
+          'AND i.input = "source_data" ' .
+          'AND i.value = q.data ' .
+          'AND d.did = q.data ' .
+          'AND t.ttid = "' . $meta_dataset->task_type . '"' .
+          $dataset_constr . $task_constr .
+          'INTO OUTFILE "'. $tmp_path .'" ' .
+          'FIELDS TERMINATED BY "," ' .
+          'ENCLOSED BY "\"" ' .
+          'LINES TERMINATED BY "\n" ' . 
+          ';';
+      } else {
+        $sql = 
+          'SELECT "run_id", "setup_id", "task_id", "' . implode( '", "', array_keys( $evaluation_keys ) ) . '" ' . 
+          ', "value", "task_name", "setup_name", "textual"' .
+          'UNION ALL ' .
+          'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
+          implode( ', ', $evaluation_keys ) . ', e.value, '.
+          'CONCAT("Task_", t.task_id, "_", d.name),'.
+          's.setup_string, ' . 
+          'CONCAT(i.fullName, " on ", d.name) as textual '.
+          'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, '. $evaluation_column .' e '.
+          'WHERE r.task_id = t.task_id AND v.task_id = t.task_id  '.
+          'AND v.input = "source_data" AND v.value = d.did '.
+          'AND r.setup = s.sid AND s.implementation_id = i.id '.
+          'AND e.source = r.rid '.
+          'AND t.ttid = "' . $meta_dataset->task_type . '"' .
+          $dataset_constr . $task_constr . $flow_constr . $setup_constr . $function_constr . 
+           /* the GROUP BY line makes stuff slower, we might want to comment it out. */
+          'GROUP BY r.setup, r.task_id, ' . implode( ',', $evaluation_keys ) . ' ' .
+          'INTO OUTFILE "'. $tmp_path .'" ' .
+          'FIELDS TERMINATED BY "," ' .
+          'ENCLOSED BY "\"" ' .
+          'LINES TERMINATED BY "\n" ' . 
+          ';';
+      }
       
       $this->Dataset->query( $sql ); 
       $success = file_exists( $tmp_path );      
