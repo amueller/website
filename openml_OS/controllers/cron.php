@@ -92,7 +92,7 @@ class Cron extends CI_Controller {
           $quality_keys_key_string = '"' . implode( '", "', array_keys( $quality_keys ) ) . '",';
         }
         $sql = 
-          'SELECT "data_id", "task_id", "quality", "' . $quality_keys_key_string . '", "value"' .
+          'SELECT "data_id", "task_id", "quality", ' . $quality_keys_key_string . ' "value" ' .
           'UNION ALL ' .
           'SELECT d.did, t.task_id, q.quality, ' . $quality_keys_string . 'q.value ' .
           'FROM dataset d, data_quality q, task t, task_inputs i ' .
