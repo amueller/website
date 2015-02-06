@@ -95,7 +95,7 @@ class Cron extends CI_Controller {
           'SELECT "data_id", "task_id", "quality", ' . $quality_keys_key_string . ' "value" ' .
           'UNION ALL ' .
           'SELECT d.did, t.task_id, q.quality, ' . $quality_keys_string . 'q.value ' .
-          'FROM dataset d, data_quality q, task t, task_inputs i ' .
+          'FROM dataset d, '.$quality_colum.' q, task t, task_inputs i ' .
           'WHERE t.task_id = i.task_id ' .
           'AND i.input = "source_data" ' .
           'AND i.value = q.data ' .
