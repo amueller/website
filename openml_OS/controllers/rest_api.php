@@ -802,7 +802,7 @@ class Rest_api extends CI_Controller {
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' ); 
     
     for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }
-    for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$dq[$i]->input] = $ti[$i]->value; }
+    for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value; }
     
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
