@@ -48,7 +48,8 @@ class Frontend extends CI_Controller {
     $this->page = 'home'; // default value
     $this->subpage = false;
 
-    $this->searchclient = new Elasticsearch\Client();
+    $params['hosts'] = array ('http://openml.org:80');
+    $this->searchclient = new Elasticsearch\Client($params);
   }
   
   public function index() {
