@@ -1275,9 +1275,9 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    if( safe( $task_id ) == false || 
-        safe( $setup_id ) == false || 
-        safe( $implementation_id ) == false ) {
+    if( is_safe( $task_id ) == false || 
+        is_safe( $setup_id ) == false || 
+        is_safe( $implementation_id ) == false ) {
       $this->_returnError( 511 );
       return;
     }
