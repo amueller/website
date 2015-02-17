@@ -208,7 +208,7 @@ class Rest_api extends CI_Controller {
     }
     
     // make associative
-    $datasets = new array();
+    $datasets = array();
     foreach( $datasets_res as $dataset ) {
       $datasets[$dataset->did] = $dataset;
       $datasets->qualities = array();
