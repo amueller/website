@@ -217,8 +217,8 @@ class Rest_api extends CI_Controller {
     
     $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
     
-    for( $i = 0; $i < count($dq); ++$i ) {
-      $datasets[$dq[$i]->did]->qualities[$dq[$i]->quality] = $dq[$i]->value;
+    foreach( $dq as $quality ) {
+      $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
     }
     
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
