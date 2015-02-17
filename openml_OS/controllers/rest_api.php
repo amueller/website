@@ -785,28 +785,28 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'" ORDER BY task_id; ' );
-    if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
+    $tasks_res = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'" ORDER BY task_id; ' );
+    if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {
       $this->_returnError( 481 );
       return;
     }
+    // make associative array from it
     $dids = array();
-    foreach( $tasks as $task ) { $dids[] = $task->did; }
-    
-    $data_qualities = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY data');
-    
-    // DIRTY HACK. CAN BE DONE FASTER???
-    for( $i = 0; $i < count($tasks); ++$i ) {
-      for( $j = 0; $j < count($data_qualities); ++$j ) {
-        if($tasks[$i]->did == $data_qualities[$j]->data) {
-          if( property_exists( $tasks[$i], 'qualities' ) == false ) {
-            $tasks[$i]->qualities = array();
-          }
-          $tasks[$i]->qualities[$data_qualities[$j]->quality] = $data_qualities[$j]->value;
-        }
-      }
+    $tasks = array();
+    foreach( $tasks_res as $task ) { 
+      $dids[] = $task->did; 
+      $tasks[$task->task_id] = $task;
     }
     
+    $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND q.data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY t.task_id');
+    $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' ); 
+    
+    for( $i = 0; $i < count($dq); ++$i ) {
+      if( property_exists( $tasks[$dq[$i]->task_id], 'qualities' ) == false ) {
+        $tasks[$dq[$i]->task_id]->qualities = array();
+      }
+      $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value;
+    }
     
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
@@ -1275,9 +1275,16 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $where_task = $task_id == false ? '' : ' AND task_id = ' . $task_id;
-    $where_setup = $setup_id == false ? '' : ' AND setup = ' . $setup_id;
-    $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $implementation_id;
+    if( is_cs_natural_numbers( $task_id ) == false || 
+        is_cs_natural_numbers( $setup_id ) == false || 
+        is_cs_natural_numbers( $implementation_id ) == false ) {
+      $this->_returnError( 511 );
+      return;
+    }
+    
+    $where_task = $task_id == false ? '' : ' AND task_id IN (' . $task_id . ') ';
+    $where_setup = $setup_id == false ? '' : ' AND setup IN (' . $setup_id . ') ';
+    $where_impl = $implementation_id == false ? '' : ' AND implementation_id IN (' . $implementation_id . ') ';
     
     $sql = 
       'SELECT r.rid, r.uploader, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
@@ -1285,7 +1292,7 @@ class Rest_api extends CI_Controller {
     $res = $this->Run->query( $sql );
     
     if($res == false) {
-      $this->_returnError( 511 );
+      $this->_returnError( 512 );
       return;
     }
     
