@@ -202,9 +202,10 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $datasets_res = $this->Task->query( 'SELECT `did`, `name`, `status` FROM `dataset` `d` WHERE 1 ORDER BY did; ' );
-    if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
+    $datasets_res = $this->Dataset->get( 'did' );
+    if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->_returnError( 370 );
+      return;
     }
     
     // make associative
