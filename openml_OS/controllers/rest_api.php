@@ -1275,9 +1275,9 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    if( is_cs_natural_numbers( $task_id ) == false || 
-        is_cs_natural_numbers( $setup_id ) == false || 
-        is_cs_natural_numbers( $implementation_id ) == false ) {
+    if( safe( $task_id ) == false || 
+        safe( $setup_id ) == false || 
+        safe( $implementation_id ) == false ) {
       $this->_returnError( 511 );
       return;
     }
