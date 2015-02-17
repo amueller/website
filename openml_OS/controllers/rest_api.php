@@ -202,25 +202,22 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $datasets = $this->Task->query( 'SELECT `did`, `name`, `status` FROM `dataset` `d` WHERE 1 ORDER BY did; ' );
+    $datasets_res = $this->Task->query( 'SELECT `did`, `name`, `status` FROM `dataset` `d` WHERE 1 ORDER BY did; ' );
     if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
       $this->_returnError( 370 );
     }
-    $dids = array();
-    foreach( $datasets as $d ) { $dids[] = $d->did; }
     
-    $data_qualities = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
+    // make associative
+    $datasets = new array();
+    foreach( $datasets_res as $dataset ) {
+      $datasets[$dataset->did] = $dataset;
+      $datasets->qualities = array();
+    }
     
-    // DIRTY HACK. CAN BE DONE FASTER???
-    for( $i = 0; $i < count($datasets); ++$i ) {
-      for( $j = 0; $j < count($data_qualities); ++$j ) {
-        if($datasets[$i]->did == $data_qualities[$j]->data) {
-          if( property_exists( $datasets[$i], 'qualities' ) == false ) {
-            $datasets[$i]->qualities = array();
-          }
-          $datasets[$i]->qualities[$data_qualities[$j]->quality] = $data_qualities[$j]->value;
-        }
-      }
+    $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
+    
+    for( $i = 0; $i < count($dq); ++$i ) {
+      $datasets[$dq[$i]->did]->qualities[$dq[$i]->quality] = $dq[$i]->value;
     }
     
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
@@ -796,17 +793,15 @@ class Rest_api extends CI_Controller {
     foreach( $tasks_res as $task ) { 
       $dids[] = $task->did; 
       $tasks[$task->task_id] = $task;
+      $tasks[$task->task_id]->qualities = array();
+      $tasks[$task->task_id]->inputs = array();
     }
     
     $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND q.data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY t.task_id');
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' ); 
     
-    for( $i = 0; $i < count($dq); ++$i ) {
-      if( property_exists( $tasks[$dq[$i]->task_id], 'qualities' ) == false ) {
-        $tasks[$dq[$i]->task_id]->qualities = array();
-      }
-      $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value;
-    }
+    for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }
+    for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$dq[$i]->input] = $ti[$i]->value; }
     
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
