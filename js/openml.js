@@ -1,5 +1,5 @@
 var client = new $.es.Client({
-  hosts: 'http://openml.org:9200'
+  hosts: 'http://es.openml.org'
 });
 
 /**client.ping({
