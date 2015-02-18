@@ -202,7 +202,7 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $active = $this->input->get('active_only') ? ' AND d.status = "active" ' : ' 1 ';
+    $active = $this->input->get('active_only') ? ' d.status = "active" ' : ' 1=1 ';
     $datasets_res = $this->Dataset->getWhere( $active, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->_returnError( 370 );
