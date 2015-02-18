@@ -7,7 +7,7 @@
     <oml:name><?php echo $task->dataset_name; ?></oml:name>
     <oml:status><?php echo $task->status; ?></oml:status>
     <?php if( property_exists( $task, 'inputs' ) ): foreach( $task->inputs as $input => $value ): ?>
-      <oml:input name="<?php echo $input; ?>"><?php echo $input; ?></oml:input>
+      <oml:input name="<?php echo $input; ?>"><?php echo $value; ?></oml:input>
     <?php endforeach; endif; ?>
     <?php if( property_exists( $task, 'qualities' ) ): foreach( $task->qualities as $quality => $value ): ?>
       <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>

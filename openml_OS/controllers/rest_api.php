@@ -202,7 +202,7 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $active = $this->input->get('active_only') ? ' d.status = "active" ' : ' 1=1 ';
+    $active = $this->input->get('active_only') ? 'status = "active"' : 'did = did'; // no constraints
     $datasets_res = $this->Dataset->getWhere( $active, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->_returnError( 370 );
@@ -793,13 +793,12 @@ class Rest_api extends CI_Controller {
     $dids = array();
     $tasks = array();
     foreach( $tasks_res as $task ) { 
-      $dids[] = $task->did; 
       $tasks[$task->task_id] = $task;
       $tasks[$task->task_id]->qualities = array();
       $tasks[$task->task_id]->inputs = array();
     }
     
-    $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND q.data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY t.task_id');
+    $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND t.task_id IN (' . implode(',', array_keys($tasks)) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY t.task_id');
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' ); 
     
     for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }

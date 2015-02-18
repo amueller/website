@@ -57,7 +57,7 @@ class Task extends Database_write {
       $current_task_obj = json_decode(json_encode($task), false); // convert array to obj, using json lib
       
       if( in_array( $current_task_obj, $existing_tasks ) == false ) {
-        $task_id = $this->insert( array( 'ttid' => $ttid ) );
+        $task_id = $this->insert( array( 'ttid' => $ttid, 'creation_date' => now() ) );
         foreach( $task as $key => $value ) {
           $to_insert[] = array( 'task_id' => $task_id, 'input' => $key, 'value' => $value );
         }
