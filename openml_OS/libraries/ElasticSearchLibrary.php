@@ -5,7 +5,7 @@ class ElasticSearchLibrary {
   public function __construct() {
     $this->searchclient = null;
     try {
-      $params['hosts'] = array ('http://openml.org:9200');
+      $params['hosts'] = array ('http://es.openml.org');
       $this->searchclient = new Elasticsearch\Client($params);
     } catch( Exception $e ) {}
   }
