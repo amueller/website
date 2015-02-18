@@ -11,8 +11,9 @@ class ElasticSearch {
     $this->CI->load->model('Estimation_procedure');
     $this->db = $this->CI->Dataset;
     $this->userdb = $this->CI->Author;
-
-    $this->client = new Elasticsearch\Client();
+    
+    $params['hosts'] = array ('http://openml.org:9200');
+    $this->client = new Elasticsearch\Client($params);
 
     $this->data_names = $this->CI->Dataset->getAssociativeArray('did','name','name IS NOT NULL');
     $this->flow_names = $this->CI->Implementation->getAssociativeArray('id','fullName','name IS NOT NULL');
