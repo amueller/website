@@ -1339,7 +1339,7 @@ class Client
      */
     private function getDefaultHost()
     {
-        return array(array('host' => 'localhost', 'port' => 9200));
+        return array(array('host' => 'http://es.openml.org', 'port' => 80));
     }
 
 
@@ -1381,7 +1381,7 @@ class Client
         }
 
         if (isset($parts['port']) !== true) {
-            $parts['port'] = 9200;
+            $parts['port'] = 80;
         }
 
         return $parts;
