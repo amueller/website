@@ -679,7 +679,11 @@ $this->apiErrors[510][0] = 'Please provide at least task_id, implementation_id o
 $this->apiErrors[510][1] = 'The number of runs is huge. Please limit the result space. ';
 
 // openml.implementations
-$this->apiErrors[511][0] = 'No results';
-$this->apiErrors[511][1] = 'There where no results. Check whether there are runs under this constraint. ';
+$this->apiErrors[511][0] = 'Input not safe';
+$this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, implementation_id) did not meet the contrains (comma separated list of integers). ';
+
+// openml.implementations
+$this->apiErrors[512][0] = 'No results';
+$this->apiErrors[512][1] = 'There where no results. Check whether there are runs under this constraint. ';
 
 ?>

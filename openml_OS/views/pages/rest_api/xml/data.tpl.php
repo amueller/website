@@ -8,5 +8,5 @@
     <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
     <?php endforeach; ?>
   </oml:dataset>
-	<?php endforeach; ?>
+  <?php endforeach; ?>
 </oml:data>

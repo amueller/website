@@ -70,7 +70,8 @@ $config['xml_fields_run'] = array(
 );
 
 $config['basic_qualities'] = array(
-  "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues", "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures"
+  "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues", 
+  "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures"
 );
 
 $config['taggable_entities'] = array(

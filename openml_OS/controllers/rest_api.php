@@ -202,25 +202,24 @@ class Rest_api extends CI_Controller {
   }
   
   private function _openml_data() {
-    $datasets = $this->Task->query( 'SELECT `did`, `name`, `status` FROM `dataset` `d` WHERE 1 ORDER BY did; ' );
-    if( is_array( $datasets ) == false || count( $datasets ) == 0 ) {
+    $active = $this->input->get('active_only') ? ' d.status = "active" ' : ' 1=1 ';
+    $datasets_res = $this->Dataset->getWhere( $active, 'did' );
+    if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->_returnError( 370 );
+      return;
     }
-    $dids = array();
-    foreach( $datasets as $d ) { $dids[] = $d->did; }
     
-    $data_qualities = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
+    // make associative
+    $datasets = array();
+    foreach( $datasets_res as $dataset ) {
+      $datasets[$dataset->did] = $dataset;
+      $datasets->qualities = array();
+    }
     
-    // DIRTY HACK. CAN BE DONE FASTER???
-    for( $i = 0; $i < count($datasets); ++$i ) {
-      for( $j = 0; $j < count($data_qualities); ++$j ) {
-        if($datasets[$i]->did == $data_qualities[$j]->data) {
-          if( property_exists( $datasets[$i], 'qualities' ) == false ) {
-            $datasets[$i]->qualities = array();
-          }
-          $datasets[$i]->qualities[$data_qualities[$j]->quality] = $data_qualities[$j]->value;
-        }
-      }
+    $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
+    
+    foreach( $dq as $quality ) {
+      $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
     }
     
     $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
@@ -784,29 +783,27 @@ class Rest_api extends CI_Controller {
       $this->_returnError( 480 );
       return;
     }
-    
-    $tasks = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'" ORDER BY task_id; ' );
-    if( is_array( $tasks ) == false || count( $tasks ) == 0 ) {
+    $active = $this->input->get('active_only') ? ' AND d.status = "active" ' : '';
+    $tasks_res = $this->Task->query( 'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` AND `t`.`ttid` = "'.$task_type_id.'" ' . $active . ' ORDER BY task_id; ' );
+    if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {
       $this->_returnError( 481 );
       return;
     }
+    // make associative array from it
     $dids = array();
-    foreach( $tasks as $task ) { $dids[] = $task->did; }
-    
-    $data_qualities = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY data');
-    
-    // DIRTY HACK. CAN BE DONE FASTER???
-    for( $i = 0; $i < count($tasks); ++$i ) {
-      for( $j = 0; $j < count($data_qualities); ++$j ) {
-        if($tasks[$i]->did == $data_qualities[$j]->data) {
-          if( property_exists( $tasks[$i], 'qualities' ) == false ) {
-            $tasks[$i]->qualities = array();
-          }
-          $tasks[$i]->qualities[$data_qualities[$j]->quality] = $data_qualities[$j]->value;
-        }
-      }
+    $tasks = array();
+    foreach( $tasks_res as $task ) { 
+      $dids[] = $task->did; 
+      $tasks[$task->task_id] = $task;
+      $tasks[$task->task_id]->qualities = array();
+      $tasks[$task->task_id]->inputs = array();
     }
     
+    $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND q.data IN (' . implode(',', $dids) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY t.task_id');
+    $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' ); 
+    
+    for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }
+    for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value; }
     
     $this->_xmlContents( 'tasks', array( 'tasks' => $tasks ) );
   }
@@ -1275,9 +1272,16 @@ class Rest_api extends CI_Controller {
       return;
     }
     
-    $where_task = $task_id == false ? '' : ' AND task_id = ' . $task_id;
-    $where_setup = $setup_id == false ? '' : ' AND setup = ' . $setup_id;
-    $where_impl = $implementation_id == false ? '' : ' AND implementation_id = ' . $implementation_id;
+    if( is_safe( $task_id ) == false || 
+        is_safe( $setup_id ) == false || 
+        is_safe( $implementation_id ) == false ) {
+      $this->_returnError( 511 );
+      return;
+    }
+    
+    $where_task = $task_id == false ? '' : ' AND task_id IN (' . $task_id . ') ';
+    $where_setup = $setup_id == false ? '' : ' AND setup IN (' . $setup_id . ') ';
+    $where_impl = $implementation_id == false ? '' : ' AND implementation_id IN (' . $implementation_id . ') ';
     
     $sql = 
       'SELECT r.rid, r.uploader, r.task_id, r.setup, s.implementation_id, s.setup_string ' . 
@@ -1285,7 +1289,7 @@ class Rest_api extends CI_Controller {
     $res = $this->Run->query( $sql );
     
     if($res == false) {
-      $this->_returnError( 511 );
+      $this->_returnError( 512 );
       return;
     }
     
