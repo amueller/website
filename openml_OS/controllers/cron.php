@@ -38,13 +38,15 @@ class Cron extends CI_Controller {
   function create_meta_dataset( $id = false ) {
     if( $id == false ) {
       $meta_dataset = $this->Meta_dataset->getWhere( 'processed IS NULL' );
+      echo 'No id specified, requesting first dataset in queue.' . "\n";
     } else {
       $meta_dataset = $this->Meta_dataset->getWhere( 'id = "' . $id . '"' );
+      echo 'Requesting dataset with id ' . $id . ".\n";
     }
     
     if( $meta_dataset ) {
       $meta_dataset = $meta_dataset[0];
-      echo 'processing meta-dataset with id ' . $meta_dataset->id;
+      echo 'Processing meta-dataset with id ' . $meta_dataset->id . ".\n";
       $this->Meta_dataset->update( $meta_dataset->id, array( 'processed' => now() ) );
       $dataset_constr = ( $meta_dataset->datasets ) ? 'AND d.did IN (' . $meta_dataset->datasets . ') ' : '';
       $task_constr = ( $meta_dataset->tasks ) ? 'AND t.task_id IN (' . $meta_dataset->tasks . ') ' : '';
@@ -164,6 +166,8 @@ class Cron extends CI_Controller {
       $this->email->subject('OpenML Meta Dataset');
       $this->email->message("This is an automatically generated email. The your requested meta-dataset was created successfully and can be downloaded from " . BASE_URL ); 
       $this->email->send();
+    } else {
+      echo 'No meta-dataset to process. '."\n";
     }
   }
   
