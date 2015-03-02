@@ -144,7 +144,8 @@ class Cron extends CI_Controller {
       $success = file_exists( $tmp_path );      
       
       if( $success == false ) {
-        $this->_error_meta_dataset( $meta_dataset->id, 'Failed to export query to tmp directory. ', $meta_dataset->user_id );
+        $error = 'MySQL Error #' . $this->db->_error_number() . ': ' . $this->db->_error_message();
+        $this->_error_meta_dataset( $meta_dataset->id, $error, $meta_dataset->user_id );
         return;
       }
       
