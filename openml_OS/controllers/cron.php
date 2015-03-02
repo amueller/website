@@ -39,11 +39,12 @@ class Cron extends CI_Controller {
     if( $id == false ) {
       $meta_dataset = $this->Meta_dataset->getWhere( 'processed IS NULL' );
     } else {
-      $meta_dataset = $this->Meta_dataset->getById( $id );
+      $meta_dataset = $this->Meta_dataset->getWhere( 'id = "' . $id . '"' );
     }
     
     if( $meta_dataset ) {
       $meta_dataset = $meta_dataset[0];
+      echo 'processing meta-dataset with id ' . $meta_dataset->id;
       $this->Meta_dataset->update( $meta_dataset->id, array( 'processed' => now() ) );
       $dataset_constr = ( $meta_dataset->datasets ) ? 'AND d.did IN (' . $meta_dataset->datasets . ') ' : '';
       $task_constr = ( $meta_dataset->tasks ) ? 'AND t.task_id IN (' . $meta_dataset->tasks . ') ' : '';
