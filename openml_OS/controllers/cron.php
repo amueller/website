@@ -173,13 +173,14 @@ class Cron extends CI_Controller {
   }
   
   private function _error_meta_dataset( $id, $msg, $user_id ) {
+    echo $msg;
     $this->Meta_dataset->update( $id, array( 'error_message' => $msg ) );
     
     $user = $this->ion_auth->user( $user_id )->row();
     $this->email->to( $user->email );
     $this->email->bcc( $this->config->item( 'email_debug' ) );
     $this->email->subject('OpenML Meta Dataset');
-    $this->email->message("This is an automatically generated email. \n\nUnfortunatelly, the creation of the Meta Dataset was unsuccessfull. \n\nError message: $msg\n\nIn case of any questions, please don't hesitate to contact the OpenML Team. "); 
+    $this->email->message("This is an automatically generated email. \n\nUnfortunatelly, the creation of the Meta Dataset was unsuccessfull. \n\nThe full error message is available to the system administrators. In case of any questions, please don't hesitate to contact the OpenML Team. "); 
     $this->email->send();
   }
 }
