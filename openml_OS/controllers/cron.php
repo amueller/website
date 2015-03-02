@@ -35,8 +35,12 @@ class Cron extends CI_Controller {
     }
   }
   
-  function create_meta_dataset() {
-    $meta_dataset = $this->Meta_dataset->getWhere( 'processed IS NULL' );
+  function create_meta_dataset( $id = false ) {
+    if( $id == false ) {
+      $meta_dataset = $this->Meta_dataset->getWhere( 'processed IS NULL' );
+    } else {
+      $meta_dataset = $this->Meta_dataset->getById( $id );
+    }
     
     if( $meta_dataset ) {
       $meta_dataset = $meta_dataset[0];
