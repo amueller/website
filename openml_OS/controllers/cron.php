@@ -144,7 +144,7 @@ class Cron extends CI_Controller {
       $success = file_exists( $tmp_path );      
       
       if( $success == false ) {
-        $error = 'MySQL Error #' . $this->db->_error_number() . ': ' . $this->db->_error_message();
+        $error = 'MySQL Error #' . $this->Dataset->mysqlErrorNo() . ': ' . $this->Dataset->mysqlErrorMessage();
         $this->_error_meta_dataset( $meta_dataset->id, $error, $meta_dataset->user_id );
         return;
       }

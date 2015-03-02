@@ -12,8 +12,9 @@ class Database_read extends CI_Model {
   }
 
   function get( $orderby = null ) {
-    if( $orderby != null ) 
+    if( $orderby != null ) {
       $this->db->order_by( $orderby );
+    }
     $data = $this->db->get( $this->table );
     return ( $data->num_rows() > 0 ) ? $data->result() : false;
   }
@@ -48,13 +49,14 @@ class Database_read extends CI_Model {
   }
   
   function getColumn( $column, $orderby = null) {
-    if( $orderby != null ) 
+    if( $orderby != null ) {
       $this->db->order_by( $orderby );
+    }
     $data = $this->db->select( $column )->get( $this->table );
     $res = array();
-    foreach( $data->result() as $row )
+    foreach( $data->result() as $row ) {
       $res[] = $row->{$column};
-    
+    }
     return count( $res ) > 0 ? $res : false;
   }
   
@@ -64,13 +66,14 @@ class Database_read extends CI_Model {
   }
   
   function getColumnFunction( $function, $orderby = null ) {
-    if( $orderby != null ) 
+    if( $orderby != null ) {
       $this->db->order_by( $orderby );
+    }
     $data = $this->db->select( $function . ' AS `name`', false )->get( $this->table );
     $res = array();
-    foreach( $data->result() as $row )
+    foreach( $data->result() as $row ) {
       $res[] = $row->{'name'};
-    
+    }
     return count( $res ) > 0 ? $res : false;
   }
   
@@ -85,7 +88,7 @@ class Database_read extends CI_Model {
       $this->db->group_by( $group_by );
     }
     $data = $this->getWhere( $where, $orderby );
-    if($data === false) return false;
+    if($data === false) { return false; }
     
     $res = array();
     foreach( $data as $item ) {
@@ -95,14 +98,17 @@ class Database_read extends CI_Model {
   }
   
   function getDistinct( $column, $excludeEmpty = true ) {
-    if( $excludeEmpty ) $this->db->where( $column . ' IS NOT NULL AND ' . $column . ' != ""' );
+    if( $excludeEmpty ) {
+      $this->db->where( $column . ' IS NOT NULL AND ' . $column . ' != ""' );
+    }
     $this->db->distinct();
     return $this->getColumn( $column );
   }
   
   function getColumns( $columns, $orderby = null ) {
-    if( $orderby != null ) 
+    if( $orderby != null ) {
       $this->db->order_by( $orderby );
+    }
     $data = $this->db->select( $columns, false )->get( $this->table );
     return $data->num_rows() > 0 ? $data->result() : false;
   }
@@ -125,11 +131,19 @@ class Database_read extends CI_Model {
     return max( $res ) + 1;
   }
   
+  function mysqlErrorNo() {
+    return $this->db->_error_number();
+  }
+  
+  function mysqlErrorMessage() {
+    return $this->db->_error_message();
+  }
+  
   function incrementVersionNumber( $name ) {
     $data = $this->getWhere( 'name = "' . $name . '"'  );
-    if( $data === false )
+    if( $data === false ) {
       return 1;
-      
+    } 
     $highest = $data[0];
     for( $i = 1; $i < count($data); $i++ ) {
       if( version_compare( $highest->version, $data[$i]->version ) < 0 ) {
@@ -142,24 +156,24 @@ class Database_read extends CI_Model {
   }
   
   protected function _where_clause_on_id($id_value) {
-		$where_clauses = array();
-		if(is_array($this->id_column)) {
-			if(is_array($id_value) && count($id_value) == count($id_value) ) {
-				for($i = 0; $i < count($this->id_column); $i++ ) {
-					$where_clauses[] = '`'.$this->id_column[$i].'` = "'.$id_value[$i].'"';
-				}
-			} else {
-				die('Function ' . get_class($this) . '::where_clause_on_id abused. Please fix. ');
-			}
-		} else {
-			if(is_array($id_value)) {
-				die('Function ' . get_class($this) . '::where_clause_on_id abused. Please fix. ');
-			} else {
-				$where_clauses[] = '`'.$this->id_column.'` = "'.$id_value.'"';
-			}
-		}
-		$res = implode( ' AND ', $where_clauses );
+    $where_clauses = array();
+    if(is_array($this->id_column)) {
+      if(is_array($id_value) && count($id_value) == count($id_value) ) {
+        for($i = 0; $i < count($this->id_column); $i++ ) {
+          $where_clauses[] = '`'.$this->id_column[$i].'` = "'.$id_value[$i].'"';
+        }
+      } else {
+        die('Function ' . get_class($this) . '::where_clause_on_id abused. Please fix. ');
+      }
+    } else {
+      if(is_array($id_value)) {
+        die('Function ' . get_class($this) . '::where_clause_on_id abused. Please fix. ');
+      } else {
+        $where_clauses[] = '`'.$this->id_column.'` = "'.$id_value.'"';
+      }
+    }
+    $res = implode( ' AND ', $where_clauses );
     return $res;
-	}
+  }
 }
 ?>
