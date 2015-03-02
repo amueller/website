@@ -173,7 +173,7 @@ class Cron extends CI_Controller {
   }
   
   private function _error_meta_dataset( $id, $msg, $user_id ) {
-    echo $msg;
+    echo $msg . "\n";
     $this->Meta_dataset->update( $id, array( 'error_message' => $msg ) );
     
     $user = $this->ion_auth->user( $user_id )->row();
