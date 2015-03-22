@@ -22,6 +22,7 @@ $this->items = $this->Author->query( $sql );
 $this->name = false;
 $this->task_types = $this->Task_type->get( );
 $this->check = false;
+$this->ttid=$this->input->post('task_type');
 
 $legal_task_types = array();
 foreach( $this->task_types as $tt ) {
@@ -125,6 +126,7 @@ if( $_POST || $this->input->get('check') ) {
       'AND `i`.`input` = "source_data" ' .
       'AND `i`.`value` = `d`.`did` ' .
       'AND `t`.`ttid` = `tt`.`ttid` ' .
+      'AND `t`.`ttid` = "'.$task_type.'" ' .
       (($dataset_ids) ? ('AND `i`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
       (($task_ids) ? ('AND `t`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' );
     $res_tasks = $this->Task->query( $sql_tasks );

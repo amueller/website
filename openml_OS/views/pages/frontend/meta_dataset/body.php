@@ -26,7 +26,7 @@
                 <div class="col-md-10">
                   <select id="tasktypeDropdown" name="task_type" class="form-control">
                     <?php foreach( $this->task_types as $tt ): ?>
-                    <option value="<?php echo $tt->ttid; ?>"><?php echo $tt->name; ?></option>
+                    <option value="<?php echo $tt->ttid; ?>" <?php if($tt->ttid == $this->ttid) echo 'selected="selected"'; ?>><?php echo $tt->name; ?></option>
                     <?php endforeach; ?>
                   </select>
                   <span class="help-block">Select the task type the results should cover.</span>
