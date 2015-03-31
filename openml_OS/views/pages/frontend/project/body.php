@@ -36,14 +36,14 @@
                 $this->setup_items );
               ?>
           </div>
-          <div class="tab-pane" id="run">
+<?php  /* <div class="tab-pane" id="run">
             <?php
               echo $this->dataoverview->generate_table_static( 
                 $this->run_name, 
                 $this->run_columns, 
                 $this->run_items );
               ?>
-          </div>
+          </div> */ ?>
         </div>
       </div>
 

@@ -50,7 +50,7 @@ $this->data_columns = array( 'id', 'name', 'instances', 'features' );
 $this->data_items = $this->Dataset->query( $data_sql );
 $this->data_name = 'Data' . $with_tag;
 
-$run_sql = 
+/*$run_sql = 
   'SELECT r.rid, i.id, i.name, r.task_id, r.error '.
   'FROM `run` `r`, `algorithm_setup` `s`, `setup_tag` `st`, task_tag `tt`, `implementation` `i` '.
   'WHERE `i`.`id` = `s`.`implementation_id` AND `r`.`task_id` = `tt`.`id` '.
@@ -60,5 +60,5 @@ $run_sql =
   'GROUP BY r.rid;';
 $this->run_columns = array( 'rid', 'task_id', 'id', 'name', 'error' );
 $this->run_items = $this->Run->query( $run_sql );
-$this->run_name = 'Runs (errors) ' . $with_tag;
+$this->run_name = 'Runs (errors) ' . $with_tag;*/
 ?>
