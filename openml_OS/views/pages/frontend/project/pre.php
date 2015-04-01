@@ -32,7 +32,7 @@ $this->setup_name = 'Setups' . $with_tag;
 $task_sql = 
   'SELECT CONCAT("<a href=\'t/",task.task_id,"\'>", task.task_id, "</a>") AS id, '.
   't.name AS task_type, '.
-  'CONCAT("<a href=\'t/",task.task_id,"\'>", d.name, "</a>"),'.
+  'CONCAT("<a href=\'t/",task.task_id,"\'>", d.name, "</a>") AS name, '.
   'inst.value AS instances, attr.value AS features ' . 
   'FROM task, task_type t, task_tag `tag`, task_inputs `i`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
