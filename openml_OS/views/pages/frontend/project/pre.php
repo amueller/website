@@ -30,7 +30,10 @@ $this->setup_items = $this->Algorithm_setup->query( $setup_sql );
 $this->setup_name = 'Setups' . $with_tag;
 
 $task_sql = 
-  'SELECT CONCAT("<a href=\'t/",task.task_id,"\'>", task.task_id, "</a>") AS id, t.name AS task_type, d.name, inst.value AS instances, attr.value AS features ' . 
+  'SELECT CONCAT("<a href=\'t/",task.task_id,"\'>", task.task_id, "</a>") AS id, '
+  't.name AS task_type, '.
+  'CONCAT("<a href=\'t/",task.task_id,"\'>", d.name, "</a>"),'.
+  'inst.value AS instances, attr.value AS features ' . 
   'FROM task, task_type t, task_tag `tag`, task_inputs `i`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
   'LEFT JOIN data_quality attr ON d.did = attr.data AND attr.quality = "NumberOfFeatures" ' .
