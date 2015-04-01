@@ -55,9 +55,10 @@ $data_sql =
   'FROM dataset_tag `tag`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
   'LEFT JOIN data_quality attr ON d.did = attr.data AND attr.quality = "NumberOfFeatures" ' .
-  'WHERE d.did = tag.id ' .
+  'WHERE d.did = tag.id AND ((1=1 ' .
   $where_tag_name . 
   $where_tag_by . 
+  ') OR did IN (SELECT value FROM task_inputs i, task_tag t WHERE i.task_id = t.id AND i.input = "source_data" AND t.tag = "'.$tag_name.'"))' .
   'GROUP BY d.did;';
 $this->data_columns = array( 'id', 'name', 'instances', 'features' );
 $this->data_items = $this->Dataset->query( $data_sql );
