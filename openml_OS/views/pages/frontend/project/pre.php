@@ -21,7 +21,7 @@ if( $tag_by ) {
 }
 
 if( $tag_name || $tag_by ) {
-  $did_where = 'AND ( d.did IN (SELECT `id` FROM `dataset_tag` `tag` WHERE 1 = 1 ' . $where_tag_name . $where_tag_by . ') OR did IN (SELECT id FROM task_inputs i, task_tag tag WHERE i.task_id = tag.id AND i.input = "source_data" ' . $where_tag_name . $where_tag_by . '))';
+  $did_where = 'AND ( d.did IN (SELECT `id` FROM `dataset_tag` `tag` WHERE 1 = 1 ' . $where_tag_name . $where_tag_by . ') OR did IN (SELECT value FROM task_inputs i, task_tag tag WHERE i.task_id = tag.id AND i.input = "source_data" ' . $where_tag_name . $where_tag_by . ')) ';
 }
 
 $setup_sql = 
