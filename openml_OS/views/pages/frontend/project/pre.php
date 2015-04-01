@@ -1,7 +1,7 @@
 <?php
 
 $tag_name = gu('tag') ? gu('tag') : $this->input->get('tag');
-$tag_by  = gu('by') ? gu('by') : $this->input->get('by');
+$tag_by  = gu('u') ? gu('u') : $this->input->get('u');
 
 $with_tag = '';
 $where_tag_name = '';
