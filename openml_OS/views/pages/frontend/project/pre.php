@@ -9,19 +9,18 @@ $where_tag_by = '';
 
 
 if( $tag_name ) {
-  $where_tag_name = 'AND tag = "' . $tag_name . '" ';
+  $where_tag_name = 'AND tag.tag = "' . $tag_name . '" ';
   $with_tag = ' tagged with ' . $tag_name . ' ';
 }
 if( $tag_by ) {
-  
-  $where_tag_by = 'AND uploader = ' . $tag_by . ' ';
+  $where_tag_by = 'AND tag.uploader = ' . $tag_by . ' ';
 }
 
 
 $setup_sql = 
   'SELECT s.sid AS id, i.name, s.setup_string ' .
-  'FROM `implementation` i, `algorithm_setup` s, `setup_tag` st ' .
-  'WHERE s.sid = st.id ' .
+  'FROM `implementation` i, `algorithm_setup` s, `setup_tag` tag ' .
+  'WHERE s.sid = tag.id ' .
   $where_tag_name . 
   $where_tag_by . 
   'AND i.id = s.implementation_id ' .
@@ -32,10 +31,10 @@ $this->setup_name = 'Setups' . $with_tag;
 
 $task_sql = 
   'SELECT task.task_id AS id, t.name AS task_type, d.name, inst.value AS instances, attr.value AS features ' . 
-  'FROM task, task_type t, task_tag `tt`, task_inputs `i`, dataset d ' . 
+  'FROM task, task_type t, task_tag `tag`, task_inputs `i`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
   'LEFT JOIN data_quality attr ON d.did = attr.data AND attr.quality = "NumberOfFeatures" ' .
-  'WHERE task.task_id = tt.id ' .
+  'WHERE task.task_id = tag.id ' .
   'AND task.ttid = t.ttid ' .
   'AND i.input = "source_data" AND i.task_id = task.task_id ' . 
   'AND i.value = d.did ' .
@@ -48,10 +47,10 @@ $this->task_name = 'Tasks' . $with_tag;
 
 $data_sql = 
   'SELECT d.did AS id, d.name, inst.value AS instances, attr.value AS features ' . 
-  'FROM dataset_tag `dt`, dataset d ' . 
+  'FROM dataset_tag `tag`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
   'LEFT JOIN data_quality attr ON d.did = attr.data AND attr.quality = "NumberOfFeatures" ' .
-  'WHERE d.did = dt.id ' .
+  'WHERE d.did = tag.id ' .
   $where_tag_name . 
   $where_tag_by . 
   'GROUP BY d.did;';
