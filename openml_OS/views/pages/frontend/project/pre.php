@@ -11,7 +11,7 @@ $did_where = '';
 
 
 if( $tag_name ) {
-  $where_tag_name = 'AND tag.tag = "' . $tag_name . '" ';
+  $where_tag_name = 'AND LOWER(tag.tag) = LOWER("' . $tag_name . '") ';
   $with_tag = ' tagged with ' . $tag_name . ' ';
   $tag_suffix .= '/tag/'.$tag_name;
 }
