@@ -6,16 +6,19 @@ $tag_by  = gu('by') ? gu('by') : $this->input->get('by');
 $with_tag = '';
 $where_tag_name = '';
 $where_tag_by = '';
+$tag_suffix = '?';
 
 
 if( $tag_name ) {
   $where_tag_name = 'AND tag.tag = "' . $tag_name . '" ';
   $with_tag = ' tagged with ' . $tag_name . ' ';
+  $tag_suffix .= 'tag='.$tag_name;
 }
 if( $tag_by ) {
   $where_tag_by = 'AND tag.uploader = ' . $tag_by . ' ';
+  $tag_suffix .= 'by='.$tag_by;
 }
-
+if($tag_suffix=='?') { $tag_suffix = ''; }
 
 $setup_sql = 
   'SELECT s.sid AS id, i.name, s.setup_string ' .
@@ -32,7 +35,7 @@ $this->setup_name = 'Setups' . $with_tag;
 $task_sql = 
   'SELECT CONCAT("<a href=\'t/",task.task_id,"\'>", task.task_id, "</a>") AS id, '.
   't.name AS task_type, '.
-  'CONCAT("<a href=\'t/",task.task_id,"\'>", d.name, "</a>") AS name, '.
+  'CONCAT("<a href=\'t/",task.task_id,"'.$tag_suffix.'\'>", d.name, "</a>") AS name, '.
   'inst.value AS instances, attr.value AS features ' . 
   'FROM task, task_type t, task_tag `tag`, task_inputs `i`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
