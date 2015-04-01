@@ -1,14 +1,20 @@
 <?php
 
+$tag_name = $this->input->get('tag') || gu('tag');
+$tag_by  = $this->input->get('by') || gu('by');
+
 $with_tag = '';
-$where_tag_task = '';
-$where_tag_setup = '';
-$where_tag_data = '';
-if( $this->input->get('tag') ) {
-  $where_tag_setup = 'AND st.tag = "' . $this->input->get('tag') . '" ';
-  $where_tag_task = 'AND tt.tag = "' . $this->input->get('tag') . '" ';
-  $where_tag_data = 'AND dt.tag = "' . $this->input->get('tag') . '" ';
-  $with_tag = ' tagged with ' . $this->input->get('tag');
+$where_tag_name = '';
+$where_tag_by = '';
+
+
+if( $tag_name ) {
+  $where_tag_name = 'AND tag = "' . $tag_name . '" ';
+  $with_tag = ' tagged with ' . $tag_name . ' ';
+}
+if( $tag_by ) {
+  
+  $where_tag_by = 'AND uploader = ' . $tag_by . ' ';
 }
 
 
@@ -16,7 +22,8 @@ $setup_sql =
   'SELECT s.sid AS id, i.name, s.setup_string ' .
   'FROM `implementation` i, `algorithm_setup` s, `setup_tag` st ' .
   'WHERE s.sid = st.id ' .
-  $where_tag_setup . 
+  $where_tag_name . 
+  $where_tag_by . 
   'AND i.id = s.implementation_id ' .
   'GROUP BY s.sid;';
 $this->setup_columns = array( 'id', 'name', 'setup_string' );
@@ -32,7 +39,8 @@ $task_sql =
   'AND task.ttid = t.ttid ' .
   'AND i.input = "source_data" AND i.task_id = task.task_id ' . 
   'AND i.value = d.did ' .
-  $where_tag_task . ' ' .
+  $where_tag_name . 
+  $where_tag_by . 
   'GROUP BY task.task_id;';
 $this->task_columns = array( 'id', 'task_type', 'name', 'instances', 'features' );
 $this->task_items = $this->Algorithm_setup->query( $task_sql );
@@ -44,7 +52,8 @@ $data_sql =
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
   'LEFT JOIN data_quality attr ON d.did = attr.data AND attr.quality = "NumberOfFeatures" ' .
   'WHERE d.did = dt.id ' .
-  $where_tag_data . ' ' .
+  $where_tag_name . 
+  $where_tag_by . 
   'GROUP BY d.did;';
 $this->data_columns = array( 'id', 'name', 'instances', 'features' );
 $this->data_items = $this->Dataset->query( $data_sql );

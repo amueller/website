@@ -7,7 +7,7 @@
           <li><a href="#data" role="tab" data-toggle="tab">Data</a></li>
           <li class="active"><a href="#task" role="tab" data-toggle="tab">Tasks</a></li>
           <li><a href="#setup" role="tab" data-toggle="tab">Setups</a></li>
-          <li><a href="#run" role="tab" data-toggle="tab">Runs</a></li>
+     <!--     <li><a href="#run" role="tab" data-toggle="tab">Runs</a></li> -->
         </ul>
 
         <!-- Tab panes -->
