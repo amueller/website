@@ -25,7 +25,7 @@ if( $tag_name || $tag_by ) {
 }
 
 $setup_sql = 
-  'SELECT CONCAT("<a href=\'i/",i.id,"'.$tag_suffix.'\'>", sid, "</a>") AS id, CONCAT("<a href=\'i/",i.id,"'.$tag_suffix.'\'>", i.name, "</a>") AS name, s.setup_string ' .
+  'SELECT CONCAT("<a href=\'f/",i.id,"'.$tag_suffix.'\'>", sid, "</a>") AS id, CONCAT("<a href=\'f/",i.id,"'.$tag_suffix.'\'>", i.name, "</a>") AS name, s.setup_string ' .
   'FROM `implementation` i, `algorithm_setup` s, `setup_tag` tag ' .
   'WHERE s.sid = tag.id ' .
   $where_tag_name . 
