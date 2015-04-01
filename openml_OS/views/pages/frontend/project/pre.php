@@ -7,6 +7,7 @@ $with_tag = '';
 $where_tag_name = '';
 $where_tag_by = '';
 $tag_suffix = '';
+$did_where = '';
 
 
 if( $tag_name ) {
@@ -17,6 +18,10 @@ if( $tag_name ) {
 if( $tag_by ) {
   $where_tag_by = 'AND tag.uploader = ' . $tag_by . ' ';
   $tag_suffix .= '/by/'.$tag_by;
+}
+
+if( $tag_name || $tag_by ) {
+  $did_where = 'AND ( d.did IN (SELECT `value` FROM `data_tag` `tag` WHERE 1 = 1 ' . $where_tag_name . $where_tag_by . ') OR did IN (SELECT value FROM task_inputs i, task_tag tag WHERE i.task_id = tag.id AND i.input = "source_data" ' . $where_tag_name . $where_tag_by . '))';
 }
 
 $setup_sql = 
@@ -55,10 +60,8 @@ $data_sql =
   'FROM dataset_tag `tag`, dataset d ' . 
   'LEFT JOIN data_quality inst ON d.did = inst.data AND inst.quality = "NumberOfInstances" ' .
   'LEFT JOIN data_quality attr ON d.did = attr.data AND attr.quality = "NumberOfFeatures" ' .
-  'WHERE d.did = tag.id AND ((1=1 ' .
-  $where_tag_name . 
-  $where_tag_by . 
-  ') OR did IN (SELECT value FROM task_inputs i, task_tag t WHERE i.task_id = t.id AND i.input = "source_data" AND t.tag = "'.$tag_name.'"))' .
+  'WHERE 1=1 ' .
+  $did_where .
   'GROUP BY d.did;';
 $this->data_columns = array( 'id', 'name', 'instances', 'features' );
 $this->data_items = $this->Dataset->query( $data_sql );
