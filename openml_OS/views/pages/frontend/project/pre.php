@@ -6,19 +6,18 @@ $tag_by  = gu('by') ? gu('by') : $this->input->get('by');
 $with_tag = '';
 $where_tag_name = '';
 $where_tag_by = '';
-$tag_suffix = '?';
+$tag_suffix = '';
 
 
 if( $tag_name ) {
   $where_tag_name = 'AND tag.tag = "' . $tag_name . '" ';
   $with_tag = ' tagged with ' . $tag_name . ' ';
-  $tag_suffix .= 'tag='.$tag_name;
+  $tag_suffix .= '/tag/'.$tag_name;
 }
 if( $tag_by ) {
   $where_tag_by = 'AND tag.uploader = ' . $tag_by . ' ';
-  $tag_suffix .= 'by='.$tag_by;
+  $tag_suffix .= '/by/'.$tag_by;
 }
-if($tag_suffix=='?') { $tag_suffix = ''; }
 
 $setup_sql = 
   'SELECT CONCAT("<a href=\'i/",i.id,"'.$tag_suffix.'\'>", sid, "</a>") AS id, CONCAT("<a href=\'i/",i.id,"'.$tag_suffix.'\'>", i.name, "</a>") AS name, s.setup_string ' .
