@@ -17,7 +17,7 @@ if( $tag_name ) {
 }
 if( $tag_by ) {
   $where_tag_by = 'AND tag.uploader = ' . $tag_by . ' ';
-  $tag_suffix .= '/by/'.$tag_by;
+  $tag_suffix .= '/u/'.$tag_by;
 }
 
 if( $tag_name || $tag_by ) {
