@@ -21,7 +21,7 @@ if( $tag_by ) {
 if($tag_suffix=='?') { $tag_suffix = ''; }
 
 $setup_sql = 
-  'SELECT s.sid AS id, i.name, s.setup_string ' .
+  'SELECT CONCAT("<a href=\'i/",i.id,"'.$tag_suffix.'\'>", sid, "</a>") AS id, CONCAT("<a href=\'i/",i.id,"'.$tag_suffix.'\'>", i.name, "</a>") AS name, s.setup_string ' .
   'FROM `implementation` i, `algorithm_setup` s, `setup_tag` tag ' .
   'WHERE s.sid = tag.id ' .
   $where_tag_name . 
@@ -33,7 +33,7 @@ $this->setup_items = $this->Algorithm_setup->query( $setup_sql );
 $this->setup_name = 'Setups' . $with_tag;
 
 $task_sql = 
-  'SELECT CONCAT("<a href=\'t/",task.task_id,"\'>", task.task_id, "</a>") AS id, '.
+  'SELECT CONCAT("<a href=\'t/",task.task_id,"'.$tag_suffix.'\'>", task.task_id, "</a>") AS id, '.
   't.name AS task_type, '.
   'CONCAT("<a href=\'t/",task.task_id,"'.$tag_suffix.'\'>", d.name, "</a>") AS name, '.
   'inst.value AS instances, attr.value AS features ' . 
