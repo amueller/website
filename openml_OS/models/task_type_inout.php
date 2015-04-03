@@ -13,7 +13,7 @@ class Task_type_inout extends Database_read {
 	
 	public function getParsed( $task_id ) {
     $task = $this->Task->getById( $task_id );
-		$templates = $this->getAssociativeArray('name','template_api', '`template_api` IS NOT NULL AND `ttid` = ' . $task->ttid, '`order` ASC' );
+		$templates = $this->getAssociativeArray('name','template_api', '`template_api` IS NOT NULL AND `ttid` = ' . $task->ttid, null, '`order` ASC' );
     $values = $this->Task_inputs->getTaskValuesAssoc( $task_id );
     
     list($variables, $variable_names) = $this->getVariables( $templates );
