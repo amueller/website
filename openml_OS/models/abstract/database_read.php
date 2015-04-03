@@ -34,7 +34,7 @@ class Database_read extends CI_Model {
     if( $orderby != null ) {
       $this->db->order_by( $orderby ); }
     $data = $this->db->where( $where )->get( $this->table );
-    return ( $data->num_rows() > 0 ) ? $data->result() : false;
+    return ( $data && $data->num_rows() > 0 ) ? $data->result() : false;
   }
   
   function getById( $id, $orderby = null ) {
