@@ -1866,6 +1866,14 @@ class Rest_api extends CI_Controller {
     $this->_openml_task_get();
   }
   
+  private function _openml_task_types_search() {
+    $this->_openml_task_type_get();
+  }
+  
+  private function _openml_task_types() {
+    $this->_openml_task_type();
+  }
+  
   /************************************* DISPLAY *************************************/
   
   private function _show_webpage() {
