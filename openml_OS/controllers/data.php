@@ -1,20 +1,20 @@
 <?php
 class Data extends CI_Controller {
-  
+
   function __construct() {
     parent::__construct();
-    
+
     $this->controller = strtolower(get_class ($this));
     $this->nr_segments = count($this->uri->segments);
-    
+
     $this->load->Model('Dataset');
     $this->load->Model('File');
     $this->load->Model('Implementation');
     $this->load->Model('Author');
     $this->load->Model('Api_session');
-    
+
     $this->load->helper('file_upload');
-    
+
     // authentication
     $this->provided_hash = $this->input->get_post('session_hash') != false;
     $this->provided_valid_hash = $this->Api_session->isValidHash( $this->input->get_post('session_hash') );
@@ -26,7 +26,7 @@ class Data extends CI_Controller {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
   }
-  
+
   function download($id,$name = 'undefined') {
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
@@ -36,10 +36,11 @@ class Data extends CI_Controller {
         $this->_header_download($file);
         readfile_chunked(DATA_PATH . $file->filepath);
       }
-    } // else, an appropriate message is shown. 
+    } // else, an appropriate message is shown.
   }
-  
+
   function view($id,$name = 'undefined') {
+    if(BASE_URL == "http://openml.org" or BASE_URL == "http://www.openml.org"){
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
@@ -49,18 +50,21 @@ class Data extends CI_Controller {
         header('Content-Length: ' . $file->filesize);
         readfile(DATA_PATH . $file->filepath);
       }
-    } // else, an appropriate message is shown. 
+    } // else, an appropriate message is shown.
+  } else {
+    echo file_get_contents('http://www.openml.org/data/view/' . $id . '/image.png');
   }
-  
+  }
+
   private function _check_rights( $file ) {
     if( $file->access_policy == 'public' ) {
       return true;
     }
-    
+
     if( $this->ion_auth->is_admin( $this->user_id ) ) {
       return true;
     }
-    
+
     elseif( $file->access_policy == 'private' ) {
       if( $this->user_id == $file->creator ) {
         return true;
@@ -68,26 +72,26 @@ class Data extends CI_Controller {
         $this->_error403();
       }
     }
-    
+
     elseif( $file->access_policy == 'deleted' ) {
       $this->_error404();
     }
-    
+
     elseif( $file->access_policy == 'none' ) {
       $this->_error403();
     }
   }
-  
+
   private function _error404() {
     header("Status: 404 Not Found");
     $this->load->view('404');
   }
-  
+
   private function _error403() {
     header("Status: 403 Forbidden");
     $this->load->view('403');
   }
-  
+
   private function _header_download($file) {
     header('Content-Description: File Transfer');
     header('Content-Type: ' . $file->mime_type);

@@ -1,16 +1,3 @@
-<div class="col-sm-12 col-md-3 searchbar">
-      <div class="bs-sidebar affix">
-        <ul class="nav bs-sidenav">
-	    <li><a href="#r-download">Download</a></li>
-	    <li><a href="#r-start">Quick Start</a></li>
-	    <li><a href="#r-issues">Issues</a></li>
-
-	</ul>
-      </div>
-</div>
-
-<div class="col-sm-12 col-md-9 openmlsectioninfo">
-  <div class="bs-docs-section">
           <div class="page-header">
             <h1>mlr (Machine Learning in R)</h1>
           </div>
@@ -24,6 +11,3 @@
 
 	<h2 id="r-issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/r/issues"> OpenML R issue tracker</a>.
-
-   </div>
-</div>

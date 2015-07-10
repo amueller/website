@@ -1,7 +1,7 @@
 /// SHARING
 
-$(document).ready(function() { 
-    // bind form using ajaxForm 
+$(document).ready(function() {
+    // bind form using ajaxForm
 	$('#implementationForm').ajaxForm( {
 		beforeSerialize: prepareImplementationDescriptionXML,
 		success: implementationFormSubmitted,
@@ -14,7 +14,7 @@ $(document).ready(function() {
 function prepareImplementationDescriptionXML(form, options) {
 	var fields =  ['name','description','creator','contributor','licence','language','installation_notes'];
 	var implode = [false,false,true,true,false,false,false];
-	
+
 	var xml_header = '<oml:implementation xmlns:oml="http://openml.org/openml">'+"\n";
 	var xml_footer = '</oml:implementation>'+"\n";
 	var xml_content = prepareDescriptionXML('implementation',fields,implode);
@@ -39,7 +39,7 @@ function prepareDescriptionXML(type,fields,implode) {
 			}
 		}
 	}
-	
+
 	return xml_content;
 }
 
@@ -76,14 +76,14 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
 
 
 /// DETAIL
-<?php  
+<?php
 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 ?>
 
 function fetch_params_succes(xml, setup_id) {
     inner = '<table><thead><tr><th style="border: 0">Parameter Name</th><th style="border: 0">Description</th><th style="border: 0">Default Value</th><th style="border: 0">Chosen value</th></tr></thead><tbody>';
 	var xmlDocument = $(xml);
-	
+
 	$(xmlDocument).find('oml\\:parameter').each(function(){
 		inner += '<tr>';
 		inner += '<td style="border: 0">' + $(this).find('oml\\:parameter_name').text() + '</td>';
@@ -97,17 +97,17 @@ function fetch_params_succes(xml, setup_id) {
 }
 
 
-// Formating function for row details 
+// Formating function for row details
 function fnFetchParams ( oTable, row, column )
 {
     var aData = oTable.fnGetData( row );
-    
-	$.ajax({ 
+
+	$.ajax({
 		url: '<?php echo BASE_URL; ?>api/?f=openml.setup.parameters&setup_id='+aData[column],
 		context: document.body,
 		dataType: 'text'
 	}).done(function(xml){fetch_params_succes(xml,aData[column])});
-	
+
     return '<div class="setup-record-'+aData[column]+'" style="margin: 0px 20px;">Loading...</div>';
 }
 
@@ -134,9 +134,9 @@ $(document).ready(function() {
         "aoColumnDefs": [
             { "bSearchable": false, "bVisible":    false, "aTargets": [ 1, 2 ] }
         ],
-		"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
+		"sDom": "<'row'<'col-md-6'f><'col-md-6'T>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
 		"oTableTools": {
-			"sSwfPath": "SWF/tableTools/copy_csv_xls_pdf.swf",
+			"sSwfPath": "swf/copy_csv_xls_pdf.swf",
 			"aButtons": [
 				"copy","print","csv", "pdf",
                 {
@@ -154,7 +154,7 @@ $(document).ready(function() {
 		"bAutoWidth": false,
 		<?php echo column_widths($this->dt_main['column_widths']); ?>
         "bPaginate": true
-    });	
+    });
 	var oTableQualities = $('#datatable_implementationqualities').dataTable( {
 		"bServerSide": true,
 		"sAjaxSource": "api_query/table_feed",
@@ -174,7 +174,7 @@ $(document).ready(function() {
         var nTr = $(this).parents('tr')[0];
         if ( oTableRuns.fnIsOpen(nTr) )
         {
-            // This row is already open - close it 
+            // This row is already open - close it
             this.src = "img/datatables/details_open.png";
             oTableRuns.fnClose( nTr );
         }
@@ -228,8 +228,11 @@ options = {
                 gridLineWidth: 1
             },
             title: {
-                text: null
-            },    
+              text: 'Evaluations per dataset (multiple parameter settings)'
+            },
+      	    subtitle: {
+      	        text: 'every point is a run, click for details'
+      	    },
             legend: {
                 enabled: false
             },
@@ -274,39 +277,67 @@ options = {
             }]
         };
 
-var theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, r.rid from algorithm_setup l, evaluation e, run r, dataset d, task t, task_inputs ti where r.setup=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.task_id=ti.task_id and ti.input="source_data" and ti.value=d.did AND r.task_id = t.task_id and t.ttid='+ current_task + ' AND e.source=r.rid AND e.function="'+evaluation_measure+'" order by value desc';
-
-if(typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
- theQuery = 'select distinct d.name, d.did, round(e.value,4) as value, ins.value as paramval, r.rid from algorithm_setup l, evaluation e, run r, dataset d, task t, task_inputs ti, input_setting ins where r.setup=l.sid AND l.implementation_id=<?php echo $this->record->id; ?> AND r.task_id=ti.task_id and ti.input="source_data" and ti.value=d.did AND r.task_id = t.task_id and t.ttid='+ current_task + ' AND e.source=r.rid AND e.function="'+evaluation_measure+'" AND l.sid=ins.setup AND ins.input="'+selected_parameter+'" group by d.name, value order by value desc';
-console.log(theQuery);
-}
-	
-var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+theQuery, "UTF-8");
-$.getJSON(query,function(jsonData){
-        var data = jsonData.data;
+client.search({
+  index: 'openml',
+  type: 'run',
+  size: '10000',
+  body: {
+		_source: [ "run_id", "run_task.source_data.name", "run_task.source_data.data_id", "run_flow.parameters.parameter", "run_flow.parameters.value", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
+    filter: {
+      and: [
+                  {
+                      term: {
+                          "run_flow.flow_id": <?php echo $this->id; ?>
+                      }
+                  },
+                  {
+                      term: {
+                          "run_task.tasktype.tt_id": current_task
+                      }
+                  }
+              ]
+    },
+    sort: [
+    {
+      "evaluations.value": {
+        "order": "desc",
+        "nested_path": "evaluations",
+        "nested_filter": {
+          "term": {
+            "evaluations.evaluation_measure": evaluation_measure
+          }
+        }
+      }
+    }
+  ]
+  }
+}).then(function (resp) {
+  var data = resp.hits.hits;
+  if(!data[0]){
+    $('#runcount').html('0');
+  } else {
+    $('#runcount').html(data.length);
 	var catcount = 0;
 	var map = {};
 	options.series[0].data = [];
 	options.yAxis.categories = [];
-	var useparams = false;
-	if (data[0].length > 4){
-		useparams = true;
-	}
 	var parvaluenumeric = true;
 	var parvalues = [];
 	var heatmap = new Rainbow();
 
-	if (useparams){
-		if (useparams && isNaN(data[0][3])){
+	if (typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
+		if (isNaN(data[0]['_source']['run_flow']['parameters'][0]['value'])){
 			parvaluenumeric = false;
 		}
 		for(var i=0;i<data.length;i++){
-			if (parvalues.indexOf(data[i][3])<0){
-				parvalues.push(data[i][3]);
-			}	
+      var run = data[i]['_source'];
+      var parval = getPar(run['run_flow']['parameters'],selected_parameter);
+			if (parvalues.indexOf(parval)<0){
+				parvalues.push(parval);
+			}
 		}
  		if (parvaluenumeric){
-			if (parvalues.length > 10){
+			if (parvalues.length > 2){
 				var min = Math.min.apply( Math, parvalues );
 				var max = Math.max.apply( Math, parvalues );
 				if(min<max){
@@ -315,38 +346,51 @@ $.getJSON(query,function(jsonData){
 			} else {
 				parvalues.sort(function(a,b){return parseInt(a)-parseInt(b)});
 				heatmap.setNumberRange(0, parvalues.length);
-			}		
+			}
 			heatmap.setSpectrum('blue','green','yellow','orange','red');
 		} else {
 			heatmap.setNumberRange(0, parvalues.length);
 		}
-		
+
 	}
 	for(var i=0;i<data.length;i++){
-		if (!(data[i][0] in map)){
-			map[data[i][0]] = catcount++;
-			options.yAxis.categories.push(data[i][0]);
-			categoryMap[data[i][0]]= data[i][1]; 
+    var run = data[i]['_source'];
+    var dataset = run['run_task']['source_data'];
+		if (!(dataset['name'] in map)){
+			map[dataset['name']] = catcount++;
+			options.yAxis.categories.push(dataset['name']);
+			categoryMap[dataset['name']]= dataset['data_id'];
 		}
-		if (useparams){
+		if (typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
 			var col = "#000000";
-			if (parvaluenumeric && parvalues.length > 10){
-				col = heatmap.colourAt(data[i][3]);
+      var parval = getPar(run['run_flow']['parameters'],selected_parameter);
+			if (parvaluenumeric && parvalues.length > 2){
+				col = heatmap.colourAt(parval);
 			} else {
-				col = heatmap.colourAt(parvalues.indexOf(data[i][3]));
+				col = heatmap.colourAt(parvalues.indexOf(parval));
 			}
-			options.series[0].data.push({x: parseFloat(data[i][2]), y: map[data[i][0]], z: data[i][3], r: data[i][4], fillColor: 'rgba('+parseInt(col.substring(0,2),16)+','+parseInt(col.substring(2,4),16)+','+parseInt(col.substring(4,6),16)+',0.5)'});
+			options.series[0].data.push({x: parseFloat(getEval(run['evaluations'],evaluation_measure)), y: map[dataset['name']], z: parval, r: run['run_id'], fillColor: 'rgba('+parseInt(col.substring(0,2),16)+','+parseInt(col.substring(2,4),16)+','+parseInt(col.substring(4,6),16)+',0.5)'});
 		} else {
-			options.series[0].data.push({x: parseFloat(data[i][2]), y: map[data[i][0]], r: data[i][3]});
+			options.series[0].data.push({x: parseFloat(getEval(run['evaluations'],evaluation_measure)), y: map[dataset['name']], r: run['run_id']});
 		}
 	}
 	options.chart.height = options.yAxis.categories.length*18+120;
 	coderesultchart = new Highcharts.Chart(options);
 
 
-}).fail(function(){ console.log('failure', arguments); });
+}}).fail(function(){ console.log('failure', arguments); });
 
 
+}
+
+function getEval(arr, value) {
+  var result  = arr.filter(function(o){return o.evaluation_measure == value;} );
+  return result ? (result[0] ? result[0]['value'] : null) : null; // or undefined
+}
+
+function getPar(arr, value) {
+  var result  = arr.filter(function(o){return o.parameter == value;} );
+  return result ? (result[0] ? result[0]['value'] : null) : null; // or undefined
 }
 
 $(document).ready(function() {
@@ -383,7 +427,7 @@ function updateRunModal(rid) {
 				$("#runinfo").append("<h3>Flow</h3>Flow: <a href='f/" + data[0][3] + "'>"+ data[0][0] + "</a>");
 				if(data[0][1].length > 0){
 					$("#runinfo").append("<br>Parameter settings:<br>");
-				}				
+				}
 				for(var i=0;i<data.length;i++){
 					$("#runinfo").append(data[i][1]+": "+ data[i][2]+"<br>");
 				}
@@ -393,7 +437,6 @@ function updateRunModal(rid) {
 }
 
 
-<?php  
+<?php
 }
 ?>
-

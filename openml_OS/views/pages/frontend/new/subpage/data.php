@@ -7,24 +7,24 @@
 			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
 	});
-	
+
 	$(document).ready( function() {
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-			
+
 			var input = $(this).parents('.input-group').find(':text'),
 				log = numFiles > 1 ? numFiles + ' files selected' : label;
-			
+
 			if( input.length ) {
 				input.val(log);
 			} else {
 				if( log ) alert(log);
 			}
-			
+
 		});
-	});	
+	});
 </script>
 
-<div class="openmlsectioninfo">
+<div class="panel">
 	<h1><a href="d"><i class="fa fa-database"></i></a> Add data</h1>
         <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
 	<form method="post" action="" enctype="multipart/form-data">
@@ -32,14 +32,10 @@
 		<div class="col-sm-6">
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Data files</label>
-		    <div class="input-group">
-			<span class="input-group-btn">
-				<a class="btn btn-primary btn-file">Upload&hellip;<input type="file" name="dataset" multiple></a>
-			</span>
-			<input type="text" class="form-control" readonly>
-		    </div>
+				<input type="text" readonly="" class="form-control floating-label" placeholder="Upload data file...">
+				<input type="file" id="dataset" name="dataset" multiple="">
 		    <div class="col-sm-12 input-info">Or (not both)</div>
-		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted (e.g. data repository)" value="" /> 
+		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted (e.g. data repository)" value="" />
 		  </div>
 		  <div class="form-group">
 		    <div class="row">
@@ -55,11 +51,11 @@
 		  </div>
 		  <div class="form-group has-error">
 		    <label class="control-label" for="description">Description</label>
-		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Short description (can still be edited online). Use #tags to label it." value=""><?php echo $this->input->post('description'); ?></textarea> 
+		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Short description (can still be edited online). Use #tags to label it. Describe where the data originates from, and whether it was processed in any way." value=""><?php echo $this->input->post('description'); ?></textarea>
 		  </div>
 		  <div class="form-group has-error">
 	            <label class="control-label" for="format">Data format</label>
-		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="<?php echo $this->input->post('format'); ?>" onblur=""/> 
+		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="<?php echo $this->input->post('format'); ?>" onblur=""/>
 	          </div>
                 </div>
    		<div class="col-sm-6">
@@ -97,11 +93,11 @@
         });
     });
 </script>
-			
+
 	          </div>
 		  <div class="form-group">
 			    <label class="control-label" for="citation">Citation requests</label>
-			    <textarea class="form-control" rows="4" name="citation"  placeholder="How to reference this data in future work (e.g., publication, DOI)." value="<?php echo $this->input->post('citation'); ?>"></textarea>			         		  		
+			    <textarea class="form-control" rows="4" name="citation"  placeholder="How to reference this data in future work (e.g., publication, DOI)." value="<?php echo $this->input->post('citation'); ?>"></textarea>
 		  </div>
 		  <div class="form-group">
 		  <label class="control-label" for="visibility">Who can view this data <span class="label label-danger">Under development</span></label>
@@ -122,15 +118,15 @@
 		<div class="col-sm-6">
 		  <div class="form-group">
 		    <label class="control-label" for="default_target_attribute">Target attribute(s)</label>
-		    <input type="text" class="form-control" name="default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset. Comma-separate if multiple values." value="<?php echo $this->input->post('default_target_attribute'); ?>" onblur=""/> 
+		    <input type="text" class="form-control" name="default_target_attribute" placeholder="For predictive problems: name of the attribute that is typically used as the target feature of this dataset. Comma-separate if multiple values." value="<?php echo $this->input->post('default_target_attribute'); ?>" onblur=""/>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="row_id_attribute">Row ID Attribute</label>
-		    <input type="text" class="form-control" name="row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="<?php echo $this->input->post('row_id_attribute'); ?>" onblur=""/>		  
+		    <input type="text" class="form-control" name="row_id_attribute" placeholder="If present, the name of the feature keeping row id's." value="<?php echo $this->input->post('row_id_attribute'); ?>" onblur=""/>
                   </div>
 		  <div class="form-group">
 		    <label class="control-label" for="row_id_attribute">Ignore Attributes</label>
-		    <input type="text" class="form-control" name="ignore_attributes" placeholder="If present, the names of attributes that should be ignored when modelling the data (e.g. identifiers, indices)." value="<?php echo $this->input->post('ignore_attributes'); ?>" onblur=""/>		  
+		    <input type="text" class="form-control" name="ignore_attributes" placeholder="If present, the names of attributes that should be ignored when modelling the data (e.g. identifiers, indices)." value="<?php echo $this->input->post('ignore_attributes'); ?>" onblur=""/>
 		  </div>
 		</div>
 		<div class="col-sm-6">
@@ -140,16 +136,16 @@
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="contributor">Acknowledgements, contributors</label>
-		    <input type="text" class="form-control" name="contributor" 
+		    <input type="text" class="form-control" name="contributor"
 			placeholder="Thanks to..." value="<?php echo $this->input->post('contributor'); ?>" />
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="paper_url">Paper/preprint</label>
-		    <input type="text" class="form-control" name="paper_url" placeholder="URL to paper or preprint about this data." value="<?php echo $this->input->post('paper_url'); ?>" /> 
+		    <input type="text" class="form-control" name="paper_url" placeholder="URL to paper or preprint about this data." value="<?php echo $this->input->post('paper_url'); ?>" />
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="collection_date">Collection date</label>
-		    <input type="text" class="form-control" name="collection_date" placeholder="When was this data collected?" value="<?php echo $this->input->post('collection_date'); ?>" /> 
+		    <input type="text" class="form-control" name="collection_date" placeholder="When was this data collected?" value="<?php echo $this->input->post('collection_date'); ?>" />
 		  </div>
 		</div>
               </div>
@@ -166,7 +162,7 @@
 
               </div>
            </div>
-	</form> 
+	</form>
 
         <p><i>By submitting, you allow OpenML to index the data and link it to uploaded results. All rights remain with the original author(s) of the data.</i></p>
 </div> <!-- end container -->

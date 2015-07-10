@@ -1,14 +1,18 @@
 <?php
 function formatTeaser($r){
+	$teaser = '';
 	if(array_key_exists('highlight',$r))
-		return trim(preg_replace('/\s+/', ' ', preg_replace('/^\*{2,}.*?\n/', '', $r['highlight']['description'][0])));
+		$teaser = trim(preg_replace('/\s+/', ' ', preg_replace('/^\*{2,}.*?\n/', '', $r['highlight']['description'][0])));
 	elseif(array_key_exists('description',$r['_source']))
-		return truncate(trim(preg_replace('/\s+/',' ',preg_replace('/^\*{2,}.*/m', '', $r['_source']['description']))));
-	return '';
+		$teaser = truncate(trim(preg_replace('/\s+/',' ',preg_replace('/^\*{2,}.*/m', '', $r['_source']['description']))));
+	if($teaser == '')
+		$teaser = 'No data.';
+	return $teaser;
 }
 
 function truncate($string,$length=200,$append="&hellip;") {
   $string = trim($string);
+	$string = str_replace('<br>','',$string);
 
   if(strlen($string) > $length) {
     $string = wordwrap($string, $length);
@@ -20,13 +24,35 @@ function truncate($string,$length=200,$append="&hellip;") {
 }
 
 ?>
-<div class="dropdown pull-right"> 
+<?php if(!$this->dataonly) {?>
+<div class="topselectors">
+<?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
+	<a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
+<?php
+if($this->table) // toggle off
+$att = addToGET(array( 'table' => false, 'listids' => false, 'size' => false));
+else // toggle on
+$att = addToGET(array( 'table' => '1', 'listids' => false, 'size' => $this->results['hits']['total']));
+echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->table ? 'fa-align-justify' : 'fa-table');?>"></i><?php echo ($this->table ? ' List' : ' Table');?></a>
+<?php } ?>
+
+<?php if($this->filtertype and in_array($this->filtertype, array("run", "task", "data", "flow"))){ ?>
+	<a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
+<?php
+if($this->listids) // toggle off
+$att = addToGET(array( 'listids' => false, 'table' => false, 'size' => false));
+else // toggle on
+$att = addToGET(array( 'listids' => '1', 'table' => false, 'size' => $this->results['hits']['total']));
+echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-justify' : 'fa-list-ol');?>"></i> ID's</a>
+	<?php } ?>
+
+<div class="dropdown pull-right">
   <a data-toggle="dropdown" class="btn btn-default" href="#">Sort: <b><?php echo $this->curr_sort; ?></b> <i class="fa fa-caret-down"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task_type"))){ ?>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'match', 'order' => 'desc')); ?>">Best match</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'desc')); ?>">Most runs</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'asc')); ?>">Fewest runs</a></li> 
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'asc')); ?>">Fewest runs</a></li>
     <?php } ?>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'desc')); ?>">Most recent</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
@@ -36,9 +62,11 @@ function truncate($string,$length=200,$append="&hellip;") {
   </ul>
 </div>
 
+<div class="searchstats"><?php echo $this->results['hits']['total'];?> results</div>
+</div>
+<?php } ?>
 <?php
 if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
-      <div class="searchstats">Found <?php echo $this->results['hits']['total'];?> results (<?php echo $this->results['took']/1000;?> seconds)</div>
       <?php
       if($this->listids){?>
       <!-- copy id list -->
@@ -66,31 +94,41 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 			   $newrow['name'] = str_replace('</a>',' ('.$v.')</a>',$newrow['name']);
 			else
 			   $newrow[$k] = $v;
-		}	
+		}
 	}
 	$this->tableview[] = $newrow;
-	$cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "");
-	} ?>
+	$cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "","NumberOfClasses" => "");
+	}
+	?>
 	<div class="topmenu"></div>
-	<table id="tableview" class="table table-striped table-bordered table-condensed dataTable no-footer">
+	<table id="tableview" class="table table-striped table-bordered table-condensed dataTable no-footer responsive">
 	<thead><tr>
-        <?php   foreach( $cols as $k => $v ) {
+    <?php   foreach( $cols as $k => $v ) {
 			echo '<th>'.$k.'</th>';
 		}
 		foreach( $this->tableview[0] as $k => $v ) {
 			if(!array_key_exists($k,$cols))
 				echo '<th>'.$k.'</th>';
-	} ?>
+	}
+	?>
 	</tr></thead>
 	<tbody></tbody>
 	</table>
 	<script>
 	$('#tableview').dataTable( {
+		"responsive": "true",
+		"dom": 'CT<"clear">lfrtip',
 		"aaData": <?php echo json_encode($this->tableview); ?>,
-		"bPaginate": true,
-			"aLengthMenu": [[10, 50, 100, 250, -1], [10, 50, 100, 250, "All"]],
-			"iDisplayLength" : 50,
+    "scrollY": "600px",
+    "scrollCollapse": true,
+		"deferRender": true,
+    "paging": false,
+		"processing": true,
 		"bSort" : true,
+		"bInfo": false,
+		"tableTools": {
+						"sSwfPath": "//cdn.datatables.net/tabletools/2.2.3/swf/copy_csv_xls_pdf.swf"
+				},
 		"aaSorting" : [],
 		"aoColumns": [
 	          <?php $cnt = sizeOf($cols);
@@ -98,7 +136,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 			$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
 			if(is_numeric($v))
 				$newcol .= '"sType":"numeric", ';
-			if($cnt<6)
+			if($k == 'name' || $k == 'runs' || $k == 'NumberOfInstances' || $k == 'NumberOfFeatures' || $k == 'ClassCount' || $k == 'DefaultAccuracy' )
 				$newcol .= '"bVisible":true},';
 			else
 				$newcol .= '"bVisible":false},';
@@ -110,58 +148,41 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 			}
 		  	}
 			foreach( $cols as $k => $v ) {
- 				echo $v; 		
+ 				echo $v;
 			}?>
 
 		]
 	    } );
 
-	// create controls to show other columns 
-	var colcount = <?php echo $cnt; ?>;
-	var colmax = 6;
-	var columnmenu = '';
-	var columnmenutop = '';
-	var columnmenubottom = '';
-
-	if( colcount > colmax + 1 ) {
-		columnmenutop = '<div style="float:right; position:relative;z-index:1019">Columns <div class="btn-group">';
-
-		for( var i = 0; i < Math.ceil(colcount - 1) / colmax; i++ ) {
-			columnmenu += '<button type="button" class="btn btn-default" onclick="toggleResults('+i+')">'+(i+1)+'</button>';
-			if( (i + 1) % 20 == 20 ) l+='</div><div class="btn-group">';
-		}
-		columnmenu +='</div></div>';
-	}
-	
 	$('.topmenu').show();
-	$('.topmenu').html(columnmenutop + columnmenu);
 
 function toggleResults( resultgroup ) {
-	var oDatatable = $('#tableview').dataTable(); // is not reinitialisation, see docs. 
-	
+	var oDatatable = $('#tableview').dataTable(); // is not reinitialisation, see docs.
+
 	redrawScatterRequest = true;
 	redrawLineRequest = true;
 	for( var i = 1; i < colcount; i++) {
 		if( i > colmax * resultgroup && i <= colmax * (resultgroup+1) )
 			oDatatable.fnSetColumnVis( i, true );
-		else 
+		else
 			oDatatable.fnSetColumnVis( i, false );
 	}
 }
 
-   
+
 	</script>
-     <?php } else { 
-      $runparams['index'] = 'openml';
-      $runparams['type']  = 'run';
+     <?php } else { ?>
+
+	<div id="scrollingcontent">
+	<div class="listitempage" id="itempage" data-url="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from, 'dataonly' => 0)); ?>" data-next-url="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from+$this->size, 'dataonly' => 0)); ?>" data-prev-url="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => max(0,$this->from-$this->size), 'dataonly' => 0));?>">
+		 <?php
       foreach( $this->results['hits']['hits'] as $r ) {
         $type = $r['_type'];
-	$rs = $r['_source'];
-        $runparams['body'] = false;
-	?>
-	<div class="searchresult">
+				$rs = $r['_source'];
+	   ?>
+	<div class="searchresult panel">
 
-		   <?php if ($this->curr_sort == 'last update'){
+		  <?php if ($this->curr_sort == 'last update'){
 			echo '<div class="update_date">'.$rs['last_update'].'</div><a href="u/'.$rs['uploader_id'].'">'.$rs['uploader'].'</a> ';
 			if($rs['update_comment'])
 				echo 'updated '.$type.':<div class="update_comment">'.$rs['update_comment'].'</div><div class="search-result">';
@@ -172,86 +193,125 @@ function toggleResults( resultgroup ) {
 
 
 		   <?php if($type == 'run') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>
-				<a href="r/<?php echo  $r['_id'] ?>">Run <?php echo  $r['_id'] ?></a>
-				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats">flow <a href="<?php echo $rs['run_flow']['flow_id'];?>"><?php echo $rs['run_flow']['name'] ?></a> - task <a href="<?php echo $rs['run_task']['task_id'];?>"><?php echo $rs['run_task']['task_id'];?> - <?php echo $rs['run_task']['tasktype']['name'];?> on <?php echo $rs['run_task']['source_data']['name']; ?></a> - uploaded <?php echo str_replace('.000Z','',$rs['date']);?> by <?php echo $rs['uploader'] ?></div>
+				<div class="itemheadfull">
+				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+				<a href="r/<?php echo  $r['_id'] ?>"><?php echo $rs['uploader'] ?> <span><i class="fa fa-fw fa-clock-o"></i> <?php echo get_timeago(strtotime(str_replace('.000Z','',$rs['date'])));?></span><br>
+					<span>ran flow</span> <?php echo $rs['run_flow']['name'] ?> <span>on task</span> <?php echo $rs['run_task']['tasktype']['name'];?> on data set <?php echo $rs['run_task']['source_data']['name']; ?></a>
+				</div>
+				<div class="runStats statLine">
+				<?php
+				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations']))
+					echo 'No evaluations yet (or not applicable)';
+				else{
+					$tn = "";
+					$vals = array();
+					foreach($rs['evaluations'] as $eval){
+						if(array_key_exists('value', $eval))
+							$vals[$eval['evaluation_measure']] = $eval['value']."";
+					}
+					if(array_key_exists('evaluation_measures',$rs['run_task'])){
+						$tm = $rs['run_task']['evaluation_measures'];
+						if(array_key_exists($tm,$vals))
+							echo $tm.': '.$vals[$tm].', ';
+					}
+					foreach($vals as $k => $v){
+						if(!isset($tm) or $k != $tm)
+							echo $k.': '.$v.', ';
+					}
+				}
+				?>
+				</div>
 
 		   <?php } elseif($type == 'user') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>
-		   		<a href="u/<?php echo $r['_id']; ?>"><?php echo $rs['first_name'].' '.$rs['last_name']; ?></a><br />
-				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats"><?php echo $rs['affiliation'];?> - <?php echo $rs['country'];?></div>
+				<div class="itemheadhead">
+					<?php
+						$auth = $this->Author->getById($r['_id']);
+						$authimg = "img/community/misc/anonymousMan.png";
+						if ($auth)
+							$authimg = htmlentities( authorImage( $auth->image ) );
+					?>
+					<i><img src="<?php echo $authimg; ?>" width="40" height="40" class="img-circle" /></i></div>
+		   		<a href="u/<?php echo $r['_id']; ?>"><?php echo $rs['first_name'].' '.$rs['last_name']; ?></a>
+					<div class="teaser"><?php echo $rs['bio']; ?> </div>
+				  <div class="runStats statLine">
+						<?php if($rs['affiliation']) echo '<i class="fa fa-fw fa-institution"></i>'.$rs['affiliation'];?>
+						<?php if($rs['country']) echo '<i class="fa fa-fw fa-map-marker"></i>'.$rs['country'];?>
+						<i class="fa fa-fw fa-clock-o"></i>Joined <?php echo date("Y-m-d", $rs['date']); ?>
+				</div>
 
 		   <?php } elseif($type == 'data') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>
-		   		<a href="d/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a><br />
-				<div class="teaser"><?php echo formatTeaser($r); ?></div>
+				<div class="itemhead">
+				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+		   		<a href="d/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a></div>
+				<div class="teaser"><?php echo formatTeaser($r); ?> </div>
 				<div class="runStats">
-					<?php $runparams['body']['query']['match']['run_task.source_data.data_id'] = $r['_id'];
-                $searchresult = $this->searchclient->search($runparams);
-					      echo $searchresult['hits']['total'].' runs';
-					      if(array_key_exists('NumberOfInstances', $rs))    echo ' - '.$rs['NumberOfInstances'].' instances'; 
-					      if(array_key_exists('NumberOfFeatures', $rs))     echo ' - '.$rs['NumberOfFeatures'].' features'; 
+					<?php echo '<b>'.$rs['runs'].' runs</b>';
+					      if(array_key_exists('NumberOfInstances', $rs))    echo ' - '.$rs['NumberOfInstances'].' instances';
+					      if(array_key_exists('NumberOfFeatures', $rs))     echo ' - '.$rs['NumberOfFeatures'].' features';
 					      if(array_key_exists('NumberOfClasses', $rs))      echo ' - '.$rs['NumberOfClasses'].' classes';
 					      if(array_key_exists('NumberOfMissingValues', $rs))echo ' - '.$rs['NumberOfMissingValues'].' missing values';?></div>
 		   <?php } elseif($type == 'task_type') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>
-		   		<a href="t/type/<?php echo $r['_id']; ?>"><?php echo $rs['name']; ?></a><br />
+				<div class="itemhead">
+				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+		   		<a href="tt/<?php echo $r['_id']; ?>"><?php echo $rs['name']; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats"><?php $runparams['type'] = 'task'; $runparams['body']['query']['match']['tasktype.tt_id'] = $r['_id'];
-                $searchresult = $this->searchclient->search($runparams); echo $searchresult['hits']['total'];
-					?> tasks, <?php $runparams['type'] = 'run'; $runparams['body'] = false; $runparams['body']['query']['match']['run_task.tasktype.tt_id'] = $r['_id'];
-                $searchresult = $this->searchclient->search($runparams); echo $searchresult['hits']['total'];
-					?> runs</div>
+				<div class="runStats">
+					<?php echo '<b>'.$rs['tasks'].' tasks</b>';?>
+        </div>
 
 		   <?php } elseif($type == 'measure') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>
-		   		<a href="<?php echo $this->measures[$rs['type']].'/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a><br />
+				<div class="itemhead">
+				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+		   		<a href="<?php echo $this->measures[$rs['type']].'/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats"><?php echo str_replace('_',' ',$rs['type']); ?></div>
 
 		   <?php } elseif($type == 'task') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>
-		   		<a href="t/<?php echo $r['_id']; ?>">Task <?php echo $r['_id']; ?></a><br />
-				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats">
-					<?php $runparams['body']['query']['match']['run_task.task_id'] = $r['_id'];
-                $searchresult = $this->searchclient->search($runparams);
-					      echo $searchresult['hits']['total'];
-					?> runs - <?php echo $rs['tasktype']['name'];?>
-					<?php foreach( $rs as $key => $value ) {
-						if($key == 'id' or $key == 'tasktype' or $key == 'data_splits' or !$value) {}
-						elseif(is_array($value)) { if(array_key_exists('name', $value)){ echo ' - '.$key.': '.$value['name'];}}
-						else { echo ' - '.$key.': '.$value;}
-					} ?> </div>
+				<div class="itemheadfull">
+				  <i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+		   		<a href="t/<?php echo $r['_id']; ?>"><?php echo $rs['tasktype']['name'].' on '.$rs['source_data']['name']; ?></a>
+				</div>
+				<div class="runStats statLine">
+					<?php
+					  echo '<b>'.$rs['runs'].' runs</b>';
+						foreach( $rs as $key => $value ) {
+						if($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or !$value) { echo '';}
+						elseif(is_array($value) and array_key_exists('name', $value)){
+								echo ' - '.$key.' : '.$value['name'];}
+						elseif(!is_array($value)){
+							  echo ' - '.$key.' : '.$value;}
+					  } ?>
+				</div>
 
 		   <?php } elseif($type == 'flow') { ?>
-				<i class="<?php echo $this->icons[$type];?>"></i>				
-				<a href="f/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a><br />
+				<div class="itemhead">
+				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+				<a href="f/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
-					<?php $runparams['body']['query']['match']['run_flow.flow_id'] = $r['_id'];
-                $searchresult = $this->searchclient->search($runparams);
-					      echo $searchresult['hits']['total'];
-					?> runs</div>
+					<?php echo '<b>'.$rs['runs'].' runs</b>';?>
+        </div>
 		   <?php } ?>
 
 		   <?php if ($this->curr_sort == 'last update'){
 				echo '</div>';
 		   } ?>
 			</div>
-<?php } if(!$this->table) {?>
+<?php }
+?>
 
-
-<ul class="pagination" style="margin-bottom:50px">
-  <li><a href="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => max(0,$this->from-10))); ?>">&laquo;</a></li>
-<?php for ($x=$this->from; $x<min($this->from+(10*$this->size),$this->results['hits']['total']); $x+=$this->size) { ?>
+</div>
+</div>
+<p class="loadingmore" style="color:#666"></p>
+<?php if(!$this->table and $this->results['hits']['total']/50>1){ ?>
+<ul class="pagination" style="display:none;">
+  <li><a href="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => 0)); ?>" style="color:#666">Jump back to page</a></li>
+<?php for ($x=0; $x<min($this->from+(10*$this->size),$this->results['hits']['total']); $x+=$this->size) { ?>
   <li><a href="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $x)); ?>"><?php echo floor($x/$this->size) +1; ?></a></li>
 <?php } ?>
-  <li><a href="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from+10)); ?>">&raquo;</a></li>
 </ul>
-
+<?php } else { ?>
+	<ul class="pagination" style="margin-bottom:50px"></ul>
 <?php }}
 	} else {
 		if( $this->terms != false ) {
@@ -259,4 +319,4 @@ function toggleResults( resultgroup ) {
 		} else {
 	    o('no-results');
 	  }
-	}?> 
+	}?>

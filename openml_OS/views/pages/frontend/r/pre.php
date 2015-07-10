@@ -31,52 +31,95 @@ foreach( $implementationsAlgorithms as $i ) {
 		$this->algorithms[] = $i->implements;
 	$this->implementations[] = $i->fullName;
 }
+$this->active_tab = "";
 
-/// SEARCH
-$this->terms = safe($this->input->post('searchterms'));
-
-$this->implementation_count = 0;
-$this->function_count = 0;
-$this->dataset_count = 0;
-$this->total_count = 0;
-$this->results_all = array();
-$this->results_runcount = array();
-
-$this->implementation_total = $this->Implementation->numberOfRecords();
-$this->dataset_total = $this->Dataset->numberOfRecords();
-$this->function_total = 0; // fetched later on. 
-
-$icons = array( 'function' => 'fa fa-signal', 'implementation' => 'fa fa-cogs', 'dataset' => 'fa fa-database', 'run' => 'fa fa-star' );
-
-$this->active_tab = gu('tab');
-if($this->active_tab == false) $this->active_tab = 'intro';
-
-if(false === strpos($_SERVER['REQUEST_URI'],'/r/')){ // Popular
-	$start_time = microtime(true);
-
-	$runs = $this->Dataset->query('SELECT r.rid, r.uploader, i.id, i.fullName, r.task_id, tt.name as taskname, d.did, d.name as dataname, r.start_time FROM run r, algorithm_setup als, implementation i, task t, task_type tt, task_inputs ti left join dataset d on ti.value = d.did WHERE r.status=\'OK\' and r.task_id=t.task_id and t.ttid=tt.ttid and t.task_id = ti.task_id and ti.input=\'source_data\' and r.setup = als.sid and als.implementation_id=i.id order by r.start_time desc limit 0,30');
-  if( $runs != false ) {
-	  foreach( $runs as $r ) {
-		  $author = $this->Author->getById($r->uploader);
-		  $result = array(
-			  'type' => 'run',
-			  'icon' => $icons['run'],
-		          'id' => $r->rid,
-			  'task' => $r->task_id,
-			  'taskname' => $r->taskname,
-			  'data' => $r->did,
-			  'dataname' => $r->dataname,
-			  'flow' => $r->id,
-			  'flowname' => $r->fullName,
-			  'uploader' =>  $author->first_name . ' ' . $author->last_name,
-			  'time' => $r->start_time
-		  );
-		  $this->results_all[] = $result;
-		  $this->total_count++;
-    }
-	}
-
-	$this->time = round(microtime(true) - $start_time,3);
+function format_eval_name($name){
+	$name = str_replace('_',' ',$name);
+	$name = str_replace(' roc ',' ROC ',$name);
+	$name = str_replace('kb ','KB ',$name);
+	$name = str_replace('os ', 'OS ',$name);
+	$name = str_replace('scimark ','SciMark ',$name);
+	$name = str_replace('cpu ','CPU ',$name);
+	return ucfirst($name);
 }
 
+function box_plot_values($array)
+{
+    $return = array(
+        'lower_outlier'  => 0,
+        'min'            => 0,
+        'q1'             => 0,
+        'median'         => 0,
+        'q3'             => 0,
+        'max'            => 0,
+        'higher_outlier' => 0,
+    );
+
+    $array_count = count($array);
+    sort($array, SORT_NUMERIC);
+
+    $return['min']            = $array[0];
+    $return['lower_outlier']  = $return['min'];
+    $return['max']            = $array[$array_count - 1];
+    $return['higher_outlier'] = $return['max'];
+    $middle_index             = floor($array_count / 2);
+    $return['median']         = $array[$middle_index]; // Assume an odd # of items
+    $lower_values             = array();
+    $higher_values            = array();
+
+    // If we have an even number of values, we need some special rules
+    if ($array_count % 2 == 0)
+    {
+        // Handle the even case by averaging the middle 2 items
+        $return['median'] = round(($return['median'] + $array[$middle_index - 1]) / 2, 4);
+
+        foreach ($array as $idx => $value)
+        {
+            if ($idx < ($middle_index - 1)) $lower_values[]  = $value; // We need to remove both of the values we used for the median from the lower values
+            elseif ($idx > $middle_index)   $higher_values[] = $value;
+        }
+    }
+    else
+    {
+        foreach ($array as $idx => $value)
+        {
+            if ($idx < $middle_index)     $lower_values[]  = $value;
+            elseif ($idx > $middle_index) $higher_values[] = $value;
+        }
+    }
+
+    $lower_values_count = count($lower_values);
+    $lower_middle_index = floor($lower_values_count / 2);
+		if($lower_values_count>0){
+    $return['q1']       = $lower_values[$lower_middle_index];
+    if ($lower_values_count % 2 == 0){
+			if ($lower_middle_index != 0) {
+				$return['q1'] = round(($return['q1'] + $lower_values[$lower_middle_index - 1]) / 2, 4);
+			}
+			else {
+				$return['q1'] = round(($return['q1'] + $lower_values[0]) / 2, 4);
+			}
+		}
+	  }
+
+    $higher_values_count = count($higher_values);
+    $higher_middle_index = floor($higher_values_count / 2);
+		if($higher_values_count>0){
+    $return['q3']        = $higher_values[$higher_middle_index];
+    if ($higher_values_count % 2 == 0){
+			if ($lower_middle_index != 0) {
+        $return['q3'] = round(($return['q3'] + $higher_values[$higher_middle_index - 1]) / 2, 4);
+			}
+			else {
+				$return['q3'] = round(($return['q3'] + $higher_values[0]) / 2, 4);
+			}
+		}
+	  }
+    // Check if min and max should be capped
+    $iqr = $return['q3'] - $return['q1']; // Calculate the Inner Quartile Range (iqr)
+    if ($return['q1'] > $iqr)                  $return['min'] = $return['q1'] - $iqr;
+    if ($return['max'] - $return['q3'] > $iqr) $return['max'] = $return['q3'] + $iqr;
+
+    return $return;
+}
 ?>

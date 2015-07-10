@@ -359,7 +359,7 @@
 }
 
 .history {
-  margin-bottom: 7em;
+  margin-bottom: 4.5em;
 }
 
 .history #wiki-history ul.actions li,
@@ -2100,4 +2100,3 @@ a#function-help:hover span { background-position: -405px -28px; }
 .type-csharp .highlight .sc {
   color: #A31515;
 }
-

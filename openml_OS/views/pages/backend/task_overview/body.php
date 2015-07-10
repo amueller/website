@@ -1,6 +1,6 @@
-<div class="bs-docs-container topborder">
-  <div class="container">
-    <div class="col-sm-12">
+<div class="container-fluid topborder endless guidecontainer openmlsectioninfo">
+  <div class="col-xs-12 col-md-10 col-md-offset-1 guidesection" id="mainpanel">
+
       <h2>Task Overview</h2>
       <div class="form-group">
 	      <label class="control-label" for="input_dataset_licence">Select Task type</label>
@@ -42,10 +42,10 @@
             </div>
             <div class="tab-pane" id="task-type-<?php echo $tt->ttid; ?>-duplicates">
               <h4><?php echo $tt->name; ?> groups of tasks with the same values (<?php echo count($tt->duplicate_groups); ?>)</h4>
-              
+
               <button type="button" class="btn btn-primary" onclick="selectDuplicateTasks();">Select duplicates</button>
               <button type="button" class="btn btn-primary" onclick="removeSelectedTasks();">Delete selected</button>
-              
+
               <table class="table table-striped duplicatetable">
                 <thead>
                   <tr>
@@ -74,6 +74,18 @@
         </div>
       <?php endforeach; ?>
       </div>
-    </div>
+
+      <div class="submenu">
+        <ul class="sidenav nav" id="accordeon">
+          <li class="panel guidechapter">
+            <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-wrench fa-fw fa-lg"></i> <b>Tools</b></a>
+            <ul class="sidenav nav collapse in" id="pagelist">
+              <?php foreach( $this->directories as $d ): ?>
+                <li><a href="backend/page/<?php echo $d; ?>"><?php echo text_neat_ucwords($d); ?></a></li>
+              <?php endforeach; ?>
+            </ul>
+          </li>
+        </ul>
+      </div>
   </div>
 </div>

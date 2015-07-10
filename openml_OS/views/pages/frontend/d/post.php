@@ -1,7 +1,20 @@
 <?php
 
+//Add and remove tags
+if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
+  $post_data = array('session_hash' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ));
+  $url = BASE_URL.'/api/?f=openml.data.tag&data_id='.$this->id.'&tag='.$_POST["newtags"];
+  $api_response = $this->curlhandler->post_helper($url,$post_data);
+  redirect('d/'.$this->id);
+}
+elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
+  $post_data = array('session_hash' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ));
+  $url = BASE_URL.'/api/?f=openml.data.untag&data_id='.$this->id.'&tag='.$_POST["deletetag"];
+  $api_response = $this->curlhandler->post_helper($url,$post_data);
+  redirect('d/'.$this->id);
+}
 // Description edit
-if($this->input->post('page')){
+elseif($this->input->post('page')){
 // prepare to send data to gollum
   //$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
@@ -12,14 +25,14 @@ if($this->input->post('page')){
       'path' => $this->input->post('path'),
       'content' => $this->input->post('content'),
       'message' => $this->editor.': '.$message );
-  
+
 if($this->input->post('versions')){
   foreach($this->input->post('versions') as $k => $v){
 	$post_data['versions['.$k.']'] = $v;
   }
 }
 
-// check whether we are sending new data or requesting comparison  
+// check whether we are sending new data or requesting comparison
   if($this->input->post('content'))
 	$url = 'http://localhost:4567/edit/'.$this->wikipage;
   elseif($this->input->post('versions'))

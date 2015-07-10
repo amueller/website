@@ -1,21 +1,9 @@
-<div class="col-xs-12 col-md-3 searchbar">
-
- <div class="bs-sidebar affix">
- <ul class="nav bs-sidenav">
-    <li><a href="#moa-plugin">Download Plugin</a></li>
-    <li><a href="#moa-start">Quick Start</a></li>
- </ul>
- </div>
-
-    </div> <!-- end col-2 -->
-    <div class="col-xs-12 col-md-9 openmlsectioninfo"> 
-      <div class="bs-docs-section">
           <div class="page-header">
             <h1 id="moa">MOA </h1>
           </div>
 
           <h2 id="moa-plugin">Download Plugin</h2>
-            <p>OpenML features extensive support for MOA. However currently this is implemented as a stand alone MOA compilation, using the latest version (as of May, 2014). 
+            <p>OpenML features extensive support for MOA. However currently this is implemented as a stand alone MOA compilation, using the latest version (as of May, 2014).
             </p><br>
             <a href="downloads/openmlmoa.beta.jar">
               <button class="btn btn-large btn-primary" type="button">Download MOA for OpenML</button>
@@ -35,8 +23,5 @@ password = YOUR_PASSWORD</pre></li>
             	<li>Select the task <code>moa.tasks.openml.OpenmlDataStreamClassification</code> to evaluate a classifier on an OpenML task, and send the results to OpenML.</li>
 		<li>Optionally, you can generate new streams using the Bayesian Network Generator: select the <code>moa.tasks.WriteStreamToArff</code> task, with <code>moa.streams.generators.BayesianNetworkGenerator</code>.</li>
 	    </ol>
-            
+
             Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:j.n.van.rijn@liacs.leidenuniv.nl">j.n.van.rijn@liacs.leidenuniv.nl</a>.
-      
-	</div>
-      </div> <!-- end col-md-9 -->

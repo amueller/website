@@ -6,7 +6,6 @@ $this->sort = 'runs';
 if($this->input->get('sort'))
 	$this->sort = safe($this->input->get('sort'));
 
-
 $this->active_tab = gu('tab');
 if($this->active_tab == false) $this->active_tab = 'searchtab';
 
@@ -59,6 +58,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type') || false !== strpos($_SER
 	}
 }
 
+/// TASK DETAIL
+
 if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER['REQUEST_URI'],'/t/')) {
 
 	$info = explode('/', $_SERVER['REQUEST_URI']);
@@ -75,6 +76,16 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	$info = explode('/', $_SERVER['REQUEST_URI']);
 	$this->task_id = $info[array_search('t',$info)+1];
 
+	//get data from ES
+	$this->p = array();
+	$this->p['index'] = 'openml';
+	$this->p['type'] = 'task';
+	$this->p['id'] = $this->task_id;
+	try{
+		$result = $this->searchclient->get($this->p);
+		$this->task = $result['_source'];
+	} catch (Exception $e) {}
+
 	$task = $this->Implementation->query('SELECT t.task_id, t.ttid, tt.name, tt.description FROM task t, task_type tt WHERE t.ttid=tt.ttid and task_id=' . $this->task_id );
 	if( $task != false ) {
 		$this->record = array(
@@ -86,6 +97,11 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	$count = $this->Implementation->query('SELECT group_concat(rid) as runs, count(rid) as count from run where task_id=' . $this->task_id );
 	$this->record['runcount'] = $count[0]->count;
 	$this->record['runs'] = $count[0]->runs;
+
+	$type = $this->Implementation->query('SELECT * FROM task_type WHERE ttid=' . $this->record['type_id'] );
+	if( $type != false ) {
+		$this->typedescription = $type[0]->description;
+	}
 
 	$this->default_measure = false;
 	$io = $this->Implementation->query('SELECT io.name, io.type, io.description, tt.description as typedescription, io.io, io.requirement, ti.value FROM task_type_inout io left join task_inputs ti on (io.name = ti.input and ti.task_id=' . $this->task_id . ") left join task_io_types tt on io.type=tt.name WHERE io.ttid=" . $this->record['type_id'] );

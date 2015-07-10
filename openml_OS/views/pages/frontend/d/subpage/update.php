@@ -7,52 +7,49 @@
 			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
 	});
-	
+
 	$(document).ready( function() {
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-			
+
 			var input = $(this).parents('.input-group').find(':text'),
 				log = numFiles > 1 ? numFiles + ' files selected' : label;
-			
+
 			if( input.length ) {
 				input.val(log);
 			} else {
 				if( log ) alert(log);
 			}
-			
+
 		});
-	});	
+	});
 </script>
 
-<div class="openmlsectioninfo">
-	<h1><a href="d"><i class="fa fa-database"></i></a> Update data</h1>
+<div class="panel">
+
+	<h1><a href="d"><i class="fa fa-database"></i></a> Update <?php echo $this->record->{'name'}; ?> (<?php echo $this->record->{'version'}; ?>)</h1>
         <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
 	<form method="post" action="" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="<?php echo $this->record->{'did'}; ?>"/> 
-        <input type="hidden" name="name" value="<?php echo $this->record->{'name'}; ?>"/> 
+        <input type="hidden" name="id" value="<?php echo $this->record->{'did'}; ?>"/>
+        <input type="hidden" name="name" value="<?php echo $this->record->{'name'}; ?>"/>
         <input type="hidden" name="description" value="_"/>  <!-- will be ignored in update -->
-        <input type="hidden" name="format" value="<?php echo $this->record->{'format'}; ?>"/> 
+        <input type="hidden" name="format" value="<?php echo $this->record->{'format'}; ?>"/>
 	      <div class="row">
 		<div class="col-sm-6">
 		  <h2>Core information</h2>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Data files: <a href="<?php echo $this->record->{'url'}; ?>">current file</a></label>
-		    <div class="input-group">
-			<span class="input-group-btn">
-				<a class="btn btn-primary btn-file">Upload new&hellip;<input type="file" name="dataset" multiple></a>
-			</span>
-			<input type="text" class="form-control" readonly>
-		    </div>
+				<input type="text" readonly="" class="form-control floating-label" placeholder="Upload data file...">
+				<input type="file" id="dataset" name="dataset" multiple="">
 		    <div class="col-sm-12 input-info">Or (not both)</div>
-		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted now (e.g. data repository)" value="<?php if(strpos(strtolower($this->record->{'url'}), 'openml') == false) echo $this->record->{'url'};?>" /> 
+		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted now (e.g. data repository)" value="<?php if(strpos(strtolower($this->record->{'url'}), 'openml') == false) echo $this->record->{'url'};?>" />
 		  </div>
 		  <div class="form-group">
 	            <label class="control-label" for="format">Version label</label>
-		    <input type="text" class="form-control" name="version_label" id="format" placeholder="A version label for your reference" value="<?php echo $this->record->{'version_label'}; ?>" onblur=""/> 
+		    <input type="text" class="form-control" name="version_label" id="format" placeholder="A version label for your reference" value="<?php echo $this->record->{'version_label'}; ?>" onblur=""/>
 	          </div>
 		  <div class="form-group">
 	            <label class="control-label" for="format">Data format</label>
-		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="<?php echo $this->record->{'format'}; ?>" onblur=""/> 
+		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="<?php echo $this->record->{'format'}; ?>" onblur=""/>
 	          </div>
 		  <div class="form-group">
 		  <label class="control-label" for="licence">Licence - <a href="http://creativecommons.org/licenses/?lang=en" target="_blank">Learn more</a></label>
@@ -83,7 +80,7 @@
         });
     });
 </script>
-			
+
 	          </div>
 		  <div class="form-group">
 		  <label class="control-label" for="visibility">Who can view this data <span class="label label-danger">Under development</span></label>
@@ -119,16 +116,13 @@
 	  	    </select>
 		  </div>
 		</div>
-              </div>
-		</div>
-              </div>
+	</div>
 
-            </div>
 	    <div class="row">
 	      <div class="col-sm-12">
 		  <h2>Submit</h2>
 		  <div class="form-group has-error">
-		    <input type="text" class="form-control" name="update_comment" id="comment" placeholder="State what changed and why this change was necessary" /> 
+		    <input type="text" class="form-control" name="update_comment" id="comment" placeholder="State what changed and why this change was necessary" />
 		  </div>
 
 		  <div class="form-group">
@@ -137,8 +131,8 @@
 
 
               </div>
-	</form> 
-
+	</form>
+</div>
 </div> <!-- end container -->
 
 <script>

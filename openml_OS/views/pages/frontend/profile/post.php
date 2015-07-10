@@ -11,9 +11,9 @@ $this->form_validation->set_rules('affiliation', 'Affiliation', 'xss_clean');
 $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password]');
 
 if ($this->form_validation->run() == true) {
-	
+
 	$user = clean_array( $_POST, array( 'first_name', 'last_name', 'affiliation', 'country', 'bio', 'image' ) );
-	
+
 	if( check_uploaded_file( $_FILES['image'] ) ) {
 		resize_image_squared($_FILES['image']['tmp_name'], $this->config->item('max_avatar_size') );
 		$file_id = $this->File->register_uploaded_file($_FILES['image'], 'userdata/', $this->ion_auth->user()->row()->id, 'userimage');
@@ -21,7 +21,7 @@ if ($this->form_validation->run() == true) {
 			$user['image'] = $this->data_controller . 'view/' . $file_id . '/' . $_FILES['image']['name'];
 		}
 	}
-	
+
 	if( $this->input->post('password') != false ) {
 		$identity = $this->session->userdata($this->config->item('identity', 'ion_auth'));
 
@@ -35,15 +35,16 @@ if ($this->form_validation->run() == true) {
 
 
 	$update = $this->ion_auth->update($this->ion_auth->user()->row()->id,$user);
-	
+
 	if($update) {
-		$this->session->set_flashdata('message', $this->ion_auth->messages());
-		redirect('frontend/page/profile');
+		//$this->session->set_flashdata('message', $this->ion_auth->messages());
+		$this->elasticsearch->index('user', $this->ion_auth->user()->row()->id);
+		redirect('u/'.$this->ion_auth->user()->row()->id);
 	} else {
 		$this->session->set_flashdata('message', $this->ion_auth->errors());
 		redirect('frontend/page/profile');
 	}
-	
+
 } else {
 
 	$this->session->set_flashdata('message', validation_errors() );

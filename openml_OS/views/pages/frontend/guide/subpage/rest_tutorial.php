@@ -1,19 +1,3 @@
-    <div class="col-sm-12 col-md-3 searchbar">
-
-      <div class="bs-sidebar affix">
-        <ul class="nav bs-sidenav">
-              <li><a href="#dev-getdata">Download a dataset</a></li>
-              <li><a href="#dev-getimpl">Download an implementation</a></li>
-              <li><a href="#dev-gettask">Download a task</a></li>
-              <li><a href="#dev-setdata">Upload a dataset</a></li>
-              <li><a href="#dev-setimpl">Upload an implementation</a></li>
-              <li><a href="#dev-setrun">Upload a run</a></li>
-        </ul>
-      </div>
-    </div> <!-- end col-2 -->
-
-    <div class="col-sm-12 col-md-9 openmlsectioninfo">
-     <div class="bs-docs-section">
         <div class="page-header">
           <h1 id="dev-tutorial">REST tutorial</h1>
         </div>
@@ -134,9 +118,3 @@ curl -XGET "<?php echo BASE_URL;?>api/?f=openml.data.description&data_id=1&sessi
           <li><a href="api#openml_authenticate">openml.authenticate</a></li>
           <li><a href="api#openml_run_upload">openml.run.upload</a></li>
         </ul>
-
-    <!-- end col-md-9 -->
-  </div>
-  <!-- end row -->
-</div>
-<!-- end container -->

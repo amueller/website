@@ -6,6 +6,13 @@
      foreach($datasets as $d){
 	$this->messages[] = $this->wiki->export_to_wiki($d->did);
      }
+   } else if($this->input->post('flow-id')){
+     $id = $this->input->post('flow-id');
+
+     $flows = $this->Dataset->query( 'SELECT id from implementation'.($id != 'all' ? ' where id='.$id : '') );
+     foreach($flows as $f){
+	$this->messages[] = $this->wiki->export_flow_to_wiki($f->id);
+     }
    } else if($this->input->post('wiki-id')){
      $id = $this->input->post('wiki-id');
 

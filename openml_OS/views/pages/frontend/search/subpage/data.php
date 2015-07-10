@@ -1,20 +1,20 @@
-<div id="filters" class="panel-collapse <?php if(strpos($this->terms,':') === false) echo 'collapse'; ?>">
-  <div class="form-group">
-      <label class="control-label" for="NumberOfInstances">Number of instances</label>
-      <input type="text" class="form-control" id="NumberOfInstances" name="NumberOfInstances" placeholder="100..200, 500, >10000" value="<?php if(array_key_exists('NumberOfInstances',$this->filters)){ echo $this->filters['NumberOfInstances'];}?>" />
-  </div>
-  <div class="form-group">
-      <label class="control-label" for="NumberOfFeatures">Number of features</label>
-      <input type="text" class="form-control" id="NumberOfFeatures" name="NumberOfFeatures" placeholder="10..20, 50, >100" value="<?php if(array_key_exists('NumberOfFeatures',$this->filters)){ echo $this->filters['NumberOfFeatures'];}?>" />
-  </div>
-  <div class="form-group">
-      <label class="control-label" for="NumberOfMissingValues">Number of missing values</label>
-      <input type="text" class="form-control" id="NumberOfMissingValues" name="NumberOfMissingValues" placeholder="100..200, 500, >10000" value="<?php if(array_key_exists('NumberOfMissingValues',$this->filters)){ echo $this->filters['NumberOfMissingValues'];}?>" />
-  </div>
-  <div class="form-group">
-      <label class="control-label" for="NumberOfClasses">Number of classes</label>
-      <input type="text" class="form-control" id="NumberOfClasses" name="NumberOfClasses" placeholder="2, 0..10, >10" value="<?php if(array_key_exists('NumberOfClasses',$this->filters)){ echo $this->filters['NumberOfClasses'];}?>" />
-  </div>
-  <button class="btn btn-default btn-small" style="width:100%; margin-top:10px;" id="research">Search</button>
-</div> <!-- end filters -->
-
+<?php
+  $p = array();
+  $p['index'] = 'openml';
+  $p['type'] = 'measure';
+  $fs = array('NumberOfInstances' => 'Number of instances','NumberOfFeatures' => 'Number of features','NumberOfMissingValues' => 'Number of missing values','NumberOfClasses' => 'Number of classes','DefaultAccuracy' => 'Default accuracy');
+  foreach($fs as $f => $v){
+?>
+  <li>
+      <input type="text" class="form-control floating-label" id="<?php echo $f; ?>" name="<?php echo $f; ?>" data-hint="<?php $p['id'] = $f; echo $this->searchclient->get($p)['_source']['description'];?>"
+       value="<?php if(array_key_exists($f,$this->filters)){ echo $this->filters[$f];}?>" placeholder="<?php echo $v; ?>">
+  </li>
+<?php } ?>
+<li>
+    <input type="text" class="form-control floating-label" id="uploader" name="uploader" data-hint="The person who uploaded the dataset"
+     value="<?php if(array_key_exists('uploader',$this->filters)){ echo $this->filters['uploader'];}?>" placeholder="Uploader">
+</li>
+<li>
+    <input type="text" class="form-control floating-label" id="tags.tag" name="tags.tag" data-hint="A tag that has been added to this dataset"
+     value="<?php if(array_key_exists('tags.tag',$this->filters)){ echo $this->filters['tags.tag'];}?>" placeholder="Tag">
+</li>

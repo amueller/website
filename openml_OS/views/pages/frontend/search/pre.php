@@ -1,5 +1,11 @@
 <?php
 
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
+
 function addToGET($keyvalue){
   $attr = $_GET;
   foreach($keyvalue as $key => $value){
@@ -10,7 +16,7 @@ function addToGET($keyvalue){
       $attr[$key]=$value;
     }
   }
-  return http_build_query($attr); 
+  return http_build_query($attr);
 }
 
 /// SEARCH
@@ -20,6 +26,8 @@ else
 	$this->terms = safe($this->input->get('q'));
 $this->coreterms = "";
 $this->filters = array();
+$this->dataonly = 0;
+$this->results = 0;
 
 $pieces = str_getcsv($this->terms, ' ');
 
@@ -34,15 +42,19 @@ foreach($pieces as $t){
 	  $parts = explode(":",$t);
 	  $this->filters[$parts[0]] = $parts[1];
 	} else {
-	  $this->coreterms .= $t;
-	}	
+    if($this->coreterms==""){
+       $this->coreterms .= $t;
+    } else {
+	     $this->coreterms .= ' '.$t;
+    }
+	}
 }
 
 $this->filterstring=implode(" ",$this->filters);
 
 $this->listids = safe($this->input->get('listids'));
 $this->table = safe($this->input->get('table'));
-$this->size = (safe($this->input->get('size')) ? safe($this->input->get('size')) : 10);
+$this->size = (safe($this->input->get('size')) ? safe($this->input->get('size')) : 100);
 
 // some fields can be set beforehand. If not, set them to appropriate defaults.
 
@@ -52,6 +64,8 @@ if(!isset($this->from))
 	$this->from = 0;
 if($this->input->get('type'))
 	$this->filtertype = safe($this->input->get('type'));
+if($this->input->get('dataonly'))
+	$this->dataonly = safe($this->input->get('dataonly'));
 if(!isset($this->filtertype))
 	$this->filtertype = false;
 if($this->input->get('sort'))
@@ -86,7 +100,9 @@ $attrs = $_GET;
 unset($attrs['from']);
 $this->rel_uri = "search?".http_build_query($attrs);
 
-$this->icons = array( 'flow' => 'fa fa-cogs', 'data' => 'fa fa-database', 'run' => 'fa fa-star', 'user' => 'fa fa-user', 'task' => 'fa fa-trophy', 'task_type' => 'fa fa-flag', 'measure' => 'fa fa-signal');
+$this->icons = array( 'flow' => 'fa fa-cogs fa-lg', 'data' => 'fa fa-database fa-lg', 'run' => 'fa fa-star fa-lg', 'user' => 'fa fa-user fa-lg', 'task' => 'fa fa-trophy fa-lg', 'task_type' => 'fa fa-flask fa-lg', 'measure' => 'fa fa-bar-chart-o fa-lg');
+$this->colors = array( 'flow' => '#428bca', 'data' => '#3d8b3d', 'run' => '#d9534f', 'user' => '#e91e63', 'task' => '#fb8c00', 'task_type' => '#ff5722', 'measure' => '#9c27b0');
+
 
 $this->measures = array( 'estimation_procedure' => 'a/estimation-procedures', 'evaluation_measure' => 'a/evaluation-measures', 'data_quality' => 'a/data-qualities', 'flow_quality' => 'a/flow-qualities');
 
@@ -114,8 +130,6 @@ if (!$this->ion_auth->logged_in()) {
 }
 
 //search filters
-if($this->filtertype)
-	$jsonfilters[] = '{ "type" : { "value" : "'.$this->filtertype.'" } }';
 foreach($this->filters as $k => $v){
 	if(strpos($v,'>') !== false and is_numeric(str_replace('>','',$v)))
 		$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gt" : '.str_replace('>','',$v).' } } }';
@@ -126,37 +140,48 @@ foreach($this->filters as $k => $v){
 		if(count($parts) == 2)
 			$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gte" : '.$parts[0].', "lte" : '.$parts[1].' } } }';
 		}
-	else
+	elseif($k == 'type')
+    $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
+  elseif($k == 'tags.tag')
+    $jsonfilters[] = '{ "nested": { "path": "tags", "filter": { "term": { "tags.tag": "'.$v.'" } } } }';
+  else
 		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.str_replace('_',' ',$v).'"} }';
 }
 $fjson = implode(",",$jsonfilters);
 if(count($jsonfilters)>1)
-	$fjson = '"filter" : { "and" : ['.$fjson.'] },';
-elseif(count($jsonfilters)>0)
-	$fjson = '"filter" : '.$fjson.',';
+	$fjson = '{ "and" : ['.$fjson.'] }';
 
 $params['index'] = 'openml';
+if($this->filtertype)
+  $params['type'] = $this->filtertype;
 $params['body']  = '{
     "from" : '. ($this->from ? $this->from : 0) .',
     "size" : '. $this->size .','.
     ($this->listids ? '"fields" : [],' : '').'
-    "query" : {'.$query.'},'.
+    "query" : { "filtered" : { "query" : {'.$query.'}, "filter": '.($fjson ? $fjson : '').'}},'.
     (($this->sort and $this->sort!='match') ? '"sort" : { "'.$this->sort.'" : { "order": "'.$this->order.'"}},' : '').
-    ($fjson ? $fjson : '').'
-    "highlight" : {
+    ($this->coreterms == '' ? '' :
+    '"highlight" : {
         "fields" : {
             "description" : {}
         }
-    },
-    "facets" : {
+    },').'
+    "aggs" : {
         "type" : {
-          "terms" : { "field" : "_type"}
+          "terms" : { "field" : "_type" }
         }
     }
 }';
 
 //print_r($params);
 
+// prepare query for result counts over all types (will be loaded using JS)
+$this->alltypes = $params;
+unset($this->alltypes['type']);
+$this->alltypes['body'] = str_replace('"size" : '. $this->size,'"size" : 0',$this->alltypes['body']);
+
+$time_start = microtime_float();
+// launch query
 try {
 	$this->results = $this->searchclient->search($params);
 } catch (Exception $e) {
@@ -167,5 +192,14 @@ try {
 	$this->results['facets']['type'] = array();
 	$this->results['facets']['type']['total'] = 0;
 	$this->results['facets']['type']['terms'] = array();
+  $this->results['aggregations'] = array();
+  $this->results['aggregations']['type'] = array();
+  $this->results['aggregations']['type']['buckets'] = array();
 }
+
+$time_end = microtime_float();
+$time = $time_end - $time_start;
+
+//echo "Query took $time seconds\n";
+
 ?>

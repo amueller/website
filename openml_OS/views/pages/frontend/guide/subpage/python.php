@@ -1,15 +1,3 @@
-<div class="col-sm-12 col-md-3 searchbar">
-      <div class="bs-sidebar affix">
-        <ul class="nav bs-sidenav">
-	    <li><a href="#download">Download</a></li>
-	    <li><a href="#issues">Issues</a></li>
-
-	</ul>
-      </div>
-</div>
-
-<div class="col-sm-12 col-md-9 openmlsectioninfo">
-  <div class="bs-docs-section">
           <div class="page-header">
             <h1>Python API</h1>
           </div>
@@ -19,6 +7,3 @@
 
 	<h2 id="issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/python/issues"> OpenML Python issue tracker</a>.
-
-   </div>
-</div>

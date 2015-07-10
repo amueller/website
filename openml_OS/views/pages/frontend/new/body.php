@@ -1,7 +1,7 @@
 <script type="text/javascript" src="javascript/page/data"></script>
-<div class="bs-docs-container topborder">
-  <div class="container">
-    <div class="col-sm-12">
+<div class="container-fluid topborder endless openmlsectioninfo">
+  <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
 <?php
   if(false === strpos($_SERVER['REQUEST_URI'],'/new/')) {
     subpage('data');
@@ -9,6 +9,5 @@
     subpage(end(explode('/', $_SERVER['REQUEST_URI'])));
   }
 ?>
-   </div>
   </div>
 </div>

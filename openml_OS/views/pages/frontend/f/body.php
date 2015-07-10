@@ -1,27 +1,47 @@
-<div class="container-fluid topborder">
-  <div class="row">
-    <div class="col-lg-10 col-sm-12 col-lg-offset-1 openmlsectioninfo">
+<div class="container-fluid topborder endless openmlsectioninfo">
+  <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
      <div class="tab-content">
 
-      <div class="tab-pane <?php if(false === strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="intro">
-       <div class="blueheader">
-      <h1><i class="fa fa-cogs"></i> Flows</h1>
-      <p>Flows are implementations (programs, scripts, workflows) that solve OpenML tasks. They are either uploaded or referenced by url, so that anyone can easily find and run them, often through a <a href="plugins">plugin</a>. OpenML indexes all flows, keeps track of versions, citations and reuse, collects all results from all users, and organizes everything online.</p>
-      </div>
-      <hr>
+     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="flow_overview">
      	<?php
-	    loadpage('search', true, 'pre'); 
-	    loadpage('search/subpage', true, 'results'); 
-        ?> 
-     </div> <!-- end intro tab -->
-
-     <div class="tab-pane <?php if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) { echo 'active'; } ?>" id="codedetail">
-     	<?php 
 	 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
-		subpage('implementation'); 
+		subpage('implementation');
 	}?>
      </div>
      </div> <!-- end tabs content -->
-    </div> <!-- end col-10 -->
+
+     <div class="submenu">
+       <ul class="sidenav nav" id="accordeon">
+         <li class="panel guidechapter">
+           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
+           <ul class="sidenav nav collapse in" id="pagelist">
+             <li class="active"><a href="#flow_overview" data-toggle="tab">Overview</a></li>
+             <li><a href="search?q=+run_flow.flow_id%3A<?php echo $this->id; ?>&type=run">All runs</a></li>
+             <li><a class="loginfirst" href="<?php echo $this->record->{'binary_file_id'}; ?>">Download flow</a></li>
+             <li><a href="new/flow">Submit new flow</a></li>
+           </ul>
+         </li>
+         <li class="panel guidechapter">
+           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#taglist"><i class="fa fa-tag fa-fw fa-lg"></i> <b>Tags</b></a>
+           <form method="post" action="" enctype="multipart/form-data">
+           <input type="hidden" name="deletetag" id="deletetag"/>
+           <ul class="sidenav nav collapse in" id="taglist">
+             <li class="tags">
+               <?php if(array_key_exists('tags', $this->flow)){
+                     foreach( $this->flow['tags'] as $t) { ?>
+                   <span class="label label-material-<?php echo $this->materialcolor; ?> tag"><?php echo $t['tag']; if($t['uploader']==$this->user_id){ ?> <button class="deltag" type="submit" onclick="$('#deletetag').val('<?php echo $t['tag'];?>');" name="<?php echo $t['tag'];?>"><i class="fa fa-times"></i></button><?php } ?></span>
+               <?php }} ?>
+             </li>
+             <li>
+                 <input type="text" class="form-control floating-label loginfirst" id="newtags" name="newtags" data-hint="Add a single new tag. Use underscores for spaces. Press enter when done."
+                  placeholder="Add tag">
+             </li>
+           </ul>
+         </form>
+         </li>
+       </ul>
+     </div>
+
   </div> <!-- end row -->
 </div> <!-- end container -->

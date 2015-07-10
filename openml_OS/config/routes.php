@@ -80,11 +80,13 @@ $frontend_pages = array(
           'f',
           'r',
           't',
+	        'tt',
           'a',
           'u',
           'share',
 	        'guide',
-          'preview', 
+          'preview',
+          'query',
           'project' );
 
 foreach( $frontend_pages as $page ) {

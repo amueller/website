@@ -1,26 +1,3 @@
-   <div class="col-sm-12 col-md-3 searchbar"> 
-
-      <div class="bs-sidebar affix">
-        <ul class="nav bs-sidenav">
-	    <li><a href="#java-download">Download</a></li>
-	    <li><a href="#java-start">Quick Start</a></li>
-	    <li><a href="#java-data-download">Data download</a></li>
-	    <li><a href="#java-data-upload">Data upload</a></li>
-	    <li><a href="#java-flow-download">Flow download</a></li>
-	    <li><a href="#java-flow-mgm">Flow management</a></li>
-	    <li><a href="#java-flow-upload">Flow upload</a></li>
-	    <li><a href="#java-task-download">Task download</a></li>
-	    <li><a href="#java-run-download">Run download</a></li>
-	    <li><a href="#java-run-mgm">Run management</a></li>
-	    <li><a href="#java-run-upload">Run upload</a></li>
-	    <li><a href="#java-sql">Free SQL query</a></li>
-	    <li><a href="#java-issues">Issues and requests</a></li>
-	</ul>
-      </div>
-     </div> <!-- end col-2 -->
-    
-<div class="col-sm-12 col-md-9 openmlsectioninfo">
-  <div class="bs-docs-section">
           <div class="page-header">
             <h1>Java API</h1>
           </div>
@@ -134,7 +111,7 @@ int flow_id = check.getId();
 	<h3 id="java-flow-upload">Flow upload</h3>
 	<h5><code>openmlImplementationUpload(Implementation description, File binary, File source)</code></h5>
 	<p>Uploads implementation files (binary and/or source) to OpenML given a description.</p>
-	<div class="codehighlight"><pre><code class="java">Implementation flow = new Implementation("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12") 
+	<div class="codehighlight"><pre><code class="java">Implementation flow = new Implementation("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12")
 UploadImplementation response = client.openmlImplementationUpload( flow, new File("code.jar"), new File("source.zip"));
 int flow_id = response.getId();
 </code></pre></div>
@@ -166,7 +143,7 @@ Evaluation[] evaluations = response.getEvaluation();
 	<div class="codehighlight"><pre><code class="java">Run run = client.openmlRunGet(1);
 int task_id = run.getTask_id();
 int flow_id = run.getImplementation_id();
-Parameter_setting[] settings = run.getParameter_settings() 
+Parameter_setting[] settings = run.getParameter_settings()
 EvaluationScore[] scores = run.getOutputEvaluation();
 </code></pre></div>
 
@@ -195,7 +172,3 @@ int run_id = response.getRun_id();
 
 	<h3 id="java-issues">Issues</h3>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/java/issues"> OpenML Java issue tracker</a>.
-
-    </div> 
-</div>
-

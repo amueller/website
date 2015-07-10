@@ -39,7 +39,7 @@ $(document).ready(function() {
         ],
 		"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
 		"oTableTools": {
-			"sSwfPath": "SWF/tableTools/copy_csv_xls_pdf.swf",
+			"sSwfPath": "swf/copy_csv_xls_pdf.swf",
 			"aButtons": [
 				"copy","print","csv", "pdf",
                 {
@@ -156,15 +156,16 @@ options2 = {
 client.search({
   index: 'openml',
   type: 'run',
-  size: '100000',
-  body: {
-    filter: {
-      term: {
-        'run_task.task_id': current_task
-      }
-    },
-    sort: { 'date' : 'asc' }
-  }
+  size: '5000',
+	body: {
+		_source: [ "run_id", "date", "run_flow.name", "run_flow.flow_id", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
+		filter: {
+			term: {
+				'run_task.task_id': current_task
+			}
+		},
+		sort: { 'date' : 'asc' }
+	}
 }).then(function (resp) {
         var data = resp.hits.hits;
 	var usercount = 1;
@@ -191,12 +192,12 @@ client.search({
 			else
 				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: Infinity, entries: 0, highRank: Infinity});
 		}
-		if(typeof evals[evaluation_measure] !== 'undefined'){
+		if(typeof getEval(evals,evaluation_measure) !== 'undefined'){
 			var dat = Date.parse(run['date']);
-			var e = parseFloat(evals[evaluation_measure]);
-			d[map[run['uploader']]].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
+			var e = parseFloat(getEval(evals,evaluation_measure));
+			d[map[run['uploader']]].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: getEval(evals,'build_cpu_time')} );
 			if(d[0].length==0 || (higherIsBetter && e > d[0][d[0].length-1]['y']) || (!higherIsBetter && e < d[0][d[0].length-1]['y'])){
-				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']});
+				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: getEval(evals,'build_cpu_time')});
 			}
 
 			if(!pairs.has(run['run_flow']['name']+e)){ //check if submission is new
@@ -264,42 +265,6 @@ function leaderboard(data){
 		]
 	} );
 }
-
-/**
-$('#tableview').dataTable( {
-	"aaData": data,
-	"scrollY": "600px",
-	"scrollCollapse": true,
-	"paging":         false,
-	"aLengthMenu": [[10, 50, 100, 250, -1], [10, 50, 100, 250, "All"]],
-	"iDisplayLength" : 50,
-	"bSort" : true,
-	"bInfo": false,
-	"aaSorting" : [],
-	"aoColumns": [
-	<?php $cnt = sizeOf($cols);
-	foreach( $this->tableview[0] as $k => $v ) {
-		$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
-			if(is_numeric($v))
-			$newcol .= '"sType":"numeric", ';
-			if($cnt<6)
-			$newcol .= '"bVisible":true},';
-			else
-			$newcol .= '"bVisible":false},';
-			if(array_key_exists($k,$cols)){
-				$cols[$k] = $newcol;
-			} else {
-				$cols[] = $newcol;
-				$cnt++;
-			}
-		}
-		foreach( $cols as $k => $v ) {
-			echo $v;
-		}?>
-
-		]
-	} );
-}**/
 
 function redrawchart(){
 categoryMap = {};
@@ -390,23 +355,33 @@ options = {
             }]
         };
 
-sorts = {};
-sorts['evaluations.'+evaluation_measure] = 'desc';
-
 client.search({
   index: 'openml',
   type: 'run',
-  size: '100000',
+  size: '5000',
   body: {
+		_source: [ "run_id", "run_flow.name", "run_flow.flow_id", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
     filter: {
       term: {
         'run_task.task_id': current_task
       }
     },
-    sort: sorts
+    sort: [
+    {
+      "evaluations.value": {
+        "order": "desc",
+        "nested_path": "evaluations",
+        "nested_filter": {
+          "term": {
+            "evaluations.evaluation_measure": evaluation_measure
+          }
+        }
+      }
+    }
+  ]
   }
 }).then(function (resp) {
-        var data = resp.hits.hits;
+  var data = resp.hits.hits;
 	var catcount = 0;
 	var map = {};
 	var d=[];
@@ -421,7 +396,7 @@ client.search({
 			categoryMap[flow['name']]= flow['flow_id'];
 			c.push(flow['name']);
 		}
-		d.push({x: parseFloat(evals[evaluation_measure]), y: map[flow['name']], r: run['run_id'], u: run['uploader'], t: evals['build_cpu_time']} );
+		d.push({x: parseFloat(getEval(evals,evaluation_measure)), y: map[flow['name']], r: run['run_id'], u: run['uploader'], t: parseFloat(getEval(evals,'usercpu_time_millis_training'))/1000} );
 	}
 
 	options.yAxis.categories = c;
@@ -433,6 +408,14 @@ client.search({
 }, function (err) {
     console.trace(err.message);
 });
+}
+
+function getEval(arr, value) {
+
+  var result  = arr.filter(function(o){return o.evaluation_measure == value;} );
+
+  return result ? (result[0] ? result[0]['value'] : null) : null; // or undefined
+
 }
 
 function redrawCurves(){
@@ -463,7 +446,6 @@ function redrawCurves(){
 
   var sql =
     'SELECT `e`.`sample_size`, concat_ws("_",`i`.`name`,`i`.`version`)  AS `name`, `r`.`setup`, avg(`e`.`value`) as `score`, stddev(`e`.`value`) as `stdev`, `i`.`name` as `iname` FROM `run` `r`, `evaluation_sample` `e`, `algorithm_setup` `a`, `implementation` `i`, `task` `t` WHERE `e`.`function` = "'+evaluation_measure+'" AND `t`.`ttid` = 3 AND `r`.`rid` = `e`.`source` AND `r`.`setup` = `a`.`sid` AND `a`.`implementation_id` = `i`.`id` AND `r`.`task_id` = `t`.`task_id` AND `t`.`task_id` = '+<?php echo $this->task_id; ?>+' GROUP BY `e`.`sample`, `r`.`setup` ORDER BY `sample` ASC, `name` DESC';
-
   if(latestOnly){
     sql = 'select * from ('+sql+') as a group by iname, sample_size order by sample_size';
   }
@@ -471,7 +453,8 @@ function redrawCurves(){
   var query =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q="+sql, "UTF-8");
 
   $.getJSON(query,function(jsonData){
-        var data = jsonData.data;
+	console.log(jsonData);
+  var data = jsonData.data;
 	var setupcount = 0;
 	var map = {}; // setup -> name
 	var names = [];

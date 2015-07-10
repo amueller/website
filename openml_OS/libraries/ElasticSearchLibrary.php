@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class ElasticSearchLibrary {
-  
+
   public function __construct() {
     $this->searchclient = null;
     try {
@@ -9,7 +9,7 @@ class ElasticSearchLibrary {
       $this->searchclient = new Elasticsearch\Client($params);
     } catch( Exception $e ) {}
   }
-  
+
   public function search( $params ) {
     $from  = array_key_exists( 'from', $params ) ? safe($params['from']) : 0;
     $size  = array_key_exists( 'size', $params ) ? safe($params['size']) : 0;
@@ -18,13 +18,13 @@ class ElasticSearchLibrary {
     $order = array_key_exists( 'order', $params ) ? safe($params['order']) : 0;
     $filters = array_key_exists( 'filters', $params ) ? safe($params['filters']) : array();
     $query_terms = array_key_exists( 'query_terms', $params ) ? safe($params['query_terms']) : '';
-    
+
     $query = '"match_all" : { }';
     if( $query_terms ) { $query = '"query_string" : { "query" : "' . $query_terms . '" }'; }
-	  
+
     $jsonfilters = array();
     if($type) { $jsonfilters[] = '{ "type" : { "value" : "'.$type.'" } }'; }
-    
+
     foreach($filters as $k => $v) {
 	    if(strpos($v,'>') !== false and is_numeric(str_replace('>','',$v)))
 		    $jsonfilters[] = '{ "range" : { "'.$k.'" : { "gt" : '.str_replace('>','',$v).' } } }';
@@ -43,15 +43,15 @@ class ElasticSearchLibrary {
 	    $fjson = '"filter" : { "and" : ['.$fjson.'] },';
     elseif(count($jsonfilters)>0)
 	    $fjson = '"filter" : '.$fjson.",\n";
-    
+
     $search_params['index'] = 'openml';
-    $search_params['body']  = 
-      '{' . 
+    $search_params['body']  =
+      '{' .
         '"from" : ' . $from . ",\n" .
-        ($size ? '"size" : ' . $size . ",\n" : '') . 
-        '"query" : {' . $query . '}, ' . 
+        ($size ? '"size" : ' . $size . ",\n" : '') .
+        '"query" : {' . $query . '}, ' .
         ($sort ? '"sort" : { "'.$sort.'" : "'.$order.'" },' : '') .
-        ($fjson ? $fjson : '') . 
+        ($fjson ? $fjson : '') .
         '"highlight" : {
            "fields" : {
             "_all" : {}
@@ -63,10 +63,10 @@ class ElasticSearchLibrary {
            }
          }
        }';
-    
+
     return $this->_search($search_params);
   }
-  
+
   private function _search($params) {
     $results = array();
     try {

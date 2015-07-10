@@ -232,8 +232,11 @@
 .bs-callout {
   margin: 20px 0;
   padding: 15px 30px 15px 15px;
-  border-left: 5px solid #eee;
+  border-left: 5px solid #fff;
+  box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
+  background-color: white;
 }
+
 .bs-callout h4 {
   margin-top: 0;
 }
@@ -248,7 +251,7 @@
   font-size: 12px;
 }
 
-.bs-callout-danger dl{  
+.bs-callout-danger dl{
   margin-bottom: 0px;
 }
 
@@ -1127,7 +1130,7 @@ form.bs-docs-example {
   }
   .pull-right-lg{
     float: right !important;
-  }  
+  }
   .openml-contact {
     float: right;
   }
@@ -1375,4 +1378,3 @@ form.bs-docs-example {
 .codehighlight pre code{font-size:inherit;color:#333}
 .codehighlight pre code:first-child{display:inline-block;padding-right:45px}
 .codehighlight pre{white-space:normal}
-

@@ -1,17 +1,4 @@
-    <div class="col-sm-12 col-md-3 searchbar">
 
-      <div class="bs-sidebar affix">
-        <ul class="nav bs-sidenav">
-              <li><a href="#dev-repos">GitHub repo's</a></li>
-              <li><a href="#dev-issues">Issues and feature requests</a></li>
-              <li><a href="#dev-wiki">GitHub wiki</a></li>
-              <li><a href="#dev-database">Database snapshots</a></li>
-        </ul>
-      </div>
-    </div> <!-- end col-2 -->
-
-    <div class="col-sm-12 col-md-9 openmlsectioninfo">
-      <div class="bs-docs-section">
         <div class="page-header">
           <h2 id="dev-start">OpenML <i class="fa fa-heart"></i> Open Source</h2>
         </div>
@@ -40,8 +27,3 @@
 
 	<p>If you want to work on the website locally, you'll also need the schema for the 'private' database with non-public information.</p>
         <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Private database schema</a>
-
-   
-        </div>
-
-    </div>

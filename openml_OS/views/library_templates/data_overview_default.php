@@ -50,9 +50,6 @@ $.ajax({
 <?php endif; ?>
 </script>
 
-<div class="bs-docs-container topborder">
-  <div class="container">
-    <div class="col-sm-12">
       <h2><?php echo $table_name; ?></h2>
       <table class="table table-striped data_overview_table_<?php echo $counter; ?>">
         <thead>
@@ -66,6 +63,3 @@ $.ajax({
           
         </tbody>
       </table>
-    </div>
-  </div>
-</div>

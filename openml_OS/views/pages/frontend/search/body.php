@@ -1,56 +1,43 @@
-<div class="container-fluid topborder">
-  <div class="row">
-    <div class="col-sm-12">
+<?php if(!$this->dataonly) {?>
+<div class="container-fluid topborder endless openmlsectioninfo">
+<div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+<?php }?>
+      <?php subpage('results');?>
 
-    <div class="col-xs-12 col-sm-3 col-md-2 searchbar">
-        <!-- Upload stuff -->
-      <ul class="menu">
-	<li><a href="search?q=<?php echo $this->terms;?>" <?php if(!$this->filtertype) echo 'class="selected"';?>><i class="fa fa-fw fa-circle-thin"></i> All<span class="counter"><?php echo $this->results['facets']['type']['total'];?></span></a></li>
-	<?php
-	  $stack = array();
-      	  foreach( $this->results['facets']['type']['terms'] as $f ) { array_push($stack,$f['term']); ?>
-          	<li><a href="search?q=<?php echo $this->terms . '&type=' . $f['term']; ?>" <?php if($this->filtertype == $f['term']) echo 'class="selected"';?>><i class="fa-fw <?php echo $this->icons[$f['term']];?>"></i> <?php echo str_replace('User','People',str_replace('_',' ', ucfirst($f['term'])));?><span class="counter"><?php echo $f['count'];?></span></a></li>	
-	<?php }
-	  foreach( $this->icons as $f => $i ){
-		if(!in_array($f, $stack)){ ?>
-          		<li><a href="search?q=<?php echo $this->terms . '&type=' . $f; ?>" <?php if($this->filtertype == $f) echo 'class="selected"';?>><i class="fa-fw <?php echo $i;?>"></i> <?php echo str_replace('_',' ', ucfirst($f));?><span class="counter"></span></a></li>
-			
-	<?php }} ?>
-       </ul>
-       <ul class="menu">
-       <li><a href="search?q=match_all<?php echo ($this->filtertype ? '&type='.$this->filtertype : ''); ?>"><i class="fa fa-fw fa-expand"></i> Show all</a></li>
-       <li><a data-toggle="collapse" href="#filters"><i class="fa fa-search-plus fa-fw"></i> Filter results</a></li>
-       </ul>
-       <?php if($this->filtertype) subpage($this->filtertype);
-             else subpage("everything"); ?>
+<?php if(!$this->dataonly) {?>
+</div>
 
-    </div> <!-- end col-2 -->
-    <div class="col-xs-12 col-sm-10 openmlsectioninfo">
-      <h1>Results for <b><?php echo str_replace('match_','',$this->coreterms); if($this->coreterms=='') echo '*'?></b></h1>
 
-      <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
-        <a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
-	<?php
-		if($this->table) // toggle off
-			$att = addToGET(array( 'table' => false, 'listids' => false, 'size' => false));	
-		else // toggle on
-			$att = addToGET(array( 'table' => '1', 'listids' => false, 'size' => $this->results['hits']['total']));		
-		echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->table ? 'fa-align-justify' : 'fa-table');?>"></i></a>
-      <?php } ?>		
-
-      <?php if($this->filtertype and in_array($this->filtertype, array("run", "task", "data", "flow"))){ ?>
-        <a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
-	<?php
-		if($this->listids) // toggle off
-			$att = addToGET(array( 'listids' => false, 'table' => false, 'size' => false));	
-		else // toggle on
-			$att = addToGET(array( 'listids' => '1', 'table' => false, 'size' => $this->results['hits']['total']));		
-		echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-justify' : 'fa-list-ol');?>"></i></a>
+<div class="submenu">
+  <ul class="sidenav nav" id="accordeon">
+    <li class="panel guidechapter">
+      <a data-toggle="collapse" data-parent="#accordeon"  data-target="#filterlist"><i class="fa fa-filter fa-fw fa-lg"></i> <b>Filter results</b></a>
+      <ul class="sidenav nav collapse in" id="filterlist">
+        <?php if($this->filtertype) subpage($this->filtertype);
+              else subpage("everything");
+              if($this->filtertype and $this->filtertype!='user' and $this->filtertype!='task_type') {?>
+        <li>
+          <button class="btn btn-default btn-material-<?php echo $this->materialcolor;?>" id="research">Search</button>
+        </li>
+        <li><a><i class="fa fa-lg fa-fw fa-info-circle"></i>You can use 1..10, >10,...</a>
+            <a id="removefilters"><i class="fa fa-lg fa-fw fa-trash-o"></i>Remove all filters</a></li>
         <?php } ?>
-
-      <?php subpage('results');?> 
-    </div>
-  </div> 
-</div>
+      </ul>
+    </li>
+  </ul>
 </div>
 
+</div>
+<?php }?>
+
+
+<script>
+client.search(<?php echo json_encode($this->alltypes); ?>).then(function (body) {
+  var buckets = body.aggregations.type.buckets;
+  for (var b in buckets.reverse()){
+    $('#'+buckets[b].key+'counter').html(buckets[b].doc_count);
+  }
+}, function (error) {
+  console.trace(error.message);
+});
+</script>

@@ -1,47 +1,6 @@
-    <div class="col-sm-12 col-md-3 searchbar">
+<!-- [START] Api function description: openml.authenticate -->
 
-      <div class="bs-sidebar">
-        <ul class="nav bs-sidenav">
-              <li><a href="#openml_authenticate">openml.authenticate</a></li>
-              <li><a href="#openml_authenticate_check">openml.authenticate.check</a></li>
-              <li><a href="#openml_data">openml.data</a></li>
-              <li><a href="#openml_data_description">openml.data.description</a></li>
-              <li><a href="#openml_data_upload">openml.data.upload</a></li>
-              <li><a href="#openml_data_delete">openml.data.delete</a></li>
-              <li><a href="#openml_data_licences">openml.data.licences</a></li>
-              <li><a href="#openml_data_features">openml.data.features</a></li>
-              <li><a href="#openml_data_qualities">openml.data.qualities</a></li>
-              <li><a href="#openml_data_qualities_list">openml.data.qualities.list</a></li>
-              <li><a href="#openml_task_search">openml.task</a></li>
-              <li><a href="#openml_task_types_search">openml.task.types.search</a></li>
-              <li><a href="#openml_task_evaluations">openml.task.evaluations</a></li>
-              <li><a href="#openml_task_types">openml.task.types</a></li>
-              <li><a href="#openml_estimationprocedure_get">openml.estimationprocedure</a></li>
-              <li><a href="#openml_implementation_exists">openml.implementation.exists</a></li>
-              <li><a href="#openml_implementation_upload">openml.implementation.upload</a></li>
-              <li><a href="#openml_implementation_owned">openml.implementation.owned</a></li>
-              <li><a href="#openml_implementation_delete">openml.implementation.delete</a></li>
-              <li><a href="#openml_implementation_licences">openml.implementation.licences</a></li>
-              <li><a href="#openml_evaluation_measures">openml.evaluation.measures</a></li>
-              <li><a href="#openml_run_get">openml.run</a></li>
-              <li><a href="#openml_run_upload">openml.run.upload</a></li>
-              <li><a href="#openml_run_delete">openml.run.delete</a></li>
-              <li><a href="#openml_job_get">openml.job</a></li>
-              <li><a href="#openml_setup_delete">openml.setup</a></li>
-        </ul>
-      </div>
-    </div> <!-- end col-2 -->
-
-    <div class="col-sm-12 col-md-9 openmlsectioninfo">
-        <div class="bs-docs-section">
-        <div class="page-header">
-          <h1 id="dev-docs">REST services</h1>
-        </div>
-        <p class="lead">Details of all OpenML services, with their expected arguments, file formats, responses and error codes.</p>
-               
-<!-- [START] Api function description: openml.authenticate --> 
-
-
+<div class="tab-pane" id="openml_authenticate">
 <h3 id=openml_authenticate>openml.authenticate</h3>
 <p><i>returns a session_hash, which can be used for writing to the API</i></p>
 
@@ -71,13 +30,14 @@
 <dl><dt>252: Authentication failed</dt><dd>The username and password did not match any record in the database. Please note that the password should be hashed using md5</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.authenticate -->  
+<!-- [END] Api function description: openml.authenticate -->
 
 
 
-<!-- [START] Api function description: openml.authenticate.check --> 
+<!-- [START] Api function description: openml.authenticate.check -->
 
-
+</div>
+<div class="tab-pane" id="openml_authenticate_check">
 <h3 id=openml_authenticate_check>openml.authenticate.check</h3>
 <p><i>checks the validity of the session hash</i></p>
 
@@ -106,14 +66,15 @@
 <dl><dt>292: Hash does not exist</dt><dd>Hash does not exist, or is not owned by this user</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.authenticate.check -->  
+<!-- [END] Api function description: openml.authenticate.check -->
 
 
 
 
-<!-- [START] Api function description: openml.data --> 
+<!-- [START] Api function description: openml.data -->
 
-
+</div>
+<div class="tab-pane" id="openml_data">
 <h3 id=openml_data>openml.data</h3>
 <p><i>Returns a list with all dataset ids in OpenML that are ready to use</i></p>
 
@@ -147,13 +108,14 @@ None
 <dl><dt>370: No datasets available</dt><dd>There are no valid datasets in the system. Please upload!</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.data -->  
+<!-- [END] Api function description: openml.data -->
 
 
 
-<!-- [START] Api function description: openml.data.description --> 
+<!-- [START] Api function description: openml.data.description -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_description">
 <h3 id=openml_data_description>openml.data.description</h3>
 <p><i>returns dataset descriptions in XML</i></p>
 
@@ -180,11 +142,11 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
   &lt;oml:description&gt;This is a preprocessed version of the &lt;a href="d/2"&gt;anneal.ORIG&lt;/a&gt; dataset. All missing values are threated as a nominal value with label '?'. (Quotes for clarity). The original version of this dataset can be found with the name anneal.ORIG.
 
 1. Title of Database: Annealing Data
- 
+
  2. Source Information: donated by David Sterling and Wray Buntine.
- 
+
  3. Past Usage: unknown
- 
+
  4. Relevant Information:
     -- Explanation: I suspect this was left by Ross Quinlan in 1987 at the
        4th Machine Learning Workshop.  I'd have to check with Jeff Schlimmer
@@ -206,13 +168,14 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
 <dl><dt>111: Unknown dataset</dt><dd>Data set description with data_id was not found in the database</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.data.description -->  
+<!-- [END] Api function description: openml.data.description -->
 
 
 
-<!-- [START] Api function description: openml.data.upload --> 
+<!-- [START] Api function description: openml.data.upload -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_upload">
 <h3 id=openml_data_upload>openml.data.upload</h3>
 <p><i>Uploads a dataset</i></p>
 
@@ -247,13 +210,14 @@ This XSD schema is applicable for both uploading and downloading data, hence som
 <dl><dt>143: Suggested target feature not legal</dt><dd>It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data. </dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.data.upload -->  
+<!-- [END] Api function description: openml.data.upload -->
 
 
 
-<!-- [START] Api function description: openml.data.delete --> 
+<!-- [START] Api function description: openml.data.delete -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_delete">
 <h3 id=openml_data_delete>openml.data.delete</h3>
 <p><i>Deletes a dataset. Can only be done if the dataset is not used in tasks</i></p>
 
@@ -272,13 +236,14 @@ This XSD schema is applicable for both uploading and downloading data, hence som
 <dl><dt>355: Deleting dataset failed.</dt><dd>Deleting the dataset failed. Please contact support team.</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.data.delete -->  
+<!-- [END] Api function description: openml.data.delete -->
 
 
 
-<!-- [START] Api function description: openml.data.licences --> 
+<!-- [START] Api function description: openml.data.licences -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_licences">
 <h3 id=openml_data_licences>openml.data.licences</h3>
 <p><i>Gives a list of all data licences used in OpenML</i></p>
 
@@ -306,13 +271,14 @@ None
 None
 </div>
 
-<!-- [END] Api function description: openml.data.licences -->  
+<!-- [END] Api function description: openml.data.licences -->
 
 
 
-<!-- [START] Api function description: openml.data.features --> 
+<!-- [START] Api function description: openml.data.features -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_features">
 <h3 id=openml_data_features>openml.data.features</h3>
 <p><i>Returns the features (attributes) of a given dataset</i></p>
 
@@ -542,13 +508,14 @@ None
 <dl><dt>274: Dataset processed with error</dt><dd>The feature extractor has run into an error while processing the dataset. Please check whether it is a valid supported file. </dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.data.features -->  
+<!-- [END] Api function description: openml.data.features -->
 
 
 
-<!-- [START] Api function description: openml.data.qualities --> 
+<!-- [START] Api function description: openml.data.qualities -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_qualities">
 <h3 id=openml_data_qualities>openml.data.qualities</h3>
 <p><i>Returns the qualities (meta-features) of a given dataset</i></p>
 
@@ -848,13 +815,14 @@ None
 <dl><dt>365: Interval start or end illegal</dt><dd>There was a problem with the interval start or end.</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.data.qualities -->  
+<!-- [END] Api function description: openml.data.qualities -->
 
 
 
-<!-- [START] Api function description: openml.data.qualities.list --> 
+<!-- [START] Api function description: openml.data.qualities.list -->
 
-
+</div>
+<div class="tab-pane" id="openml_data_qualities_list">
 <h3 id=openml_data_qualities_list>openml.data.qualities.list</h3>
 <p><i>Lists all data qualities that are used (i.e., are calculated for at least one dataset)</i></p>
 
@@ -950,14 +918,15 @@ None
 None
 </div>
 
-<!-- [END] Api function description: openml.data.qualities.list -->  
+<!-- [END] Api function description: openml.data.qualities.list -->
 
 
 
 
-<!-- [START] Api function description: openml.task.search --> 
+<!-- [START] Api function description: openml.task.search -->
 
-
+</div>
+<div class="tab-pane" id="openml_task_search">
 <h3 id=openml_task_search>openml.task.search</h3>
 <p><i>Returns the description of a task</i></p>
 
@@ -1022,13 +991,14 @@ A task description<br/>
 <dl><dt>151: Unknown task</dt><dd>The task with this id was not found in the database</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.task.search -->  
+<!-- [END] Api function description: openml.task.search -->
 
 
 
-<!-- [START] Api function description: openml.task.evaluations --> 
+<!-- [START] Api function description: openml.task.evaluations -->
 
-
+</div>
+<div class="tab-pane" id="openml_task_evaluation">
 <h3 id=openml_task_evaluations>openml.task.evaluations</h3>
 <p><i>Returns the performance of flows on a given task</i></p>
 
@@ -1058,13 +1028,14 @@ A task description<br/>
 <dl><dt>301: Unknown task</dt><dd>The task with this id was not found in the database</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.task.evaluations -->  
+<!-- [END] Api function description: openml.task.evaluations -->
 
 
 
-<!-- [START] Api function description: openml.task.types --> 
+<!-- [START] Api function description: openml.task.types -->
 
-
+</div>
+<div class="tab-pane" id="openml_task_types">
 <h3 id=openml_task_types>openml.task.types</h3>
 <p><i>Returns a list of all task types</i></p>
 
@@ -1118,13 +1089,14 @@ Optionally, you can upload the model trained on all the input data. There is no 
 None
 </div>
 
-<!-- [END] Api function description: openml.task.types -->  
+<!-- [END] Api function description: openml.task.types -->
 
 
 
-<!-- [START] Api function description: openml.task.types.search --> 
+<!-- [START] Api function description: openml.task.types.search -->
 
-
+</div>
+<div class="tab-pane" id="openml_task_types_search">
 <h3 id=openml_task_types_search>openml.task.types.search</h3>
 <p><i>returns a definition (template) of a certain task type</i></p>
 
@@ -1204,14 +1176,15 @@ Optionally, you can upload the model trained on all the input data. There is no 
 <dl><dt>241: Unknown task type</dt><dd>The task type with this id was not found in the database</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.task.types.search -->  
+<!-- [END] Api function description: openml.task.types.search -->
 
 
 
 
-<!-- [START] Api function description: openml.estimationprocedure.get --> 
+<!-- [START] Api function description: openml.estimationprocedure.get -->
 
-
+</div>
+<div class="tab-pane" id="openml_estimationprocedure_get">
 <h3 id=openml_estimationprocedure_get>openml.estimationprocedure.get</h3>
 <p><i>returns the details of an estimation procedure</i></p>
 
@@ -1242,14 +1215,15 @@ Optionally, you can upload the model trained on all the input data. There is no 
 <dl><dt>441: estimationprocedure_id not valid</dt><dd>Please provide a valid estimationprocedure_id</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.estimationprocedure.get -->  
+<!-- [END] Api function description: openml.estimationprocedure.get -->
 
 
 
 
-<!-- [START] Api function description: openml.implementation.get --> 
+<!-- [START] Api function description: openml.implementation.get -->
 
-
+</div>
+<div class="tab-pane" id="openml_implementation_get">
 <h3 id=openml_implementation_get>openml.implementation.get</h3>
 <p><i>Returns the description of an implementation (flow)</i></p>
 
@@ -1366,13 +1340,14 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <dl><dt>181: Unknown implementation</dt><dd>The implementation with this ID was not found in the database</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.implementation.get -->  
+<!-- [END] Api function description: openml.implementation.get -->
 
 
 
-<!-- [START] Api function description: openml.implementation.exists --> 
+<!-- [START] Api function description: openml.implementation.exists -->
 
-
+</div>
+<div class="tab-pane" id="openml_implementation_exists">
 <h3 id=openml_implementation_exists>openml.implementation.exists</h3>
 <p><i>A utility function that checks whether an implementation already exists. Mainly used by workbenches</i></p>
 
@@ -1399,13 +1374,14 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <dl><dt>330: Mandatory fields not present.</dt><dd>Please provide one of the following mandatory field combination: name and external_version.</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.implementation.exists -->  
+<!-- [END] Api function description: openml.implementation.exists -->
 
 
 
-<!-- [START] Api function description: openml.implementation.upload --> 
+<!-- [START] Api function description: openml.implementation.upload -->
 
-
+</div>
+<div class="tab-pane" id="openml_implementation_upload">
 <h3 id=openml_implementation_upload>openml.implementation.upload</h3>
 <p><i>Uploads an implementation to OpenML</i></p>
 
@@ -1439,13 +1415,14 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <dl><dt>171: Implementation already exists</dt><dd>This implementation is already in the database</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.implementation.upload -->  
+<!-- [END] Api function description: openml.implementation.upload -->
 
 
 
-<!-- [START] Api function description: openml.implementation.owned --> 
+<!-- [START] Api function description: openml.implementation.owned -->
 
-
+</div>
+<div class="tab-pane" id="openml_implementation_owned">
 <h3 id=openml_implementation_owned>openml.implementation.owned</h3>
 <p><i>Returns a list of all implementations owned by the user</i></p>
 
@@ -1460,13 +1437,14 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <dl><dt>312: No implementations owned by this used</dt><dd>The user has no implementations linked to his account</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.implementation.owned -->  
+<!-- [END] Api function description: openml.implementation.owned -->
 
 
 
-<!-- [START] Api function description: openml.implementation.delete --> 
+<!-- [START] Api function description: openml.implementation.delete -->
 
-
+</div>
+<div class="tab-pane" id="openml_implementation_delete">
 <h3 id=openml_implementation_delete>openml.implementation.delete</h3>
 <p><i>Deletes an implementation (can only be done to owned implementations)</i></p>
 
@@ -1485,13 +1463,14 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <dl><dt>325: Deleting implementation failed.</dt><dd>Deleting the implementation failed. Please contact support team. </dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.implementation.delete -->  
+<!-- [END] Api function description: openml.implementation.delete -->
 
 
 
-<!-- [START] Api function description: openml.implementation.licences --> 
+<!-- [START] Api function description: openml.implementation.licences -->
 
-
+</div>
+<div class="tab-pane" id="openml_implementation_licence">
 <h3 id=openml_implementation_licences>openml.implementation.licences</h3>
 <p><i>Returns a list of all used licences in the implementations</i></p>
 
@@ -1519,14 +1498,15 @@ None
 None
 </div>
 
-<!-- [END] Api function description: openml.implementation.licences -->  
+<!-- [END] Api function description: openml.implementation.licences -->
 
 
 
 
-<!-- [START] Api function description: openml.evaluation.measures --> 
+<!-- [START] Api function description: openml.evaluation.measures -->
 
-
+</div>
+<div class="tab-pane" id="openml_evaluation_measures">
 <h3 id=openml_evaluation_measures>openml.evaluation.measures</h3>
 <p><i>Returns a list of all evaluation measures</i></p>
 
@@ -1604,14 +1584,15 @@ None
 None
 </div>
 
-<!-- [END] Api function description: openml.evaluation.measures -->  
+<!-- [END] Api function description: openml.evaluation.measures -->
 
 
 
 
-<!-- [START] Api function description: openml.run.get --> 
+<!-- [START] Api function description: openml.run.get -->
 
-
+</div>
+<div class="tab-pane" id="openml_run_get">
 <h3 id=openml_run_get>openml.run.get</h3>
 <p><i>Returns the details of a specific run</i></p>
 
@@ -1788,13 +1769,15 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <dl><dt>221: Run not found</dt><dd>The run id was invalid, run not found</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.run.get -->  
+<!-- [END] Api function description: openml.run.get -->
 
 
 
-<!-- [START] Api function description: openml.run.upload --> 
+<!-- [START] Api function description: openml.run.upload -->
 
 
+</div>
+<div class="tab-pane" id="openml_run_upload">
 <h3 id=openml_run_upload>openml.run.upload</h3>
 <p><i>Uploads the results of a run to OpenML</i></p>
 
@@ -1834,13 +1817,15 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <dl><dt>219: Error reading the XML document</dt><dd>The xml description file could not be verified. </dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.run.upload -->  
+<!-- [END] Api function description: openml.run.upload -->
 
 
 
-<!-- [START] Api function description: openml.run.delete --> 
+<!-- [START] Api function description: openml.run.delete -->
 
 
+</div>
+<div class="tab-pane" id="openml_run_delete">
 <h3 id=openml_run_delete>openml.run.delete</h3>
 <p><i>Deletes a run from the database. </i></p>
 
@@ -1858,14 +1843,16 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <dl><dt>394: Deleting run failed.</dt><dd>Deleting the run failed. Please contact support team. </dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.run.delete -->  
+<!-- [END] Api function description: openml.run.delete -->
 
 
 
 
-<!-- [START] Api function description: openml.job.get --> 
+<!-- [START] Api function description: openml.job.get -->
 
 
+</div>
+<div class="tab-pane" id="openml_job_get">
 <h3 id=openml_job_get>openml.job.get</h3>
 <p><i>Retrieves a job that is scheduled and not yet performed</i></p>
 
@@ -1893,14 +1880,16 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <dl><dt>341: No jobs available.</dt><dd>There are no jobs that need to be executed.</dd></dl>
 </div>
 
-<!-- [END] Api function description: openml.job.get -->  
+<!-- [END] Api function description: openml.job.get -->
 
 
 
 
-<!-- [START] Api function description: openml.setup.delete --> 
+<!-- [START] Api function description: openml.setup.delete -->
 
 
+</div>
+<div class="tab-pane" id="openml_setup_delete">
 <h3 id=openml_setup_delete>openml.setup.delete</h3>
 <p><i>Removes a setup from the database. Can only be done if no runs are performed on this setup.</i></p>
 
@@ -1917,11 +1906,5 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <dl><dt>404: Setup is in use by other content (runs, schedules, etc). Can not be deleted</dt><dd>The setup is used in runs. Delete this other content before deleting this setup. </dd></dl>
 <dl><dt>405: Deleting setup failed.</dt><dd>Deleting the setup failed. Please contact support team. </dd></dl>
 </div>
-
-<!-- [END] Api function description: openml.setup.delete -->  
-
-    <!-- end col-md-9 -->
-  </div>
-  <!-- end row -->
 </div>
-<!-- end container -->
+<!-- [END] Api function description: openml.setup.delete -->

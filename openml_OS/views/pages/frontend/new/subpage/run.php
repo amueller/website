@@ -7,23 +7,23 @@
 			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
 	});
-	
+
 	$(document).ready( function() {
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-			
+
 			var input = $(this).parents('.input-group').find(':text'),
 				log = numFiles > 1 ? numFiles + ' files selected' : label;
-			
+
 			if( input.length ) {
 				input.val(log);
 			} else {
 				if( log ) alert(log);
 			}
 		});
-	});		
+	});
 </script>
 
-<div class="openmlsectioninfo">
+<div class="panel">
 	      <h1><a href="r"><i class="fa fa-star"></i></a> Add runs</h1>
 	      <form method="post" id="datasetForm" action="api/?f=openml.data.upload" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_dataset_description" name="description" value="" />
@@ -33,4 +33,3 @@
 	      </div>
 	      </form>
 </div> <!-- end container -->
-

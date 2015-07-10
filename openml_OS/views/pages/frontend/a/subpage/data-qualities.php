@@ -1,38 +1,20 @@
-<div class="row openmlsectioninfo">
-  <div class="col-sm-12">
-     <?php if(false === strpos($_SERVER['REQUEST_URI'], '/a/data-qualities/')){ ?>
-	<h1>Data qualities</h1>
-	<p>OpenML automatically computes a range of characteristics (qualities) about each new dataset (for known data formats). This helps to study and understand under which conditions algorithms perform well (or badly).</p>
-	<p>To calculate these qualities, we provide an extensible Java library, called <a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/fantail/dc">FanTail</a>, which operates on ARFF datasets. If you want to add further data qualities, or provide wrappers to work with other data formats, don't hesitate to extend FanTail. Your new qualities can then be computed for all OpenML datasets. We also welcome new, useful libraries.</p>
-
-	<h2>All qualities</h2>
-	<?php	foreach( $this->dataqs as $r ):?>
-			<div class="searchresult">
-				<a href="a/data-qualities/<?php echo cleanName($r['name']); ?>"><?php echo $r['name']; ?></a><br />
-				<div class="teaser"><?php echo teaser($r['description'], 150); ?></div>
-				<div class="runStats"><?php echo $r['count']; ?> datasets evaluated</div>
-			</div><?php 
-		endforeach;
-	} 
-        else { ?>
-	<?php if(!isset( $this->record)) echo 'Sorry, this measure is not known.'; else { ?>
-	<h1><?php echo $this->record['name']; ?></h1>
-	<p><?php echo $this->record['description']; ?></p>
+<?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/data-qualities/')){ ?>
+	<?php if(!isset( $this->measure)) echo 'Sorry, this measure is not known.'; else { ?>
+	<h1><?php echo $this->measure['name']; ?></h1>
+	<p><?php echo $this->measure['description']; ?></p>
 	<ul class="hotlinks">
 		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/fantail/dc"><i class="fa fa-gears"></i> View code</a></li>
 	</ul>
 	<h2>Overview</h2>
 		<div class="table-responsive"><table class="table table-striped">
 		<tbody>
-		<?php	foreach( $this->dataqvals as $r ):?>
+		<?php	if(!isset($this->results)) {echo "No values found.";} else { foreach( $this->results as $r ):
+        if(array_key_exists($this->measure['name'],$r['fields'])){?>
 			<tr>
-        <td><a href="d/<?php echo $r['did'];?>"><?php echo $r['data_name'] . ' ('. $r['data_version'] . ')'; ?></a></td>
-        <td><a href="a/quality-values/<?php echo $this->record['name']; ?>/<?php echo $r['did'];?>"><?php echo $r['value'];?></a></td>
+        <td><a href="d/<?php echo $r['_id'];?>"><?php echo $r['fields']['name'][0] . ' ('. $r['fields']['version'][0] . ')'; ?></a></td>
+        <td><?php echo $r['fields'][$this->measure['name']][0];?></td>
       </tr>
-		<?php endforeach; ?>
-		</tbody> 
+		<?php } endforeach; ?>
+		</tbody>
 		</table></div>
-	<?php }} ?>
-
-  </div>
-</div> <!-- end openmlsectioninfo -->
+	<?php }}} ?>

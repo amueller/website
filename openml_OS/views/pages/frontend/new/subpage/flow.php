@@ -7,24 +7,24 @@
 			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			input.trigger('fileselect', [numFiles, label]);
 	});
-	
+
 	$(document).ready( function() {
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-			
+
 			var input = $(this).parents('.input-group').find(':text'),
 				log = numFiles > 1 ? numFiles + ' files selected' : label;
-			
+
 			if( input.length ) {
 				input.val(log);
 			} else {
 				if( log ) alert(log);
 			}
-			
+
 		});
-	});		
+	});
 </script>
 
-<div class="openmlsectioninfo">
+<div class="panel">
 	      <h1><a href="f"><i class="fa fa-cogs"></i></a> Add flows</h1>
 	      <form method="post" id="implementationForm" action="api/?f=openml.implementation.upload" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_implementation_description" name="description" value="" />
@@ -37,15 +37,15 @@
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_description">Description</label>
-		    <textarea class="form-control" id="input_implementation_description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea> 
+		    <textarea class="form-control" id="input_implementation_description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_description">Instructions</label>
-		    <textarea class="form-control" id="input_implementation_description" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea> 
+		    <textarea class="form-control" id="input_implementation_description" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Implementation</label>
-		    <input type="text" class="form-control" id="source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" /> 
+		    <input type="text" class="form-control" id="source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" />
 		    <div class="col-md-12 input-info">And/or, upload the code (source, executable, readme) as an archive.</div>
 		    <div class="input-group">
 			<span class="input-group-btn">
@@ -69,7 +69,7 @@
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_contributor">Contributor(s)</label>
-		    <input type="text" class="form-control" id="input_implementation_contributor" 
+		    <input type="text" class="form-control" id="input_implementation_contributor"
 			placeholder="Other contributor(s) of the implementation" value="" />
 		  </div>
 		  <div class="form-group">
@@ -93,7 +93,7 @@
 			    <textarea class="form-control" id="input_implementation_licence"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Paper/preprint</label>
-		    <input type="text" class="form-control" id="source_url" placeholder="URL to paper or preprint describing the code." value="" /> 
+		    <input type="text" class="form-control" id="source_url" placeholder="URL to paper or preprint describing the code." value="" />
 		  </div>
 		</div>
 	      </div>
@@ -147,11 +147,11 @@
 
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_language">Programming Language</label>
-		    <input type="text" class="form-control" id="input_implementation_language" placeholder="The programming language(s) used" value="" onblur=""/> 
+		    <input type="text" class="form-control" id="input_implementation_language" placeholder="The programming language(s) used" value="" onblur=""/>
 		  </div>
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_dependencies">Dependencies</label>
-		    <input type="text" class="form-control" id="input_implementation_dependencies" placeholder="Dependencies, packages used" value="" onblur=""/> 
+		    <input type="text" class="form-control" id="input_implementation_dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
 		  </div>
 
 		  <div class="form-group">

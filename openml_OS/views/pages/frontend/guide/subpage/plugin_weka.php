@@ -1,47 +1,34 @@
-<div class="col-xs-12 col-md-3 searchbar">
-
- <div class="bs-sidebar affix">
- <ul class="nav bs-sidenav">
-    <li><a href="#weka-plugin">Download Plugin</a></li>
-    <li><a href="#weka-start-exp">Quick Start</a></li>
-    <li><a href="#weka-start-cli">Quick Start CLI</a></li>
- </ul>
- </div>
-
-    </div> <!-- end col-2 -->
-    <div class="col-xs-12 col-md-9 openmlsectioninfo">
-
-   <div class="bs-docs-section">
      <div class="page-header">
             <h1 id="weka">WEKA</h1>
           </div>
-OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Experimenter and the Command Line Interface. It will
-be included in WEKA (via the package manager) starting from the next version (3.7.12). Until then, you can download a standalone version below.
- 
-	  	  <h2 id="weka-plugin">Download Plugin</h2>
-      		  The current integration is available as a standalone WEKA version which can be downloaded here:<br/>
-		  <br/>
-		  <a href="downloads/OpenWeka.beta.jar"><button class="btn btn-large btn-primary" type="button">Download Weka OpenML</button></a>
-		  <br/><br/>
-		  <img src="img/partners/Weka_logo.png" /><br/>
+          <img src="img/partners/Weka_logo.png" /><br/>
 
-			<h2 id="weka-start-exp">Quick Start Experimenter (GUI)</h2>
+OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Experimenter and the Command Line Interface.
+
+	  	<h2 id="weka-plugin">Installation</h2>
+      OpenML is available as a weka extension in the package manager starting from Weka 3.7.12:<br/>
+      <ol>
+				<li>Open the package manager (Under 'Tools')</li>
+        <li>Select package <b>OpenmlWeka</b> and click install</li>
+        <li>From the Tools menu, open the 'OpenML Experimenter'</li>
+      </ol>
+
+			<h2 id="weka-start-exp">Quick Start (Graphical Interface)</h2>
 			<div>
-			<img src="img/openmlweka.png" alt="OpenML Weka Screenshot" class="img-rounded" style="width:100%">
-			You can solve OpenML Tasks in the Weka Experimenter, and automatically upload your experiments to OpenML (or store them locally).
+			<img src="img/openmlweka.png" alt="OpenML Weka Screenshot" class="img-rounded" style="width:800px">
+			<p>You can solve OpenML Tasks in the Weka Experimenter, and automatically upload your experiments to OpenML (or store them locally).</p>
 			<ol>
-				<li>Download the standalone WEKA environment above. Open the jar file to open the GUI Chooser. </li>
-				<li>Under 'Tools', select the 'OpenML Experimenter'. The WEKA Experimenter will open. Click New.
+        <li>From the Tools menu, open the 'OpenML Experimenter'. Click 'new'.</li>
 				<li>Under 'Results Destination', choose 'OpenML.org' to automatically upload results to OpenML. Click 'Login' to provide your username and password.</li>
 				<li>The 'Experiment Type' should now be 'OpenML Task'. Several fields are greyed out (and ignored) because they are now controlled by OpenML tasks.</li>
-				<li>In the 'Tasks' panel, click the 'Add New' button to add new tasks. Insert the task id's as comma-separated values (e.g., '1,2,3,4,5'). Use <a href="search">search</a> to search for interesting tasks and click the <i class="fa fa-list-ol"></i> icon to list the ID's. In the future this search will also be integrated in WEKA.</li>
+				<li>In the 'Tasks' panel, click the 'Add New' button to add new tasks. Insert the task id's as comma-separated values (e.g., '1,2,3,4,5'). Use <a href="search?type=task">search</a> to find interesting tasks and click the <i class="fa fa-list-ol"></i> icon to list the ID's. In the future this search will also be integrated in WEKA.</li>
 				<li>Add algorithms in the "Algorithm" panel.</li>
 				<li>Go to the "Run" tab, and click on the "Start" button. </li>
 				<li>The experiment will be executed, and if 'OpenML.org' was selected, also sent to OpenML.org. When the experiment is finished, the results can be inspected in the "Analyse" tab. </li>
 				<li>The runs will now appear on OpenML.org. You can follow their progress and check for errors under 'My runs'.</li>
-			</ol> 
+			</ol>
 			</div>
-      
+
       <h2 id="weka-start-cli">Quick Start CommandLine Interface</h2>
       The Command Line interface is useful for running experiments automatically on a server, without using a GUI.
       <ol>
@@ -52,10 +39,7 @@ password = YOUR_PASSWORD</pre>
 </li>
         <li>Execute the following command: <pre>java -cp OpenWeka.beta.jar openml.experiment.TaskBasedExperiment -T &lt;task_id&gt; -C &lt;classifier_classpath&gt; -- &lt;parameter_settings&gt;</pre></li>
         <li>For example, the following command will run Weka's J48 algorithm on Task 1: <pre>java -cp OpenWeka.beta.jar openml.experiment.TaskBasedExperiment -T 1 -C weka.classifiers.trees.J48</pre> </li>
-        <li>The following suffix will set some parameters of this classifier: <pre>-- -C 0.25 -M 2</pre></li>      
+        <li>The following suffix will set some parameters of this classifier: <pre>-- -C 0.25 -M 2</pre></li>
       </ol>
-			
+
 		  Please note that this is a beta version, which is under active development. Please report any bugs that you may encounter to <a href="mailto:j.n.van.rijn@liacs.leidenuniv.nl">j.n.van.rijn@liacs.leidenuniv.nl</a>.
-      
-	</div>
-      </div> <!-- end col-md-9 -->
