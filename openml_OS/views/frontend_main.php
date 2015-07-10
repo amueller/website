@@ -96,11 +96,16 @@
 
   <?php
     $section = "OpenML";
-    $materialcolor = "blue-600";
+    $materialcolor = "blue";
     $href = "";
+    $ch = "";
     $url = explode('/', $_SERVER['REQUEST_URI']);
     if(sizeof($url)>2){
-      if(strrpos($url[2], 'search') == 0 and strlen($url[2])>4){
+      if($url[1] == 'OpenML')
+        $ch = $url[2];
+      else
+        $ch = $url[1];
+      if(strpos($ch, 'search') === 0){
         if(isset($this->filtertype) and $this->filtertype){
             $section = str_replace('_',' ',ucfirst($this->filtertype));
             $href = "search?type=".$this->filtertype;
@@ -110,61 +115,61 @@
           $materialcolor = "blue-grey";
         }
       }
-      if($url[2]=='r' or $section=='Run'){
+      }
+      if($ch=='r' or $section=='Run'){
             $section = 'Run';
             $href = 'search?type=run';
             $materialcolor = "red";
           }
-      if($url[2]=='d' or $section=='Data'){
+      if($ch=='d' or $section=='Data'){
             $section = 'Data';
             $href = 'search?type=data';
             $materialcolor = "green";
           }
-      if($url[2]=='f' or $section=='Flow'){
+      if($ch=='f' or $section=='Flow'){
             $section = 'Flow';
             $href = 'search?type=flow';
             $materialcolor = "blue";
           }
-      if($url[2]=='t' or $section=='Task'){
+      if($ch=='t' or $section=='Task'){
             $section = 'Task';
             $href = 'search?type=task';
             $materialcolor = "orange-600";
           }
-      if($url[2]=='tt' or $section=='Task type'){
+      if($ch=='tt' or $section=='Task type'){
             $section = 'Task type';
             $href = 'search?type=tasktype';
             $materialcolor = "deep-orange";
           }
-      if($url[2]=='u' or $section=='User'){
+      if($ch=='u' or $section=='User'){
             $section = 'People';
             $materialcolor = "light-blue";
           }
-      if($url[2]=='a' or $section=='Measure'){
+      if($ch=='a' or $section=='Measure'){
             $section = 'Measure';
-            $href = $url[2];
+            $href = $ch;
             $materialcolor = "deep-purple";
           }
-      if(substr( $url[2], 0, 5 ) === "guide"){
+      if(substr( $ch, 0, 5 ) === "guide"){
             $section = 'Guide';
-            $href = $url[2];
+            $href = $ch;
             $materialcolor = "green";
           }
-      if($url[2]=='community'){
+      if($ch=='community'){
             $section = 'Forum';
-            $href = $url[2];
+            $href = $ch;
             $materialcolor = "purple";
           }
-      if($url[2]=='backend'){
+      if($ch=='backend'){
             $section = 'Backend';
-            $href = $url[2];
+            $href = $ch;
             $materialcolor = "red";
           }
-      if($url[2]=='register' or $url[2]=='profile' or $url[2]=='frontend' or $url[2]=='login' or $url[2]=='password_forgot'){
+      if($ch=='register' or $ch=='profile' or $ch=='frontend' or $ch=='login' or $ch=='password_forgot'){
             $section = 'OpenML';
-            $href = $url[2];
+            $href = $ch;
             $materialcolor = "blue";
           }
-    }
 
     $this->materialcolor = $materialcolor;
     $this->user = $this->ion_auth->user()->row();
