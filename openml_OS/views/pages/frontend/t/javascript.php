@@ -194,11 +194,13 @@ client.search({
 		}
 		if(typeof getEval(evals,evaluation_measure) !== 'undefined'){
 			var dat = Date.parse(run['date']);
-			var e = parseFloat(getEval(evals,evaluation_measure));
+			var e = getEval(evals,evaluation_measure);
+			if(e!== null){
+				e = parseFloat(e);
 			d[map[run['uploader']]].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: getEval(evals,'build_cpu_time')} );
 			if(d[0].length==0 || (higherIsBetter && e > d[0][d[0].length-1]['y']) || (!higherIsBetter && e < d[0][d[0].length-1]['y'])){
 				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: getEval(evals,'build_cpu_time')});
-			}
+			}}
 
 			if(!pairs.has(run['run_flow']['name']+e)){ //check if submission is new
 				pairs.add(run['run_flow']['name']+e);
@@ -224,7 +226,7 @@ client.search({
 	for(var i=0;i<usercount;i++){
 		options2.series[i] = {};
 		if(i==0){options2.series[i].type= 'line';}
-		options2.series[i].turboThreshold = 0;
+		options2.series[i].turboThreshold = 5000;
 		options2.series[i].name = names[i];
 		options2.series[i].data = d[i];
 		options2.series[i].color = colors[i%9];
@@ -232,8 +234,9 @@ client.search({
 		<?php if($this->record['type_id']!=6){ ?>
 		options2.series[i].point = {
                     events: {
-                        click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
-                    }
+                        //click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
+												click: function() { window.open('http://www.openml.org/r/' + this.r);}
+										}
                 };
 		<?php } ?>
 	}
@@ -396,8 +399,10 @@ client.search({
 			categoryMap[flow['name']]= flow['flow_id'];
 			c.push(flow['name']);
 		}
-		d.push({x: parseFloat(getEval(evals,evaluation_measure)), y: map[flow['name']], r: run['run_id'], u: run['uploader'], t: parseFloat(getEval(evals,'usercpu_time_millis_training'))/1000} );
-	}
+		var sc = getEval(evals,evaluation_measure);
+		if(sc !== null){
+		d.push({x: parseFloat(sc), y: map[flow['name']], r: run['run_id'], u: run['uploader'], t: parseFloat(getEval(evals,'usercpu_time_millis_training'))/1000} );
+	}}
 
 	options.yAxis.categories = c;
 	options.series[0].data = d;
@@ -412,7 +417,7 @@ client.search({
 
 function getEval(arr, value) {
 
-  var result  = arr.filter(function(o){return o.evaluation_measure == value;} );
+  var result  = arr.filter(function(o){return o.evaluation_measure.toLowerCase() == value.toLowerCase();} );
 
   return result ? (result[0] ? result[0]['value'] : null) : null; // or undefined
 
