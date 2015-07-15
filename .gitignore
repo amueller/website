@@ -1,2 +1,4 @@
 data/*
 !data/sql/
+openml_OS/config/BASE_CONFIG.php
+
