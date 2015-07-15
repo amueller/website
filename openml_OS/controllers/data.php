@@ -40,7 +40,7 @@ class Data extends CI_Controller {
   }
 
   function view($id,$name = 'undefined') {
-    if(BASE_URL == "http://openml.org" or BASE_URL == "http://www.openml.org"){
+    if(BASE_URL == "http://openml.org/" or BASE_URL == "http://www.openml.org/"){
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
