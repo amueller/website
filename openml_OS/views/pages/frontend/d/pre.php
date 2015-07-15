@@ -109,7 +109,8 @@ if (!function_exists('array_column')) {
 
 
 
-$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/gollum.js','js/libs/gollum.dialog.js','js/libs/gollum.placeholder.js','js/libs/gollum.editor.js');
+//$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
 $this->load_css = array('css/gollum.css');
 
 //Redirect to search if bad url
