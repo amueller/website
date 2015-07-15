@@ -1,4 +1,7 @@
 <?php
+
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+
 $this->initialMsgClass = '';
 $this->initialMsg = '';
 
