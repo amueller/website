@@ -1,4 +1,7 @@
 <?php
+$this->load_javascript = array('js/libs/processing.js','js/libs/dat.gui.min.js','js/libs/codemirror.js','js/libs/mysql.js');
+$this->load_css = array('css/codemirror.css','css/eclipse.css');
+
 $this->initialMsgClass = '';
 $this->initialMsg = '';
 

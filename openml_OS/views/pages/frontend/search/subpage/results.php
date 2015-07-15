@@ -246,10 +246,14 @@ function toggleResults( resultgroup ) {
 				<div class="teaser"><?php echo formatTeaser($r); ?> </div>
 				<div class="runStats">
 					<?php echo '<b>'.$rs['runs'].' runs</b>';
-					      if(array_key_exists('NumberOfInstances', $rs))    echo ' - '.$rs['NumberOfInstances'].' instances';
-					      if(array_key_exists('NumberOfFeatures', $rs))     echo ' - '.$rs['NumberOfFeatures'].' features';
-					      if(array_key_exists('NumberOfClasses', $rs))      echo ' - '.$rs['NumberOfClasses'].' classes';
-					      if(array_key_exists('NumberOfMissingValues', $rs))echo ' - '.$rs['NumberOfMissingValues'].' missing values';?></div>
+					 	if(array_key_exists('qualities', $rs)){
+								$q = $rs['qualities'];
+					      if(array_key_exists('NumberOfInstances', $q))    echo ' - '.$q['NumberOfInstances'].' instances';
+					      if(array_key_exists('NumberOfFeatures', $q))     echo ' - '.$q['NumberOfFeatures'].' features';
+					      if(array_key_exists('NumberOfClasses', $q))      echo ' - '.$q['NumberOfClasses'].' classes';
+					      if(array_key_exists('NumberOfMissingValues', $q))echo ' - '.$q['NumberOfMissingValues'].' missing values';
+							}?>
+								</div>
 		   <?php } elseif($type == 'task_type') { ?>
 				<div class="itemhead">
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>

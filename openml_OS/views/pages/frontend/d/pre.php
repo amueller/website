@@ -1,5 +1,8 @@
 <?php
 
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/gollum.js','js/libs/gollum.dialog.js','js/libs/gollum.placeholder.js','js/libs/gollum.editor.js');
+$this->load_css = array('css/gollum.css');
+
 //Redirect to search if bad url
 $this->activetab = 'overview';
 if(false === strpos($_SERVER['REQUEST_URI'],'/d/')) {

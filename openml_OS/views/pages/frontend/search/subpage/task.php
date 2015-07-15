@@ -43,7 +43,6 @@
                 array('match' => array('type' => 'estimation_procedure')),
                 array('match' => array('task_type' => $this->filters['tasktype.tt_id'])),
             );
-            print_r($p);
             $results = $this->searchclient->search($p);
             $alltasks = $results['hits']['hits'];
             foreach($alltasks as $h){?>

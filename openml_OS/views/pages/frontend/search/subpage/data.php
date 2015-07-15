@@ -6,8 +6,8 @@
   foreach($fs as $f => $v){
 ?>
   <li>
-      <input type="text" class="form-control floating-label" id="<?php echo $f; ?>" name="<?php echo $f; ?>" data-hint="<?php $p['id'] = $f; echo $this->searchclient->get($p)['_source']['description'];?>"
-       value="<?php if(array_key_exists($f,$this->filters)){ echo $this->filters[$f];}?>" placeholder="<?php echo $v; ?>">
+      <input type="text" class="form-control floating-label" id="qualities.<?php echo $f; ?>" name="qualities.<?php echo $f; ?>" data-hint="<?php $p['id'] = $f; echo $this->searchclient->get($p)['_source']['description'];?>"
+       value="<?php if(array_key_exists("qualities".$f,$this->filters)){ echo $this->filters["qualities".$f];}?>" placeholder="<?php echo $v; ?>">
   </li>
 <?php } ?>
 <li>

@@ -153,6 +153,7 @@ $(document).ready(function()
       query = query.replace(" "+type+":",'');
       query = query.replace(type+":",'');
     }
+    console.log(query);
     $("#openmlsearch").val(query);
   }
 
@@ -173,11 +174,11 @@ $(document).ready(function()
     $("#openmlsearch").val(newQuery);
   }
 
-  $(document).on("change, keyup", "#NumberOfInstances", function() { updateQuery("NumberOfInstances"); });
-  $(document).on("change, keyup", "#NumberOfFeatures", function() { updateQuery("NumberOfFeatures"); });
-  $(document).on("change, keyup", "#NumberOfMissingValues", function() { updateQuery("NumberOfMissingValues"); });
-  $(document).on("change, keyup", "#NumberOfClasses", function() { updateQuery("NumberOfClasses"); });
-  $(document).on("change, keyup", "#DefaultAccuracy", function() { updateQuery("DefaultAccuracy"); });
+  $(document).on("change, keyup", "#qualities\\.NumberOfInstances", function() { updateQuery("qualities.NumberOfInstances"); });
+  $(document).on("change, keyup", "#qualities\\.NumberOfFeatures", function() { updateQuery("qualities.NumberOfFeatures"); });
+  $(document).on("change, keyup", "#qualities\\.NumberOfMissingValues", function() { updateQuery("qualities.NumberOfMissingValues"); });
+  $(document).on("change, keyup", "#qualities\\.NumberOfClasses", function() { updateQuery("qualities.NumberOfClasses"); });
+  $(document).on("change, keyup", "#qualities\\.DefaultAccuracy", function() { updateQuery("qualities.DefaultAccuracy"); });
 
   $('#NumberOfInstances').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
   $('#NumberOfFeatures').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});

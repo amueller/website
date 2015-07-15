@@ -28,144 +28,122 @@
         <meta property="og:description" content="OpenML: exploring machine learning better, together. An open science platform for machine learning."/>
         <meta property="og:type" content="Science"/>
         <meta name="viewport" content="width=device-width">
+        <link rel="shortcut icon" href="img/favicon.ico">
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
+        <script type="text/javascript"><?php echo script();?></script>
+
         <link rel="stylesheet" href="css/pygments-manni.css">
-        <link rel="stylesheet" href="css/gollum.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link href="css/material-fullpalette.min.css" rel="stylesheet">
-        <link href="css/ripples.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/material-fullpalette.min.css">
         <link rel="stylesheet" href="css/expdb.css">
         <link rel="stylesheet" href="css/docs.css">
         <link rel="stylesheet" href="css/prettify.css">
-        <link rel="stylesheet" href="css/codemirror.css">
-        <link rel="stylesheet" href="css/eclipse.css">
         <link rel="stylesheet" href="css/jquery-ui.css" type="text/css"/>
-        <link rel="stylesheet" href="css/jquery.dataTables.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dataTables.colvis.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dataTables.colvis.jqueryui.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dataTables.responsive.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dataTables.scroller.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dataTables.tableTools.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/MyFontsWebfontsKit.css">
         <link rel="stylesheet" href="css/bootstrap-select.css">
-        <link rel="stylesheet" href="css/bootstrap-slider.css">
-        <link rel="shortcut icon" href="img/favicon.ico">
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
-  <link href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="css/highlight.css">
-	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery.validate.js"></script>
-        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js" ></script>
-        <script type="text/javascript" src="js/libs/processing.js" ></script>
-        <script type="text/javascript" src="js/libs/dat.gui.min.js" ></script>
-        <script type="text/javascript" src="js/libs/codemirror.js" ></script>
-        <script type="text/javascript" src="js/libs/mysql.js" ></script>
-        <script type="text/javascript" src="js/libs/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="js/libs/dataTables.tableTools.min.js"></script>
-        <script type="text/javascript" src="js/libs/dataTables.scroller.min.js"></script>
-        <script type="text/javascript" src="js/libs/dataTables.responsive.min.js"></script>
-        <script type="text/javascript" src="js/libs/dataTables.colVis.min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery.form.js"></script>
-        <script type="text/javascript" src="js/libs/jquery.sharrre.js"></script>
-        <script type="text/javascript" src="js/libs/bootstrap-select.js"></script>
-        <script type="text/javascript" src="js/libs/bootstrap-slider.js" ></script>
-        <script type="text/javascript" src="js/libs/rainbowvis.js"></script>
-        <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
-        <script src="js/libs/mousetrap.min.js"></script>
-        <script src="js/libs/gollum.js"></script>
-        <script src="js/libs/gollum.dialog.js"></script>
-        <script src="js/libs/gollum.placeholder.js"></script>
-        <script src="js/libs/gollum.editor.js"></script>
-        <script type="text/javascript" src="js/openml.js"></script>
+      	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" rel="stylesheet" type="text/css">
+        <?php if( isset( $this->load_css ) ): foreach( $this->load_css as $j ): ?>
+        <link rel="stylesheet" href="<?php echo $j; ?>"></script>
+        <?php endforeach; endif;?>
+
+        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+        <script type="text/javascript" src="js/openml.js" async></script>
+	      <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js" async></script>
+        <script type="text/javascript" src="js/libs/jquery.validate.js" async></script>
+        <script type="text/javascript" src="js/libs/jquery.form.js" async></script>
+        <script type="text/javascript" src="js/libs/bootstrap-select.js" async></script>
+        <script type="text/javascript" src="js/libs/bootstrap-slider.js" async></script>
+        <script type="text/javascript" src="js/libs/mousetrap.min.js" async></script>
         <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
-        <script type="text/javascript" src="<?php echo $j; ?>"></script>
+        <script type="text/javascript" src="<?php echo $j; ?>" async></script>
         <?php endforeach; endif;
 	       $this->endjs = '';
 	        ?>
-
         <!-- page dependent javascript code -->
-        <script type="text/javascript"><?php echo script();?></script>
+        <script type="text/javascript" src="js/libs/bootstrap.min.js" async></script>
+        <script type="text/javascript" src="js/material.min.js" async></script>
+        <script type="text/javascript" src="js/plugins.js" async></script>
+        <script type="text/javascript" src="js/application.js" async></script>
     </head>
-    <body onresize="try{updateCanvasDimensions()}catch(err){}">
-        <!--[if lt IE 7]>
-        <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
-        <![endif]-->
-
+    <body>
   <?php
-    $section = "OpenML";
-    $materialcolor = "blue";
-    $href = "";
-    $ch = "";
-    $url = explode('/', $_SERVER['REQUEST_URI']);
-    if(sizeof($url)>2){
-      if($url[1] == 'OpenML')
-        $ch = $url[2];
-      else
-        $ch = $url[1];
-      if(strpos($ch, 'search') === 0){
-        if(isset($this->filtertype) and $this->filtertype){
-            $section = str_replace('_',' ',ucfirst($this->filtertype));
-            $href = "search?type=".$this->filtertype;
-          }
-        else{
-          $section = 'Search';
-          $materialcolor = "blue-grey";
+      $section = "OpenML";
+      $materialcolor = "blue";
+      $href = "";
+      $url = explode('/', $_SERVER['REQUEST_URI']);
+      $ch = $url[1];
+      if(sizeof($url)>2){
+        if($url[1] == 'OpenML')
+          $ch = $url[2];
         }
-      }
-      }
+        if(strpos($ch, 'search') === 0){
+          if(isset($this->filtertype) and $this->filtertype){
+              $section = str_replace('_',' ',ucfirst($this->filtertype));
+              $href = "search?type=".$this->filtertype;
+            }
+          else{
+            $section = 'Search';
+            $materialcolor = "blue";
+          }
+        }
       if($ch=='r' or $section=='Run'){
             $section = 'Run';
             $href = 'search?type=run';
             $materialcolor = "red";
           }
-      if($ch=='d' or $section=='Data'){
+      elseif($ch=='d' or $section=='Data'){
             $section = 'Data';
             $href = 'search?type=data';
             $materialcolor = "green";
           }
-      if($ch=='f' or $section=='Flow'){
+      elseif($ch=='f' or $section=='Flow'){
             $section = 'Flow';
             $href = 'search?type=flow';
             $materialcolor = "blue";
           }
-      if($ch=='t' or $section=='Task'){
+      elseif($ch=='t' or $section=='Task'){
             $section = 'Task';
             $href = 'search?type=task';
             $materialcolor = "orange-600";
           }
-      if($ch=='tt' or $section=='Task type'){
+      elseif($ch=='tt' or $section=='Task type'){
             $section = 'Task type';
             $href = 'search?type=tasktype';
             $materialcolor = "deep-orange";
           }
-      if($ch=='u' or $section=='User'){
+      elseif($ch=='u' or $section=='User'){
             $section = 'People';
             $materialcolor = "light-blue";
           }
-      if($ch=='a' or $section=='Measure'){
+      elseif($ch=='a' or $section=='Measure'){
             $section = 'Measure';
             $href = $ch;
             $materialcolor = "deep-purple";
           }
-      if(substr( $ch, 0, 5 ) === "guide"){
+      elseif(substr( $ch, 0, 5 ) === "guide"){
             $section = 'Guide';
             $href = $ch;
             $materialcolor = "green";
           }
-      if($ch=='community'){
+      elseif($ch=='community'){
             $section = 'Forum';
             $href = $ch;
             $materialcolor = "purple";
           }
-      if($ch=='backend'){
+      elseif($ch=='backend'){
             $section = 'Backend';
             $href = $ch;
             $materialcolor = "red";
           }
-      if($ch=='register' or $ch=='profile' or $ch=='frontend' or $ch=='login' or $ch=='password_forgot'){
+      elseif($ch=='query'){
+            $section = 'Query';
+            $href = $ch;
+            $materialcolor = "blue";
+          }
+      elseif($ch=='register' or $ch=='profile' or $ch=='frontend' or $ch=='login' or $ch=='password_forgot'){
             $section = 'OpenML';
             $href = $ch;
             $materialcolor = "blue";
@@ -301,9 +279,7 @@
           <?php echo body(); ?>
         </div>
 
-        <script src="js/libs/bootstrap.min.js"></script>
-        <script src="js/ripples.min.js"></script>
-        <script src="js/material.min.js"></script>
+	      <script type="text/javascript">$('.tip').tooltip();</script>
         <script>
             $(document).ready(function() {
                 // This command is used to initialize some elements and make them work properly
@@ -311,12 +287,6 @@
                 $.material.init();
             });
         </script>
-        <script src="js/plugins.js"></script>
-        <script src="js/application.js"></script>
-	<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
-	<script type="text/javascript" src="http://code.highcharts.com/highcharts-more.js"></script>
-	<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
-	<script type="text/javascript">$('.tip').tooltip();</script>
         <script>
 			$(document).ready(function(){
 				$('#popover').popover({
