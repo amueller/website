@@ -51,7 +51,7 @@
 
         <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/openml.js" async></script>
+        <script type="text/javascript" src="js/openml.js"></script>
         <script type="text/javascript" src="js/libs/jquery.validate.js" async></script>
         <script type="text/javascript" src="js/libs/jquery.form.js" async></script>
         <script type="text/javascript" src="js/libs/bootstrap-select.js" async></script>

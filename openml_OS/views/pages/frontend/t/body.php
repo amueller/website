@@ -19,9 +19,6 @@
       <div class="tab-pane" id="results">
         <?php if( isset($this->task_id) ) { subpage('task_results'); } ?>
       </div> <!-- end task tab -->
-      <div class="tab-pane" id="discuss">
-        <?php if( isset($this->task_id) ) { subpage('task_discuss'); } ?>
-      </div> <!-- end task tab -->
 
     </div> <!-- end tabs content -->
 
@@ -34,7 +31,6 @@
         <li><a href="search?q=+run_task.task_id%3A<?php echo $this->task_id; ?>&type=run">All runs</a></li>
         <li><a href="#results" data-toggle="tab">Results</a></li>
         <li><a href="#people" data-toggle="tab">Leaderboard</a></li>
-        <li><a href="#discuss" data-toggle="tab">Discuss</a></li>
       </ul>
     </li>
     <li class="panel guidechapter">
