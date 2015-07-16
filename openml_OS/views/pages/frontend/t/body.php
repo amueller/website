@@ -1,27 +1,3 @@
-<div class="container-fluid topborder endless openmlsectioninfo">
-  <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
-
-    <div class="tab-content">
-
-      <div class="tab-pane <?php if( isset($this->id) ) echo 'active'; ?>" id="typedetail">
-        <?php
-        if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type')) {
-        subpage('tasktype');
-        }?>
-      </div> <!-- end task_type tab -->
-
-      <div class="tab-pane active" id="detail">
-        <?php if( isset($this->task_id) ) { subpage('task'); } ?>
-      </div> <!-- end task tab -->
-      <div class="tab-pane" id="people">
-        <?php if( isset($this->task_id) ) { subpage('task_leaderboard'); } ?>
-      </div> <!-- end task tab -->
-      <div class="tab-pane" id="results">
-        <?php if( isset($this->task_id) ) { subpage('task_results'); } ?>
-      </div> <!-- end task tab -->
-
-    </div> <!-- end tabs content -->
-
 <div class="submenu">
   <ul class="sidenav nav" id="accordeon">
     <li class="panel guidechapter">
@@ -53,6 +29,30 @@
     </li>
   </ul>
 </div>
+
+<div class="container-fluid topborder endless openmlsectioninfo">
+  <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
+    <div class="tab-content">
+
+      <div class="tab-pane <?php if( isset($this->id) ) echo 'active'; ?>" id="typedetail">
+        <?php
+        if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type')) {
+        subpage('tasktype');
+        }?>
+      </div> <!-- end task_type tab -->
+
+      <div class="tab-pane active" id="detail">
+        <?php if( isset($this->task_id) ) { subpage('task'); } ?>
+      </div> <!-- end task tab -->
+      <div class="tab-pane" id="people">
+        <?php if( isset($this->task_id) ) { subpage('task_leaderboard'); } ?>
+      </div> <!-- end task tab -->
+      <div class="tab-pane" id="results">
+        <?php if( isset($this->task_id) ) { subpage('task_results'); } ?>
+      </div> <!-- end task tab -->
+
+    </div> <!-- end tabs content -->
 
 </div> <!-- end tabs content -->
 </div> <!-- end container -->

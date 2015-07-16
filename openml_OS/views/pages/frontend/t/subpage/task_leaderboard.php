@@ -32,11 +32,11 @@
 
       <h3>Timeline</h3>
 
-			<div class="col-sm-12 panel" id="data_result_time">Plotting contribution timeline <i class="fa fa-spinner fa-spin"></i></div>
+			<div class="col-sm-12 panel reflow-chart" id="data_result_time">Plotting contribution timeline <i class="fa fa-spinner fa-spin"></i></div>
 
       <h3>Leaderboard</h3>
 
-      <div class='table-responsive panel'><table id="leaderboard" class='table table-striped'>
+      <div class='table-responsive panel reflow-table'><table id="leaderboard" class='table table-striped'>
         <thead>
           <tr>
             <th>Rank</th>

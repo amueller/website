@@ -34,9 +34,9 @@
       <h3><?php echo $this->record['runcount']; ?> Runs</h3>
       <div class="col-xs-12 panel">
 
-			<div id="data_result_visualize">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
+			<div id="data_result_visualize" class="reflow-chart">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
 
-			<div class="table-responsive">
+			<div class="table-responsive reflow-table">
 				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
 					<?php echo generate_table(
 								array('img_open' => '',

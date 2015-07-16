@@ -126,6 +126,17 @@ $(function() {
 
 $(document).ready(function()
 {
+  //reflow hidden charts and tables when they become visible
+  jQuery(document).on( 'shown.bs.tab', 'a[data-toggle="tab"]', function (e) { // on tab selection event
+    jQuery( ".reflow-chart" ).each(function() { // target each element with the .contains-chart class
+        var chart = jQuery(this).highcharts(); // target the chart itself
+        if(chart) chart.reflow() // reflow that chart
+    });
+    jQuery( ".reflow-table" ).each(function() { // target each element with the .contains-chart classt
+        $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+    });
+  });
+
   function updateQuery(type)
   {
     var constr = '';
