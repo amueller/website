@@ -643,7 +643,6 @@ select{
   font-family: "RobotoDraft","Roboto",sans-serif;
   font-size: 14px;
   padding-top: 20px;
-  padding-left: 30px;
   padding-bottom:50px;
     overflow-y: auto;
     overflow-x: visible;
@@ -2603,6 +2602,16 @@ svg:not(:root){
   text-align: right;
 }
 }
+
+@media screen and (max-width: 768px) {
+
+.openmlsectioninfo{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+}
+
+
 
 /* Change the docs' brand */
 .brand {
