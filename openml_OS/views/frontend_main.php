@@ -52,6 +52,7 @@
         <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/openml.js"></script>
+        <script type="text/javascript" src="js/material.min.js"></script>
         <script type="text/javascript" src="js/libs/jquery.validate.js" async></script>
         <script type="text/javascript" src="js/libs/jquery.form.js" async></script>
         <script type="text/javascript" src="js/libs/bootstrap-select.js" async></script>
@@ -64,9 +65,7 @@
 	        ?>
         <!-- page dependent javascript code -->
         <script type="text/javascript" src="js/libs/bootstrap.min.js" async></script>
-        <script type="text/javascript" src="js/material.min.js" async></script>
         <script type="text/javascript" src="js/plugins.js" async></script>
-        <script type="text/javascript" src="js/application.js" async></script>
     </head>
     <body>
   <?php
@@ -280,6 +279,7 @@
         </div>
 
 	      <script type="text/javascript">$('.tip').tooltip();</script>
+        <script type="text/javascript" src="js/application.js"></script>
         <script>
             $(document).ready(function() {
                 // This command is used to initialize some elements and make them work properly
