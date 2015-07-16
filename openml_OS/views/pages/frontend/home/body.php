@@ -171,17 +171,31 @@
 
 
 <script>
+//client.search({ index: 'openml', searchType: 'count', body: { facets: { count_by_type: { terms: { field: '_type' } } } } }, function (error, response) {
+//  var res = {};
+//  for (v in response['facets']['count_by_type']['terms']) {
+//    res[v['term']] = v['count'];
+//  }
+//  $('#data_count').html(res['data']);
+//  $('#task_count').html(res['task']);
+//  $('#flow_count').html(res['flow']);
+//  $('#run_count').html(res['run']);
+//});
+//  }
+
   (function(){
     function update(){
-	client.search({ index: 'openml', searchType: 'count', body: { facets: { count_by_type: { terms: { field: '_type' } } } } }, function (error, response) {
-    var res = {};
-    for (v in response['facets']['count_by_type']['terms']) {
-      res[v['term']] = v['count'];
-    }
-	  $('#data_count').html(res['data']);
-    $('#task_count').html(res['task']);
-    $('#flow_count').html(res['flow']);
-    $('#run_count').html(res['run']);
+	client.search({ index: 'openml', searchType: 'count' }, function (error, response) {
+	  $('#data_count').html(response.count);
+	});
+	client.count({ index: 'openml', type: 'task' }, function (error, response) {
+	  $('#task_count').html(response.count);
+	});
+	client.count({ index: 'openml', type: 'flow' }, function (error, response) {
+	  $('#flow_count').html(response.count);
+	});
+	client.count({ index: 'openml', type: 'run' }, function (error, response) {
+	  $('#run_count').html(response.count);
 	});
     }
     update();
