@@ -8,10 +8,9 @@
      </div>
      <div class="tab-pane <?php if($this->activetab == 'update') echo 'active'; ?>" id="data_update">
        <?php if($this->activetab == 'update') subpage('update'); ?>
-     <div>
+     </div>
 
      </div> <!-- end tabs content -->
-    </div> <!-- end col-10 -->
 
     <div class="submenu">
       <ul class="sidenav nav" id="accordeon">

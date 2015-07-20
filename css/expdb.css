@@ -1698,6 +1698,18 @@ hr.hardSmall {
   margin-right: 5px;
 }
 
+#disqus_thread {
+     position: relative;
+}
+#disqus_thread:after {
+     content: "";
+     display: block;
+     height: 55px;
+     width: 100%;
+     position: absolute;
+     bottom: 0;
+     background: white;
+}
 
 html, body {
    height: 100%;
@@ -1734,7 +1746,7 @@ html, body {
         height: 100vh;
         /* Negative indent footer by it's height */
         margin: 0 auto 0px;
-        margin-top: 55px;
+        margin-top: 50px;
       }
 
       /* Set the fixed height of the footer here */
@@ -2057,7 +2069,6 @@ html, body {
   display:inline-block;
   color: #212121;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -2086,6 +2097,10 @@ html, body {
   padding-left:24px;
 }
 
+.postmessage{
+  padding-top:10px;
+  padding-left:10px;
+}
 
 .searchresult  .runStats{
   padding-top:0px;

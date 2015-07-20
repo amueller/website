@@ -127,8 +127,8 @@
             $href = $ch;
             $materialcolor = "green";
           }
-      elseif($ch=='community'){
-            $section = 'Forum';
+      elseif($ch=='discuss' || $ch=='discuss_new'){
+            $section = 'Discuss';
             $href = $ch;
             $materialcolor = "purple";
           }
@@ -245,7 +245,7 @@
                   <li <?php echo ($section == 'Measure' ?  'class="topactive"' : '');?>><a href="search?type=measure<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconpurple"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i> Measures<span id="measurecounter" class="counter"></span></a></li>
                   <li <?php echo ($section == 'People' ?  'class="topactive"' : '');?>><a href="search?type=user<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblueacc"><i class="fa fa-fw fa-lg fa-users"></i> People<span id="usercounter" class="counter"></span></a></li>
                   <li <?php echo ($section == 'Guide' ?  'class="topactive"' : '');?>><a href="guide" class="icongreenacc"><i class="fa fa-fw fa-lg fa-leanpub"></i> Guide</a></li>
-                  <li <?php echo ($section == 'Forum' ?  'class="topactive"' : '');?>><a href="community" class="iconpurple"><i class="fa fa-fw fa-lg fa-comments"></i> Discussions</a></li>
+                  <li <?php echo ($section == 'Discussions' ?  'class="topactive"' : '');?>><a href="discuss" class="iconpurple"><i class="fa fa-fw fa-lg fa-comments"></i> Discuss</a></li>
                   <li <?php echo ($section == 'Blog' ?  'class="topactive"' : '');?>><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
                   <!--<li <?php echo ($section == 'Search' ?  'class="topactive"' : '');?>><a href="search" class="icongray"><i class="fa fa-fw fa-lg fa-search"></i> Search</a></li>-->
             </ul>

@@ -7,7 +7,7 @@ function formatTeaser($r){
 		$teaser = truncate(trim(preg_replace('/\s+/',' ',preg_replace('/^\*{2,}.*/m', '', $r['_source']['description']))));
 	if($teaser == '')
 		$teaser = 'No data.';
-	return $teaser;
+	return strip_tags($teaser);
 }
 
 function truncate($string,$length=200,$append="&hellip;") {
@@ -267,8 +267,12 @@ function toggleResults( resultgroup ) {
 				<div class="itemhead">
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
 		   		<a href="<?php echo $this->measures[$rs['type']].'/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a></div>
-				<div class="teaser"><?php echo formatTeaser($r); ?></div>
-				<div class="runStats"><?php echo str_replace('_',' ',$rs['type']); ?></div>
+				<div class="teaser">
+					<?php echo formatTeaser($r); ?>
+				</div>
+				<div class="runStats">
+					<?php echo str_replace('_',' ',$rs['type']); ?>
+				</div>
 
 		   <?php } elseif($type == 'task') { ?>
 				<div class="itemheadfull">

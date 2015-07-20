@@ -45,22 +45,13 @@ $route['api'] = 'rest_api';
 $route['api/:any'] = 'rest_api/$1';
 
 $frontend_pages = array(
-          'community',
-          'community_category',
-          'community_create',
-          'community_search',
-          'community_thread',
           'detail',
           'developers',
           'home',
           'learn_sql',
           'login',
           'overview',
-          'community',
-          'community_category',
-          'community_create',
-          'community_search',
-          'community_thread',
+          'discuss',
           'detail',
           'developers',
           'home',
