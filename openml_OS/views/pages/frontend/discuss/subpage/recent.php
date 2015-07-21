@@ -28,15 +28,16 @@
       ?>
       <div class="searchresult panel"><div class="itemheadfull">
        <?php if($ttype == 'general' and $t){ ?>
-         <i><img src="<?php echo $authimage;?>" width="20" height="20" class="img-circle" /></i>
-         <a href="discuss/tid/<?php echo $t->id; ?>" style="margin-left:10px;"><?php echo stripslashes( teaser( $t->title, 100 ) );?></a>
-         <?php echo $authname; ?>
+         <i><img src="<?php echo $authimage;?>" width="30" height="30" class="img-circle" /></i>
+         <a href="discuss/tid/<?php echo $t->id; ?>"><?php echo stripslashes( teaser( $t->title, 100 ) );?></a>
        <?php } else { ?>
          <i class="<?php echo $this->icons[$this->category_code[$thread->category]];?>"></i>
          <a href="<?php echo $thread->link; ?>"><?php echo $thread->title;?></a>
        <?php } ?>
         (<?php echo $thread->posts;?> comments)
        <span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->createdAt)));?>
+       <?php if($ttype == 'general' and $t){ echo ' by '.$authname; } ?>
+       </span>
      </div>
      <div class="postmessage" id="postmessage_<?php echo $ttype; ?>_<?php echo $tid; ?>">
        <?php
@@ -76,10 +77,9 @@
           ?>
         <div class="searchresult panel" >
           <div class="itemheadfull">
+          <i><img src="<?php echo $authimage;?>" width="30" height="30" class="img-circle" style="margin-right:-15px;" /></i>
           <a href="discuss/tid/<?php echo $thread->id; ?>" style="margin-left:10px;"><?php echo stripslashes( teaser( $thread->title, 100 ) );?></a>
-          <i><img src="<?php echo $authimage;?>" width="20" height="20" class="img-circle" style="margin-left:20px;margin-right:-15px;" /></i>
-          <?php echo $authname; ?>
-          <span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->post_date)));?>
+          <span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->post_date))).' by '.$authname; ?>
           </span></div>
           <div class="postmessage">
             <?php
