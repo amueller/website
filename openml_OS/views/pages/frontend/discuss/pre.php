@@ -35,7 +35,7 @@ $this->body = array(
 	'id' => 'body',
 	'type' => 'text',
 	'rows' => '5',
-  'style'       => 'margin-top:20px;',
+  'style'       => 'margin-top:20px;padding-top: 5px',
 	'placeholder' => 'Question, comment, feature request,...'
 );
 

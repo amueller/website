@@ -13,7 +13,7 @@ if ($this->form_validation->run() == true) {
 		'body' => gp('body'),
 		'post_date' => now(),
 		'author_id' => $this->ion_auth->user()->row()->id,
-		'category_id' => 'General')
+		'category_id' => 1
 	);
 
 	$id = $this->Thread->insert( $thread );
