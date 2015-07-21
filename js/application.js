@@ -9,7 +9,7 @@
 
 
     // make code pretty
-    window.prettyPrint && prettyPrint()  
+    window.prettyPrint && prettyPrint()
 
     $('.bs-docs-container [href=#]').click(function (e) {
       e.preventDefault()
@@ -135,3 +135,61 @@ $.ajaxTransport('jsonpi', function(opts, originalOptions, jqXHR) {
 })
 
 }(window.jQuery)
+
+
+$(document).ready(function(){
+  $('#popover').popover({
+      trigger: 'click',
+      placement: 'bottom',
+      html: true,
+      container: 'body',
+      animation: 'false',
+      content: function() { return $('#openmllinks').html(); }
+  });
+  $('#popover2').popover({
+      trigger: 'click',
+      placement: 'bottom',
+      html: true,
+      container: 'body',
+      animation: 'false',
+      content: $('#sociallinks')
+  });
+  $('#popover').on('shown.bs.popover', function () {
+     $('.popover').css('left','inherit')
+     $('.popover').css('right','10px')
+     $('.arrow').css('left','inherit')
+     $('.arrow').css('right','10px')
+  })
+  $('#popover2').on('shown.bs.popover', function () {
+     $('.popover').css('left','inherit')
+     $('.popover').css('right','10px')
+     $('.arrow').css('left','inherit')
+     $('.arrow').css('right','55px')
+     $('#sociallinks').css('display','block')
+  })
+  $('#popover2').on('hide.bs.popover', function () {
+     $('body').append($('#sociallinks'))
+     $('#sociallinks').css('display','none')
+  })
+});
+$(document).click(function (e) {
+    $('#popover').each(function () {
+  if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+      if ($(this).data('bs.popover').tip().hasClass('in')) {
+    $(this).popover('toggle');
+      }
+      return;
+  }
+    });
+    $('#popover2').each(function () {
+  if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+      if ($(this).data('bs.popover').tip().hasClass('in')) {
+    $(this).popover('toggle');
+      }
+      return;
+  }
+    });
+});
+$('body').on('hidden.bs.modal', '.modal', function () {
+  $(this).removeData('bs.modal');
+});
