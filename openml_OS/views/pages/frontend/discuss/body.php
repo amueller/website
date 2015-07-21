@@ -10,7 +10,7 @@
     <?php subpage('new'); ?>
   </div>
   <div class="tab-pane <?php if($this->activetab == 'thread') echo 'active'; ?>" id="thread">
-    <?php subpage('thread'); ?>
+    <?php if($this->thread) subpage('thread'); ?>
   </div>
 
   </div> <!-- end tabs content -->

@@ -11,13 +11,46 @@
     //print_r($results);
     // parse the desired JSON data into HTML
     $threads = $results->response;
-    foreach ($threads as $thread) { ?>
+    foreach ($threads as $thread) {
+       $ttype = $this->category_code[$thread->category];
+       $tid = end(explode('/', $thread->link));
+       $message = "Could not retrieve message";
+       if($ttype == 'general'){
+         $t = $this->Thread->getById( $tid );
+         if($t){
+           $message = nl2br( stripslashes( $t->body ) );
+           $title = nl2br( stripslashes( $t->title ) );
+           $auth = $this->Author->getById( $t->author_id );
+           $authname = user_display_text( $author );
+           $authimage = htmlentities( authorImage( $author->image ) );
+         }
+       }
+      ?>
       <div class="searchresult panel"><div class="itemheadfull">
-       <i class="<?php echo $this->icons[$this->category_code[$thread->category]];?>"></i>
-       <a href="<?php echo $thread->link; ?>"><?php echo $thread->title;?></a> (<?php echo $thread->posts;?> comments)
+       <?php if($ttype == 'general'){ ?>
+         <i><img src="<?php echo $authimage;?>" width="40" height="40" class="img-circle" /></i>
+         <?php echo $authname; ?>
+       <?php } else { ?>
+         <i class="<?php echo $this->icons[$this->category_code[$thread->category]];?>"></i>
+         <a href="<?php echo $thread->link; ?>"><?php echo $thread->title;?></a>
+       <?php } ?>
+        (<?php echo $thread->posts;?> comments)
        <span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->createdAt)));?>
-       Message: <?php echo 'Type '.$this->category_code[$thread->category].' id '.end(explode('/', $thread->link));?>
-     </div></div>
+     </div>
+     <div class="postmessage" id="postmessage_<?php echo $ttype; ?>_<?php echo $tid; ?>">
+       <?php
+           if($ttype == 'general'){
+             echo $message;
+           } else {?>
+             <script>
+             $(function() {
+             client.get({index:'openml',type:'<?php echo $ttype; ?>',id:<?php echo $tid; ?>,fields:'description'}, function (error, response) {
+              $('#postmessage_<?php echo $ttype; ?>_<?php echo $tid; ?>').html(response.fields.description[0].replace(/(?:\r\n|\r|\n)/g, ' ').substr(0,150) + " ...");
+            });});
+            </script>
+     <?php } ?>
+     </div>
+   </div>
     <?php }
   ?>
 
@@ -45,8 +78,7 @@
 
 	<?php foreach( $this->categories as $category ):?>
     <div class="topselectors">
-    <a type="button" class="btn btn-default loginfirst" style="float:right; margin-left:10px;" href="frontend/page/community_create/cid/<?php echo $category->id;?>"><i class="fa fa-fw fa-edit"></i> New Topic</a>
-    <a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="frontend/page/community_category/cid/<?php echo $category->id;?>"><i class="fa fa-fw fa-list-ul"></i> View all</a>
+    <a type="button" class="btn btn-default loginfirst" style="float:right; margin-left:10px;" href="#new" data-toggle="tab"><i class="fa fa-fw fa-edit"></i> New Topic</a>
     <div class="searchstats"><?php echo $category->title; ?> (<?php echo isset( $this->threadsPerCategory[$category->id] ) ? $this->threadsPerCategory[$category->id]->threads : '0'; ?>)</div>
     </div>
 
