@@ -29,7 +29,7 @@
       <div class="searchresult panel"><div class="itemheadfull">
        <?php if($ttype == 'general' and $t){ ?>
          <i><img src="<?php echo $authimage;?>" width="20" height="20" class="img-circle" /></i>
-         <a href="discuss/tid/<?php echo $thread->id; ?>" style="margin-left:10px;"><?php echo stripslashes( teaser( $thread->title, 100 ) );?></a>
+         <a href="discuss/tid/<?php echo $t->id; ?>" style="margin-left:10px;"><?php echo stripslashes( teaser( $t->title, 100 ) );?></a>
          <?php echo $authname; ?>
        <?php } else { ?>
          <i class="<?php echo $this->icons[$this->category_code[$thread->category]];?>"></i>
