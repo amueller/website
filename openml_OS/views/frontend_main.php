@@ -46,6 +46,7 @@
         <?php endforeach; endif;?>
 
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
         <script type="text/javascript" src="js/libs/bootstrap.min.js"></script>
@@ -61,7 +62,6 @@
         <script>
           [
             'js/material.min.js',
-            'js/libs/modernizr-2.5.3-respond-1.1.0.min.js',
           ].forEach(function(src) {
             var script = document.createElement('script');
             script.src = src;
