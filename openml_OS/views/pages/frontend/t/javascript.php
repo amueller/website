@@ -109,7 +109,7 @@ options2 = {
 	        text: 'every point is a run, click for details'
 	    },
 	    xAxis: {
-		type: 'datetime',
+								type: 'datetime',
                 title: {
                     text: 'Date'
                 }
@@ -193,7 +193,7 @@ client.search({
 				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: Infinity, entries: 0, highRank: Infinity});
 		}
 		if(typeof getEval(evals,evaluation_measure) !== 'undefined'){
-			var dat = Date.parse(run['date']);
+			var dat = Date.parse(run['date'].replace(" ", "T"));
 			var e = getEval(evals,evaluation_measure);
 			if(e!== null){
 				e = parseFloat(e);
@@ -248,7 +248,6 @@ client.search({
 });
 }
 function leaderboard(data){
-	console.log(data);
 	$('#leaderboard').dataTable( {
 		"processing": true,
 		"scrollY": "600px",

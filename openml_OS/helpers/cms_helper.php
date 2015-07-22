@@ -23,6 +23,7 @@ function loadpage($page = false,$display = FALSE,$section = 'body') {
 function body(){$dq = &get_instance(); return isset($dq->page_body)?$dq->page_body:$dq->page_body = loadpage($dq->page);}
 function menu(){$dq = &get_instance(); return isset($dq->menu)?$dq->menu:$dq->menu = loadpage($dq->page,FALSE,'menu');}
 function script(){$dq = &get_instance(); return isset($dq->script)?$dq->script:$dq->script = loadpage($dq->page,FALSE,'javascript');}
+function script_loc(){$dq = &get_instance(); return 'openml_OS/views/pages/frontend/'.$dq->page.'/'.'javascript.php';}
 
 function home() {return BASE_URL;}
 

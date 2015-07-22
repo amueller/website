@@ -39,7 +39,7 @@
        <?php if($ttype == 'general' and $t){ echo ' by '.$authname; } ?>
        </span>
      </div>
-     <div class="postmessage" id="postmessage_<?php echo $ttype; ?>_<?php echo $tid; ?>">
+     <div class="discuss_postmessage" id="postmessage_<?php echo $ttype; ?>_<?php echo $tid; ?>">
        <?php
            if($ttype == 'general'){
              echo $message;
@@ -81,7 +81,7 @@
           <a href="discuss/tid/<?php echo $thread->id; ?>" style="margin-left:10px;"><?php echo stripslashes( teaser( $thread->title, 100 ) );?></a>
           <span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->post_date))).' by '.$authname; ?>
           </span></div>
-          <div class="postmessage">
+          <div class="discuss_postmessage">
             <?php
             echo stripslashes( teaser( $message, 100 ) );
             ?>
@@ -107,7 +107,7 @@
          <b><?php echo $post->thread->title;?></b>
          (<?php echo $this->category_code[$post->thread->category];?>)
          <span><i class="fa fa-fw fa-clock-o"></i> <?php echo get_timeago(strtotime(str_replace('T',' ',$post->createdAt)));?></span>
-         <div class="postmessage">
+         <div class="discuss_postmessage">
          <?php echo $post->message;?>
          </div>
        </div></div>

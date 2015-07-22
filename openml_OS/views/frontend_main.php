@@ -30,10 +30,6 @@
         <meta name="viewport" content="width=device-width">
         <link rel="shortcut icon" href="img/favicon.ico">
 
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
-        <script type="text/javascript"><?php echo script();?></script>
-
         <link rel="stylesheet" href="css/pygments-manni.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/material-fullpalette.min.css">
@@ -46,26 +42,35 @@
       	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
         <link href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" rel="stylesheet" type="text/css">
         <?php if( isset( $this->load_css ) ): foreach( $this->load_css as $j ): ?>
-        <link rel="stylesheet" href="<?php echo $j; ?>"></script>
+        <link rel="stylesheet" href="<?php echo $j; ?>"/>
         <?php endforeach; endif;?>
 
-        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
+        <script type="text/javascript" src="js/libs/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/libs/bootstrap-select.js"></script>
+        <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
+          echo '<script type="text/javascript" src="'.$j.'"></script>';; endforeach; endif; ?>
+        <script>
+          var client = new $.es.Client({
+            hosts: 'http://es.openml.org'
+          });
+        </script>
         <script type="text/javascript" src="js/openml.js"></script>
-        <script type="text/javascript" src="js/material.min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery.validate.js" async></script>
-        <script type="text/javascript" src="js/libs/jquery.form.js" async></script>
-        <script type="text/javascript" src="js/libs/bootstrap-select.js" async></script>
-        <script type="text/javascript" src="js/libs/bootstrap-slider.js" async></script>
-        <script type="text/javascript" src="js/libs/mousetrap.min.js" async></script>
-        <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ): ?>
-        <script type="text/javascript" src="<?php echo $j; ?>" async></script>
-        <?php endforeach; endif;
-	       $this->endjs = '';
-	        ?>
-        <!-- page dependent javascript code -->
-        <script type="text/javascript" src="js/libs/bootstrap.min.js" async></script>
-        <script type="text/javascript" src="js/plugins.js" async></script>
+        <script>
+          [
+            'js/material.min.js',
+            'js/libs/modernizr-2.5.3-respond-1.1.0.min.js',
+          ].forEach(function(src) {
+            var script = document.createElement('script');
+            script.src = src;
+            script.async = false;
+            document.head.appendChild(script);
+          });
+        </script>
+
+        <?php $this->endjs = ""; ?>
     </head>
     <body>
   <?php
@@ -275,29 +280,43 @@
                 <?php echo $this->message; ?>
             </div>
           <?php endif; ?>
+
           <?php echo body(); ?>
         </div>
 
-	      <script type="text/javascript">$('.tip').tooltip();</script>
-        <script>
-            $(document).ready(function() {
-                // This command is used to initialize some elements and make them work properly
-                $.material.options.autofill = true;
-                $.material.init();
-            });
-        </script>
-        <script type="text/javascript" src="js/application.js" defer></script>
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        <script><?php echo script();?></script>
 
-	    ga('require', 'linkid', 'linkid.js');
-            ga('create', 'UA-40902346-1', 'openml.org');
-            ga('send', 'pageview');
+
+        <script type="text/javascript">
+          function downloadJSAtOnload() {
+          var element = document.createElement("script");
+          element.src = "js/libs/mousetrap.min.js";
+          document.body.appendChild(element);
+          var element2= document.createElement("script");
+          element2.src = "js/libs/jquery.form.js";
+          document.body.appendChild(element2);
+          var element3= document.createElement("script");
+          element3.src = "js/libs/jquery.sharrre.js";
+          document.body.appendChild(element3);
+          }
+          if (window.addEventListener)
+          window.addEventListener("load", downloadJSAtOnload, false);
+          else if (window.attachEvent)
+          window.attachEvent("onload", downloadJSAtOnload);
+          else window.onload = downloadJSAtOnload;
         </script>
-	<?php echo $this->endjs; ?>
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('require', 'linkid', 'linkid.js');
+          ga('create', 'UA-40902346-1', 'openml.org');
+          ga('send', 'pageview');
+        </script>
+	      <?php echo $this->endjs; ?>
 
     </body>
 </html>

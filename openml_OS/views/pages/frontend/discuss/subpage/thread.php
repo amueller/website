@@ -4,7 +4,7 @@
     <?php echo user_display_text( $this->author ); ?>
     <span><i class="fa fa-fw fa-clock-o"></i> <?php echo get_timeago(strtotime(str_replace('T',' ',$this->thread->post_date)));?></span>
   </div>
-  <div class="postmessage" style="margin-bottom:40px;">
+  <div class="discuss_postmessage" style="margin-bottom:40px;">
     <h2 style="margin-top:0px;"><?php echo $this->thread->title; ?></h2>
 		<?php echo nl2br( stripslashes( $this->thread->body ) );?>
   </div>
