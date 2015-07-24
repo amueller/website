@@ -56,6 +56,21 @@ class Frontend extends CI_Controller {
     $this->page( $this->page );
   }
   
+  public function js($indicator) {
+    $this->page = $indicator;
+    
+    $exploded_page = explode('_',$indicator);
+    $this->active = $exploded_page[0]; // can be overridden. 
+    $this->message = $this->session->flashdata('message'); // can be overridden
+    
+    if(!loadpage($indicator,TRUE,'pre')) {
+      $this->error404();
+      return;
+    }
+    loadpage($indicator,TRUE,'javascript');
+    
+  }
+  
   public function page( $indicator, $subindicator = false ) {
     $this->page = $indicator;
     $this->subpage = $subindicator;
