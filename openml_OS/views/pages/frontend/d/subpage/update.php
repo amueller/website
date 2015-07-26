@@ -1,29 +1,3 @@
-<!-- File upload. Somehow, putting this in the javascript file doesn't work :/ -->
-<script>
-	$(document)
-		.on('change', '.btn-file :file', function() {
-			var input = $(this),
-			numFiles = input.get(0).files ? input.get(0).files.length : 1,
-			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			input.trigger('fileselect', [numFiles, label]);
-	});
-
-	$(document).ready( function() {
-		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-
-			var input = $(this).parents('.input-group').find(':text'),
-				log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-			if( input.length ) {
-				input.val(log);
-			} else {
-				if( log ) alert(log);
-			}
-
-		});
-	});
-</script>
-
 <div class="panel">
 
 	<h1><a href="d"><i class="fa fa-database"></i></a> Update <?php echo $this->record->{'name'}; ?> (<?php echo $this->record->{'version'}; ?>)</h1>
@@ -38,7 +12,7 @@
 		  <h2>Core information</h2>
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Data files: <a href="<?php echo $this->record->{'url'}; ?>">current file</a></label>
-				<input type="text" readonly="" class="form-control floating-label" placeholder="Upload data file...">
+				<input type="text" readonly="" class="form-control floating-label" placeholder="Upload data file..." style="margin-top:10px;">
 				<input type="file" id="dataset" name="dataset" multiple="">
 		    <div class="col-sm-12 input-info">Or (not both)</div>
 		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted now (e.g. data repository)" value="<?php if(strpos(strtolower($this->record->{'url'}), 'openml') == false) echo $this->record->{'url'};?>" />
@@ -71,15 +45,6 @@
 			<div id="CC_BY-NC-SA" class="licences">Lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms. <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">More info</a></div>
 			<div id="CC_BY-NC-ND" class="licences">Allow others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially. <a href="http://creativecommons.org/licenses/by-nc-nd/4.0" target="_blank">More info</a></div>
 			<div id="CC0" class="licences">Waive all copyright and related rights. Others may freely build upon, enhance and reuse the works for any purposes without restriction under copyright or database law. <a href="http://creativecommons.org/about/cc0" target="_blank">More info</a></div>
-
-<script>
-    $(function() {
-        $('#licence').change(function(){
-            $('.licences').hide();
-            $('#' + $(this).val()).show();
-        });
-    });
-</script>
 
 	          </div>
 		  <div class="form-group">
@@ -134,16 +99,3 @@
 	</form>
 </div>
 </div> <!-- end container -->
-
-<script>
-	$('#comment').bind('input', function() {
-	    var cname = $(this).val();
-	    if(cname.length > 0){
-	       $(this).parent().removeClass('has-error');
-	       $(this).parent().addClass('has-success');
-	    } else {
-	       $(this).parent().removeClass('has-success');
-	       $(this).parent().addClass('has-error');
-	    }
-	});
-</script>

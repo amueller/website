@@ -11,6 +11,30 @@ $(document).ready(function() {
 	$('.selectpicker').selectpicker();
 });
 
+
+    <!-- redirect communication to gollum -->
+  $("#gollum-editor-message-field").val("Write a small message explaining the change.");
+  $("#gollum-editor-submit").addClass("btn btn-success pull-left");
+  $("#gollum-editor-preview").removeClass("minibutton");
+  $("#gollum-editor-preview").addClass("btn btn-default padded-button");
+  $("#gollum-editor-preview").attr("href","preview");
+  $("#version-form").attr('action', "f/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
+  $("a[title*='View commit']").each(function() {
+     var _href = $(this).attr("href");
+     $(this).attr('href', 'f/<?php echo $this->id; ?>/view' + _href);
+  });
+
+  $( "#gollum-editor-preview" ).click(function() {
+  	var $form = $($('#gollum-editor form').get(0));
+          $form.attr('action', '');
+  });
+
+  $("a[title*='View commit']").each(function() {
+     var _href = $(this).attr("href");
+     $(this).attr('href', 'f/<?php echo $this->id; ?>/view' + _href);
+  });
+
+
 function prepareImplementationDescriptionXML(form, options) {
 	var fields =  ['name','description','creator','contributor','licence','language','installation_notes'];
 	var implode = [false,false,true,true,false,false,false];
@@ -271,7 +295,9 @@ options = {
                 data: [],
 		point: {
                     events: {
-                        click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
+                        //click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
+                        click: function() { window.open('http://www.openml.org/r/' + this.r);}
+
                     }
                 }
             }]

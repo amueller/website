@@ -1,6 +1,7 @@
  <?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/flow-qualities/')){ ?>
 	<?php if(!isset( $this->measure)) echo 'Sorry, this measure is not known.'; else { ?>
 	<h1><?php echo $this->measure['name']; ?></h1>
+  <div class="panel">
 	<p><?php echo $this->measure['description']; ?></p>
   <h2>Overview</h2>
 		<div class="table-responsive"><table class="table table-striped">
@@ -14,4 +15,5 @@
 		<?php } endforeach; ?>
 		</tbody>
 		</table></div>
+  </div>
 	<?php }}} ?>

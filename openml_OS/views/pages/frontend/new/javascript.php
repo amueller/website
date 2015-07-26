@@ -145,3 +145,104 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
 	$('#response'+type+'Txt').addClass(status);
 	$('#response'+type+'Txt').html(message);
 }
+
+// New Data
+	$(document)
+		.on('change', '.btn-file :file', function() {
+			var input = $(this),
+			numFiles = input.get(0).files ? input.get(0).files.length : 1,
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			input.trigger('fileselect', [numFiles, label]);
+	});
+
+	$(document).ready( function() {
+		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+
+			var input = $(this).parents('.input-group').find(':text'),
+				log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+			if( input.length ) {
+				input.val(log);
+			} else {
+				if( log ) alert(log);
+			}
+
+		});
+	});
+
+  $(function() {
+      $('#licence').change(function(){
+          $('.licences').hide();
+          $('#' + $(this).val()).show();
+      });
+  });
+
+  $('#name').bind('input', function() {
+      var cname = $(this).val();
+      if(cname.length > 0 && cname.split(" ").length == 1){
+         $(this).parent().removeClass('has-error');
+         $(this).parent().addClass('has-success');
+      } else {
+         $(this).parent().removeClass('has-success');
+         $(this).parent().addClass('has-error');
+      }
+  });
+  $('#description').bind('input', function() {
+      var cname = $(this).val();
+      if(cname.length > 0){
+         $(this).parent().removeClass('has-error');
+         $(this).parent().addClass('has-success');
+      } else {
+         $(this).parent().removeClass('has-success');
+         $(this).parent().addClass('has-error');
+      }
+  });
+  $('#format').bind('input', function() {
+      var cname = $(this).val();
+      if(cname.length > 0){
+         $(this).parent().removeClass('has-error');
+         $(this).parent().addClass('has-success');
+      } else {
+         $(this).parent().removeClass('has-success');
+         $(this).parent().addClass('has-error');
+      }
+  });
+
+// New flow
+var $input = $("#addparameter").children();
+
+$(".addparam").on("click", function(){
+   var $newField = $input.clone();
+   // change what you need to do with the field here.
+   $("#parameterbox").append($newField);
+   $("#parname").attr({value: '', placeholder: 'Name (required)'});
+   $("#parinfo").attr({value: '', placeholder: 'Description (required)'});
+   $("#pardatatype").attr({value: 'Integer', placeholder: 'Data type'});
+   $("#pardefault").attr({value: '', placeholder: 'Default value'});
+   $("#parrange").attr({value: '', placeholder: 'Recommended range'});
+});
+
+// New task
+<?php foreach( $this->task_types as $tt ):
+        foreach( $tt->in as $io ):
+          $id = 'input_' . $tt->ttid . '-' . $io->name;
+          $template_search = json_decode( $io->template_search );
+          if( $template_search && property_exists( $template_search, 'type' ) && $template_search->type == 'select' ): // make a dropdown
+          if( $template_search->table == 'estimation_procedure' ): ?>
+
+          $( "#dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?>" ).change(function () {
+
+            var field = "<?php echo 'input_' . $tt->ttid . '-custom_testset'; ?>";
+            $( "#dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?> option:selected" ).each(function() {
+              if( $( this ).data('dbfield_custom_testset') == true ) {
+                $('#'+field).val('');
+                $('#'+field).prop('disabled', false);
+                $('#'+field+'_formgroup').css("display", "block");
+              } else {
+                $('#'+field).val('');
+                $('#'+field).prop('disabled', true);
+                $('#'+field+'_formgroup').css("display", "none");
+              }
+            });
+          }).change();
+<?php endif; endif; endforeach; endforeach;?>

@@ -390,6 +390,7 @@ select{
 
 #mainmenu{
   display:none;
+  max-width: 20%;
 }
 
 .menu{
@@ -2992,6 +2993,11 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 
 .panel-simple{
   padding: 0px;
+}
+
+.newssection{
+  text-align: left;
+  margin-top: -40px;
 }
 
 .list-group .list-group-separator-full {

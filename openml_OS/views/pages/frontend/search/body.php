@@ -29,15 +29,3 @@
 
 </div>
 <?php }?>
-
-
-<script>
-client.search(<?php echo json_encode($this->alltypes); ?>).then(function (body) {
-  var buckets = body.aggregations.type.buckets;
-  for (var b in buckets.reverse()){
-    $('#'+buckets[b].key+'counter').html(buckets[b].doc_count);
-  }
-}, function (error) {
-  console.trace(error.message);
-});
-</script>

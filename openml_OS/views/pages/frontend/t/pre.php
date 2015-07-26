@@ -34,7 +34,9 @@ $this->record = array();
 $this->taskio = array();
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type') || false !== strpos($_SERVER['REQUEST_URI'],'/t/search/type')) {
-	$this->id = explode("?",end(explode('/', $_SERVER['REQUEST_URI'])))[0];
+	$info = explode('/', $_SERVER['REQUEST_URI']);
+	$this->id = explode('?',$info[array_search('t',$info)+1])[0];
+
 	$type = $this->Implementation->query('SELECT * FROM task_type WHERE ttid=' . $this->id );
 	if( $type != false ) {
 		$this->record = array(
@@ -65,9 +67,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type') || false !== strpos($_SER
 /// TASK DETAIL
 
 if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER['REQUEST_URI'],'/t/')) {
-
 	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->task_id = $info[array_search('t',$info)+1];
+	$this->id = explode('?',$info[array_search('t',$info)+1])[0];
+	$this->task_id = $this->id;
 
 	$io = $this->Implementation->query('SELECT value FROM task_inputs WHERE task_id='.$this->task_id.' AND input = "source_data"' );
 	if( $io != false ) {

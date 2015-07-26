@@ -5,7 +5,7 @@
       <!-- DETAIL -->
 	<?php if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')){ ?>
         <div class="tab-pane active" id="data_overview">
-		<?php o('run'); ?>
+		<?php subpage('run'); ?>
         </div>
   <?php } ?>
      </div> <!-- end tabs content -->

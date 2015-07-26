@@ -14,7 +14,7 @@
       $domxpath = new DOMXPath($dom);
       $newDom = new DOMDocument;
       $newDom->formatOutput = true;
-      
+
       $filtered = $domxpath->query("//div[@id='aggregateCount']");
       if (isset($filtered->item(0)->nodeValue))
       {
@@ -23,7 +23,7 @@
   }
   else if($type == 'stumbleupon'){
       $content = parse("http://www.stumbleupon.com/services/1.01/badge.getinfo?url=$url");
-      
+
       $result = json_decode($content);
       if (isset($result->result->views))
       {
@@ -32,7 +32,7 @@
 
   }
   echo str_replace('\\/','/',json_encode($json));
-  
+
   function parse($encUrl){
     $options = array(
       CURLOPT_RETURNTRANSFER => true, // return web page
@@ -48,16 +48,16 @@
       CURLOPT_SSL_VERIFYPEER => false,
     );
     $ch = curl_init();
-    
-    $options[CURLOPT_URL] = $encUrl;  
+
+    $options[CURLOPT_URL] = $encUrl;
     curl_setopt_array($ch, $options);
-    
+
     $content = curl_exec($ch);
     $err = curl_errno($ch);
     $errmsg = curl_error($ch);
-    
+
     curl_close($ch);
-    
+
     if ($errmsg != '' || $err != '') {
       /*print_r($errmsg);
       print_r($errmsg);*/

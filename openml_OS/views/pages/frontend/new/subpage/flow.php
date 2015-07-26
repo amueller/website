@@ -1,29 +1,3 @@
-<!-- Somehow, putting this in the javascript file doesn't work :/ -->
-<script>
-	$(document)
-		.on('change', '.btn-file :file', function() {
-			var input = $(this),
-			numFiles = input.get(0).files ? input.get(0).files.length : 1,
-			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			input.trigger('fileselect', [numFiles, label]);
-	});
-
-	$(document).ready( function() {
-		$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-
-			var input = $(this).parents('.input-group').find(':text'),
-				log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-			if( input.length ) {
-				input.val(log);
-			} else {
-				if( log ) alert(log);
-			}
-
-		});
-	});
-</script>
-
 <div class="panel">
 	      <h1><a href="f"><i class="fa fa-cogs"></i></a> Add flows</h1>
 	      <form method="post" id="implementationForm" action="api/?f=openml.implementation.upload" enctype="multipart/form-data">
@@ -129,21 +103,6 @@
  		<span class="btn btn-success btn-sm col-xs-1 addparam"><i class="fa fa-plus-circle fa-lg"></i> Add</span>
  		<div id="parameterbox" class="col-sm-12 stretch"></div>
 	       </div>
-
-		  <script>
-		    var $input = $("#addparameter").children();
-
-		    $(".addparam").on("click", function(){
-		       var $newField = $input.clone();
-		       // change what you need to do with the field here.
-		       $("#parameterbox").append($newField);
-		       $("#parname").attr({value: '', placeholder: 'Name (required)'});
-		       $("#parinfo").attr({value: '', placeholder: 'Description (required)'});
-		       $("#pardatatype").attr({value: 'Integer', placeholder: 'Data type'});
-		       $("#pardefault").attr({value: '', placeholder: 'Default value'});
-		       $("#parrange").attr({value: '', placeholder: 'Recommended range'});
-		    });
-		  </script>
 
 		  <div class="form-group">
 		    <label class="control-label" for="input_implementation_language">Programming Language</label>

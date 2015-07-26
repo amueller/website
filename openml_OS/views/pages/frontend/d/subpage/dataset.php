@@ -1,9 +1,6 @@
     <?php if($this->blocked){
 		o('no-access');
 	  } else {
-    $fgraphs = '';
-    $fgraphs_all = '';
-
     ?>
 
     <ul class="hotlinks">
@@ -58,36 +55,9 @@
 			<div class="table-responsive">
 				<table class="table">
 				<?php
+        foreach( $this->features as $r ) {
 				//get target values
-				$featCount = 0;
-				foreach( $this->features as $r ) {
-					$newGraph = '';
-			      if($r->{'data_type'} == "numeric"){
-						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:{enabled: false},tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r->{'MinimumValue'}.','.($r->{'MeanValue'}-$r->{'StandardDeviation'}).','.$r->{'MeanValue'}.','.($r->{'MeanValue'}+$r->{'StandardDeviation'}).','.$r->{'MaximumValue'}.']]}]});';
-					} else if (strlen($r->{'ClassDistribution'})>0) {
-						$distro = json_decode($r->{'ClassDistribution'});
-						$newGraph = '$("#feat'.$r->{'index'}.'").highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", str_replace("'", "", $distro[0])).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}},legend:{enabled: false},tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
-
-					for($i=0; $i<count($this->classvalues); $i++){
-						$newGraph .= '{name:\''.$this->classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
-						if($i!=count($this->classvalues)-1)
-							$newGraph .= ',';
-					}
-					if(count($this->classvalues)==0){
-						$newGraph .= '{name:"count",data:['.implode(",",array_column($distro[1], 0)).']}';
-					}
-					$newGraph .= ']});';
-					}
-					if($featCount<3 or $this->showallfeatures){
-						$fgraphs = $newGraph . PHP_EOL . $fgraphs;
-						$featCount = $featCount + 1;
-					}
-					else
-						$fgraphs_all = $newGraph . PHP_EOL . $fgraphs_all;
-
-
 					echo "<tr class='cardrow'><td>" . $r->{'name'} . ( $r->{'is_target'} == 'true' ? ' <b>(target)</b>': '').( $r->{'is_row_identifier'} == 'true' ? ' <b>(row identifier)</b>': '').( $r->{'is_ignore'} == 'true' ? ' <b>(ignore)</b>': ''). "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " unique values<br> " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 50%;'></div></td></tr>";
-
 				}
 					?>
 				</table>
@@ -174,8 +144,8 @@
   </div>
   <?php } ?>
 
-    <script type="text/javascript">
-        var disqus_shortname = 'openml'; // forum name
+  <script type="text/javascript">
+  var disqus_shortname = 'openml'; // forum name
 	var disqus_category_id = '3353609'; // Data category
 	var disqus_title = '<?php echo $this->record->{'name'}; ?>'; // Data name
 	var disqus_url = 'http://openml.org/d/<?php echo $this->id; ?>'; // Data url
@@ -186,36 +156,4 @@
             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
-    </script>
-
-
-<!-- redirect communication to gollum -->
-<script>
-$("#gollum-editor-message-field").val("Write a small message explaining the change.");
-$("#gollum-editor-submit").addClass("btn btn-success pull-left");
-$("#gollum-editor-preview").removeClass("minibutton");
-$("#gollum-editor-preview").addClass("btn btn-default padded-button");
-$("#gollum-editor-preview").attr("href","preview");
-$("#version-form").attr('action', "d/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
-$("a[title*='View commit']").each(function() {
-   var _href = $(this).attr("href");
-   $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
-});
-
-$( "#gollum-editor-preview" ).click(function() {
-	var $form = $($('#gollum-editor form').get(0));
-        $form.attr('action', '');
-});
-
-$("a[title*='View commit']").each(function() {
-   var _href = $(this).attr("href");
-   $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
-});
-</script>
-<?php
-  if(isset($fgraphs)){
-	$this->endjs = '<script>$(function(){'.$fgraphs.'});</script>';
-	$this->endjs .= '<script>function visualize_all(){'.$fgraphs_all.'}</script>';
-  }
-
-?>
+  </script>

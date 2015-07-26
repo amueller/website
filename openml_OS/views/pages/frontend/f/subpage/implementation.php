@@ -99,7 +99,7 @@
       <div style="float:right">
       Parameter:
           <select class="selectpicker" data-width="auto" onchange="selected_parameter = this.value; oTableRuns.fnDraw(true); redrawchart();">
-            <option value="none" selected>none</option>
+            <option value="none " selected>none </option>
             <?php foreach($this->flow['parameters'] as $r): ?>
             <option value="<?php echo $r['full_name'];?>"><?php echo str_replace('_', ' ', $r['name'] );?></option>
             <?php endforeach; ?>
@@ -152,28 +152,4 @@
             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
-    </script>
-
-    <!-- redirect communication to gollum -->
-    <script>
-    $("#gollum-editor-message-field").val("Write a small message explaining the change.");
-    $("#gollum-editor-submit").addClass("btn btn-success pull-left");
-    $("#gollum-editor-preview").removeClass("minibutton");
-    $("#gollum-editor-preview").addClass("btn btn-default padded-button");
-    $("#gollum-editor-preview").attr("href","preview");
-    $("#version-form").attr('action', "f/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
-    $("a[title*='View commit']").each(function() {
-       var _href = $(this).attr("href");
-       $(this).attr('href', 'f/<?php echo $this->id; ?>/view' + _href);
-    });
-
-    $( "#gollum-editor-preview" ).click(function() {
-    	var $form = $($('#gollum-editor form').get(0));
-            $form.attr('action', '');
-    });
-
-    $("a[title*='View commit']").each(function() {
-       var _href = $(this).attr("href");
-       $(this).attr('href', 'f/<?php echo $this->id; ?>/view' + _href);
-    });
     </script>

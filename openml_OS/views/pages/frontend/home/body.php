@@ -44,7 +44,31 @@
 </div>
 
 </div>
+<div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
+  <div class="list-group">
+      <div class="list-group-item">
+          <div class="row-picture">
+              <img class="circle" src="img/colorballs2.jpg" alt="icon">
+          </div>
+          <div class="row-content">
+              <h4 class="list-group-item-heading">Upcoming events</h4>
+              <p class="list-group-item-text">2-4 September 2015: <a target="_blank" href="http://eindhoven2015.openml.org/">OpenML Hackathon - register now</a></p>
+              <p class="list-group-item-text">7 September 2015: <a target="_blank" href="http://metasel-tutorial2015.inesctec.pt/">OpenML Tutorial @ ECMLPKDD</a></p>
+          </div>
+      </div>
+      <div class="list-group-item">
+          <div class="row-picture">
+              <img class="circle" src="img/survey.jpg" alt="icon">
+          </div>
+          <div class="row-content">
+              <h4 class="list-group-item-heading">Tell us what you think</h4>
+              <p class="list-group-item-text"><a href="https://docs.google.com/forms/d/1pyWZRE5HnVEtY3_TmFhAx68uTuTfC_yvEDqmuz-yAwo/viewform?usp=send_form">Help make OpenML better and more fun by taking a short survey</a></p>
+          </div>
+      </div>
+  </div>
+
+</div>
 
  <div id="green" class="introsection greensection">
 

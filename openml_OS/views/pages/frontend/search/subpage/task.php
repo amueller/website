@@ -12,7 +12,7 @@
 </li>
 <li>
     <select class="form-control input-small selectpicker" name="tasktype" id="tasktype.tt_id">
-       <option value="">Task type &#x25BE;</option>
+       <option value="">Task type</option>
 	    <?php
 	      $p['body']['query']['match_all'] = array();
         $results = $this->searchclient->search($p);
@@ -35,7 +35,7 @@
       <?php
       if($v['name'] == 'estimation_procedure'){?>
         <select class="form-control input-small selectpicker" name="tasktype" id="estimation_procedure.proc_id">
-           <option value="">Estimation procedure &#x25BE;</option>
+           <option value="">Estimation procedure</option>
           <?php
             unset($p['id']);
             $p['type'] = 'measure';

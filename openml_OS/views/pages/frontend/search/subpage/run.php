@@ -10,7 +10,7 @@
 <?php } ?>
 <li>
     <select class="form-control input-small selectpicker" name="run_task.tasktype.tt_id" id="run_task.tasktype.tt_id">
-       <option value="">Task type &#x25BE;</option>
+       <option value="">Task type</option>
 	    <?php
         $p = array();
         $p['index'] = 'openml';

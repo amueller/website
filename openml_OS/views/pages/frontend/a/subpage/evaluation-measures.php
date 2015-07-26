@@ -1,6 +1,8 @@
  <?php if(false !== strpos($_SERVER['REQUEST_URI'], '/a/evaluation-measures/')){ ?>
 	<?php if(!isset( $this->measure)) echo 'Sorry, this measure is not known.'; else { ?>
   <h1><?php echo str_replace('-',' ',$this->measure['name']); ?></h1>
+  <div class="panel">
+
 	<p><?php echo $this->measure['description']; ?></p>
 	<ul class="hotlinks">
 		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/evaluate"><i class="fa fa-gears"></i> View code</a></li>
@@ -13,6 +15,6 @@
 		<tr><td>Optimization</td><td><?php if( 1 == $this->measure['higherIsBetter']) echo 'Higher is better'; elseif( 0 == $this->measure['higherIsBetter']) echo 'Lower is better'; ?></td></tr>
 
 		</table></div>
-
+  </div>
 
 	<?php }} ?>

@@ -2,6 +2,8 @@
 
 	<?php if(!isset( $this->measure)) echo 'Sorry, this procedure is not known.'; else { ?>
 	<h1><?php echo $this->measure['name']; ?></h1>
+  <div class="panel">
+
 	<p><?php echo $this->measure['description']; ?></p>
 	<ul class="hotlinks">
 		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/generatefolds"><i class="fa fa-gears"></i> View code</a></li>
@@ -13,5 +15,5 @@
 		<tr><td>Holdout percentage</td><td><?php echo $this->measure['percentage']; ?></td></tr>
 		<tr><td>Stratified sampling</td><td><?php echo $this->measure['stratified_sampling'];?></td></tr>
 		</table></div>
-
+  </div>
 	<?php }} ?>

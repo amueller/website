@@ -6,7 +6,7 @@
 
 <li>
     <select class="form-control input-small selectpicker" name="tasktype" id="type">
-       <option value="">Measure type &#x25BE;</option>
+       <option value="">Measure type</option>
 	    <?php
         $p['body']['size'] = 0;
 	      $p['body']['query']['match_all'] = array();

@@ -40,7 +40,8 @@ $this->body = array(
 );
 
 /// disqus API
-function get_popular(){
+/// Get Popular
+
 	$endpoint = 'https://disqus.com/api/3.0/threads/listPopular.json?api_secret='.urlencode(DISQUS_API_SECRET).'&forum=openml&interval=90d&limit=100';
 	$ch = curl_init();
 	// Disable SSL verification
@@ -59,29 +60,32 @@ function get_popular(){
 	foreach ($threads as $thread) {
 		$type = $category_code[$thread->category];
 		$id = end(explode('/', $thread->link));
-		if($type = 'general'){
-
+		$message = "Could not retrieve message";
+		if($type == 'general'){
+			$t = $this->Thread->getById( $tid );
+			if($t){
+				$thread->message = nl2br( stripslashes( $t->body ) );
+				$thread->title = nl2br( stripslashes( $t->title ) );
+				$auth = $this->Author->getById( $t->author_id );
+				$thread->authname = user_display_text( $auth );
+				$thread->authimage = htmlentities( authorImage( $auth->image ) );
+			}
+		}
+		else{
+			//get data from ES
+			$p = array();
+			$p['index'] = 'openml';
+			$p['type'] = $type;
+			$p['id'] = $id;
+			$p['fields'] = 'description';
+			try{
+				$thread->message = substr(preg_replace('/\s+/',' ',$this->searchclient->get($p)['fields']['description'][0]),0,150).' ...';
+			} catch (Exception $e) {}
 		}
 	}
-	return $results;
-}
+	$this->popular = $threads;
 
-function get_recent(){
-	$endpoint = 'https://disqus.com/api/3.0/threads/list.json?api_secret='.urlencode(DISQUS_API_SECRET).'&forum=openml&limit=100';
-	$ch = curl_init();
-	// Disable SSL verification
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	// Will return the response, if false it print the response
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	// Set the url
-	curl_setopt($ch, CURLOPT_URL, $endpoint);
-	// Execute
-	$data = curl_exec($ch);
-
-	return json_decode($data);
-}
-
-function get_posts(){
+  /// Get posts
 	$endpoint = 'https://disqus.com/api/3.0/forums/listPosts.json?api_secret='.urlencode(DISQUS_API_SECRET).'&forum=openml&limit=100&related=thread';
 	$ch = curl_init();
 	// Disable SSL verification
@@ -92,7 +96,5 @@ function get_posts(){
 	curl_setopt($ch, CURLOPT_URL, $endpoint);
 	// Execute
 	$data = curl_exec($ch);
-
-	return json_decode($data);
-}
+	$this->posts = json_decode($data)->response;
 ?>

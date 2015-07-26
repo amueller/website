@@ -45,31 +45,6 @@
         <link rel="stylesheet" href="<?php echo $j; ?>"/>
         <?php endforeach; endif;?>
 
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
-        <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/libs/elasticsearch.jquery.min.js"></script>
-        <script type="text/javascript" src="js/libs/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/libs/bootstrap-select.js"></script>
-        <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
-          echo '<script type="text/javascript" src="'.$j.'"></script>';; endforeach; endif; ?>
-        <script>
-          var client = new $.es.Client({
-            hosts: 'http://es.openml.org'
-          });
-        </script>
-        <script type="text/javascript" src="js/openml.js"></script>
-        <script>
-          [
-            'js/material.min.js',
-          ].forEach(function(src) {
-            var script = document.createElement('script');
-            script.src = src;
-            script.async = false;
-            document.head.appendChild(script);
-          });
-        </script>
-
         <?php $this->endjs = ""; ?>
     </head>
     <body>
@@ -83,16 +58,18 @@
         if($url[1] == 'OpenML')
           $ch = $url[2];
         }
-        if(strpos($ch, 'search') === 0){
-          if(isset($this->filtertype) and $this->filtertype){
-              $section = str_replace('_',' ',ucfirst($this->filtertype));
-              $href = "search?type=".$this->filtertype;
-            }
-          else{
-            $section = 'Search';
-            $materialcolor = "blue";
+      if($ch == "")
+        $ch = "home";
+      if(strpos($ch, 'search') === 0){
+        if(isset($this->filtertype) and $this->filtertype){
+            $section = str_replace('_',' ',ucfirst($this->filtertype));
+            $href = "search?type=".$this->filtertype;
           }
+        else{
+          $section = 'Search';
+          $materialcolor = "blue";
         }
+      }
       if($ch=='r' or $section=='Run'){
             $section = 'Run';
             $href = 'search?type=run';
@@ -235,6 +212,18 @@
         ?>
 
         <div id="wrap">
+            <!-- USER MESSAGE -->
+            <noscript>
+                <div class="alert alert-error" style="text-align:center;">
+                    JavaScript is required to properly view the contents of this page!
+                </div>
+            </noscript>
+            <?php if($this->message!==false and strlen($this->message) > 0): ?>
+            <div class="alert alert-info" style="text-align:center;margin-bottom:0px">
+                <?php echo $this->message; ?>
+            </div>
+          <?php endif; ?>
+
           <div class="searchbar" id="mainmenu">
             <ul class="sidenav nav topchapter">
               <?php if (!$this->ion_auth->logged_in()){ ?>
@@ -269,43 +258,49 @@
             </li>
             </ul>
           </div>
-            <!-- USER MESSAGE -->
-            <noscript>
-                <div class="alert alert-error" style="text-align:center;">
-                    JavaScript is required to properly view the contents of this page!
-                </div>
-            </noscript>
-            <?php if($this->message!==false and strlen($this->message) > 0): ?>
-            <div class="alert alert-info" style="text-align:center;margin-bottom:0px">
-                <?php echo $this->message; ?>
-            </div>
-          <?php endif; ?>
 
           <?php echo body(); ?>
+
+
         </div>
-
-        <script><?php echo script();?></script>
-
 
         <script type="text/javascript">
           function downloadJSAtOnload() {
           var element = document.createElement("script");
           element.src = "js/libs/mousetrap.min.js";
           document.body.appendChild(element);
-          var element2= document.createElement("script");
-          element2.src = "js/libs/jquery.form.js";
-          document.body.appendChild(element2);
           var element3= document.createElement("script");
           element3.src = "js/libs/jquery.sharrre.js";
           document.body.appendChild(element3);
           }
+
+          !function(e,t,r){function n(){for(;d[0]&&"loaded"==d[0][f];)c=d.shift(),c[o]=!i.parentNode.insertBefore(c,i)}for(var s,a,c,d=[],i=e.scripts[0],o="onreadystatechange",f="readyState";s=r.shift();)a=e.createElement(t),"async"in i?(a.async=!1,e.head.appendChild(a)):i[f]?(d.push(a),a[o]=n):e.write("<"+t+' src="'+s+'" defer></'+t+">"),a.src=s}(document,"script",[
+              '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+              'js/libs/modernizr-2.5.3-respond-1.1.0.min.js',
+              '//code.jquery.com/ui/1.10.4/jquery-ui.min.js',
+              'js/libs/elasticsearch.jquery.min.js',
+              'js/libs/bootstrap.min.js',
+              'js/libs/bootstrap-select.js',
+              'js/material.min.js',
+              'js/libs/jquery.form.js',
+              'js/openml.js',
+              <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
+                echo "'".$j."',"; endforeach; endif; ?>
+              <?php if( isset( $this->id)){
+                echo "'frontend/js/".$ch."/".$this->id."/script.js',";
+              } else {?>
+              'frontend/js/<?php echo $ch;?>/script.js', <?php } ?>
+              'js/openmlafter.js',
+
+            ])
+
+          //download js that does not affect DOM and can be loaded after page is rendered
           if (window.addEventListener)
           window.addEventListener("load", downloadJSAtOnload, false);
           else if (window.attachEvent)
           window.attachEvent("onload", downloadJSAtOnload);
           else window.onload = downloadJSAtOnload;
         </script>
-
         <script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -316,7 +311,6 @@
           ga('create', 'UA-40902346-1', 'openml.org');
           ga('send', 'pageview');
         </script>
-	      <?php echo $this->endjs; ?>
 
     </body>
 </html>

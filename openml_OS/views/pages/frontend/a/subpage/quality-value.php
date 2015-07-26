@@ -1,7 +1,9 @@
 <div class="row openmlsectioninfo">
   <div class="col-sm-12">
-     
+
 	<h1><?php echo $this->quality->quality; ?></h1>
+  <div class="panel">
+
 	<p>The <a href="<?php echo BASE_URL; ?>a/data-qualities/<?php echo strtolower($this->quality->quality); ?>"><?php echo $this->quality->quality; ?></a> of <a href="<?php echo BASE_URL; ?>d/<?php echo $this->data->did; ?>"><?php echo $this->data->name; ?></a> is <?php echo $this->quality->value; ?></p>
 	<ul class="hotlinks">
 		<li><a href="https://github.com/openml/OpenML/tree/master/Java/OpenmlWebapplication/src/org/openml/webapplication/features"><i class="fa fa-gears"></i> View code</a></li>
@@ -27,8 +29,6 @@
         </td>
       </tr>
 		<?php endforeach; endif; ?>
-		</tbody> 
+		</tbody>
 		</table></div>
-
-  </div>
-</div> <!-- end openmlsectioninfo -->
+</div>

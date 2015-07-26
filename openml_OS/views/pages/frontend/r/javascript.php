@@ -881,3 +881,86 @@ function printModal(elem) {
     document.body.appendChild($printSection);
     $printSection.appendChild(domClone);
 }
+
+
+
+
+<?php
+foreach( (array)$this->run['evaluations'] as $r ):
+
+if(array_key_exists('array_data',$r)){
+		$d = json_encode($r['array_data']);
+		if (0 !== strpos($d, '[[')) {
+			$d = '['.$d.']';
+		}
+		$columns = array();
+		if(array_key_exists('target_values',$this->run['run_task'])){
+			foreach($this->run['run_task']['target_values'] as $target){
+				$columns[] = array("title" => $target);
+			}
+			if($r['evaluation_measure'] == 'confusion_matrix'){
+				$d = array();
+				$c = 0;
+				foreach($r['array_data'] as $rr){
+					array_unshift($rr, $columns[$c]['title']);
+					$d[] = $rr;
+					$c++;
+				}
+				$d = json_encode($d);
+				array_unshift($columns, array("title" => 'actual\predicted'));
+			}
+			elseif($r['evaluation_measure'] == 'scimark_benchmark'){
+				$columns = array();
+				foreach($this->benchmarks as $b){
+					$columns[] = array("title" => $b);
+				}
+			}
+		}
+		?>
+
+$(function(){$('#table_<?php echo $r['evaluation_measure']; ?>').DataTable({"data":<?php echo $d;?>,"bSort":false,"sDom":'t',"aoColumns":<?php echo json_encode($columns);?>,"pageLength":50});
+$('#table_<?php echo $r['evaluation_measure']; ?>').removeClass('dataTable');
+$('#table_<?php echo $r['evaluation_measure']; ?>_wrapper').addClass('table-responsive');});
+
+<?php }
+if(array_key_exists('per_fold',$r) and !empty($r['per_fold'])  and !empty($r['per_fold'][0])){
+
+if($r['evaluation_measure'] == 'number_of_instances'){
+		$d = array();
+		$columns = array();
+		$columns[] = array("title" => "repeat\\fold");
+		$c = 0;
+		foreach($r['per_fold'] as $rr){
+			array_unshift($rr, $c);
+			$columns[] = array("title" => $c."");
+			$d[] = $rr;
+			$c++;
+		}
+		$d = json_encode($d);
+		?>
+
+$(function(){$('#cvtable_<?php echo $r['evaluation_measure']; ?>').DataTable({"data":<?php echo $d;?>,"bSort":false,"sDom":'t',"aoColumns":<?php echo json_encode($columns);?>,"pageLength":50});
+$('#cvtable_<?php echo $r['evaluation_measure']; ?>').removeClass('dataTable');
+$('#cvtable_<?php echo $r['evaluation_measure']; ?>_wrapper').addClass('table-responsive');});
+
+<?php
+} else {
+$boxplots = array();
+$sum = 0;
+$cnt = 0;
+foreach($r['per_fold'] as $f){
+	$bp = box_plot_values($f);
+	$boxplots[] = array($bp['lower_outlier'],$bp['q1'],$bp['median'],$bp['q3'],$bp['higher_outlier']);
+	$sum += array_sum($f);
+	$cnt += count($f);
+}
+$foldmean = $sum/$cnt;
+?>
+
+$(function(){$('#folds_<?php echo $r['evaluation_measure']; ?>').highcharts({
+	chart:{type:'boxplot',inverted:true},title:false,legend:{enabled:false},exporting:{enabled:false},credits:{enabled:false},
+	xAxis:{title:{text:'Repeat'},tickInterval:1},yAxis:{title:{text:'Score'},
+	plotLines:[{value:<?php echo $foldmean;?>,color:'red',width:1,zIndex:100,label:{useHTML:true,text:'mean',style:{fontSize:'8pt'}}}]},
+	series:[{name:'Box plot',data:<?php echo json_encode($boxplots);?>,tooltip:{headerFormat:'<em>Repeat {point.key}</em><br/>'}}]});});
+
+<?php }} endforeach; ?>

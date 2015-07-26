@@ -161,7 +161,7 @@ if ($this->ion_auth->logged_in()) {
   $this->user_id = $this->ion_auth->user()->row()->id;
 }
 
-if(false !== strpos($_SERVER['REQUEST_URI'],'/d/')) {
+if(false !== strpos($_SERVER['REQUEST_URI'],'/d/') and false === strpos($_SERVER['REQUEST_URI'],'/d/script')) {
   $info = explode('/', $_SERVER['REQUEST_URI']);
   $this->id = explode('?',$info[array_search('d',$info)+1])[0];
   if(!$this->id) { su('d'); }

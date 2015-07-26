@@ -1,7 +1,8 @@
 <?php
 if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->user_id = $info[array_search('u',$info)+1];
+	$this->id = explode('?',$info[array_search('u',$info)+1])[0];
+	$this->user_id = $this->id;
 	$this->baseurl = $_SERVER['REQUEST_URI'];
 	$this->author = $this->Author->getById($this->user_id);
 	$this->legal_subpages = array('flows','data','runs');

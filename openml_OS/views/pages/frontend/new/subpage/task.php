@@ -69,25 +69,6 @@
               <option value="<?php echo $type->{$template_search->key}; ?>" <?php echo $data_str; ?> <?php if($this->input->post($io->name) == $type->{$template_search->key}) echo 'selected="selected"'; ?>><?php echo $type->{$template_search->value}; ?></option>
               <?php endforeach; ?>
             </select>
-            <?php if( $template_search->table == 'estimation_procedure' ): ?>
-            <script>
-              $( "#dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?>" ).change(function () {
-
-                var field = "<?php echo 'input_' . $tt->ttid . '-custom_testset'; ?>";
-                $( "#dropdown_input_<?php echo $io->ttid;?>_<?php echo $io->name;?> option:selected" ).each(function() {
-                  if( $( this ).data('dbfield_custom_testset') == true ) {
-                    $('#'+field).val('');
-                    $('#'+field).prop('disabled', false);
-                    $('#'+field+'_formgroup').css("display", "block");
-                  } else {
-                    $('#'+field).val('');
-                    $('#'+field).prop('disabled', true);
-                    $('#'+field+'_formgroup').css("display", "none");
-                  }
-                });
-              }).change();
-            </script>
-            <?php endif; ?>
           <?php else: // makes a plain text input ?>
 		        <input type="text" class="form-control" id="<?php echo  $id; ?>" name="<?php echo $io->name;?>" placeholder="<?php echo $placeholder; ?>" value="<?php echo $this->input->post($io->name) ? $this->input->post($io->name) : $default; ?>" />
           <?php endif; ?>

@@ -94,8 +94,8 @@ options2 = {
             chart: {
                 renderTo: 'data_result_time',
                 type: 'scatter',
-		pinchType: 'x',
-		spacingTop: 40,
+								pinchType: 'x',
+								spacingTop: 40,
                 events: {
                     load: function (event) {
                         $('.tip').tooltip();
@@ -351,7 +351,8 @@ options = {
                 data: [],
 		point: {
                     events: {
-                        click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
+                        //click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
+												click: function() { window.open('http://www.openml.org/r/' + this.r);}
                     }
                 }
             }]
@@ -442,7 +443,7 @@ function redrawCurves(){
 	options.legend = {};
 
 	options.tooltip = {
-    		backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF',
 		useHTML: true,
 		formatter: function() {return '<b>'+ this.series.name +'</b><br/>'+	this.x +' '+ this.y;}};
 
