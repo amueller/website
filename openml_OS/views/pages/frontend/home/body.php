@@ -155,6 +155,7 @@
 
 		  <div class="col-xs-12 col-sm-6 pull-right-lg contactfooter">
                     <ul class="openml-contact-footer">
+                        <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank"><i class="fa fa-envelope fa-2x"></i><br />join list</a></li>
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
                         <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
 			<li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-2x"></i><br />comment</a></li>
@@ -165,8 +166,8 @@
 		    <br>
 
                     <ul class="openml-footer" class="pull-right">
-           		<li>Funded by</li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
-                        <li>Hosted by</li><li> <a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden</a>, <a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">TU/e</a></li>
+           		          <li>Generously funded by</li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
+                        <li>Hosted for you by</li><li> <a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden</a>, <a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">TU/e</a></li>
                     </ul>
 
 		  </div>
