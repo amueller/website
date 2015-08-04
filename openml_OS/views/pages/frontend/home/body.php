@@ -159,7 +159,7 @@
                         <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
 			<li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-2x"></i><br />comment</a></li>
                         <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-2x"></i><br />comment</a></li>
-                        <li><a href="community"><i class="fa fa-comments-o fa-2x"></i><br />forum</a></li>
+                        <li><a href="discuss"><i class="fa fa-comments-o fa-2x"></i><br />discuss</a></li>
 			<li><a href="https://github.com/openml/OpenML/issues?state=open" target="_blank"><i class="fa fa-github fa-2x"></i><br />issues</a></li>
                     </ul>
 		    <br>
