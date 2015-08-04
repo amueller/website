@@ -24,4 +24,61 @@
     }, function (error) {
       console.trace(error.message);
     });
+
+    if($this->table) {
+      $('#tableview').dataTable( {
+    		"responsive": "true",
+    		"dom": 'CT<"clear">lfrtip',
+    		"aaData": <?php echo json_encode($this->tableview); ?>,
+        "scrollY": "600px",
+        "scrollCollapse": true,
+    		"deferRender": true,
+        "paging": false,
+    		"processing": true,
+    		"bSort" : true,
+    		"bInfo": false,
+    		"tableTools": {
+    						"sSwfPath": "//cdn.datatables.net/tabletools/2.2.3/swf/copy_csv_xls_pdf.swf"
+    				},
+    		"aaSorting" : [],
+    		"aoColumns": [
+    	          <?php $cnt = sizeOf($cols);
+    			foreach( $this->tableview[0] as $k => $v ) {
+    			$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
+    			if(is_numeric($v))
+    				$newcol .= '"sType":"numeric", ';
+    			if($k == 'name' || $k == 'runs' || $k == 'NumberOfInstances' || $k == 'NumberOfFeatures' || $k == 'ClassCount' || $k == 'DefaultAccuracy' )
+    				$newcol .= '"bVisible":true},';
+    			else
+    				$newcol .= '"bVisible":false},';
+    			if(array_key_exists($k,$cols)){
+    				$cols[$k] = $newcol;
+    			} else {
+    				$cols[] = $newcol;
+    				$cnt++;
+    			}
+    		  	}
+    			foreach( $cols as $k => $v ) {
+     				echo $v;
+    			}?>
+
+    		]
+    	    } );
+
+    	$('.topmenu').show();
+
+    function toggleResults( resultgroup ) {
+    	var oDatatable = $('#tableview').dataTable(); // is not reinitialisation, see docs.
+
+    	redrawScatterRequest = true;
+    	redrawLineRequest = true;
+    	for( var i = 1; i < colcount; i++) {
+    		if( i > colmax * resultgroup && i <= colmax * (resultgroup+1) )
+    			oDatatable.fnSetColumnVis( i, true );
+    		else
+    			oDatatable.fnSetColumnVis( i, false );
+    	}
+    }
+    }
+
   });
