@@ -25,7 +25,8 @@
       console.trace(error.message);
     });
 
-    if($this->table) {
+    <?php
+    if($this->table) { ?>
       $('#tableview').dataTable( {
     		"responsive": "true",
     		"dom": 'CT<"clear">lfrtip',
@@ -79,6 +80,6 @@
     			oDatatable.fnSetColumnVis( i, false );
     	}
     }
-    }
+    <?php } ?>
 
   });
