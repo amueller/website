@@ -59,7 +59,9 @@ $this->filterstring=implode(" ",$this->filters);
 
 $this->listids = safe($this->input->get('listids'));
 $this->table = safe($this->input->get('table'));
-$this->size = (safe($this->input->get('size')) ? safe($this->input->get('size')) : 100);
+
+$size = explode('/',$this->input->get('size'))[0];
+$this->size = (safe($size) ? safe($size) : 100);
 
 // some fields can be set beforehand. If not, set them to appropriate defaults.
 
@@ -159,8 +161,9 @@ if(count($jsonfilters)>1)
 $params['index'] = 'openml';
 if($this->filtertype)
   $params['type'] = $this->filtertype;
-$params['body']  = '{
-    "from" : '. ($this->from ? $this->from : 0) .',
+$params['body']  = '{'.
+    ($this->table ? '"_source" : ["data_id","name","version","runs","qualities"],' : '').
+   '"from" : '. ($this->from ? $this->from : 0) .',
     "size" : '. $this->size .','.
     ($this->listids ? '"fields" : [],' : '').'
     "query" : { "filtered" : { "query" : {'.$query.'}, "filter": '.($fjson ? $fjson : '').'}},'.
@@ -207,4 +210,30 @@ $time = $time_end - $time_start;
 
 //echo "Query took $time seconds\n";
 
+if($this->table) {
+    $this->tableview = [];
+    $this->cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "","NumberOfClasses" => "");
+    foreach( $this->results['hits']['hits'] as $r ) {
+    $rs = $r['_source'];
+    $newrow = array();
+    $id=0;
+    foreach( $rs as $k => $v ) {
+        if($k == 'data_id')
+           $id = $v;
+        elseif($k == 'name')
+           $newrow[$k] = '<a href="d/'.$id.'">'.$v.'</a>';
+        elseif($k == 'version')
+           $newrow['name'] = str_replace('</a>',' ('.$v.')</a>',$newrow['name']);
+        elseif($k == 'qualities')
+          foreach( $v as $qk => $qv ) {
+           $newrow[$qk] = $qv;
+           if(!array_key_exists($qk,$this->cols))
+            $this->cols[$qk] = "";
+         }
+        elseif($k == 'runs')
+          $newrow[$k] = $v;
+    }
+    $this->tableview[] = $newrow;
+    }
+  }
 ?>

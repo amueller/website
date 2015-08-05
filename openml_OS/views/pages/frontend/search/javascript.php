@@ -26,7 +26,8 @@
     });
 
     <?php
-    if($this->table) { ?>
+    if($this->table) {
+    ?>
       $('#tableview').dataTable( {
     		"responsive": "true",
     		"dom": 'CT<"clear">lfrtip',
@@ -43,23 +44,24 @@
     				},
     		"aaSorting" : [],
     		"aoColumns": [
-    	          <?php $cnt = sizeOf($cols);
+    	  <?php
+          $cnt = sizeOf($this->cols);
     			foreach( $this->tableview[0] as $k => $v ) {
     			$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
     			if(is_numeric($v))
     				$newcol .= '"sType":"numeric", ';
-    			if($k == 'name' || $k == 'runs' || $k == 'NumberOfInstances' || $k == 'NumberOfFeatures' || $k == 'ClassCount' || $k == 'DefaultAccuracy' )
-    				$newcol .= '"bVisible":true},';
+    			if($k == 'name' || $k == 'runs' || $k == 'NumberOfInstances' || $k == 'NumberOfFeatures' || $k == 'NumberOfClasses')
+          	$newcol .= '"bVisible":true},';
     			else
     				$newcol .= '"bVisible":false},';
-    			if(array_key_exists($k,$cols)){
-    				$cols[$k] = $newcol;
+    			if(array_key_exists($k,$this->cols)){
+    				$this->cols[$k] = $newcol;
     			} else {
-    				$cols[] = $newcol;
+    				//$this->cols[] = $newcol;
     				$cnt++;
     			}
     		  	}
-    			foreach( $cols as $k => $v ) {
+    			foreach( $this->cols as $k => $v ) {
      				echo $v;
     			}?>
 

@@ -77,39 +77,13 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
         </div>
 
     <?php } else if($this->table) {
-      $this->tableview = [];
-      foreach( $this->results['hits']['hits'] as $r ) {
-	$rs = $r['_source'];
-	$newrow = array();
-	$id=0;
-	foreach( $rs as $k => $v ) {
-		if(!in_array($k,array('suggest','description','creator','contributor','update_comment','last_update',
-			'default_target_attribute','row_id_attribute','ignore_attribute','version_label','url','uploader',
-			'uploader_id','visibility','date','licence','format'))){
-			if($k == 'data_id')
-			   $id = $v;
-			elseif($k == 'name')
-			   $newrow[$k] = '<a href="d/'.$id.'">'.$v.'</a>';
-			elseif($k == 'version')
-			   $newrow['name'] = str_replace('</a>',' ('.$v.')</a>',$newrow['name']);
-			else
-			   $newrow[$k] = $v;
-		}
-	}
-	$this->tableview[] = $newrow;
-	$cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "","NumberOfClasses" => "");
-	}
 	?>
 	<div class="topmenu"></div>
 	<table id="tableview" class="table table-striped table-bordered table-condensed dataTable no-footer responsive">
 	<thead><tr>
-    <?php   foreach( $cols as $k => $v ) {
+    <?php foreach( $this->cols as $k => $v ) {
 			echo '<th>'.$k.'</th>';
 		}
-		foreach( $this->tableview[0] as $k => $v ) {
-			if(!array_key_exists($k,$cols))
-				echo '<th>'.$k.'</th>';
-	}
 	?>
 	</tr></thead>
 	<tbody></tbody>
