@@ -64,6 +64,13 @@ if (!empty($this->data['features'])){
 
 ?>
 
+// Needed for Wiki to work well
+Mousetrap.bind(['e'], function( e ) {
+  e.preventDefault();
+  window.location = "/edit" + window.location.pathname;
+  return false;
+});
+
 //Update form
 $(function() {
 		$('#licence').change(function(){

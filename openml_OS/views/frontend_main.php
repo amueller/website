@@ -266,9 +266,6 @@
 
         <script type="text/javascript">
           function downloadJSAtOnload() {
-          var element = document.createElement("script");
-          element.src = "js/libs/mousetrap.min.js";
-          document.body.appendChild(element);
           var element3= document.createElement("script");
           element3.src = "js/libs/jquery.sharrre.js";
           document.body.appendChild(element3);
@@ -284,6 +281,7 @@
               'js/material.min.js',
               'js/libs/jquery.form.js',
               'js/openml.js',
+              'js/libs/mousetrap.min.js',
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id)){

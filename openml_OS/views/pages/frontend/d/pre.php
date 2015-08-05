@@ -352,6 +352,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/') and false === strpos($_SERVER
     preg_match('/<body>(.*)<\/body>/s',$html,$content_arr);
     $this->wikiwrapper = $preamble . str_replace('body>','div>',$content_arr[0]);
     $this->wikiwrapper = str_replace('action="/edit/'.$this->wikipage.'"','',$this->wikiwrapper);
+    $this->wikiwrapper = preg_replace('/<script[^>]+\/>/im', '', $this->wikiwrapper);
   } else { //failsafe
     $this->wikiwrapper = '<div class="rawtext">'.$this->record->{'description'}.'</div>';
     $this->wiki_ok = false;
