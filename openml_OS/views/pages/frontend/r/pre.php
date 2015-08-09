@@ -1,5 +1,10 @@
 <?php
 
+if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) {
+  header('Location: search?type=run');
+  die();
+}
+
 $this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
 
 $this->initialMsgClass = '';

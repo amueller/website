@@ -1,6 +1,6 @@
 /// Wiki
 
-// Needed for Wiki to work well
+// Key shortcuts for wiki
 Mousetrap.bind(['e'], function( e ) {
   e.preventDefault();
   window.location = "/edit" + window.location.pathname;

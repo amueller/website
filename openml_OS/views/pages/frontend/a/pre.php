@@ -1,4 +1,10 @@
 <?php
+
+if(false === strpos($_SERVER['REQUEST_URI'],'/a/')) {
+  header('Location: search?type=measure');
+  die();
+}
+
 $this->initialMsgClass = '';
 $this->initialMsg = '';
 
