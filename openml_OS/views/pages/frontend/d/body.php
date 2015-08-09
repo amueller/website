@@ -1,3 +1,4 @@
+
 <div class="container-fluid topborder endless openmlsectioninfo">
   <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 
@@ -6,11 +7,13 @@
      <div class="tab-pane <?php if($this->activetab == 'overview') echo 'active'; ?>" id="data_overview">
        <?php if($this->activetab == 'overview') subpage('dataset'); ?>
      </div>
+
      <div class="tab-pane <?php if($this->activetab == 'update') echo 'active'; ?>" id="data_update">
        <?php if($this->activetab == 'update') subpage('update'); ?>
      </div>
 
      </div> <!-- end tabs content -->
+
 
     <div class="submenu">
       <ul class="sidenav nav" id="accordeon">

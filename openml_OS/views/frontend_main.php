@@ -261,9 +261,7 @@
 
           <?php echo body(); ?>
 
-
         </div>
-
         <script type="text/javascript">
           function downloadJSAtOnload() {
           var element3= document.createElement("script");
@@ -281,15 +279,13 @@
               'js/material.min.js',
               'js/libs/jquery.form.js',
               'js/openml.js',
-              'js/libs/mousetrap.min.js',
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id)){
                 echo "'frontend/js/".$ch."/".$this->id."/script.js',";
               } else {?>
               'frontend/js/<?php echo $ch;?>/script.js', <?php } ?>
-              'js/openmlafter.js',
-
+              'js/openmlafter.js'
             ])
 
           //download js that does not affect DOM and can be loaded after page is rendered

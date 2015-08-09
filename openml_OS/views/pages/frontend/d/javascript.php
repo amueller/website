@@ -1,9 +1,18 @@
 /// Wiki
 
+// Needed for Wiki to work well
+Mousetrap.bind(['e'], function( e ) {
+  e.preventDefault();
+  window.location = "/edit" + window.location.pathname;
+  return false;
+});
+
 $("#gollum-editor-message-field").val("Write a small message explaining the change.");
 $("#gollum-editor-submit").addClass("btn btn-success pull-left");
 $("#gollum-editor-preview").removeClass("minibutton");
 $("#gollum-editor-preview").addClass("btn btn-default padded-button");
+$("#function-help").addClass("wiki-help-button");
+$("#function-help").html("Need help?");
 $("#gollum-editor-preview").attr("href","preview");
 $("#version-form").attr('action', "d/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
 $("a[title*='View commit']").each(function() {
@@ -63,13 +72,6 @@ if (!empty($this->data['features'])){
 	}
 
 ?>
-
-// Needed for Wiki to work well
-Mousetrap.bind(['e'], function( e ) {
-  e.preventDefault();
-  window.location = "/edit" + window.location.pathname;
-  return false;
-});
 
 //Update form
 $(function() {

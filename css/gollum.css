@@ -1,3 +1,15 @@
+.wiki-help-button{
+  border: none !important;
+  background: none !important;
+  font-size: 9pt;
+  margin-top: 10px !important;
+}
+
+a.wiki-help-button:hover{
+  color: #444 !important;
+}
+
+
 #wiki-wrapper #template blockquote {
   margin: 1em 0;
   border-left: 4px solid #ddd;

@@ -41,7 +41,10 @@
     </div>
     <div class="card-content">
      <div class="description <?php if($this->hidedescription) echo 'hideContent';?>">
-	    <?php echo $this->wikiwrapper; ?>
+	    <?php
+        $this->wikiwrapper = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $this->wikiwrapper);
+        echo $this->wikiwrapper;
+         ?>
      </div>
     </div>
   </div>

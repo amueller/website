@@ -105,12 +105,8 @@ if (!function_exists('array_column')) {
 
 }
 
-
-
-
-
 //$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
-$this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+$this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/gollum.js','js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
 $this->load_css = array('css/gollum.css');
 
 //Redirect to search if bad url
@@ -352,7 +348,6 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/') and false === strpos($_SERVER
     preg_match('/<body>(.*)<\/body>/s',$html,$content_arr);
     $this->wikiwrapper = $preamble . str_replace('body>','div>',$content_arr[0]);
     $this->wikiwrapper = str_replace('action="/edit/'.$this->wikipage.'"','',$this->wikiwrapper);
-    $this->wikiwrapper = preg_replace('/<script[^>]+\/>/im', '', $this->wikiwrapper);
   } else { //failsafe
     $this->wikiwrapper = '<div class="rawtext">'.$this->record->{'description'}.'</div>';
     $this->wiki_ok = false;
@@ -370,4 +365,5 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/d/') and false === strpos($_SERVER
 function cleanName($string){
   return $safe = preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $string)));
 }
+
 ?>
