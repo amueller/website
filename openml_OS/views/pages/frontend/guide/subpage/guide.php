@@ -95,6 +95,10 @@
 <h3 class="text-muted"><i class="fa fa-graduation-cap fa-fw"></i> Altmetrics (under construction)</h3>
 <p>OpenML keeps track of the impact of your work: how often is it downloaded, liked, or reused in other studies.</p>
 
+<h3 class="text-muted"><i class="fa fa-clone fa-fw"></i> Jobs (under construction)</h3>
+<p>OpenML can help you run large experiments. A job is a small container defining a specific flow, with specific parameters settings, to run on a specific tasks. You can generate batches of these jobs online, and you can run a helper tool on your machines/clouds/clusters that downloads these jobs (including all data), executes them, and uploads the results.</p>
+
+
 <h3 id="g_devs" class="text-danger"><i class="fa fa-github fa-fw"></i> Developers</h3>
 <p>OpenML is an open source project, <a href="https://github.com/openml">hosted on GitHub</a>, and maintained by a very active community of developers. We welcome everybody to contribute to OpenML, and are glad to help you make optimal use of OpenML in your research.
 <ul>
