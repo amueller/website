@@ -1,6 +1,6 @@
 <?php
 
-if(false === strpos($_SERVER['REQUEST_URI'],'/d/')) {
+if(false === strpos($_SERVER['REQUEST_URI'],'/f/')) {
   header('Location: search?type=flow');
   die();
 }
