@@ -1,20 +1,20 @@
 var oTable;
 
 $(document).ready(function() {
-  oTable = $('.data_overview_table_<?php echo $counter; ?>').dataTable({
+  oTable = $('.data_overview_table_<?php echo $this->counter; ?>').dataTable({
     "bServerSide": true,
     "sAjaxSource": "api_query/table_feed",
     "sServerMethod": "POST",
     "fnServerParams": function ( aoData ) {
-      aoData.push( { 'value': '<?php echo implode(",",$columns); ?>', 'name' : 'columns' } );
-      aoData.push( { 'value': '<?php echo htmlspecialchars($sql); ?>', 'name' : 'base_sql' } );
+      aoData.push( { 'value': '<?php echo implode(",",$this->columns); ?>', 'name' : 'columns' } );
+      aoData.push( { 'value': '<?php echo htmlspecialchars($this->sql); ?>', 'name' : 'base_sql' } );
     },
-    "aaSorting": <?php echo $sort; ?>,
+    "aaSorting": <?php echo $this->sort; ?>,
     "bLengthChange": false,
     "bFilter": false,
     "iDisplayLength" : 30,
     "bAutoWidth": true,
-    <?php echo column_widths($column_widths); ?>
+    <?php echo column_widths($this->widths); ?>
     "bPaginate": true
   });
 });
