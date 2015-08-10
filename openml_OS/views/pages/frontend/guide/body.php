@@ -14,7 +14,7 @@
   <div class="tab-pane" id="cite">
   <?php subpage('citing'); ?>
   </div>
-  <div class="tab-pane" id="team">r
+  <div class="tab-pane" id="team">
   <?php subpage('team'); ?>
   </div>
   <div class="tab-pane" id="plugin_weka">

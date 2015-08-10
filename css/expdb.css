@@ -2,6 +2,13 @@
     display: none;
 }
 
+.img-guide-wrapper{
+  width: 65%;
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 canvas {
   display: inline-block;
   *display: inline;
@@ -752,8 +759,8 @@ select{
 
 .openmlsectioninfo h3{
   font-size: 25px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top:30px;
+  padding-bottom: 5px;
   clear: both;
 }
 

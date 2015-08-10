@@ -1,4 +1,4 @@
-  <div class="row">
+<div class="row">
 
          <h2 id="team-core">Our Team</h2>
 <?php
