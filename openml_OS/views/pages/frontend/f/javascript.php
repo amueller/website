@@ -18,6 +18,8 @@ $(document).ready(function() {
   $("#gollum-editor-preview").removeClass("minibutton");
   $("#gollum-editor-preview").addClass("btn btn-default padded-button");
   $("#gollum-editor-preview").attr("href","preview");
+  $("#function-help").addClass("wiki-help-button");
+  $("#function-help").html("Need help?");
   $("#version-form").attr('action', "f/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
   $("a[title*='View commit']").each(function() {
      var _href = $(this).attr("href");
