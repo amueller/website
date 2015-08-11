@@ -4,8 +4,8 @@ $this->load_javascript = array('js/libs/jquery.dataTables.min.js');
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->id = $this->uri->segment(2);
-	$this->subpage = $this->uri->segment(3);
+	$this->id = $this->subpage;
+	$this->subpage = $info[array_search('u',$info)+2];
 	$this->user_id = $this->id;
 	$this->baseurl = $_SERVER['REQUEST_URI'];
 	$this->author = $this->Author->getById($this->user_id);
@@ -24,7 +24,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	if(($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->user_id) || $this->ion_auth->is_admin())
 	   $this->is_owner = true;
 
-	if(isset($info[array_search('u',$info)+2]) and in_array($this->subpage,$this->legal_subpages)){
+	if(in_array($this->subpage,$this->legal_subpages)){
 	 array_pop($info);
 	 $this->baseurl = implode("/",$info);
 	 if( $this->subpage == 'flows' ) {
