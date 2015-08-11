@@ -49,6 +49,12 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	$this->id = explode('?',$info[array_search('f',$info)+1])[0];
 
 	$this->record = $this->Implementation->getByID($this->id);
+  $bfilerecord = $this->File->getById( $this->record->binary_file_id );
+  if($bfilerecord)
+    $this->flow_binary_url =  BASE_URL . 'data/download/' . $bfilerecord->id . '/binary';
+  $sfilerecord = $this->File->getById( $this->record->source_file_id );
+  if($sfilerecord)
+    $this->flow_source_url = BASE_URL . 'data/download/' . $sfilerecord->id . '/source';
 
 	// Get data from ES
 	$this->p = array();

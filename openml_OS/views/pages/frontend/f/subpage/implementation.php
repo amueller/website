@@ -1,6 +1,10 @@
 
 <ul class="hotlinks">
-<li><a class="loginfirst" href="<?php echo "#todo"; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+<?php if(isset($this->flow_source_url)) { ?>
+<li><a class="loginfirst" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+<?php } elseif(isset($this->flow_binary_url)) { ?>
+<li><a class="loginfirst" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+<?php } ?>
 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
 
 <li>   <div class="version" style="margin-bottom: -17px;">
