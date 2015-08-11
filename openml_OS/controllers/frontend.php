@@ -56,8 +56,9 @@ class Frontend extends CI_Controller {
     $this->page( $this->page );
   }
   
-  public function js($indicator) {
+  public function js($indicator,$subindicator) {
     $this->page = $indicator;
+    $this->subpage = $subindicator;
     
     $exploded_page = explode('_',$indicator);
     $this->active = $exploded_page[0]; // can be overridden. 
