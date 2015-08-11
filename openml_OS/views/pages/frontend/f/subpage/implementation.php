@@ -25,7 +25,9 @@
 <div class="col-xs-12 panel" onclick="showmore()">
   <div class="cardactions">
     <div class="wiki-buttons">
-    <span style="font-size:10px;font-style:italic;color:#666">Help us complete this description <i class="fa fa-long-arrow-right"></i></span>
+    <?php if(!$this->editing){ ?>
+      <span style="font-size:10px;font-style:italic;color:#666">Help us complete this description <i class="fa fa-long-arrow-right"></i></span>
+    <?php } ?>
     <a class="pull-right greenheader loginfirst" href="f/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
     <?php if ($this->show_history) { ?>
     <a class="pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
@@ -34,7 +36,10 @@
   </div>
   <div class="card-content">
    <div class="description <?php if($this->hidedescription) echo 'hideContent';?>">
-    <?php echo $this->wikiwrapper; ?>
+    <?php
+      $this->wikiwrapper = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $this->wikiwrapper);
+      echo $this->wikiwrapper;
+    ?>
    </div>
   </div>
 </div>

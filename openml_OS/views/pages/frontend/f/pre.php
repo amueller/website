@@ -17,6 +17,20 @@ if($this->input->get('sort'))
 
 /// DETAIL
 
+// Making sure we know who is editing
+$this->editor = 'Anonymous';
+$this->is_owner = false;
+$this->editing = false;
+if(false !== strpos($_SERVER['REQUEST_URI'],'/edit')){
+  if (!$this->ion_auth->logged_in()) {
+  header('Location: ' . BASE_URL . 'login');
+  }
+  else{
+  $user = $this->Author->getById($this->ion_auth->user()->row()->id);
+  $this->editor = $user->first_name . ' ' . $user->last_name;
+  $this->editing = true;
+  }
+}
 $this->user_id = -1;
 if ($this->ion_auth->logged_in()) {
   $this->user_id = $this->ion_auth->user()->row()->id;

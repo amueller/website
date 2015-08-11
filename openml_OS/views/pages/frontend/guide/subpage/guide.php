@@ -26,18 +26,18 @@
 
 <h3 class="text-warning"><i class="fa fa-trophy fa-fw"></i> Tasks</h3>
 <p>Tasks describe what to do with the data. OpenML covers several <a href="search?type=task_type">task types</a>, such as classification and clustering. You can <a href="new/task" class="loginfirst">create tasks</a> online.</p>
-<p>Tasks are little containers including the data, other information such as train/test splits, and define what needs to be returned.</p>
+<p>Tasks are little containers including the data and other information such as train/test splits, and define what needs to be returned.</p>
 <p>Tasks are machine-readable so that machine learning environments know what to do, and you can focus on finding the best algorithm. You can run algorithms on your own machine(s) and upload the results. OpenML evaluates and organizes all solutions online.</p>
 <div class="img-guide-wrapper"><img src="img/task-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
 <p>Tasks are <i>real-time, collaborative</i> data mining challenges (e.g. see <a href="t/7293#!people">this one</a>): you can study, discuss and learn from all submissions (code has to be shared), while OpenML keeps track of who was first.</p>
 <div class="img-guide-wrapper"><img src="img/task-ss2.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
-<p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply a hidden test sets for a traditional challenge. Other ways of ranking solutions will be added in the near future.</p>
+<p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply hidden test sets for the evaluation of solutions. Novel ways of ranking solutions will be added in the near future.</p>
 
 <h3 class="text-info"><i class="fa fa-cogs fa-fw"></i> Flows</h3>
-<p>Flows are algorithms, workflows, or scripts solving tasks. You can upload them through the <a href="new/flow" class="loginfirst">website</a>, or <a href="guide#g_apis">API</a>. Code hosted elsewhere can be referenced by URL.</p>
-<p>Ideally, flows are wrappers around existing algorithms/tools so that they can read and solve OpenML tasks.</p>
+<p>Flows are algorithms, workflows, or scripts solving tasks. You can upload them through the <a href="new/flow" class="loginfirst">website</a>, or <a href="guide#g_apis">API</a>. Code hosted elsewhere (e.g., GitHub) can be referenced by URL.</p>
+<p>Ideally, flows are wrappers around existing algorithms/tools so that they can automatically read and solve OpenML tasks.</p>
 <p>Every flow gets a dedicated page with all known information (check out <a href="f/65">WEKA's RandomForest</a>), including a wiki, hyperparameters, evaluations on all tasks, and user discussions.</p>
 <div class="img-guide-wrapper"><img src="img/flow-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 

@@ -94,7 +94,15 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	    'id_field'        => 'rid',
 	    'identify_field'  => 'name' );
 	}
- }
+
+	$this->sort = '[[1, \'desc\']]';
+	$this->datatable = $this->dataoverview->generate_table(
+    $this->name,
+    $this->columns,
+    $this->widths,
+    $this->sql,
+    $this->api_delete_function );
+}
 }
 
 
