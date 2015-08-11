@@ -29,9 +29,9 @@
         <li class="panel guidechapter">
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-cubes fa-fw fa-lg"></i> <b>My data</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
-            <li><a href="<?php echo BASE_URL .'u/data/' . $this->user_id;?>">Data sets</a></li>
-            <li><a href="<?php echo BASE_URL .'u/flows/' . $this->user_id;?>">Flows</a></li>
-            <li><a href="<?php echo BASE_URL .'u/runs/' . $this->user_id;?>">Runs</a></li>
+            <li><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/data';?>">Data sets</a></li>
+            <li><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/flows';?>">Flows</a></li>
+            <li><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/runs';?>">Runs</a></li>
           </ul>
         </li>
       </ul>

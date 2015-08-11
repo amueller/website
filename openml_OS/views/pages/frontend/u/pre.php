@@ -4,7 +4,8 @@ $this->load_javascript = array('js/libs/jquery.dataTables.min.js');
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->id = $this->uri->segment(3);
+	$this->id = $this->uri->segment(2);
+	$this->subpage = $this->uri->segment(3);
 	$this->user_id = $this->id;
 	$this->baseurl = $_SERVER['REQUEST_URI'];
 	$this->author = $this->Author->getById($this->user_id);
