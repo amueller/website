@@ -23,11 +23,10 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	if(($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->user_id) || $this->ion_auth->is_admin())
 	   $this->is_owner = true;
 
-	if(isset($info[array_search('u',$info)+2]) and in_array(end($info),$this->legal_subpages)){
-	 $this->usubpage = end($info);
+	if(isset($info[array_search('u',$info)+2]) and in_array($this->subpage,$this->legal_subpages)){
 	 array_pop($info);
 	 $this->baseurl = implode("/",$info);
-	 if( $this->usubpage == 'flows' ) {
+	 if( $this->subpage == 'flows' ) {
 	  $sql = 'SELECT SQL_CALC_FOUND_ROWS `i`.`id`, `i`.`name`, `i`.`version`, `i`.`external_version`, `r`.`runs`, '.
 	         'IF(`r`.`runs` > 0,"",CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`i`.`id`,",\\\'",`i`.`name`,"\\\')\\\\"></i>")) AS `delete`, '.
 	         'CONCAT("<a href=\\\\"f/", `i`.`id`, "\\\\">", `i`.`name`, "</a>") AS `name_link`' .
@@ -48,7 +47,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	    'id_field'        => 'id',
 	    'identify_field'  => 'name' );
 
-	 } elseif( $this->usubpage == 'data' ) {
+	 } elseif( $this->subpage == 'data' ) {
 
 	  $sql = 'SELECT SQL_CALC_FOUND_ROWS `d`.`did`, `d`.`name`, `d`.`upload_date`, `d`.`format`, `t`.`tasks`, '.
 	         'IF(`t`.`tasks` > 0,"",CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`d`.`did`,",\\\'",`d`.`name`,"\\\')\\\\"></i>")) AS `delete`, '.
@@ -69,7 +68,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	    'id_field'        => 'did',
 	    'identify_field'  => 'name' );
 
-	 } elseif( $this->usubpage == 'runs' ) {
+	 } elseif( $this->subpage == 'runs' ) {
 
 	  $sql = 'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name` AS `dataset`, `i`.`fullName` AS `flow`, '.
 	         'CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`r`.`rid`,",\\\'run ",`r`.`rid`,"\\\')\\\\"></i>") AS `delete`, '.
