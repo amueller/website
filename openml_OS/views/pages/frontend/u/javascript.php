@@ -1,7 +1,7 @@
 var oTable;
 
 $(document).ready(function() {
-  oTable = $('.data_overview_table_<?php echo $this->counter; ?>').dataTable({
+  oTable = $('.data_overview_table_<?php echo $counter; ?>').dataTable({
     "bServerSide": true,
     "sAjaxSource": "api_query/table_feed",
     "sServerMethod": "POST",
