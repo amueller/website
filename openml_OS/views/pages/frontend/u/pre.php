@@ -34,7 +34,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	         'FROM `implementation` `i` '.
 	         'LEFT JOIN `algorithm_setup` `s` ON `i`.`id` = `s`.`implementation_id` '.
 	         'LEFT JOIN (SELECT `setup`, count(*) AS `runs` FROM `run` GROUP BY `setup`) `r` ON `s`.`sid` = `r`.`setup` ' .
-	         'WHERE `i`.`uploader` = "' . $this->ion_auth->get_user_id() . '"';
+	         'WHERE `i`.`uploader` = "' . $this->user_id . '"';
 
 	  $this->columns = array( 'delete', 'id', 'name_link', 'version', 'external_version', 'runs' );
 	  $this->widths = array( 5, 5, 20, 5, 10, 5);
@@ -55,7 +55,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	         'CONCAT("<a href=\\\\"d/", `d`.`did`, "\\\\">", `d`.`name`, "</a>") AS `name_link`' .
 	         'FROM `dataset` `d` '.
 	         'LEFT JOIN (SELECT `value` AS `did`, count(*) AS `tasks` FROM `task_inputs` WHERE `input` = "source_data" GROUP BY `value`) `t` ON d.did = t.did ' .
-	         'WHERE `uploader` = "' . $this->ion_auth->get_user_id() . '"';
+	         'WHERE `uploader` = "' . $this->user_id . '"';
 
 	  $this->columns = array( 'delete', 'did', 'name_link', 'upload_date', 'format', 'tasks' );
 	  $this->widths = array( 5, 5, 20, 10, 10, 5);
@@ -78,7 +78,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	         'FROM `algorithm_setup` `s`, `implementation` `i`, `run` `r` ' .
 	         'LEFT JOIN `task_inputs` `t` ON `r`.`task_id` = `t`.`task_id` AND `t`.`input` = "source_data" ' .
 	         'LEFT JOIN `dataset` `d` ON `t`.`value` = `d`.`did` ' .
-	         'WHERE `r`.`uploader` = ' . $this->ion_auth->get_user_id() . ' ' .
+	         'WHERE `r`.`uploader` = ' . $this->user_id . ' ' .
 	         'AND `r`.`setup` = `s`.`sid` AND `s`.`implementation_id` = `i`.`id` ';
 
 	  $this->columns = array( 'delete', 'name_link', 'start_time', 'task_id', 'dataset', 'flow', 'status', 'error' );
