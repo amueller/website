@@ -282,7 +282,7 @@
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id)){
-                echo "'frontend/js/".$ch."/".$this->id."/script.js',";
+                echo "'frontend/js/".$ch."/".$this->id."/".$this->subpage."',";
               } else {?>
               'frontend/js/<?php echo $ch;?>/script.js', <?php } ?>
               'js/openmlafter.js'
