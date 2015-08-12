@@ -4,7 +4,8 @@ $this->load_javascript = array('js/libs/jquery.dataTables.min.js');
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->id = $this->uri->segment(3);
+	$this->id = $this->subpage;
+	$this->subpage = $info[array_search('u',$info)+2];
 	$this->user_id = $this->id;
 	$this->baseurl = $_SERVER['REQUEST_URI'];
 	$this->author = $this->Author->getById($this->user_id);
@@ -23,18 +24,17 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	if(($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->user_id) || $this->ion_auth->is_admin())
 	   $this->is_owner = true;
 
-	if(isset($info[array_search('u',$info)+2]) and in_array(end($info),$this->legal_subpages)){
-	 $this->usubpage = end($info);
+	if(in_array($this->subpage,$this->legal_subpages)){
 	 array_pop($info);
 	 $this->baseurl = implode("/",$info);
-	 if( $this->usubpage == 'flows' ) {
+	 if( $this->subpage == 'flows' ) {
 	  $sql = 'SELECT SQL_CALC_FOUND_ROWS `i`.`id`, `i`.`name`, `i`.`version`, `i`.`external_version`, `r`.`runs`, '.
 	         'IF(`r`.`runs` > 0,"",CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`i`.`id`,",\\\'",`i`.`name`,"\\\')\\\\"></i>")) AS `delete`, '.
 	         'CONCAT("<a href=\\\\"f/", `i`.`id`, "\\\\">", `i`.`name`, "</a>") AS `name_link`' .
 	         'FROM `implementation` `i` '.
 	         'LEFT JOIN `algorithm_setup` `s` ON `i`.`id` = `s`.`implementation_id` '.
 	         'LEFT JOIN (SELECT `setup`, count(*) AS `runs` FROM `run` GROUP BY `setup`) `r` ON `s`.`sid` = `r`.`setup` ' .
-	         'WHERE `i`.`uploader` = "' . $this->ion_auth->get_user_id() . '"';
+	         'WHERE `i`.`uploader` = "' . $this->user_id . '"';
 
 	  $this->columns = array( 'delete', 'id', 'name_link', 'version', 'external_version', 'runs' );
 	  $this->widths = array( 5, 5, 20, 5, 10, 5);
@@ -48,14 +48,14 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	    'id_field'        => 'id',
 	    'identify_field'  => 'name' );
 
-	 } elseif( $this->usubpage == 'data' ) {
+	 } elseif( $this->subpage == 'data' ) {
 
 	  $sql = 'SELECT SQL_CALC_FOUND_ROWS `d`.`did`, `d`.`name`, `d`.`upload_date`, `d`.`format`, `t`.`tasks`, '.
 	         'IF(`t`.`tasks` > 0,"",CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`d`.`did`,",\\\'",`d`.`name`,"\\\')\\\\"></i>")) AS `delete`, '.
 	         'CONCAT("<a href=\\\\"d/", `d`.`did`, "\\\\">", `d`.`name`, "</a>") AS `name_link`' .
 	         'FROM `dataset` `d` '.
 	         'LEFT JOIN (SELECT `value` AS `did`, count(*) AS `tasks` FROM `task_inputs` WHERE `input` = "source_data" GROUP BY `value`) `t` ON d.did = t.did ' .
-	         'WHERE `uploader` = "' . $this->ion_auth->get_user_id() . '"';
+	         'WHERE `uploader` = "' . $this->user_id . '"';
 
 	  $this->columns = array( 'delete', 'did', 'name_link', 'upload_date', 'format', 'tasks' );
 	  $this->widths = array( 5, 5, 20, 10, 10, 5);
@@ -69,7 +69,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	    'id_field'        => 'did',
 	    'identify_field'  => 'name' );
 
-	 } elseif( $this->usubpage == 'runs' ) {
+	 } elseif( $this->subpage == 'runs' ) {
 
 	  $sql = 'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`,`r`.`start_time`,`r`.`task_id`,`r`.`status`, `r`.`error`, `d`.`name` AS `dataset`, `i`.`fullName` AS `flow`, '.
 	         'CONCAT("<i class=\\\\"fa fa-fw fa-times\\\\" onclick=\\\\"askConfirmation(",`r`.`rid`,",\\\'run ",`r`.`rid`,"\\\')\\\\"></i>") AS `delete`, '.
@@ -78,7 +78,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	         'FROM `algorithm_setup` `s`, `implementation` `i`, `run` `r` ' .
 	         'LEFT JOIN `task_inputs` `t` ON `r`.`task_id` = `t`.`task_id` AND `t`.`input` = "source_data" ' .
 	         'LEFT JOIN `dataset` `d` ON `t`.`value` = `d`.`did` ' .
-	         'WHERE `r`.`uploader` = ' . $this->ion_auth->get_user_id() . ' ' .
+	         'WHERE `r`.`uploader` = ' . $this->user_id . ' ' .
 	         'AND `r`.`setup` = `s`.`sid` AND `s`.`implementation_id` = `i`.`id` ';
 
 	  $this->columns = array( 'delete', 'name_link', 'start_time', 'task_id', 'dataset', 'flow', 'status', 'error' );
