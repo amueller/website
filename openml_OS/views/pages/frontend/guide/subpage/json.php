@@ -20,7 +20,7 @@
 	<p>Example: <a href="r/1/json"><code>www.openml.org/r/1/json</code></a></p>
 
 	<h3 id="json_sql">Free SQL Queries</h3>
-        <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
+        <div class="panel" style="padding-top:20px;padding-bottom:20px">
           <p>Whenever the existing API functions do not cover your needs, it is possible to use direct SQL SELECT queries. The result will be returned in JSON format. </p>
           <p>The URL is
           <div class="codehighlight">

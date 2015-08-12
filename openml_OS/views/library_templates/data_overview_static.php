@@ -10,7 +10,7 @@
       "bInfo": true
     } );
   } );
-  
+
 <?php if( $api_delete_function ): ?>
 
 function askConfirmation( id, name ) {
@@ -25,9 +25,9 @@ $.ajax({
   url: "<?php echo BASE_URL; ?>api/?f=<?php echo $api_delete_function['function']; ?>",
   data: "<?php echo $api_delete_function['key']; ?>="+id,
   dataType: "xml"
-}).done( function( resultdata ) { 
+}).done( function( resultdata ) {
     id_field = $(resultdata).find("oml\\:id, id");
-    
+
     if( id_field.length ) {
       $("#overviewtable_row_" + id_field.text() ).remove();
       if( msg ) { alert( name + " was deleted. " ); }
@@ -41,7 +41,7 @@ $.ajax({
 <?php endif; ?>
 </script>
 
-<div class="bs-docs-container topborder">
+<div class="topborder">
   <div class="container">
     <div class="col-sm-12">
       <?php if($table_name): ?><h2><?php echo $table_name; ?></h2><?php endif; ?>

@@ -34,7 +34,6 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/material-fullpalette.min.css">
         <link rel="stylesheet" href="css/expdb.css">
-        <link rel="stylesheet" href="css/docs.css">
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/jquery-ui.css" type="text/css"/>
         <link rel="stylesheet" href="css/bootstrap-select.css">

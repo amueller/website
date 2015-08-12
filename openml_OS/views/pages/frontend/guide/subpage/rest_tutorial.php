@@ -4,8 +4,11 @@
        <p>OpenML offers a RESTful Web API for uploading and downloading machine learning resources. Below is a list of common use cases.
 
        <div class="alert alert-warning" role="alert">You need to be <a href="login">signed in</a> to use the examples below.</div>
-       <div class="bs-callout bs-callout-info" style="padding-top:20px;padding-bottom:20px">
-          <h4>Using REST services</h4>
+       <div class="panel panel-simple panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Using REST services</h3>
+        </div>
+        <div class="panel-body">
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
           <p>The REST Endpoint URL is
           <div class="codehighlight"><pre><code class="http"><?php echo BASE_URL;?>api/</code>
@@ -39,6 +42,7 @@ curl -XGET "<?php echo BASE_URL;?>api/?f=openml.data.description&data_id=1&sessi
 </code></pre>
           </div>
           <p>All services and the corresponding error messages are listed below.</p>
+         </div>
         </div>
 
         <h2 id="dev-getdata">Download a dataset</h2>

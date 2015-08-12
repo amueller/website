@@ -184,6 +184,7 @@ width: 80pt;
   border-radius: 5px;
   text-decoration: none;
   list-style: none;
+  width:265px !important;
 }
 
 .sidenav ul {
@@ -368,7 +369,7 @@ select{
 }
 
 #submenucontainer{
-  min-height: 100%;
+  height: 100vh;
 }
 
 .guidechapter-contact li i{
@@ -3001,6 +3002,11 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
   padding: 0px;
 }
 
+.panel-title{
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
 .newssection{
   text-align: left;
   margin-top: -40px;
@@ -3046,4 +3052,88 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
   overflow-x: scroll;
   -ms-overflow-style: -ms-autohiding-scrollbar;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Marketing section of Overview
+-------------------------------------------------- */
+.marketing {
+  text-align: center;
+  color: #5a5a5a;
+}
+.marketing .row {
+  margin-bottom: 9px;
+}
+.marketing .row-fluid {
+  margin-bottom: 15px;
+}
+
+.marketing h1 {
+  margin: 36px 0 27px;
+  font-size: 40px;
+  font-weight: 300;
+  text-align: center;
+}
+.marketing h2,
+.marketing h3 {
+  color:#40a236;
+  font-weight: 300;
+  margin-top:0px;
+}
+.marketing h2 {
+  font-size: 22px;
+}
+.marketing p {
+  margin-right: 10px;
+}
+.marketing .bs-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: .8;
+}
+.marketing .bs-icon2 {
+  float: left;
+  padding-right: 15px;
+  margin-bottom: -20px;
+  opacity: .7;
+}
+.marketing .small-bs-icon {
+  float: left;
+  margin: 4px 5px 0 0;
+}
+.marketing-byline {
+  margin: -18px 0 27px;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 24px;
+  color: #999;
+  text-align: center;
+}
+.marketing img {
+  display: block;
+  margin: 0 auto 30px;
+}
+.marketing .expdblogo {
+  margin-left: -120px;
+}
+
+@media (max-width: 767px) {
+.pull-left-lg{
+  float: left !important;
+}
+
+.pull-right-lg{
+  float: left !important;
+}
+}
+@media screen and (min-width: 768px) {
+  .pull-left-lg{
+    float: left !important;
+  }
+  .pull-right-lg{
+    float: right !important;
+  }
+  .openml-contact {
+    float: right;
+  }
 }

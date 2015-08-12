@@ -5,7 +5,7 @@
 <p><i>returns a session_hash, which can be used for writing to the API</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST username</code> (Required)</dt><dd>The username to be authenticated with</dd></dl>
 <dl><dt><code>POST password</code> (Required)</dt><dd>An md5 hash of the password, corresponding to the username</dd></dl>
 </div>
@@ -24,7 +24,7 @@
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>250: Please provide username</dt><dd>Please provide the username as a POST variable</dd></dl>
 <dl><dt>251: Please provide password</dt><dd>Please provide the password (hashed as a MD5) as a POST variable</dd></dl>
 <dl><dt>252: Authentication failed</dt><dd>The username and password did not match any record in the database. Please note that the password should be hashed using md5</dd></dl>
@@ -42,7 +42,7 @@
 <p><i>checks the validity of the session hash</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST username</code> (Required)</dt><dd>The username to be authenticated with</dd></dl>
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash to be checked</dd></dl>
 </div>
@@ -60,7 +60,7 @@
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>290: Username not provided</dt><dd>Please provide username</dd></dl>
 <dl><dt>291: Hash not provided</dt><dd>Please provide hash to be checked</dd></dl>
 <dl><dt>292: Hash does not exist</dt><dd>Hash does not exist, or is not owned by this user</dd></dl>
@@ -79,7 +79,7 @@
 <p><i>Returns a list with all dataset ids in OpenML that are ready to use</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 None
 </div>
 <h5>Example Response</h5>
@@ -104,7 +104,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>370: No datasets available</dt><dd>There are no valid datasets in the system. Please upload!</dd></dl>
 </div>
 
@@ -120,11 +120,11 @@ None
 <p><i>returns dataset descriptions in XML</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET data_id</code> (Required)</dt><dd>The dataset id</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.data.description</h5>
 
 This XSD schema is applicable for both uploading and downloading data. <br/>
@@ -163,7 +163,7 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>110: Please provide data_id</dt><dd>Please provide data_id</dd></dl>
 <dl><dt>111: Unknown dataset</dt><dd>Data set description with data_id was not found in the database</dd></dl>
 </div>
@@ -180,20 +180,20 @@ This XSD schema is applicable for both uploading and downloading data. <br/>
 <p><i>Uploads a dataset</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST description</code> (Required)</dt><dd>An XML file containing the data set description</dd></dl>
 <dl><dt><code>POST dataset</code> (Required)</dt><dd>The dataset file to be stored on the server</dd></dl>
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash, provided by the server on authentication (1 hour valid)</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.data.upload</h5>
 
 This XSD schema is applicable for both uploading and downloading data, hence some fields are not used.<br/>
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.upload.xsd">XSD Schema</a>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>130: Problem with file uploading</dt><dd>There was a problem with the file upload</dd></dl>
 <dl><dt>131: Problem validating uploaded description file</dt><dd>The XML description format does not meet the standards</dd></dl>
 <dl><dt>132: Failed to move the files</dt><dd>Internal server error, please contact api administrators</dd></dl>
@@ -222,12 +222,12 @@ This XSD schema is applicable for both uploading and downloading data, hence som
 <p><i>Deletes a dataset. Can only be done if the dataset is not used in tasks</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash to authenticate with</dd></dl>
 <dl><dt><code>POST data_id</code> (Required)</dt><dd>The dataset to be deleted</dd></dl>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>350: Please provide session_hash</dt><dd>In order to remove your content, please authenticate (openml.authenticate) and provide session_hash</dd></dl>
 <dl><dt>351: Authentication failed</dt><dd>The session_hash was not valid. Please try to login again, or contact api administrators</dd></dl>
 <dl><dt>352: Dataset does not exists</dt><dd>The data id could not be linked to an existing dataset.</dd></dl>
@@ -248,7 +248,7 @@ This XSD schema is applicable for both uploading and downloading data, hence som
 <p><i>Gives a list of all data licences used in OpenML</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 None
 </div>
 <h5>Example Response</h5>
@@ -267,7 +267,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 None
 </div>
 
@@ -283,11 +283,11 @@ None
 <p><i>Returns the features (attributes) of a given dataset</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET data_id</code> (Required)</dt><dd>The dataset id</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.data.features</h5>
 
 -<br/>
@@ -500,7 +500,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>270: Please provide data_id</dt><dd>Please provide data_id</dd></dl>
 <dl><dt>271: Unknown dataset</dt><dd>Data set description with data_id was not found in the database</dd></dl>
 <dl><dt>272: No features found</dt><dd>The registered dataset did not contain any features</dd></dl>
@@ -520,11 +520,11 @@ None
 <p><i>Returns the qualities (meta-features) of a given dataset</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET data_id</code> (Required)</dt><dd>The dataset id</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.data.qualities</h5>
 
 -<br/>
@@ -806,7 +806,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>360: Please provide data_id</dt><dd>Please provide data_id</dd></dl>
 <dl><dt>361: Unknown dataset</dt><dd>Data set description with data_id was not found in the database</dd></dl>
 <dl><dt>362: No qualities found</dt><dd>The registered dataset did not contain any calculated qualities</dd></dl>
@@ -827,7 +827,7 @@ None
 <p><i>Lists all data qualities that are used (i.e., are calculated for at least one dataset)</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 None
 </div>
 <h5>Example Response</h5>
@@ -914,7 +914,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 None
 </div>
 
@@ -931,11 +931,11 @@ None
 <p><i>Returns the description of a task</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET task_id</code> (Required)</dt><dd>The task id</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.task.search</h5>
 
 A task description<br/>
@@ -986,7 +986,7 @@ A task description<br/>
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>150: Please provide task_id</dt><dd>Please provide task_id</dd></dl>
 <dl><dt>151: Unknown task</dt><dd>The task with this id was not found in the database</dd></dl>
 </div>
@@ -1003,7 +1003,7 @@ A task description<br/>
 <p><i>Returns the performance of flows on a given task</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET task_id</code> (Required)</dt><dd>the task id</dd></dl>
 </div>
 <h5>Example Response</h5>
@@ -1023,7 +1023,7 @@ A task description<br/>
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>300: Please provide task_id</dt><dd>Please provide task_id</dd></dl>
 <dl><dt>301: Unknown task</dt><dd>The task with this id was not found in the database</dd></dl>
 </div>
@@ -1040,7 +1040,7 @@ A task description<br/>
 <p><i>Returns a list of all task types</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 None
 </div>
 <h5>Example Response</h5>
@@ -1085,7 +1085,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 None
 </div>
 
@@ -1101,11 +1101,11 @@ None
 <p><i>returns a definition (template) of a certain task type</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET task_type_id</code> (Required)</dt><dd>The task type id</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.task.types.search</h5>
 
 A description of a task type<br/>
@@ -1171,7 +1171,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>240: Please provide task_type_id</dt><dd>Please provide task_type_id</dd></dl>
 <dl><dt>241: Unknown task type</dt><dd>The task type with this id was not found in the database</dd></dl>
 </div>
@@ -1189,7 +1189,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
 <p><i>returns the details of an estimation procedure</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET estimationprocedure_id</code> (Required)</dt><dd>The id of the estimation procedure</dd></dl>
 </div>
 <h5>Example Response</h5>
@@ -1210,7 +1210,7 @@ Optionally, you can upload the model trained on all the input data. There is no 
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>440: Please provide estimationprocedure_id</dt><dd>Please provide estimationprocedure_id</dd></dl>
 <dl><dt>441: estimationprocedure_id not valid</dt><dd>Please provide a valid estimationprocedure_id</dd></dl>
 </div>
@@ -1228,11 +1228,11 @@ Optionally, you can upload the model trained on all the input data. There is no 
 <p><i>Returns the description of an implementation (flow)</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET implementation_id</code> (Required)</dt><dd>The id of the implementation</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.implementation.get</h5>
 
 This XSD schema is applicable for both uploading and downloading a implementation. <br/>
@@ -1335,7 +1335,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>180: Please provide implementation_id</dt><dd>Please provide implementation_id</dd></dl>
 <dl><dt>181: Unknown implementation</dt><dd>The implementation with this ID was not found in the database</dd></dl>
 </div>
@@ -1352,7 +1352,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <p><i>A utility function that checks whether an implementation already exists. Mainly used by workbenches</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET name</code> (Required)</dt><dd>The name of the implementation</dd></dl>
 <dl><dt><code>GET external_version</code> (Required)</dt><dd>The (workbench) version of the implementation. This is generally based on conventions per workbench</dd></dl>
 </div>
@@ -1370,7 +1370,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>330: Mandatory fields not present.</dt><dd>Please provide one of the following mandatory field combination: name and external_version.</dd></dl>
 </div>
 
@@ -1386,21 +1386,21 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <p><i>Uploads an implementation to OpenML</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST description</code> (Required)</dt><dd>An XML file containing the implementation meta data</dd></dl>
 <dl><dt><code>POST source</code></dt><dd>The source code of the implementation. If multiple files, please zip them. Either source or binary is required.</dd></dl>
 <dl><dt><code>POST binary</code></dt><dd>The binary of the implementation. If multiple files, please zip them. Either source or binary is required.</dd></dl>
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash, provided by the server on authentication (1 hour valid)</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.implementation.upload</h5>
 
 This XSD schema is applicable for both uploading and downloading a implementation. (Some fields are ignored)<br/>
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.implementation.upload.xsd">XSD Schema</a>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>160: Error in file uploading</dt><dd>There was a problem with the file upload</dd></dl>
 <dl><dt>161: Please provide description xml</dt><dd>Please provide description xml</dd></dl>
 <dl><dt>162: Please provide source or binary file</dt><dd>Please provide source or binary file. It is also allowed to upload both</dd></dl>
@@ -1427,11 +1427,11 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <p><i>Returns a list of all implementations owned by the user</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash, provided by the server on authentication (1 hour valid)</dd></dl>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>310: Please provide session_hash</dt><dd>In order to view private content, please authenticate (openml.authenticate) and provide session_hash</dd></dl>
 <dl><dt>311: Authentication failed</dt><dd>The session_hash was not valid. Please try to login again, or contact api administrators</dd></dl>
 <dl><dt>312: No implementations owned by this used</dt><dd>The user has no implementations linked to his account</dd></dl>
@@ -1449,12 +1449,12 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <p><i>Deletes an implementation (can only be done to owned implementations)</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash, provided by the server on authentication (1 hour valid)</dd></dl>
 <dl><dt><code>POST implementation_id</code> (Required)</dt><dd>The id of the implementation to delete</dd></dl>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>320: Please provide session_hash</dt><dd>In order to remove your content, please authenticate (openml.authenticate) and provide session_hash</dd></dl>
 <dl><dt>321: Authentication failed</dt><dd>The session_hash was not valid. Please try to login again, or contact api administrators</dd></dl>
 <dl><dt>322: Implementation does not exists</dt><dd>The implementation id could not be linked to an existing implementation.</dd></dl>
@@ -1475,7 +1475,7 @@ This XSD schema is applicable for both uploading and downloading a implementatio
 <p><i>Returns a list of all used licences in the implementations</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 None
 </div>
 <h5>Example Response</h5>
@@ -1494,7 +1494,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 None
 </div>
 
@@ -1511,7 +1511,7 @@ None
 <p><i>Returns a list of all evaluation measures</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 None
 </div>
 <h5>Example Response</h5>
@@ -1580,7 +1580,7 @@ None
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 None
 </div>
 
@@ -1597,11 +1597,11 @@ None
 <p><i>Returns the details of a specific run</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET run_id</code> (Required)</dt><dd>The id of the run</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.run.get</h5>
 
 This XSD schema is applicable for both uploading and downloading run details. <br/>
@@ -1764,7 +1764,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>220: Please provide run_id</dt><dd>In order to view run details, please provide run_id</dd></dl>
 <dl><dt>221: Run not found</dt><dd>The run id was invalid, run not found</dd></dl>
 </div>
@@ -1782,20 +1782,20 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <p><i>Uploads the results of a run to OpenML</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST description</code> (Required)</dt><dd>An XML file describing the run</dd></dl>
 <dl><dt><code>POST &lt;output_files&gt;</code> (Required)</dt><dd>All output files that should be generated by the run, as described in the task xml. For supervised classification tasks, this is typically a file containing predictions</dd></dl>
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash, provided by the server on authentication (1 hour valid)</dd></dl>
 </div>
 <h5>Schema's</h5>
-<div class="bs-callout bs-callout-info">
+<div class="panel panel-info">
 <h5>openml.run.upload</h5>
 
 This XSD schema is applicable for both uploading and downloading run details. <br/>
 <a type="button" class="btn btn-primary" href="https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.run.upload.xsd">XSD Schema</a>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>200: Please provide session_hash</dt><dd>In order to share content, please authenticate (openml.authenticate) and provide session_hash</dd></dl>
 <dl><dt>201: Authentication failed</dt><dd>The session_hash was not valid. Please try to login again, or contact api administrators</dd></dl>
 <dl><dt>202: Please provide run xml</dt><dd>Please provide run xml</dd></dl>
@@ -1830,12 +1830,12 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <p><i>Deletes a run from the database. </i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST run_id</code> (Required)</dt><dd>The id of the run to be deleted</dd></dl>
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash to be checked</dd></dl>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>390: Please provide session_hash</dt><dd>In order to remove your content, please authenticate (openml.authenticate) and provide session_hash</dd></dl>
 <dl><dt>391: Authentication failed</dt><dd>The session_hash was not valid. Please try to login again, or contact api administrators</dd></dl>
 <dl><dt>392: Run does not exists</dt><dd>The run id could not be linked to an existing run.</dd></dl>
@@ -1857,7 +1857,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <p><i>Retrieves a job that is scheduled and not yet performed</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>GET workbench</code> (Required)</dt><dd>The name of the workbench that is performing the job</dd></dl>
 <dl><dt><code>GET task_type_id</code> (Required)</dt><dd>The task type of which the job should be.</dd></dl>
 </div>
@@ -1875,7 +1875,7 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 </pre>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>340: Please provide workbench and task type.</dt><dd>Please provide workbench and task type.</dd></dl>
 <dl><dt>341: No jobs available.</dt><dd>There are no jobs that need to be executed.</dd></dl>
 </div>
@@ -1894,12 +1894,12 @@ This XSD schema is applicable for both uploading and downloading run details. <b
 <p><i>Removes a setup from the database. Can only be done if no runs are performed on this setup.</i></p>
 
 <h5>Arguments</h5>
-<div class="bs-callout">
+<div class="panel">
 <dl><dt><code>POST setup_id</code> (Required)</dt><dd>The id of the setup that should be removed</dd></dl>
 <dl><dt><code>POST session_hash</code> (Required)</dt><dd>The session hash to be checked</dd></dl>
 </div>
 <h5>Error codes</h5>
-<div class='bs-callout bs-callout-danger'>
+<div class='panel panel-danger'>
 <dl><dt>400: Please provide session_hash</dt><dd>In order to remove your content, please authenticate (openml.authenticate) and provide session_hash</dd></dl>
 <dl><dt>401: Authentication failed</dt><dd>The session_hash was not valid. Please try to login again, or contact api administrators</dd></dl>
 <dl><dt>402: Setup does not exists</dt><dd>The setup id could not be linked to an existing setup.</dd></dl>
