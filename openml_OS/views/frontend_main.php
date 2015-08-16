@@ -242,7 +242,7 @@
                   <li <?php echo ($section == 'Blog' ?  'class="topactive"' : '');?>><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
                   <!--<li <?php echo ($section == 'Search' ?  'class="topactive"' : '');?>><a href="search" class="icongray"><i class="fa fa-fw fa-lg fa-search"></i> Search</a></li>-->
             </ul>
-            <div class="menuaction"><i class="fa fa-lg fa-fw fa-angle-up" onclick="scrollMenuTop()"></i></div>
+            <div class="menuaction"><a onclick="scrollMenuTop()"><i class="fa fa-lg fa-fw fa-navicon"></i></a></div>
             <div id="submenucontainer"></div>
             <ul class="sidenav nav">
             <li class="guidechapter-contact">

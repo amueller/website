@@ -5,7 +5,8 @@ $this->load_javascript = array('js/libs/jquery.dataTables.min.js');
 if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
 	$this->id = $this->subpage;
-	$this->subpage = $info[array_search('u',$info)+2];
+	if(array_search('u',$info)+2 < count($info))
+		$this->subpage = $info[array_search('u',$info)+2];
 	$this->user_id = $this->id;
 	$this->baseurl = $_SERVER['REQUEST_URI'];
 	$this->author = $this->Author->getById($this->user_id);
