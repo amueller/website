@@ -222,7 +222,7 @@
                 <?php echo $this->message; ?>
             </div>
           <?php endif; ?>
-
+          <div class="searchbarcontainer">
           <div class="searchbar" id="mainmenu">
             <ul class="sidenav nav topchapter">
               <?php if (!$this->ion_auth->logged_in()){ ?>
@@ -242,21 +242,27 @@
                   <li <?php echo ($section == 'Blog' ?  'class="topactive"' : '');?>><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
                   <!--<li <?php echo ($section == 'Search' ?  'class="topactive"' : '');?>><a href="search" class="icongray"><i class="fa fa-fw fa-lg fa-search"></i> Search</a></li>-->
             </ul>
-            <div class="menuaction"><a onclick="scrollMenuTop()"><i class="fa fa-lg fa-fw fa-navicon"></i></a></div>
+            <?php if($ch != "home"){ ?>
+            <div class="menuaction"><a onclick="scrollMenuTop()"><i class="fa fa-lg fa-angle-up"></i><i class="fa fa-lg fa-fw fa-navicon"></i></a></div>
+            <?php } ?>
+            <div class="submenubar">
             <div id="submenucontainer"></div>
             <ul class="sidenav nav">
             <li class="guidechapter-contact">
              <a>Ask us a question...</a>
-             <ul class="sidenav nav">
-               <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-fw fa-lg"></i>Email</a></li>
-               <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-fw fa-lg"></i>Google+</a></li>
-               <li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-fw fa-lg"></i>Facebook</a></li>
-               <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-fw fa-lg"></i>Twitter</a></li>
-               <li><a href="https://github.com/openml/OpenML/issues?q=is%3Aopen"><i class="fa fa-github fa-fw fa-lg"></i>Report issue</a></li>
+             <ul class="openml-contact-menu">
+               <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-envelope-o fa-fw fa-lg"></i></a></li>
+               <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank"><i class="fa fa-users fa-fw fa-lg"></i></a></li>
+               <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-fw fa-lg"></i></a></li>
+               <li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-fw fa-lg"></i></a></li>
+               <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-fw fa-lg"></i></a></li>
+               <li><a href="https://github.com/openml/OpenML/issues?q=is%3Aopen"><i class="fa fa-github fa-fw fa-lg"></i></a></li>
              </ul>
             </li>
             </ul>
           </div>
+        </div>
+        </div>
 
           <?php echo body(); ?>
 

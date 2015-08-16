@@ -335,6 +335,13 @@ select{
   width: calc(100% - 265px);
 }
 
+.searchbarcontainer{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
 .searchbar{
   background: #f6f6f6;
   padding-bottom: 30px;
@@ -344,9 +351,8 @@ select{
   box-shadow: 4px 0px 8px 0px rgba(0,0,0,.20);
   font-size: 13px !important;
   overflow-y: auto;
-  overflow-x: visible;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none;
   width:265px !important;
   z-index: 1020;
   height: 100vh;
@@ -366,12 +372,10 @@ select{
 }
 
 #submenucontainer{
-  /* height: 100vh; */
 }
 
-.guidechapter-contact li i{
-  color: #757575;
-  margin-right: 5px;
+.submenubar{
+  height: 100vh;
 }
 
 .menuheader{
@@ -690,11 +694,12 @@ select{
 }
 
 .guidechapter-contact{
-  margin-top: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   background-color: #f6f6f6;
   box-shadow: none;
   padding-left: 15px;
-  padding-bottom: 10px;
+  padding-bottom: 60px;
 }
 
 .simplesection{
@@ -1215,6 +1220,35 @@ a:hover .count {
   text-decoration: none;
   font-size: 11px;
   color: #AEAEAE;
+}
+
+.openml-contact-menu{
+  position: relative;
+  float: left;
+  padding: 0px;
+}
+
+.openml-contact-menu ul{
+  float: left;
+  display: inline-block;
+}
+
+.openml-contact-menu li{
+  float: left;
+  display: inline-block;
+  padding: 5px;
+}
+
+.openml-contact-menu a{
+  text-decoration: none;
+  font-size: 13px;
+  color: #444;
+}
+
+.openml-contact-menu a span{
+  font-size: 10px;
+  margin-left: -12px;
+  margin-top: 5px;
 }
 
 .twitter-header a{
