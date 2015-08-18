@@ -1,6 +1,16 @@
+<?php
+  if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
+	   $info = explode('/', $_SERVER['REQUEST_URI']);
+	   $this->id = $this->subpage;
+	   if(array_search('u',$info)+2 < count($info))
+		   $this->subpage = $info[array_search('u',$info)+2];
+     $this->legal_subpages = array('flows','data','runs');
+	   if(in_array($this->subpage,$this->legal_subpages)){ ?>
+
 var oTable;
 
 $(document).ready(function() {
+
   oTable = $('.data_overview_table_<?php echo $counter; ?>').dataTable({
     "bServerSide": true,
     "sAjaxSource": "api_query/table_feed",
@@ -46,4 +56,4 @@ $.ajax({
     }
   } );
 }
-<?php endif; ?>
+<?php endif; }} ?>

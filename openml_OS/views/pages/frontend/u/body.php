@@ -2,13 +2,13 @@
   <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 
     <div class="tab-content">
-      <div class="tab-pane  <?php if(isset($this->subpage)) { echo 'active'; } ?>" id="data">
+      <div class="tab-pane  <?php if(in_array($this->subpage,$this->legal_subpages)) { echo 'active'; } ?>" id="data">
         <?php
         subpage('data');
         ?>
       </div> <!-- end intro tab -->
 
-      <div class="tab-pane <?php if(!isset($this->subpage) and false !== strpos($_SERVER['REQUEST_URI'],'/u/')) { echo 'active'; }?>" id="userdetail">
+      <div class="tab-pane <?php if(!in_array($this->subpage,$this->legal_subpages) and false !== strpos($_SERVER['REQUEST_URI'],'/u/')) { echo 'active'; }?>" id="userdetail">
         <?php
         subpage('user');
         ?>
