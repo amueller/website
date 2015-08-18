@@ -1,3 +1,6 @@
+
+  $(document).ready(function () {
+
 // Update search query upon user actions
 function updateQuery(type)
 {
@@ -59,6 +62,7 @@ var is_loading = 0; // simple lock to prevent loading when loading
 var hide_on_load = false; // ID that can be hidden when content has been loaded
 
 function loadFollowing() {
+console.log("following");
 if(getParameterByName('table') != 1){ //only scroll if cards are shown
   is_loading = 1; // note: this will break when the server doesn't respond
   function showFollowing(data) {
@@ -140,6 +144,7 @@ function initPaginator() {
   var currentUrl = $(document).find("#itempage").attr("data-url");
 
   $('.openmlsectioninfo').scroll(function() {
+    console.log("scroll");
 
     $(".listitempage").each(function(index) {
       if (mostlyVisible(this)) {
@@ -172,7 +177,6 @@ function initPaginator() {
   loadFollowing();
 }
 
-  $(document).ready(function () {
 
     // initialize endless scrolling
     initPaginator();
