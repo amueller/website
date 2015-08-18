@@ -21,8 +21,15 @@
 </div>
 <div id="catchphrase">Exploring machine learning better, together</div><br>
 
+
+  <div class="col-md-6 col-md-offset-3 surveypopup">
+    <a href="https://docs.google.com/forms/d/1pyWZRE5HnVEtY3_TmFhAx68uTuTfC_yvEDqmuz-yAwo/viewform?usp=send_form" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-comments-o"></i></a>
+    <div class="shortintro" style="padding-top:10px;">Tell us what you think</div>
+  </div>
+
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
+
   <!--<div class="buttons">
     <a href="guide" class="action-button white">Learn more</a>
     <a href="register" class="action-button white">Sign up</a>
@@ -55,15 +62,6 @@
               <h4 class="list-group-item-heading">Upcoming events</h4>
               <p class="list-group-item-text">2-4 September 2015: <a target="_blank" href="http://eindhoven2015.openml.org/">OpenML Hackathon - register now</a></p>
               <p class="list-group-item-text">7 September 2015: <a target="_blank" href="http://metasel-tutorial2015.inesctec.pt/">OpenML Tutorial @ ECMLPKDD</a></p>
-          </div>
-      </div>
-      <div class="list-group-item">
-          <div class="row-picture">
-              <img class="circle" src="img/survey.jpg" alt="icon">
-          </div>
-          <div class="row-content">
-              <h4 class="list-group-item-heading">Tell us what you think</h4>
-              <p class="list-group-item-text"><a href="https://docs.google.com/forms/d/1pyWZRE5HnVEtY3_TmFhAx68uTuTfC_yvEDqmuz-yAwo/viewform?usp=send_form">Help make OpenML better and more fun by taking a short survey</a></p>
           </div>
       </div>
   </div>
