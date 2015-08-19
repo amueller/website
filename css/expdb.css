@@ -7,6 +7,11 @@
   margin-bottom:-30px !important;
 }
 
+.head{
+  margin-top: 40px;
+  height: 140px;
+  text-align: center;
+}
 
 .img-guide-wrapper{
   width: 65%;
@@ -325,13 +330,6 @@ select{
 .navbar-static-top{
   background: #f6f6f6;
   box-shadow: 0 0 4px rgba(0,0,0,.14),0px 4px 8px rgba(0,0,0,.14);
-}
-
-.rightpanel{
-  margin-left:265px;
-  width: -moz-calc(100% - 265px);
-  width: -webkit-calc(100% - 265px);
-  width: calc(100% - 265px);
 }
 
 .rightpanel{
@@ -671,7 +669,6 @@ select{
 }
 
 .guidecontainer{
-  padding: 0px;
   background-color: #ffffff;
 }
 
@@ -1212,7 +1209,7 @@ a:hover .count {
   text-align: center;
   z-index:1000;
   position: relative;
-  margin-bottom: 120px;
+  margin-bottom: 90px;
 }
 
 .openml-contact-footer li{
@@ -1257,6 +1254,10 @@ a:hover .count {
   margin-top: 5px;
 }
 
+.twitter-header{
+  margin-bottom: 5px;
+}
+
 .twitter-header a{
   text-decoration: none;
   font-size: 11px;
@@ -1282,6 +1283,7 @@ ul.openml-footer {
   margin-right: auto;
   margin-left: auto;
   text-align: center;
+  min-height: 350px;
 }
 
 ul.openml-contact {

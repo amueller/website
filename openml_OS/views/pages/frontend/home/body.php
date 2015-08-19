@@ -24,7 +24,7 @@
 
   <div class="col-md-6 col-md-offset-3 surveypopup">
     <a href="https://docs.google.com/forms/d/1pyWZRE5HnVEtY3_TmFhAx68uTuTfC_yvEDqmuz-yAwo/viewform?usp=send_form" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-comments-o"></i></a>
-    <div class="shortintro" style="padding-top:10px;">Tell us what you think</div>
+    <div class="shortintro" style="padding-top:10px;">Help make OpenML better and more fun :)</div>
   </div>
 
 <div class="col-md-12">
@@ -153,7 +153,6 @@
 
 		  <div class="col-xs-12 col-sm-6 pull-right-lg contactfooter">
                     <ul class="openml-contact-footer">
-                        <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank"><i class="fa fa-envelope fa-2x"></i><br />join list</a></li>
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
                         <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
 			<li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-2x"></i><br />comment</a></li>
@@ -161,11 +160,14 @@
                         <li><a href="discuss"><i class="fa fa-comments-o fa-2x"></i><br />discuss</a></li>
 			<li><a href="https://github.com/openml/OpenML/issues?state=open" target="_blank"><i class="fa fa-github fa-2x"></i><br />issues</a></li>
                     </ul>
-		    <br>
+        <br>
 
                     <ul class="openml-footer" class="pull-right">
+                        <li>Community mailing list</li>
+                        <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank">openml@googlegroups.com <i class="fa fa-envelope fa-fw"></i></a></li>
+
            		          <li>Generously funded by</li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
-                        <li>Hosted for you by</li><li> <a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden</a>, <a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">TU/e</a></li>
+                        <li>Hosted for you by</li><li> <a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden</a>, <a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">Eindhoven</a></li>
                     </ul>
 
 		  </div>

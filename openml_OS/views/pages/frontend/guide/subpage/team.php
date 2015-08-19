@@ -1,6 +1,9 @@
 <div class="row">
 
-         <h2 id="team-core">Our Team</h2>
+<h2 id="team-core">Our Team</h2>
+<p>OpenML is a community effort, and as such many people have contributed to it over the years.<br />
+Want to join? Leave a message on the <a href="mailto:openml@googlegroups.com">community mailing list</a>.</p>
+
 <?php
  if( $this->team != false ) {
     foreach( $this->team as $t ) { ?>
@@ -13,10 +16,3 @@
 
 
   </div>
-  <div class="row">
-
-         <h2 id="hall-fame">Hall of Fame</h2>
-	 <p>The OpenML Hall of Fame is a special place where we honor the people who made small but significant contributions to OpenML.</p>
-
-
-   </div>

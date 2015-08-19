@@ -57,7 +57,7 @@
         <a data-toggle="collapse" data-parent="#accordeon"  data-target="#startlist"><i class="fa fa-graduation-cap fa-fw fa-lg"></i> <b>Getting Started</b></a>
         <ul class="sidenav nav collapse" id="startlist">
           <li class="active"><a href="#intro" data-toggle="tab">10 minute intro</a></li>
-          <li><a href="#terms" data-toggle="tab">Honor Code</a></li>
+          <li><a href="#terms" data-toggle="tab">Honor Code and Terms</a></li>
           <li><a href="#team" data-toggle="tab">Our Team</a></li>
         </ul>
       </li>
