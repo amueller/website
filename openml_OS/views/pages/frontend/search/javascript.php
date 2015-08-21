@@ -66,6 +66,7 @@ function removeFilters()
     $(document).on("change, keyup", "#qualities\\.NumberOfMissingValues", function() { updateQuery("qualities.NumberOfMissingValues"); });
     $(document).on("change, keyup", "#qualities\\.NumberOfClasses", function() { updateQuery("qualities.NumberOfClasses"); });
     $(document).on("change, keyup", "#qualities\\.DefaultAccuracy", function() { updateQuery("qualities.DefaultAccuracy"); });
+    $(document).on("change, keyup", "#uploader", function() { updateQuery("uploader"); });
 
     $('#NumberOfInstances').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
     $('#NumberOfFeatures').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
@@ -84,7 +85,6 @@ function removeFilters()
     $("#run_task\\.task_id").change(function() { updateQuery("run_task.task_id"); $('#searchform').submit();});
     $("#run_task\\.tasktype\\.tt_id").change(function() { updateQuery("run_task.tasktype.tt_id"); $('#searchform').submit();});
     $("#run_flow\\.flow_id").change(function() { updateQuery("run_flow.flow_id"); $('#searchform').submit();});
-    $("#uploader").change(function() { updateQuery("uploader"); $('#searchform').submit();});
 
     $("#flow_id").change(function() { updateQuery("flow_id"); $('#searchform').submit();});
     $("#version").change(function() { updateQuery("version"); $('#searchform').submit();});
@@ -94,9 +94,6 @@ function removeFilters()
     $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
 
     $('#research').click(function() { $('#searchform').submit();});
-
-    $('.loginfirst').focus(function() { if(!logged_in){$('#login-dialog').modal('show'); return false;}});
-    $('.loginfirst').click(function() { if(!logged_in){$('#login-dialog').modal('show'); return false;}});
 
 
     <?php
