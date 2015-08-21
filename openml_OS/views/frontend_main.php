@@ -288,7 +288,7 @@
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id)){
                 echo "'frontend/js/".$ch."/".$this->id."/".$this->subpage."',";
-              } else {?>
+              } elseif( $ch != 'backend') {?>
               'frontend/js/<?php echo $ch;?>/script.js', <?php } ?>
               'js/openmlafter.js'
             ])
