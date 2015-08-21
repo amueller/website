@@ -13,6 +13,10 @@
 	endforeach;
      }
 
+     else if($this->input->post('settings')){
+       $this->messages[] = $this->elasticsearch->initialize_settings();
+     }
+
      else if($this->input->post('type')){
 	$this->index_type = $this->input->post('type');
 	$this->index_id = $this->input->post('doc_id');

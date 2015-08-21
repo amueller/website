@@ -315,6 +315,15 @@ class ElasticSearch {
                           return $response;
                         }
 
+                        public function initialize_settings(){
+
+                          $params['index'] = 'openml';
+                          $params['body']['index']['analysis']['analyzer']['keyword-ci'] = array('tokenizer' => 'keyword', 'filter' => 'lowercase');
+                          $this->client->indices()->putSettings($params);
+
+                          return 'Successfully updated settings';
+                        }
+
                         public function initialize_index($t){
 
                           $this->mapping_delete($t);
@@ -323,9 +332,6 @@ class ElasticSearch {
                           $params['type'] = $t;
                           $params['body'][$t] = $this->mappings[$t];
                           $this->client->indices()->putMapping($params);
-
-                          $params['body']['index']['analysis']['analyzer']['keyword-ci'] = array('tokenizer' => 'keyword', 'filter' => 'lowercase');
-                          $this->client->indices()->putSettings($params);
 
                           return 'Successfully reinitialized index for '.$t;
                         }

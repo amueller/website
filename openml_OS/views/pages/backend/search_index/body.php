@@ -42,6 +42,14 @@
         </form>
 </div>
 
+<div class="col-sm-12">
+	<h3>Update settings</h2>
+	<form method="post" action="">
+    <input type="radio" class="check_setups" name="settings" value="openml"/>&nbsp;openml<br />
+	  <input class="btn btn-primary" type="submit" value="Put settings"/>
+  </form>
+</div>
+
 <div class="submenu">
   <ul class="sidenav nav" id="accordeon">
     <li class="panel guidechapter">
