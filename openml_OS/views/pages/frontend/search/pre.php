@@ -32,7 +32,7 @@ function microtime_float()
 function addToGET($keyvalue){
   $attr = $_GET;
   foreach($keyvalue as $key => $value){
-    if(array_key_exists($key,$attr)) {
+    if(array_key_exists($key,$attr) && $value) {
       unset($attr[$key]);
     }
     if($value) {
@@ -43,10 +43,13 @@ function addToGET($keyvalue){
 }
 
 /// SEARCH
+$this->ref_url = BASE_URL . 'search';
 if(isset ($this->specialterms))
 	$this->terms = $this->specialterms;
-else
+else{
+  $this->specialterms = "";
 	$this->terms = safe($this->input->get('q'));
+}
 $this->coreterms = "";
 $this->filters = array();
 $this->dataonly = 0;

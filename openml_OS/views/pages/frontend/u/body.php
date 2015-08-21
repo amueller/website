@@ -21,7 +21,10 @@
         <li class="panel guidechapter">
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-user fa-fw fa-lg"></i> <b>My account</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
-            <li><a href="<?php echo $this->baseurl;?>">Profile</a></li>
+            <li><a href="<?php echo $this->baseurl;?>">Profile page</a></li>
+            <?php if($this->is_owner){?>
+               <li><a href="profile">Edit Profile</a></li>
+            <?php } ?>
           </ul>
         </li>
       </ul>

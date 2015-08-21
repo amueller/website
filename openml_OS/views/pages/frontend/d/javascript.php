@@ -1,12 +1,5 @@
 /// Wiki
 
-// Key shortcuts for wiki
-Mousetrap.bind(['e'], function( e ) {
-  e.preventDefault();
-  window.location = "/edit" + window.location.pathname;
-  return false;
-});
-
 $("#gollum-editor-message-field").val("Write a small message explaining the change.");
 $("#gollum-editor-submit").addClass("btn btn-success pull-left");
 $("#gollum-editor-preview").removeClass("minibutton");

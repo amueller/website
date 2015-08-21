@@ -180,6 +180,14 @@ width: 80pt;
   margin-bottom: 70px;
 }
 
+.searchframefull .pagination{
+  display: none;
+}
+
+.searchframefull{
+  margin-bottom: 70px;
+}
+
 #menusearchframe{
   margin-right:-20px;
 }
@@ -194,12 +202,15 @@ width: 80pt;
   border-radius: 5px;
   text-decoration: none;
   list-style: none;
-  padding-left:10px;
   margin-right: 0px;
 }
 
 .sidenav ul {
   list-style: none;
+}
+
+.sidenav li {
+  padding-left: 10px;
 }
 
 /* All levels of nav */
@@ -678,7 +689,6 @@ select{
   border-bottom: 1px solid #d6d6d6;
   border-radius: 0px;
   box-shadow: none;
-  padding-left: 0px !important;
   padding-bottom: 5px;
   margin-bottom: 0px;
 }

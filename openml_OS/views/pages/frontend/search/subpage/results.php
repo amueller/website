@@ -91,7 +91,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
      <?php } else { ?>
 
 	<div id="scrollingcontent">
-	<div class="listitempage" id="itempage" data-url="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from, 'dataonly' => 0)); ?>" data-next-url="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => $this->from+$this->size, 'dataonly' => 0)); ?>" data-prev-url="<?php echo $_SERVER['PHP_SELF'] . "?" . addToGET(array( 'from' => max(0,$this->from-$this->size), 'dataonly' => 0));?>">
+	<div class="listitempage" id="itempage" data-url="<?php echo $this->ref_url . '?' . addToGET(array( 'from' => $this->from, 'dataonly' => 0, 'q' => $this->specialterms)); ?>" data-next-url="<?php echo $this->ref_url . '?' . addToGET(array( 'from' => $this->from+$this->size, 'dataonly' => 0, 'q' => $this->specialterms)); ?>" data-prev-url="<?php echo $this->ref_url . '?' . addToGET(array( 'from' => max(0,$this->from-$this->size), 'dataonly' => 0, 'q' => $this->specialterms));?>">
 		 <?php
       foreach( $this->results['hits']['hits'] as $r ) {
         $type = $r['_type'];

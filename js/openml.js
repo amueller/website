@@ -46,6 +46,11 @@ function scrollMenuTop(){
 }
 
 $(function() {
+
+  // brings up login window on restricted links
+  $('.loginfirst').focus(function() { if(!logged_in){$('#login-dialog').modal('show'); return false;}});
+  $('.loginfirst').click(function() { if(!logged_in){$('#login-dialog').modal('show'); return false;}});
+
   // attaches page-specific menu below main menu
   $("#submenucontainer").append($(".submenu"));
 
@@ -137,6 +142,148 @@ $(function() {
         $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
     });
   });
+
+  // ENDLESS SCROLL (is used on multiple pages, and thus defined system-wide)
+
+  var next_data_url; // replaced when loading more
+  var prev_data_url; // replaced when loading more
+  var next_data_cache = false;
+  var prev_data_cache = false;
+  var last_scroll = 0;
+  var is_loading = 0; // simple lock to prevent loading when loading
+  var hide_on_load = false; // ID that can be hidden when content has been loaded
+
+  function loadFollowing() {
+  if(getParameterByName('table') != 1){ //only scroll if cards are shown
+    is_loading = 1; // note: this will break when the server doesn't respond
+    function showFollowing(data) {
+      next_data_cache = false;
+      if(!$(data).find("#itempage").is(':empty') && $(data).find("#itempage")[0].childElementCount > 0) {
+        $(data).find("#itempage").appendTo("#scrollingcontent");
+        next_data_url = $(data).find("#itempage").attr("data-next-url");
+        if(next_data_url)
+          $.get(next_data_url+'&dataonly=1', function(preview_data) {
+            next_data_cache = preview_data;
+          });
+      } else {
+        $( ".loadingmore" ).html("No more data");
+        $( ".pagination" ).css("display","block");
+      }
+    }
+    if (next_data_cache) {
+      showFollowing(next_data_cache);
+      is_loading = 0;
+    } else if(next_data_url) {
+      $( ".loadingmore" ).html("Loading more...");
+      $.get(next_data_url+'&dataonly=1', function(data) {
+          showFollowing(data);
+          is_loading = 0;
+      });
+    }
+  }
+  }
+
+  function loadPrevious() {
+  if(getParameterByName('table') != 1){ //only scroll if cards are shown
+    is_loading = 1; // note: this will break when the server doesn't respond
+    function showPrevious(data) {
+      prev_data_cache = false;
+      var scroll_pos = $('.openmlsectioninfo').scrollTop();
+      $(data).find("#itempage").prependTo("#scrollingcontent");
+      item_height = $(".listitempage:first").height();
+      $('.openmlsectioninfo').animate({
+        scrollTop: scroll_pos + item_height
+      }, 0);
+      prev_data_url = $(data).find("#itempage").attr("data-prev-url");
+      if(prev_data_url && curr_data_url != prev_data_url){
+        $.get(prev_data_url+'&dataonly=1', function(preview_data) {
+          prev_data_cache = preview_data;
+        });}
+      }
+      if (prev_data_cache) {
+        showPrevious(prev_data_cache);
+        is_loading = 0;
+      } else if (prev_data_url && curr_data_url != prev_data_url){
+        $.get(prev_data_url+'&dataonly=1', function(data) {
+          showPrevious(data);
+          is_loading = 0;
+        });
+      } else
+      is_loading = 0;
+    }
+  }
+
+  function mostlyVisible(element) {
+    // if ca 25% of element is visible
+    var scroll_pos = $('#scrollingcontent').scrollTop();
+    var window_height = $('.openmlsectioninfo').height();
+    var el_top = $(element).offset().top;
+    var el_height = $(element).height();
+    var el_bottom = el_top + el_height;
+    return ((el_bottom - el_height*0.25 > scroll_pos) &&  (el_top < (scroll_pos+0.5*window_height)));
+  }
+
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
+  function initPaginator() {
+
+    var seenUrls = new Set();
+    var currentUrl = $(document).find("#itempage").attr("data-url");
+
+    $('.openmlsectioninfo').scroll(function() {
+
+      $(".listitempage").each(function(index) {
+        if (mostlyVisible(this)) {
+          if(currentUrl != $(this).attr("data-url")){
+            if(window.location.href.indexOf('search') >= 0)
+              history.replaceState(null, null, $(this).attr("data-url"));
+            currentUrl = $(this).attr("data-url");
+            if(!seenUrls.has($(this).attr("data-next-url"))){
+              seenUrls.add($(this).attr("data-next-url"));
+              loadFollowing();
+            }
+            else if(!seenUrls.has($(this).attr("data-prev-url"))){
+              seenUrls.add($(this).attr("data-prev-url"));
+              loadPrevious();
+            }
+          }
+          return(false);
+        }
+      });
+    });
+
+    curr_data_url = $(document).find("#itempage").attr("data-url");
+    next_data_url = $(document).find("#itempage").attr("data-next-url");
+    prev_data_url = $(document).find("#itempage").attr("data-prev-url");
+    seenUrls.add(curr_data_url);
+    if(curr_data_url != prev_data_url){
+      seenUrls.add(prev_data_url);
+      loadPrevious();
+    }
+    seenUrls.add(next_data_url);
+    loadFollowing();
+  }
+
+
+      // initialize endless scrolling
+      initPaginator();
+
+      // handle clicks on cards
+      $(".searchresult").click(function(){
+          window.location = $(this).find("a:first").attr("href");
+          return false;
+      });
+
+      $(".searchresult").hover(function () {
+          window.status = $(this).find("a:first").attr("href");
+      }, function () {
+          window.status = "";
+      });
 
 });
 

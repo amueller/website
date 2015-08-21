@@ -13,6 +13,9 @@
       <div class="tab-pane active" id="detail">
         <?php if( isset($this->task_id) ) { subpage('task'); } ?>
       </div> <!-- end task tab -->
+      <div class="tab-pane" id="taskruns">
+        <?php if( isset($this->task_id) ) { subpage('task_runs'); } ?>
+      </div>
       <div class="tab-pane" id="people">
         <?php if( isset($this->task_id) ) { subpage('task_leaderboard'); } ?>
       </div> <!-- end task tab -->
@@ -28,7 +31,7 @@
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
             <li class="active"><a href="#detail" data-toggle="tab">Overview</a></li>
-            <li><a href="search?q=+run_task.task_id%3A<?php echo $this->task_id; ?>&type=run">All runs</a></li>
+            <li><a href="#taskruns" data-toggle="tab">All runs</a></li>
             <li><a href="#results" data-toggle="tab">Results</a></li>
             <li><a href="#people" data-toggle="tab">Leaderboard</a></li>
           </ul>
