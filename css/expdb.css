@@ -1728,6 +1728,7 @@ hr.hardSmall {
 	overflow-x: hidden;
   border-top: none !important;
   border-radius: 0px !important;
+  z-index: 3000;
 }
 
 .img-modal{

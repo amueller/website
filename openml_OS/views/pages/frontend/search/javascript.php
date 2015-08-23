@@ -1,16 +1,21 @@
-
-  $(document).ready(function () {
+// auto-suggest for the filters
+function updateUploader(name){
+  console.log('Uploader is ' + name);
+  $('#uploader').val(name+'');
+  updateQuery("uploader");
+  $('#searchform').submit();
+}
 
 // Update search query upon user actions
 function updateQuery(type)
 {
   var constr = '';
   if(type == 'source_data.name')
-    constr = $("#"+type.replace('.name','')).val().replace(" ","_");
+    constr = $("#"+type.replace('.name','')).val().replace(/\s/g,"_");
   else if(type == 'run_task.tasktype.tt_id')
     constr = $("#run_task\\.tasktype\\.tt_id").val();
   else
-    constr = $("#"+type.replace('.','\\.')).val().replace(" ","_");
+    constr = $("#"+type.replace('.','\\.')).val().replace(/\s/g,"_");
   var query = $("#openmlsearch").val();
   if(query.indexOf(type+":") > -1){
     var qparts = query.match(/(?:[^\s"]+|"[^"]*")+/g);
@@ -32,6 +37,9 @@ function updateQuery(type)
   console.log(query);
   $("#openmlsearch").val(query);
 }
+
+
+  $(document).ready(function () {
 
 // Reset all search filters
 function removeFilters()
@@ -154,5 +162,41 @@ function removeFilters()
     	}
     }
     <?php } ?>
+
+    $("#uploader").autocomplete({
+      html: true,
+      position: {
+          my: "left top+13" // Shift 0px to the left, 20px down.
+      },
+      source: function(request, fresponse) {
+        client.suggest({
+          index: 'openml',
+          type: 'user',
+          body: {
+            mysuggester: {
+              text: request.term,
+              completion: {
+                field: 'suggest',
+                size: 10
+              }
+            }
+          }
+        }, function (error, response) {
+          fresponse($.map(response['mysuggester'][0]['options'], function(item) {
+            console.log(item['text']);
+            if(item['payload']['type'] == 'user'){
+            return {
+              type: item['payload']['type'],
+              id: item['payload'][item['payload']['type']+'_id'],
+              text: item['text']
+            };}
+          }));
+        });
+      }
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+      .append( '<a onclick="updateUploader(\'' + item.text + '\')"><i class="' + icons[item.type] + '"></i> ' + item.text + '</a>' )
+      .appendTo( ul );
+    }
 
   });
