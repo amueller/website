@@ -21,6 +21,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/tid/')){
 	}
 	//$this->category = $this->Category->getById( $this->thread->category_id );
 }
+if(false !== strpos($_SERVER['REQUEST_URI'],'new')){
+	$this->activetab = 'new';
+}
 
 /// creating new topics
 $this->title = array(

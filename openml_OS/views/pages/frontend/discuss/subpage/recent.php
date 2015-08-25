@@ -19,7 +19,7 @@
          <a href="<?php echo $thread->link; ?>"><?php echo $thread->title;?></a>
        <?php } ?>
         (<?php echo $thread->posts;?> comments)
-       <span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->createdAt)));?>
+       <!--<span><i class="fa fa-fw fa-clock-o"></i> <?php echo 'Created '.get_timeago(strtotime(str_replace('T',' ',$thread->createdAt)));?>-->
        <?php if($ttype == 'general' and $t){ echo ' by '.$thread->authname; } ?>
        </span>
      </div>
