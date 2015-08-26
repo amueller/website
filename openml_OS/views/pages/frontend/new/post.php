@@ -162,7 +162,7 @@ if($this->subpage == 'task') {
       $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message;
       if($this->responsecode=='131') $this->response .= ' Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the dataset name.';
     } else if($xml->children('oml', true)->id){
-      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Thanks!</h2>Data was uploaded successfully (ID = '.$xml->children('oml', true)->id).')<br> You can now <b><a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a></b>, complete its description, track its impact, create OpenML tasks, and see all ensuing results.<br><br>You can also continue to add datasets below.';
+      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Thanks!</h2>Data was uploaded successfully (ID = '.$xml->children('oml', true)->id .')<br> You can now <b><a href="d/'. $xml->children('oml', true)->id . '"> follow your dataset on OpenML</a></b>, complete its description, track its impact, create OpenML tasks, and see all ensuing results.<br><br>You can also continue to add datasets below.';
       sm($this->response);
       su('new/data');
     } else {
