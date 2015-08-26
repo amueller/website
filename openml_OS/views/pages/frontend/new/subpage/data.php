@@ -1,7 +1,8 @@
+<form method="post" action="" enctype="multipart/form-data">
+
 <div class="panel">
 	<h1><a href="d"><i class="fa fa-database"></i></a> Add data</h1>
         <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
-	<form method="post" action="" enctype="multipart/form-data">
 	      <div class="row">
 		<div class="col-sm-6">
 		  <div class="form-group">
@@ -60,6 +61,7 @@
 			<div id="CC0" class="licences">Waive all copyright and related rights. Others may freely build upon, enhance and reuse the works for any purposes without restriction under copyright or database law. <a href="http://creativecommons.org/about/cc0" target="_blank">More info</a></div>
 
 	          </div>
+
 		  <div class="form-group">
 			    <label class="control-label" for="citation">Citation requests</label>
 			    <textarea class="form-control" rows="4" name="citation"  placeholder="How to reference this data in future work (e.g., publication, DOI)." value="<?php echo $this->input->post('citation'); ?>"></textarea>
