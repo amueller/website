@@ -7,7 +7,7 @@
 		<div class="col-sm-6">
 		  <div class="form-group">
 		    <label class="control-label" for="sourcefile">Data files</label>
-				<input type="text" readonly="" class="form-control floating-label" placeholder="Choose data file" style="margin-top:10px;">
+				<input type="text" readonly="" class="form-control floating-label" placeholder="Browse..." style="margin-top:10px;">
 				<input type="file" id="dataset" name="dataset" multiple="">
 		    <div class="col-sm-12 input-info">Or (not both)</div>
 		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted (e.g. data repository)" value="" />
