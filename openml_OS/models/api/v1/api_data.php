@@ -1,5 +1,5 @@
 <?php
-class Api_data extends Api_Model {
+class Api_data extends Api_model {
   
   private $version = 'v1';
   
