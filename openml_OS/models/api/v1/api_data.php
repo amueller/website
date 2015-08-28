@@ -1,5 +1,5 @@
 <?php
-class Api_data extends CI_Model {
+class Api_data extends Api_Model {
   
   private $version = 'v1';
   
@@ -16,7 +16,7 @@ class Api_data extends CI_Model {
     $this->load->model('File');
   }
   
-  function bootstrap($segments, $request_type) {
+  function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
     
     if (count($segments) == 1 && $segments[0] == 'list') {
@@ -69,14 +69,14 @@ class Api_data extends CI_Model {
       return;
     }
     
-    $this->_returnError( 100 );
+    $this->returnError( 100 );
   }
 
   private function data_list() {
     $active = 'visibility = "public"'; // no constraints
     $datasets_res = $this->Dataset->getWhere( $active, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
-      $this->_returnError( 370 );
+      $this->returnError( 370 );
       return;
     }
 
@@ -93,18 +93,18 @@ class Api_data extends CI_Model {
       $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
     }
 
-    $this->_xmlContents( 'data', array( 'datasets' => $datasets ) );
+    $this->xmlContents( 'data', array( 'datasets' => $datasets ) );
   }
   
   private function data($data_id) {
     if( $data_id == false ) {
-      $this->_returnError( 110 );
+      $this->returnError( 110 );
       return;
     }
 
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->_returnError( 111 );
+      $this->returnError( 111 );
       return;
     }
     $file = $this->File->getById( $dataset->file_id );
@@ -116,19 +116,19 @@ class Api_data extends CI_Model {
       $dataset->{$field} = getcsv( $dataset->{$field} );
     }
 
-    $this->_xmlContents( 'data-get', $dataset );
+    $this->xmlContents( 'data-get', $dataset );
   }
 
   private function data_delete($data_id) {
 
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset == false ) {
-      $this->_returnError( 352 );
+      $this->returnError( 352 );
       return;
     }
 
     if($dataset->uploader != $this->user_id ) {
-      $this->_returnError( 353 );
+      $this->returnError( 353 );
       return;
     }
 
@@ -142,7 +142,7 @@ class Api_data extends CI_Model {
 
 
       if( $runs ) {
-        $this->_returnError( 354 );
+        $this->returnError( 354 );
         return;
       }
     }
@@ -152,10 +152,10 @@ class Api_data extends CI_Model {
     $this->Data_quality->deleteWhere('data =' . $dataset->did);
 
     if( $result == false ) {
-      $this->_returnError( 355 );
+      $this->returnError( 355 );
       return;
     }
-    $this->_xmlContents( 'data-delete', array( 'dataset' => $dataset ) );
+    $this->xmlContents( 'data-delete', array( 'dataset' => $dataset ) );
   }
   
   
@@ -165,7 +165,7 @@ class Api_data extends CI_Model {
       // get description from string upload
       $description = $this->input->post('description', false);
       if( validateXml( $description, xsd('openml.data.upload'), $xmlErrors, false ) == false ) {
-        $this->_returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
+        $this->returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_string( $description );
@@ -174,12 +174,12 @@ class Api_data extends CI_Model {
       $description = $_FILES['description'];
 
       if( validateXml( $description['tmp_name'], xsd('openml.data.upload'), $xmlErrors ) == false ) {
-        $this->_returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
+        $this->returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_file( $description['tmp_name'] );
     } else {
-      $this->_returnError( 135 );
+      $this->returnError( 135 );
       return;
     }
 
@@ -194,12 +194,12 @@ class Api_data extends CI_Model {
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
     $datasetFileProvided = isset( $_FILES['dataset'] );
     if( $datasetUrlProvided && $datasetFileProvided ) {
-      $this->_returnError( 140 );
+      $this->returnError( 140 );
       return;
     } elseif( $datasetFileProvided ) {
       $message = '';
       if( ! check_uploaded_file( $_FILES['dataset'], false, $message ) ) {
-        $this->_returnError( 130, $this->openmlGeneralErrorCode, 'File dataset: ' . $message );
+        $this->returnError( 130, $this->openmlGeneralErrorCode, 'File dataset: ' . $message );
         return;
       }
       $access_control = 'public';
@@ -210,7 +210,7 @@ class Api_data extends CI_Model {
 
       $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
       if($file_id === false) {
-        $this->_returnError( 132 );
+        $this->returnError( 132 );
         return;
       }
       $file_record = $this->File->getById($file_id);
@@ -220,7 +220,7 @@ class Api_data extends CI_Model {
     } elseif($update) {
       $destinationUrl = false;
     } else {
-      $this->_returnError( 141 );
+      $this->returnError( 141 );
       return;
     }
 
@@ -249,7 +249,7 @@ class Api_data extends CI_Model {
       $id = $xml->children('oml', true)->{'id'};
       $dataset = $this->Dataset->getById( $id );
       if( $dataset === false ) {
-        $this->_returnError( 144 );
+        $this->returnError( 144 );
         return;
       }
 
@@ -285,7 +285,7 @@ class Api_data extends CI_Model {
 
       $id = $this->Dataset->insert( $dataset );
       if( ! $id ) {
-        $this->_returnError( 134 );
+        $this->returnError( 134 );
         return;
       }
       // insert tags.
@@ -326,60 +326,60 @@ class Api_data extends CI_Model {
     }
 
     // create
-    $this->_xmlContents( 'data-upload', array( 'id' => $id ) );
+    $this->xmlContents( 'data-upload', array( 'id' => $id ) );
   }
   
   
   private function data_features($data_id) {
     if( $data_id == false ) {
-      $this->_returnError( 270 );
+      $this->returnError( 270 );
       return;
     }
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->_returnError( 271 );
+      $this->returnError( 271 );
       return;
     }
 
     if( $dataset->processed == NULL) {
-      $this->_returnError( 273 );
+      $this->returnError( 273 );
       return;
     }
 
     if( $dataset->error != "false") {
-      $this->_returnError( 274 );
+      $this->returnError( 274 );
       return;
     }
 
     $dataset->features = $this->Data_feature->getWhere( 'did = "' . $dataset->did . '"' );
 
     if( $dataset->features === false ) {
-      $this->_returnError( 272 );
+      $this->returnError( 272 );
       return;
     }
     if( is_array( $dataset->features ) === false ) {
-      $this->_returnError( 272 );
+      $this->returnError( 272 );
       return;
     }
     if( count( $dataset->features ) === 0 ) {
-      $this->_returnError( 272 );
+      $this->returnError( 272 );
       return;
     }
 
-    $this->_xmlContents( 'data-features', $dataset );
+    $this->xmlContents( 'data-features', $dataset );
   }
 
   private function data_features_upload() {
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
-      $this->_returnError( 432 );
+      $this->returnError( 432 );
       return;
     }
 
     // get description from string upload
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.features'), $xmlErrors ) == false ) {
-      $this->_returnError( 433, $this->openmlGeneralErrorCode, $xmlErrors );
+      $this->returnError( 433, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -387,7 +387,7 @@ class Api_data extends CI_Model {
 
     $dataset = $this->Dataset->getById( $did );
     if( $dataset == false ) {
-      $this->_returnError( 434 );
+      $this->returnError( 434 );
       return;
     }
     // prepare array for updating data object
@@ -438,9 +438,9 @@ class Api_data extends CI_Model {
     $this->Dataset->update( $did, $data );
 
     if( $success ) {
-      $this->_xmlContents( 'data-features-upload', array( 'did' => $dataset->did ) );
+      $this->xmlContents( 'data-features-upload', array( 'did' => $dataset->did ) );
     } else {
-      $this->_returnError( 435 );
+      $this->returnError( 435 );
       return;
     }
   }
@@ -453,31 +453,31 @@ class Api_data extends CI_Model {
         $qualities[] = $r->name;
       }
     } else {
-      $this->_returnError( 520 );
+      $this->returnError( 520 );
       return;
     }
-    $this->_xmlContents( 'data-qualities-list', array( 'qualities' => $qualities ) );
+    $this->xmlContents( 'data-qualities-list', array( 'qualities' => $qualities ) );
   }
   
   
   private function data_qualities($data_id) {
     if( $data_id == false ) {
-      $this->_returnError( 360 );
+      $this->returnError( 360 );
       return;
     }
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->_returnError( 361 );
+      $this->returnError( 361 );
       return;
     }
 
     if( $dataset->processed == NULL) {
-      $this->_returnError( 363 );
+      $this->returnError( 363 );
       return;
     }
 
     if( $dataset->error != "false") {
-      $this->_returnError( 364 );
+      $this->returnError( 364 );
       return;
     }
 
@@ -504,32 +504,32 @@ class Api_data extends CI_Model {
     }
 
     if( $dataset->qualities === false ) {
-      $this->_returnError( 362 );
+      $this->returnError( 362 );
       return;
     }
     if( is_array( $dataset->qualities ) === false ) {
-      $this->_returnError( 362 );
+      $this->returnError( 362 );
       return;
     }
     if( count( $dataset->qualities ) === 0 ) {
-      $this->_returnError( 362 );
+      $this->returnError( 362 );
       return;
     }
 
-    $this->_xmlContents( 'data-qualities', $dataset );
+    $this->xmlContents( 'data-qualities', $dataset );
   }
 
   private function _openml_data_qualities_upload() {
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
-      $this->_returnError( 382 );
+      $this->returnError( 382 );
       return;
     }
 
     // get description from string upload
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.qualities'), $xmlErrors ) == false ) {
-      $this->_returnError( 383, $this->openmlGeneralErrorCode, $xmlErrors );
+      $this->returnError( 383, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -537,7 +537,7 @@ class Api_data extends CI_Model {
 
     $dataset = $this->Dataset->getById( $did );
     if( $dataset == false ) {
-      $this->_returnError( 384 );
+      $this->returnError( 384 );
       return;
     }
 
@@ -559,15 +559,15 @@ class Api_data extends CI_Model {
       $quality = xml2object( $q, true );
 
       /*if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
-        $this->_returnError( 385, $this->openmlGeneralErrorCode, $quality->name );
+        $this->returnError( 385, $this->openmlGeneralErrorCode, $quality->name );
         return;
       } elseif( $qualities != false && array_key_exists( $quality->name, $qualities ) ) { // prior to this run, we already got this quality
         if( abs( $qualities[$quality->name] - $quality->value ) > $this->config->item('double_epsilon') ) {
-          $this->_returnError( 386, $this->openmlGeneralErrorCode, $quality->name );
+          $this->returnError( 386, $this->openmlGeneralErrorCode, $quality->name );
           return;
         }
       } else*/if( is_array( $all_qualities ) == false || in_array( $quality->name, $all_qualities ) == false ) {
-        $this->_returnError( 387, $this->openmlGeneralErrorCode, $quality->name );
+        $this->returnError( 387, $this->openmlGeneralErrorCode, $quality->name );
         return;
       } else {
         $newQualities[] = $quality;
@@ -581,7 +581,7 @@ class Api_data extends CI_Model {
     }
 
     if( count( $newQualities) == 0 ) {
-      $this->_returnError( 388 );
+      $this->returnError( 388 );
       return;
     }
 
@@ -612,9 +612,9 @@ class Api_data extends CI_Model {
     $this->elasticsearch->index('data', $dataset->did);
 
     if( $success ) {
-      $this->_xmlContents( 'data-qualities-upload', array( 'did' => $dataset->did ) );
+      $this->xmlContents( 'data-qualities-upload', array( 'did' => $dataset->did ) );
     } else {
-      $this->_returnError( 389 );
+      $this->returnError( 389 );
       return;
     }
   }
@@ -628,9 +628,9 @@ class Api_data extends CI_Model {
     $this->elasticsearch->index('data', $id);
 
     if( $result == false ) {
-      $this->_returnError( $error );
+      $this->returnError( $error );
     } else {
-      $this->_xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'data' ) );
+      $this->xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'data' ) );
     }
   }
 
@@ -643,33 +643,10 @@ class Api_data extends CI_Model {
     $this->elasticsearch->index('data', $id);
 
     if( $result == false ) {
-      $this->_returnError( $error );
+      $this->returnError( $error );
     } else {
-      $this->_xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'data' ) );
+      $this->xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'data' ) );
     }
-  }
-  
-  /************************************* DISPLAY *************************************/
-  
-  private function _returnError( $code, $httpErrorCode = 450, $additionalInfo = null ) {
-    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code][0] . (($additionalInfo == null)?'':$additionalInfo) );
-    $error['code'] = $code;
-    $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
-    $error['additional'] = htmlentities( $additionalInfo );
-
-    $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
-    $this->_xmlContents( 'error-message', $error, $httpHeaders );
-  }
-
-  private function _xmlContents( $xmlFile, $source, $httpHeaders = array() ) {
-    $view = 'pages/'.$this->controller.'/' . $this->version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
-    $data = $this->load->view( $view, $source, true );
-    header('Content-length: ' . strlen($data) );
-    header('Content-type: text/xml; charset=utf-8');
-    foreach( $httpHeaders as $header ) {
-      header( $header );
-    }
-    echo $data;
   }
 }
 ?>

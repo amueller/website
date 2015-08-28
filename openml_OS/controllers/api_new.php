@@ -49,14 +49,17 @@ class Api_new extends CI_Controller {
     $type = array_shift($segs);
     $request_type = strtolower($_SERVER['REQUEST_METHOD']);
     
-    $api_session = $this->input->post();
-    
-    if (file_exists(APPPATH.'models/api/' . $this->version . '/api_' . $type . '.php')) {
-      $this->{'Api_'.$type}->bootstrap($segs, $request_type);
-    } else {
+    if ($this->authenticated == false) {
+      if ($this->provided_hash) {
+        $this->_returnError( 103 );
+      } else {
+        $this->_returnError( 102 );
+      }
+    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/api_' . $type . '.php') == false) {
        $this->_returnError( 100 );
+    } else {
+      $this->{'Api_'.$type}->bootstrap($segs, $request_type, $user_id);
     }
-    
   }
 
   public function xsd($filename,$version) {
