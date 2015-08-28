@@ -13,7 +13,7 @@ class Api_model extends CI_Model {
     $error['additional'] = htmlentities( $additionalInfo );
 
     $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
-    $this->_xmlContents( 'error-message', $error, $httpHeaders );
+    $this->xmlContents( 'error-message', $error, $httpHeaders );
   }
 
   protected function xmlContents( $xmlFile, $source, $httpHeaders = array() ) {
