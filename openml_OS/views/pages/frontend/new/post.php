@@ -145,7 +145,7 @@ if($this->subpage == 'task') {
       'session_hash' => $session_hash
   );
   if( $_FILES['dataset']['error'] == 0 ) {
-      $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
+      $post_data['dataset'] = new CurlFile($_FILES['dataset']['tmp_name'], 'text/xml');
   }
 
   $url = BASE_URL.'/api/?f=openml.data.upload';
