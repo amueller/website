@@ -350,7 +350,7 @@ class Api_data extends CI_Model {
       return;
     }
 
-    $dataset->features = $this->Feature->getWhere( 'did = "' . $dataset->did . '"' );
+    $dataset->features = $this->Data_feature->getWhere( 'did = "' . $dataset->did . '"' );
 
     if( $dataset->features === false ) {
       $this->_returnError( 272 );
