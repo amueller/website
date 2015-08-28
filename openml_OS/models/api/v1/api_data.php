@@ -13,6 +13,7 @@ class Api_data extends CI_Model {
     $this->load->model('Data_quality');
     $this->load->model('Data_quality_interval');
     $this->load->model('Quality');
+    $this->load->model('File');
   }
   
   function bootstrap($segments, $request_type) {
