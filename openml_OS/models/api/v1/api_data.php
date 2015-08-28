@@ -1,7 +1,7 @@
 <?php
 class Api_data extends Api_model {
   
-  private $version = 'v1';
+  protected $version = 'v1';
   
   function __construct() {
     parent::__construct();
@@ -69,14 +69,14 @@ class Api_data extends Api_model {
       return;
     }
     
-    $this->returnError( 100 );
+    $this->returnError( 100, $this->version );
   }
 
   private function data_list() {
     $active = 'visibility = "public"'; // no constraints
     $datasets_res = $this->Dataset->getWhere( $active, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
-      $this->returnError( 370 );
+      $this->returnError( 370, $this->version );
       return;
     }
 
@@ -93,18 +93,18 @@ class Api_data extends Api_model {
       $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
     }
 
-    $this->xmlContents( 'data', array( 'datasets' => $datasets ) );
+    $this->xmlContents( 'data', $this->version, array( 'datasets' => $datasets ) );
   }
   
   private function data($data_id) {
     if( $data_id == false ) {
-      $this->returnError( 110 );
+      $this->returnError( 110, $this->version );
       return;
     }
 
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->returnError( 111 );
+      $this->returnError( 111, $this->version );
       return;
     }
     $file = $this->File->getById( $dataset->file_id );
@@ -116,19 +116,19 @@ class Api_data extends Api_model {
       $dataset->{$field} = getcsv( $dataset->{$field} );
     }
 
-    $this->xmlContents( 'data-get', $dataset );
+    $this->xmlContents( 'data-get', $this->version, $dataset );
   }
 
   private function data_delete($data_id) {
 
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset == false ) {
-      $this->returnError( 352 );
+      $this->returnError( 352, $this->version );
       return;
     }
 
     if($dataset->uploader != $this->user_id ) {
-      $this->returnError( 353 );
+      $this->returnError( 353, $this->version );
       return;
     }
 
@@ -142,7 +142,7 @@ class Api_data extends Api_model {
 
 
       if( $runs ) {
-        $this->returnError( 354 );
+        $this->returnError( 354, $this->version );
         return;
       }
     }
@@ -152,10 +152,10 @@ class Api_data extends Api_model {
     $this->Data_quality->deleteWhere('data =' . $dataset->did);
 
     if( $result == false ) {
-      $this->returnError( 355 );
+      $this->returnError( 355, $this->version );
       return;
     }
-    $this->xmlContents( 'data-delete', array( 'dataset' => $dataset ) );
+    $this->xmlContents( 'data-delete', $this->version, array( 'dataset' => $dataset ) );
   }
   
   
@@ -165,7 +165,7 @@ class Api_data extends Api_model {
       // get description from string upload
       $description = $this->input->post('description', false);
       if( validateXml( $description, xsd('openml.data.upload'), $xmlErrors, false ) == false ) {
-        $this->returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
+        $this->returnError( 131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_string( $description );
@@ -174,12 +174,12 @@ class Api_data extends Api_model {
       $description = $_FILES['description'];
 
       if( validateXml( $description['tmp_name'], xsd('openml.data.upload'), $xmlErrors ) == false ) {
-        $this->returnError( 131, $this->openmlGeneralErrorCode, $xmlErrors );
+        $this->returnError( 131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
       $xml = simplexml_load_file( $description['tmp_name'] );
     } else {
-      $this->returnError( 135 );
+      $this->returnError( 135, $this->version );
       return;
     }
 
@@ -194,12 +194,12 @@ class Api_data extends Api_model {
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
     $datasetFileProvided = isset( $_FILES['dataset'] );
     if( $datasetUrlProvided && $datasetFileProvided ) {
-      $this->returnError( 140 );
+      $this->returnError( 140, $this->version );
       return;
     } elseif( $datasetFileProvided ) {
       $message = '';
       if( ! check_uploaded_file( $_FILES['dataset'], false, $message ) ) {
-        $this->returnError( 130, $this->openmlGeneralErrorCode, 'File dataset: ' . $message );
+        $this->returnError( 130, $this->version, $this->openmlGeneralErrorCode, 'File dataset: ' . $message );
         return;
       }
       $access_control = 'public';
@@ -210,7 +210,7 @@ class Api_data extends Api_model {
 
       $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
       if($file_id === false) {
-        $this->returnError( 132 );
+        $this->returnError( 132, $this->version );
         return;
       }
       $file_record = $this->File->getById($file_id);
@@ -220,7 +220,7 @@ class Api_data extends Api_model {
     } elseif($update) {
       $destinationUrl = false;
     } else {
-      $this->returnError( 141 );
+      $this->returnError( 141, $this->version );
       return;
     }
 
@@ -249,7 +249,7 @@ class Api_data extends Api_model {
       $id = $xml->children('oml', true)->{'id'};
       $dataset = $this->Dataset->getById( $id );
       if( $dataset === false ) {
-        $this->returnError( 144 );
+        $this->returnError( 144, $this->version );
         return;
       }
 
@@ -285,7 +285,7 @@ class Api_data extends Api_model {
 
       $id = $this->Dataset->insert( $dataset );
       if( ! $id ) {
-        $this->returnError( 134 );
+        $this->returnError( 134, $this->version );
         return;
       }
       // insert tags.
@@ -326,60 +326,60 @@ class Api_data extends Api_model {
     }
 
     // create
-    $this->xmlContents( 'data-upload', array( 'id' => $id ) );
+    $this->xmlContents( 'data-upload', $this->version, array( 'id' => $id ) );
   }
   
   
   private function data_features($data_id) {
     if( $data_id == false ) {
-      $this->returnError( 270 );
+      $this->returnError( 270, $this->version );
       return;
     }
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->returnError( 271 );
+      $this->returnError( 271, $this->version );
       return;
     }
 
     if( $dataset->processed == NULL) {
-      $this->returnError( 273 );
+      $this->returnError( 273, $this->version );
       return;
     }
 
     if( $dataset->error != "false") {
-      $this->returnError( 274 );
+      $this->returnError( 274, $this->version );
       return;
     }
 
     $dataset->features = $this->Data_feature->getWhere( 'did = "' . $dataset->did . '"' );
 
     if( $dataset->features === false ) {
-      $this->returnError( 272 );
+      $this->returnError( 272, $this->version );
       return;
     }
     if( is_array( $dataset->features ) === false ) {
-      $this->returnError( 272 );
+      $this->returnError( 272, $this->version );
       return;
     }
     if( count( $dataset->features ) === 0 ) {
-      $this->returnError( 272 );
+      $this->returnError( 272, $this->version );
       return;
     }
 
-    $this->xmlContents( 'data-features', $dataset );
+    $this->xmlContents( 'data-features', $this->version, $dataset );
   }
 
   private function data_features_upload() {
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
-      $this->returnError( 432 );
+      $this->returnError( 432, $this->version );
       return;
     }
 
     // get description from string upload
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.features'), $xmlErrors ) == false ) {
-      $this->returnError( 433, $this->openmlGeneralErrorCode, $xmlErrors );
+      $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -387,7 +387,7 @@ class Api_data extends Api_model {
 
     $dataset = $this->Dataset->getById( $did );
     if( $dataset == false ) {
-      $this->returnError( 434 );
+      $this->returnError( 434, $this->version );
       return;
     }
     // prepare array for updating data object
@@ -438,9 +438,9 @@ class Api_data extends Api_model {
     $this->Dataset->update( $did, $data );
 
     if( $success ) {
-      $this->xmlContents( 'data-features-upload', array( 'did' => $dataset->did ) );
+      $this->xmlContents( 'data-features-upload', $this->version, array( 'did' => $dataset->did ) );
     } else {
-      $this->returnError( 435 );
+      $this->returnError( 435, $this->version );
       return;
     }
   }
@@ -453,31 +453,31 @@ class Api_data extends Api_model {
         $qualities[] = $r->name;
       }
     } else {
-      $this->returnError( 520 );
+      $this->returnError( 520, $this->version );
       return;
     }
-    $this->xmlContents( 'data-qualities-list', array( 'qualities' => $qualities ) );
+    $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
   }
   
   
   private function data_qualities($data_id) {
     if( $data_id == false ) {
-      $this->returnError( 360 );
+      $this->returnError( 360, $this->version );
       return;
     }
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->returnError( 361 );
+      $this->returnError( 361, $this->version );
       return;
     }
 
     if( $dataset->processed == NULL) {
-      $this->returnError( 363 );
+      $this->returnError( 363, $this->version );
       return;
     }
 
     if( $dataset->error != "false") {
-      $this->returnError( 364 );
+      $this->returnError( 364, $this->version );
       return;
     }
 
@@ -504,32 +504,32 @@ class Api_data extends Api_model {
     }
 
     if( $dataset->qualities === false ) {
-      $this->returnError( 362 );
+      $this->returnError( 362, $this->version );
       return;
     }
     if( is_array( $dataset->qualities ) === false ) {
-      $this->returnError( 362 );
+      $this->returnError( 362, $this->version );
       return;
     }
     if( count( $dataset->qualities ) === 0 ) {
-      $this->returnError( 362 );
+      $this->returnError( 362, $this->version );
       return;
     }
 
-    $this->xmlContents( 'data-qualities', $dataset );
+    $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
 
   private function _openml_data_qualities_upload() {
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
-      $this->returnError( 382 );
+      $this->returnError( 382, $this->version );
       return;
     }
 
     // get description from string upload
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.qualities'), $xmlErrors ) == false ) {
-      $this->returnError( 383, $this->openmlGeneralErrorCode, $xmlErrors );
+      $this->returnError( 383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -537,7 +537,7 @@ class Api_data extends Api_model {
 
     $dataset = $this->Dataset->getById( $did );
     if( $dataset == false ) {
-      $this->returnError( 384 );
+      $this->returnError( 384, $this->version );
       return;
     }
 
@@ -567,7 +567,7 @@ class Api_data extends Api_model {
           return;
         }
       } else*/if( is_array( $all_qualities ) == false || in_array( $quality->name, $all_qualities ) == false ) {
-        $this->returnError( 387, $this->openmlGeneralErrorCode, $quality->name );
+        $this->returnError( 387, $this->version, $this->openmlGeneralErrorCode, $quality->name );
         return;
       } else {
         $newQualities[] = $quality;
@@ -581,7 +581,7 @@ class Api_data extends Api_model {
     }
 
     if( count( $newQualities) == 0 ) {
-      $this->returnError( 388 );
+      $this->returnError( 388, $this->version );
       return;
     }
 
@@ -612,9 +612,9 @@ class Api_data extends Api_model {
     $this->elasticsearch->index('data', $dataset->did);
 
     if( $success ) {
-      $this->xmlContents( 'data-qualities-upload', array( 'did' => $dataset->did ) );
+      $this->xmlContents( 'data-qualities-upload', $this->version, array( 'did' => $dataset->did ) );
     } else {
-      $this->returnError( 389 );
+      $this->returnError( 389, $this->version );
       return;
     }
   }
@@ -628,9 +628,9 @@ class Api_data extends Api_model {
     $this->elasticsearch->index('data', $id);
 
     if( $result == false ) {
-      $this->returnError( $error );
+      $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-tag', array( 'id' => $id, 'type' => 'data' ) );
+      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'data' ) );
     }
   }
 
@@ -643,9 +643,9 @@ class Api_data extends Api_model {
     $this->elasticsearch->index('data', $id);
 
     if( $result == false ) {
-      $this->returnError( $error );
+      $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-untag', array( 'id' => $id, 'type' => 'data' ) );
+      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'data' ) );
     }
   }
 }

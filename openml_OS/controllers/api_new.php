@@ -58,7 +58,7 @@ class Api_new extends CI_Controller {
     } else if (file_exists(APPPATH.'models/api/' . $this->version . '/api_' . $type . '.php') == false) {
        $this->_returnError( 100 );
     } else {
-      $this->{'Api_'.$type}->bootstrap($segs, $request_type, $user_id);
+      $this->{'Api_'.$type}->bootstrap($segs, $request_type, $this->user_id);
     }
   }
 
