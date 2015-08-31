@@ -8,6 +8,7 @@ class Api_task extends Api_model {
     
     // load models
     $this->load->model('Task');
+    $this->load->model('Task_tag');
     $this->load->model('Task_inputs');
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');
