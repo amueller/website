@@ -7,7 +7,10 @@ class Api_user extends Api_model {
     parent::__construct();
     
     // load models
-    $this->load->model('User');
+    $this->load->model('Author');
+    $this->load->model('Dataset');
+    $this->load->model('Implementation');
+    $this->load->model('Run');
   }
   
   function bootstrap($segments, $request_type, $user_id) {
