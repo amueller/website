@@ -65,7 +65,7 @@ class Api_data extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->data_tag($this->input->post('data_id'),$this->input->post('tag'));
+      $this->data_untag($this->input->post('data_id'),$this->input->post('tag'));
       return;
     }
     

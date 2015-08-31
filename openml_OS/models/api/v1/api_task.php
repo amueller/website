@@ -40,7 +40,7 @@ class Api_task extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->task_tag($this->input->post('task_id'),$this->input->post('tag'));
+      $this->task_untag($this->input->post('task_id'),$this->input->post('tag'));
       return;
     }
     
@@ -141,9 +141,7 @@ class Api_task extends Api_model {
     $this->xmlContents( 'task-delete', $this->version, array( 'task' => $task ) );
   }
 
-  private function task_tag() {
-    $id = $this->input->post( 'task_id' );
-    $tag = $this->input->post( 'tag' );
+  private function task_tag($id, $tag) {
 
     $error = -1;
     $result = tag_item( 'task', $id, $tag, $this->user_id, $error );
@@ -159,9 +157,7 @@ class Api_task extends Api_model {
     }
   }
 
-  private function task_untag() {
-    $id = $this->input->post( 'task_id' );
-    $tag = $this->input->post( 'tag' );
+  private function task_untag($id, $tag) {
 
     $error = -1;
     $result = untag_item( 'task', $id, $tag, $this->user_id, $error );

@@ -55,7 +55,7 @@ class Api_flow extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->flow_tag($this->input->post('flow_id'),$this->input->post('tag'));
+      $this->flow_untag($this->input->post('flow_id'),$this->input->post('tag'));
       return;
     }
     
@@ -104,32 +104,12 @@ class Api_flow extends Api_model {
     $this->xmlContents( 'implementation-exists', $this->version, $result );
   }
   
+  // TODO: check what is going wrong with implementation id 1
   private function flow($id) {
     if( $id == false ) {
       $this->returnError( 180, $this->version );
       return;
     }
-
-    /*if(is_numeric($id) === false ) {
-      $record = $this->Implementation->getWhere('`fullName` = "' . $id . '"');
-
-      if( $record !== false ) {
-        $id = $record[0]->id;
-      } else {
-        // maybe a file hash has been given.
-        $files =  $this->File->getColumnWhere('id','`md5_hash` = "'.$id.'"');
-        if( $files !== false ) {
-          $record = $this->Implementation->getWhere('`binary_file_id` IN ('.implode(',', $files).') OR `source_file_id` IN ('.implode(',', $files).')');
-          if( $record !== false ) {
-            $id = $record[0]->id;
-          } else {
-            $id = -1;
-          }
-        } else {
-          $id = -1;
-        }
-      }
-    }*/
 
     $implementation = $this->Implementation->fullImplementation( $id );
 
@@ -243,9 +223,7 @@ class Api_flow extends Api_model {
   }
   
   
-  private function flow_tag() {
-    $id = $this->input->post( 'flow_id' );
-    $tag = $this->input->post( 'tag' );
+  private function flow_tag($id, $tag) {
 
     $error = -1;
     $result = tag_item( 'implementation', $id, $tag, $this->user_id, $error );
@@ -260,9 +238,7 @@ class Api_flow extends Api_model {
     }
   }
 
-  private function flow_untag() {
-    $id = $this->input->post( 'flow_id' );
-    $tag = $this->input->post( 'tag' );
+  private function flow_untag($id, $tag) {
 
     $error = -1;
     $result = untag_item( 'implementation', $id, $tag, $this->user_id, $error );
