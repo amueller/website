@@ -23,8 +23,8 @@ class Api_job extends Api_model {
   
   
   private function job_request() {
-    $workbench = $this->input->getpost('workbench');
-    $task_type_id = $this->input->getpost('task_type_id');
+    $workbench = $this->input->get_post('workbench');
+    $task_type_id = $this->input->get_post('task_type_id');
 
     if( $workbench == false || $task_type_id == false ) {
       $this->returnError( 340, $this->version );
