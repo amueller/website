@@ -17,7 +17,7 @@ class Api_new extends CI_Controller {
     $this->load->model('api/v1/Api_flow');
     $this->load->model('api/v1/Api_run');
     $this->load->model('api/v1/Api_setup');
-    $this->load->model('api/v1/Api_estmationprocedure');
+    $this->load->model('api/v1/Api_estimationprocedure');
     $this->load->model('api/v1/Api_evaluationmeasure');
     $this->load->model('api/v1/Api_file');
     $this->load->model('api/v1/Api_job');
