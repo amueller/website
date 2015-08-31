@@ -17,12 +17,26 @@ class Api_new extends CI_Controller {
     $this->load->model('api/v1/Api_flow');
     $this->load->model('api/v1/Api_run');
     $this->load->model('api/v1/Api_setup');
+    $this->load->model('api/v1/Api_estmationprocedure');
+    $this->load->model('api/v1/Api_evaluationmeasure');
+    $this->load->model('api/v1/Api_file');
+    $this->load->model('api/v1/Api_job');
+    $this->load->model('api/v1/Api_user');
 
     $this->load->model('Log');
     $this->load->model('Api_session');
     
     // helper
     $this->load->helper('api');
+    
+    // paths
+    $this->data_folders = array(
+      'dataset'        => 'dataset/api/',
+      'implementation' => 'implementation/',
+      'run'            => 'run/',
+      'misc'           => 'misc/'
+    );
+    
     
     // some user authentication things.
     $this->provided_hash = $this->input->get_post('session_hash') != false;
