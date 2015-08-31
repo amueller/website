@@ -12,6 +12,8 @@ class Api_flow extends Api_model {
     $this->load->model('Implementation_component');
     
     $this->load->model('File');
+    $this->load->model('Bibliographical_reference');
+    $this->load->model('Input');
   }
   
   function bootstrap($segments, $request_type, $user_id) {
@@ -108,7 +110,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    if(is_numeric($id) === false ) {
+    /*if(is_numeric($id) === false ) {
       $record = $this->Implementation->getWhere('`fullName` = "' . $id . '"');
 
       if( $record !== false ) {
@@ -127,7 +129,7 @@ class Api_flow extends Api_model {
           $id = -1;
         }
       }
-    }
+    }*/
 
     $implementation = $this->Implementation->fullImplementation( $id );
 
