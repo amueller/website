@@ -12,6 +12,7 @@ class Api_new extends CI_Controller {
     $this->message = $this->session->flashdata('message'); // can be overridden
 
     $this->load->model('api/v1/Api_data');
+    $this->load->model('api/v1/Api_task');
 
     $this->load->model('Log');
     $this->load->model('Api_session');
