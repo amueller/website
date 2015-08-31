@@ -10,6 +10,8 @@ class Api_flow extends Api_model {
     $this->load->model('Implementation');
     $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
+    
+    $this->load->model('File');
   }
   
   function bootstrap($segments, $request_type, $user_id) {
