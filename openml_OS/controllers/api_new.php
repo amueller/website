@@ -25,6 +25,7 @@ class Api_new extends CI_Controller {
 
     $this->load->model('Log');
     $this->load->model('Api_session');
+    $this->load->model('Author');
     
     // helper
     $this->load->helper('api');
@@ -40,7 +41,7 @@ class Api_new extends CI_Controller {
     
     // some user authentication things.
     $this->provided_hash = $this->input->get_post('session_hash') != false;
-    $this->provided_valid_hash = $this->Api_session->isValidHash( $this->input->get_post('session_hash') );
+    $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('session_hash') . '"' ); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     if($this->provided_valid_hash) {
