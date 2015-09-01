@@ -38,6 +38,17 @@ class Api_new extends CI_Controller {
       'misc'           => 'misc/'
     );
     
+    $this->load->library('elasticSearch');
+    $this->load->library('wiki');
+    
+    
+    // XML maintainance
+    $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');
+    $this->xml_fields_dataset_update = $this->config->item('xml_fields_dataset_update');
+    $this->xml_fields_implementation = $this->config->item('xml_fields_implementation');
+    $this->xml_fields_run = $this->config->item('xml_fields_run');
+
+    $this->data_controller = $this->config->item('data_controller');
     
     // some user authentication things.
     $this->provided_hash = $this->input->get_post('session_hash') != false;
@@ -45,7 +56,7 @@ class Api_new extends CI_Controller {
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     if($this->provided_valid_hash) {
-      $this->user_id = $this->Api_session->getByHash( $this->input->post('session_hash') )->author_id;
+      $this->user_id = $this->provided_valid_hash[0]->id;
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
