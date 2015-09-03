@@ -8,6 +8,6 @@
     <?php if( property_exists( $ep, 'folds' ) && $ep->folds !== null ): ?><oml:folds><?php echo $ep->folds; ?></oml:folds><?php endif; ?>
     <?php if( property_exists( $ep, 'percentage' ) && $ep->percentage !== null ): ?><oml:percentage><?php echo $ep->percentage; ?></oml:percentage><?php endif; ?>
     <?php if( property_exists( $ep, 'stratified_sampling' ) && $ep->stratified_sampling !== null ): ?><oml:stratified_sampling><?php echo $ep->stratified_sampling; ?></oml:stratified_sampling><?php endif; ?>
-  </oml:estimationprocedures>
+  </oml:estimationprocedure>
   <?php endforeach; ?>
 </oml:estimationprocedures>
