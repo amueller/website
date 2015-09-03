@@ -222,6 +222,42 @@ class Api_flow extends Api_model {
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
   
+  private function _openml_implementation_delete() {
+
+    $implementation = $this->Implementation->getById( $this->input->post( 'implementation_id' ) );
+    if( $implementation == false ) {
+      $this->returnError( 322, $this->version );
+      return;
+    }
+
+    if($implementation->uploader != $this->user_id ) {
+      $this->returnError( 323, $this->version  );
+      return;
+    }
+
+    $runs = $this->Implementation->query('SELECT rid FROM `algorithm_setup`, `run` WHERE `algorithm_setup`.`sid` = `run`.`setup` AND `algorithm_setup`.`implementation_id` = "'.$implementation->id.'" LIMIT 0,1;');
+    $evaluations = $this->Evaluation->getWhereSingle('implementation_id = "' . $implementation->id . '"');
+
+    if($runs || $evaluations || $this->Implementation->isComponent($implementation->id) ) {
+      $this->returnError( 324, $this->version  );
+      return;
+    }
+
+    $result = $this->Implementation->delete( $implementation->id );
+    if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
+    if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }
+    $this->Input->deleteWhere('implementation_id =' . $implementation->id);
+    $this->Implementation_component->deleteWhere('parent =' . $implementation->id);
+    $this->Bibliographical_reference->deleteWhere('implementation_id =' . $implementation->id);
+    // TODO: also check component parts.
+
+    if( $result == false ) {
+      $this->returnError( 325, $this->version  );
+      return;
+    }
+    $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
+  }
+  
   
   private function flow_tag($id, $tag) {
 
