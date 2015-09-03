@@ -1,6 +1,7 @@
 <oml:estimationprocedures xmlns:oml="http://openml.org/openml">
   <?php foreach($eps as $ep): ?>
   <oml:estimationprocedure>
+    <oml:id><?php echo $ep->id; ?></oml:id>
     <oml:ttid><?php echo $ep->ttid; ?></oml:ttid>
     <oml:name><?php echo $ep->name; ?></oml:name>
     <oml:type><?php echo $ep->type; ?></oml:type>
