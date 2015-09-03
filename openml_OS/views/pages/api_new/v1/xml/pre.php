@@ -92,61 +92,61 @@ $this->apiErrors[150][1] = 'Please provide task_id';
 $this->apiErrors[151][0] = 'Unknown task';
 $this->apiErrors[151][1] = 'The task with this id was not found in the database';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[160][0] = 'Error in file uploading';
 $this->apiErrors[160][1] = 'There was a problem with the file upload';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[161][0] = 'Please provide description xml';
 $this->apiErrors[161][1] = 'Please provide description xml';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[162][0] = 'Please provide source or binary file';
 $this->apiErrors[162][1] = 'Please provide source or binary file. It is also allowed to upload both';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[163][0] = 'Problem validating uploaded description file';
 $this->apiErrors[163][1] = 'The XML description format does not meet the standards';
 
-// for function: openml.implementation.upload 
-$this->apiErrors[164][0] = 'Implementation already stored in database';
+// for function: openml.flow.upload 
+$this->apiErrors[164][0] = 'flow already stored in database';
 $this->apiErrors[164][1] = 'Please change name or version number';
 
-// for function: openml.implementation.upload 
-$this->apiErrors[165][0] = 'Failed to insert implementation';
+// for function: openml.flow.upload 
+$this->apiErrors[165][0] = 'Failed to insert flow';
 $this->apiErrors[165][1] = 'There can be many causes for this error. If you included the implements field, it should be an existing entry in the algorithm or math_function table. Otherwise it could be an internal server error. Please contact API support team. ';
 
-// for function: openml.implementation.upload 
-$this->apiErrors[166][0] = 'Failed to add implementation to database';
+// for function: openml.flow.upload 
+$this->apiErrors[166][0] = 'Failed to add flow to database';
 $this->apiErrors[166][1] = 'Internal server error, please contact api administrators';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[167][0] = 'Illegal files uploaded';
 $this->apiErrors[167][1] = 'An non required file was uploaded.';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[168][0] = 'The provided md5 hash equals not the server generated md5 hash of the file';
 $this->apiErrors[168][1] = 'The provided md5 hash equals not the server generated md5 hash of the file';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[169][0] = 'Please provide session_hash';
 $this->apiErrors[169][1] = 'In order to share content, please authenticate (openml.authenticate) and provide session_hash';
 
-// for function: openml.implementation.upload 
+// for function: openml.flow.upload 
 $this->apiErrors[170][0] = 'Authentication failed';
 $this->apiErrors[170][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
-// for function: openml.implementation.upload 
-$this->apiErrors[171][0] = 'Implementation already exists';
-$this->apiErrors[171][1] = 'This implementation is already in the database';
+// for function: openml.flow.upload 
+$this->apiErrors[171][0] = 'flow already exists';
+$this->apiErrors[171][1] = 'This flow is already in the database';
 
-// for function: openml.implementation.get 
-$this->apiErrors[180][0] = 'Please provide implementation_id';
-$this->apiErrors[180][1] = 'Please provide implementation_id';
+// for function: openml.flow.get 
+$this->apiErrors[180][0] = 'Please provide flow_id';
+$this->apiErrors[180][1] = 'Please provide flow_id';
 
-// for function: openml.implementation.get 
-$this->apiErrors[181][0] = 'Unknown implementation';
-$this->apiErrors[181][1] = 'The implementation with this ID was not found in the database';
+// for function: openml.flow.get 
+$this->apiErrors[181][0] = 'Unknown flow';
+$this->apiErrors[181][1] = 'The flow with this ID was not found in the database';
 
 // for function: openml.run.upload 
 //$this->apiErrors[200][0] = 'Please provide session_hash';
@@ -169,8 +169,8 @@ $this->apiErrors[204][0] = 'Unknown task';
 $this->apiErrors[204][1] = 'The task with this id was not found in the database';
 
 // for function: openml.run.upload 
-$this->apiErrors[205][0] = 'Unknown implementation';
-$this->apiErrors[205][1] = 'The implementation with this id was not found in the database';
+$this->apiErrors[205][0] = 'Unknown flow';
+$this->apiErrors[205][1] = 'The flow with this id was not found in the database';
 
 // for function: openml.run.upload 
 $this->apiErrors[206][0] = 'Invalid number of files';
@@ -198,7 +198,7 @@ $this->apiErrors[212][1] = 'Internal server error, please contact api administra
 
 // for function: openml.run.upload 
 $this->apiErrors[213][0] = 'Parameter in run xml unknown';
-$this->apiErrors[213][1] = 'One of the parameters provided in the run xml is not registered as parameter for the implementation nor its components';
+$this->apiErrors[213][1] = 'One of the parameters provided in the run xml is not registered as parameter for the flow nor its components';
 
 // for function: openml.run.upload 
 $this->apiErrors[214][0] = 'Unable to store input setting';
@@ -214,11 +214,11 @@ $this->apiErrors[216][1] = 'The Java application has thrown an error. Additional
 
 // for function: openml.run.upload
 $this->apiErrors[217][0] = 'Error processing output data: unknown or inconsistent evaluation measure';
-$this->apiErrors[217][1] = 'One of the provided evaluation measures could not be matched with a record in the math_function / implementation table.';
+$this->apiErrors[217][1] = 'One of the provided evaluation measures could not be matched with a record in the math_function / flow table.';
 
 // for function: openml.run.upload
-$this->apiErrors[218][0] = 'Wrong implementation associated with run: this implements a math_function';
-$this->apiErrors[218][1] = 'The implementation implements a math_function, which is unable to generate predictions. Please select another implementation. ';
+$this->apiErrors[218][0] = 'Wrong flow associated with run: this implements a math_function';
+$this->apiErrors[218][1] = 'The flow implements a math_function, which is unable to generate predictions. Please select another flow. ';
 
 // for function: openml.run.upload
 $this->apiErrors[219][0] = 'Error reading the XML document';
@@ -301,43 +301,43 @@ $this->apiErrors[300][1] = 'Please provide task_id';
 $this->apiErrors[301][0] = 'Unknown task';
 $this->apiErrors[301][1] = 'The task with this id was not found in the database';
 
-// for function: openml.implementation.owned
+// for function: openml.flow.owned
 $this->apiErrors[310][0] = 'Please provide session_hash';
 $this->apiErrors[310][1] = 'In order to view private content, please authenticate (openml.authenticate) and provide session_hash';
 
-// for function: openml.implementation.owned
+// for function: openml.flow.owned
 $this->apiErrors[311][0] = 'Authentication failed';
 $this->apiErrors[311][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
-// for function: openml.implementation.owned
-$this->apiErrors[312][0] = 'No implementations owned by this used';
-$this->apiErrors[312][1] = 'The user has no implementations linked to his account';
+// for function: openml.flow.owned
+$this->apiErrors[312][0] = 'No flows owned by this used';
+$this->apiErrors[312][1] = 'The user has no flows linked to his account';
 
-// for function: openml.implementation.delete
+// for function: openml.flow.delete
 $this->apiErrors[320][0] = 'Please provide session_hash';
 $this->apiErrors[320][1] = 'In order to remove your content, please authenticate (openml.authenticate) and provide session_hash';
 
-// for function: openml.implementation.delete
+// for function: openml.flow.delete
 $this->apiErrors[321][0] = 'Authentication failed';
 $this->apiErrors[321][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
-// for function: openml.implementation.delete
-$this->apiErrors[322][0] = 'Implementation does not exists';
-$this->apiErrors[322][1] = 'The implementation id could not be linked to an existing implementation.';
+// for function: openml.flow.delete
+$this->apiErrors[322][0] = 'flow does not exists';
+$this->apiErrors[322][1] = 'The flow id could not be linked to an existing flow.';
 
-// for function: openml.implementation.delete
-$this->apiErrors[323][0] = 'Implementation is not owned by you';
-$this->apiErrors[323][1] = 'The implementation was owned by another user. Hence you cannot delete it.';
+// for function: openml.flow.delete
+$this->apiErrors[323][0] = 'flow is not owned by you';
+$this->apiErrors[323][1] = 'The flow was owned by another user. Hence you cannot delete it.';
 
-// for function: openml.implementation.delete
-$this->apiErrors[324][0] = 'Implementation is in use by other content. Can not be deleted';
-$this->apiErrors[324][1] = 'The implementation is used in runs, evaluations or as component of another implementation. Delete this other content before deleting this implementation. ';
+// for function: openml.flow.delete
+$this->apiErrors[324][0] = 'flow is in use by other content. Can not be deleted';
+$this->apiErrors[324][1] = 'The flow is used in runs, evaluations or as component of another flow. Delete this other content before deleting this flow. ';
 
-// for function: openml.implementation.delete
-$this->apiErrors[325][0] = 'Deleting implementation failed.';
-$this->apiErrors[325][1] = 'Deleting the implementation failed. Please contact support team. ';
+// for function: openml.flow.delete
+$this->apiErrors[325][0] = 'Deleting flow failed.';
+$this->apiErrors[325][1] = 'Deleting the flow failed. Please contact support team. ';
 
-// for function: openml.implementation.exists
+// for function: openml.flow.exists
 $this->apiErrors[330][0] = 'Mandatory fields not present.';
 $this->apiErrors[330][1] = 'Please provide one of the following mandatory field combination: name and external_version. ';
 
@@ -610,16 +610,16 @@ $this->apiErrors[465][0] = 'Deleting user failed.';
 $this->apiErrors[465][1] = 'Deleting the user failed. Please contact support team. ';
 
 // for function: openml.data.tag
-$this->apiErrors[470][0] = 'Please give entity_id {data_id, implementation_id, run_id} and tag.';
-$this->apiErrors[470][1] = 'In order to add a tag, please upload the entity id (either data_id, implementation_id, run_id) and tag (the name of the tag).';
+$this->apiErrors[470][0] = 'Please give entity_id {data_id, flow_id, run_id} and tag.';
+$this->apiErrors[470][1] = 'In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).';
 
 // for function: openml.data.tag
 $this->apiErrors[471][0] = 'Entity not found.';
-$this->apiErrors[471][1] = 'The provided entity_id {data_id, implementation_id, run_id} does not correspond to an existing entity.';
+$this->apiErrors[471][1] = 'The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.';
 
 // for function: openml.data.tag
 $this->apiErrors[472][0] = 'Entity already tagged by this tag. ';
-$this->apiErrors[472][1] = 'The entity {dataset, implementation, run} already had this tag. Probably tagged by another user. ';
+$this->apiErrors[472][1] = 'The entity {dataset, flow, run} already had this tag. Probably tagged by another user. ';
 
 // for function: openml.data.tag
 $this->apiErrors[473][0] = 'Database problem inserting tag. ';
@@ -630,20 +630,20 @@ $this->apiErrors[474][0] = 'Internal error tagging the entity. ';
 $this->apiErrors[474][1] = 'Something technical went wrong inserting the tag. Please contact OpenML Team. ';
 
 // for function: openml.data.untag
-$this->apiErrors[475][0] = 'Please give entity_id {data_id, implementation_id, run_id} and tag.';
-$this->apiErrors[475][1] = 'In order to remove a tag, please upload the entity id (either data_id, implementation_id, run_id) and tag (the name of the tag).';
+$this->apiErrors[475][0] = 'Please give entity_id {data_id, flow_id, run_id} and tag.';
+$this->apiErrors[475][1] = 'In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).';
 
 // for function: openml.data.untag
-$this->apiErrors[476][0] = 'Entity {dataset, implementation, run} not found.';
-$this->apiErrors[476][1] = 'The provided entity_id {data_id, implementation_id, run_id} does not correspond to an existing entity.';
+$this->apiErrors[476][0] = 'Entity {dataset, flow, run} not found.';
+$this->apiErrors[476][1] = 'The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.';
 
 // for function: openml.data.untag
 $this->apiErrors[477][0] = 'Tag not found.';
-$this->apiErrors[477][1] = 'The provided tag is not associated with the entity {dataset, implementation, run}.';
+$this->apiErrors[477][1] = 'The provided tag is not associated with the entity {dataset, flow, run}.';
 
 // for function: openml.data.untag
 $this->apiErrors[478][0] = 'Tag is not owned by you';
-$this->apiErrors[478][1] = 'The entity {dataset, implementation, run} was tagged by another user. Hence you cannot delete it.';
+$this->apiErrors[478][1] = 'The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it.';
 
 // for function: openml.data.tag
 $this->apiErrors[479][0] = 'Internal error removing the tag. ';
@@ -670,19 +670,19 @@ $this->apiErrors[492][0] = 'File register error';
 $this->apiErrors[492][1] = 'Something went wrong registering the file. Please contact OpenML team. ';
 
 
-// openml.implementations
+// openml.flows
 $this->apiErrors[500][0] = 'No results';
-$this->apiErrors[500][1] = 'There where no results. Check whether there are implementations. ';
+$this->apiErrors[500][1] = 'There where no results. Check whether there are flows. ';
 
 // openml.runs
-$this->apiErrors[510][0] = 'Please provide at least task_id, implementation_id or setup_id. ';
+$this->apiErrors[510][0] = 'Please provide at least task_id, flow_id or setup_id. ';
 $this->apiErrors[510][1] = 'The number of runs is huge. Please limit the result space. ';
 
-// openml.implementations
+// openml.flows
 $this->apiErrors[511][0] = 'Input not safe';
-$this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, implementation_id) did not meet the contrains (comma separated list of integers). ';
+$this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, flow_id) did not meet the contrains (comma separated list of integers). ';
 
-// openml.implementations
+// openml.flows
 $this->apiErrors[512][0] = 'No results';
 $this->apiErrors[512][1] = 'There where no results. Check whether there are runs under this constraint. ';
 
