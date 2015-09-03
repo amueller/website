@@ -222,7 +222,7 @@ class Api_flow extends Api_model {
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
   
-  private function _openml_implementation_delete() {
+  private function flow_delete() {
 
     $implementation = $this->Implementation->getById( $this->input->post( 'implementation_id' ) );
     if( $implementation == false ) {
