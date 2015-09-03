@@ -222,9 +222,9 @@ class Api_flow extends Api_model {
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
   
-  private function flow_delete() {
+  private function flow_delete($flow_id) {
 
-    $implementation = $this->Implementation->getById( $this->input->post( 'implementation_id' ) );
+    $implementation = $this->Implementation->getById( $flow_id );
     if( $implementation == false ) {
       $this->returnError( 322, $this->version );
       return;
