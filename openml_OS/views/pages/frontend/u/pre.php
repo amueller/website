@@ -107,11 +107,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 
 // PROFILE EDIT FORM
 $this->message = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-if (!$this->ion_auth->logged_in())
+if ($this->ion_auth->logged_in())
 {
-	sm('Please login first. ');
-	redirect('frontend/page/login');
-}
 $this->user = $this->ion_auth->user()->row();
 $this->load->library('elasticSearch');
 
@@ -206,6 +203,7 @@ $this->image = array(
 	'type' => 'file',
 );
 
+}
 }
 
 

@@ -2,6 +2,14 @@
   <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 
     <div class="tab-content">
+      <?php if(!in_array($this->subpage,$this->activity_subpages) and false !== strpos($_SERVER['REQUEST_URI'],'/u/') ){ ?>
+      <div class="tab-pane active" id="overview">
+        <?php
+        subpage('user');
+        ?>
+      </div>
+      <?php } ?>
+
       <?php if(in_array($this->subpage,$this->activity_subpages)) { ?>
       <div class="tab-pane active" id="data">
         <?php
@@ -11,11 +19,7 @@
       <?php } ?>
 
       <?php if(!in_array($this->subpage,$this->activity_subpages) and false !== strpos($_SERVER['REQUEST_URI'],'/u/') and $this->is_owner) { ?>
-      <div class="tab-pane active" id="overview">
-        <?php
-        subpage('user');
-        ?>
-      </div>
+
       <div class="tab-pane" id="edit">
         <?php
         subpage('profile');
