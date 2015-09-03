@@ -686,4 +686,8 @@ $this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, implementat
 $this->apiErrors[512][0] = 'No results';
 $this->apiErrors[512][1] = 'There where no results. Check whether there are runs under this constraint. ';
 
+// openml.estimationprocedure.list
+$this->apiErrors[520][0] = 'No results';
+$this->apiErrors[520][1] = 'There where no results. Please contact API team. ';
+
 ?>

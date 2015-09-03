@@ -13,10 +13,10 @@ class Api_estimationprocedure extends Api_model {
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
     
-    //if (count($segments) == 1 && $segments[0] == 'list') {
-    //  $this->data_list();
-    //  return;
-    //}
+    if (count($segments) == 1 && $segments[0] == 'list') {
+      $this->estimationprocedure_list();
+      return;
+    }
     
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->estimationprocedure($segments[0]);
@@ -39,6 +39,15 @@ class Api_estimationprocedure extends Api_model {
       return;
     }
     $this->xmlContents( 'estimationprocedure-get', $this->version, array( 'ep' => $ep ) );
+  }
+  private function estimationprocedure_list() {
+
+    $estimationprocedures = $this->Estimation_procedure->get();
+    if( $estimationprocedures == false ) {
+      $this->returnError( 500, $this->version );
+      return;
+    }
+    $this->xmlContents( 'estimationprocedures', $this->version, array( 'eps' => $estimationprocedures ) );
   }
 }
 ?>
