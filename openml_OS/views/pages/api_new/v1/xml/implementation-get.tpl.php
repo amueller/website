@@ -26,7 +26,7 @@ $mapping = array(
   'binary_md5' => 'binaryMd5',
  ); ?>
 
-<oml:implementation xmlns:oml="http://openml.org/openml">
+<oml:flow xmlns:oml="http://openml.org/openml">
   <?php 
   foreach( $mapping as $key => $value ) {
     if( property_exists( $source, $value ) ){
@@ -39,4 +39,4 @@ $mapping = array(
       }
     }
   }?>
-</oml:implementation>
+</oml:flow>

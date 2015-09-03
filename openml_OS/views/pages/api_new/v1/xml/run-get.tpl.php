@@ -2,7 +2,7 @@
   <oml:run_id><?php echo $source->rid; ?></oml:run_id>
   <oml:uploader><?php echo $source->uploader; ?></oml:uploader>
   <oml:task_id><?php echo $source->task_id; ?></oml:task_id>
-  <oml:implementation_id><?php echo $source->setup->implementation_id; ?></oml:implementation_id>
+  <oml:flow_id><?php echo $source->setup->implementation_id; ?></oml:flow_id>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
   <?php if($source->error !== null):?> <oml:error_message><?php echo $source->error; ?></oml:error_message> <?php endif; ?>
   <oml:setup_string><?php echo $source->setup->setup_string; ?></oml:setup_string>
@@ -49,7 +49,7 @@
       <?php foreach( $source->outputData['evaluations'] as $e ): ?>
         <oml:evaluation>
           <oml:name><?php echo $e->{'function'}; ?></oml:name>
-          <oml:implementation><?php echo $e->{'implementation_id'}; ?></oml:implementation>
+          <oml:flow_id><?php echo $e->{'implementation_id'}; ?></oml:flow_id>
           <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
           <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
         </oml:evaluation>

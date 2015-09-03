@@ -11,6 +11,8 @@ class Api_run extends Api_model {
     $this->load->model('Run_tag');
     $this->load->model('Algorithm_setup');
     $this->load->model('Input_setting');
+    $this->load->model('Output_data');
+    $this->load->model('Input_data');
     
     $this->load->model('Evaluation');
     $this->load->model('Evaluation_fold');

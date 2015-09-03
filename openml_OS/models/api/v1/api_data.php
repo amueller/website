@@ -622,30 +622,30 @@ class Api_data extends Api_model {
   
   private function data_tag($data_id, $tag) {
     $error = -1;
-    $result = tag_item( 'dataset', $id, $tag, $this->user_id, $error );
+    $result = tag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('data', $id);
+    $this->elasticsearch->index('data', $data_id);
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'data' ) );
+      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $data_id, 'type' => 'data' ) );
     }
   }
 
   private function data_untag($data_id, $tag) {
     $error = -1;
-    $result = untag_item( 'dataset', $id, $tag, $this->user_id, $error );
+    $result = untag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
 
 
     //update index
-    $this->elasticsearch->index('data', $id);
+    $this->elasticsearch->index('data', $data_id);
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'data' ) );
+      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $data_id, 'type' => 'data' ) );
     }
   }
 }
