@@ -4,8 +4,8 @@
 	   $this->id = $this->subpage;
 	   if(array_search('u',$info)+2 < count($info))
 		   $this->subpage = $info[array_search('u',$info)+2];
-     $this->legal_subpages = array('flows','data','runs');
-	   if(in_array($this->subpage,$this->legal_subpages)){ ?>
+     $this->activity_subpages = array('flows','data','runs');
+	   if(in_array($this->subpage,$this->activity_subpages)){ ?>
 
 var oTable;
 

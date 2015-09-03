@@ -1,12 +1,11 @@
-<div class="header-panel">
   <div class="col-sm-3 hidden-xs" style="padding-top:20px;">
   </div>
 
-<div class="pages col-sm-9">
+<div class="col-sm-9">
   <div class="col-sm-10">
-    <div class="well page" style="position: relative; z-index:1030 !important">
+    <div class="panel">
       <h2>Edit Profile</h2>
-      <?php echo form_open_multipart("frontend/page/profile");?>
+      <?php echo form_open_multipart("frontend/page/u/". $this->user_id);?>
       <fieldset>
         <div class="inputs">
             <?php echo form_input($this->emailField);?>
@@ -26,5 +25,4 @@
         <?php echo form_close();?>
    </div>
  </div>
-</div>
 </div>

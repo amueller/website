@@ -7,7 +7,7 @@
 
   <div class="datainfo">
      <i class="fa fa-trophy"></i> <a href="t/<?php echo $this->run['run_task']['task_id']; ?>">Task <?php echo $this->run['run_task']['task_id']; ?> (<?php echo $this->run['run_task']['tasktype']['name']; ?>)</a> <i class="fa fa-database"></i> <a href="d/<?php echo $this->run['run_task']['source_data']['data_id']; ?>"><?php echo $this->run['run_task']['source_data']['name']; ?></a>
-     <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat($this->run['run_task']['date']); ?> by <a href="u/<?php echo $this->run['uploader']; ?>"><?php echo $this->run['uploader']; ?></a>
+     <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat($this->run['date']); ?> by <a href="u/<?php echo $this->run['uploader']; ?>"><?php echo $this->run['uploader']; ?></a>
 </div>
 
 <?php

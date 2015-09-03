@@ -16,11 +16,12 @@
        <i class="fa fa-fw fa-clock-o"></i> Joined <?php echo date("Y-m-d", $this->userinfo['date']); ?>
        <br clear="all"/>
        </div>
-       <?php if($this->is_owner){?>
-          <a href="profile" class="btn btn-primary">Edit Profile</a>
+       <?php if($this->is_owner || $this->ion_auth->is_admin()){?>
+          <a href="profile" class="btn btn-primary">Edit Profile</a><br />
        <?php } ?>
      </div>
    </div>
+
   <div class="col-sm-4">
     <div class="panel panel-simple panel-success">
      <div class="panel-heading">Data Sets</div>
