@@ -169,6 +169,8 @@
   			    <li><a href="new/flow" class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i> New flow</a></li>
   		            <li class="divider"></li>
   			    <li><a href="new/run" class="iconred"><i class="fa fa-fw fa-lg fa-star"></i> New run</a></li>
+                  <li class="divider"></li>
+            <li><a href="new/study" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> New study</a></li>
   			  </ul>
   			</div>
 

@@ -173,6 +173,12 @@ if($this->subpage == 'task') {
     $this->responsetype = 'alert alert-danger';
     $this->response = 'Could not upload data. Please fill in all required (red) fields.';
   }
+} elseif($this->subpage == 'study') {
+  $user_id = $this->ion_auth->user()->row()->id;
+  $name = $this->input->post( 'study_name' );
+  $tag = $this->input->post( 'name' );
+  $description = $this->input->post( 'description' );
+  $this->Study->create( $tag, $name, $description, $user_id );
 }
 
 ?>

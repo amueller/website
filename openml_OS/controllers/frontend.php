@@ -13,6 +13,7 @@ class Frontend extends CI_Controller {
     $this->load->model('Input');
     $this->load->model('Bibliographical_reference');
     $this->load->model('Math_function');
+    $this->load->model('Study');
     $this->load->model('Task');
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');

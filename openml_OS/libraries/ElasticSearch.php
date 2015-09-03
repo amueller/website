@@ -251,6 +251,26 @@ class ElasticSearch {
                               )
                             )
                           );
+                          $this->mappings['study'] = array('_all' => array(
+                            'enabled' => true,
+                            'stored' => 'yes',
+                            'type' => 'string',
+                            'analyzer' => 'snowball'
+                          ),
+                          '_timestamp' => array( 'enabled' => true),
+                          '_type' => array( 'enabled' => true	),
+                          'properties' => array(
+                            'date' => array(
+                              'type' => 'date',
+                              'format' => 'yyyy-MM-dd HH:mm:ss'
+                            ),
+                            'study_id' => array('type' => 'long'),
+                            'uploader' => array(
+                                'type' => 'string',
+                                'analyzer' => 'keyword'
+                            )
+                            )
+                          );
                           $this->mappings['measure'] = array('_all' => array(
                             'enabled' => true,
                             'stored' => 'yes',
@@ -417,6 +437,64 @@ class ElasticSearch {
                           $user['runs_on_flows'] = $runs_flows[0]->count;
 
                           return $user;
+                        }
+
+                        public function index_study($id){
+
+                          $params['index']     = 'openml';
+                          $params['type']      = 'study';
+
+                          $studies = $this->userdb->query('select * from study where '.($id?' and id='.$id:''));
+
+                          if($id and !$studies)
+                          return 'Error: study '.$id.' is unknown';
+
+                          foreach( $studies as $s ) {
+                            $params['body'][] = array(
+                              'index' => array(
+                                '_id' => $s->id
+                              )
+                            );
+
+                            $params['body'][] = $this->build_study($s);
+                          }
+
+                          $responses = $this->client->bulk($params);
+                          return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($users).' studies.';
+                        }
+
+                        private function build_study($d){
+                          $study = array(
+                            'study_id' 		=> $d->id,
+                            'tag' 	=> $d->tag,
+                            'name' 	=> $d->name,
+                            'description' => $d->description,
+                            'date' 	=> $d->created,
+                            'creator'	 	=> $d->creator,
+                            'suggest'		=> array(
+                              'input' => array($d->tag,$d->name,$d->description),
+                              'output'=> $d->name,
+                              'weight'=> 5,
+                              'payload' => array(
+                                'type' => 'study',
+                                'study_id' => $d->id,
+                                'description' => substr($d->description, 0, 100)
+                                )
+                                )
+                          );
+                          $data_tagged = $this->db->query('select count(id) as count from dataset_tag where tag='.$d->tag);
+                          if($data_tagged)
+                            $study['datasets_included'] = $data_tagged[0]->count;
+
+                          $flows_tagged = $this->db->query('select count(id) as count from implementation_tag where tag='.$d->tag);
+                          if($flows_tagged)
+                            $study['flows_included'] = $flows_tagged[0]->count;
+
+                          $runs_tagged = $this->db->query('select count(id) as count from run_tag where tag='.$d->tag);
+                          if($runs_tagged)
+                            $study['runs_included'] = $runs_tagged[0]->count;
+
+                          return $study;
                         }
 
                         // Special case - tasks are pre-fetched because they are also needed to build the run index
