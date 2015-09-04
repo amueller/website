@@ -188,7 +188,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
  				</div>
  				<div class="runStats">
 					<?php
-								echo $rs['datasets_included'] . ' datasets, '. $rs['flows_included'] . ' flows, ' . $rs['runs_included'] . ' runs';
+								echo $rs['datasets_included'] . ' datasets, '. $rs['tasks_included'] . ' tasks, ' . $rs['flows_included'] . ' flows, ' . $rs['runs_included'] . ' runs';
 					?>
  				</div>
 		   <?php } elseif($type == 'measure') { ?>
