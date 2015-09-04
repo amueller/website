@@ -455,7 +455,7 @@ class Api_run extends Api_model {
 
       // more naming convention
       if( array_key_exists( $evaluation['flow'], $implementation_ids ) ) {
-        $evaluation['flow_id'] = $implementation_ids[$evaluation['flow']];
+        $evaluation['implementation_id'] = $implementation_ids[$evaluation['flow']];
         unset($evaluation['flow']);
       } else {
         $this->Log->mapping( __FILE__, __LINE__, 'Flow ' . $evaluation['flow'] . ' not found in database. ' );
@@ -471,9 +471,9 @@ class Api_run extends Api_model {
       } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
         // evaluation_fold
         $this->Evaluation_fold->insert( $evaluation );
-      } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
-        // evaluation_interval
-        $this->Evaluation_interval->insert( $evaluation );
+  //    } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
+  //      // evaluation_interval
+  //      $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
         $this->Evaluation->insert( $evaluation );
