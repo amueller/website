@@ -154,7 +154,7 @@ class Api_flow extends Api_model {
       // get description from string upload
       $description = $this->input->post('description');
       $xmlErrors = "";
-      if( validateXml( $description, xsd('openml.implementation.upload'), $xmlErrors, false ) == false ) {
+      if( validateXml( $description, xsd('openml.implementation.upload', $this->controller, $this->version), $xmlErrors, false ) == false ) {
         $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
@@ -163,7 +163,7 @@ class Api_flow extends Api_model {
       // get description from file upload
       $description = $_FILES['description'];
 
-      if( validateXml( $description['tmp_name'], xsd('openml.implementation.upload'), $xmlErrors ) == false ) {
+      if( validateXml( $description['tmp_name'], xsd('openml.implementation.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
         $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }

@@ -164,7 +164,7 @@ class Api_data extends Api_model {
     if( $this->input->post('description') ) {
       // get description from string upload
       $description = $this->input->post('description', false);
-      if( validateXml( $description, xsd('openml.data.upload'), $xmlErrors, false ) == false ) {
+      if( validateXml( $description, xsd('openml.data.upload', $this->controller, $this->version), $xmlErrors, false ) == false ) {
         $this->returnError( 131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
@@ -173,7 +173,7 @@ class Api_data extends Api_model {
       // get description from file upload
       $description = $_FILES['description'];
 
-      if( validateXml( $description['tmp_name'], xsd('openml.data.upload'), $xmlErrors ) == false ) {
+      if( validateXml( $description['tmp_name'], xsd('openml.data.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
         $this->returnError( 131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
@@ -378,7 +378,7 @@ class Api_data extends Api_model {
 
     // get description from string upload
     $description = $_FILES['description'];
-    if( validateXml( $description['tmp_name'], xsd('openml.data.features'), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], xsd('openml.data.features', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
@@ -528,7 +528,7 @@ class Api_data extends Api_model {
 
     // get description from string upload
     $description = $_FILES['description'];
-    if( validateXml( $description['tmp_name'], xsd('openml.data.qualities'), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], xsd('openml.data.qualities', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }

@@ -163,8 +163,15 @@ function untag_item( $type, $id, $tag, $user_id, &$error ) {
   return true;
 }
 
-function xsd( $name ) {
-  return APPPATH.'views/pages/rest_api/xsd/' . $name . '.xsd';
+function xsd( $name, $controller = null, $versionName = null ) {
+  $version = '';
+  if(!$controller) {
+    $controller = 'rest_api';
+  }
+  if ($versionName) {
+    $version = $versionName . '/';
+  }
+  return APPPATH.'views/pages/' . $controller . $version . 'xsd/' . $name . '.xsd';
 }
 
 function sub_xml( $xmlFile, $source ) {
