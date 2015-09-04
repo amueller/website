@@ -128,8 +128,8 @@ $attrs = $_GET;
 unset($attrs['from']);
 $this->rel_uri = "search?".http_build_query($attrs);
 
-$this->icons = array( 'flow' => 'fa fa-cogs fa-lg', 'data' => 'fa fa-database fa-lg', 'run' => 'fa fa-star fa-lg', 'user' => 'fa fa-user fa-lg', 'task' => 'fa fa-trophy fa-lg', 'task_type' => 'fa fa-flask fa-lg', 'measure' => 'fa fa-bar-chart-o fa-lg');
-$this->colors = array( 'flow' => '#428bca', 'data' => '#3d8b3d', 'run' => '#d9534f', 'user' => '#e91e63', 'task' => '#fb8c00', 'task_type' => '#ff5722', 'measure' => '#9c27b0');
+$this->icons = array( 'flow' => 'fa fa-cogs fa-lg', 'data' => 'fa fa-database fa-lg', 'run' => 'fa fa-star fa-lg', 'user' => 'fa fa-user fa-lg', 'task' => 'fa fa-trophy fa-lg', 'study' => 'fa fa-flask fa-lg', 'task_type' => 'fa fa-flag fa-lg', 'measure' => 'fa fa-bar-chart-o fa-lg');
+$this->colors = array( 'flow' => '#428bca', 'data' => '#3d8b3d', 'run' => '#d9534f', 'user' => '#e91e63', 'task' => '#fb8c00', 'task_type' => '#ff5722', 'study' => '#9c27b0', 'measure' => '#607d8b');
 
 
 $this->measures = array( 'estimation_procedure' => 'a/estimation-procedures', 'evaluation_measure' => 'a/evaluation-measures', 'data_quality' => 'a/data-qualities', 'flow_quality' => 'a/flow-qualities');
@@ -213,6 +213,7 @@ $time_start = microtime_float();
 // launch query
 try {
 	$this->results = $this->searchclient->search($params);
+  //print_r($this->results);
 } catch (Exception $e) {
 	$this->results = array();
 	$this->results['hits'] = array();

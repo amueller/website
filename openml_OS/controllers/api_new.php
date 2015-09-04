@@ -1,6 +1,6 @@
 <?php
 class Api_new extends CI_Controller {
-  
+
   private $version;
 
   function __construct() {
@@ -26,10 +26,10 @@ class Api_new extends CI_Controller {
     $this->load->model('Log');
     $this->load->model('Api_session');
     $this->load->model('Author');
-    
+
     // helper
     $this->load->helper('api');
-    
+
     // paths
     $this->data_folders = array(
       'dataset'        => 'dataset/api/',
@@ -37,11 +37,11 @@ class Api_new extends CI_Controller {
       'run'            => 'run/',
       'misc'           => 'misc/'
     );
-    
+
     $this->load->library('elasticSearch');
     $this->load->library('wiki');
-    
-    
+
+
     // XML maintainance
     $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');
     $this->xml_fields_dataset_update = $this->config->item('xml_fields_dataset_update');
@@ -49,7 +49,7 @@ class Api_new extends CI_Controller {
     $this->xml_fields_run = $this->config->item('xml_fields_run');
 
     $this->data_controller = $this->config->item('data_controller');
-    
+
     // some user authentication things.
     $this->provided_hash = $this->input->get_post('api_key') != false;
     $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('api_key') . '"' ); // TODO: and add date?
@@ -60,26 +60,26 @@ class Api_new extends CI_Controller {
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
-    
+
   }
 
   public function index() {
     $this->_show_webpage();
   }
-  
+
   public function v1($type) {
     $this->bootstrap('1');
   }
-  
+
   private function bootstrap($version) {
     loadpage('v1/'.$this->page,false,'pre');
     $segs = $this->uri->segment_array();
-    
+
     $controller = array_shift($segs);
     $this->version = array_shift($segs);
     $type = array_shift($segs);
     $request_type = strtolower($_SERVER['REQUEST_METHOD']);
-    
+
     if ($this->authenticated == false) {
       if ($this->provided_hash) {
         $this->_returnError( 103 );

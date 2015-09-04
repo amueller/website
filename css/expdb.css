@@ -2928,6 +2928,12 @@ svg:not(:root){
   margin-right: 3px;
 }
 
+.iconbluegray i {
+  color: #607d8b;
+  display: inline-block;
+  margin-right: 3px;
+}
+
 .sidenav > li.topactive > .iconpink {
   color: #e91e63;
 }

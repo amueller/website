@@ -444,10 +444,10 @@ class ElasticSearch {
                           $params['index']     = 'openml';
                           $params['type']      = 'study';
 
-                          $studies = $this->userdb->query('select * from study where '.($id?' and id='.$id:''));
+                          $studies = $this->db->query('select * from study'.($id?' where id='.$id:''));
 
                           if($id and !$studies)
-                          return 'Error: study '.$id.' is unknown';
+                            return 'Error: study '.$id.' is unknown';
 
                           foreach( $studies as $s ) {
                             $params['body'][] = array(
@@ -460,7 +460,7 @@ class ElasticSearch {
                           }
 
                           $responses = $this->client->bulk($params);
-                          return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($users).' studies.';
+                          return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($studies).' studies.';
                         }
 
                         private function build_study($d){
@@ -470,7 +470,8 @@ class ElasticSearch {
                             'name' 	=> $d->name,
                             'description' => $d->description,
                             'date' 	=> $d->created,
-                            'creator'	 	=> $d->creator,
+                            'uploader_id'	 	=> $d->creator,
+                            'visibility'	 	=> $d->visibility,
                             'suggest'		=> array(
                               'input' => array($d->tag,$d->name,$d->description),
                               'output'=> $d->name,
@@ -482,6 +483,10 @@ class ElasticSearch {
                                 )
                                 )
                           );
+                          $study['datasets_included'] = 0;
+                          $study['flows_included'] = 0;
+                          $study['runs_included'] = 0;
+
                           $data_tagged = $this->db->query('select count(id) as count from dataset_tag where tag='.$d->tag);
                           if($data_tagged)
                             $study['datasets_included'] = $data_tagged[0]->count;

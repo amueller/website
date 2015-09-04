@@ -179,7 +179,18 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="runStats">
 					<?php echo '<b>'.$rs['tasks'].' tasks</b>';?>
         </div>
-
+				<?php } elseif($type == 'study') { ?>
+ 				<div class="itemhead">
+ 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
+ 		   		<a href="<?php echo 's/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a></div>
+ 				<div class="teaser">
+ 					<?php echo formatTeaser($r); ?>
+ 				</div>
+ 				<div class="runStats">
+					<?php
+								echo $rs['datasets_included'] . ' datasets, '. $rs['flows_included'] . ' flows, ' . $rs['runs_included'] . ' runs';
+					?>
+ 				</div>
 		   <?php } elseif($type == 'measure') { ?>
 				<div class="itemhead">
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
