@@ -204,7 +204,9 @@ $this->image = array(
 );
 
 }
+} elseif($this->ion_auth->logged_in()){
+		header('Location: '.str_replace('/u','/u/'.$this->ion_auth->user()->row()->id, $_SERVER['REQUEST_URI']));
+		die();
 }
-
 
 ?>
