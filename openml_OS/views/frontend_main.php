@@ -94,8 +94,9 @@
             $href = 'search?type=tasktype';
             $materialcolor = "deep-orange";
           }
-      elseif($ch=='u' or $section=='User'){
+      elseif($ch=='u' or $section=='People'){
             $section = 'People';
+            $href = 'search?type=user';
             $materialcolor = "light-blue";
           }
       elseif($ch=='a' or $section=='Measure'){
