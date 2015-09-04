@@ -62,6 +62,8 @@
       if(strpos($ch, 'search') === 0){
         if(isset($this->filtertype) and $this->filtertype){
             $section = str_replace('_',' ',ucfirst($this->filtertype));
+            if($section=='User')
+              $section = 'People';
             $href = "search?type=".$this->filtertype;
           }
         else{
