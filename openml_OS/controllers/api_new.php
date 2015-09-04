@@ -96,9 +96,9 @@ class Api_new extends CI_Controller {
   }
 
   public function xsd($filename,$version) {
-    if(is_safe($filename) && file_exists(xsd($filename,$version))) {
+    if(is_safe($filename) && file_exists(xsd($filename,$this->controller,$version))) {
       header('Content-type: text/xml; charset=utf-8');
-      echo file_get_contents(xsd($filename,$version));
+      echo file_get_contents(xsd($filename,$this->controller,$version));
     } else {
       $this->error404();
     }
