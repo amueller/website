@@ -86,17 +86,19 @@ class Api_new extends CI_Controller {
       } else {
         $this->_returnError( 102 );
       }
-    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/api_' . $type . '.php') == false) {
+    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/api_' . $type . '.php') == false && $type != 'xsd') {
        $this->_returnError( 100 );
+    } else if($type == 'xsd') {
+      $this->xsd($segs[0], 'v1');
     } else {
       $this->{'Api_'.$type}->bootstrap($segs, $request_type, $this->user_id);
     }
   }
 
   public function xsd($filename,$version) {
-    if(is_safe($filename) && file_exists(xsd($filename))) {
+    if(is_safe($filename) && file_exists(xsd($filename,$this->controller,$version))) {
       header('Content-type: text/xml; charset=utf-8');
-      echo file_get_contents(xsd($filename,$version));
+      echo file_get_contents(xsd($filename,$this->controller,$version));
     } else {
       $this->error404();
     }
