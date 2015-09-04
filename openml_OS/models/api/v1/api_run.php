@@ -406,9 +406,11 @@ class Api_run extends Api_model {
       $this->returnError( 422, $this->version );
       return;
     }
-
+    
+    $xsd = xsd('openml.run.evaluate', $this->controller, $this->version);
+    
     // validate xml
-    if( validateXml( $description['tmp_name'], xsd('openml.run.evaluate', $this->controller, $this->version), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], $xsd, $xmlErrors ) == false ) {
       $this->returnError( 423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
