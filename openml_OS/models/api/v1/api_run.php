@@ -240,7 +240,7 @@ class Api_run extends Api_model {
       $this->xml_fields_run );
 
     $task_id = $run_xml['task_id'];
-    $implementation_id = $run_xml['implementation_id'];
+    $implementation_id = $run_xml['flow_id'];
     $setup_string = array_key_exists( 'setup_string', $run_xml ) ? $run_xml['setup_string'] : null;
     $error_message = array_key_exists( 'error_message', $run_xml ) ? $run_xml['error_message'] : false;
     $parameter_objects = array_key_exists( 'parameter_setting', $run_xml ) ? $run_xml['parameter_setting'] : array();
@@ -443,11 +443,11 @@ class Api_run extends Api_model {
       unset($evaluation['name']);
 
       // more naming convention
-      if( array_key_exists( $evaluation['implementation'], $implementation_ids ) ) {
-        $evaluation['implementation_id'] = $implementation_ids[$evaluation['implementation']];
-        unset($evaluation['implementation']);
+      if( array_key_exists( $evaluation['flow'], $implementation_ids ) ) {
+        $evaluation['flow_id'] = $implementation_ids[$evaluation['flow']];
+        unset($evaluation['flow']);
       } else {
-        $this->Log->mapping( __FILE__, __LINE__, 'Implementation ' . $evaluation['implementation'] . ' not found in database. ' );
+        $this->Log->mapping( __FILE__, __LINE__, 'Flow ' . $evaluation['flow'] . ' not found in database. ' );
         continue;
       }
 
