@@ -406,9 +406,11 @@ class Api_run extends Api_model {
       $this->returnError( 422, $this->version );
       return;
     }
-
+    
+    $xsd = xsd('openml.run.evaluate', $this->controller, $this->version);
+    
     // validate xml
-    if( validateXml( $description['tmp_name'], xsd('openml.run.evaluate', $this->controller, $this->version), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], $xsd, $xmlErrors ) == false ) {
       $this->returnError( 423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
@@ -453,7 +455,7 @@ class Api_run extends Api_model {
 
       // more naming convention
       if( array_key_exists( $evaluation['flow'], $implementation_ids ) ) {
-        $evaluation['flow_id'] = $implementation_ids[$evaluation['flow']];
+        $evaluation['implementation_id'] = $implementation_ids[$evaluation['flow']];
         unset($evaluation['flow']);
       } else {
         $this->Log->mapping( __FILE__, __LINE__, 'Flow ' . $evaluation['flow'] . ' not found in database. ' );
@@ -469,9 +471,9 @@ class Api_run extends Api_model {
       } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
         // evaluation_fold
         $this->Evaluation_fold->insert( $evaluation );
-      } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
-        // evaluation_interval
-        $this->Evaluation_interval->insert( $evaluation );
+  //    } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
+  //      // evaluation_interval
+  //      $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
         $this->Evaluation->insert( $evaluation );
