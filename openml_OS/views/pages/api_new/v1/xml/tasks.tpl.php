@@ -12,6 +12,9 @@
     <?php if( property_exists( $task, 'qualities' ) ): foreach( $task->qualities as $quality => $value ): ?>
       <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
     <?php endforeach; endif; ?>
+    <?php if( property_exists( $task, 'tags' ) ): foreach( $task->tags as $tag ): ?>
+      <oml:tag><?php echo $tag; ?></oml:tag>
+    <?php endforeach; endif; ?>
   </oml:task>
   <?php endforeach; ?>
 </oml:tasks>
