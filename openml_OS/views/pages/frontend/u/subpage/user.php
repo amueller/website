@@ -17,7 +17,7 @@
        <br clear="all"/>
        </div>
        <?php if($this->is_owner || $this->ion_auth->is_admin()){?>
-          <a href="profile" class="btn btn-primary">Edit Profile</a><br />
+          <a href="#edit" data-toggle="tab" class="btn btn-primary">Edit Profile</a><br />
        <?php } ?>
      </div>
    </div>
