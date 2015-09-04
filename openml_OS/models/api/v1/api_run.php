@@ -1,11 +1,11 @@
 <?php
 class Api_run extends Api_model {
-  
+
   protected $version = 'v1';
-  
+
   function __construct() {
     parent::__construct();
-    
+
     // load models
     $this->load->model('Run');
     $this->load->model('Run_tag');
@@ -13,63 +13,67 @@ class Api_run extends Api_model {
     $this->load->model('Input_setting');
     $this->load->model('Output_data');
     $this->load->model('Input_data');
-    
+    $this->load->model('Task');
+    $this->load->model('Task_inputs');
+    $this->load->model('Author');
+    $this->load->model('Implementation');
+
     $this->load->model('Evaluation');
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
     $this->load->model('Evaluation_interval');
-    
+
     $this->load->model('File');
-    
+
   }
-  
+
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->run_list();
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'evaluate') {
       $this->run_evaluate();
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->run($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 2 && is_numeric($segments[1]) && $segments[0] == 'reset' && in_array($request_type, $getpost)) {
       $this->run_reset($segments[1]);
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->run_delete($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 0 && $request_type == 'post') {
       $this->run_upload();
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
       $this->run_tag($this->input->post('run_id'),$this->input->post('tag'));
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
       $this->run_untag($this->input->post('run_id'),$this->input->post('tag'));
       return;
     }
-    
+
     $this->returnError( 100, $this->version );
   }
-  
-  
+
+
   private function run_list() {
     $task_id = $this->input->get_post('task_id');
     $setup_id = $this->input->get_post('setup_id');
@@ -104,8 +108,8 @@ class Api_run extends Api_model {
 
     $this->xmlContents( 'runs', $this->version, array( 'runs' => $res ) );
   }
-  
-  
+
+
   private function run($run_id) {
     if( $run_id == false ) {
       $this->returnError( 220, $this->version );
@@ -122,10 +126,15 @@ class Api_run extends Api_model {
     $run->setup = $this->Algorithm_setup->getById( $run->setup );
     $run->tags = $this->Run_tag->getColumnWhere( 'tag', 'id = ' . $run->rid );
     $run->inputSetting = $this->Input_setting->query('SELECT i.name, s.value from input i, input_setting s where i.id=s.input_id and setup = ' . $run->setup->sid );
+    $run->task_type = $this->Task->query('SELECT tt.name from task t, task_type tt where t.ttid=tt.ttid and t.task_id = ' . $run->task_id )[0]->name;
+    $user = $this->Author->getById($run->uploader);
+    $run->user_name = $user->first_name . ' ' . $user->last_name;
+    $run->flow_name = $this->Implementation->getById($run->setup->implementation_id)->fullName;
+    $run->task_evaluation = $this->Task_inputs->getWhere("task_id = " . $run->task_id . " and input = 'evaluation_measures'")[0];
 
     $this->xmlContents( 'run-get', $this->version, array( 'source' => $run ) );
   }
-  
+
   private function run_delete($run_id) {
 
     $run = $this->Run->getById( $run_id );
@@ -163,8 +172,8 @@ class Api_run extends Api_model {
     }
     $this->xmlContents( 'run-delete', $this->version, array( 'run' => $run ) );
   }
-  
-  
+
+
   private function run_reset($run_id) {
 
     $run = $this->Run->getById( $run_id );
@@ -208,7 +217,7 @@ class Api_run extends Api_model {
     }
     $this->xmlContents( 'run-reset', $this->version, array( 'run' => $run ) );
   }
-  
+
   private function run_upload() {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -387,8 +396,8 @@ class Api_run extends Api_model {
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }
-  
-  
+
+
   private function run_evaluate() {
 
     // check uploaded file
@@ -475,8 +484,8 @@ class Api_run extends Api_model {
 
     $this->xmlContents( 'run-evaluate', $this->version, array( 'run_id' => $run_id ) );
   }
-  
-  
+
+
   private function run_tag($id,$tag) {
     $error = -1;
     $result = tag_item( 'run', $id, $tag, $this->user_id, $error );
@@ -504,6 +513,6 @@ class Api_run extends Api_model {
       $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'run' ) );
     }
   }
-  
+
 }
 ?>

@@ -1,8 +1,14 @@
 <oml:run xmlns:oml="http://openml.org/openml">
   <oml:run_id><?php echo $source->rid; ?></oml:run_id>
   <oml:uploader><?php echo $source->uploader; ?></oml:uploader>
+  <oml:uploader_name><?php echo $source->user_name; ?></oml:uploader_name>
   <oml:task_id><?php echo $source->task_id; ?></oml:task_id>
+  <oml:task_type><?php echo $source->task_type; ?></oml:task_type>
+  <?php if($source->task_evaluation){ ?>
+    <oml:task_evaluation_measure><?php echo $source->task_evaluation->value; ?></oml:task_evaluation_measure>
+  <?php } ?>
   <oml:flow_id><?php echo $source->setup->implementation_id; ?></oml:flow_id>
+  <oml:flow_name><?php echo $source->flow_name; ?></oml:flow_name>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
   <?php if($source->error !== null):?> <oml:error_message><?php echo $source->error; ?></oml:error_message> <?php endif; ?>
   <oml:setup_string><?php echo $source->setup->setup_string; ?></oml:setup_string>
@@ -24,7 +30,7 @@
         <oml:url><?php echo $d->url; ?></oml:url>
       </oml:dataset>
     <?php endforeach; ?>
-    </oml:input_data>  
+    </oml:input_data>
   <?php endif; ?>
   <?php if(is_array($source->outputData) ): ?>
     <oml:output_data>
