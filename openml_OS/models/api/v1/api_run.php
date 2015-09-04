@@ -478,9 +478,6 @@ class Api_run extends Api_model {
   
   
   private function run_tag($id,$tag) {
-    $id = $this->input->get( 'run_id' );
-    $tag = $this->input->get( 'tag' );
-
     $error = -1;
     $result = tag_item( 'run', $id, $tag, $this->user_id, $error );
 
