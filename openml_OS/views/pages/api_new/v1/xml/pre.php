@@ -140,6 +140,10 @@ $this->apiErrors[170][1] = 'The session_hash was not valid. Please try to login 
 $this->apiErrors[171][0] = 'flow already exists';
 $this->apiErrors[171][1] = 'This flow is already in the database';
 
+// for function: openml.flow.upload 
+$this->apiErrors[172][0] = 'Xsd not found';
+$this->apiErrors[172][1] = 'Please contact api support team';
+
 // for function: openml.flow.get 
 $this->apiErrors[180][0] = 'Please provide flow_id';
 $this->apiErrors[180][1] = 'Please provide flow_id';

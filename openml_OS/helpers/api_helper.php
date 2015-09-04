@@ -171,7 +171,12 @@ function xsd( $name, $controller = null, $versionName = null ) {
   if ($versionName) {
     $version = $versionName . '/';
   }
-  return APPPATH.'views/pages/' . $controller . $version . 'xsd/' . $name . '.xsd';
+  $filename = APPPATH.'views/pages/' . $controller . '/' . $version . 'xsd/' . $name . '.xsd';
+  if (file_exists($filename) == false) {
+    return false;
+  } else{
+    return $filename;
+  }
 }
 
 function sub_xml( $xmlFile, $source ) {
