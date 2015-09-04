@@ -73,7 +73,8 @@ class Api_run extends Api_model {
   private function run_list() {
     $task_id = $this->input->get_post('task_id');
     $setup_id = $this->input->get_post('setup_id');
-    $implementation_id = $this->input->get_post('implementation_id');
+    $implementation_id = $this->input->get_post('flow_id');
+    $uploader_id = $this->input->get_post('uploader_id');
 
     if( $task_id == false && $setup_id == false && $implementation_id == false ) {
       $this->returnError( 510, $this->version );
@@ -222,7 +223,7 @@ class Api_run extends Api_model {
       return;
     }
     // validate xml
-    if( validateXml( $description['tmp_name'], xsd('openml.run.upload'), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
@@ -398,7 +399,7 @@ class Api_run extends Api_model {
     }
 
     // validate xml
-    if( validateXml( $description['tmp_name'], xsd('openml.run.evaluate'), $xmlErrors ) == false ) {
+    if( validateXml( $description['tmp_name'], xsd('openml.run.evaluate', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
