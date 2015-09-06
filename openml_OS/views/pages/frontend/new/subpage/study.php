@@ -5,12 +5,8 @@
       <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
 		  <div class="form-group has-error">
 		    <label class="control-label" for="name">Name</label>
-		    <input type="text" class="form-control" name="study_name" id="study_name" placeholder="A good name" value="<?php echo $this->input->post('name'); ?>"/>
+		    <input type="text" class="form-control" name="study_name" id="study_name" placeholder="The name of your study." value="<?php echo $this->input->post('study_name'); ?>"/>
 		  </div>
-			<div class="form-group has-error">
- 	      <label class="control-label" for="tag">Short name</label>
- 		    <input type="text" class="form-control" name="name" id="name" placeholder="A short name for tagging (no spaces)" value="<?php echo $this->input->post('tag'); ?>"/>
- 	    </div>
 		  <div class="form-group has-error">
 		    <label class="control-label" for="description">Description</label>
 		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Short description (can still be edited online)." value=""><?php echo $this->input->post('description'); ?></textarea>

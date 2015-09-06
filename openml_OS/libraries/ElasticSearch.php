@@ -466,14 +466,13 @@ class ElasticSearch {
                         private function build_study($d){
                           $study = array(
                             'study_id' 		=> $d->id,
-                            'tag' 	=> $d->tag,
                             'name' 	=> $d->name,
                             'description' => $d->description,
                             'date' 	=> $d->created,
                             'uploader_id'	 	=> $d->creator,
                             'visibility'	 	=> $d->visibility,
                             'suggest'		=> array(
-                              'input' => array($d->tag,$d->name,$d->description),
+                              'input' => array($d->name,$d->description),
                               'output'=> $d->name,
                               'weight'=> 5,
                               'payload' => array(

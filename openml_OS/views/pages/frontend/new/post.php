@@ -176,9 +176,8 @@ if($this->subpage == 'task') {
 } elseif($this->subpage == 'study') {
   $user_id = $this->ion_auth->user()->row()->id;
   $name = $this->input->post( 'study_name' );
-  $tag = $this->input->post( 'name' );
   $description = $this->input->post( 'description' );
-  $this->Study->create( $tag, $name, $description, $user_id );
+  $this->Study->create( $name, $description, $user_id );
 }
 
 ?>

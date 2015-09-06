@@ -7,10 +7,10 @@ class Study extends Database_write {
     $this->id_column = 'id';
   }
 
-  function create( $tag, $name, $description, $creator ) {
+  function create( $name, $description, $creator ) {
 
     // insert
-    $study_id = $this->insert( array( 'tag' => $tag, 'name' => $name, 'description' => $description, 'creator' => $creator ) );
+    $study_id = $this->insert( array( 'name' => $name, 'description' => $description, 'creator' => $creator ) );
 
     // add to elastic search index.
     $this->elasticsearch->index('study', $study_id );

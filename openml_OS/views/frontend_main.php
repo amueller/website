@@ -177,8 +177,8 @@
   			    <li><a href="new/flow" class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i> New flow</a></li>
   		            <li class="divider"></li>
   			    <li><a href="new/run" class="iconred"><i class="fa fa-fw fa-lg fa-star"></i> New run</a></li>
-                  <li class="divider"></li>
-            <li><a href="new/study" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> New study</a></li>
+              <!--    <li class="divider"></li>
+            <li><a href="new/study" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> New study</a></li>-->
   			  </ul>
   			</div>
 
@@ -244,7 +244,7 @@
                   <li <?php echo ($section == 'Task' ?  'class="topactive"' : '');?>><a href="search?type=task<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconyellow"><i class="fa fa-fw fa-lg fa-trophy"></i> Tasks<span id="taskcounter" class="counter"></span></a></li>
                   <li <?php echo ($section == 'Flow' ?  'class="topactive"' : '');?>><a href="search?type=flow<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i> Flows<span id="flowcounter" class="counter"></span></a></li>
                   <li <?php echo ($section == 'Run' ?  'class="topactive"' : '');?>><a href="search?type=run<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconred"><i class="fa fa-fw fa-lg fa-star"></i> Runs<span id="runcounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Study' ?  'class="topactive"' : '');?>><a href="search?type=study<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> Studies<span id="studycounter" class="counter"></span></a></li>
+                  <!--<li <?php echo ($section == 'Study' ?  'class="topactive"' : '');?>><a href="search?type=study<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> Studies<span id="studycounter" class="counter"></span></a></li>-->
                   <li <?php echo ($section == 'Task type' ?  'class="topactive"' : '');?>><a href="search?type=task_type<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconorange"><i class="fa fa-fw fa-lg fa-flag-o"></i> Task Types<span id="task_typecounter" class="counter"></span></a></li>
                   <li <?php echo ($section == 'Measure' ?  'class="topactive"' : '');?>><a href="search?type=measure<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconbluegray"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i> Measures<span id="measurecounter" class="counter"></span></a></li>
                   <li <?php echo ($section == 'People' ?  'class="topactive"' : '');?>><a href="search?type=user<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblueacc"><i class="fa fa-fw fa-lg fa-users"></i> People<span id="usercounter" class="counter"></span></a></li>
