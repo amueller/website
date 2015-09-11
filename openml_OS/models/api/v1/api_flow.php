@@ -1,68 +1,68 @@
 <?php
 class Api_flow extends Api_model {
-  
+
   protected $version = 'v1';
-  
+
   function __construct() {
     parent::__construct();
-    
+
     // load models
     $this->load->model('Implementation');
     $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
-    
+
     $this->load->model('File');
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input');
   }
-  
+
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->flow_list();
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'owned') {
       $this->flow_owned($user_id);
       return;
     }
-    
-    if (count($segments) == 1 && $segments[0] == 'exists') {
-      $this->flow_exists();
+
+    if (count($segments) == 3 && $segments[0] == 'exists') {
+      $this->flow_exists($segments[1],$segments[2]);
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->flow($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->flow_delete($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 0 && $request_type == 'post') {
       $this->flow_upload();
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
       $this->flow_tag($this->input->post('flow_id'),$this->input->post('tag'));
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
       $this->flow_untag($this->input->post('flow_id'),$this->input->post('tag'));
       return;
     }
-    
+
     $this->returnError( 100, $this->version );
   }
-  
-  
+
+
   private function flow_list() {
 
     $implementations = $this->Implementation->get();
@@ -72,8 +72,8 @@ class Api_flow extends Api_model {
     }
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }
-  
-  
+
+
   private function flow_owned() {
 
     $implementations = $this->Implementation->getColumnWhere( 'id', '`uploader` = "'.$this->user_id.'"' );
@@ -83,11 +83,9 @@ class Api_flow extends Api_model {
     }
     $this->xmlContents( 'implementation-owned', $this->version, array( 'implementations' => $implementations ) );
   }
-  
-  
-  private function flow_exists() {
-    $name = $this->input->post( 'name' );
-    $external_version = $this->input->post( 'external_version' );
+
+
+  private function flow_exists($name, $external_version) {
 
     $similar = false;
     if( $name !== false && $external_version !== false ) {
@@ -103,7 +101,7 @@ class Api_flow extends Api_model {
     }
     $this->xmlContents( 'implementation-exists', $this->version, $result );
   }
-  
+
   // TODO: check what is going wrong with implementation id 1
   private function flow($id) {
     if( $id == false ) {
@@ -120,7 +118,7 @@ class Api_flow extends Api_model {
 
     $this->xmlContents( 'implementation-get', $this->version, array( 'source' => $implementation ) );
   }
-  
+
   private function flow_upload() {
 
     if(isset($_FILES['source']) && $_FILES['source']['error'] == 0) {
@@ -148,13 +146,13 @@ class Api_flow extends Api_model {
         return;
       }
     }
-    
+
     $xsd = xsd('openml.implementation.upload', $this->controller, $this->version);
     if (!$xsd) {
       $this->returnError( 172, $this->version, $this->openmlGeneralErrorCode );
       return;
     }
-    
+
     // get correct description
     if( $this->input->post('description') ) {
       // get description from string upload
@@ -227,7 +225,7 @@ class Api_flow extends Api_model {
 
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
-  
+
   private function flow_delete($flow_id) {
 
     $implementation = $this->Implementation->getById( $flow_id );
@@ -263,8 +261,8 @@ class Api_flow extends Api_model {
     }
     $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
   }
-  
-  
+
+
   private function flow_tag($id, $tag) {
 
     $error = -1;
@@ -294,6 +292,6 @@ class Api_flow extends Api_model {
       $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'implementation' ) );
     }
   }
-  
+
 }
 ?>
