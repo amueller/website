@@ -259,7 +259,7 @@ class Api_run extends Api_model {
     // the user can specify his own metrics. here we check whether these exists in the database.
     if( $output_data != false && array_key_exists('evaluation', $output_data ) ) {
       foreach( $output_data->children('oml',true)->{'evaluation'} as $eval ) {
-        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->implementation.'" AND `implements` = "'.$eval->name.'"');
+        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->flow.'" AND `implements` = "'.$eval->name.'"');
         if( $measure_id == false ) {
           $this->returnError( 217, $this->version );
           return;
