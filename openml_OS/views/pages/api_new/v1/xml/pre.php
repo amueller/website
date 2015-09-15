@@ -7,13 +7,19 @@ $this->apiErrors[100][1] = 'Function not valid';
 $this->apiErrors[101][0] = 'Function not yet ported or implemented';
 $this->apiErrors[101][1] = 'Function not yet ported or implemented';
 
-// for function: openml.data.upload 
+// for function: openml.global
 $this->apiErrors[102][0] = 'Please provide session_hash';
 $this->apiErrors[102][1] = 'In order to use the OpenML API, please authenticate (openml.authenticate) and provide session_hash';
 
-// for function: openml.data.upload 
+// for function: openml.global
 $this->apiErrors[103][0] = 'Authentication failed';
 $this->apiErrors[103][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+
+// for function: openml.gobal
+$this->apiErrors[104][0] = 'Not the right Permissions';
+$this->apiErrors[104][1] = 'The session_hash was valid, but the user has not the right (write) permissions.';
+
 
 // for function: openml.data.description 
 $this->apiErrors[110][0] = 'Please provide data_id';

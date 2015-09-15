@@ -188,6 +188,11 @@ class Api_data extends Api_model {
     if($xml->children('oml', true)->{'id'}) {
       $update = true;
     }
+    
+    if (!$this->ion_auth->in_group(1) && !$this->ion_auth->in_group(2)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
 
     //check and register the data files, return url
     $file_id = null;
@@ -382,6 +387,12 @@ class Api_data extends Api_model {
       $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
+    
+    if (!$this->ion_auth->in_group(1) && !$this->ion_auth->in_group(2)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
+    
     $xml = simplexml_load_file( $description['tmp_name'] );
     $did = ''. $xml->children('oml', true)->{'did'};
 
@@ -532,6 +543,12 @@ class Api_data extends Api_model {
       $this->returnError( 383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
+    
+    if (!$this->ion_auth->in_group(1) && !$this->ion_auth->in_group(2)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
+    
     $xml = simplexml_load_file( $description['tmp_name'] );
     $did = ''. $xml->children('oml', true)->{'did'};
 
