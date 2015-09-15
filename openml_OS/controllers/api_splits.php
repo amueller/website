@@ -29,7 +29,7 @@ class Api_splits extends CI_Controller {
       $this->generate( $task_id, $filepath );
     }
     
-    header('Content-type: ');
+    header('Content-type: text/plain');
     header('Content-Length: ' . filesize( $filepath ) );
     readfile_chunked( $filepath );
   }
