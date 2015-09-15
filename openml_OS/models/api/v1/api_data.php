@@ -189,7 +189,7 @@ class Api_data extends Api_model {
       $update = true;
     }
     
-    if (!$this->ion_auth->in_group(1) && !$this->ion_auth->in_group(2)) {
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
@@ -388,7 +388,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    if (!$this->ion_auth->in_group(1) && !$this->ion_auth->in_group(2)) {
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
@@ -544,7 +544,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    if (!$this->ion_auth->in_group(1) && !$this->ion_auth->in_group(2)) {
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
