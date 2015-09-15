@@ -152,6 +152,12 @@ class Api_flow extends Api_model {
       $this->returnError( 172, $this->version, $this->openmlGeneralErrorCode );
       return;
     }
+    
+    
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
 
     // get correct description
     if( $this->input->post('description') ) {

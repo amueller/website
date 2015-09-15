@@ -236,6 +236,11 @@ class Api_run extends Api_model {
       $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
+    
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
 
     // fetch xml
     $xml = simplexml_load_file( $description['tmp_name'] );
