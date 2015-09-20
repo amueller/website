@@ -169,8 +169,9 @@ class Api_task extends Api_model {
     }
     
     if( validateXml( $descriptionFile, $xsd, $xmlErrors ) == false ) {
-      $this->returnError(532, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
-      return;
+      // TODO: do later!
+      //$this->returnError(532, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
+      //return;
     }
     
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
