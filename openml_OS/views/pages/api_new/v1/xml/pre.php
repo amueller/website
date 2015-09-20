@@ -700,4 +700,15 @@ $this->apiErrors[512][1] = 'There where no results. Check whether there are runs
 $this->apiErrors[520][0] = 'No results';
 $this->apiErrors[520][1] = 'There where no results. Please contact API team. ';
 
+// openml.task.upload
+$this->apiErrors[530][0] = 'Description file not present';
+$this->apiErrors[530][1] = 'Please upload task description. ';
+
+// for function: openml.task.upload 
+$this->apiErrors[531][0] = 'Xsd not found';
+$this->apiErrors[531][1] = 'Please contact api support team';
+
+// for function: openml.flow.upload 
+$this->apiErrors[532][0] = 'Problem validating uploaded description file';
+$this->apiErrors[532][1] = 'The XML description format does not meet the standards';
 ?>
