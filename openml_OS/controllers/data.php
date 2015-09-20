@@ -16,12 +16,12 @@ class Data extends CI_Controller {
     $this->load->helper('file_upload');
 
     // authentication
-    $this->provided_hash = $this->input->get_post('session_hash') != false;
-    $this->provided_valid_hash = $this->Api_session->isValidHash( $this->input->get_post('session_hash') );
+    $this->provided_hash = $this->input->get_post('api_key') != false;
+    $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('api_key') . '"' ); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     if($this->provided_valid_hash) {
-      $this->user_id = $this->Api_session->getByHash( $this->input->get_post('session_hash') )->author_id;
+      $this->user_id = $this->provided_valid_hash[0]->id;
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
     }
