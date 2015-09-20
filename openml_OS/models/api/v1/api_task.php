@@ -170,8 +170,8 @@ class Api_task extends Api_model {
     
     if( validateXml( $descriptionFile, $xsd, $xmlErrors ) == false ) {
       // TODO: do later!
-      //$this->returnError(532, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
-      //return;
+      $this->returnError(532, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
+      return;
     }
     
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
@@ -179,7 +179,22 @@ class Api_task extends Api_model {
       return;
     }
     
-    $xml = simplexml_load_file( $descriptionFile );
+    $xml = simplexml_load_file($descriptionFile);
+    
+    $task_type_id = $xml->children('oml', true)->{'task_type_id'};
+    $inputs = array();
+    
+    foreach($xml->children('oml', true) as $input) {
+      if ($input->getName() == 'input') {
+        $name = $input->attributes() . '';
+        $inputs[$name] = $input . '';
+      }
+    }
+    
+    if ($this->Task->search($task_type_id, $inputs)) {
+      $this->returnError( 533, $this->version );
+    }
+    
     
     $id = 0;
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
