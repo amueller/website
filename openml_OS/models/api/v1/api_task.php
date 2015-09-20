@@ -211,7 +211,7 @@ class Api_task extends Api_model {
         'input' => $name,
         'value' => $value
       );
-      $this->Task_input->insert($task_input);
+      $this->Task_inputs->insert($task_input);
     }
     
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
