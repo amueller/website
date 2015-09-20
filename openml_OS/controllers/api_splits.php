@@ -66,7 +66,7 @@ class Api_splits extends CI_Controller {
     // TODO: very important. sanity check input
     $testset_str = array_key_exists('custom_testset', $values) && is_cs_natural_numbers($values['custom_testset']) ?  '-test "' . $values['custom_testset'] . '"' : '';
     
-    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . " -config 'server=http://www.openml.org/;username=".API_USERNAME.";password=".API_PASSWORD."' "; 
+    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . " -config 'server=http://www.openml.org/;api_key=".API_KEY."' "; 
     
     if( $filepath ) $command .= ' -o ' . $filepath;
     //if( $md5 ) $command .= ' -m';

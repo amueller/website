@@ -102,6 +102,7 @@ define( 'DB_PASS_OPENML', 'MySQLQu1n0' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'API_USERNAME', 'FILL_IN_USERNAME' );
 define( 'API_PASSWORD', 'FILL_IN_PASSWORD' );
+define( 'API_KEY', 'FILL_IN_KEY' );
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
