@@ -192,11 +192,27 @@ class Api_task extends Api_model {
     }
     
     if ($this->Task->search($task_type_id, $inputs)) {
-      $this->returnError( 533, $this->version );
+      $this->returnError(533, $this->version);
     }
     
+    // THE INSERTION
+    $task = array(
+      'ttid' => $task_type_id,
+      'creator' => $this->user_id,
+      'creation_date' => now()
+    );
     
-    $id = 0;
+    $id = $this->Task->insert($task);
+    // TODO: sanity check on input data!
+    
+    foreach($inputs as $name => $value) {
+      $task_input = array(
+        'task_id' => $id,
+        'input' => $name,
+        'value' => $value
+      );
+    }
+    
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
   }
 
