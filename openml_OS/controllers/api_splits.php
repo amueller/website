@@ -68,6 +68,10 @@ class Api_splits extends CI_Controller {
     
     $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . " -config 'server=http://www.openml.org/;api_key=".API_KEY."' "; 
     
+    if (array_key_exists('custom_testset', $values)) {
+      $command .= '-test "' . $values['custom_testset'] . '" ';
+    }
+    
     if( $filepath ) $command .= ' -o ' . $filepath;
     //if( $md5 ) $command .= ' -m';
     $this->Log->cmd( 'API Splits::get(' . $task_id . ')', $command );
