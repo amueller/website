@@ -179,6 +179,8 @@ class Api_task extends Api_model {
       return;
     }
     
+    $xml = simplexml_load_file( $descriptionFile );
+    
     $id = 0;
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
   }
