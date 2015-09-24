@@ -27,3 +27,8 @@
 
 	<p>If you want to work on the website locally, you'll also need the schema for the 'private' database with non-public information.</p>
         <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Private database schema</a>
+
+        <h3 id="dev-wiki">Legacy Resources</h3>
+        <p>OpenML is always evolving, but we keep hosting the resources that were used in prior publications so that others may still build on them.</p>
+        <p><i class="fa fa-fw fa-database"></i> The <a href="downloads/ExpDB2012.sql.gz">experiment database</a> used in <a href="http://link.springer.com/article/10.1007%2Fs10994-011-5277-0">Vanschoren et al. (2012) Experiment databases. Machine Learning 87(2), pp 127-158</a>. You'll need to import this database (we used MySQL) to run queries. The database structure is described in the paper. Note that most of the experiments in this database have been rerun using OpenML, using newer algorithm implementations and stored in much more detail.</p>
+        <p><i class="fa fa-fw fa-share-alt"></i> The <a href="downloads/expose.owl">Exposé ontology</a> used in the same paper, and described in more detail <a href="https://lirias.kuleuven.be/bitstream/123456789/273222/1/sokd10.pdf">here</a> and <a href="http://kt.ijs.si/janez_kranjc/dmo_jamboree/Expose.pdf">here</a>. Exposé is used in designing our databases, and we aim to use it to export all OpenML data as Linked Open Data.</p>

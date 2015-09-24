@@ -116,11 +116,11 @@ $(function() {
         }
       }, function (error, response) {
         fresponse($.map(response['mysuggester'][0]['options'], function(item) {
-          console.log(item['text']);
+          console.log(item);
           return {
             type: item['payload']['type'],
             id: item['payload'][item['payload']['type']+'_id'],
-            description: item['payload']['description'].substring(0,50),
+            description: (typeof myVar === 'string' ? item['payload']['description'].substring(0,50) : ''),
             text: item['text']
           };
         }));
@@ -275,8 +275,7 @@ $(function() {
 
       // handle clicks on cards
       $(".searchresult").click(function(){
-          window.location = $(this).find("a:first").attr("href");
-          return false;
+          $(this).find("a:first").click();
       });
 
       $(".searchresult").hover(function () {

@@ -43,12 +43,13 @@ function addToGET($keyvalue){
 }
 
 /// SEARCH
-$this->ref_url = BASE_URL . 'search';
+$this->ref_url = 'search';
 if(isset ($this->specialterms))
 	$this->terms = $this->specialterms;
 else{
   $this->specialterms = "";
 	$this->terms = safe($this->input->get('q'));
+  $this->terms = explode('/',$this->terms)[0];
 }
 $this->coreterms = "";
 $this->filters = array();

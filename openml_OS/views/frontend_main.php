@@ -199,7 +199,7 @@
       <div class="hidden-xs col-sm-6 col-md-6" id="menusearchframe">
 <form class="navbar-form" method="get" id="searchform" action="search">
   <input type="text" class="form-control col-lg-8" id="openmlsearch" name="q" placeholder="Search" onfocus="this.placeholder = 'Search datasets, flows, tasks, people,... (leave empty to see all)'" value="<?php if( isset( $this->terms ) ) echo htmlentities($this->terms); ?>" />
-<input type="hidden" name="type" value="<?php if(array_key_exists("type",$_GET)) echo safe($_GET["type"]);
+  <input type="hidden" name="type" value="<?php if(array_key_exists("type",$_GET)) echo safe($_GET["type"]);
   elseif(false !== strpos($_SERVER['REQUEST_URI'],'/d')) echo 'data';
   elseif(false !== strpos($_SERVER['REQUEST_URI'],'/t')) echo 'task';
   elseif(false !== strpos($_SERVER['REQUEST_URI'],'/f')) echo 'flow';

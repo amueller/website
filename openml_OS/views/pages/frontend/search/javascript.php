@@ -34,12 +34,12 @@ function updateQuery(type)
     query = query.replace(" "+type+":",'');
     query = query.replace(type+":",'');
   }
-  console.log(query);
   $("#openmlsearch").val(query);
 }
 
 
   $(document).ready(function () {
+
 
 // Reset all search filters
 function removeFilters()
@@ -59,6 +59,12 @@ function removeFilters()
   $("#openmlsearch").val(newQuery);
 }
 
+ function bindInput(elem){
+   $('#'+elem.replace(/\./g, '\\.')).keyup(function(event) {
+     if (event.keyCode == 13) { $('#searchform').submit();}
+     else {updateQuery(elem);}});
+ }
+
     // fetch counts for menu bar
     client.search(<?php echo json_encode($this->alltypes); ?>).then(function (body) {
       var buckets = body.aggregations.type.buckets;
@@ -69,38 +75,31 @@ function removeFilters()
       console.trace(error.message);
     });
 
-    $(document).on("change, keyup", "#qualities\\.NumberOfInstances", function() { updateQuery("qualities.NumberOfInstances"); });
-    $(document).on("change, keyup", "#qualities\\.NumberOfFeatures", function() { updateQuery("qualities.NumberOfFeatures"); });
-    $(document).on("change, keyup", "#qualities\\.NumberOfMissingValues", function() { updateQuery("qualities.NumberOfMissingValues"); });
-    $(document).on("change, keyup", "#qualities\\.NumberOfClasses", function() { updateQuery("qualities.NumberOfClasses"); });
-    $(document).on("change, keyup", "#qualities\\.DefaultAccuracy", function() { updateQuery("qualities.DefaultAccuracy"); });
+    //autocomplete
     $(document).on("change, keyup", "#uploader", function() { updateQuery("uploader"); });
 
-    $('#NumberOfInstances').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
-    $('#NumberOfFeatures').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
-    $('#NumberOfMissingValues').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
-    $('#NumberOfClasses').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
-    $('#DefaultAccuracy').keypress(function(event) { if (event.keyCode == 13) { $('#searchform').submit();}});
+    //normal typing
+    bindInput("qualities.NumberOfInstances");
+    bindInput("qualities.NumberOfFeatures");
+    bindInput("qualities.NumberOfMissingValues");
+    bindInput("qualities.NumberOfClasses");
+    bindInput("qualities.DefaultAccuracy");
+    bindInput("tags.tag");
+    bindInput("tasktype.tt_id");
+    bindInput("task_id");
+    bindInput("estimation_procedure.proc_id");
+    bindInput("source_data.name");
+    bindInput("run_id");
+    bindInput("run_task.task_id");
+    bindInput("run_task.tasktype.tt_id");
+    bindInput("run_flow.flow_id");
+    bindInput("flow_id");
+    bindInput("version");
+    bindInput("type");
+    bindInput("task_id");
 
-    $("#tags\\.tag").change(function() { updateQuery("tags.tag"); $('#searchform').submit();});
-
-    $("#tasktype\\.tt_id").change(function() { updateQuery("tasktype.tt_id"); $('#searchform').submit();});
-    $("#task_id").change(function() { updateQuery("task_id"); $('#searchform').submit();});
-    $("#estimation_procedure\\.proc_id").change(function() { updateQuery("estimation_procedure.proc_id"); $('#searchform').submit();});
-    $("#source_data").change(function() { updateQuery("source_data.name"); $('#searchform').submit();});
-
-    $("#run_id").change(function() { updateQuery("run_id"); $('#searchform').submit();});
-    $("#run_task\\.task_id").change(function() { updateQuery("run_task.task_id"); $('#searchform').submit();});
-    $("#run_task\\.tasktype\\.tt_id").change(function() { updateQuery("run_task.tasktype.tt_id"); $('#searchform').submit();});
-    $("#run_flow\\.flow_id").change(function() { updateQuery("run_flow.flow_id"); $('#searchform').submit();});
-
-    $("#flow_id").change(function() { updateQuery("flow_id"); $('#searchform').submit();});
-    $("#version").change(function() { updateQuery("version"); $('#searchform').submit();});
-
-    $("#type").change(function() { updateQuery("type"); $('#searchform').submit();});
-
+    //buttons
     $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
-
     $('#research').click(function() { $('#searchform').submit();});
 
 
@@ -163,6 +162,7 @@ function removeFilters()
     }
     <?php } ?>
 
+    if ( $( "#uploader" ).length ) {
     $("#uploader").autocomplete({
       html: true,
       position: {
@@ -198,5 +198,6 @@ function removeFilters()
       .append( '<a onclick="updateUploader(\'' + item.text + '\')"><i class="' + icons[item.type] + '"></i> ' + item.text + '</a>' )
       .appendTo( ul );
     }
+  }
 
   });

@@ -113,7 +113,7 @@ $this->load_css = array('css/gollum.css');
 $this->activetab = 'overview';
 if(false === strpos($_SERVER['REQUEST_URI'],'/d/')) {
   header('Location: search?type=data');
-  die();
+  exit();
 } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/update')) {
   $this->activetab = 'update';
 }
@@ -147,6 +147,7 @@ $this->editing = false;
 if(false !== strpos($_SERVER['REQUEST_URI'],'/edit')){
   if (!$this->ion_auth->logged_in()) {
   header('Location: ' . BASE_URL . 'login');
+  exit();
   }
   else{
   $user = $this->Author->getById($this->ion_auth->user()->row()->id);

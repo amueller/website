@@ -1,6 +1,6 @@
 <?php
 
-$this->active = 'profile';
+// $this->active = 'profile';
 $this->message = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
 if( $this->session->flashdata('login_redirect') == false ) {

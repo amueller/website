@@ -6,14 +6,14 @@
     <h2 class="modal-title">Sign in</h2>
   </div>
   <div class="modal-body">
-    <?php echo form_open("frontend/page/login");?>
+    <?php echo form_open("login");?>
     <fieldset>
       <div class="inputs">
         <?php echo form_input($this->identity);?>
         <?php echo form_input($this->password);?>
       </div>
       <div class="form-group">
-        <?php echo form_submit('submit', 'Sign in');?>
+        <?php echo form_submit('submitlogin', 'Sign in');?>
         <a href="register" class="btn pull-right">No account? Join OpenML</a>
         <a href="password_forgot" class="btn pull-right">Forgot password</a>
       </div>
