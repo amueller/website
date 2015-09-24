@@ -106,7 +106,7 @@ class Frontend extends CI_Controller {
   public function logout() {
     $logout = $this->ion_auth->logout();
     $this->session->set_flashdata('message', $this->ion_auth->messages());
-    redirect('frontend/page/home');
+    redirect('home');
   }
 
   public function result_output() {

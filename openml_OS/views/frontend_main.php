@@ -59,6 +59,7 @@
         }
       if($ch == "")
         $ch = "home";
+      $ch = explode('?',$ch)[0];
       if(strpos($ch, 'search') === 0){
         if(isset($this->filtertype) and $this->filtertype){
             $section = str_replace('_',' ',ucfirst($this->filtertype));
@@ -298,9 +299,9 @@
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id)){
-                echo "'frontend/js/".$ch."/".$this->id."/".$this->subpage."',";
+                echo "'frontend/js/".$ch."/".$this->subpage."',";
               } elseif( $ch != 'backend') {?>
-              'frontend/js/<?php echo $ch;?>/script.js', <?php } ?>
+              'frontend/js/<?php echo $ch;?>', <?php } ?>
               'js/openmlafter.js'
             ])
 

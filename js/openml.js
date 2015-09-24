@@ -275,7 +275,8 @@ $(function() {
 
       // handle clicks on cards
       $(".searchresult").click(function(){
-          $(this).find("a:first").click();
+          window.location = $(this).find("a:first").attr("href");
+          return false;
       });
 
       $(".searchresult").hover(function () {
