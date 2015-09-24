@@ -33,6 +33,11 @@ class Api_task extends Api_model {
       $this->task($segments[0]);
       return;
     }
+    
+    if (count($segments) == 0 && $request_type == 'post') {
+      $this->task_upload();
+      return;
+    }
 
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->task_delete($segments[0]);
@@ -147,6 +152,69 @@ class Api_task extends Api_model {
     }
 
     $this->xmlContents( 'task-delete', $this->version, array( 'task' => $task ) );
+  }
+  
+  public function task_upload() {
+    
+    if (isset($_FILES['description']) == false || $_FILES['source']['error'] > 0) {
+      $this->returnError(530, $this->version);
+      return;
+    }
+    
+    $descriptionFile = $_FILES['description']['tmp_name'];
+    $xsd = xsd('openml.task.upload', $this->controller, $this->version);
+    if (!$xsd) {
+      $this->returnError( 531, $this->version, $this->openmlGeneralErrorCode );
+      return;
+    }
+    
+    if( validateXml( $descriptionFile, $xsd, $xmlErrors ) == false ) {
+      // TODO: do later!
+      $this->returnError(532, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
+      return;
+    }
+    
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
+    
+    $xml = simplexml_load_file($descriptionFile);
+    
+    $task_type_id = $xml->children('oml', true)->{'task_type_id'};
+    $inputs = array();
+    
+    foreach($xml->children('oml', true) as $input) {
+      if ($input->getName() == 'input') {
+        $name = $input->attributes() . '';
+        $inputs[$name] = $input . '';
+      }
+    }
+    
+    if ($this->Task->search($task_type_id, $inputs)) {
+      $this->returnError(533, $this->version);
+    }
+    
+    // THE INSERTION
+    $task = array(
+      'ttid' => $task_type_id,
+      'creator' => $this->user_id,
+      'creation_date' => now()
+    );
+    
+    $id = $this->Task->insert($task);
+    // TODO: sanity check on input data!
+    
+    foreach($inputs as $name => $value) {
+      $task_input = array(
+        'task_id' => $id,
+        'input' => $name,
+        'value' => $value
+      );
+      $this->Task_inputs->insert($task_input);
+    }
+    
+    $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
   }
 
   private function task_tag($id, $tag) {

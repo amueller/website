@@ -236,6 +236,11 @@ class Api_run extends Api_model {
       $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
+    
+    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
 
     // fetch xml
     $xml = simplexml_load_file( $description['tmp_name'] );
@@ -259,7 +264,7 @@ class Api_run extends Api_model {
     // the user can specify his own metrics. here we check whether these exists in the database.
     if( $output_data != false && array_key_exists('evaluation', $output_data ) ) {
       foreach( $output_data->children('oml',true)->{'evaluation'} as $eval ) {
-        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->implementation.'" AND `implements` = "'.$eval->name.'"');
+        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->flow.'" AND `implements` = "'.$eval->name.'"');
         if( $measure_id == false ) {
           $this->returnError( 217, $this->version );
           return;

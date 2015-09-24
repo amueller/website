@@ -7,13 +7,19 @@ $this->apiErrors[100][1] = 'Function not valid';
 $this->apiErrors[101][0] = 'Function not yet ported or implemented';
 $this->apiErrors[101][1] = 'Function not yet ported or implemented';
 
-// for function: openml.data.upload 
+// for function: openml.global
 $this->apiErrors[102][0] = 'Please provide session_hash';
 $this->apiErrors[102][1] = 'In order to use the OpenML API, please authenticate (openml.authenticate) and provide session_hash';
 
-// for function: openml.data.upload 
+// for function: openml.global
 $this->apiErrors[103][0] = 'Authentication failed';
 $this->apiErrors[103][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
+
+
+// for function: openml.gobal
+$this->apiErrors[104][0] = 'Not the right Permissions';
+$this->apiErrors[104][1] = 'The session_hash was valid, but the user has not the right (write) permissions.';
+
 
 // for function: openml.data.description 
 $this->apiErrors[110][0] = 'Please provide data_id';
@@ -694,4 +700,19 @@ $this->apiErrors[512][1] = 'There where no results. Check whether there are runs
 $this->apiErrors[520][0] = 'No results';
 $this->apiErrors[520][1] = 'There where no results. Please contact API team. ';
 
+// openml.task.upload
+$this->apiErrors[530][0] = 'Description file not present';
+$this->apiErrors[530][1] = 'Please upload task description. ';
+
+// for function: openml.task.upload 
+$this->apiErrors[531][0] = 'Xsd not found';
+$this->apiErrors[531][1] = 'Please contact api support team';
+
+// for function: openml.flow.upload 
+$this->apiErrors[532][0] = 'Problem validating uploaded description file';
+$this->apiErrors[532][1] = 'The XML description format does not meet the standards';
+
+// for function: openml.flow.upload 
+$this->apiErrors[532][0] = 'Task already exists.';
+$this->apiErrors[532][1] = '';
 ?>
