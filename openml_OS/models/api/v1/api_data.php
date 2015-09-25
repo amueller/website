@@ -59,6 +59,11 @@ class Api_data extends Api_model {
       return;
     }
     
+    if (count($segments) == 1 && $segments[0] == 'qualities' && $request_type == 'post') {
+      $this->data_qualities_upload($segments[0]);
+      return;
+    }
+    
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
       $this->data_tag($this->input->post('data_id'),$this->input->post('tag'));
       return;
