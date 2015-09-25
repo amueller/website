@@ -535,7 +535,7 @@ class Api_data extends Api_model {
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
 
-  private function _openml_data_qualities_upload() {
+  private function data_qualities_upload() {
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
       $this->returnError( 382, $this->version );
