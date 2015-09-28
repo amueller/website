@@ -24,13 +24,15 @@ class Api_run extends Api_model {
     $this->load->model('Evaluation_interval');
 
     $this->load->model('File');
-
+    
+    $this->query_string = $this->uri->uri_to_assoc(4);
+    
   }
 
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
 
-    if (count($segments) > 1 && $segments[0] == 'list') {
+    if (count($segments) >= 1 && $segments[0] == 'list') {
       $this->run_list();
       return;
     }
