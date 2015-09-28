@@ -93,11 +93,6 @@ class Api_run extends Api_model {
       return;
     }
     
-    if ($this->Math_function->getById($measure) == false) {
-      $this->returnError( 512, $this->version );
-      return;
-    }
-    
     $where_task = $task_id == false ? '' : ' AND `r`.`task_id` IN (' . $task_id . ') ';
     $where_setup = $setup_id == false ? '' : ' AND `r`.`setup` IN (' . $setup_id . ') ';
     $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader_id` IN (' . $uploader_id . ') ';
