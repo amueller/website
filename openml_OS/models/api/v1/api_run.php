@@ -25,7 +25,7 @@ class Api_run extends Api_model {
 
     $this->load->model('File');
     
-    $this->query_string = $this->uri->uri_to_assoc(4);
+    $this->query_string = $this->uri->uri_to_assoc(5);
     
   }
 
