@@ -684,17 +684,21 @@ $this->apiErrors[492][1] = 'Something went wrong registering the file. Please co
 $this->apiErrors[500][0] = 'No results';
 $this->apiErrors[500][1] = 'There where no results. Check whether there are flows. ';
 
-// openml.runs
-$this->apiErrors[510][0] = 'Please provide at least task_id, flow_id or setup_id. ';
+// openml.runs.list
+$this->apiErrors[510][0] = 'Please provide at least task_id, flow_id or setup_id, uploader_id or run_id, to filter results. ';
 $this->apiErrors[510][1] = 'The number of runs is huge. Please limit the result space. ';
 
-// openml.flows
+// openml.runs.list
 $this->apiErrors[511][0] = 'Input not safe';
-$this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, flow_id) did not meet the contrains (comma separated list of integers). ';
+$this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers). ';
 
-// openml.flows
+// openml.runs.list
 $this->apiErrors[512][0] = 'No results';
 $this->apiErrors[512][1] = 'There where no results. Check whether there are runs under this constraint. ';
+
+// openml.runs.list
+$this->apiErrors[513][0] = 'Too many results';
+$this->apiErrors[513][1] = 'Given the constraints, there were still too many results. Please add constraints, to keep server load low. ';
 
 // openml.estimationprocedure.list
 $this->apiErrors[520][0] = 'No results';
