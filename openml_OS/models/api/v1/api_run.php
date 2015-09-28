@@ -77,11 +77,11 @@ class Api_run extends Api_model {
 
 
   private function run_list() {
-    $task_id = gu('task');
-    $setup_id = gu('setup');
-    $implementation_id = gu('flow');
-    $uploader_id = gu('uploader');
-    $run_id = gu('run');
+    $task_id = element('task', $this->query_string);
+    $setup_id = element('setup',$this->query_string);
+    $implementation_id = element('flow',$this->query_string);
+    $uploader_id = element('uploader',$this->query_string);
+    $run_id = element('run',$this->query_string);
 
     if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false) {
       $this->returnError( 510, $this->version );

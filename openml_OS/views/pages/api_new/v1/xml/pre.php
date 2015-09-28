@@ -685,7 +685,7 @@ $this->apiErrors[500][0] = 'No results';
 $this->apiErrors[500][1] = 'There where no results. Check whether there are flows. ';
 
 // openml.runs.list
-$this->apiErrors[510][0] = 'Please provide at least task_id, flow_id or setup_id, uploader_id or run_id, to filter results. ';
+$this->apiErrors[510][0] = 'Please provide at least task, flow or setup, uploader or run, to filter results. ';
 $this->apiErrors[510][1] = 'The number of runs is huge. Please limit the result space. ';
 
 // openml.runs.list
