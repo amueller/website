@@ -32,15 +32,10 @@ class Task extends Database_write {
             ' AND `source_data`.`input` = "source_data"';
     
     foreach( $keyValues as $key => $value ) {
-      $possible_values = explode(',', $value);
-      for( $i = 0; $i < count($possible_values); ++$i ) {
-        if($key == 'source_data') {
-          $possible_values[$i] = '`dataset`.`name` LIKE "%' . $possible_values[$i] . '%"';
-          $sql .= ' AND (' . implode( ' OR ', $possible_values ) . ')';
-        } else {
-          $possible_values[$i] = '`' . $key . '`.`value` = "' . $possible_values[$i] . '"';
-          $sql .= ' AND `task`.`task_id` = `' . $key . '`.`task_id` AND `'.$key.'`.`input` = "'.$key.'" AND (' . implode( ' OR ', $possible_values ) . ')'; 
-        }
+      if($key == 'source_data') {
+        $sql .= ' AND (`dataset`.`name` = "' . $value . '")';
+      } else {
+        $sql .= ' AND `task`.`task_id` = `' . $key . '`.`task_id` AND `' . $key . '`.`input` = "' . $key . '" AND (`' . $key . '`.`value` = "' . $value . '")'; 
       }
     }
     
