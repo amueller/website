@@ -202,7 +202,7 @@ class Api_task extends Api_model {
     
     // THE INSERTION
     $task = array(
-      'ttid' => $task_type_id,
+      'ttid' => '' . $task_type_id,
       'creator' => $this->user_id,
       'creation_date' => now()
     );
