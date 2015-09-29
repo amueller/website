@@ -717,6 +717,12 @@ $this->apiErrors[532][0] = 'Problem validating uploaded description file';
 $this->apiErrors[532][1] = 'The XML description format does not meet the standards';
 
 // for function: openml.flow.upload 
-$this->apiErrors[532][0] = 'Task already exists.';
-$this->apiErrors[532][1] = '';
+$this->apiErrors[533][0] = 'Task already exists.';
+$this->apiErrors[533][1] = '';
+
+
+// for function: openml.flow.upload 
+$this->apiErrors[534][0] = 'Error creating the task.';
+$this->apiErrors[534][1] = '';
+
 ?>

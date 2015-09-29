@@ -210,6 +210,12 @@ class Api_task extends Api_model {
     $id = $this->Task->insert($task);
     // TODO: sanity check on input data!
     
+    if ($id == false) {
+      $this->returnError( 534, $this->version );
+      return;
+    }
+    
+    
     foreach($inputs as $name => $value) {
       $task_input = array(
         'task_id' => $id,
