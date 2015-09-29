@@ -32,11 +32,7 @@ class Task extends Database_write {
             ' AND `source_data`.`input` = "source_data"';
     
     foreach( $keyValues as $key => $value ) {
-      if($key == 'source_data') {
-        $sql .= ' AND (`dataset`.`name` = "' . $value . '")';
-      } else {
-        $sql .= ' AND `task`.`task_id` = `' . $key . '`.`task_id` AND `' . $key . '`.`input` = "' . $key . '" AND (`' . $key . '`.`value` = "' . $value . '")'; 
-      }
+      $sql .= ' AND `task`.`task_id` = `' . $key . '`.`task_id` AND `' . $key . '`.`input` = "' . $key . '" AND (`' . $key . '`.`value` = "' . $value . '")'; 
     }
     
     return $this->query( $sql );
