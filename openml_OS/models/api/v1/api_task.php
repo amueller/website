@@ -191,8 +191,13 @@ class Api_task extends Api_model {
       }
     }
     
-    if ($this->Task->search($task_type_id, $inputs)) {
-      $this->returnError(533, $this->version);
+    $search = $this->Task->search($task_type_id, $inputs);
+    if ($search) {
+      $task_ids = array();
+      foreach($search as $s) { $task_ids[] = $s->task_id; }
+      
+      $this->returnError(533, $this->version, 'matched id(s): [' . implode(',', $task_ids) . ']');
+      return;
     }
     
     // THE INSERTION
@@ -228,6 +233,7 @@ class Api_task extends Api_model {
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
+      return;
     } else {
       $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'task' ) );
     }
@@ -243,6 +249,7 @@ class Api_task extends Api_model {
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
+      return;
     } else {
       $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'task' ) );
     }
