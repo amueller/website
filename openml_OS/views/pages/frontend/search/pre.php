@@ -203,7 +203,7 @@ $params['body']  = '{'.
     }
 }';
 
-print_r($params);
+//print_r($params);
 
 // prepare query for result counts over all types (will be loaded using JS)
 $this->alltypes = $params;
