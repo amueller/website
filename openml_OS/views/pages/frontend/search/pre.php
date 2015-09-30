@@ -172,7 +172,7 @@ foreach($this->filters as $k => $v){
 	elseif($k == 'type')
     $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   elseif($k == 'tags.tag')
-    $jsonfilters[] = '{ "nested": { "path": "tags", "filter": { "term": { "tags.tag": "'.$v.'" } } } }';
+    $jsonfilters[] = '{ "nested": { "path": "tags", "filter": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';
   else
 		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.str_replace('_',' ',$v).'"} }';
 }
@@ -203,7 +203,7 @@ $params['body']  = '{'.
     }
 }';
 
-//print_r($params);
+print_r($params);
 
 // prepare query for result counts over all types (will be loaded using JS)
 $this->alltypes = $params;
