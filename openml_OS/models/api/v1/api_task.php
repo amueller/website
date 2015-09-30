@@ -191,19 +191,30 @@ class Api_task extends Api_model {
       }
     }
     
-    if ($this->Task->search($task_type_id, $inputs)) {
-      $this->returnError(533, $this->version);
+    $search = $this->Task->search($task_type_id, $inputs);
+    if ($search) {
+      $task_ids = array();
+      foreach($search as $s) { $task_ids[] = $s->task_id; }
+      
+      $this->returnError(533, $this->version, 'matched id(s): [' . implode(',', $task_ids) . ']');
+      return;
     }
     
     // THE INSERTION
     $task = array(
-      'ttid' => $task_type_id,
+      'ttid' => '' . $task_type_id,
       'creator' => $this->user_id,
       'creation_date' => now()
     );
     
     $id = $this->Task->insert($task);
     // TODO: sanity check on input data!
+    
+    if ($id == false) {
+      $this->returnError( 534, $this->version );
+      return;
+    }
+    
     
     foreach($inputs as $name => $value) {
       $task_input = array(
@@ -228,6 +239,7 @@ class Api_task extends Api_model {
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
+      return;
     } else {
       $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'task' ) );
     }
@@ -243,6 +255,7 @@ class Api_task extends Api_model {
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
+      return;
     } else {
       $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'task' ) );
     }

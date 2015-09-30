@@ -24,13 +24,15 @@ class Api_run extends Api_model {
     $this->load->model('Evaluation_interval');
 
     $this->load->model('File');
-
+    
+    $this->query_string = $this->uri->uri_to_assoc(5);
+    
   }
 
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
 
-    if (count($segments) == 1 && $segments[0] == 'list') {
+    if (count($segments) >= 1 && $segments[0] == 'list') {
       $this->run_list();
       return;
     }
@@ -75,34 +77,43 @@ class Api_run extends Api_model {
 
 
   private function run_list() {
-    $task_id = $this->input->get_post('task_id');
-    $setup_id = $this->input->get_post('setup_id');
-    $implementation_id = $this->input->get_post('flow_id');
-    $uploader_id = $this->input->get_post('uploader_id');
+    $task_id = element('task', $this->query_string);
+    $setup_id = element('setup',$this->query_string);
+    $implementation_id = element('flow',$this->query_string);
+    $uploader_id = element('uploader',$this->query_string);
+    $run_id = element('run',$this->query_string);
 
-    if( $task_id == false && $setup_id == false && $implementation_id == false ) {
+    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false) {
       $this->returnError( 510, $this->version );
       return;
     }
-
-    if( is_safe( $task_id ) == false ||
-        is_safe( $setup_id ) == false ||
-        is_safe( $implementation_id ) == false ) {
-      $this->returnError( 511, $this->version );
+    
+    if (is_safe($task_id) && is_safe($setup_id) == false && is_safe($implementation_id) == false && is_safe($uploader_id) == false && is_safe($run_id) == false) {
+      $this->returnError(511, $this->version );
       return;
     }
-
-    $where_task = $task_id == false ? '' : ' AND task_id IN (' . $task_id . ') ';
-    $where_setup = $setup_id == false ? '' : ' AND setup IN (' . $setup_id . ') ';
-    $where_impl = $implementation_id == false ? '' : ' AND implementation_id IN (' . $implementation_id . ') ';
-
+    
+    $where_task = $task_id == false ? '' : ' AND `r`.`task_id` IN (' . $task_id . ') ';
+    $where_setup = $setup_id == false ? '' : ' AND `r`.`setup` IN (' . $setup_id . ') ';
+    $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader_id` IN (' . $uploader_id . ') ';
+    $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
+    $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
+    
+    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
+    
     $sql =
-      'SELECT r.rid, r.uploader, r.task_id, r.setup, s.implementation_id, s.setup_string ' .
-      'FROM run r, algorithm_setup s WHERE r.setup = s.sid ' . $where_task . $where_setup . $where_impl;
+      'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id, i.name AS flow_name ' .
+      'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
+      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . $where_total;
     $res = $this->Run->query( $sql );
-
-    if($res == false) {
-      $this->returnError( 512, $this->version );
+    
+    if ($res == false) {
+      $this->returnError(512, $this->version);
+      return;
+    }
+    
+    if (count($res) > 10000) {
+      $this->returnError(513, $this->version, 'Size of result set: ' . count($res) . '; max size: 10000. ');
       return;
     }
 
