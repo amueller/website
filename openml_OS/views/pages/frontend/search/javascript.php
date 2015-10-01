@@ -103,7 +103,7 @@ function removeFilters()
     $('#research').click(function() { $('#searchform').submit();});
 
     // deleting items
-    $('.delete_action').click(function(event) {
+    $(document).on('click', '.delete_action', function(event) {
          var itemName = $(this).data("name");
          var itemID = $(this).data("id");
          var itemType = $(this).data("type");
@@ -129,6 +129,7 @@ function removeFilters()
         id_field = $(resultdata).find("oml\\:id, id");
         if( id_field.length ) {
           swal("Deleted!", name + " has been deleted.", "success");
+          location.reload();
         } else {
           code_field = $(resultdata).find("oml\\:code, code");
           message_field = $(resultdata).find("oml\\:message, message");
