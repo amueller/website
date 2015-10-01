@@ -31,6 +31,7 @@ $fgraphs_all = '';
 
 if (!empty($this->data['features'])){
 	$featCount = 0;
+  if($this->features){
 	foreach( $this->features as $r ) {
 		$newGraph = '';
 			if($r->{'data_type'} == "numeric"){
@@ -57,7 +58,7 @@ if (!empty($this->data['features'])){
 		}
 		else
 			$fgraphs_all = $newGraph . PHP_EOL . $fgraphs_all;
-		}
+		}}
 	}
 
 

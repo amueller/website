@@ -6,7 +6,6 @@
     <ul class="hotlinks">
 	 <li><a class="loginfirst" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
 	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
-
 	 <li>   <div class="version" style="margin-bottom: -17px;">
 		  <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
 			  <?php foreach( $this->versions as $v ) { ?>
@@ -21,7 +20,10 @@
 
     <div class="datainfo">
        <i class="fa fa-table"></i> <?php echo (strtolower($this->data['format']) == 'arff' ? '<a href="http://weka.wikispaces.com/ARFF+%28developer+version%29" target="_blank">ARFF</a>' : $this->data['format']); ?>
-       <?php if($this->data['licence']): ?><i class="fa fa-cc"></i> <?php $l = $this->licences[$this->data['licence']]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; endif; ?>
+       <?php if($this->data['licence']):?><i class="fa fa-cc"></i>
+         <?php if(!array_key_exists($this->data['licence'],$this->licences)): echo $this->data['licence'];
+               else: $l = $this->licences[$this->data['licence']]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>';
+             endif; endif;?>
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->data['visibility']); ?>
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat( $this->data['date']); ?> by <a href="u/<?php echo $this->data['uploader_id'] ?>"><?php echo $this->data['uploader'] ?></a>
        <?php if($this->is_owner)
@@ -60,10 +62,11 @@
 			<div class="table-responsive">
 				<table class="table">
 				<?php
+        if(!empty($this->features)){
         foreach( $this->features as $r ) {
 				//get target values
 					echo "<tr class='cardrow'><td>" . $r->{'name'} . ( $r->{'is_target'} == 'true' ? ' <b>(target)</b>': '').( $r->{'is_row_identifier'} == 'true' ? ' <b>(row identifier)</b>': '').( $r->{'is_ignore'} == 'true' ? ' <b>(ignore)</b>': ''). "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " unique values<br> " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 50%;'></div></td></tr>";
-				}
+				}}
 					?>
 				</table>
 			</div>
@@ -94,7 +97,8 @@
   if (!empty($this->data['qualities'])){
   $qtable = ""; ?>
     <div class="properties <?php if($this->hidedescription) echo 'hideProperties'; ?>">
-    <?php foreach( $this->properties as $r ) { ?>
+    <?php if($this->properties){ 
+           foreach( $this->properties as $r ) { ?>
       <div class="searchresult panel">
       <div class="itemhead">
       <a href="a/data-qualities/<?php echo cleanName($r->{'quality'}); ?>" class="iconpurple">
@@ -113,31 +117,30 @@
       </div>
       <div class="datadescription"><?php if(array_key_exists($r->{'quality'},$this->dataproperties)) echo $this->dataproperties[$r->{'quality'}]['description']; else echo 'No description.';?></div>
       </div>
-      <?php } ?> </div>
+      <?php }} ?> </div>
       <?php } else {
         echo '<p>Data properties are not analyzed yet. Refresh the page in a few minutes.</p>';
         } ?>
 
+    <?php if (!empty($this->data['qualities'])){ ?>
     <div class="show-more-props">
       <a class="cardaction" onclick="showmoreprops()"><i class="fa fa-chevron-down"></i> Show all <?php echo sizeof($this->properties);?> properties</a>
     </div>
-
+    <?php } ?>
 
 		<h3><?php echo count($this->tasks_all); ?> tasks</h3>
     <a class="loginfirst" href="new/task"><i class="fa fa-plus-circle"></i> Define a new task on this data set</a>
     <div class="searchframe">
-		<?php if(count($this->tasks_all)==0){ ?>
-				<p>There haven't been any tasks created on this dataset yet. <a href="new/task">Create a task on this data set.</a></p>
-		<?php } else {
+		<?php if(count($this->tasks_all)>0){
 			$this->filtertype = 'task';
 			$this->sort = 'runs';
 			if($this->input->get('sort'))
 			  $this->sort = safe($this->input->get('sort'));
 			$this->specialterms = 'source_data.data_id:'.$this->id;
-	    		loadpage('search', true, 'pre');
-	    		loadpage('search/subpage', true, 'results'); ?>
+	    loadpage('search', true, 'pre');
+	    loadpage('search/subpage', true, 'results');
+    } ?>
 
-		<?php } ?>
   </div>
 
 

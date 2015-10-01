@@ -166,7 +166,7 @@ $(function() {
             next_data_cache = preview_data;
           });
       } else {
-        $( ".loadingmore" ).html("No more data");
+        $( ".loadingmore" ).html(" ");
         $( ".pagination" ).css("display","block");
       }
     }
