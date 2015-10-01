@@ -55,9 +55,9 @@
       $ch = $url[1];
       $req = array_slice($url, 1);
       if(sizeof($url)>2){
-        if($url[1] == 'OpenML')
+        if($url[1] == 'OpenML'){
           $ch = $url[2];
-          $req = array_slice($url, 2);
+          $req = array_slice($url, 2);}
         }
       if($ch == "")
         $ch = "home";
