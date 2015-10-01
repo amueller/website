@@ -11,11 +11,11 @@
       <?php } ?>
 
       <?php if(in_array($this->subpage,$this->activity_subpages)) { ?>
-      <div class="tab-pane active" id="data">
-        <?php
-        subpage('data');
-        ?>
+
+      <div class="tab-pane active" id="userdata">
+        <?php subpage('user_'.$this->subpage); ?>
       </div>
+
       <?php } ?>
 
       <?php if(!in_array($this->subpage,$this->activity_subpages) and false !== strpos($_SERVER['REQUEST_URI'],'/u/') and $this->is_owner) { ?>
@@ -39,7 +39,7 @@
         <li class="panel guidechapter">
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-user fa-fw fa-lg"></i> <b>Activity</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
-            <li><a href="<?php echo $this->baseurl;?>">Overview</a></li>
+            <li><a href="<?php echo BASE_URL .'u/' . $this->user_id;?>">Overview</a></li>
             <li><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/data';?>">Data sets</a></li>
             <li><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/flows';?>">Flows</a></li>
             <li><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/runs';?>">Runs</a></li>

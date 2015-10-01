@@ -24,9 +24,10 @@
   <div class="col-xs-12 panel">
     <h2 style="margin-top:0px">Challenge</h2>
     <?php echo $this->typedescription; ?>
+
 		<h2>Given inputs</h2>
 		<div class='table-responsive'><table class='table table-striped'>
-		<?php foreach( $this->taskio as $r ): if($r['category'] != 'input' or !$r['value']) continue; ?>
+		<?php foreach( $this->taskio as $r ): if($r['category'] != 'input' or !$r['value'] or $r['name'] == 'custom_testset') continue; ?>
 		<tr><td><a class="pop" data-html="true" data-toggle="popover" data-placement="right" data-content="<?php echo $r['description']; ?>"><?php echo $r['name']; ?></td>
 		<td><?php if($r['type'] == 'Dataset') { echo '<a href="d/' . $r['value']. '">' . $r['dataset'] . '</a>';}
 		elseif($r['type'] == 'Estimation Procedure') { echo '<a href="a/estimation-procedures/' . $r['value']. '">' . $r['evalproc'] . '</a>';}

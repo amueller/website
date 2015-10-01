@@ -53,13 +53,16 @@
       $href = "";
       $url = explode('/', $_SERVER['REQUEST_URI']);
       $ch = $url[1];
+      $req = array_slice($url, 1);
       if(sizeof($url)>2){
         if($url[1] == 'OpenML')
           $ch = $url[2];
+          $req = array_slice($url, 2);
         }
       if($ch == "")
         $ch = "home";
       $ch = explode('?',$ch)[0];
+      $req = explode('?',implode('/',$req))[0];
       if(strpos($ch, 'search') === 0){
         if(isset($this->filtertype) and $this->filtertype){
             $section = str_replace('_',' ',ucfirst($this->filtertype));
@@ -299,7 +302,7 @@
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id)){
-                echo "'frontend/js/".$ch."/".$this->subpage."',";
+                echo "'frontend/js/".$req."',";
               } elseif( $ch != 'backend') {?>
               'frontend/js/<?php echo $ch;?>', <?php } ?>
               'js/openmlafter.js'

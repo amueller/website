@@ -102,6 +102,48 @@ function removeFilters()
     $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
     $('#research').click(function() { $('#searchform').submit();});
 
+    // deleting items
+    $('.delete_action').click(function(event) {
+         var itemName = $(this).data("name");
+         var itemID = $(this).data("id");
+         var itemType = $(this).data("type");
+         swal({title: "Are you sure?",
+               text: "You are about to delete "+itemName+". You will not be able to recover this "+itemType+"!",
+               type: "warning",
+               showCancelButton: true,
+               confirmButtonColor: "#DD6B55",
+               confirmButtonText: "Yes, delete it!",
+               closeOnConfirm: false},
+             function(){
+               deleteItem( itemType, itemID, itemName );
+             });
+        return false;
+    });
+
+    function deleteItem( type, id, name ) {
+    $.ajax({
+      type: "DELETE",
+      url: "<?php echo BASE_URL; ?>api_new/v1/"+type+"/"+id,
+      dataType: "xml"
+    }).done( function( resultdata ) {
+        id_field = $(resultdata).find("oml\\:id, id");
+        if( id_field.length ) {
+          swal("Deleted!", name + " has been deleted.", "success");
+        } else {
+          code_field = $(resultdata).find("oml\\:code, code");
+          message_field = $(resultdata).find("oml\\:message, message");
+          swal("Error " + code_field.text(), message_field.text(), "error");
+        }
+      }).fail( function( resultdata ) {
+          console.log(resultdata.responseText);
+          code_field = $(resultdata.responseText).find("oml\\:code, code");
+          message_field = $(resultdata.responseText).find("oml\\:message, message");
+          if(code_field.text() == 102)
+            swal("Error", "Your login has expired. Log in and try again.", "error");
+          else
+            swal("Error " + code_field.text(), message_field.text(), "error");
+      });
+    }
 
     <?php
     if($this->table) {

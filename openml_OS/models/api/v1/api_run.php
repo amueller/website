@@ -24,9 +24,9 @@ class Api_run extends Api_model {
     $this->load->model('Evaluation_interval');
 
     $this->load->model('File');
-    
+
     $this->query_string = $this->uri->uri_to_assoc(5);
-    
+
   }
 
   function bootstrap($segments, $request_type, $user_id) {
@@ -87,31 +87,31 @@ class Api_run extends Api_model {
       $this->returnError( 510, $this->version );
       return;
     }
-    
+
     if (is_safe($task_id) && is_safe($setup_id) == false && is_safe($implementation_id) == false && is_safe($uploader_id) == false && is_safe($run_id) == false) {
       $this->returnError(511, $this->version );
       return;
     }
-    
+
     $where_task = $task_id == false ? '' : ' AND `r`.`task_id` IN (' . $task_id . ') ';
     $where_setup = $setup_id == false ? '' : ' AND `r`.`setup` IN (' . $setup_id . ') ';
     $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader_id` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
-    
+
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
-    
+
     $sql =
       'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id, i.name AS flow_name ' .
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . $where_total;
     $res = $this->Run->query( $sql );
-    
+
     if ($res == false) {
       $this->returnError(512, $this->version);
       return;
     }
-    
+
     if (count($res) > 10000) {
       $this->returnError(513, $this->version, 'Size of result set: ' . count($res) . '; max size: 10000. ');
       return;
@@ -181,6 +181,8 @@ class Api_run extends Api_model {
       $this->returnError( 394, $this->version );
       return;
     }
+
+    $this->elasticsearch->delete('run', $run_id);
     $this->xmlContents( 'run-delete', $this->version, array( 'run' => $run ) );
   }
 
@@ -247,7 +249,7 @@ class Api_run extends Api_model {
       $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
-    
+
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
@@ -422,9 +424,9 @@ class Api_run extends Api_model {
       $this->returnError( 422, $this->version );
       return;
     }
-    
+
     $xsd = xsd('openml.run.evaluate', $this->controller, $this->version);
-    
+
     // validate xml
     if( validateXml( $description['tmp_name'], $xsd, $xmlErrors ) == false ) {
       $this->returnError( 423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );

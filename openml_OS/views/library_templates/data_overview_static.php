@@ -1,6 +1,6 @@
 <script>
   $(document).ready( function() {
-    $('.data_overview_table_<?php echo $counter; ?>').dataTable( {
+    $('.data_overview_table').dataTable( {
       "bPaginate": true,
       "iDisplayLength" : 30,
       "bLengthChange": false,

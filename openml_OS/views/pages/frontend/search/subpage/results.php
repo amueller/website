@@ -98,6 +98,11 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				$rs = $r['_source'];
 	   ?>
 	<div class="searchresult panel">
+		<?php if ($this->ion_auth->logged_in() and array_key_exists('uploader_id',$rs) and $this->user_id == $rs['uploader_id']){ ?>
+			<div class="actionicon">
+				<div class="delete_action" data-type="<?php echo $r['_type'];?>" data-id="<?php echo $r['_id'];?>" data-name="<?php echo (array_key_exists('name',$rs) ? $rs['name'].' ('.$rs['version'].')' : '');?>"><i class="fa fa-2x fa-trash"></i></div>
+			</div>
+		<?php } ?>
 
 		  <?php if ($this->curr_sort == 'last update'){
 			echo '<div class="update_date">'.$rs['last_update'].'</div><a href="u/'.$rs['uploader_id'].'">'.$rs['uploader'].'</a> ';
@@ -211,7 +216,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					<?php
 					  echo '<b>'.$rs['runs'].' runs</b>';
 						foreach( $rs as $key => $value ) {
-						if($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or !$value) { echo '';}
+						if($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or $key == 'custom_testset' or !$value) { echo '';}
 						elseif(is_array($value) and array_key_exists('name', $value)){
 								echo ' - '.$key.' : '.$value['name'];}
 						elseif(!is_array($value)){

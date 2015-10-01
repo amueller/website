@@ -918,6 +918,7 @@ class ElasticSearch {
                                 'full_description' 	=> $d->fullDescription,
                                 'installation_notes'=> $d->installationNotes,
                                 'uploader' 		=> array_key_exists($d->uploader,$this->user_names) ? $this->user_names[$d->uploader] : 'Unknown',
+                                'uploader_id' => $d->uploader,
                                 'creator'		=> $d->creator,
                                 'contributor' 	=> $d->contributor,
                                 'dependencies' 	=> $d->dependencies,

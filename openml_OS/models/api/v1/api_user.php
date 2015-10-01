@@ -1,30 +1,30 @@
 <?php
 class Api_user extends Api_model {
-  
+
   protected $version = 'v1';
-  
+
   function __construct() {
     parent::__construct();
-    
+
     // load models
     $this->load->model('Author');
     $this->load->model('Dataset');
     $this->load->model('Implementation');
     $this->load->model('Run');
   }
-  
+
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->user_delete($segments[0]);
       return;
     }
-    
+
     $this->returnError( 100, $this->version );
   }
 
-  
+
   private function user_delete() {
 
     if( $this->ion_auth->is_admin($this->user_id) == false ) {
@@ -62,8 +62,9 @@ class Api_user extends Api_model {
       return;
     }
 
+    $this->elasticsearch->delete('user', $this->user_id);
     $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
   }
-  
+
 }
 ?>

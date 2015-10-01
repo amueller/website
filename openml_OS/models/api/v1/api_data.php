@@ -1,11 +1,11 @@
 <?php
 class Api_data extends Api_model {
-  
+
   protected $version = 'v1';
-  
+
   function __construct() {
     parent::__construct();
-    
+
     // load models
     $this->load->model('Dataset');
     $this->load->model('Dataset_tag');
@@ -15,65 +15,65 @@ class Api_data extends Api_model {
     $this->load->model('Quality');
     $this->load->model('File');
   }
-  
+
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->data_list();
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->data($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->data_delete($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 0 && $request_type == 'post') {
       $this->data_upload();
       return;
     }
-    
+
     if (count($segments) == 2 && $segments[0] == 'features' && is_numeric($segments[1]) && in_array($request_type, $getpost)) {
       $this->data_features($segments[1]);
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'features' && $request_type == 'post') {
       $this->data_features_upload($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 2 && $segments[0] == 'qualities' && $segments[1] == 'list' && in_array($request_type, $getpost)) {
       $this->data_qualities_list($segments[1]);
       return;
     }
-    
+
     if (count($segments) == 2 && $segments[0] == 'qualities' && is_numeric($segments[1]) && in_array($request_type, $getpost)) {
       $this->data_qualities($segments[1]);
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'qualities' && $request_type == 'post') {
       $this->data_qualities_upload($segments[0]);
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
       $this->data_tag($this->input->post('data_id'),$this->input->post('tag'));
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
       $this->data_untag($this->input->post('data_id'),$this->input->post('tag'));
       return;
     }
-    
+
     $this->returnError( 100, $this->version );
   }
 
@@ -100,7 +100,7 @@ class Api_data extends Api_model {
 
     $this->xmlContents( 'data', $this->version, array( 'datasets' => $datasets ) );
   }
-  
+
   private function data($data_id) {
     if( $data_id == false ) {
       $this->returnError( 110, $this->version );
@@ -160,10 +160,12 @@ class Api_data extends Api_model {
       $this->returnError( 355, $this->version );
       return;
     }
+
+    $this->elasticsearch->delete('data', $data_id);
     $this->xmlContents( 'data-delete', $this->version, array( 'dataset' => $dataset ) );
   }
-  
-  
+
+
   private function data_upload() {
     // get correct description
     if( $this->input->post('description') ) {
@@ -193,7 +195,7 @@ class Api_data extends Api_model {
     if($xml->children('oml', true)->{'id'}) {
       $update = true;
     }
-    
+
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
@@ -279,7 +281,7 @@ class Api_data extends Api_model {
         $xml->children('oml', true),
         $this->xml_fields_dataset_update, $dataset );
     }
-    
+
     // handle tags
     $tags = array();
     if( array_key_exists( 'tag', $dataset ) ) {
@@ -338,8 +340,8 @@ class Api_data extends Api_model {
     // create
     $this->xmlContents( 'data-upload', $this->version, array( 'id' => $id ) );
   }
-  
-  
+
+
   private function data_features($data_id) {
     if( $data_id == false ) {
       $this->returnError( 270, $this->version );
@@ -392,12 +394,12 @@ class Api_data extends Api_model {
       $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
-    
+
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
-    
+
     $xml = simplexml_load_file( $description['tmp_name'] );
     $did = ''. $xml->children('oml', true)->{'did'};
 
@@ -474,8 +476,8 @@ class Api_data extends Api_model {
     }
     $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
   }
-  
-  
+
+
   private function data_qualities($data_id) {
     if( $data_id == false ) {
       $this->returnError( 360, $this->version );
@@ -548,12 +550,12 @@ class Api_data extends Api_model {
       $this->returnError( 383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
     }
-    
+
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
-    
+
     $xml = simplexml_load_file( $description['tmp_name'] );
     $did = ''. $xml->children('oml', true)->{'did'};
 
@@ -640,8 +642,8 @@ class Api_data extends Api_model {
       return;
     }
   }
-  
-  
+
+
   private function data_tag($data_id, $tag) {
     $error = -1;
     $result = tag_item( 'dataset', $data_id, $tag, $this->user_id, $error );

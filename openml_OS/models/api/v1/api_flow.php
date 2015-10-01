@@ -181,7 +181,7 @@ class Api_flow extends Api_model {
       $this->returnError( 161, $this->version );
       return;
     }
-    
+
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
@@ -264,6 +264,8 @@ class Api_flow extends Api_model {
       $this->returnError( 325, $this->version  );
       return;
     }
+    $this->elasticsearch->delete('flow', $id);
+
     $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
   }
 

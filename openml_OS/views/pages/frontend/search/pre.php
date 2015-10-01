@@ -1,7 +1,7 @@
 <?php
 
 //$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
-$myjs = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+$myjs = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js','js/libs/sweetalert.min.js');
 if(!isset($this->load_javascript))
   $this->load_javascript = $myjs;
 else{
@@ -23,6 +23,12 @@ else{
   }
 }
 
+// get user
+if ($this->ion_auth->logged_in()) {
+  $this->user_id = $this->ion_auth->user()->row()->id;
+}
+
+// helper functions
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());

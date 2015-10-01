@@ -1,32 +1,32 @@
 <?php
 class Api_tasktype extends Api_model {
-  
+
   protected $version = 'v1';
-  
+
   function __construct() {
     parent::__construct();
-    
+
     // load models
     $this->load->model('Task_type');
     $this->load->model('Task_type_inout');
   }
-  
+
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->tasktype_list();
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->tasktype($segments[0]);
       return;
     }
-    
+
     $this->returnError( 100, $this->version );
   }
-  
+
   private function tasktype_list() {
     $data = new stdClass();
     $data->task_types = $this->Task_type->get();
