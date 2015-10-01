@@ -97,7 +97,7 @@
   if (!empty($this->data['qualities'])){
   $qtable = ""; ?>
     <div class="properties <?php if($this->hidedescription) echo 'hideProperties'; ?>">
-    <?php if($this->properties){ 
+    <?php if($this->properties){
            foreach( $this->properties as $r ) { ?>
       <div class="searchresult panel">
       <div class="itemhead">
@@ -156,7 +156,7 @@
   var disqus_shortname = 'openml'; // forum name
 	var disqus_category_id = '3353609'; // Data category
 	var disqus_title = '<?php echo $this->record->{'name'}; ?>'; // Data name
-	var disqus_url = 'http://openml.org/d/<?php echo $this->id; ?>'; // Data url
+	var disqus_url = 'http://www.openml.org/d/<?php echo $this->id; ?>'; // Data url
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {
