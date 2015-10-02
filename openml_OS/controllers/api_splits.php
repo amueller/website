@@ -36,7 +36,7 @@ class Api_splits extends CI_Controller {
     
     $task_id = $runs[0]->task_id;
     
-    $command = 'java -jar '.$this->evaluation.' -f "different_predictions" -t ' . $task_id . ' -r ' . $run_ids;
+    $command = 'java -jar '.$this->evaluation.' -f "different_predictions" -t ' . $task_id . ' -r ' . $run_ids . " -config 'server=http://www.openml.org/;api_key=".API_KEY."' ";
     
     $this->Log->cmd( 'API Splits::different_predictions(' . $run_ids . ')', $command );
     
