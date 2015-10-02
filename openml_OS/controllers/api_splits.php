@@ -22,6 +22,7 @@ class Api_splits extends CI_Controller {
     $this->db = $this->load->database('read',true);
     $this->task_types = array( 1, 2, 3, 6, 7 );
     $this->evaluation = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
+    $this->config = " -config 'cache_allowed=false;server=http://www.openml.org/;api_key=".API_KEY."' ";
   }
   
   function different_predictions($run_ids) {
@@ -36,7 +37,7 @@ class Api_splits extends CI_Controller {
     
     $task_id = $runs[0]->task_id;
     
-    $command = 'java -jar '.$this->evaluation.' -f "different_predictions" -t ' . $task_id . ' -r ' . $run_ids . " -config 'server=http://www.openml.org/;api_key=".API_KEY."' ";
+    $command = 'java -jar '.$this->evaluation.' -f "different_predictions" -t ' . $task_id . ' -r ' . $run_ids . $this->config;
     
     $this->Log->cmd( 'API Splits::different_predictions(' . $run_ids . ')', $command );
     
@@ -91,7 +92,7 @@ class Api_splits extends CI_Controller {
     // TODO: very important. sanity check input
     $testset_str = array_key_exists('custom_testset', $values) && is_cs_natural_numbers($values['custom_testset']) ?  '-test "' . $values['custom_testset'] . '"' : '';
     
-    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . " -config 'server=http://www.openml.org/;api_key=".API_KEY."' "; 
+    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . $this->config; 
     
     if (array_key_exists('custom_testset', $values)) {
       $command .= '-test "' . $values['custom_testset'] . '" ';
