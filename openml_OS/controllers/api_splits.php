@@ -49,6 +49,30 @@ class Api_splits extends CI_Controller {
     }
   }
   
+  function all_wrong($run_ids) {
+    if (is_safe($run_ids) == false) {
+      die('run id input not safe. ');
+    } 
+    
+    $runs = $this->Run->getWhere('`rid` IN (' . $run_ids . ')');
+    if (count($runs) == 0) {
+      die('no runs found.');
+    }
+    
+    $task_id = $runs[0]->task_id;
+    
+    $command = 'java -jar '.$this->evaluation.' -f "all_wrong" -t ' . $task_id . ' -r ' . $run_ids . $this->config;
+    
+    $this->Log->cmd( 'API Splits::all_wrong(' . $run_ids . ')', $command );
+    
+    if( function_enabled('system') ) {
+      header('Content-type: text/plain');
+      system( CMD_PREFIX . $command );
+    } else {
+      die('failed to generate arff file: php "system" function disabled. ');
+    }
+  }
+  
   function get( $task_id ) {
     $filepath = $this->directory . '/' . $task_id . '.arff';
     if( file_exists( $filepath ) == false ) {
