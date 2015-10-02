@@ -24,7 +24,7 @@ class Api_splits extends CI_Controller {
     $this->evaluation = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
   }
   
-  function difference($run_ids) {
+  function different_predictions($run_ids) {
     if (is_safe($run_ids) == false) {
       die('run id input not safe. ');
     } 
@@ -36,9 +36,9 @@ class Api_splits extends CI_Controller {
     
     $task_id = $runs[0]->task_id;
     
-    $command = 'java -jar '.$this->evaluation.' -f "difference" -t ' . $task_id . ' -r ' . $run_ids;
+    $command = 'java -jar '.$this->evaluation.' -f "different_predictions" -t ' . $task_id . ' -r ' . $run_ids;
     
-    $this->Log->cmd( 'API Splits::difference(' . $run_ids . ')', $command );
+    $this->Log->cmd( 'API Splits::different_predictions(' . $run_ids . ')', $command );
     
     if( function_enabled('system') ) {
       header('Content-type: text/plain');
