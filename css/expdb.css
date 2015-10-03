@@ -677,7 +677,7 @@ select{
   font-size: 14px;
   padding-top: 20px;
   padding-bottom:50px;
-  height: 100vh;
+  /* height: 100vh; */
     overflow-y: auto;
     overflow-x: visible;
     -webkit-overflow-scrolling: touch;
