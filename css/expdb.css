@@ -1761,6 +1761,7 @@ hr.hardSmall {
 
 html, body {
    height: 100%;
+   min-height: 1000px;
    font-family: 'Roboto', sans-serif;
    font-weight: 400;
    width: auto !important;  /* Firefox will set width as auto */
