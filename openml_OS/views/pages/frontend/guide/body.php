@@ -38,6 +38,9 @@
   <div class="tab-pane" id="python">
   <?php subpage('python'); ?>
   </div>
+  <div class="tab-pane" id="net">
+  <?php subpage('net'); ?>
+  </div>
   <div class="tab-pane" id="rest_tutorial">
   <?php subpage('rest_tutorial'); ?>
   </div>
@@ -77,6 +80,7 @@
         <li><a href="#java" data-toggle="tab">Java API</a></li>
         <li><a href="#r" data-toggle="tab">R API</a></li>
         <li><a href="#python" data-toggle="tab">Python API</a></li>
+        <li><a href="#net" data-toggle="tab">.NET API</a></li>
         <li><a href="#rest_tutorial" data-toggle="tab">REST API Tutorial</a></li>
         <li><a data-toggle="collapse" data-target="#servicelist">REST API Services</a></li>
         <ul class="sidenav nav collapse" id="servicelist">
