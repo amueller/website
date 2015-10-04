@@ -1437,7 +1437,6 @@ a.btn-small{
   z-index: 1020;
 }
 
-
 .topmenu > .btn-group{
   display: block;
   clear: both;
@@ -1770,7 +1769,11 @@ html, body {
 }
 
       a:hover {
-        cursor:pointer;
+        cursor: pointer;
+      }
+
+      a {
+        cursor: pointer;
       }
 
       .openmlsectioninfo p {
