@@ -686,6 +686,7 @@ select{
 
 .guidesection{
   background: #ffffff;
+  min-height: 100vh;
 }
 
 .guidecontainer{
@@ -1759,7 +1760,7 @@ hr.hardSmall {
 }
 
 html, body {
-   height: 100%;
+   /* height: 100%; */
    font-family: 'Roboto', sans-serif;
    font-weight: 400;
    width: auto !important;  /* Firefox will set width as auto */
