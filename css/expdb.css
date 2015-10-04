@@ -678,7 +678,7 @@ select{
   font-size: 14px;
   padding-top: 20px;
   padding-bottom:50px;
-  /* height: 100vh; */
+  height: 100vh;
     overflow-y: auto;
     overflow-x: visible;
     -webkit-overflow-scrolling: touch;
@@ -1762,7 +1762,6 @@ hr.hardSmall {
 
 html, body {
    height: 100%;
-   min-height: 1000px;
    font-family: 'Roboto', sans-serif;
    font-weight: 400;
    width: auto !important;  /* Firefox will set width as auto */
@@ -2936,6 +2935,26 @@ svg:not(:root){
 
 .sidenav > li.topactive > .iconblueacc {
   color: #03a9f4;
+}
+
+.navbar-material-orange, .btn-material-orange {
+  color: rgba(255,255,255,.84) !important;
+}
+
+::input-placeholder {
+  color: rgba(255,255,255,.84) !important;
+}
+input::-webkit-input-placeholder {
+  color: rgba(255,255,255,.84) !important;
+}
+input::-moz-placeholder {
+  color: rgba(255,255,255,.84) !important;
+}
+input:-moz-placeholder {   /* Older versions of Firefox */
+  color: rgba(255,255,255,.84) !important;
+}
+input:-ms-input-placeholder {
+  color: rgba(255,255,255,.84) !important;
 }
 
 .iconorange i {

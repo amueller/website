@@ -32,7 +32,7 @@
 
         <link rel="stylesheet" href="css/pygments-manni.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/material-fullpalette.min.css">
+        <link rel="stylesheet" href="css/material.min.css">
         <link rel="stylesheet" href="css/expdb.css">
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/jquery-ui.css" type="text/css"/>
@@ -93,7 +93,7 @@
       elseif($ch=='t' or $section=='Task'){
             $section = 'Task';
             $href = 'search?type=task';
-            $materialcolor = "orange-600";
+            $materialcolor = "orange";
           }
       elseif($ch=='tt' or $section=='Task type'){
             $section = 'Task type';
