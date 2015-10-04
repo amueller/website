@@ -678,8 +678,7 @@ select{
   font-size: 14px;
   padding-top: 20px;
   padding-bottom:50px;
-  height: 100vh;
-  min-height: 750px;
+  height: 110vh;
     overflow-y: auto;
     overflow-x: visible;
     -webkit-overflow-scrolling: touch;
@@ -1762,7 +1761,6 @@ hr.hardSmall {
 }
 
 html, body {
-   height: 100%;
    font-family: 'Roboto', sans-serif;
    font-weight: 400;
    width: auto !important;  /* Firefox will set width as auto */
