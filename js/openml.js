@@ -74,7 +74,8 @@ $(function(){
     url: "http://www.openml.org/api_new/v1/"+type+"/"+id,
     dataType: "xml"
   }).done( function( resultdata ) {
-      id_field = $(resultdata).find("oml\\:id, id");
+      console.log(resultdata.responseText);
+      id_field = $(resultdata.responseText).find("oml\\:id, id");
       if( id_field.length ) {
         swal("Deleted!", name + " has been deleted.", "success");
         location.reload();
