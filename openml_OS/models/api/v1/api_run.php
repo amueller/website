@@ -102,7 +102,7 @@ class Api_run extends Api_model {
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
 
     $sql =
-      'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id, i.name AS flow_name ' .
+      'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message ' .
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . $where_total;
     $res = $this->Run->query( $sql );
