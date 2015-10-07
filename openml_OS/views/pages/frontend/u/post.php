@@ -4,6 +4,12 @@ if( $this->user->external_source != false ) {
 	redirect('frontend/page/home');
 }
 
+if(!empty($_POST['key-reset'])){
+  $this->Author->query('UPDATE users SET session_hash = md5(rand()), session_hash_date = now() where id = '.$this->ion_auth->user()->row()->id);
+	header('Location: '.$_SERVER['REQUEST_URI']);
+	die();
+}
+
 $this->form_validation->set_rules('first_name', 'First Name', 'xss_clean');
 $this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
 $this->form_validation->set_rules('Country', 'Country', 'xss_clean');
