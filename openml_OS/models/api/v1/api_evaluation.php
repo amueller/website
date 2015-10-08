@@ -15,7 +15,7 @@ class Api_evaluation extends Api_model {
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
     
-    if (count($segments) == 1 && $segments[0] == 'list') {
+    if (count($segments) >= 1 && $segments[0] == 'list') {
       $this->evaluation_list();
       return;
     }
