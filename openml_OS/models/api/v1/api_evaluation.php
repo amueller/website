@@ -14,7 +14,7 @@ class Api_evaluation extends Api_model {
     $getpost = array('get','post');
     
     if (count($segments) == 1 && $segments[0] == 'list') {
-      $this->evaluationmeasure_list();
+      $this->evaluation_list();
       return;
     }
     
