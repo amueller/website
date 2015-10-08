@@ -44,10 +44,10 @@ class Api_evaluation extends Api_model {
     
     $where_task = $task_id == false ? '' : ' AND `r`.`task_id` IN (' . $task_id . ') ';
     $where_setup = $setup_id == false ? '' : ' AND `r`.`setup` IN (' . $setup_id . ') ';
-    $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader_id` IN (' . $uploader_id . ') ';
+    $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `s`.`implementation_id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
-    $where_function = $run_id == false ? '' : ' AND `e`.`function` = "' . $function_name . '" ';
+    $where_function = $function_name == false ? '' : ' AND `e`.`function` = "' . $function_name . '" ';
 
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_function;
     
