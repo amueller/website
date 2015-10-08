@@ -7,7 +7,7 @@ class Api_evaluation extends Api_model {
     parent::__construct();
     
     // load models
-    $this->load->model('Evaluations');
+    $this->load->model('Evaluation');
   }
   
   function bootstrap($segments, $request_type, $user_id) {
