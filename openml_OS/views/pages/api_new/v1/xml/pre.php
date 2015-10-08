@@ -720,9 +720,26 @@ $this->apiErrors[532][1] = 'The XML description format does not meet the standar
 $this->apiErrors[533][0] = 'Task already exists.';
 $this->apiErrors[533][1] = '';
 
-
 // for function: openml.flow.upload 
 $this->apiErrors[534][0] = 'Error creating the task.';
 $this->apiErrors[534][1] = '';
+
+
+// openml.evaluations.list
+$this->apiErrors[540][0] = 'Please provide at least task, flow or setup, uploader or run, to filter results. ';
+$this->apiErrors[540][1] = 'The number of evaluations is huge. Please limit the result space. ';
+
+// openml.evaluations.list
+$this->apiErrors[541][0] = 'Input not safe';
+$this->apiErrors[541][1] = 'The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers). ';
+
+// openml.evaluations.list
+$this->apiErrors[542][0] = 'No results';
+$this->apiErrors[542][1] = 'There where no results. Check whether there are runs under this constraint. ';
+
+// openml.evaluations.list
+$this->apiErrors[543][0] = 'Too many results';
+$this->apiErrors[543][1] = 'Given the constraints, there were still too many results. Please add constraints, to keep server load low. ';
+
 
 ?>
