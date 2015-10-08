@@ -8,6 +8,8 @@ class Api_evaluation extends Api_model {
     
     // load models
     $this->load->model('Evaluation');
+    
+    $this->query_string = $this->uri->uri_to_assoc(5);
   }
   
   function bootstrap($segments, $request_type, $user_id) {
@@ -52,7 +54,7 @@ class Api_evaluation extends Api_model {
     $sql =
       'SELECT r.rid, e.function, e.value ' .
       'FROM evaluation e, run r, algorithm_setup s ' .
-      'WHERE r.setup = s.sid AND e.source = r.rid ' . $where_total
+      'WHERE r.setup = s.sid AND e.source = r.rid ' . $where_total .
       'ORDER BY r.rid; ';
     $res = $this->Evaluation->query( $sql );
 
