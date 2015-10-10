@@ -88,7 +88,7 @@ class Api_run extends Api_model {
       return;
     }
 
-    if (is_safe($task_id) && is_safe($setup_id) == false && is_safe($implementation_id) == false && is_safe($uploader_id) == false && is_safe($run_id) == false) {
+    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id))) {
       $this->returnError(511, $this->version );
       return;
     }
