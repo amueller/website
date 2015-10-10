@@ -1760,12 +1760,17 @@ hr.hardSmall {
      background: white;
 }
 
+.disquspanel{
+  margin-top: 50px;
+}
+
 html, body {
    font-family: 'Roboto', sans-serif;
    font-weight: 400;
    width: auto !important;  /* Firefox will set width as auto */
    min-width: 480px; /* suppose you want minimun width of 1000px */
    background-color: #ececec;
+   margin-bottom: 0px !important;
 }
 
       a:hover {

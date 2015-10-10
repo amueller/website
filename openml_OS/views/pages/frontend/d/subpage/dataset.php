@@ -54,7 +54,7 @@
   </div>
 
 
-  <h3><?php echo sizeof($this->data['features']); ?> features</h3>
+  <h3><?php echo $this->data['qualities']['NumberOfFeatures']; ?> features</h3>
 <?php
   if (!empty($this->data['features'])){ ?>
       <div class="cardtable">
@@ -62,11 +62,10 @@
 			<div class="table-responsive">
 				<table class="table">
 				<?php
-        if(!empty($this->features)){
-        foreach( $this->features as $r ) {
+        foreach( $this->data['features'] as $r ) {
 				//get target values
-					echo "<tr class='cardrow'><td>" . $r->{'name'} . ( $r->{'is_target'} == 'true' ? ' <b>(target)</b>': '').( $r->{'is_row_identifier'} == 'true' ? ' <b>(row identifier)</b>': '').( $r->{'is_ignore'} == 'true' ? ' <b>(ignore)</b>': ''). "</td><td>" . $r->{'data_type'} . "</td><td>" . $r->{'NumberOfDistinctValues'} . " unique values<br> " . $r->{'NumberOfMissingValues'} . " missing</td><td class='feat-distribution'><div id='feat".$r->{'index'}."' style='height: 90px; margin: auto; min-width: 300px; max-width: 50%;'></div></td></tr>";
-				}}
+					echo "<tr class='cardrow'><td>" . $r['name'] . ( array_key_exists('target',$r) ? ' <b>(target)</b>': '').( array_key_exists('identifier',$r) ? ' <b>(row identifier)</b>': '').( array_key_exists('ignore',$r) ? ' <b>(ignore)</b>': ''). "</td><td>" . $r['type'] . "</td><td>" . $r['distinct'] . " unique values<br> " . $r['missing'] . " missing</td><td class='feat-distribution'><div id='feat".$r['index']."' style='height: 90px; margin: auto; min-width: 300px; max-width: 50%;'></div></td></tr>";
+				}
 					?>
 				</table>
 			</div>
@@ -75,12 +74,12 @@
 
 	<div class="show-more-features">
 	<?php if(!$this->showallfeatures){ ?>
-		<a class="cardaction" onclick="showmorefeats()"><i class="fa fa-chevron-down"></i> Show <?php echo (count($this->features)<100 ? 'all '.count($this->features) : 'first 100'); ?> features</a>
+		<a class="cardaction" onclick="showmorefeats()"><i class="fa fa-chevron-down"></i> Show <?php echo ($this->data['qualities']['NumberOfFeatures']<100 ? 'all '.$this->data['qualities']['NumberOfFeatures'] : 'first 100'); ?> features</a>
 	<?php } ?>
 	</div>
         <div class="show-all-features">
 	<?php if(isset($this->highFeatureCount) and $this->highFeatureCount){ ?>
-		<a href="d/<?php echo $this->id; ?>?show=all">Show all <?php echo $this->nrfeatures; ?> features.</a><br>This may take a while to load.
+		<a href="d/<?php echo $this->id; ?>?show=all">Show all <?php echo $this->data['qualities']['NumberOfFeatures']; ?> features.</a><br>This may take a while to load.
 	<?php } ?>
 	</div>
 
@@ -97,57 +96,60 @@
   if (!empty($this->data['qualities'])){
   $qtable = ""; ?>
     <div class="properties <?php if($this->hidedescription) echo 'hideProperties'; ?>">
-    <?php if($this->properties){
-           foreach( $this->properties as $r ) { ?>
+    <?php if($this->data['qualities']){
+      foreach( $this->dataproperties as $dp ) {
+        if(array_key_exists($dp['name'], $this->data['qualities'])){
+        ?>
       <div class="searchresult panel">
       <div class="itemhead">
-      <a href="a/data-qualities/<?php echo cleanName($r->{'quality'}); ?>" class="iconpurple">
-      <i class="fa fa-fw fa-bar-chart"></i> <?php echo $r->{'quality'}; ?></a>
+      <a href="a/data-qualities/<?php echo $dp['name']; ?>" class="iconpurple">
+      <i class="fa fa-fw fa-bar-chart"></i> <?php echo $dp['name']; ?></a>
       </div>
       <div class="dataproperty"><?php
-        if(is_numeric($r->{'value'})){
-          echo round($r->{'value'},2);
-        } elseif($r->{'value'}=='true'){
+        $qval = $this->data['qualities'][$dp['name']];
+        if(is_numeric($qval)){
+          echo round($qval,2);
+        } elseif($qval=='true'){
           echo "<i class='fa fa-check fa-lg'></i>";
-        } elseif($r->{'value'}=='false'){
+        } elseif($qval=='false'){
           echo "<i class='fa fa-times fa-lg'></i>";
         } else{
-          echo $r->{'value'};
+          echo $qval;
         } ?>
       </div>
-      <div class="datadescription"><?php if(array_key_exists($r->{'quality'},$this->dataproperties)) echo $this->dataproperties[$r->{'quality'}]['description']; else echo 'No description.';?></div>
+      <div class="datadescription"><?php echo $dp['description'].' '.$dp['function'];?></div>
       </div>
-      <?php }} ?> </div>
+      <?php }}} ?> </div>
       <?php } else {
         echo '<p>Data properties are not analyzed yet. Refresh the page in a few minutes.</p>';
         } ?>
 
     <?php if (!empty($this->data['qualities'])){ ?>
     <div class="show-more-props">
-      <a class="cardaction" onclick="showmoreprops()"><i class="fa fa-chevron-down"></i> Show all <?php echo sizeof($this->properties);?> properties</a>
+      <a class="cardaction" onclick="showmoreprops()"><i class="fa fa-chevron-down"></i> Show all <?php echo sizeof($this->data['qualities']);?> properties</a>
     </div>
     <?php } ?>
 
-		<h3><?php echo count($this->tasks_all); ?> tasks</h3>
-    <a class="loginfirst" href="new/task"><i class="fa fa-plus-circle"></i> Define a new task on this data set</a>
-    <div class="searchframe">
-		<?php if(count($this->tasks_all)>0){
-			$this->filtertype = 'task';
-			$this->sort = 'runs';
-			if($this->input->get('sort'))
-			  $this->sort = safe($this->input->get('sort'));
-			$this->specialterms = 'source_data.data_id:'.$this->id;
-	    loadpage('search', true, 'pre');
-	    loadpage('search/subpage', true, 'results');
-    } ?>
+		<h3><?php echo count($this->tasks); ?> tasks</h3>
+		<?php foreach( $this->tasks as $q){?>
+      <div class="searchresult panel">
+        <div class="itemheadfull">
+          <i class="fa fa-trophy fa-lg" style="color:#fb8c00;"></i>
+          <a href="t/<?php echo $q['task_id']; ?>"><?php echo $q['tasktype']['name'].' on '.$q['source_data']['name']; ?></a>
+        </div>
+        <div class="runStats statLine">
+          <?php
+            echo '<b>'.$q['runs'].' runs</b>';
+            echo ' - estimation_procedure: '.$q['estimation_procedure']['name'];
+            if(array_key_exists('evaluation_measures',$q)) echo ' - evaluation_measure: '.$q['evaluation_measures'];
+            if(array_key_exists('target_feature',$q)) echo ' - target_feature: '.$q['target_feature'];
+            ?>
+        </div>
+      </div>
+    <?php } ?>
+  <a class="loginfirst btn btn-default btn-raised" href="new/task">Define a new task</a>
 
-  </div>
-
-
-	<?php } ?>
-
-  <?php if(!$this->blocked){ ?>
-  <div class="panel">
+  <div class="panel disquspanel">
     <div id="disqus_thread">Loading discussions...</div>
   </div>
   <?php } ?>
@@ -155,7 +157,7 @@
   <script type="text/javascript">
   var disqus_shortname = 'openml'; // forum name
 	var disqus_category_id = '3353609'; // Data category
-	var disqus_title = '<?php echo $this->record->{'name'}; ?>'; // Data name
+	var disqus_title = '<?php echo $this->data['name']; ?>'; // Data name
 	var disqus_url = 'http://www.openml.org/d/<?php echo $this->id; ?>'; // Data url
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
