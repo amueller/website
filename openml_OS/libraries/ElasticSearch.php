@@ -1107,6 +1107,8 @@ class ElasticSearch {
                                       'type'    		=> 'data_quality',
                                       'name'    		=> $d->name,
                                       'description' 	=> $d->description,
+                                      'function' 	=> $d->function,
+                                      'priority' 	=> $d->priority,
                                       'visibility'	=> 'public',
                                       'date' 		=> $d->date,
                                       'suggest'		=> array(
@@ -1129,6 +1131,8 @@ class ElasticSearch {
                                       'type'    		=> 'flow_quality',
                                       'name'    		=> $d->name,
                                       'description' 	=> $d->description,
+                                      'function' 	=> $d->function,
+                                      'priority' 	=> $d->priority,
                                       'visibility'	=> 'public',
                                       'date' 		=> $d->date,
                                       'suggest'		=> array(
