@@ -21,11 +21,14 @@ class Wiki {
         $d = $this->db->getByID($id);
         $user = $this->userdb->getById($d->uploader);
 	$wikipage = 'data-'.$d->did;
-	$preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
-	if($d->contributor)
-		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
-	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.($d->collection_date ? $d->collection_date : 'Date unknown').'  '.PHP_EOL;
-	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL.PHP_EOL;
+  $preamble = "";
+  if(!startswith($d->description,'**Author**')){
+    $preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
+  	if($d->contributor)
+  		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
+  	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.($d->collection_date ? $d->collection_date : 'Date unknown').'  '.PHP_EOL;
+  	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL.PHP_EOL;
+  }
 
 	$data = $d->description;
 
@@ -51,11 +54,13 @@ class Wiki {
   $f = $this->flow->getByID($id);
   $user = $this->userdb->getById($f->uploader);
 	$wikipage = 'flow_'.$f->id;
-	$preamble = '**Author**: '.trim($f->creator, '"').'  '.PHP_EOL;
-	if($f->contributor)
-		$preamble .= trim($f->contributor, '"').'  '.PHP_EOL;
-	$preamble .= '**Please cite**: '.$f->citation.'  '.PHP_EOL.PHP_EOL;
-
+  $preamble = "";
+  if(!startswith($d->description,'**Author**')){
+  	$preamble = '**Author**: '.trim($f->creator, '"').'  '.PHP_EOL;
+  	if($f->contributor)
+  		$preamble .= trim($f->contributor, '"').'  '.PHP_EOL;
+  	$preamble .= '**Please cite**: '.$f->citation.'  '.PHP_EOL.PHP_EOL;
+  }
 	$data = $f->description;
 
 	$post_data = array(
