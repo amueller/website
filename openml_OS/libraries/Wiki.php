@@ -20,7 +20,7 @@ class Wiki {
 
         $d = $this->db->getByID($id);
         $user = $this->userdb->getById($d->uploader);
-	$wikipage = 'data-'$d->did;
+	$wikipage = 'data-'.$d->did;
 	$preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
 	if($d->contributor)
 		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
