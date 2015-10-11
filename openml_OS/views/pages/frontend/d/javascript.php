@@ -26,6 +26,15 @@ $("a[title*='View commit']").each(function() {
 /// Feature graphs
 <?php
 
+//get data from ES
+$this->p = array();
+$this->p['index'] = 'openml';
+$this->p['type'] = 'data';
+$this->p['id'] = $this->id;
+try{
+  $this->data = $this->searchclient->get($this->p)['_source'];
+} catch (Exception $e) {}
+
 $fgraphs = '';
 $fgraphs_all = '';
 

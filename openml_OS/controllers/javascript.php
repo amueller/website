@@ -24,7 +24,7 @@ class Javascript extends CI_Controller {
 	}
 
 	public function page() {
-		//$d = loadpage($this->page,FALSE,'pre');
+		$d = loadpage($this->page,FALSE,'pre');
 		$this->load->view('javascript_main');
 	}
 }

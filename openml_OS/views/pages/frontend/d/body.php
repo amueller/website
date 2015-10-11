@@ -1,3 +1,104 @@
+<?php
+
+    //get data from ES
+    $this->p = array();
+    $this->p['index'] = 'openml';
+    $this->p['type'] = 'data';
+    $this->p['id'] = $this->id;
+    try{
+      $this->data = $this->searchclient->get($this->p)['_source'];
+    } catch (Exception $e) {}
+
+    //get other versions -> do in javascript?
+    $this->p2 = array();
+    $this->p2['index'] = 'openml';
+    $this->p2['type'] = 'data';
+    $this->p2['body']['_source'] = array("data_id", "version", "version_label");
+    $this->p2['body']['query']['term']['exact_name'] = $this->data['name'];
+    $this->p2['body']['sort'] = 'version';
+    try{
+      $this->versions = array_column($this->searchclient->search($this->p2)['hits']['hits'],'_source');
+    } catch (Exception $e) {}
+
+    //get tasks
+    $this->p3 = array();
+    $this->p3['index'] = 'openml';
+    $this->p3['type'] = 'task';
+    $this->p3['body']['filter']['term']['source_data.data_id'] = $this->id;
+    try{
+      $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
+    } catch (Exception $e) {}
+
+    //get properties
+    $this->p4 = array();
+    $this->p4['index'] = 'openml';
+    $this->p4['type'] = 'measure';
+    $this->p4['body']['size'] = 1000;
+    $this->p4['body']['query']['filtered']['query']['match_all'] = array();
+    $this->p4['body']['query']['filtered']['filter']['term']['type'] = "data_quality";
+    $this->p4['body']['sort'] = array('priority','name');
+    try {
+      $this->dataproperties = array_column($this->searchclient->search($this->p4)['hits']['hits'],'_source');
+    } catch (Exception $e) {}
+
+    // block unauthorized access
+    $this->blocked = false;
+    if($this->data['visibility'] == 'private' and (!$this->ion_auth->logged_in() or $this->ion_auth->user()->row()->id != $this->data['uploader_id'])){
+      $this->blocked = true;
+    } else {
+
+    if(($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->data['uploader_id']) || $this->ion_auth->is_admin())
+      $this->is_owner = true;
+
+    // licences
+    $this->licences = array();
+    $this->licences['Public'] = array( "name" => 'Publicly available', "url" => 'https://creativecommons.org/choose/mark/' );
+    $this->licences['CC_BY'] = array( "name" => 'Attribution (CC BY)', "url" => 'http://creativecommons.org/licenses/by/4.0/' );
+    $this->licences['CC_BY-SA'] = array( "name" => 'Attribution-ShareAlike (CC BY-SA)', "url" => 'http://creativecommons.org/licenses/by-sa/4.0/' );
+    $this->licences['CC_BY-ND'] = array( "name" => 'Attribution-NoDerivs (CC BY-ND)', "url" => 'http://creativecommons.org/licenses/by-nd/4.0/' );
+    $this->licences['CC_BY-NC'] = array( "name" => 'Attribution-NonCommercial (CC BY-NC)', "url" => 'http://creativecommons.org/licenses/by-nc/4.0/' );
+    $this->licences['CC_BY-NC-SA'] = array( "name" => 'Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)', "url" => 'http://creativecommons.org/licenses/by-nc-sa/4.0/' );
+    $this->licences['CC-BY-NC-ND'] = array( "name" => 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', "url" => 'http://creativecommons.org/licenses/by-nc-nd/4.0/' );
+    $this->licences['CC0'] = array( "name" => 'Public Domain (CC0)', "url" => 'http://creativecommons.org/about/cc0' );
+
+    //wiki import -> can we do this async?
+    $url = $this->wikipage;
+    $this->show_history = true;
+
+    $preamble = '';
+    if(end($this->info) == 'edit')
+      $url = 'edit/'.$this->wikipage;
+    elseif(end($this->info) == 'history')
+      $url = 'history/'.$this->wikipage;
+    elseif(in_array('compare',$this->info)){
+      $p = $this->input->post('versions');
+      $url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];}
+    elseif(in_array('view',$this->info)){
+      $url = $this->wikipage.'/'.end($this->info);
+      $preamble = '<span class="label label-danger" style="font-weight:200">You are viewing version: '.end($info).'</span><br><br>';}
+    elseif(end($this->info) == 'preview')
+      $url = 'preview';
+    else
+      $this->show_history = false;
+
+    $this->wiki_ok = true;
+    $html = @file_get_contents('http://localhost:4567/'.$url);
+
+    if($html){ //check if Gollum working and not trying to create new page
+      preg_match('/<body>(.*)<\/body>/s',$html,$content_arr);
+      $this->wikiwrapper = $preamble . str_replace('body>','div>',$content_arr[0]);
+      $this->wikiwrapper = str_replace('action="/edit/'.$this->wikipage.'"','',$this->wikiwrapper);
+    } else { //failsafe
+      $this->wikiwrapper = '<div class="rawtext">'.$this->data['description'].'</div>';
+      $this->wiki_ok = false;
+    }
+
+    //crop long descriptions
+    $this->hidedescription = false;
+    if(strlen($this->wikiwrapper)>400 and $url==$this->wikipage and strlen($preamble)==0)
+      $this->hidedescription = true;
+    }
+?>
 
 <div class="container-fluid topborder endless openmlsectioninfo">
   <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">

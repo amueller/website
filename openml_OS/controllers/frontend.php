@@ -70,7 +70,6 @@ class Frontend extends CI_Controller {
       return;
     }
     loadpage($indicator,TRUE,'javascript');
-
   }
 
   public function page( $indicator, $subindicator = false ) {
