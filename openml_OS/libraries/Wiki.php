@@ -20,7 +20,7 @@ class Wiki {
 
         $d = $this->db->getByID($id);
         $user = $this->userdb->getById($d->uploader);
-	$wikipage = $d->name.'-'.$d->version;
+	$wikipage = 'data-'$d->did;
 	$preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
 	if($d->contributor)
 		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
@@ -50,7 +50,7 @@ class Wiki {
 
   $f = $this->flow->getByID($id);
   $user = $this->userdb->getById($f->uploader);
-	$wikipage = 'flow_'.$f->name.'-'.$f->version;
+	$wikipage = 'flow_'.$f->id;
 	$preamble = '**Author**: '.trim($f->creator, '"').'  '.PHP_EOL;
 	if($f->contributor)
 		$preamble .= trim($f->contributor, '"').'  '.PHP_EOL;
