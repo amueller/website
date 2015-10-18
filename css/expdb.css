@@ -2614,6 +2614,14 @@ a:hover > .circlered{
   font-size:11pt;
 }
 
+#wiki-waiting{
+  color:#999;
+}
+
+#wiki-ready{
+  display:none;
+}
+
 .wiki-buttons a{
   padding-left:10px;
   padding-right:10px;

@@ -1,7 +1,7 @@
   <?php
 
   //$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
-  $this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/gollum.js','js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+  $this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
   $this->load_css = array('css/gollum.css');
 
   //Redirect to search if bad url
@@ -61,6 +61,26 @@
 
     //wiki
     $this->wikipage = 'data-'.$this->id;
+
+    //wiki import -> can we do this async?
+    $this->url = $this->wikipage;
+    $this->show_history = true;
+
+    $this->preamble = '';
+    if(end($this->info) == 'edit')
+      $this->url = 'edit/'.$this->wikipage;
+    elseif(end($this->info) == 'history')
+      $this->url = 'history/'.$this->wikipage;
+    elseif(in_array('compare',$this->info)){
+      $p = $this->input->post('versions');
+      $this->url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];}
+    elseif(in_array('view',$this->info)){
+      $this->url = $this->wikipage.'/'.end($this->info);
+      $this->preamble = '<span class="label label-danger" style="font-weight:200">You are viewing version: '.end($info).'</span><br><br>';}
+    elseif(end($this->info) == 'preview')
+      $this->url = 'preview';
+    else
+      $this->show_history = false;
   }
 
   function cleanName($string){

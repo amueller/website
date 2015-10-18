@@ -21,7 +21,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	} catch (Exception $e) {}
 
 	$this->is_owner = false;
-	if(($this->ion_auth->logged_in() and $this->ion_auth->user()->row()->id == $this->user_id) || $this->ion_auth->is_admin())
+	if($this->ion_auth->logged_in() and ($this->ion_auth->user()->row()->id == $this->user_id || $this->ion_auth->is_admin()))
 	   $this->is_owner = true;
 
 

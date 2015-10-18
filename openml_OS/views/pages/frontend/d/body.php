@@ -61,41 +61,12 @@
     $this->licences['CC-BY-NC-ND'] = array( "name" => 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', "url" => 'http://creativecommons.org/licenses/by-nc-nd/4.0/' );
     $this->licences['CC0'] = array( "name" => 'Public Domain (CC0)', "url" => 'http://creativecommons.org/about/cc0' );
 
-    //wiki import -> can we do this async?
-    $url = $this->wikipage;
-    $this->show_history = true;
-
-    $preamble = '';
-    if(end($this->info) == 'edit')
-      $url = 'edit/'.$this->wikipage;
-    elseif(end($this->info) == 'history')
-      $url = 'history/'.$this->wikipage;
-    elseif(in_array('compare',$this->info)){
-      $p = $this->input->post('versions');
-      $url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];}
-    elseif(in_array('view',$this->info)){
-      $url = $this->wikipage.'/'.end($this->info);
-      $preamble = '<span class="label label-danger" style="font-weight:200">You are viewing version: '.end($info).'</span><br><br>';}
-    elseif(end($this->info) == 'preview')
-      $url = 'preview';
-    else
-      $this->show_history = false;
-
-    $this->wiki_ok = true;
-    $html = @file_get_contents('http://localhost:4567/'.$url);
-
-    if($html){ //check if Gollum working and not trying to create new page
-      preg_match('/<body>(.*)<\/body>/s',$html,$content_arr);
-      $this->wikiwrapper = $preamble . str_replace('body>','div>',$content_arr[0]);
-      $this->wikiwrapper = str_replace('action="/edit/'.$this->wikipage.'"','',$this->wikiwrapper);
-    } else { //failsafe
-      $this->wikiwrapper = '<div class="rawtext">'.$this->data['description'].'</div>';
-      $this->wiki_ok = false;
-    }
+    //placeholder
+    $this->wikiwrapper = '<div class="rawtext">'.$this->data['description'].'</div>';
 
     //crop long descriptions
     $this->hidedescription = false;
-    if(strlen($this->wikiwrapper)>400 and $url==$this->wikipage and strlen($preamble)==0)
+    if(strlen($this->wikiwrapper)>400)
       $this->hidedescription = true;
     }
 ?>
