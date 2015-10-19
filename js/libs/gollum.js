@@ -1063,7 +1063,7 @@
 
         $field.val( fullStr.substring(0, selPos.start) + replaceText +
                     fullStr.substring(selPos.end) );
-        $field[0].focus();
+        //$field[0].focus();
 
         if ( selectNew ) {
           if ( $field[0].setSelectionRange ) {
@@ -1802,3 +1802,35 @@ $(document).ready(function() {
     });
   }
 });
+
+var observe;
+if (window.attachEvent) {
+    observe = function (element, event, handler) {
+        element.attachEvent('on'+event, handler);
+    };
+}
+else {
+    observe = function (element, event, handler) {
+        element.addEventListener(event, handler, false);
+    };
+}
+/*
+$(document).ready(function() {
+    var text = document.getElementById('gollum-editor-body');
+    function resize () {
+        text.style.height = 'auto';
+        text.style.height = text.scrollHeight+'px';
+    }
+    function delayedResize () {
+        window.setTimeout(resize, 0);
+    }
+    observe(text, 'change',  resize);
+    observe(text, 'cut',     delayedResize);
+    observe(text, 'paste',   delayedResize);
+    observe(text, 'drop',    delayedResize);
+    observe(text, 'keydown', delayedResize);
+
+    text.focus();
+    resize();
+});
+*/

@@ -14,7 +14,7 @@ elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   redirect('d/'.$this->id);
 }
 // Description edit
-elseif($this->input->post('page')){
+elseif($this->input->post('page') or $this->input->post('versions')){
 // prepare to send data to gollum
   //$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
@@ -34,9 +34,9 @@ if($this->input->post('versions')){
 
 // check whether we are sending new data or requesting comparison
   if($this->input->post('content'))
-	$url = 'http://localhost:4567/edit/'.$this->wikipage;
-  elseif($this->input->post('versions'))
-	$url = 'http://localhost:4567/compare/'.$this->wikipage;
+	$url = 'http://wiki.openml.org/edit/'.$this->wikipage;
+  if($this->input->post('versions'))
+	$url = 'http://wiki.openml.org/compare/'.$this->wikipage;
 
 //call gollum
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
