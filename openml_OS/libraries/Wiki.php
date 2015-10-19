@@ -9,9 +9,8 @@ class Wiki {
     $this->CI->load->model('Implementation');
     $this->db = $this->CI->Dataset;
     $this->flow = $this->CI->Implementation;
+    $this->study = $this->CI->Study;
     $this->userdb = $this->CI->Author;
-    $this->wiki_path = '/Library/WebServer/Documents/wiki/';
-    //$this->wiki_path = '/openmldata/weblog/wiki/';
     $this->CI->load->helper('file');
     $this->CI->load->Library('curlHandler');
   }
@@ -39,7 +38,7 @@ class Wiki {
 	      'format' => 'md',
 	      'message' => 'Automatically added');
 
-	$url = 'http://localhost:4567/create';
+	$url = 'http://wiki.openml.org/create';
 
 	//call gollum
   	$api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );
@@ -53,7 +52,7 @@ class Wiki {
 
   $f = $this->flow->getByID($id);
   $user = $this->userdb->getById($f->uploader);
-	$wikipage = 'flow_'.$f->id;
+	$wikipage = 'flow-'.$f->id;
   $preamble = "";
   if(!startswith($d->description,'**Author**')){
   	$preamble = '**Author**: '.trim($f->creator, '"').'  '.PHP_EOL;
@@ -70,7 +69,7 @@ class Wiki {
 	      'format' => 'md',
 	      'message' => 'Automatically added');
 
-	$url = 'http://localhost:4567/create';
+	$url = 'http://wiki.openml.org/create';
 
 	//call gollum
   	$api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );
@@ -78,6 +77,31 @@ class Wiki {
 		return $api_response;
 
 	return "Successfully added ".$wikipage;
+  }
+
+  public function export_study_to_wiki($id){
+
+  $s = $this->study->getByID($id);
+  $user = $this->userdb->getById($s->creator);
+  $wikipage = 'study-'.$s->id;
+  $preamble = "";
+  $data = $s->description;
+
+  $post_data = array(
+        'page' => $wikipage,
+        'path' => '/',
+        'content' => $preamble.$data,
+        'format' => 'md',
+        'message' => 'Automatically added on creation');
+
+  $url = 'http://wiki.openml.org/create';
+
+  //call gollum
+    $api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );
+  if(strlen($api_response)>0)
+    return $api_response;
+
+  return "Successfully added ".$wikipage;
   }
 
   public function import_from_wiki($id){

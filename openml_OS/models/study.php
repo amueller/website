@@ -15,6 +15,10 @@ class Study extends Database_write {
     // add to elastic search index.
     $this->elasticsearch->index('study', $study_id );
 
+    // add to wiki
+    $this->wiki->export_study_to_wiki($id);
+
+    return $study_id;
   }
 
 }

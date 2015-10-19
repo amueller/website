@@ -487,19 +487,19 @@ class ElasticSearch {
                           $study['flows_included'] = 0;
                           $study['runs_included'] = 0;
 
-                          $data_tagged = $this->db->query("select count(id) as count from dataset_tag where tag='".$d->tag."'");
+                          $data_tagged = $this->db->query("select count(id) as count from dataset_tag where tag='study:".$d->id."'");
                           if($data_tagged)
                             $study['datasets_included'] = $data_tagged[0]->count;
 
-                          $task_tagged = $this->db->query("select count(id) as count from task_tag where tag='".$d->tag."'");
+                          $task_tagged = $this->db->query("select count(id) as count from task_tag where tag='study:".$d->id."'");
                           if($task_tagged)
                             $study['tasks_included'] = $task_tagged[0]->count;
 
-                          $flows_tagged = $this->db->query("select count(id) as count from implementation_tag where tag='".$d->tag."'");
+                          $flows_tagged = $this->db->query("select count(id) as count from implementation_tag where tag='study:".$d->id."'");
                           if($flows_tagged)
                             $study['flows_included'] = $flows_tagged[0]->count;
 
-                          $runs_tagged = $this->db->query("select count(id) as count from run_tag where tag='".$d->tag."'");
+                          $runs_tagged = $this->db->query("select count(id) as count from run_tag where tag='study:".$d->id."'");
                           if($runs_tagged)
                             $study['runs_included'] = $runs_tagged[0]->count;
 
