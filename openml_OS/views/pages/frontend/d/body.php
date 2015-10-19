@@ -62,7 +62,7 @@
     $this->licences['CC0'] = array( "name" => 'Public Domain (CC0)', "url" => 'http://creativecommons.org/about/cc0' );
 
     //placeholder
-    $this->wikiwrapper = '<div class="rawtext">'.$this->data['description'].'</div>';
+    $this->wikiwrapper = '<div class="rawtext">'.str_replace('**','',$this->data['description']).'</div>';
 
     //crop long descriptions
     $this->hidedescription = false;

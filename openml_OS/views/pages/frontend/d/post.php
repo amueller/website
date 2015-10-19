@@ -14,7 +14,7 @@ elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   redirect('d/'.$this->id);
 }
 // Description edit
-elseif($this->input->post('page') or $this->input->post('versions')){
+elseif($this->input->post('page')){
 // prepare to send data to gollum
   //$session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
 
@@ -55,6 +55,8 @@ if($this->input->post('versions')){
   	header('Location: '.BASE_URL.'d/'.$this->id);
 }
 
+
+elseif($this->input->post('versions')){}
 
 // Dataset update
 else{

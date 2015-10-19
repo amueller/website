@@ -1,3 +1,13 @@
+<?php
+  //placeholder
+  $this->wikiwrapper = '<div class="rawtext">'.str_replace('**','',$this->flow['description']).'</div>';
+
+  //crop long descriptions
+  $this->hidedescription = false;
+  if(strlen($this->wikiwrapper)>400)
+    $this->hidedescription = true;
+?>
+
 <div class="container-fluid topborder endless openmlsectioninfo">
   <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 

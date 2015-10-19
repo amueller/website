@@ -45,8 +45,8 @@ $this->current_task = 1;
 
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
-	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->id = explode('?',$info[array_search('f',$info)+1])[0];
+	$this->info = explode('/', $_SERVER['REQUEST_URI']);
+	$this->id = explode('?',$this->info[array_search('f',$this->info)+1])[0];
 
 	$this->record = $this->Implementation->getByID($this->id);
   $bfilerecord = $this->File->getById( $this->record->binary_file_id );
@@ -70,49 +70,27 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	ksort($this->versions);
 
   //wiki import
-  $this->wikipage = str_replace('_','-','flow-'.$this->flow['name'].'-'.$this->flow['version']);
-  $this->wikipage = str_replace('.','-dot-',$this->wikipage);
-  $this->wikipage = str_replace('(','-',$this->wikipage);
-  $this->wikipage = str_replace(')','-',$this->wikipage);
-  $this->wikipage = str_replace(',','-',$this->wikipage);
-  $this->wikipage = str_replace('--','-',$this->wikipage);
-
-  $url = $this->wikipage;
+  $this->wikipage = 'flow-'.$this->id;
+  $this->url = $this->wikipage;
   $this->show_history = true;
 
-  $preamble = '';
-  if(end($info) == 'edit')
-    $url = 'edit/'.$this->wikipage;
-  elseif(end($info) == 'history')
-    $url = 'history/'.$this->wikipage;
-  elseif(in_array('compare',$info)){
+  $this->preamble = '';
+  if(end($this->info) == 'edit')
+    $this->url = 'edit/'.$this->wikipage;
+  elseif(end($this->info) == 'history')
+    $this->url = 'history/'.$this->wikipage;
+  elseif(in_array('compare',$this->info)){
     $p = $this->input->post('versions');
-    $url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];}
-  elseif(in_array('view',$info)){
-    $url = $this->wikipage.'/'.end($info);
-    $preamble = '<span class="label label-danger" style="font-weight:200">You are viewing version: '.end($info).'</span><br><br>';}
-  elseif(end($info) == 'preview')
-    $url = 'preview';
+    $this->url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];}
+  elseif(in_array('view',$this->info)){
+    $this->url = $this->wikipage.'/'.end($this->info);
+    $this->preamble = '<span class="label label-danger" style="font-weight:200">You are viewing version: '.end($this->info).'</span><br><br>';}
+  elseif(end($this->info) == 'preview')
+    $this->url = 'preview';
   else
     $this->show_history = false;
 
-  $this->wiki_ok = true;
-  $html = @file_get_contents('http://localhost:4567/'.$url);
-
-  if($html){ //check if Gollum working and not trying to create new page
-    preg_match('/<body>(.*)<\/body>/s',$html,$content_arr);
-    $this->wikiwrapper = $preamble . str_replace('body>','div>',$content_arr[0]);
-    $this->wikiwrapper = str_replace('action="/edit/'.$this->wikipage.'"','',$this->wikiwrapper);
-  } else { //failsafe
-    $this->wikiwrapper = '<div class="rawtext">'.$this->flow['description'].'</div>';
-    $this->wiki_ok = false;
-  }
-
-  //crop long descriptions
-  $this->hidedescription = false;
-  if(strlen($this->wikiwrapper)>400 and $url==$this->wikipage and strlen($preamble)==0)
-    $this->hidedescription = true;
-
+  // tables -> remove?
 	$this->dt_main['columns'] 		= array('r.rid','rid','sid','name','value');
 	$this->dt_main['column_widths']		= array(1,1,0,60,30);
 	$this->dt_main['column_content']	= array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="d/[CONTENT1]">[CONTENT2]</a>',null);

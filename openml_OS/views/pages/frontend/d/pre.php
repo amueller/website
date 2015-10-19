@@ -73,7 +73,8 @@
       $this->url = 'history/'.$this->wikipage;
     elseif(in_array('compare',$this->info)){
       $p = $this->input->post('versions');
-      $this->url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];}
+      $this->url = 'compare/'.$this->wikipage.'/'.$p[0].'...'.$p[1];
+    }
     elseif(in_array('view',$this->info)){
       $this->url = $this->wikipage.'/'.end($this->info);
       $this->preamble = '<span class="label label-danger" style="font-weight:200">You are viewing version: '.end($info).'</span><br><br>';}
