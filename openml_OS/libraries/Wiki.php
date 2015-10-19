@@ -9,7 +9,6 @@ class Wiki {
     $this->CI->load->model('Implementation');
     $this->db = $this->CI->Dataset;
     $this->flow = $this->CI->Implementation;
-    $this->study = $this->CI->Study;
     $this->userdb = $this->CI->Author;
     $this->CI->load->helper('file');
     $this->CI->load->Library('curlHandler');
@@ -17,8 +16,8 @@ class Wiki {
 
   public function export_to_wiki($id){
 
-        $d = $this->db->getByID($id);
-        $user = $this->userdb->getById($d->uploader);
+  $d = $this->db->getByID($id);
+  $user = $this->userdb->getById($d->uploader);
 	$wikipage = 'data-'.$d->did;
   $preamble = "";
   if(!startswith($d->description,'**Author**')){

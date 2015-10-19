@@ -470,6 +470,7 @@ class ElasticSearch {
                             'description' => $d->description,
                             'date' 	=> $d->created,
                             'uploader_id'	 	=> $d->creator,
+                            'uploader' 		=> array_key_exists($d->creator,$this->user_names) ? $this->user_names[$d->creator] : 'Unknown',
                             'visibility'	 	=> $d->visibility,
                             'suggest'		=> array(
                               'input' => array($d->name,$d->description),
@@ -487,19 +488,19 @@ class ElasticSearch {
                           $study['flows_included'] = 0;
                           $study['runs_included'] = 0;
 
-                          $data_tagged = $this->db->query("select count(id) as count from dataset_tag where tag='study:".$d->id."'");
+                          $data_tagged = $this->db->query("select count(id) as count from dataset_tag where tag='study_".$d->id."'");
                           if($data_tagged)
                             $study['datasets_included'] = $data_tagged[0]->count;
 
-                          $task_tagged = $this->db->query("select count(id) as count from task_tag where tag='study:".$d->id."'");
+                          $task_tagged = $this->db->query("select count(id) as count from task_tag where tag='study_".$d->id."'");
                           if($task_tagged)
                             $study['tasks_included'] = $task_tagged[0]->count;
 
-                          $flows_tagged = $this->db->query("select count(id) as count from implementation_tag where tag='study:".$d->id."'");
+                          $flows_tagged = $this->db->query("select count(id) as count from implementation_tag where tag='study_".$d->id."'");
                           if($flows_tagged)
                             $study['flows_included'] = $flows_tagged[0]->count;
 
-                          $runs_tagged = $this->db->query("select count(id) as count from run_tag where tag='study:".$d->id."'");
+                          $runs_tagged = $this->db->query("select count(id) as count from run_tag where tag='study_".$d->id."'");
                           if($runs_tagged)
                             $study['runs_included'] = $runs_tagged[0]->count;
 
