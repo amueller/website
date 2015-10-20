@@ -37,6 +37,10 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/s/')) {
     }
   }
 
+	if ($this->ion_auth->logged_in() and $this->study['uploader_id'] == $this->ion_auth->user()->row()->id){
+		$this->is_owner = true;
+	}
+
 	//wiki
 	$this->wikipage = 'study-'.$this->id;
 	$this->url = $this->wikipage;

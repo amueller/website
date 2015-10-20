@@ -23,11 +23,10 @@
           <i class="fa fa-spinner fa-pulse"></i> Loading wiki
         </div>
         <div class="pull-right" id="wiki-ready">
-          <?php if(!$this->editing){ ?>
-            <span style="font-size:10px;font-style:italic;color:#666">Help us complete this description <i class="fa fa-long-arrow-right"></i></span>
-          <?php } ?>
-          <a class="pull-right greenheader loginfirst" href="d/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
-          <?php if ($this->show_history) { ?>
+          <?php if($this->is_owner){ ?>
+            <a class="pull-right greenheader loginfirst" href="s/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
+          <?php }
+                if ($this->show_history) { ?>
           <a class="pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
           <?php } ?>
         </div>
