@@ -603,7 +603,7 @@ class ElasticSearch {
                             $tags = $this->CI->Task_tag->getAssociativeArray('tag', 'uploader', 'id = '.$d->task_id);
                             if( $tags != false ){
                               foreach( $tags as $t => $u ) {
-                                $new_data['tags'][] = array(
+                                $newdata['tags'][] = array(
                                   'tag' => $t,
                                   'uploader' => $u );
                                 }
