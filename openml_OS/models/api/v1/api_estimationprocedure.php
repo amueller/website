@@ -1,32 +1,32 @@
 <?php
 class Api_estimationprocedure extends Api_model {
-  
+
   protected $version = 'v1';
-  
+
   function __construct() {
     parent::__construct();
-    
+
     // load models
     $this->load->model('Estimation_procedure');
   }
-  
+
   function bootstrap($segments, $request_type, $user_id) {
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->estimationprocedure_list();
       return;
     }
-    
+
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->estimationprocedure($segments[0]);
       return;
     }
-    
+
     $this->returnError( 100, $this->version );
   }
-  
-  
+
+
   private function estimationprocedure($id) {
     if( $id == false ) {
       $this->returnError( 440, $this->version );

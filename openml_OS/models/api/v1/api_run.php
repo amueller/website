@@ -95,7 +95,7 @@ class Api_run extends Api_model {
 
     $where_task = $task_id == false ? '' : ' AND `r`.`task_id` IN (' . $task_id . ') ';
     $where_setup = $setup_id == false ? '' : ' AND `r`.`setup` IN (' . $setup_id . ') ';
-    $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader_id` IN (' . $uploader_id . ') ';
+    $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
 
@@ -113,7 +113,7 @@ class Api_run extends Api_model {
     }
 
     if (count($res) > 10000) {
-      $this->returnError(513, $this->version, 'Size of result set: ' . count($res) . '; max size: 10000. ');
+      $this->returnError(513, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res) . '; max size: 10000. ');
       return;
     }
 
