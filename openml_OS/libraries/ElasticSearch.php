@@ -516,6 +516,8 @@ class ElasticSearch {
                             try{
                               $this->all_tasks[$d->task_id] = $this->build_task($d);
                             } catch (Exception $e) {
+                                echo 'Indexing task '.$d->task_id.' failed: '. $e->getMessage();
+
                                 $this->messages[] = 'Indexing task '.$d->task_id.' failed: '. $e->getMessage();
                             }
                           }
