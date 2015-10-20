@@ -599,6 +599,16 @@ class ElasticSearch {
                               }
                             }
 
+                            $new_data['tags'] = array();
+                            $tags = $this->CI->Task_tag->getAssociativeArray('tag', 'uploader', 'id = '.$d->task_id);
+                            if( $tags != false ){
+                              foreach( $tags as $t => $u ) {
+                                $new_data['tags'][] = array(
+                                  'tag' => $t,
+                                  'uploader' => $u );
+                                }
+                              }
+
                             $newdata['suggest'] = array(
                               'input' => $description,
                               'output'=> 'Task '.$d->task_id,
