@@ -52,7 +52,7 @@ class Api_evaluation extends Api_model {
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_function;
 
     $sql =
-      'SELECT r.rid, e.function, e.value ' .
+      'SELECT r.rid, e.function, e.value, e.array_data ' .
       'FROM evaluation e, run r, algorithm_setup s ' .
       'WHERE r.setup = s.sid AND e.source = r.rid ' . $where_total .
       'ORDER BY r.rid; ';
