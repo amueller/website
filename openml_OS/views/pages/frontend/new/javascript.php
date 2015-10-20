@@ -1,3 +1,4 @@
+<?php if($this->newtype=='task') { ?>
 $(document).ready( function() {
   //check for change on the categories menu
   $('#form-task-type-tabs li a').eq($('#selectTaskType option:selected').attr('name')).tab('show');
@@ -25,6 +26,7 @@ $(document).ready( function() {
     endforeach;
   ?>
 });
+<?php } ?>
 
 /// SHARING DATA
 
@@ -187,6 +189,16 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
          $(this).parent().addClass('has-error');
       }
   });
+  $('#study_tag').bind('input', function() {
+      var cname = $(this).val();
+      if(cname.length > 0 && cname.split(" ").length == 1 && !cname.startsWith('s:')){
+         $(this).parent().removeClass('has-error');
+         $(this).parent().addClass('has-success');
+      } else {
+         $(this).parent().removeClass('has-success');
+         $(this).parent().addClass('has-error');
+      }
+  });
   $('#description').bind('input', function() {
       var cname = $(this).val();
       if(cname.length > 0){
@@ -207,7 +219,7 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
          $(this).parent().addClass('has-error');
       }
   });
-  $('#study_name').bind('input', function() {
+  $('#study_title').bind('input', function() {
       var cname = $(this).val();
       if(cname.length > 0){
          $(this).parent().removeClass('has-error');

@@ -1,59 +1,57 @@
-<?php
-  if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
-	   $info = explode('/', $_SERVER['REQUEST_URI']);
-	   $this->id = $this->subpage;
-	   if(array_search('u',$info)+2 < count($info))
-		   $this->subpage = $info[array_search('u',$info)+2];
-     $this->activity_subpages = array('flows','data','runs');
-	   if(in_array($this->subpage,$this->activity_subpages)){ ?>
 
-var oTable;
+/// Wiki
+// Loading the Wiki through CORS. This allows it to be loaded from anywhere.
+$.ajax({
+  type: 'GET',
+  url: '<?php echo 'http://wiki.openml.org/'.$this->url;?>',
+  contentType: 'text/plain',
+  xhrFields: { withCredentials: false },
+  headers: {  },
+  success: function(data) {
+    data = data.match(/<body[^>]*>[\s\S]*<\/body>/gi)[0];
+    data = '<?php echo $this->preamble; ?>' + data.replace('body>', 'div>');
+    data = data.replace('action="/edit/<?php echo $this->wikipage; ?>','');
+    data = data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,'');
+    $(".description").html(data);
 
-$(document).ready(function() {
+    //customizations
+    $("#gollum-editor-message-field").val("Write a small message explaining the change.");
+    $("#gollum-editor-submit").addClass("btn btn-success pull-left");
+    $("#gollum-editor-preview").removeClass("minibutton");
+    $("#gollum-editor-preview").addClass("btn btn-default padded-button");
+    $("#function-help").addClass("wiki-help-button");
+    $("#function-help").html("Need help?");
+    $("#gollum-editor-preview").attr("href","preview");
+    $("#version-form").attr('action', "d/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
+    $("a[title*='View commit']").each(function() {
+       var _href = $(this).attr("href");
+       $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
+    });
+    $("#wiki-waiting").css("display","none");
+    $("#wiki-ready").css("display","block");
 
-  oTable = $('.data_overview_table_<?php echo $counter; ?>').dataTable({
-    "bServerSide": true,
-    "sAjaxSource": "api_query/table_feed",
-    "sServerMethod": "POST",
-    "fnServerParams": function ( aoData ) {
-      aoData.push( { 'value': '<?php echo implode(",",$this->columns); ?>', 'name' : 'columns' } );
-      aoData.push( { 'value': '<?php echo htmlspecialchars($this->sql); ?>', 'name' : 'base_sql' } );
-    },
-    "aaSorting": <?php echo $this->sort; ?>,
-    "bLengthChange": false,
-    "bFilter": false,
-    "iDisplayLength" : 30,
-    "bAutoWidth": true,
-    <?php echo column_widths($this->widths); ?>
-    "bPaginate": true
-  });
+    //load gollum javascript
+    var headID = document.getElementsByTagName("head")[0];
+    var newScript = document.createElement('script');
+    newScript.type = 'text/javascript';
+    newScript.src = 'js/libs/gollum.js';
+    headID.appendChild(newScript);
+  },
+  error: function() {
+    // Here's where you handle an error response.
+    // Note that if the error was due to a CORS issue,
+    // this function will still fire, but there won't be any additional
+    // information about the error.
+    console.log('Woops, there was an error making the request.');
+  }
 });
 
-<?php if( $api_delete_function ): ?>
+$( "#gollum-editor-preview" ).click(function() {
+	var $form = $($('#gollum-editor form').get(0));
+        $form.attr('action', '');
+});
 
-function askConfirmation( id, name ) {
-  if(confirm('Are you sure you want to delete ' + name + '? This can not be undone. ')) {
-    deleteItem( id, name, true );
-  }
-}
-
-function deleteItem( id, name, msg ) {
-$.ajax({
-  type: "POST",
-  url: "<?php echo BASE_URL; ?>api/?f=<?php echo $api_delete_function['function']; ?>",
-  data: "<?php echo $api_delete_function['key']; ?>="+id,
-  dataType: "xml"
-}).done( function( resultdata ) {
-    id_field = $(resultdata).find("oml\\:id, id");
-
-    if( id_field.length ) {
-      oTable.fnDraw();
-      if( msg ) { alert( name + " was deleted. " ); }
-    } else {
-      code_field = $(resultdata).find("oml\\:code, code");
-      message_field = $(resultdata).find("oml\\:message, message");
-      if( msg ) { alert( "Error " + code_field.text() + ": " + message_field.text() ); }
-    }
-  } );
-}
-<?php endif; }} ?>
+$("a[title*='View commit']").each(function() {
+   var _href = $(this).attr("href");
+   $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
+});

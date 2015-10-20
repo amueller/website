@@ -23,4 +23,6 @@ for( $i = 0; $i < count($this->task_types); ++$i ) {
 $this->responsetype = '';
 $this->response = '';
 
+$this->newtype = end(explode('/', $_SERVER['REQUEST_URI']));
+
 ?>

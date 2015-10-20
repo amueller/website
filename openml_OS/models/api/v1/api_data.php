@@ -650,6 +650,10 @@ class Api_data extends Api_model {
 
     //update index
     $this->elasticsearch->index('data', $data_id);
+    //update studies
+    if(startsWith($tag,'study_')){
+      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    }
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );

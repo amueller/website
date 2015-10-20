@@ -70,6 +70,7 @@ $frontend_pages = array(
           'd',
           'f',
           'r',
+          's',
           't',
 	        'tt',
           'a',

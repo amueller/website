@@ -9,6 +9,7 @@ class Wiki {
     $this->CI->load->model('Implementation');
     $this->db = $this->CI->Dataset;
     $this->flow = $this->CI->Implementation;
+    $this->study = $this->CI->Study;
     $this->userdb = $this->CI->Author;
     $this->CI->load->helper('file');
     $this->CI->load->Library('curlHandler');
@@ -16,17 +17,17 @@ class Wiki {
 
   public function export_to_wiki($id){
 
-  $d = $this->db->getByID($id);
-  $user = $this->userdb->getById($d->uploader);
-	$wikipage = 'data-'.$d->did;
-  $preamble = "";
-  if(!startswith($d->description,'**Author**')){
-    $preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
-  	if($d->contributor)
-  		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
-  	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.($d->collection_date ? $d->collection_date : 'Date unknown').'  '.PHP_EOL;
-  	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL.PHP_EOL;
-  }
+    $d = $this->db->getByID($id);
+    $user = $this->userdb->getById($d->uploader);
+  	$wikipage = 'data-'.$d->did;
+    $preamble = "";
+    if(!startswith($d->description,'**Author**')){
+      $preamble = '**Author**: '.trim($d->creator, '"').'  '.PHP_EOL;
+    	if($d->contributor)
+    		$preamble .= trim($d->contributor, '"').'  '.PHP_EOL;
+    	$preamble .= '**Source**: '.($d->original_data_url ? '[original]('.$d->original_data_url.')' : 'Unknown').' - '.($d->collection_date ? $d->collection_date : 'Date unknown').'  '.PHP_EOL;
+    	$preamble .= '**Please cite**: '.$d->citation.'  '.PHP_EOL.PHP_EOL;
+    }
 
 	$data = $d->description;
 

@@ -4,8 +4,8 @@
 	<h1><a href="d"><i class="fa fa-flask"></i></a> Create study</h1>
       <div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
 		  <div class="form-group has-error">
-		    <label class="control-label" for="name">Name</label>
-		    <input type="text" class="form-control" name="study_name" id="study_name" placeholder="The name of your study." value="<?php echo $this->input->post('study_name'); ?>"/>
+		    <label class="control-label" for="title">Title</label>
+		    <input type="text" class="form-control" name="study_title" id="study_title" placeholder="The title of your study." value="<?php echo $this->input->post('study_title'); ?>"/>
 		  </div>
 		  <div class="form-group has-error">
 		    <label class="control-label" for="description">Description</label>

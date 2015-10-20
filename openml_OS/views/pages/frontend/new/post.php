@@ -175,9 +175,12 @@ if($this->subpage == 'task') {
   }
 } elseif($this->subpage == 'study') {
   $user_id = $this->ion_auth->user()->row()->id;
-  $name = $this->input->post( 'study_name' );
+  $name = $this->input->post( 'study_title' );
   $description = $this->input->post( 'description' );
-  $this->Study->create( $name, $description, $user_id );
+  $sid = $this->Study->create( $name, $description, $user_id );
+  if($sid) {
+    redirect('s/'.$sid);
+  }
 }
 
 ?>
