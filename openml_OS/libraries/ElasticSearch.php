@@ -24,7 +24,6 @@ class ElasticSearch {
     $this->data_names = $this->CI->Dataset->getAssociativeArray('did','name','name IS NOT NULL');
     $this->flow_names = $this->CI->Implementation->getAssociativeArray('id','fullName','name IS NOT NULL');
     $this->procedure_names = $this->CI->Estimation_procedure->getAssociativeArray('id','name','name IS NOT NULL');
-    $this->all_tasks = array();
     $this->user_names = array();
     $author = $this->userdb->get();
     if( is_array( $author ) )
@@ -507,44 +506,39 @@ class ElasticSearch {
                           return $study;
                         }
 
-                        // Special case - tasks are pre-fetched because they are also needed to build the run index
-                        private function fetch_tasks($id = false){
-                          $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid'.($id?' and t.task_id='.$id:'').') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
-
-                          if($tasks)
-                          foreach( $tasks as $d ) {
-                            try{
-                              $this->all_tasks[$d->task_id] = $this->build_task($d);
-                            } catch (Exception $e) {
-                                echo 'Indexing task '.$d->task_id.' failed: '. $e->getMessage();
-
-                                $this->messages[] = 'Indexing task '.$d->task_id.' failed: '. $e->getMessage();
-                            }
-                          }
-                        }
-
                         public function index_task($id){
-
                           $params['index']     = 'openml';
                           $params['type']      = 'task';
 
-                          $this->fetch_tasks($id);
+                          $taskmaxquery = $this->db->query('SELECT max(task_id) as maxtask from task'.($id?' where t.task_id='.$id:''));
+                          $taskcountquery = $this->db->query('SELECT count(task_id) as taskcount from task'.($id?' where t.task_id='.$id:''));
+                          $taskmax = intval($taskmaxquery[0]->maxtask);
+                          $taskcount = intval($taskcountquery[0]->taskcount);
 
-                          if($id and !array_key_exists($id,$this->all_tasks))
-                          return 'Error: task '.$id.' is unknown';
+                          $task_id = 0;
+                          $submitted = 0;
+                          $incr = 100;
+                          while ($task_id < $taskmax){
+                            $tasks = null;
+                            $params['body'] = array();
+                            $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id>='.$task_id.' and task_id<'.($task_id+$incr).') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
+                            if($tasks){
+                            foreach( $tasks as $t ) {
+                              $params['body'][] = array(
+                                'index' => array(
+                                  '_id' => $t->task_id
+                                )
+                              );
+                              $params['body'][] = $this->build_task($t);
+                            }
+                            $responses = $this->client->bulk($params);
 
-                          foreach( $this->all_tasks as $k => $v ) {
-                            $params['body'][] = array(
-                              'index' => array(
-                                '_id' => $k
-                              )
-                            );
-                            $params['body'][] = $v;
+                            $submitted += sizeof($responses['items']);
+                            }
+                            $task_id += $incr;
                           }
 
-                          $responses = $this->client->bulk($params);
-
-                          return 'Successfully indexed '.sizeof($responses['items']).' out of '.sizeof($this->all_tasks).' tasks.';
+                          return 'Successfully indexed '.$submitted.' out of '.$taskcount.' tasks.';
                         }
 
                         private function build_task($d){
@@ -749,7 +743,6 @@ class ElasticSearch {
                               if(!$run)
                               return 'Error: run '.$id.' is unknown';
 
-                              $this->fetch_tasks($run[0]->task_id);
                               $setups = $this->fetch_setups($run[0]->setup);
                               $runfiles = $this->fetch_runfiles($id,$id+1);
                               $evals = $this->fetch_evaluations($id,$id+1);
@@ -776,8 +769,6 @@ class ElasticSearch {
                               $runcountquery = $this->db->query('SELECT count(rid) as runcount from run');
                               $runmax = intval($runmaxquery[0]->maxrun);
                               $runcount = intval($runcountquery[0]->runcount);
-                              if(!$this->all_tasks)
-                              $this->fetch_tasks();
 
                               $rid = 0;
                               $submitted = 0;
@@ -814,7 +805,7 @@ class ElasticSearch {
                                 'run_id' 		=> $r->rid,
                                 'uploader' 		=> array_key_exists($r->uploader,$this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
                                 'uploader_id' => intval($r->uploader),
-                                'run_task'		=> $this->all_tasks[$r->task_id],
+                                'run_task'		=> $this->build_task($r->task_id),
                                 'date'		=> $r->start_time,
                                 'run_flow'		=> array(
                                   'flow_id' => $r->implementation_id,
