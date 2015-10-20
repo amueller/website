@@ -48,7 +48,7 @@ if($this->study['visibility'] == 'private' and (!$this->ion_auth->logged_in() or
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-cubes fa-fw fa-lg"></i> <b>Resources</b></a>
           <ul class="sidenav nav collapse in studychapter" id="pagelist">
             <li><a href="<?php echo BASE_URL .'s/' . $this->id . '/data';?>">Data sets <span class="counter"><?php echo $this->study['datasets_included']; ?></span></a></li>
-            <li><a href="<?php echo BASE_URL .'s/' . $this->id . '/tasks';?>">Tasks <span class="counter"><?php echo $this->study['flows_included']; ?></span></a></li>
+            <li><a href="<?php echo BASE_URL .'s/' . $this->id . '/tasks';?>">Tasks <span class="counter"><?php echo $this->study['tasks_included']; ?></span></a></li>
             <li><a href="<?php echo BASE_URL .'s/' . $this->id . '/flows';?>">Flows  <span class="counter"><?php echo $this->study['flows_included']; ?></span></a></li>
             <li><a href="<?php echo BASE_URL .'s/' . $this->id . '/runs';?>">Runs  <span class="counter"><?php echo $this->study['runs_included']; ?></span></a></li>
           </ul>

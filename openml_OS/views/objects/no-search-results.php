@@ -1,7 +1,6 @@
 <div class="noresult">
 	<i class="fa fa-search fa-2x "></i><br><br>
 	We could not find any <?php if($this->filtertype) {echo '<b>' . str_replace('data','data set',str_replace('_',' ',$this->filtertype)) . 's</b>';} else {echo 'resources';} ?> matching your query.<br />
-	<a id="removefilters"><i class="fa fa-lg fa-fw fa-trash-o"></i>Try again without filters</a>
   <br /><br /> 
 
 	<i class="fa fa-heart" style="color: #d9534f;"></i><br>Start something great,

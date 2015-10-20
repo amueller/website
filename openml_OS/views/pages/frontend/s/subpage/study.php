@@ -23,9 +23,9 @@
           <i class="fa fa-spinner fa-pulse"></i> Loading wiki
         </div>
         <div class="pull-right" id="wiki-ready">
-          <?php if($this->is_owner){ ?>
+          <?php //if($this->is_owner){ ?>
             <a class="pull-right greenheader loginfirst" href="s/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
-          <?php }
+          <?php //}
                 if ($this->show_history) { ?>
           <a class="pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
           <?php } ?>

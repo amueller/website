@@ -513,7 +513,11 @@ class ElasticSearch {
 
                           if($tasks)
                           foreach( $tasks as $d ) {
-                            $this->all_tasks[$d->task_id] = $this->build_task($d);
+                            try{
+                              $this->all_tasks[$d->task_id] = $this->build_task($d);
+                            } catch (Exception $e) {
+                                return 'Indexing failed: '. $e->getMessage();
+                            }
                           }
                         }
 
