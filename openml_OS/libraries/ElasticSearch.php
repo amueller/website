@@ -509,7 +509,7 @@ class ElasticSearch {
 
                         // Special case - tasks are pre-fetched because they are also needed to build the run index
                         private function fetch_tasks($id = false){
-                          $tasks = $this->db->query('SELECT t.task_id, tt.ttid, tt.name, t.creation_date, count(rid) as runs FROM task t left join run r on (r.task_id=t.task_id), task_type tt WHERE t.ttid=tt.ttid'.($id?' and t.task_id='.$id:'').' group by t.task_id');
+                          $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid'.($id?' and t.task_id='.$id:'').') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
 
                           if($tasks)
                           foreach( $tasks as $d ) {
