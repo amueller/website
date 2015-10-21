@@ -774,7 +774,7 @@ class ElasticSearch {
                               if($id)
                               return $this->index_single_run($id);
 
-                              set_time_limit(2300);
+                              set_time_limit(7200);
 
                               $params['index']     = 'openml';
                               $params['type']      = 'run';
@@ -837,7 +837,7 @@ class ElasticSearch {
                               );
 
                               $new_data['tags'] = array();
-                              $tags = $this->CI->Run_tag->getAssociativeArray('tag', 'uploader', 'id = '.$d->did);
+                              $tags = $this->CI->Run_tag->getAssociativeArray('tag', 'uploader', 'id = '.$r->rid);
                               if( $tags != false ){
                                 foreach( $tags as $t => $u ) {
                                   $new_data['tags'][] = array(
