@@ -799,12 +799,16 @@ class ElasticSearch {
                                 $evals = $this->fetch_evaluations($rid,$rid+$incr);
 
                                 foreach( $runs as $r ) {
+                                  try {
                                   $params['body'][] = array(
                                     'index' => array(
                                       '_id' => $r->rid
                                     )
                                   );
                                   $params['body'][] = $this->build_run($r,$setups,$runfiles,$evals);
+                                  } catch( Exception $e ) {
+                                    // TODO: log?
+                                  }
                                 }
                                 $responses = $this->client->bulk($params);
 
