@@ -560,6 +560,11 @@ class ElasticSearch {
                           return 'Successfully indexed '.$submitted.' out of '.$taskcount.' tasks.';
                         }
 
+                        private function build_single_task($id){
+                          $task = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id='.$id.') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
+                          return build_task($task[0]);
+                        }
+
                         private function build_task($d){
 
                           $newdata = array(
@@ -837,7 +842,7 @@ class ElasticSearch {
                                 'run_id' 		=> $r->rid,
                                 'uploader' 		=> array_key_exists($r->uploader,$this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
                                 'uploader_id' => intval($r->uploader),
-                                'run_task'		=> $this->build_task($r->task_id),
+                                'run_task'		=> $this->build_single_task($r->task_id),
                                 'date'		=> $r->start_time,
                                 'run_flow'		=> array(
                                   'flow_id' => $r->implementation_id,
