@@ -774,8 +774,6 @@ class ElasticSearch {
                               if($id)
                               return $this->index_single_run($id);
 
-                              set_time_limit(7200);
-
                               $params['index']     = 'openml';
                               $params['type']      = 'run';
 
@@ -789,6 +787,7 @@ class ElasticSearch {
                               $submitted = 0;
                               $incr = 100;
                               while ($rid < $runmax){
+                                set_time_limit(600);
                                 $runs = null;
                                 $runfiles = null;
                                 $evals = null;
