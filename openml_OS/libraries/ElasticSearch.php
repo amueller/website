@@ -820,7 +820,7 @@ class ElasticSearch {
                                   );
                                   $params['body'][] = $this->build_run($r,$setups,$runfiles,$evals);
                                   } catch( Exception $e ) {
-                                    // TODO: log?
+                                    return $e->getMessage();
                                   }
                                 }
                                 $responses = $this->client->bulk($params);
