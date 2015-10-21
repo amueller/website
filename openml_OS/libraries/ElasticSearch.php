@@ -562,7 +562,7 @@ class ElasticSearch {
 
                         private function build_single_task($id){
                           $task = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id='.$id.') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
-                          return build_task($task[0]);
+                          return $this->build_task($task[0]);
                         }
 
                         private function build_task($d){
