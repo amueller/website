@@ -4,11 +4,11 @@ if (!empty($_POST['submitlogin'])) {
 	{
 		$this->session->set_flashdata('message', $this->ion_auth->messages());
 	  $redirect = $this->session->flashdata('login_redirect');
-	  if($redirect == false ) {
+	  if($redirect == false or endsWith($redirect,'login')) {
 		  redirect('home');
 			exit();
 	  } else {
-	    redirect($redirect);
+			redirect($redirect);
 			exit();
 	  }
 	}
