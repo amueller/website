@@ -233,8 +233,10 @@ class ElasticSearch {
                               'format' => 'yyyy-MM-dd HH:mm:ss'
                             ),
                             'tags' => array(
-                              'type' => 'string',
-                              'index_name' => 'tag'),
+                              'type' => 'nested',
+                              'properties' => array(
+                                'tag' => array('type' => 'string'),
+                                'uploader' => array('type' => 'string'))),
                               'run_id' => array('type' => 'long'),
                               'last_update' => array(
                                 'type' => 'date',
@@ -814,7 +816,7 @@ class ElasticSearch {
                             }
 
                             private function build_run($r,$setups,$runfiles,$evals){
-                              return array(
+                              $new_data = array(
                                 'run_id' 		=> $r->rid,
                                 'uploader' 		=> array_key_exists($r->uploader,$this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
                                 'uploader_id' => intval($r->uploader),
@@ -829,6 +831,18 @@ class ElasticSearch {
                                 'evaluations'	=> array_key_exists($r->rid,$evals) ? $evals[$r->rid] : array(),
                                 'visibility'	=> 'public'
                               );
+
+                              $new_data['tags'] = array();
+                              $tags = $this->CI->Run_tag->getAssociativeArray('tag', 'uploader', 'id = '.$d->did);
+                              if( $tags != false ){
+                                foreach( $tags as $t => $u ) {
+                                  $new_data['tags'][] = array(
+                                    'tag' => $t,
+                                    'uploader' => $u );
+                                  }
+                                }
+
+                              return $new_data;
                             }
 
                             public function index_task_type($id){
