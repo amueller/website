@@ -97,7 +97,7 @@ if($this->input->get('from'))
 	$this->from = safe($this->input->get('from'));
 if(!isset($this->from))
 	$this->from = 0;
-if($this->input->get('type'))
+if(!isset($this->filtertype) and $this->input->get('type'))
 	$this->filtertype = safe($this->input->get('type'));
 if($this->input->get('dataonly'))
 	$this->dataonly = safe($this->input->get('dataonly'));
