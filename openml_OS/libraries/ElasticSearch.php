@@ -180,8 +180,10 @@ class ElasticSearch {
                             'payloads' => true,
                           ),
                           'tags' => array(
-                            'type' => 'string',
-                            'index_name' => 'tag'),
+                            'type' => 'nested',
+                            'properties' => array(
+                              'tag' => array('type' => 'string'),
+                              'uploader' => array('type' => 'string'))),
                             'task_id' => array('type' => 'long'),
                             'date' => array(
                               'type' => 'date',
@@ -510,15 +512,16 @@ class ElasticSearch {
                           $params['index']     = 'openml';
                           $params['type']      = 'task';
 
-                          $taskmaxquery = $this->db->query('SELECT max(task_id) as maxtask from task'.($id?' where t.task_id='.$id:''));
-                          $taskcountquery = $this->db->query('SELECT count(task_id) as taskcount from task'.($id?' where t.task_id='.$id:''));
+                          $taskmaxquery = $this->db->query('SELECT min(task_id) as mintask, max(task_id) as maxtask from task'.($id?' where task_id='.$id:''));
+                          $taskcountquery = $this->db->query('SELECT count(task_id) as taskcount from task'.($id?' where task_id='.$id:''));
+                          $taskmin = intval($taskmaxquery[0]->mintask);
                           $taskmax = intval($taskmaxquery[0]->maxtask);
                           $taskcount = intval($taskcountquery[0]->taskcount);
 
-                          $task_id = 0;
+                          $task_id = $taskmin;
                           $submitted = 0;
-                          $incr = 100;
-                          while ($task_id < $taskmax){
+                          $incr = min(100,$taskcount);
+                          while ($task_id <= $taskmax){
                             $tasks = null;
                             $params['body'] = array();
                             $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id>='.$task_id.' and task_id<'.($task_id+$incr).') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
