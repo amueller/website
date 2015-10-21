@@ -329,6 +329,20 @@ class ElasticSearch {
                           }
                         }
 
+                        public function index_from($type, $id = false){
+                          $method_name = 'index_' . $type;
+                          if( method_exists( $this, $method_name ) ) {
+                            try {
+                              return $this->$method_name(false,$id);
+                            } catch( Exception $e ) {
+                              // TODO: log?
+                            }
+                          }
+                          else{
+                            return 'No function exists to build index of type '.$type;
+                          }
+                        }
+
                         public function delete($type, $id = false){
                           $deleteParams = array();
                           $deleteParams['index'] = 'openml';
@@ -372,7 +386,7 @@ class ElasticSearch {
                           }
                         }
 
-                        public function index_user($id){
+                        public function index_user($id, $start_id = 0){
 
                           $params['index']     = 'openml';
                           $params['type']      = 'user';
@@ -442,7 +456,7 @@ class ElasticSearch {
                           return $user;
                         }
 
-                        public function index_study($id){
+                        public function index_study($id, $start_id = 0){
 
                           $params['index']     = 'openml';
                           $params['type']      = 'study';
@@ -510,7 +524,7 @@ class ElasticSearch {
                           return $study;
                         }
 
-                        public function index_task($id){
+                        public function index_task($id, $start_id = 0){
                           $params['index']     = 'openml';
                           $params['type']      = 'task';
 
@@ -520,7 +534,7 @@ class ElasticSearch {
                           $taskmax = intval($taskmaxquery[0]->maxtask);
                           $taskcount = intval($taskcountquery[0]->taskcount);
 
-                          $task_id = $taskmin;
+                          $task_id = max($taskmin,$start_id);
                           $submitted = 0;
                           $incr = min(100,$taskcount);
                           while ($task_id <= $taskmax){
@@ -770,7 +784,7 @@ class ElasticSearch {
                               return 'Successfully indexed '.sizeof($responses['_id']).' run(s).';
                             }
 
-                            public function index_run($id){
+                            public function index_run($id, $start_id = 0){
                               if($id)
                               return $this->index_single_run($id);
 
@@ -783,7 +797,7 @@ class ElasticSearch {
                               $runmax = intval($runmaxquery[0]->maxrun);
                               $runcount = intval($runcountquery[0]->runcount);
 
-                              $rid = 0;
+                              $rid = $start_id;
                               $submitted = 0;
                               $incr = 100;
                               while ($rid < $runmax){
@@ -848,7 +862,7 @@ class ElasticSearch {
                               return $new_data;
                             }
 
-                            public function index_task_type($id){
+                            public function index_task_type($id, $start_id = 0){
 
                               $params['index']     = 'openml';
                               $params['type']      = 'task_type';
@@ -909,7 +923,7 @@ class ElasticSearch {
 
 
 
-                            public function index_flow($id){
+                            public function index_flow($id, $start_id = 0){
 
                               $params['index']     = 'openml';
                               $params['type']      = 'flow';
@@ -1013,7 +1027,7 @@ class ElasticSearch {
                                     return $new_data;
                                   }
 
-                                  public function index_measure($id){
+                                  public function index_measure($id, $start_id = 0){
 
                                     $params['index']     = 'openml';
                                     $params['type']      = 'measure';
@@ -1176,7 +1190,7 @@ class ElasticSearch {
                                     );
                                   }
 
-                                  public function index_data($id){
+                                  public function index_data($id, $start_id = 0){
 
                                     $params['index']     = 'openml';
                                     $params['type']      = 'data';

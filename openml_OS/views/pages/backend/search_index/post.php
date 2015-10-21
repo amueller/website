@@ -8,9 +8,15 @@
 
      else if($this->input->post('types')){
 	$this->index_types = $this->input->post('types');
-	foreach( $this->index_types as $t ):
-		$this->messages[] = $this->elasticsearch->index($t);
-	endforeach;
+  if(!$this->input->post('from_id')){
+  	foreach( $this->index_types as $t ):
+  		$this->messages[] = $this->elasticsearch->index($t);
+  	endforeach;
+  } else {
+    foreach( $this->index_types as $t ):
+      $this->messages[] = $this->elasticsearch->index_from($t,$this->input->post('from_id'));
+    endforeach;
+  }
      }
 
      else if($this->input->post('settings')){

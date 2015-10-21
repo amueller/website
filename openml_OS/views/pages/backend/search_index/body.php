@@ -18,6 +18,7 @@
 	<?php foreach( $this->types as $t ): ?>
                   <input type="checkbox" class="check_setups" name="types[]" value="<?php echo $t; ?>" <?php if(in_array($t,$this->index_types)) echo 'checked="yes";'?>/>&nbsp;<?php echo $t; ?><br>
         <?php endforeach; ?><br />
+        From ID: <input type="text" name="from_id"/><br />
 	<input class="btn btn-primary" type="submit" value="Rebuild indexes"/>
         </form>
 </div>
