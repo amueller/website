@@ -49,6 +49,18 @@ class Api_evaluation extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_function = $function_name == false ? '' : ' AND `e`.`function` = "' . $function_name . '" ';
 
+    //pre-test
+    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
+    $sql_test =
+      'SELECT distinct r.rid ' . 'FROM run r, algorithm_setup s ' . 'WHERE r.setup = s.sid ' . $where_runs;
+    $res_test = $this->Evaluation->query( $sql_test );
+
+    if (count($res_test) > 10000) {
+      $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res) . ' runs; max size: 10000. ');
+      return;
+    }
+
+    //get evaluations
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_function;
 
     $sql =
@@ -60,11 +72,6 @@ class Api_evaluation extends Api_model {
 
     if ($res == false) {
       $this->returnError(542, $this->version);
-      return;
-    }
-
-    if (count($res) > 10000) {
-      $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res) . '; max size: 10000. ');
       return;
     }
 
