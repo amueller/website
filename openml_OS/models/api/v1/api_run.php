@@ -98,8 +98,9 @@ class Api_run extends Api_model {
     $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
+    $where_server_error = " AND (`r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
 
-    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
+    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_server_error;
 
     $sql =
       'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message ' .
