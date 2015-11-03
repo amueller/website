@@ -37,6 +37,7 @@
         <link rel="stylesheet" href="css/prettify.css">
         <link rel="stylesheet" href="css/jquery-ui.css" type="text/css"/>
         <link rel="stylesheet" href="css/bootstrap-select.css">
+        <link rel="stylesheet" href="css/perfect-scrollbar.min.css">
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
       	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
         <link href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" rel="stylesheet" type="text/css">
@@ -298,6 +299,7 @@
               'js/libs/bootstrap-select.js',
               'js/material.min.js',
               'js/libs/jquery.form.js',
+              'js/libs/perfect-scrollbar.min.js',
               'js/openml.js',
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>

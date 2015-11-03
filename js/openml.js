@@ -45,9 +45,20 @@ function scrollMenuTop(){
   $('#mainmenu').animate({ scrollTop: 0 }, { duration: 500, queue: false });
 }
 
-// DELETING ACTIONS
 
 $(function(){
+
+//scrollbars
+var container = document.getElementById('mainmenu');
+Ps.initialize(container);
+//$("#mainmenu").find(".ps-scrollbar-y-rail").css("opacity",0);
+
+var container2 = document.getElementsByClassName('openmlsectioninfo')[0];
+Ps.initialize(container2);
+
+
+
+// DELETING ACTIONS
 
   //bind to action icons
   $(document).on('click', '.delete_action', function(event) {

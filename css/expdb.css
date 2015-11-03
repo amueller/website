@@ -1,5 +1,4 @@
-/*
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
     display: none;
 }*/
 
@@ -383,10 +382,10 @@ select{
   height: 100%;
   min-height: 100vh;
 }
-/*
+
 .searchbar::-webkit-scrollbar {
  display: none;
-}*/
+}
 
 .searchbar i{
   margin-right: 5px;
@@ -425,6 +424,11 @@ select{
 
 #mainmenu{
   display:none;
+  position:fixed;
+}
+
+#mainpanel{
+  position:relative;
 }
 
 .menu{
@@ -747,10 +751,10 @@ select{
 .searchicon{
   text-align: center;
 }
-/*
+
 .openmlsectioninfo::-webkit-scrollbar {
  display: none;
-}*/
+}
 
 .openmlsectioninfo h1,h2,h3{
   font-family: 'Roboto', sans-serif;
