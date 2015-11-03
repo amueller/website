@@ -23,8 +23,8 @@
 
 
   <div class="col-md-6 col-md-offset-3 surveypopup">
-    <a href="https://docs.google.com/forms/d/1pyWZRE5HnVEtY3_TmFhAx68uTuTfC_yvEDqmuz-yAwo/viewform?usp=send_form" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-comments-o"></i></a>
-    <div class="shortintro" style="padding-top:10px;">Help make OpenML better and more fun :)</div>
+    <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-rocket"></i></a>
+    <div class="shortintro" style="padding-top:10px;">Register now for OpenML 2016!</div>
   </div>
 
 <div class="col-md-12">
