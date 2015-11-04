@@ -38,7 +38,7 @@ function microtime_float()
 function addToGET($keyvalue){
   $attr = $_GET;
   foreach($keyvalue as $key => $value){
-    if(array_key_exists($key,$attr) && $value) {
+    if(array_key_exists($key,$attr) && ($value || $value == 0)) {
       unset($attr[$key]);
     }
     if($value) {

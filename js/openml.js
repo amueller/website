@@ -58,8 +58,6 @@ if(container2.length > 0){
   Ps.initialize(container2[0], {minScrollbarLength:100});
 }
 
-Ps.initialize(document.body);
-
 
 // DELETING ACTIONS
 
@@ -285,12 +283,29 @@ $(function() {
     // if ca 25% of element is visible
     var scroll_pos = $('#scrollingcontent').scrollTop();
     var window_height = $('.openmlsectioninfo').height();
-    console.log(scroll_pos + ' ' + window_height);
     var el_top = $(element).offset().top;
     var el_height = $(element).height();
     var el_bottom = el_top + el_height;
+
     return ((el_bottom - el_height*0.25 > scroll_pos) &&  (el_top < (scroll_pos+0.5*window_height)));
   }
+
+  function isElementInViewport (el) {
+
+    //special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    //console.log(rect.bottom + ' > 0 && ' + rect.top + ' < ' + $(window).height() + ' = ' + (rect.top <= $(window).height() && rect.bottom >= 0 ));
+
+    return (
+      rect.top <= $(window).height() &&
+      rect.bottom >= 0
+    );
+}
 
   function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -299,20 +314,21 @@ $(function() {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
+
+
   function initPaginator() {
 
     var seenUrls = new Set();
     var currentUrl = $(document).find("#itempage").attr("data-url");
+    var scrcount = 0;
 
     $('.openmlsectioninfo').scroll(function() {
-      console.log('scroll');
       $(".listitempage").each(function(index) {
         if (mostlyVisible(this)) {
           if(currentUrl != $(this).attr("data-url")){
             if(window.location.href.indexOf('search') >= 0)
-              history.replaceState(null, null, $(this).attr("data-url"));
+              history.replaceState(null, null, $(this).attr("data-url").replace("&dataonly=1",""));
             currentUrl = $(this).attr("data-url");
-            console.log(currentUrl);
             if(!seenUrls.has($(this).attr("data-next-url"))){
               seenUrls.add($(this).attr("data-next-url"));
               loadFollowing();
@@ -326,6 +342,32 @@ $(function() {
         }
       });
     });
+
+    // special behavior on mobile devices
+    window.addEventListener( "scroll", function( event ) {
+      scrcount++;
+      if(scrcount % 10 == 0){
+        $(".listitempage").each(function(index) {
+          if (isElementInViewport(this)) {
+            if(currentUrl != $(this).attr("data-url")){
+              if(window.location.href.indexOf('search') >= 0)
+                history.replaceState(null, null, $(this).attr("data-url").replace("&dataonly=1",""));
+              currentUrl = $(this).attr("data-url");
+              if(!seenUrls.has($(this).attr("data-next-url"))){
+                seenUrls.add($(this).attr("data-next-url"));
+                loadFollowing();
+              }
+              else if(!seenUrls.has($(this).attr("data-prev-url"))){
+                seenUrls.add($(this).attr("data-prev-url"));
+                loadPrevious();
+              }
+            }
+            return(false);
+          }
+        });
+      }
+    });
+
 
     curr_data_url = $(document).find("#itempage").attr("data-url");
     next_data_url = $(document).find("#itempage").attr("data-next-url");

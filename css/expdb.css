@@ -1771,7 +1771,6 @@ html, body {
    min-width: 480px; /* suppose you want minimun width of 1000px */
    background-color: #ececec;
    margin-bottom: 0px !important;
-   position: relative;
 }
 
       a:hover {
