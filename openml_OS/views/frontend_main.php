@@ -237,6 +237,8 @@
                 <?php echo $this->message; ?>
             </div>
           <?php endif; ?>
+
+
           <div class="searchbarcontainer">
           <div class="searchbar" id="mainmenu">
             <ul class="sidenav nav topchapter">
@@ -280,7 +282,8 @@
         </div>
         </div>
 
-          <?php echo body(); ?>
+        <?php echo body(); ?>
+
 
         </div>
         <script type="text/javascript">

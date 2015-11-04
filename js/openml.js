@@ -53,9 +53,12 @@ var container = document.getElementById('mainmenu');
 Ps.initialize(container);
 //$("#mainmenu").find(".ps-scrollbar-y-rail").css("opacity",0);
 
-var container2 = document.getElementsByClassName('openmlsectioninfo')[0];
-Ps.initialize(container2);
+var container2 = document.getElementsByClassName('openmlsectioninfo');
+if(container2.length > 0){
+  Ps.initialize(container2[0], {minScrollbarLength:100});
+}
 
+Ps.initialize(document.body);
 
 
 // DELETING ACTIONS
@@ -117,6 +120,7 @@ $(function() {
 
   // attaches page-specific menu below main menu
   $("#submenucontainer").append($(".submenu"));
+  $(".submenu").css('float', 'none');
 
   // shows/hides menu when menu icon is clicked
   $("#menubutton").click(function () {
@@ -281,6 +285,7 @@ $(function() {
     // if ca 25% of element is visible
     var scroll_pos = $('#scrollingcontent').scrollTop();
     var window_height = $('.openmlsectioninfo').height();
+    console.log(scroll_pos + ' ' + window_height);
     var el_top = $(element).offset().top;
     var el_height = $(element).height();
     var el_bottom = el_top + el_height;
@@ -300,13 +305,14 @@ $(function() {
     var currentUrl = $(document).find("#itempage").attr("data-url");
 
     $('.openmlsectioninfo').scroll(function() {
-
+      console.log('scroll');
       $(".listitempage").each(function(index) {
         if (mostlyVisible(this)) {
           if(currentUrl != $(this).attr("data-url")){
             if(window.location.href.indexOf('search') >= 0)
               history.replaceState(null, null, $(this).attr("data-url"));
             currentUrl = $(this).attr("data-url");
+            console.log(currentUrl);
             if(!seenUrls.has($(this).attr("data-next-url"))){
               seenUrls.add($(this).attr("data-next-url"));
               loadFollowing();

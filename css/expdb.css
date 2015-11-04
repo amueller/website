@@ -352,21 +352,19 @@ select{
   box-shadow: 0 0 4px rgba(0,0,0,.14),0px 4px 8px rgba(0,0,0,.14);
 }
 
-.rightpanel{
-  margin-left:265px;
-  width: -moz-calc(100% - 265px);
-  width: -webkit-calc(100% - 265px);
-  width: calc(100% - 265px);
+.searchbarcontainer{
+  width:265px !important;
+  float: left;
+  overflow: visible;
 }
 
-.searchbarcontainer{
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+.submenu{
+  width:265px !important;
+  float: left;
 }
 
 .searchbar{
+  display:none;
   background: #f6f6f6;
   padding-bottom: 30px;
   padding-left: 0px;
@@ -380,7 +378,7 @@ select{
   width:265px !important;
   z-index: 1020;
   height: 100%;
-  min-height: 100vh;
+  /*min-height: 100vh;*/
 }
 
 .searchbar::-webkit-scrollbar {
@@ -420,15 +418,6 @@ select{
 
 #filters .control-label{
   color: #888;
-}
-
-#mainmenu{
-  display:none;
-  position:fixed;
-}
-
-#mainpanel{
-  position:relative;
 }
 
 .menu{
@@ -573,20 +562,6 @@ select{
   padding-right: 30px;
 }
 
-.topborder{
-  background: #ececec;
-    overflow: hidden;
-    height: 100vh;
-    position: relative;
-    backface-visibility: hidden;
-    will-change: overflow;
-    clear: both;
-}
-
-.endless{
-      min-height: 1000px;
-}
-
 .tip{
   font-size: 11px !important;
   margin: 0;
@@ -688,11 +663,30 @@ select{
   font-size: 14px;
   padding-top: 20px;
   padding-bottom:50px;
-  height: 100vh;
-    overflow-y: auto;
-    overflow-x: visible;
+  height: 100%;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none;
+}
+
+.rightpanel{
+  margin-left:265px;
+  width: -moz-calc(100% - 265px);
+  width: -webkit-calc(100% - 265px);
+  width: calc(100% - 265px);
+  height: 100vh;
+}
+
+.topborder{
+  background: #ececec;
+/*    overflow: hidden;*/
+    position: relative;
+    backface-visibility: hidden;
+    will-change: overflow;
+    clear: both;
+}
+
+.endless{
+  /*height: 100vh;*/
 }
 
 .guidesection{
@@ -750,10 +744,6 @@ select{
 
 .searchicon{
   text-align: center;
-}
-
-.openmlsectioninfo::-webkit-scrollbar {
- display: none;
 }
 
 .openmlsectioninfo h1,h2,h3{
@@ -1781,6 +1771,7 @@ html, body {
    min-width: 480px; /* suppose you want minimun width of 1000px */
    background-color: #ececec;
    margin-bottom: 0px !important;
+   position: relative;
 }
 
       a:hover {
@@ -1809,7 +1800,7 @@ html, body {
 
       /* Wrapper for page content to push down footer */
       #wrap {
-        min-height: 100%;
+        height: 100%;
         /* Negative indent footer by it's height */
         margin: 0 auto 0px;
         margin-top: 50px;
