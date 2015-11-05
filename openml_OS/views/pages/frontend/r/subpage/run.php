@@ -105,8 +105,8 @@
     <?php endforeach; ?>
   </table></div></div>
 
-  <h3>Discuss</h3>
-  <div class="panel col-sm-12">
+  <h3>Discussions</h3>
+  <div class="panel disquspanel">
 
     <div id="disqus_thread">Loading discussions...</div>
     <script type="text/javascript">

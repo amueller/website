@@ -1746,21 +1746,8 @@ hr.hardSmall {
   margin-right: 5px;
 }
 
-#disqus_thread {
-     position: relative;
-}
-#disqus_thread:after {
-     content: "";
-     display: block;
-     height: 55px;
-     width: 100%;
-     position: absolute;
-     bottom: 0;
-     background: white;
-}
-
 .disquspanel{
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 html, body {

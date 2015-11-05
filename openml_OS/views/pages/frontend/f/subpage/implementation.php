@@ -151,7 +151,8 @@
 </div>
 		</div> <!-- end tab-runs -->
 
-<div class="panel">
+<h3>Discussions</h3>
+<div class="panel disquspanel]">
     <div id="disqus_thread">Loading discussions...</div>
 </div>
     <script type="text/javascript">

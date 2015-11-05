@@ -153,6 +153,7 @@
     <?php } ?>
   <a class="loginfirst btn btn-default btn-raised" href="new/task">Define a new task</a>
 
+  <h3>Discussions</h3>
   <div class="panel disquspanel">
     <div id="disqus_thread">Loading discussions...</div>
   </div>

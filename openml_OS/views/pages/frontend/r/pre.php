@@ -15,6 +15,11 @@ if (!$this->ion_auth->logged_in()) {
 	$this->initialMsg = 'Before submitting content, please login first!';
 }
 
+$this->user_id = -1;
+if ($this->ion_auth->logged_in()) {
+  $this->user_id = $this->ion_auth->user()->row()->id;
+}
+
 $this->datasets 			= $this->Dataset->getColumnWhere( 'name', 'isOriginal = "true"', '`name` ASC' );
 $this->datasetIds 			= $this->Dataset->getColumn( 'did', 'did' );
 $this->datasetVersion		= $this->Dataset->getColumnFunction( 'CONCAT(`name`,"(",`version`,")")', '`name` ASC' );
