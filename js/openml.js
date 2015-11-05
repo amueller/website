@@ -239,7 +239,7 @@ $(function() {
       showFollowing(next_data_cache);
       is_loading = 0;
     } else if(next_data_url) {
-      $( ".loadingmore" ).html('Loading more... <a href="'+next_data_url+'">click here</a>.' );
+      $( ".loadingmore" ).html('Loading more... <a href="'+next_data_url+'">Not loading? Go to the next results now.</a>.' );
       $.get(next_data_url+'&dataonly=1', function(data) {
           showFollowing(data);
           is_loading = 0;
