@@ -306,7 +306,7 @@
               'js/openml.js',
               <?php if( isset( $this->load_javascript ) ): foreach( $this->load_javascript as $j ):
                 echo "'".$j."',"; endforeach; endif; ?>
-              <?php if( isset( $this->id)){
+              <?php if( isset( $this->id) || $ch == 'new'){
                 echo "'frontend/js/".$req."',";
               } elseif( $ch != 'backend') {?>
               'frontend/js/<?php echo $ch;?>', <?php } ?>

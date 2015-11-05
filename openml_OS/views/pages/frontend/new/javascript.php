@@ -1,9 +1,44 @@
 <?php if($this->newtype=='task') { ?>
+
+  function expdbDatasets() {
+  	return <?php echo array_to_js_array( $this->datasets ); ?>;
+  }
+
+  function expdbDatasetVersion() {
+  	return <?php echo array_to_js_array( $this->datasetVersion ); ?>;
+  }
+
+  function expdbDatasetVersionOriginal() {
+  	return <?php echo array_to_js_array( $this->datasetVersionOriginal ); ?>;
+  }
+
+  function expdbDatasetIDs() {
+  	return <?php echo array_to_js_array( $this->datasetIds ); ?>;
+  }
+
+  function expdbEvaluationMetrics() {
+  	return <?php echo array_to_js_array( $this->evaluationMetrics ); ?>;
+  }
+
+  function expdbAlgorithms() {
+  	return <?php echo array_to_js_array( $this->algorithms ); ?>;
+  }
+
+  function expdbImplementations() {
+  	return <?php echo array_to_js_array( $this->implementations ); ?>;
+  }
+
+  function expdbTaskTypes() {
+  	return <?php echo array_to_js_array( $this->taskTypes ); ?>;
+  }
+
 $(document).ready( function() {
   //check for change on the categories menu
   $('#form-task-type-tabs li a').eq($('#selectTaskType option:selected').attr('name')).tab('show');
 
   $('#selectTaskType').change(function() {
+    console.log('hello');
+
     var id = $(this).val();
     console.log(id);
     $('a[href="#task-type-desc-'+id+'"]').tab('show');
