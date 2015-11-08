@@ -92,7 +92,6 @@ $size = explode('/',$this->input->get('size'))[0];
 $this->size = (safe($size) ? safe($size) : 100);
 
 // some fields can be set beforehand. If not, set them to appropriate defaults.
-
 if($this->input->get('from'))
 	$this->from = safe($this->input->get('from'));
 if(!isset($this->from))

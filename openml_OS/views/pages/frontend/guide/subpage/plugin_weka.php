@@ -25,7 +25,7 @@ OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Ex
 				<li>Add algorithms in the "Algorithm" panel.</li>
 				<li>Go to the "Run" tab, and click on the "Start" button. </li>
 				<li>The experiment will be executed, and if 'OpenML.org' was selected, also sent to OpenML.org. When the experiment is finished, the results can be inspected in the "Analyse" tab. </li>
-				<li>The runs will now appear on OpenML.org. You can follow their progress and check for errors under 'My runs'.</li>
+				<li>The runs will now appear on OpenML.org. You can follow their progress and check for errors on your profile page under 'Runs'.</li>
 			</ol>
 			</div>
 

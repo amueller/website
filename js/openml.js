@@ -82,7 +82,7 @@ Ps.initialize(container);
   function deleteItem( type, id, name ) {
   $.ajax({
     type: "DELETE",
-    url: "http://www.openml.org/api_new/v1/"+type+"/"+id,
+    url: "http://" + location.host + "/api_new/v1/"+type+"/"+id,
     dataType: "xml"
   }).done( function( resultdata ) {
       console.log(resultdata.responseText);
