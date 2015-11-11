@@ -6,6 +6,7 @@ function updateUploader(name){
   $('#searchform').submit();
 }
 
+
 // Update search query upon user actions
 function updateQuery(type)
 {
@@ -102,6 +103,7 @@ function removeFilters()
     $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
     $('#research').click(function() { $('#searchform').submit();});
 
+
     <?php
     if($this->table) {
     ?>
@@ -120,29 +122,7 @@ function removeFilters()
     						"sSwfPath": "//cdn.datatables.net/tabletools/2.2.3/swf/copy_csv_xls_pdf.swf"
     				},
     		"aaSorting" : [],
-    		"aoColumns": [
-    	  <?php
-          $cnt = sizeOf($this->cols);
-    			foreach( $this->tableview[0] as $k => $v ) {
-    			$newcol = '{ "mData": "'.$k.'" , "defaultContent": "", ';
-    			if(is_numeric($v))
-    				$newcol .= '"sType":"numeric", ';
-    			if($k == 'name' || $k == 'runs' || $k == 'NumberOfInstances' || $k == 'NumberOfFeatures' || $k == 'NumberOfClasses')
-          	$newcol .= '"bVisible":true},';
-    			else
-    				$newcol .= '"bVisible":false},';
-    			if(array_key_exists($k,$this->cols)){
-    				$this->cols[$k] = $newcol;
-    			} else {
-    				//$this->cols[] = $newcol;
-    				$cnt++;
-    			}
-    		  	}
-    			foreach( $this->cols as $k => $v ) {
-     				echo $v;
-    			}?>
-
-    		]
+    		"aoColumns": <?php echo json_encode($this->mCols); ?>
     	    } );
 
     	$('.topmenu').show();

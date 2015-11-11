@@ -63,6 +63,7 @@
       if($ch == "")
         $ch = "home";
       $ch = explode('?',$ch)[0];
+      $reqall = implode('/',$req);
       $req = explode('?',implode('/',$req))[0];
       if(strpos($ch, 'search') === 0){
         if(isset($this->filtertype) and $this->filtertype){
@@ -308,6 +309,8 @@
                 echo "'".$j."',"; endforeach; endif; ?>
               <?php if( isset( $this->id) || $ch == 'new'){
                 echo "'frontend/js/".$req."',";
+              } elseif( $ch == 'search'){
+                echo "'frontend/js/".$reqall."',";
               } elseif( $ch != 'backend') {?>
               'frontend/js/<?php echo $ch;?>', <?php } ?>
               'js/openmlafter.js'

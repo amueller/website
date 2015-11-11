@@ -240,7 +240,9 @@ $time = $time_end - $time_start;
 
 if($this->table) {
     $this->tableview = [];
-    $this->cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "","NumberOfClasses" => "");
+    $this->cols = array("name" => "","runs" => "","NumberOfInstances" => "","NumberOfFeatures" => "","NumberOfClasses" => "","NumberOfMissingValues" => "","NumberOfNumericFeatures" => "");
+    $this->mCols = json_decode('[{ "mData": "name" , "defaultContent": "", "bVisible":true},{ "mData": "runs" , "defaultContent": "", "sType":"numeric", "bVisible":true},{ "mData": "NumberOfInstances" , "defaultContent": "", "sType":"numeric", "bVisible":true},{ "mData": "NumberOfFeatures" , "defaultContent": "", "sType":"numeric", "bVisible":true},{ "mData": "NumberOfClasses" , "defaultContent": "", "sType":"numeric", "bVisible":true},{ "mData": "NumberOfMissingValues" , "defaultContent": "", "sType":"numeric", "bVisible":true},{ "mData": "NumberOfNumericFeatures" , "defaultContent": "", "sType":"numeric", "bVisible":true}]');
+
     foreach( $this->results['hits']['hits'] as $r ) {
     $rs = $r['_source'];
     $newrow = array();
@@ -255,8 +257,13 @@ if($this->table) {
         elseif($k == 'qualities')
           foreach( $v as $qk => $qv ) {
            $newrow[$qk] = $qv;
-           if(!array_key_exists($qk,$this->cols))
-            $this->cols[$qk] = "";
+           if(!array_key_exists($qk,$this->cols)){
+             $this->cols[$qk] = "";
+             $newcol = array("mData" => $qk, "defaultContent" => "", "bVisible" => false);
+             if(is_numeric($qv))
+               $newcol["sType"] = "numeric";
+             $this->mCols[] = $newcol;
+          }
          }
         elseif($k == 'runs')
           $newrow[$k] = $v;
