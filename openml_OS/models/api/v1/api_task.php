@@ -197,7 +197,7 @@ class Api_task extends Api_model {
       $task_ids = array();
       foreach($search as $s) { $task_ids[] = $s->task_id; }
 
-      $this->returnError(533, $this->version, 'matched id(s): [' . implode(',', $task_ids) . ']');
+      $this->returnError(533, $this->version, $this->openmlGeneralErrorCode, 'matched id(s): [' . implode(',', $task_ids) . ']');
       return;
     }
 
