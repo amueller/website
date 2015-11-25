@@ -9,7 +9,7 @@ OpenML is integrated in the Weka (Waikato Environment for Knowledge Analysis) Ex
       OpenML is available as a weka extension in the package manager<br/>
       <ol>
         <li><a href="http://www.cs.waikato.ac.nz/ml/weka/downloading.html">Download the latest development version</a> (3.7.13 or higher).
-        <li>Launch Weka, or start from commandline: <code>java -jar weka.jar</code>. If you need more memory (e.g. 1GB), start as follows: <code>java -Xmx1G -jar weka.jar</code>.
+        <li>Launch Weka, or start from commandline: <pre>java -jar weka.jar</pre> If you need more memory (e.g. 1GB), start as follows: <pre>java -Xmx1G -jar weka.jar</pre>
 				<li>Open the package manager (Under 'Tools')</li>
         <li>Select package <b>OpenmlWeka</b> and click install. Afterwards, restart WEKA.</li>
         <li>From the Tools menu, open the 'OpenML Experimenter'.</li>
