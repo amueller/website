@@ -15,9 +15,8 @@
 	    <img src="img/openmlmoa.png" alt="OpenML Weka Screenshot" class="img-rounded" style="width:100%">
 	    <ol>
 		<li>Download the standalone MOA environment above.</li>
-		<li>Create a config file called <code>openml.conf</code>. This config file should be in the same directory as the MOA jar, and contain the following lines:
-	<pre>username = YOUR_USERNAME
-password = YOUR_PASSWORD</pre></li>
+		<li>Find your <a href="u#!api">API key</a> in your profile (log in first). Create a config file called <code>openml.conf</code> in a <code>.openml</code> directory in your home dir. It should contain the following lines:
+	<pre>api_key = YOUR_KEY</pre></li>
 		<li>Launch the JAR file by double clicking on it, or launch from command-line using the following command:
             	<pre>java -cp openmlmoa.beta.jar moa.gui.GUI</pre></li>
             	<li>Select the task <code>moa.tasks.openml.OpenmlDataStreamClassification</code> to evaluate a classifier on an OpenML task, and send the results to OpenML.</li>
