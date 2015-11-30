@@ -116,7 +116,7 @@ class Api_splits extends CI_Controller {
     // TODO: very important. sanity check input
     $testset_str = array_key_exists('custom_testset', $values) && is_cs_natural_numbers($values['custom_testset']) ?  '-test "' . $values['custom_testset'] . '"' : '';
     
-    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" -r "'.safe($dataset->row_id_attribute).'" ' . $testset_str . $this->config; 
+    $command = 'java -jar '.$this->evaluation.' -f "generate_folds" -d "'.$dataset->url.'" -e "'.$epstr.'" -c "'.$target_feature.'" ' . $testset_str . $this->config; 
     
     if (array_key_exists('custom_testset', $values)) {
       $command .= '-test "' . $values['custom_testset'] . '" ';
