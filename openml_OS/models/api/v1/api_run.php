@@ -9,6 +9,7 @@ class Api_run extends Api_model {
     // load models
     $this->load->model('Run');
     $this->load->model('Run_tag');
+    $this->load->model('Runfile');
     $this->load->model('Algorithm_setup');
     $this->load->model('Input_setting');
     $this->load->model('Output_data');
