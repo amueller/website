@@ -10,6 +10,7 @@ class Api_setup extends Api_model {
     $this->load->model('Algorithm_setup');
     $this->load->model('Input_setting');
     $this->load->model('Schedule');
+    $this->load->model('Setup_tag');
   }
   
   function bootstrap($segments, $request_type, $user_id) {
