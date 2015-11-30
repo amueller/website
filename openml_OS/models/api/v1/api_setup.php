@@ -27,12 +27,12 @@ class Api_setup extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->task_tag($this->input->post('setup_id'),$this->input->post('tag'));
+      $this->setup_tag($this->input->post('setup_id'),$this->input->post('tag'));
       return;
     }
     
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->task_untag($this->input->post('setup_id'),$this->input->post('tag'));
+      $this->setup_untag($this->input->post('setup_id'),$this->input->post('tag'));
       return;
     }
     
