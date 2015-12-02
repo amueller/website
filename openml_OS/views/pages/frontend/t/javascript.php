@@ -158,7 +158,7 @@ client.search({
   type: 'run',
   size: '5000',
 	body: {
-		_source: [ "run_id", "date", "run_flow.name", "run_flow.flow_id", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
+		_source: [ "run_id", "date", "run_flow.name", "run_flow.flow_id", "uploader", "uploader_id", "evaluations.evaluation_measure", "evaluations.value" ],
 		filter: {
 			term: {
 				'run_task.task_id': current_task
