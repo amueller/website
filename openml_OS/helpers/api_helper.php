@@ -184,7 +184,7 @@ function sub_xml( $xmlFile, $source, $version = 0 ) {
   if ($version === 0) {
     $view = 'pages/rest_api/xml/'.$xmlFile.'.tpl.php';
   } else {
-    $view = 'pages/api_new/'.$version.'/'.$xmlFile.'.tpl.php';
+    $view = 'pages/api_new/'.$version.'/xml/'.$xmlFile.'.tpl.php';
   }
   $ci->load->view( $view, $source );
 }
