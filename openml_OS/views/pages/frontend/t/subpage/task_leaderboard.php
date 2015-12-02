@@ -39,6 +39,6 @@
           </tr>
         </thead>
       </table>
-      <p>Note: The leaderboard ignores resubmissions of previous solutions</p>
+      <p>Note: The leaderboard ignores resubmissions of previous solutions, as well as parameter variations that do not improve performance. </p>
     </div>
 <?php } ?>

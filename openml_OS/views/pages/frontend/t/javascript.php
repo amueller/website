@@ -188,9 +188,9 @@ client.search({
 			d[map[run['uploader']]] = [];
 			names[map[run['uploader']]] = run['uploader'];
 			if(higherIsBetter)
-				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: 0, entries: 0, highRank: Infinity});
+				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: 0, topTime: run['date'], entries: 0, highRank: Infinity});
 			else
-				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: Infinity, entries: 0, highRank: Infinity});
+				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: Infinity, topTime: run['date'], entries: 0, highRank: Infinity});
 		}
 		if(typeof getEval(evals,evaluation_measure) !== 'undefined'){
 			var dat = Date.parse(run['date'].replace(" ", "T"));
@@ -200,7 +200,7 @@ client.search({
 			d[map[run['uploader']]].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: getEval(evals,'build_cpu_time')} );
 			if(d[0].length==0 || (higherIsBetter && e > d[0][d[0].length-1]['y']) || (!higherIsBetter && e < d[0][d[0].length-1]['y'])){
 				d[0].push({x: dat, y: e, f: run['run_flow']['name'], r: run['run_id'], u: run['uploader'], t: getEval(evals,'build_cpu_time')});
-			}}
+			}
 
 			if(!pairs.has(run['run_flow']['name']+e)){ //check if submission is new
 				pairs.add(run['run_flow']['name']+e);
@@ -208,12 +208,15 @@ client.search({
 				l.entries = l.entries+1;
 				if((higherIsBetter && l.topScore<e) || (!higherIsBetter && l.topScore>e)){ //if new best score for this person
 					l.topScore = e;
-					sortedLeaders = leaders.slice().sort(function(a,b){if(higherIsBetter){return b.topScore-a.topScore;}else{return a.topScore-b.topScore;}});
+					l.topTime = run['date'];
+					sortedLeaders = leaders.slice().sort(function(a,b){
+						if(a.topScore == b.topScore){return a.topTime-b.topTime;}
+						else if(higherIsBetter){return b.topScore-a.topScore;}else{return a.topScore-b.topScore;}});
 					rankedLeaders = leaders.slice().map(function(v){return sortedLeaders.indexOf(v)+1 });
 					if(l.highRank > rankedLeaders[map[run['uploader']]-1])
 						l.highRank = rankedLeaders[map[run['uploader']]-1];
 				}
-			}
+			}}
 		}
 	}
 	options2.chart.height = 500;
