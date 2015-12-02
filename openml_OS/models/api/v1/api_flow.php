@@ -228,6 +228,13 @@ class Api_flow extends Api_model {
     }
     $implementation = $this->Implementation->getById( $impl );
 
+
+    // update elastic search index.
+    $this->elasticsearch->index('flow', $impl);
+
+    // update counters
+    $this->elasticsearch->index('user', $this->user_id);
+
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
 

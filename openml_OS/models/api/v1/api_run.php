@@ -8,6 +8,7 @@ class Api_run extends Api_model {
 
     // load models
     $this->load->model('Run');
+    $this->load->model('Dataset');
     $this->load->model('Run_tag');
     $this->load->model('Runfile');
     $this->load->model('Algorithm_setup');
@@ -404,6 +405,17 @@ class Api_run extends Api_model {
 
     // add to elastic search index.
     $this->elasticsearch->index('run', $run->rid);
+
+    // update usage counters
+    $this->elasticsearch->index('user', $this->user_id);
+    if($implementation->uploader != $this->user_id)
+      $this->elasticsearch->index('user', $implementation->uploader);
+    $datasetRecord = $this->Dataset->getById( $task->source_data );
+    if( $datasetRecord !== false && $datasetRecord->uploader !== false && $datasetRecord->uploader != $this->user_id && $datasetRecord->uploader != $implementation->uploader) {
+      $this->elasticsearch->index('user', $datasetRecord->uploader);
+    }
+
+
 
     // remove scheduled task
     $this->Schedule->deleteWhere( 'task_id = "' . $task->task_id . '" AND sid = "' . $setupId . '"' );

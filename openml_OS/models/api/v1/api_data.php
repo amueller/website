@@ -332,6 +332,9 @@ class Api_data extends Api_model {
     // update elastic search index.
     $this->elasticsearch->index('data', $id);
 
+    // update counters
+    $this->elasticsearch->index('user', $this->user_id);
+
     // create initial wiki page
     if(!$update) {
       $this->wiki->export_to_wiki($id);
