@@ -21,7 +21,7 @@
 <div class="datainfo">
    <?php if($this->flow['licence']): ?><i class="fa fa-cc"></i> <?php $l = $this->licences[$this->flow['licence']]; echo '<a href="'.$l['url'].'">'.$l['name'].'</a>'; endif; ?>
    <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->flow['visibility']); ?>
-   <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat( $this->flow['date']); ?> by <a href="u/<?php echo $this->flow['uploader']; ?>"><?php echo $this->flow['uploader'];?></a>
+   <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat( $this->flow['date']); ?> by <a href="u/<?php echo $this->flow['uploader_id']; ?>"><?php echo $this->flow['uploader'];?></a>
    <?php if($this->flow['dependencies']): ?><i class="fa fa-sitemap"></i> <?php echo $this->flow['dependencies']; endif; ?>
    <i class="fa fa-star"></i><?php echo $this->flow['runs']; ?> runs
 </div>
