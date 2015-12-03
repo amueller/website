@@ -188,9 +188,9 @@ client.search({
 			d[map[run['uploader']]] = [];
 			names[map[run['uploader']]] = run['uploader'];
 			if(higherIsBetter)
-				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: 0, topTime: run['date'], entries: 0, highRank: Infinity});
+				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topRun: run['run_id'], topScore: 0, topTime: run['date'], entries: 0, highRank: Infinity});
 			else
-				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topScore: Infinity, topTime: run['date'], entries: 0, highRank: Infinity});
+				leaders.push({rank: Infinity, name: run['uploader'], userId: run['uploader_id'], topRun: run['run_id'], topScore: Infinity, topTime: run['date'], entries: 0, highRank: Infinity});
 		}
 		if(typeof getEval(evals,evaluation_measure) !== 'undefined'){
 			var dat = Date.parse(run['date'].replace(" ", "T"));
@@ -209,6 +209,7 @@ client.search({
 				if((higherIsBetter && l.topScore<e) || (!higherIsBetter && l.topScore>e)){ //if new best score for this person
 					l.topScore = e;
 					l.topTime = run['date'];
+					l.topRun = run['run_id'];
 					sortedLeaders = leaders.slice().sort(function(a,b){
 						if(a.topScore == b.topScore){return a.topTime-b.topTime;}
 						else if(higherIsBetter){return b.topScore-a.topScore;}else{return a.topScore-b.topScore;}});
@@ -224,6 +225,7 @@ client.search({
 	for(var i=0;i<sortedLeaders.length;i++){
 		 sortedLeaders[i].rank = i+1;
 		 sortedLeaders[i].name = '<a href=u/'+sortedLeaders[i].userId+'>'+sortedLeaders[i].name+'</a>';
+		 sortedLeaders[i].topScore = '<a href=r/'+sortedLeaders[i].topRun+'>'+sortedLeaders[i].topScore+'</a>';
 		}
 
 	for(var i=0;i<usercount;i++){
