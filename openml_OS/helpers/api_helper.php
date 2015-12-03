@@ -179,9 +179,13 @@ function xsd( $name, $controller = null, $versionName = null ) {
   }
 }
 
-function sub_xml( $xmlFile, $source ) {
+function sub_xml( $xmlFile, $source, $version = 0 ) {
   $ci = &get_instance();
-  $view = 'pages/rest_api/xml/'.$xmlFile.'.tpl.php';
+  if ($version === 0) {
+    $view = 'pages/rest_api/xml/'.$xmlFile.'.tpl.php';
+  } else {
+    $view = 'pages/api_new/'.$version.'/xml/'.$xmlFile.'.tpl.php';
+  }
   $ci->load->view( $view, $source );
 }
 
@@ -248,8 +252,8 @@ function insertImplementationFromXML( $xml, $configuration, $implementation_base
     
     if( $key == 'component' ) {
       foreach($value as $entry) {
-        $component = $entry->implementation->children('oml', true);
-        $similarComponent = $ci->Implementation->compareToXml( $entry->implementation );
+        $component = $entry->flow->children('oml', true);
+        $similarComponent = $ci->Implementation->compareToXml( $entry->flow );
         if( $similarComponent === false ) {
           $component->version = $ci->Implementation->incrementVersionNumber( $component->name );
           $componentFullName = $component->name . '(' . $component->version . ')';

@@ -32,7 +32,7 @@ $mapping = array(
     if( property_exists( $source, $value ) ){
       if( is_array( $source->$value ) ) {
         if( count( $source->$value ) > 0 ) {
-          sub_xml( 'implementation-get.' . $value, array( 'source' => $source->$value ), false );
+          sub_xml( 'implementation-get.' . $value, array( 'source' => $source->$value ), 'v1' );
         }
       } elseif( $source->$value != false && $source->$value !== null ) { 
         echo '<oml:'.$key.'>'.htmlentities($source->$value).'</oml:'.$key.'>' . "\n";
