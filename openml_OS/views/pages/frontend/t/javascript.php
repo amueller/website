@@ -208,7 +208,7 @@ client.search({
 				l.entries = l.entries+1;
 				if((higherIsBetter && l.topScore<e) || (!higherIsBetter && l.topScore>e)){ //if new best score for this person
 					l.topScore = e;
-					l.topTime = run['date'];
+					l.topTime = +new Date(run['date']);
 					l.topRun = run['run_id'];
 					sortedLeaders = leaders.slice().sort(function(a,b){
 						if(a.topScore == b.topScore){return a.topTime-b.topTime;}
