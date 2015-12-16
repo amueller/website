@@ -14,6 +14,7 @@ class Api_flow extends Api_model {
     $this->load->model('File');
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input');
+    
   }
 
   function bootstrap($segments, $request_type, $user_id) {
@@ -41,6 +42,11 @@ class Api_flow extends Api_model {
 
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->flow_delete($segments[0]);
+      return;
+    }
+
+    if (count($segments) == 2 && is_numeric($segments[0]) && $segments[1] == 'force' && $request_type == 'delete') {
+      $this->flow_forcedelete($segments[0]);
       return;
     }
 
@@ -246,16 +252,16 @@ class Api_flow extends Api_model {
       return;
     }
 
-    if($implementation->uploader != $this->user_id ) {
-      $this->returnError( 323, $this->version  );
+    if($implementation->uploader != $this->user_id && $this->ion_auth->is_admin($this->user_id) == false) {
+      $this->returnError(323, $this->version);
       return;
     }
 
     $runs = $this->Implementation->query('SELECT rid FROM `algorithm_setup`, `run` WHERE `algorithm_setup`.`sid` = `run`.`setup` AND `algorithm_setup`.`implementation_id` = "'.$implementation->id.'" LIMIT 0,1;');
     $evaluations = $this->Evaluation->getWhereSingle('implementation_id = "' . $implementation->id . '"');
 
-    if($runs || $evaluations || $this->Implementation->isComponent($implementation->id) ) {
-      $this->returnError( 324, $this->version  );
+    if($runs || $evaluations || $this->Implementation->isComponent($implementation->id)) {
+      $this->returnError(324, $this->version);
       return;
     }
 
@@ -274,6 +280,24 @@ class Api_flow extends Api_model {
     $this->elasticsearch->delete('flow', $id);
 
     $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
+  }
+  
+  private function flow_forcedelete($flow_id) {
+    if( $this->ion_auth->is_admin($this->user_id) == false ) {
+      $this->returnError( 550, $this->version );
+      return;
+    }
+    
+    $condition = 'SELECT rid FROM run r, algorithm_setup s WHERE s.sid = r.setup AND s.implementation_id = ' . $flow_id;
+    
+    $this->Implementation->query('DELETE FROM evaluation WHERE source IN ('.$condition.')';
+    $this->Implementation->query('DELETE FROM evaluation_fold WHERE source IN ('.$condition.')';
+    $this->Implementation->query('DELETE FROM evaluation_sample WHERE source IN ('.$condition.')';
+    $this->Implementation->query('DELETE FROM runfile WHERE source IN ('.$condition.')';
+    $this->Implementation->query('DELETE FROM run WHERE setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$flow_id.')');
+    $this->Implementation->query('DELETE FROM algorithm_setup WHERE implementation_id = ' . $flow_id);
+    
+    $this->flow_delete($flow_id);
   }
 
 
