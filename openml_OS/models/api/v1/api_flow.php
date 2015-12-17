@@ -290,10 +290,10 @@ class Api_flow extends Api_model {
     
     $condition = 'SELECT rid FROM run r, algorithm_setup s WHERE s.sid = r.setup AND s.implementation_id = ' . $flow_id;
     
-    $this->Implementation->query('DELETE FROM evaluation WHERE source IN ('.$condition.')';
-    $this->Implementation->query('DELETE FROM evaluation_fold WHERE source IN ('.$condition.')';
-    $this->Implementation->query('DELETE FROM evaluation_sample WHERE source IN ('.$condition.')';
-    $this->Implementation->query('DELETE FROM runfile WHERE source IN ('.$condition.')';
+    $this->Implementation->query('DELETE FROM evaluation WHERE source IN ('.$condition.')');
+    $this->Implementation->query('DELETE FROM evaluation_fold WHERE source IN ('.$condition.')');
+    $this->Implementation->query('DELETE FROM evaluation_sample WHERE source IN ('.$condition.')');
+    $this->Implementation->query('DELETE FROM runfile WHERE source IN ('.$condition.')');
     $this->Implementation->query('DELETE FROM run WHERE setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$flow_id.')');
     $this->Implementation->query('DELETE FROM algorithm_setup WHERE implementation_id = ' . $flow_id);
     
