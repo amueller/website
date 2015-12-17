@@ -747,4 +747,9 @@ $this->apiErrors[550][1] = 'You can not execute this operation because you are n
 
 
 
+// openml.flow.forcedelete
+$this->apiErrors[551][0] = 'Delete query failed.';
+$this->apiErrors[551][1] = 'One of the delete queries failed.';
+
+
 ?>
