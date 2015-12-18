@@ -348,7 +348,7 @@ class ElasticSearch {
                           $deleteParams['index'] = 'openml';
                           $deleteParams['type'] = $type;
                           $deleteParams['id'] = $id;
-                          $response = $client->delete($deleteParams);
+                          $response = $this->client->delete($deleteParams);
                           return $response;
                         }
 
