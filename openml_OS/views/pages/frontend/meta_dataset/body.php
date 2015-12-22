@@ -109,7 +109,7 @@
                 <tr>
                   <td data-toggle="tooltip" data-placement="top" title="<?php echo $this->setup_reference[$setup_id]['setup_string']; ?>">Setup <?php echo $setup_id; ?>: <span><?php echo cutoff( $this->setup_reference[$setup_id]['name'], 20 ); ?></span></td>
                   <?php foreach( $tasks as $task => $present ): ?>
-                    <?php if ($present && $this->waning[$setup_id][$task] != false) { ?>
+                    <?php if ($present && $this->warning[$setup_id][$task] != false) { ?>
                       <td style="width: 20px; " class="table-warning">&nbsp;</td>
                     <?php } elseif ($present) { ?>
                       <td style="width: 20px; " class="table-present">&nbsp;</td>
