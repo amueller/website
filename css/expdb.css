@@ -2685,6 +2685,10 @@ svg:not(:root){
   background-color: red;
 }
 
+.table-warning {
+  background-color: orange;
+}
+
 @media screen and (min-width: 768px) {
 
 .openml-footer li{
