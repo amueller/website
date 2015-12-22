@@ -133,7 +133,7 @@ if( $_POST || $this->input->get('check') ) {
     
     // TODO: implementations
     $sql_runs = 
-      'SELECT `r`.`task_id`,`r`.`setup` ' .
+      'SELECT `r`.`task_id`,`r`.`setup`, `r`.`error_message` ' .
       'FROM `run` `r`, `task_inputs` `d`, `task` `t` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
       'AND `d`.`input` = "source_data" ' .
