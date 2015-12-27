@@ -133,7 +133,7 @@ if( $_POST || $this->input->get('check') ) {
     
     // TODO: implementations
     $sql_runs = 
-      'SELECT `r`.`task_id`,`r`.`setup` ' .
+      'SELECT `r`.`task_id`,`r`.`setup`, `r`.`error_message`, `r`.`error` ' .
       'FROM `run` `r`, `task_inputs` `d`, `task` `t` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
       'AND `d`.`input` = "source_data" ' .
@@ -145,6 +145,8 @@ if( $_POST || $this->input->get('check') ) {
       'GROUP BY `r`.`task_id`, `r`.`setup`;';
     $res_runs = $this->Run->query( $sql_runs );
     $this->data = array();
+    $this->warning = array();
+    $this->error = array();
     $this->runs_total = count($res_tasks) * count($res_setups);
     $this->runs_done = count($res_runs);
 
@@ -173,13 +175,23 @@ if( $_POST || $this->input->get('check') ) {
       
       foreach( array_keys( $this->setup_reference ) as $s ) {
         $this->data[$s] = array();
+        $this->error[$s] = array();
+        $this->warning[$s] = array();
         foreach( array_keys( $this->task_reference ) as $t ) {
           $this->data[$s][$t] = false;
+          $this->error[$s][$t] = false;
+          $this->warning[$s][$t] = false;
         }
       }
       
       foreach( $res_runs as $res ) {
         $this->data[$res->setup][$res->task_id] = true;
+        if ($res->error != null) {
+          $this->warning[$res->setup][$res->task_id] = $res->error;
+        }
+        if ($res->error_message != null) {
+          $this->error[$res->setup][$res->task_id] = $res->error_message;
+        }
       }
       
       if( $this->input->post('schedule') && $this->ion_auth->is_admin() ) {

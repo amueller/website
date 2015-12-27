@@ -351,7 +351,7 @@ class Api_run extends Api_model {
       'task_id' => $task->task_id,
       'start_time' => now(),
       'status' => ($error_message == false) ? 'OK' : 'error',
-      'error' => ($error_message == false) ? null : $error_message,
+      'error_message' => ($error_message == false) ? null : $error_message,
       'experiment' => '-1',
     );
     $runId = $this->Run->insert( $runData );
@@ -471,6 +471,9 @@ class Api_run extends Api_model {
     $data = array( 'processed' => now() );
     if( isset( $xml->children('oml', true)->{'error'}) ) {
       $data['error'] = '' . $xml->children('oml', true)->{'error'};
+    }
+    if( isset( $xml->children('oml', true)->{'warning'}) ) {
+      $data['warning'] = '' . $xml->children('oml', true)->{'warning'};
     }
 
     $this->Run->update( $run_id, $data );

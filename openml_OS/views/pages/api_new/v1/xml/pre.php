@@ -741,5 +741,15 @@ $this->apiErrors[542][1] = 'There where no results. Check whether there are runs
 $this->apiErrors[543][0] = 'Too many results';
 $this->apiErrors[543][1] = 'Given the constraints, there were still too many results. Please add constraints, to keep server load low. ';
 
+// openml.flow.forcedelete
+$this->apiErrors[550][0] = 'Admin rights are required.';
+$this->apiErrors[550][1] = 'You can not execute this operation because you are not an admin.';
+
+
+
+// openml.flow.forcedelete
+$this->apiErrors[551][0] = 'Delete query failed.';
+$this->apiErrors[551][1] = 'One of the delete queries failed.';
+
 
 ?>

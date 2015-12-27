@@ -2682,7 +2682,15 @@ svg:not(:root){
 }
 
 .table-absent {
+  background-color: gray;
+}
+
+.table-error {
   background-color: red;
+}
+
+.table-warning {
+  background-color: orange;
 }
 
 @media screen and (min-width: 768px) {
