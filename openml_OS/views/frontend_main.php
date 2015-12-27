@@ -1,3 +1,7 @@
+<?php
+if (session_status() === PHP_SESSION_NONE){session_start();}
+?>
+
 <!doctype html>
 <!--[if lt IE 7]>
 <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en">
@@ -222,7 +226,6 @@
         </div>
 
         <?php
-          loadpage('login', true, 'pre');
           loadpage('login', true, 'body');
         ?>
 
@@ -333,6 +336,7 @@
           ga('create', 'UA-40902346-1', 'openml.org');
           ga('send', 'pageview');
         </script>
+
 
     </body>
 </html>
