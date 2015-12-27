@@ -2,21 +2,15 @@
 if (!empty($_POST['submitlogin'])) {
 	if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), false))
 	{
-		$this->session->set_flashdata('message', $this->ion_auth->messages());
-	  $redirect = $this->session->flashdata('login_redirect');
-	  if($redirect == false or endsWith($redirect,'login')) {
-		  redirect('home');
+			redirect($this->input->post('location'));
 			exit();
-	  } else {
-			redirect($redirect);
-			exit();
-	  }
 	}
 	else
 	{
 		$this->session->set_flashdata('message', $this->ion_auth->errors());
-		redirect('login');
+		redirect('home');
 		exit();
 	}
 }
+
 ?>
