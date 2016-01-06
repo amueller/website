@@ -8,6 +8,7 @@ class Api_model extends CI_Model {
     
   }
   
+  // taken from: http://outlandish.com/blog/xml-to-json/
   function xmlToArray($xml, $options = array()) {
     $defaults = array(
         'namespaceSeparator' => ':',//you may want this to be something other than a colon
