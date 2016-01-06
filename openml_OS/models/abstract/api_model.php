@@ -1,6 +1,8 @@
 <?php
 class Api_model extends CI_Model {
   
+  protected $outputFormat = 'xml';
+  
   function __construct() {
     parent::__construct();
     
@@ -20,11 +22,17 @@ class Api_model extends CI_Model {
     $view = 'pages/'.$this->controller.'/' . $version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
     $data = $this->load->view( $view, $source, true );
     header('Content-length: ' . strlen($data) );
-    header('Content-type: text/xml; charset=utf-8');
+    header('Content-type: text/'.$this->outputFormat.'; charset=utf-8');
     foreach( $httpHeaders as $header ) {
       header( $header );
     }
-    echo $data;
+    
+    if ($this->outputFormat == 'json') {
+      $xml = simplexml_load_string($xml_string);
+      echo json_encode($xml);
+    } else {
+      echo $data;
+    }
   }
 }
 ?>

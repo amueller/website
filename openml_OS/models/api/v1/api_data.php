@@ -16,9 +16,11 @@ class Api_data extends Api_model {
     $this->load->model('File');
   }
 
-  function bootstrap($segments, $request_type, $user_id) {
+  function bootstrap($format, $segments, $request_type, $user_id) {
+    $this->outputFormat = $format;
+    
     $getpost = array('get','post');
-
+    
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->data_list();
       return;

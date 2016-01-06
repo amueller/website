@@ -12,8 +12,10 @@ class Api_setup extends Api_model {
     $this->load->model('Schedule');
     $this->load->model('Setup_tag');
   }
-  
-  function bootstrap($segments, $request_type, $user_id) {
+
+  function bootstrap($format, $segments, $request_type, $user_id) {
+    $this->outputFormat = $format;
+    
     $getpost = array('get','post');
     
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
