@@ -28,7 +28,7 @@ class Api_model extends CI_Model {
     }
     
     if ($this->outputFormat == 'json') {
-      $xml = simplexml_load_string($xml_string);
+      $xml = simplexml_load_string($data);
       echo json_encode($xml);
     } else {
       echo $data;
