@@ -21,16 +21,20 @@ class Api_model extends CI_Model {
   protected function xmlContents( $xmlFile, $version, $source, $httpHeaders = array() ) {
     $view = 'pages/'.$this->controller.'/' . $version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
     $data = $this->load->view( $view, $source, true );
-    header('Content-length: ' . strlen($data) );
-    header('Content-type: text/'.$this->outputFormat.'; charset=utf-8');
     foreach( $httpHeaders as $header ) {
       header( $header );
     }
     
     if ($this->outputFormat == 'json') {
       $xml = simplexml_load_string($data);
-      echo json_encode($xml);
+      $json = json_encode($xml);
+      header('Content-length: ' . strlen($json) );
+      header('Content-type: application/json; charset=utf-8');
+      
+      echo $json;
     } else {
+      header('Content-length: ' . strlen($data) );
+      header('Content-type: text/xml; charset=utf-8');
       echo $data;
     }
   }
