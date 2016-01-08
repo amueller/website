@@ -21,11 +21,11 @@
 </div>
 <div id="catchphrase">Exploring machine learning better, together</div><br>
 
-
+<!--
   <div class="col-md-6 col-md-offset-3 surveypopup">
     <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-rocket"></i></a>
     <div class="shortintro" style="padding-top:10px;">Register now for OpenML 2016!</div>
-  </div>
+  </div>-->
 
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
