@@ -26,16 +26,16 @@ class Api_run extends Api_model {
     $this->load->model('Evaluation_interval');
 
     $this->load->model('File');
-
-    $this->query_string = $this->uri->uri_to_assoc(5);
-
   }
 
-  function bootstrap($segments, $request_type, $user_id) {
+  function bootstrap($format, $segments, $request_type, $user_id) {
+    $this->outputFormat = $format;
+    
     $getpost = array('get','post');
 
     if (count($segments) >= 1 && $segments[0] == 'list') {
-      $this->run_list();
+      array_shift($segments);
+      $this->run_list($segments);
       return;
     }
 
@@ -78,12 +78,16 @@ class Api_run extends Api_model {
   }
 
 
-  private function run_list() {
-    $task_id = element('task', $this->query_string);
-    $setup_id = element('setup',$this->query_string);
-    $implementation_id = element('flow',$this->query_string);
-    $uploader_id = element('uploader',$this->query_string);
-    $run_id = element('run',$this->query_string);
+  private function run_list($segs) {
+    $query_string = array();
+    for ($i = 0; $i < count($segs) + 1; $i += 2)
+      $query_string[$segs[$i]] = $segs[$i+1];
+    
+    $task_id = element('task', $query_string);
+    $setup_id = element('setup',$query_string);
+    $implementation_id = element('flow',$query_string);
+    $uploader_id = element('uploader',$query_string);
+    $run_id = element('run',$query_string);
 
     if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false) {
       $this->returnError( 510, $this->version );

@@ -74,12 +74,23 @@ class Api_new extends CI_Controller {
   }
 
   private function bootstrap($version) {
-    loadpage('v1/'.$this->page,false,'pre');
+    $outputFormats = array('xml','json');
+    
+    loadpage('v'.$version.'/'.$this->page,false,'pre');
     $segs = $this->uri->segment_array();
-
+    
     $controller = array_shift($segs);
     $this->version = array_shift($segs);
     $type = array_shift($segs);
+    $outputFormat = 'xml';
+    
+    // TODO: currently, we support the possibility of absent 
+    // $outputFormat field, which should be mandatory in the future. 
+    if (in_array($type,$outputFormats)) {
+      $outputFormat = $type;
+      $type = array_shift($segs);
+    }
+    
     $request_type = strtolower($_SERVER['REQUEST_METHOD']);
 
     if ($this->authenticated == false) {
@@ -93,7 +104,7 @@ class Api_new extends CI_Controller {
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
     } else {
-      $this->{'Api_'.$type}->bootstrap($segs, $request_type, $this->user_id);
+      $this->{'Api_'.$type}->bootstrap($outputFormat, $segs, $request_type, $this->user_id);
     }
   }
 

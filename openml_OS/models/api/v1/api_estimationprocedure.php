@@ -9,10 +9,10 @@ class Api_estimationprocedure extends Api_model {
     // load models
     $this->load->model('Estimation_procedure');
   }
-
-  function bootstrap($segments, $request_type, $user_id) {
-    $getpost = array('get','post');
-
+  
+  function bootstrap($format, $segments, $request_type, $user_id) {
+    $this->outputFormat = $format;
+    
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->estimationprocedure_list();
       return;

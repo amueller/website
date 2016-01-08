@@ -9,8 +9,10 @@ class Api_file extends Api_model {
     // load models
     $this->load->model('File');
   }
-  
-  function bootstrap($segments, $request_type, $user_id) {
+
+  function bootstrap($format, $segments, $request_type, $user_id) {
+    $this->outputFormat = $format;
+    
     $getpost = array('get','post');
     
     if (count($segments) == 0 && $request_type == 'post') {
