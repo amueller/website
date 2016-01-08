@@ -1755,7 +1755,6 @@ html, body {
    font-weight: 400;
    width: auto !important;  /* Firefox will set width as auto */
    min-width: 480px; /* suppose you want minimun width of 1000px */
-   background-color: #ececec;
    margin-bottom: 0px !important;
 }
 
@@ -2706,6 +2705,7 @@ svg:not(:root){
 .openmlsectioninfo{
   padding-left: 0px;
   padding-right: 0px;
+  background-color: #ececec;
 }
 
 .itemhead{

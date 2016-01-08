@@ -45,6 +45,7 @@ $route['api'] = 'rest_api';
 $route['api/:any'] = 'rest_api/$1';
 
 $frontend_pages = array(
+          'api_docs',
           'detail',
           'developers',
           'home',

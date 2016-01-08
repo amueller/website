@@ -314,6 +314,8 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                 echo "'frontend/js/".$req."',";
               } elseif( $ch == 'search'){
                 echo "'frontend/js/".$reqall."',";
+              } elseif( $ch == 'api'){
+                echo "'frontend/js/api_docs',";
               } elseif( $ch != 'backend') {?>
               'frontend/js/<?php echo $ch;?>', <?php } ?>
               'js/openmlafter.js'

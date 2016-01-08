@@ -22,6 +22,7 @@ class Rest_api extends CI_Controller {
     $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
     $this->load->model('Run');
+    $this->load->model('Study');
     $this->load->model('Evaluation');
     $this->load->model('Evaluation_interval');
     $this->load->model('Evaluation_fold');
