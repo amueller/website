@@ -23,6 +23,7 @@ class Api_new extends CI_Controller {
     $this->load->model('api/v1/Api_file');
     $this->load->model('api/v1/Api_job');
     $this->load->model('api/v1/Api_user');
+    $this->load->model('Study');
 
     $this->load->model('Log');
     $this->load->model('Api_session');
@@ -41,7 +42,7 @@ class Api_new extends CI_Controller {
 
     $this->load->library('elasticSearch');
     $this->load->library('wiki');
-    
+
     $this->groups_upload_rights = array(1,2); // must be part of this group to upload stuff
 
     // XML maintainance
@@ -75,22 +76,22 @@ class Api_new extends CI_Controller {
 
   private function bootstrap($version) {
     $outputFormats = array('xml','json');
-    
+
     loadpage('v'.$version.'/'.$this->page,false,'pre');
     $segs = $this->uri->segment_array();
-    
+
     $controller = array_shift($segs);
     $this->version = array_shift($segs);
     $type = array_shift($segs);
     $outputFormat = 'xml';
-    
-    // TODO: currently, we support the possibility of absent 
-    // $outputFormat field, which should be mandatory in the future. 
+
+    // TODO: currently, we support the possibility of absent
+    // $outputFormat field, which should be mandatory in the future.
     if (in_array($type,$outputFormats)) {
       $outputFormat = $type;
       $type = array_shift($segs);
     }
-    
+
     $request_type = strtolower($_SERVER['REQUEST_METHOD']);
 
     if ($this->authenticated == false) {

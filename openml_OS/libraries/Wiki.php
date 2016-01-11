@@ -119,3 +119,4 @@ class Wiki {
 	return "Successfully imported ".$this->wikipage;
   }
 }
+?>
