@@ -17,7 +17,7 @@ $this->apiErrors[103][1] = 'The session_hash was not valid. Please try to login 
 
 
 // for function: openml.gobal
-$this->apiErrors[104][0] = 'Not the right Permissions';
+$this->apiErrors[104][0] = 'This is a read-only account, not the right permissions to execute a write operation. ';
 $this->apiErrors[104][1] = 'The session_hash was valid, but the user has not the right (write) permissions.';
 
 
