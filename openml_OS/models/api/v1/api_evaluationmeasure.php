@@ -10,8 +10,10 @@ class Api_evaluationmeasure extends Api_model {
     $this->load->model('Math_function');
   }
   
-  function bootstrap($segments, $request_type, $user_id) {
+  function bootstrap($format, $segments, $request_type, $user_id) {
     $getpost = array('get','post');
+    
+    $this->outputFormat = $format;
     
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->evaluationmeasure_list();
