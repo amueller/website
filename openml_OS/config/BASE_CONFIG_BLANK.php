@@ -16,7 +16,7 @@ setlocale(LC_TIME, 'nl_NL');
  * of OpenML, this would be http://www.openml.org/. For an instance on
  * a localhost, this would be http://localhost/.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'BASE_URL', 'http://localhost/OpenML/' );
+define( 'BASE_URL', 'FILL_IN' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DATA_URL: The subdirectory where the data can be accessed. Will be
@@ -29,7 +29,7 @@ define( 'DATA_URL', BASE_URL . 'data/' );
  * can be found, with tailing slash. Typically, this would be
  * something like /var/www/ (on Ubuntu installations)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'PATH', '/Library/Webserver/Documents/OpenML/' );
+define( 'PATH', 'FILL_IN' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DATA_PATH: The directory on whether the uploaded data is stored.
@@ -68,12 +68,12 @@ define( 'TMP_PATH', '/tmp/' );
  * DB_PASS_WRITING: The password that belongs to the DB_USER_WRITING
  * account.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'DB_NAME_EXPDB', 'openml_expdb' );
-define( 'DB_HOST_EXPDB', 'localhost' );
-define( 'DB_USER_EXPDB_READ', 'root' );
-define( 'DB_PASS_EXPDB_READ', 'MySQLQu1n0' );
-define( 'DB_USER_EXPDB_WRITE', 'root' );
-define( 'DB_PASS_EXPDB_WRITE', 'MySQLQu1n0' );
+define( 'DB_NAME_EXPDB', 'FILL_IN' );
+define( 'DB_HOST_EXPDB', 'FILL_IN' );
+define( 'DB_USER_EXPDB_READ', 'FILL_IN' );
+define( 'DB_PASS_EXPDB_READ', 'FILL_IN' );
+define( 'DB_USER_EXPDB_WRITE', 'FILL_IN' );
+define( 'DB_PASS_EXPDB_WRITE', 'FILL_IN' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Configuration details for the OpenML database (User accounts, etc.)
@@ -87,10 +87,10 @@ define( 'DB_PASS_EXPDB_WRITE', 'MySQLQu1n0' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DB_PASS: The password that belongs to the username
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'DB_NAME_OPENML', 'openml' );
-define( 'DB_HOST_OPENML', 'localhost' );
-define( 'DB_USER_OPENML', 'root' );
-define( 'DB_PASS_OPENML', 'MySQLQu1n0' );
+define( 'DB_NAME_OPENML', 'FILL_IN' );
+define( 'DB_HOST_OPENML', 'FILL_IN' );
+define( 'DB_USER_OPENML', 'FILL_IN' );
+define( 'DB_PASS_OPENML', 'FILL_IN' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Configuration details for the OpenML API (Username, password)
@@ -112,8 +112,8 @@ define( 'API_KEY', 'FILL_IN_KEY' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * API_PASSWORD: The password that belongs to the username
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-define( 'ES_USERNAME', 'openml' );
-define( 'ES_PASSWORD', 'OpenQu1n0' );
+define( 'ES_USERNAME', 'FILL_IN' );
+define( 'ES_PASSWORD', 'FILL_IN' );
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
