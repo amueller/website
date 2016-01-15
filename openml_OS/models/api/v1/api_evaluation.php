@@ -14,7 +14,7 @@ class Api_evaluation extends Api_model {
 
   function bootstrap($format, $segments, $request_type, $user_id) {
     $this->outputFormat = $format;
-    
+
     $getpost = array('get','post');
 
     if (count($segments) >= 1 && $segments[0] == 'list') {
@@ -27,12 +27,12 @@ class Api_evaluation extends Api_model {
 
 
   private function evaluation_list() {
-    $task_id = element('task', $this->query_string);
-    $setup_id = element('setup',$this->query_string);
-    $implementation_id = element('flow',$this->query_string);
-    $uploader_id = element('uploader',$this->query_string);
-    $run_id = element('run',$this->query_string);
-    $function_name = element('function',$this->query_string);
+    $task_id = urldecode(element('task', $this->query_string));
+    $setup_id = urldecode(element('setup',$this->query_string));
+    $implementation_id = urldecode(element('flow',$this->query_string));
+    $uploader_id = urldecode(element('uploader',$this->query_string));
+    $run_id = urldecode(element('run',$this->query_string));
+    $function_name = urldecode(element('function',$this->query_string));
 
     if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false) {
       $this->returnError( 540, $this->version );
