@@ -80,7 +80,7 @@ class Api_run extends Api_model {
 
   private function run_list($segs) {
     $query_string = array();
-    for ($i = 0; $i < count($segs) + 1; $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2)
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
     $task_id = element('task', $query_string);
