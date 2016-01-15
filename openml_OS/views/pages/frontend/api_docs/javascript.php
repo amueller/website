@@ -50,7 +50,10 @@
                     log("Unable to Load SwaggerUI");
                 },
                 docExpansion: "none",
-                sorter: "alpha"
+                operationsSorter: function (a, b) {
+                var order = { 'get': '0', 'post': '1', 'put': '2', 'delete': '3' };
+                return order[a.method].localeCompare(order[b.method]);
+              },
             });
 
             function addApiKeyAuthorization() {
