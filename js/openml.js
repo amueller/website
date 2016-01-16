@@ -127,14 +127,14 @@ $(function() {
     $('#mainmenu').toggle('slide', options, 500);
 
     if(visible){
-      $('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
+      //$('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
       $('#mainpanel').removeClass('rightpanel');
     } else {
       if(window.innerWidth>992){$('#mainpanel').addClass('rightpanel');}
       if(!$("#submenucontainer").is(':empty') && $('.navbar-brand').html() != 'Search'){
-        $('#mainmenu').animate({
-          scrollTop: ($("#submenucontainer").offset().top - 80)
-        }, { duration: 500, queue: false });
+        //$('#mainmenu').animate({
+        //  scrollTop: ($("#submenucontainer").offset().top - 80)
+        //}, { duration: 500, queue: false });
       }
     }
   });
@@ -142,7 +142,7 @@ $(function() {
   // automatically show/hide the menu depending on the page width
   if($('#wrap').width()>992 && $('#section-brand').html() != 'OpenML'){
     $('#mainmenu').css("display","block");
-    $('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
+    //$('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
     $('#mainpanel').addClass('rightpanel');
   } else {
     $('a[data-toggle="tab"]').click(function () {
@@ -153,8 +153,10 @@ $(function() {
 
   // highlighting for subsections in submenu
   $(".collapse").on('shown.bs.collapse', function () {
-    $(this).prev().css( "color", $(".topactive > :first-child").css("color"));
-    $(this).prev().css( "font-weight", "bold" );
+    if($(this).attr('id') != "mainlist"){
+      $(this).prev().css( "color", $(".topactive > :first-child").css("color"));
+      $(this).prev().css( "font-weight", "bold" );
+    }
   });
   $(".collapse").on('hidden.bs.collapse', function () {
     $(this).prev().css( "color", "#424242" );

@@ -207,7 +207,6 @@ width: 80pt;
 
 /* First level of nav */
 .sidenav {
-  padding-bottom: 5px;
   border-radius: 5px;
   text-decoration: none;
   list-style: none;
@@ -708,17 +707,32 @@ select{
   margin-bottom: 0px;
 }
 
+.mainchapter{
+  padding-top: 8px !important;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid #d6d6d6;
+  border-radius: 0px;
+  box-shadow: none;
+  padding-bottom: 11px !important;
+  margin-bottom: 0px;
+}
+
+.menuicon{
+  margin-top: -10px;
+  margin-left: 1px;
+  margin-right: 3px;
+}
+
 .sidenav panel{
   background-color: #f6f6f6;
 }
 
 .topchapter{
-  margin-top: 20px;
+  margin-top: 15px;
   background-color: #f6f6f6;
-  border-bottom: 1px solid #d6d6d6;
   border-radius: 0px;
   box-shadow: none;
-  padding-bottom: 10px;
+  padding-bottom: -3px;
 }
 
 .guidechapter-contact{

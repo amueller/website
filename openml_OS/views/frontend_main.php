@@ -147,6 +147,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             $materialcolor = "blue";
           }
 
+    $this->section = $section;
     $this->materialcolor = $materialcolor;
     $this->user = $this->ion_auth->user()->row();
     $this->image = array(
@@ -245,28 +246,33 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
 
           <div class="searchbarcontainer">
           <div class="searchbar" id="mainmenu">
-            <ul class="sidenav nav topchapter">
-              <?php if (!$this->ion_auth->logged_in()){ ?>
-                  <li <?php echo ($section == '' ?  'class="topactive"' : '');?>><a href="register" class="icongrayish"><i class="fa fa-fw fa-lg fa-child"></i> Join OpenML</a></li>
-              <?php } else { ?>
-                  <li <?php echo ($section == '' ?  'class="topactive"' : '');?>><a href="u/<?php echo $this->user->id; ?>"><img src="<?php echo htmlentities( authorImage( $this->user->image ) ); ?>" width="25" height="25" class="img-circle" alt="<?php echo $this->user->first_name . ' ' . $this->user->last_name; ?>" /> <?php echo user_display_text(); ?></a></li>
-              <?php } ?>
-                  <li <?php echo ($section == 'Data' ?  'class="topactive"' : '');?>><a href="search?type=data<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i> Data<span id="datacounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Task' ?  'class="topactive"' : '');?>><a href="search?type=task<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconyellow"><i class="fa fa-fw fa-lg fa-trophy"></i> Tasks<span id="taskcounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Flow' ?  'class="topactive"' : '');?>><a href="search?type=flow<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i> Flows<span id="flowcounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Run' ?  'class="topactive"' : '');?>><a href="search?type=run<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconred"><i class="fa fa-fw fa-lg fa-star"></i> Runs<span id="runcounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Study' ?  'class="topactive"' : '');?>><a href="search?type=study<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> Studies<span id="studycounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Task type' ?  'class="topactive"' : '');?>><a href="search?type=task_type<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconorange"><i class="fa fa-fw fa-lg fa-flag-o"></i> Task Types<span id="task_typecounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Measure' ?  'class="topactive"' : '');?>><a href="search?type=measure<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconbluegray"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i> Measures<span id="measurecounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'People' ?  'class="topactive"' : '');?>><a href="search?type=user<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblueacc"><i class="fa fa-fw fa-lg fa-users"></i> People<span id="usercounter" class="counter"></span></a></li>
-                  <li <?php echo ($section == 'Guide' ?  'class="topactive"' : '');?>><a href="guide" class="icongreenacc"><i class="fa fa-fw fa-lg fa-leanpub"></i> Guide</a></li>
-                  <li <?php echo ($section == 'Discussions' ?  'class="topactive"' : '');?>><a href="discuss" class="iconpurple"><i class="fa fa-fw fa-lg fa-comments"></i> Discuss</a></li>
-                  <li <?php echo ($section == 'Blog' ?  'class="topactive"' : '');?>><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
-                  <!--<li <?php echo ($section == 'Search' ?  'class="topactive"' : '');?>><a href="search" class="icongray"><i class="fa fa-fw fa-lg fa-search"></i> Search</a></li>-->
+            <ul class="sidenav nav topchapter" id="topaccordeon">
+              <li class="panel mainchapter">
+                <a data-toggle="collapse" data-parent="#topaccordeon"  data-target="#mainlist"><img src="img/dotsicon.png" class="menuicon"> <b>OpenML</b></a>
+                <ul class="sidenav nav collapse <?php if($section == 'OpenML') echo 'in';?>" id="mainlist">
+                  <!--
+                  <?php if (!$this->ion_auth->logged_in()){ ?>
+                      <li <?php echo ($section == '' ?  'class="topactive"' : '');?>><a href="register" class="icongrayish"><i class="fa fa-fw fa-lg fa-child"></i> Join OpenML</a></li>
+                  <?php } else { ?>
+                      <li <?php echo ($section == '' ?  'class="topactive"' : '');?>><a href="u/<?php echo $this->user->id; ?>"><img src="<?php echo htmlentities( authorImage( $this->user->image ) ); ?>" width="25" height="25" class="img-circle" alt="<?php echo $this->user->first_name . ' ' . $this->user->last_name; ?>" /> <?php echo user_display_text(); ?></a></li>
+                  <?php } ?> -->
+                      <li <?php echo ($section == 'Data' ?  'class="topactive"' : '');?>><a href="search?type=data<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="icongreen"><i class="fa fa-fw fa-lg fa-database"></i> Data<span id="datacounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Task' ?  'class="topactive"' : '');?>><a href="search?type=task<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconyellow"><i class="fa fa-fw fa-lg fa-trophy"></i> Tasks<span id="taskcounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Flow' ?  'class="topactive"' : '');?>><a href="search?type=flow<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblue"><i class="fa fa-fw fa-lg fa-cogs"></i> Flows<span id="flowcounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Run' ?  'class="topactive"' : '');?>><a href="search?type=run<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconred"><i class="fa fa-fw fa-lg fa-star"></i> Runs<span id="runcounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Study' ?  'class="topactive"' : '');?>><a href="search?type=study<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconpurple"><i class="fa fa-fw fa-lg fa-flask"></i> Studies<span id="studycounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Task type' ?  'class="topactive"' : '');?>><a href="search?type=task_type<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconorange"><i class="fa fa-fw fa-lg fa-flag-o"></i> Task Types<span id="task_typecounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Measure' ?  'class="topactive"' : '');?>><a href="search?type=measure<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconbluegray"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i> Measures<span id="measurecounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'People' ?  'class="topactive"' : '');?>><a href="search?type=user<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblueacc"><i class="fa fa-fw fa-lg fa-users"></i> People<span id="usercounter" class="counter"></span></a></li>
+                      <li <?php echo ($section == 'Guide' ?  'class="topactive"' : '');?>><a href="guide" class="icongreenacc"><i class="fa fa-fw fa-lg fa-leanpub"></i> Guide</a></li>
+                      <li <?php echo ($section == 'Discussions' ?  'class="topactive"' : '');?>><a href="discuss" class="iconpurple"><i class="fa fa-fw fa-lg fa-comments"></i> Discuss</a></li>
+                      <li <?php echo ($section == 'Blog' ?  'class="topactive"' : '');?>><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
+                </ul>
+              </li>
             </ul>
-            <?php if($ch != "home"){ ?>
+            <!-- <?php if($ch != "home"){ ?>
             <div class="menuaction"><a onclick="scrollMenuTop()"><i class="fa fa-lg fa-angle-up"></i><i class="fa fa-lg fa-fw fa-navicon"></i></a></div>
-            <?php } ?>
+            <?php } ?> -->
             <div class="submenubar">
             <div id="submenucontainer"></div>
             <ul class="sidenav nav">

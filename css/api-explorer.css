@@ -1079,7 +1079,7 @@
 
 .swagger-section .sticky-nav.fixed {
     position: fixed;
-    top: 0;
+    top: -53px;
     left: 0;
     width: 100%;
     z-index: 600
@@ -1154,7 +1154,7 @@
 
 .swagger-section .sticky-nav [data-navigator] [data-resource]:before {
     content: attr(label);
-    display: block;
+    display: none;
     color: #fff;
     padding: 10px 20px;
     text-transform: uppercase;
@@ -1209,7 +1209,6 @@
     position: absolute;
     right: 20px;
     top: 8px;
-    display: block;
     background: #000;
     width: 40px;
     font-size: 11px;
@@ -1218,13 +1217,19 @@
     text-align: center;
     padding: 5px 0;
     border-radius: 13px;
-    opacity: .2
+    opacity: .2;
+    display:none !important;
+}
+
+.swagger-section .sticky-nav [data-navigator] .item[data-tg-switch] {
+    display:none !important;
 }
 
 .swagger-section .sticky-nav [data-navigator] .item[data-tg-switch].active:after {
     content: 'ON';
     background: rgba(68, 199, 244, .5);
-    opacity: 1
+    opacity: 1;
+    display:none !important;
 }
 
 .swagger-section .sticky-nav [data-navigator] .item[data-selected] {
@@ -1355,7 +1360,7 @@
 }
 
 .swagger-section .mobile-nav [data-selected-value] {
-    max-width: 140px;
+    max-width: 280px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap
@@ -1568,19 +1573,17 @@ body {
     }
 
     .swagger-section #resources a.toggle-samples .circle-icon:before {
-        content: '\E16F';
+        content: '>>';
         font-family: budicon-font !important;
         font-style: normal !important;
         font-weight: 400 !important;
-        font-variant: normal !important;
+        font-size: 130% !important;
         text-transform: none !important;
         speak: none;
-        line-height: 1;
+        line-height: 0.4;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-size: 12px;
         position: relative;
-        top: 2px
     }
 
     .swagger-section #resources a.toggle-samples:active, .swagger-section #resources a.toggle-samples:hover {
@@ -1605,14 +1608,14 @@ body {
     }
 
     .swagger-section #resources.samples-collapsed a.toggle-samples .circle-icon:before {
-        content: '\E0F8';
+        content: '<<';
         font-family: budicon-font !important;
         font-style: normal !important;
         font-weight: 400 !important;
-        font-variant: normal !important;
+        font-size: 130% !important;
         text-transform: none !important;
         speak: none;
-        line-height: 1;
+        line-height: 0.4;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale
     }
