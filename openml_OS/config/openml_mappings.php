@@ -71,7 +71,7 @@ $config['xml_fields_run'] = array(
 
 $config['basic_qualities'] = array(
   "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues", 
-  "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures"
+  "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures", "MajorityClassSize", "MinorityClassSize", "MaxNominalAttDistinctValues", "NumBinaryAtts"
 );
 
 $config['taggable_entities'] = array(
