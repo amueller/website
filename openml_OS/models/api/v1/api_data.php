@@ -18,9 +18,9 @@ class Api_data extends Api_model {
 
   function bootstrap($format, $segments, $request_type, $user_id) {
     $this->outputFormat = $format;
-    
+
     $getpost = array('get','post');
-    
+
     if (count($segments) == 1 && $segments[0] == 'list') {
       $this->data_list();
       return;
@@ -90,8 +90,8 @@ class Api_data extends Api_model {
     // make associative
     $datasets = array();
     foreach( $datasets_res as $dataset ) {
+      $dataset->qualities = array();
       $datasets[$dataset->did] = $dataset;
-      $datasets->qualities = array();
     }
 
     $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
