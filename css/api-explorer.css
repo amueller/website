@@ -1079,7 +1079,7 @@
 
 .swagger-section .sticky-nav.fixed {
     position: fixed;
-    top: -53px;
+    top: 0px;
     left: 0;
     width: 100%;
     z-index: 600
@@ -1154,11 +1154,11 @@
 
 .swagger-section .sticky-nav [data-navigator] [data-resource]:before {
     content: attr(label);
-    display: none;
     color: #fff;
     padding: 10px 20px;
     text-transform: uppercase;
     letter-spacing: .08em;
+    line-height: 4;
     font-size: 11px;
     font-weight: 700;
     background: #454d53
@@ -1168,11 +1168,16 @@
     .swagger-section .sticky-nav [data-navigator] [data-resource]:before {
         background: 0 0;
         text-transform: none;
+        line-height: 2;
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0;
         color: #5c666f
     }
+}
+
+.swagger-section .sticky-nav [data-navigator] [label=Tools] {
+    display: none
 }
 
 @media (min-width: 992px) {
