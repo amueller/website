@@ -14,12 +14,12 @@ class Api_flow extends Api_model {
     $this->load->model('File');
     $this->load->model('Bibliographical_reference');
     $this->load->model('Input');
-    
+
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
     $this->outputFormat = $format;
-    
+
     $getpost = array('get','post');
 
     if (count($segments) == 1 && $segments[0] == 'list') {
@@ -279,32 +279,32 @@ class Api_flow extends Api_model {
       $this->returnError( 325, $this->version  );
       return;
     }
-    $this->elasticsearch->delete('flow', $id);
+    $this->elasticsearch->delete('flow', $flow_id);
 
     $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
   }
-  
+
   private function flow_forcedelete($flow_id) {
     if( $this->ion_auth->is_admin($this->user_id) == false ) {
       $this->returnError( 550, $this->version );
       return;
     }
-    
+
     $condition = 'SELECT rid FROM run r, algorithm_setup s WHERE s.sid = r.setup AND s.implementation_id = ' . $flow_id;
-    
+
     $res = $this->Implementation->query('DELETE FROM evaluation WHERE source IN ('.$condition.');');
     $res = $res && $this->Implementation->query('DELETE FROM evaluation_fold WHERE source IN ('.$condition.');');
     $res = $res && $this->Implementation->query('DELETE FROM evaluation_sample WHERE source IN ('.$condition.');');
     $res = $res && $this->Implementation->query('DELETE FROM runfile WHERE source IN ('.$condition.');');
     $res = $res && $this->Implementation->query('DELETE FROM run WHERE setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$flow_id.');');
     $res = $res && $this->Implementation->query('DELETE FROM algorithm_setup WHERE implementation_id = ' . $flow_id . ';');
-    
+
     if ($res == false) {
       $this->returnError( 551, $this->version );
       return;
-      
+
     }
-    
+
     $this->flow_delete($flow_id);
   }
 

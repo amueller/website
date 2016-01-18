@@ -18,7 +18,7 @@ class Api_task extends Api_model {
 
   function bootstrap($format, $segments, $request_type, $user_id) {
     $this->outputFormat = $format;
-    
+
     $getpost = array('get','post');
 
     if (count($segments) == 1 && $segments[0] == 'list') {
@@ -243,7 +243,7 @@ class Api_task extends Api_model {
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));
     }
-    
+
     if( $result == false ) {
       $this->returnError( $error, $this->version );
       return;
