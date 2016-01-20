@@ -7,4 +7,8 @@
   if(isset($this->subpage) and $this->subpage == 'v1'){
     $this->api_spec = "https://raw.githubusercontent.com/openml/OpenML/master/rest-api/openml.json";
   }
+
+  if($this->ion_auth->logged_in()){
+    $this->api_key = $this->Author->getById($this->ion_auth->user()->row()->id)->session_hash;
+  }
 ?>

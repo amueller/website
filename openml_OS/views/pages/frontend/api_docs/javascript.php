@@ -63,14 +63,19 @@
                     window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
                     log("added key " + key);
                 }
+                <?php if(isset($this->api_key) and $this->api_key){ ?>
+                  console.log('<?php echo $this->api_key; ?>');
+                  $('input[name="api_key"]').val('<?php echo $this->api_key; ?>');
+                  $('*[data-label="api_key"]').addClass('hide');
+                <?php } ?>
             }
 
             $('#input_apiKey').change(addApiKeyAuthorization);
             // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-            /*
-             var apiKey = "myApiKeyXXXX123456789";
+            <?php if(isset($this->api_key) and $this->api_key){ ?>
+             var apiKey = "<?php echo $this->api_key; ?>";
              $('#input_apiKey').val(apiKey);
-             */
+            <?php } ?>
 
             window.swaggerUi.load();
 
@@ -82,6 +87,7 @@
             console.log('hello');
             $('#resources_container').css('background-color', 'rgba(0,0,0,0.1)');
             $('label[for=input-api-token]').val('Version');
+
         });
 
         $(function () {
