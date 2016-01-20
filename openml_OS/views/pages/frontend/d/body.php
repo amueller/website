@@ -9,6 +9,19 @@
       $this->data = $this->searchclient->get($this->p)['_source'];
     } catch (Exception $e) {}
 
+    if(!isset($this->data)){ ?>
+      <div class="container-fluid topborder endless openmlsectioninfo">
+        <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
+           <div class="tab-content">
+            <h3><i class="fa fa-warning"></i> This is not the data set you are looking for</h3>
+            <p>Sorry, this data set does not seem to exist (anymore).</p>
+          </div>
+        </div>
+      </div>
+    <?php
+    } else {
+
     //get other versions -> do in javascript?
     $this->p2 = array();
     $this->p2['index'] = 'openml';
@@ -121,3 +134,4 @@
 
 </div> <!-- end container -->
 </div> <!-- end container -->
+<?php } ?>

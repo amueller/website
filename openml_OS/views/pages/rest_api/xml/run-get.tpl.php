@@ -4,7 +4,7 @@
   <oml:task_id><?php echo $source->task_id; ?></oml:task_id>
   <oml:implementation_id><?php echo $source->setup->implementation_id; ?></oml:implementation_id>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
-  <?php if($source->error !== null):?> <oml:error_message><?php echo $source->error; ?></oml:error_message> <?php endif; ?>
+  <?php if($source->error_message !== null):?> <oml:error_message><?php echo $source->error; ?></oml:error_message> <?php endif; ?>
   <oml:setup_string><?php echo $source->setup->setup_string; ?></oml:setup_string>
   <?php if(is_array($source->inputSetting)) foreach( $source->inputSetting as $parameter ): ?>
     <oml:parameter_setting>
@@ -24,7 +24,7 @@
         <oml:url><?php echo $d->url; ?></oml:url>
       </oml:dataset>
     <?php endforeach; ?>
-    </oml:input_data>  
+    </oml:input_data>
   <?php endif; ?>
   <?php if(is_array($source->outputData) ): ?>
     <oml:output_data>

@@ -10,6 +10,20 @@
         }?>
       </div> <!-- end task_type tab -->
 
+      <?php
+    	if (!isset($this->record['task_id'])){ ?>
+            <div class="container-fluid topborder endless openmlsectioninfo">
+              <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
+                 <div class="tab-content">
+                  <h3><i class="fa fa-warning"></i> This is not the task you are looking for</h3>
+                  <p>Sorry, this task does not seem to exist (anymore).</p>
+                </div>
+              </div>
+            </div>
+          <?php
+          } else { ?>
+
       <div class="tab-pane active" id="detail">
         <?php if( isset($this->task_id) ) { subpage('task'); } ?>
       </div> <!-- end task tab -->
@@ -59,3 +73,4 @@
 
 </div> <!-- end tabs content -->
 </div> <!-- end container -->
+<?php } ?>

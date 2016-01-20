@@ -231,17 +231,21 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
         ?>
 
         <div id="wrap">
+            <div class="alertbox col-md-12">
             <!-- USER MESSAGE -->
             <noscript>
-                <div class="alert alert-error" style="text-align:center;">
+                <div class="alert alert-dismissible alert-error">
+                  <button type="button" class="close" data-dismiss="alert">×</button>
                     JavaScript is required to properly view the contents of this page!
                 </div>
             </noscript>
             <?php if($this->message!==false and strlen($this->message) > 0): ?>
-            <div class="alert alert-info" style="text-align:center;margin-bottom:0px">
+            <div class="alert alert-dismissible alert-warning">
+                <button type="button" class="close" data-dismiss="alert">×</button>
                 <?php echo $this->message; ?>
             </div>
-          <?php endif; ?>
+            <?php endif; ?>
+          </div>
 
 
           <div class="searchbarcontainer">

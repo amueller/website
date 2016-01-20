@@ -65,6 +65,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 		$this->flow = $this->searchclient->get($this->p)['_source'];
 	} catch (Exception $e) {}
 
+  if(isset($this->flow)){
+
 	$this->displayName = $this->flow['name'];
 	$this->versions = $this->Implementation->getAssociativeArray('id', 'version', 'name = "'.$this->displayName.'"');
 	ksort($this->versions);
@@ -140,7 +142,7 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
       $this->licences['CC-BY-NC-ND'] = array( "name" => 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)', "url" => 'http://creativecommons.org/licenses/by-nc-nd/4.0/' );
       $this->licences['CC0'] = array( "name" => 'Public Domain (CC0)', "url" => 'http://creativecommons.org/about/cc0' );
 }
-
+}
 function cleanName($string){
 	return $safe = preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $string)));
 }

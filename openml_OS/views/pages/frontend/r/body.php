@@ -1,3 +1,17 @@
+<?php
+ if(!isset($this->run)){ ?>
+  <div class="container-fluid topborder endless openmlsectioninfo">
+    <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
+       <div class="tab-content">
+        <h3><i class="fa fa-warning"></i> This is not the run you are looking for</h3>
+        <p>Sorry, this run does not seem to exist (anymore).</p>
+      </div>
+    </div>
+  </div>
+<?php
+} else { ?>
+
 <div class="container-fluid topborder endless openmlsectioninfo">
   <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 
@@ -44,3 +58,4 @@
 
   </div> <!-- end row -->
 </div> <!-- end container -->
+<?php } ?>

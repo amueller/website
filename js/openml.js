@@ -80,6 +80,7 @@ Ps.initialize(container);
 
   // deleting items
   function deleteItem( type, id, name ) {
+  console.log("DELETE http://" + location.host + "/api_new/v1/"+type+"/"+id)
   $.ajax({
     type: "DELETE",
     url: "http://" + location.host + "/api_new/v1/"+type+"/"+id,
