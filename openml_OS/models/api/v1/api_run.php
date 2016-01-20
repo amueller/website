@@ -139,7 +139,6 @@ class Api_run extends Api_model {
       return;
     }
 
-    $run->error_message = htmlspecialchars($run->error_message);
     $run->inputData = $this->Run->getInputData( $run->rid );
     $run->outputData = $this->Run->getOutputData( $run->rid );
     $run->setup = $this->Algorithm_setup->getById( $run->setup );
