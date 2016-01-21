@@ -86,7 +86,7 @@ Ps.initialize(container);
     url: "http://" + location.host + "/api_new/v1/json/"+type+"/"+id,
     dataType: "xml"
   }).done( function( resultdata ) {
-      console.log(resultdata);
+      console.log(JSON.parse(resultdata));
       console.log(resultdata.responseText);
       id_field = $(resultdata.responseText).find("oml\\:id, id");
       if( id_field.length ) {
