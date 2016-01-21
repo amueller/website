@@ -175,7 +175,8 @@ class Api_run extends Api_model {
       $result = $result && $this->Runfile->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
       $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ' . $additional_sql);
       $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
-      $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      // Not all runs have sample so this should NOT be required for the delete to
+      $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
       // Not needed
       //$this->Dataset->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
     }
