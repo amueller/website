@@ -86,21 +86,18 @@ Ps.initialize(container);
     url: "http://" + location.host + "/api_new/v1/json/"+type+"/"+id,
     dataType: "json"
   }).done( function( resultdata ) {
-      console.log(resultdata);
-      console.log(resultdata.responseText);
-      id_field = $(resultdata.responseText).find("oml\\:id, id");
+      id_field = resultdata.data_delete["oml:id"];
       if( id_field.length ) {
         swal("Deleted!", name + " has been deleted.", "success");
         location.reload();
       } else {
-        code_field = $(resultdata).find("oml\\:code, code");
-        message_field = $(resultdata).find("oml\\:message, message");
+        code_field = resultdata.error["oml:code"];
+        message_field = resultdata.error["oml:message"];
         swal("Error " + code_field.text(), message_field.text(), "error");
       }
     }).fail( function( resultdata ) {
-        console.log(resultdata.responseText);
-        code_field = $(resultdata.responseText).find("oml\\:code, code");
-        message_field = $(resultdata.responseText).find("oml\\:message, message");
+        code_field = resultdata.error["oml:code"];
+        message_field = resultdata.error["oml:message"];
         if(code_field.text() == 102)
           swal("Error", "Your login has expired. Log in and try again.", "error");
         else
