@@ -84,7 +84,7 @@ Ps.initialize(container);
   $.ajax({
     type: "DELETE",
     url: "http://" + location.host + "/api_new/v1/json/"+type+"/"+id,
-    dataType: "xml"
+    dataType: "json"
   }).done( function( resultdata ) {
       console.log(JSON.parse(resultdata));
       console.log(resultdata.responseText);
