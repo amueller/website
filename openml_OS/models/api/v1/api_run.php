@@ -171,12 +171,11 @@ class Api_run extends Api_model {
     $result = $result && $this->Output_data->deleteWhere( 'run =' . $run->rid );
 
     if( $result ) {
-      $additional_sql = ' AND `did` NOT IN (SELECT `data` FROM `input_data` UNION SELECT `data` FROM `output_data`)';
+      $additional_sql = ''; //' AND `did` NOT IN (SELECT `data` FROM `input_data` UNION SELECT `data` FROM `output_data`)';
       $result = $result && $this->Runfile->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
       $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ' . $additional_sql);
       $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
-      // Not all runs have sample so this should NOT be required for the delete to
-      $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
       // Not needed
       //$this->Dataset->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
     }
