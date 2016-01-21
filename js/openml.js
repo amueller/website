@@ -81,11 +81,13 @@ Ps.initialize(container);
   // deleting items
   function deleteItem( type, id, name ) {
   console.log("DELETE http://" + location.host + "/api_new/v1/"+type+"/"+id)
+
   $.ajax({
     type: "DELETE",
     url: "http://" + location.host + "/api_new/v1/"+type+"/"+id,
     dataType: "xml"
   }).done( function( resultdata ) {
+      console.log(resultdata);
       console.log(resultdata.responseText);
       id_field = $(resultdata.responseText).find("oml\\:id, id");
       if( id_field.length ) {
