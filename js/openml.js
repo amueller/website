@@ -86,11 +86,12 @@ Ps.initialize(container);
     url: "http://" + location.host + "/api_new/v1/json/"+type+"/"+id,
     dataType: "json"
   }).done( function( resultdata ) {
-      id_field = resultdata.data_delete["oml:id"];
+      if(type+"_delete" in resultdata){
+      id_field = resultdata[type+"_delete"]["oml:id"];
       if( id_field.length ) {
         swal("Deleted!", name + " has been deleted.", "success");
         location.reload();
-      } else {
+      }} else {
         code_field = resultdata.error["oml:code"];
         message_field = resultdata.error["oml:message"];
         swal("Error " + code_field.text(), message_field.text(), "error");
