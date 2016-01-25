@@ -80,7 +80,7 @@ class Api_data extends Api_model {
   }
 
   private function data_list() {
-    $active = 'visibility = "public"'; // no constraints
+    $active = 'status = "active" and (visibility = "public" or uploader='.$this->user_id.')'; // constraints
     $datasets_res = $this->Dataset->getWhere( $active, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->returnError( 370, $this->version );
@@ -114,6 +114,12 @@ class Api_data extends Api_model {
       $this->returnError( 111, $this->version );
       return;
     }
+
+    if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
+      $this->returnError( 111, $this->version ); // Add special error code for this case?
+      return;
+    }
+
     $file = $this->File->getById( $dataset->file_id );
     $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'id = ' . $dataset->did );
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
@@ -358,6 +364,11 @@ class Api_data extends Api_model {
       return;
     }
 
+    if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
+      $this->returnError( 271, $this->version ); // Add special error code for this case?
+      return;
+    }
+
     if( $dataset->processed == NULL) {
       $this->returnError( 273, $this->version );
       return;
@@ -491,6 +502,11 @@ class Api_data extends Api_model {
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
       $this->returnError( 361, $this->version );
+      return;
+    }
+
+    if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
+      $this->returnError( 361, $this->version ); // Add special error code for this case?
       return;
     }
 
