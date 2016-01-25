@@ -1240,6 +1240,7 @@ class ElasticSearch {
                                       'last_update'	=> $d->last_update,
                                       'licence'		=> $d->licence,
                                       'visibility'	=> $d->visibility,
+                                      'status'	=> $d->status,
                                       'url'		=> $d->url,
                                       'default_target_attribute' => $d->default_target_attribute,
                                       'row_id_attribute' 	=> $d->row_id_attribute,
