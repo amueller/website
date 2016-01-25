@@ -2,6 +2,8 @@
   <?php foreach( $evaluations as $e ): ?>
   <oml:evaluation>
     <oml:run_id><?php echo $e->rid; ?></oml:run_id>
+    <oml:task_id><?php echo $e->task_id; ?></oml:task_id>
+    <oml:flow_id><?php echo $e->implementation_id; ?></oml:flow_id>
     <oml:function><?php echo $e->{'function'}; ?></oml:function>
     <oml:value><?php echo $e->value; ?></oml:value>
     <oml:array_data><?php echo $e->array_data; ?></oml:array_data>
