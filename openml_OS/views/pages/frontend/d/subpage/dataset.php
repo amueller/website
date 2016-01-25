@@ -19,6 +19,7 @@
     </h1>
 
     <div class="datainfo">
+       <span class="label label-<?php echo ($this->data['status'] == 'active' ? 'success' : ($this->data['status'] == 'in_preparation' ? 'warning' : 'danger'))?>"><?php echo $this->data['status'];?></span>
        <i class="fa fa-table"></i> <?php echo (strtolower($this->data['format']) == 'arff' ? '<a href="http://weka.wikispaces.com/ARFF+%28developer+version%29" target="_blank">ARFF</a>' : $this->data['format']); ?>
        <?php if($this->data['licence']):?><i class="fa fa-cc"></i>
          <?php if(!array_key_exists($this->data['licence'],$this->licences)): echo $this->data['licence'];
@@ -29,6 +30,8 @@
        <?php if($this->is_owner)
 		      echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>';
 	      ?>
+
+
     </div>
 
   <div class="col-xs-12 panel" onclick="showmore()">
