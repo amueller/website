@@ -70,7 +70,7 @@ class Api_task extends Api_model {
     //$active = $this->input->get('active_only') ? ' AND d.status = "active" ' : '';
     $task_type_constraint = $ttid == null ? '' : 'AND `t`.`ttid` = "'.$ttid.'" ';
     $tasks_res = $this->Task->query(
-      'SELECT t.task_id, tt.name, source.value as did, d.status, d.name AS dataset_name '.
+      'SELECT t.task_id, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name '.
       'FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` '.
       'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
       $task_type_constraint .

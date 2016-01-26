@@ -6,6 +6,7 @@
     <oml:did><?php echo $task->did; ?></oml:did>
     <oml:name><?php echo $task->dataset_name; ?></oml:name>
     <oml:status><?php echo $task->status; ?></oml:status>
+    <oml:format><?php echo $task->format; ?></oml:format>
     <?php if( property_exists( $task, 'inputs' ) ): foreach( $task->inputs as $input => $value ): ?>
       <oml:input name="<?php echo $input; ?>"><?php echo $value; ?></oml:input>
     <?php endforeach; endif; ?>
