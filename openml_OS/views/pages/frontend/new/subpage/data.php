@@ -9,7 +9,7 @@
 		    <label class="control-label" for="sourcefile">Data files</label>
 				<input type="text" readonly="" class="form-control floating-label" placeholder="Browse..." style="margin-top:10px;">
 				<input type="file" id="dataset" name="dataset" multiple="">
-		    <div class="col-sm-12 input-info">Or (not both)</div>
+		    <div class="col-sm-12 input-info">Or URL (not both)</div>
 		    <input type="text" class="form-control" name="url" placeholder="URL where the data is hosted (e.g. data repository)" value="" />
 		  </div>
 		  <div class="form-group">
@@ -28,9 +28,12 @@
 		    <label class="control-label" for="description">Description</label>
 		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Short description (can still be edited online). Use #tags to label it. Describe where the data originates from, and whether it was processed in any way." value=""><?php echo $this->input->post('description'); ?></textarea>
 		  </div>
-		  <div class="form-group has-error">
-	            <label class="control-label" for="format">Data format</label>
-		    <input type="text" class="form-control" name="format" id="format" placeholder="The data format (e.g. ARFF)" value="<?php echo $this->input->post('format'); ?>" onblur=""/>
+		  <div class="form-group">
+	      <label class="control-label" for="format">Data format</label>
+				<select class="form-control" id="format" name="format">
+			  	<option <?php if($this->input->post('format') == 'ARFF') echo "selected"; ?> value="ARFF">ARFF</option>
+			  	<option <?php if($this->input->post('format') == 'Sparse_ARFF') echo "selected"; ?> value="Sparse_ARFF">Sparse_ARFF</option>
+				</select>
 	          </div>
                 </div>
    		<div class="col-sm-6">
