@@ -79,12 +79,6 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	if( $io != false ) {
 	  $this->dataid = $io[0]->value;
 	}
-}
-
-if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER['REQUEST_URI'],'/t/')) {
-
-	$info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->task_id = $info[array_search('t',$info)+1];
 
 	//get data from ES
 	$this->p = array();
