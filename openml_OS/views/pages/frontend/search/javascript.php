@@ -61,9 +61,12 @@ function removeFilters()
 }
 
  function bindInput(elem){
-   $('#'+elem.replace(/\./g, '\\.')).keyup(function(event) {
+   $('#'+elem.replace(/\./g, '\\.')).bind("keyup change", function(event) {
      if (event.keyCode == 13) { $('#searchform').submit();}
-     else {updateQuery(elem);}});
+     else {
+       updateQuery(elem);
+       if (event.type == 'change') { $('#searchform').submit();}
+     }});
  }
 
     // fetch counts for menu bar
@@ -101,6 +104,7 @@ function removeFilters()
 
     //buttons
     $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
+    $("#removefilters2").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
     $('#research').click(function() { $('#searchform').submit();});
 
 
