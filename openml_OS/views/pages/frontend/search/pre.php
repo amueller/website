@@ -129,6 +129,14 @@ if($this->order=='asc' and $this->sort=='runs')
 	$this->curr_sort = "fewest runs";
 if($this->order=='asc' and $this->sort=='date')
 	$this->curr_sort = "least recent";
+if(startsWith($this->sort,'qualities.NumberOf')){
+  if($this->order=='asc'){
+    $this->curr_sort = "fewest ";
+  } else {
+    $this->curr_sort = "most ";
+  }
+  $this->curr_sort .= substr($this->sort,18);
+}
 
 $attrs = $_GET;
 unset($attrs['from']);

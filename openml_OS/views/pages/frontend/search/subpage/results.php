@@ -58,7 +58,17 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
     <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'last_update', 'order' => 'desc')); ?>">Last update</a></li>
-    <?php } ?>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'desc')); ?>">Most instances</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'asc')); ?>">Fewest instances</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfFeatures', 'order' => 'desc')); ?>">Most features</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfFeatures', 'order' => 'asc')); ?>">Fewest features</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfNumericFeatures', 'order' => 'desc')); ?>">Most numeric features</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfNumericFeatures', 'order' => 'asc')); ?>">Fewest numeric features</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfMissingValues', 'order' => 'desc')); ?>">Most missing values</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfMissingValues', 'order' => 'asc')); ?>">Fewest missing values</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'desc')); ?>">Most classes</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'asc')); ?>">Fewest classes</a></li>
+		<?php } ?>
   </ul>
 </div>
 
