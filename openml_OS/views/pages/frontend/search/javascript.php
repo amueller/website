@@ -65,8 +65,7 @@ function removeFilters()
      if (event.keyCode == 13) { $('#searchform').submit();}
      else {
        updateQuery(elem);
-       if (event.type == 'change') { $('#searchform').submit();}
-     }});
+     }});      
  }
 
     // fetch counts for menu bar
