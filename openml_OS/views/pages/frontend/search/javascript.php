@@ -12,7 +12,7 @@ function updateQuery(type)
 {
   var constr = '';
   if(type == 'source_data.name')
-    constr = $("#"+type.replace('.name','')).val().replace(/\s/g,"_");
+    constr = $("#"+type.replace('.name','\\.name')).val().replace(/\s/g,"_");
   else if(type == 'run_task.tasktype.tt_id')
     constr = $("#run_task\\.tasktype\\.tt_id").val();
   else
@@ -101,6 +101,9 @@ function removeFilters()
     bindInput("version");
     bindInput("type");
     bindInput("task_id");
+    bindInput("source_data");
+    bindInput("target_feature");
+    bindInput("evaluation_measures");
 
     //buttons
     $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});

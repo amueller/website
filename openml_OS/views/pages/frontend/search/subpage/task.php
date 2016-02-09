@@ -33,6 +33,9 @@
    ?>
    <li>
       <?php
+      if($v['name'] == 'source_data'){
+        $v['name'] = 'source_data.name';
+      }
       if($v['name'] == 'estimation_procedure'){?>
         <select class="form-control input-small selectpicker" name="tasktype" id="estimation_procedure.proc_id">
            <option value="">Estimation procedure</option>
@@ -51,7 +54,7 @@
          </select>
       <?php } else { ?>
       <input type="text" class="form-control floating-label" id="<?php echo $v['name']; ?>" name="<?php echo $v['name']; ?>" data-hint="<?php echo $v['description'];?>"
-       value="<?php if(array_key_exists($v['name'],$this->filters)){ echo $this->filters[$v['name']];}?>" placeholder="<?php echo ucfirst(str_replace('_',' ',$v['name'])); ?>">
+       value="<?php if(array_key_exists($v['name'],$this->filters)){ echo $this->filters[$v['name']];}?>" placeholder="<?php echo ucfirst(str_replace('.',' ',str_replace('_',' ',$v['name']))); ?>">
       <?php } ?>
    </li>
    <?php
