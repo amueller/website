@@ -140,7 +140,7 @@ class Api_data extends Api_model {
       return;
     }
 
-    if($dataset->uploader != $this->user_id ) {
+    if($dataset->uploader != $this->user_id and !$this->ion_auth->is_admin()) {
       $this->returnError( 353, $this->version );
       return;
     }
