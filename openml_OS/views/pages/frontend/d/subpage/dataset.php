@@ -156,11 +156,11 @@
     <?php } ?>
   <a class="loginfirst btn btn-default btn-raised" href="new/task">Define a new task</a>
 
+  <?php if($this->data['visibility'] != 'private'){ ?>
   <h3>Discussions</h3>
   <div class="panel disquspanel">
     <div id="disqus_thread">Loading discussions...</div>
   </div>
-  <?php } ?>
 
   <script type="text/javascript">
   var disqus_shortname = 'openml'; // forum name
@@ -175,3 +175,5 @@
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
   </script>
+  <?php } ?>
+  <?php } ?>
