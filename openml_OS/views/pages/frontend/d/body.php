@@ -56,7 +56,7 @@
 
     // block unauthorized access
     $this->blocked = false;
-    if($this->data['visibility'] == 'private' and (!$this->ion_auth->logged_in() or $this->ion_auth->user()->row()->id != $this->data['uploader_id'])){
+    if($this->data['visibility'] == 'private' and !$this->ion_auth->is_admin() and (!$this->ion_auth->logged_in() or $this->ion_auth->user()->row()->id != $this->data['uploader_id'])){
       $this->blocked = true;
     } else {
 
