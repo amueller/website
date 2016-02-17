@@ -34,7 +34,7 @@ class ElasticSearch {
                 $this->user_names[$a->id] = $a->first_name . ' ' . $a->last_name;
             }
 
-        $this->mappings['likes'] = array(
+        $this->mappings['like'] = array(
             '_all' => array(
                 'enabled' => true,
                 'stored' => 'yes',
@@ -50,7 +50,7 @@ class ElasticSearch {
             )
         );
 
-        $this->mappings['downloads'] = array(
+        $this->mappings['download'] = array(
             '_all' => array(
                 'enabled' => true,
                 'stored' => 'yes',
@@ -422,7 +422,7 @@ class ElasticSearch {
     public function index_like($id, $start_id = 0){
 
         $params['index'] = 'openml';
-        $params['type'] = 'likes';
+        $params['type'] = 'like';
 
         $likes = $this->db->query('select * from likes' . ($id ? ' where lid=' . $id : ''));
 
@@ -456,7 +456,7 @@ class ElasticSearch {
 
     public function index_download($id, $start_id = 0){
         $params['index'] = 'openml';
-        $params['type'] = 'downloads';
+        $params['type'] = 'download';
 
         $downloads = $this->db->query('select * from downloads' . ($id ? ' where did=' . $id : ''));
 
@@ -470,7 +470,7 @@ class ElasticSearch {
                 )
             );
 
-            $params['body'][] = $this->build_like($d);
+            $params['body'][] = $this->build_download($d);
         }
 
         $responses = $this->client->bulk($params);
