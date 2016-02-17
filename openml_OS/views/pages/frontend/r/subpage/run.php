@@ -1,6 +1,6 @@
 
   <ul class="hotlinks">
-   <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+   <li><a class="loginfirst" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
    <li><a class="loginfirst" href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
   </ul>
   <h1>Run <?php echo $this->run_id; ?></h1>

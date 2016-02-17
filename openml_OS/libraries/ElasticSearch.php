@@ -44,10 +44,6 @@ class ElasticSearch {
             '_timestamp' => array('enabled' => true),
             '_type' => array('enabled' => true),
             'properties' => array(
-                'like_id' => array('type' => 'long'),
-                'user_id' => array('type' => 'long'),
-                'knowledge_type' => array('type' => 'string'),
-                'knowledge_id' => array('type' => 'long'),
                 'time' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss')
@@ -64,11 +60,6 @@ class ElasticSearch {
             '_timestamp' => array('enabled' => true),
             '_type' => array('enabled' => true),
             'properties' => array(
-                'download_id' => array('type' => 'long'),
-                'user_id' => array('type' => 'long'),
-                'knowledge_type' => array('type' => 'string'),
-                'knowledge_id' => array('type' => 'long'),
-                'count' => array('type' => 'long'),
                 'time' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss')
@@ -123,9 +114,7 @@ class ElasticSearch {
                     'index_analyzer' => 'simple',
                     'search_analyzer' => 'simple',
                     'payloads' => true,
-                    'max_input_length' => 100),
-                'nr_of_likes' => array('type' => 'long'),
-                'nr_of_distinct_downloads' => array('type' => 'long')
+                    'max_input_length' => 100)
             )
         );
         $this->mappings['flow'] = array('_all' => array(
@@ -178,9 +167,7 @@ class ElasticSearch {
                     'search_analyzer' => 'standard',
                     'payloads' => true,
                     'max_input_length' => 100
-                ),
-                'nr_of_likes' => array('type' => 'long'),
-                'nr_of_distinct_downloads' => array('type' => 'long')
+                )
             )
         );
         $this->mappings['user'] = array('_all' => array(
@@ -206,9 +193,7 @@ class ElasticSearch {
                     'search_analyzer' => 'standard',
                     'payloads' => true,
                     'max_input_length' => 100
-                ),
-                'nr_of_likes' => array('type' => 'long'),
-                'nr_of_distinct_downloads' => array('type' => 'long')
+                )
             )
         );
         $this->mappings['task'] = array('_all' => array(
@@ -237,9 +222,7 @@ class ElasticSearch {
                 'task_id' => array('type' => 'long'),
                 'date' => array(
                     'type' => 'date',
-                    'format' => 'yyyy-MM-dd HH:mm:ss'),
-                'nr_of_likes' => array('type' => 'long'),
-                'nr_of_distinct_downloads' => array('type' => 'long')
+                    'format' => 'yyyy-MM-dd HH:mm:ss')
             )
         );
         $this->mappings['task_type'] = array('_all' => array(
@@ -303,9 +286,7 @@ class ElasticSearch {
                     'properties' => array(
                         'evaluation_measure' => array('type' => 'string')
                     )
-                ),
-                'nr_of_likes' => array('type' => 'long'),
-                'nr_of_distinct_downloads' => array('type' => 'long')
+                )
             )
         );
         $this->mappings['study'] = array('_all' => array(
@@ -437,13 +418,13 @@ class ElasticSearch {
             $this->client->indices()->deleteMapping($params);
         }
     }
-    
+
     public function index_like($id, $start_id = 0){
-        
+
         $params['index'] = 'openml';
         $params['type'] = 'likes';
 
-        $likes = $this->db->query('select * from likes where  id=' . $id);
+        $likes = $this->db->query('select * from likes' . ($id ? ' where lid=' . $id : ''));
 
         if ($id and ! $likes)
             return 'Error: like ' . $id . ' is unknown';
@@ -461,7 +442,7 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($likes) . ' likes.';
     }
-    
+
     private function build_like($l){
         $like = array(
             'like_id' => $l->lid,
@@ -472,12 +453,12 @@ class ElasticSearch {
         );
         return $like;
     }
-    
+
     public function index_download($id, $start_id = 0){
         $params['index'] = 'openml';
         $params['type'] = 'downloads';
 
-        $downloads = $this->db->query('select * from downloads where  id=' . $id);
+        $downloads = $this->db->query('select * from downloads' . ($id ? ' where did=' . $id : ''));
 
         if ($id and ! $downloads)
             return 'Error: download ' . $id . ' is unknown';
@@ -495,8 +476,8 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downloads) . ' downloads.';
     }
-    
-    
+
+
     private function build_download($d){
         $download = array(
             'download_id' => $d->did,
@@ -507,7 +488,7 @@ class ElasticSearch {
             'time' => $d->time
         );
         return $download;
-        
+
     }
 
     public function index_user($id, $start_id = 0) {
@@ -577,16 +558,16 @@ class ElasticSearch {
         if ($runs_flows)
             $user['runs_on_flows'] = $runs_flows[0]->count;
 
-        $nr_of_likes = $this->db->query("SELECT COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE user_id=".$d->id.";");
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE user_id=".$d->id);
         if($nr_of_likes){
             $user['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("SELECT COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE user_id=".$d->id.";");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE user_id=".$d->id);
         if($nr_of_downloads){
             $user['nr_of_distinct_downloads'] = $nr_of_downloads[0]->count;
         }
-        
-        
+
+
         return $user;
     }
 
@@ -774,12 +755,12 @@ class ElasticSearch {
                 'description' => substr(implode(' ', $description), 0, 100)
             )
         );
-        
-        $nr_of_likes = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t';");
+
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t';");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
@@ -1015,15 +996,15 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-        $nr_of_likes = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r';");
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r';");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
-        
+
 
         return $new_data;
     }
@@ -1187,12 +1168,12 @@ class ElasticSearch {
                 $new_data['parameters'][] = $par;
             }
         }
-        
-        $nr_of_likes = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f';");
+
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f';");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
@@ -1470,12 +1451,12 @@ class ElasticSearch {
                 $new_data['features'][] = $feat;
             }
         }
-        
-        $nr_of_likes = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d';");
+
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("SELECT COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d';");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
