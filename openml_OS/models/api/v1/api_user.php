@@ -30,7 +30,7 @@ class Api_user extends Api_model {
   private function user_delete() {
 
     if( $this->ion_auth->is_admin($this->user_id) == false ) {
-      $this->returnError( 462, $this->version );
+      $this->returnError( 104, $this->version );
       return;
     }
 
