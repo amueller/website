@@ -139,7 +139,7 @@ class Api_setup extends Api_model {
   		return;
   	} else {
   		$meta_array = array($data);
-  		$this->xmlContents( 'setup_differences', $this->version, array( 'data' => $meta_array ) );
+  		$this->xmlContents( 'setup-differences', $this->version, array( 'data' => $meta_array ) );
   	}
   }
 
