@@ -689,7 +689,8 @@ $this->apiErrors[512][0] = 'No results';
 $this->apiErrors[512][1] = 'There where no results. Check whether there are runs under this constraint. ';
 
 // openml.setup.differences
-$this->apiErrors[520][0] = 'Operation failed';
-$this->apiErrors[520][1] = 'Failed to insert setup differences. '; 
+$this->apiErrors[520][0] = 'Not found.';
+$this->apiErrors[520][1] = 'Setup differences not cached in database yet. '; 
+
 
 ?>

@@ -40,7 +40,16 @@ class Api_setup extends Api_model {
     }
     
     if (count($segments) == 3 && $segments[0] == 'differences' && is_numeric($segments[1]) && is_numeric($segments[2]) && $request_type == 'post') {
-    	$this->setup_differences($segments[1],$segments[2]);
+    	$this->setup_differences_upload($segments[1],$segments[2]);
+    	return;
+    }
+    
+    if (count($segments) >= 3 && $segments[0] == 'differences' && is_numeric($segments[1]) && is_numeric($segments[2]) && $request_type == 'get') {
+    	$task_id = null;
+    	if (count($segments) > 3) {
+    		$task_id = $segments[3];
+    	}
+    	$this->setup_differences($segments[1],$segments[2],$task_id);
     	return;
     }
     
@@ -114,7 +123,28 @@ class Api_setup extends Api_model {
     }
   }
   
-  private function setup_differences($setupA, $setupB) {
+  private function setup_differences($setupA, $setupB, $task_id) {
+  	$sidA = min($setupA, $setupB);
+  	$sidB = max($setupA, $setupB);
+  	$taskWhere = '';
+  	
+  	if ($task_id != null) {
+  		$taskWhere = ' AND `task_id` = ' . $task_id;
+  	}
+  	
+  	$meta_array = $this->Setup_differences->getWhere(
+  		  '`sidA` = ' . $sidA . ' AND `sidB` = ' . $sidB . $taskWhere);
+  	if ($meta_array != false) {
+  		$this->xmlContents(
+  			'setup-differences', $this->version, 
+  			array('data' => $meta_array)
+  		);
+  	} else {
+  		$this->returnError(520, $this->version);
+  	}
+  }
+  
+  private function setup_differences_upload($setupA, $setupB) {
   	$task_id = $this->input->post('task_id');
   	$task_size = $this->input->post('task_size');
   	$differences = $this->input->post('differences');
