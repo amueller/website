@@ -138,7 +138,8 @@ class Api_setup extends Api_model {
   	//	$this->returnError( 520, $this->version );
   	//	return;
   	//} else {
-  		$meta_array = array($data);
+  		$meta_array = $this->Setup_differences->getWhere(
+  		  '`sidA` = ' . $data['sidA'] . ' AND `sidB` = ' . $data['sidB'] . ' AND `task_id` = ' . $data['task_id']);
   		$this->xmlContents( 'setup-differences', $this->version, array( 'data' => $meta_array ) );
   	//}
   }
