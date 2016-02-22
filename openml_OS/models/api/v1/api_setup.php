@@ -134,13 +134,13 @@ class Api_setup extends Api_model {
   	
   	$success = $this->Setup_differences->insert($data);
   	
-  	if ($success == false) {
-  		$this->returnError( 520, $this->version );
-  		return;
-  	} else {
+  	// if ($success == false) {
+  	//	$this->returnError( 520, $this->version );
+  	//	return;
+  	//} else {
   		$meta_array = array($data);
   		$this->xmlContents( 'setup-differences', $this->version, array( 'data' => $meta_array ) );
-  	}
+  	//}
   }
 
   private function setup_untag($id,$tag) {
