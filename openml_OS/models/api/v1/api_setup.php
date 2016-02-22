@@ -41,6 +41,7 @@ class Api_setup extends Api_model {
     
     if (count($segments) == 3 && $segments[0] == 'differences' && is_numeric($segments[1]) && is_numeric($segments[2]) && $request_type == 'post') {
     	$this->setup_differences($segments[1],$segments[2]);
+    	return;
     }
     
     $this->returnError( 100, $this->version );
@@ -135,6 +136,7 @@ class Api_setup extends Api_model {
   	
   	if ($success == false) {
   		$this->returnError( 520, $this->version );
+  		return;
   	} else {
   		$meta_array = array($data);
   		$this->xmlContents( 'setup_differences', $this->version, array( 'data' => $meta_array ) );
