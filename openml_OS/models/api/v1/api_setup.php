@@ -41,7 +41,7 @@ class Api_setup extends Api_model {
     
     if (count($segments) == 3 && $segments[0] == 'differences' && 
         is_numeric($segments[1]) && is_numeric($segments[2]) && 
-        $request_type == 'post' && $this->inpout->post('task_id') != false) { // TODO: fix $this->inpout->post('task_id') requirement
+        $request_type == 'post' && $this->input->post('task_id') != false) { // TODO: fix $this->inpout->post('task_id') requirement
     	$this->setup_differences_upload($segments[1],$segments[2]);
     	return;
     }
