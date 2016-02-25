@@ -34,6 +34,16 @@ class ElasticSearch {
                 $this->user_names[$a->id] = $a->first_name . ' ' . $a->last_name;
             }
 
+        $this->activity_metrics['x'] = 1;
+        $this->activity_metrics['y'] = 2;
+        $this->activity_metrics['z'] = 3;
+        
+        $this->reach_metrics['x'] = 1;
+        $this->reach_metrics['y'] = 2;
+        
+        $this->impact_metrics['x'] = 0.5;
+        $this->impact_metrics['y'] = 0.5;
+
         $this->mappings['like'] = array(
             '_all' => array(
                 'enabled' => true,
@@ -564,9 +574,12 @@ class ElasticSearch {
         }
         $nr_of_downloads = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE user_id=".$d->id);
         if($nr_of_downloads){
-            $user['nr_of_distinct_downloads'] = $nr_of_downloads[0]->count;
+            $user['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
-
+        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE user_id=".$d->id);
+        if($total_downloads){
+            $user['total_downloads'] = $total_downloads[0]->sum;
+        }
 
         return $user;
     }
@@ -756,14 +769,23 @@ class ElasticSearch {
             )
         );
 
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
+        $reach = 0;
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
         if($nr_of_likes){
-            $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
+            $newdata['nr_of_likes'] = $nr_of_likes[0]->count;
+            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
         if($nr_of_downloads){
-            $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
+            $newdata['nr_of_downloads'] = $nr_of_downloads[0]->count;
+            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
         }
+        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
+        if($total_downloads){
+            $newdata['total_downloads'] = $total_downloads[0]->sum;
+        }
+        $newdata['reach'] = $reach;
+        
         return $newdata;
     }
 
@@ -996,15 +1018,23 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
+        
+        $reach = 0;
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
+            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
+            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
         }
-
+        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
+        if($total_downloads){
+            $new_data['total_downloads'] = $total_downloads[0]->sum;
+        }
+        $new_data['reach'] = $reach;
 
         return $new_data;
     }
@@ -1075,6 +1105,7 @@ class ElasticSearch {
 
         $flows = $this->db->query('select i.*, count(rid) as runs from implementation i left join algorithm_setup s on (s.implementation_id=i.id) left join run r on (r.setup=s.sid)' . ($id ? ' where i.id=' . $id : '') . ' group by i.id');
 
+        
         if ($id and ! $flows)
             return 'Error: flow ' . $id . ' is unknown';
 
@@ -1169,15 +1200,35 @@ class ElasticSearch {
             }
         }
 
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
+        $reach = 0;
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
+            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
+            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
         }
+        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
+        if($total_downloads){
+            $new_data['total_downloads'] = $total_downloads[0]->sum;
+        }
+        $new_data['reach'] = $reach;
 
+        $impact_impact = 0;
+        $impact_reach = 0;
+        $impact_reach_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `implementation`, `run`, `algorithm_setup` WHERE algorithm_setup.implementation_id=".$d->id." AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'algorithm_setup.implementation_id=".$d->id." AND run.setup=algorithm_setup.sid AND downloads.knowledge_id=run.rid AND downloads.knowledge_type='r'");
+        if($impact_reach_downloads){
+            $impact_reach += $impact_reach_downloads[0]->count * $this->reach_metrics['x'];
+        }
+        $impact_reach_likes = $this->db->query("select COUNT(DISTINCT likes.lid) as count FROM `likes`, `implementation`, `run`, `algorithm_setup` WHERE algorithm_setup.implementation_id=".$d->id." AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
+        if($impact_reach_likes){
+            $impact_reach += $impact_reach_likes[0]->count * $this->reach_metrics['y'];
+        }
+        
+        $new_data['impact'] = $this->impact_metrics['x']*$impact_impact + $this->impact_metrics['y']*$impact_reach;
         return $new_data;
     }
 
@@ -1379,7 +1430,7 @@ class ElasticSearch {
             'version_label' => $d->version_label,
             'description' => $d->description,
             'format' => $d->format,
-            'uploader' => $this->user_names[$d->uploader],
+            'uploader' => array_key_exists($d->uploader, $this->user_names) ? $this->user_names[$d->uploader]: 'unknown',
             'uploader_id' => intval($d->uploader),
             'visibility' => $d->visibility,
             'creator' => $d->creator,
@@ -1451,15 +1502,35 @@ class ElasticSearch {
                 $new_data['features'][] = $feat;
             }
         }
-
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
+        $reach = 0;
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
+            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
+            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
         }
+        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
+        if($total_downloads){
+            $new_data['total_downloads'] = $total_downloads[0]->sum;
+        }
+        $new_data['reach'] = $reach;
+        
+        $impact_impact = 0;
+        $impact_reach = 0;
+        $impact_reach_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `task_inputs` WHERE task_inputs.value=".$d->did." AND task_inputs.input='source_data' AND downloads.knowledge_id=task_inputs.task_id AND downloads.knowledge_type='t'");
+        if($impact_reach_downloads){
+            $impact_reach += $impact_reach_downloads[0]->count * $this->reach_metrics['x'];
+        }
+        $impact_reach_likes = $this->db->query("select COUNT(DISTINCT likes.lid) as count FROM `likes`, `task_inputs` WHERE task_inputs.value=".$d->did." AND task_inputs.input='source_data' AND likes.knowledge_id=task_inputs.task_id AND likes.knowledge_type='t'");
+        if($impact_reach_likes){
+            $impact_reach += $impact_reach_likes[0]->count * $this->reach_metrics['y'];
+        }
+        $new_data['impact'] = $this->impact_metrics['x']*$impact_impact + $this->impact_metrics['y']*$impact_reach;
+        
         return $new_data;
     }
 
