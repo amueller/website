@@ -106,7 +106,7 @@
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
             <li class="active"><a href="#data_overview" data-toggle="tab">Overview</a></li>
-            <li><a class="loginfirst" href="<?php echo $this->data['url']; ?>">Download data</a></li>
+            <li><a class="loginfirst" onclick="doDownload()" href="<?php echo $this->data['url']; ?>">Download data</a></li>
             <li><a href="new/data">Submit new data</a></li>
             <li><a href="new/task">Create a task with this data set</a></li>
           </ul>

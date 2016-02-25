@@ -6,6 +6,7 @@ $this->p = array();
 $this->p['index'] = 'openml';
 $this->p['type'] = 'data';
 $this->p['id'] = $this->id;
+
 try{
   $this->data = $this->searchclient->get($this->p)['_source'];
 } catch (Exception $e) {}
@@ -161,3 +162,114 @@ $("a[title*='View commit']").each(function() {
    var _href = $(this).attr("href");
    $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
 });
+
+
+
+var isliked = false;
+<?php
+if ($this->ion_auth->logged_in()) {
+echo "
+$.ajax({
+    method:'GET',
+    url:'",BASE_URL,"api_new/v1/json/likes/",$this->ion_auth->user()->row()->id,"/d/", $this->id, "'
+    }).done(function(resultdata){
+        if(resultdata.getElementsByTagName('likes')){
+            isliked = true;
+            $('#likeicon').removeClass(\"fa-heart-o\").addClass(\"fa-heart\");
+            $('#likebutton').prop('title', 'Click to unlike');
+        }else{
+            isliked = false;
+            $('#likeicon').removeClass(\"fa-heart\").addClass(\"fa-heart-o\");
+            $('#likebutton').prop('title', 'Click to like');
+        }
+    }).fail(function(resultdata){
+        isliked = false;
+        $('#likeicon').removeClass(\"fa-heart\").addClass(\"fa-heart-o\");
+        $('#likebutton').prop('title', 'Click to like');
+ });";}?>
+
+function refreshNrLikes(){
+    $.ajax({
+        method:'GET',
+        url:'<?php echo BASE_URL; ?>api_new/v1/json/likes/any/d/<?php echo $this->id ?>'
+        }).done(function(resultdata){
+            if(resultdata.getElementsByTagName('like')){
+            var nrlikes = resultdata.getElementsByTagName('like').length;
+            $('#likecount').html(nrlikes+" likes");
+            }else{
+            $('#likecount').html("0 likes");
+            }
+        }).fail(function(resultdata){        
+            $('#likecount').html("0 likes");
+     });
+ }
+ 
+ function refreshNrDownloads(){
+    $.ajax({
+       method:'GET',
+       url:'<?php echo BASE_URL; ?>api_new/v1/json/downloads/any/d/<?php echo $this->id ?>'
+    }).done(function(resultdata){
+       if(resultdata.getElementsByTagName('download')){
+           var nrdownloads = resultdata.getElementsByTagName('download').length;
+           var totaldownloads = 0;
+           for(var i=0; i<nrdownloads; i++){
+               totaldownloads+=parseInt(resultdata.getElementsByTagName('download')[i].getElementsByTagName('count')[0].textContent);
+           }
+           $('#downloadcount').html("downloaded by "+nrdownloads+" people, "+totaldownloads+" total downloads");
+       }else{
+           $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
+       }
+    }).fail(function(resultdata){        
+       $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
+    });
+ }
+
+
+function doLike(){
+    if(isliked){
+        meth = 'DELETE';
+    }else{
+        meth = 'POST';
+    }
+    $.ajax({
+        method: meth,
+        url: '<?php echo BASE_URL; ?>api_new/v1/json/likes/d/<?php echo $this->id ?>'
+    }).done(function(){console.log("Hello");}).fail(function(){console.log("Fail");});/*.always(function() {
+        if(isliked){
+            isliked = false;
+            $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
+            $('#likebutton').prop('title', 'Click to like');
+            var likecounthtml = $('#likecount').html();
+            var nrlikes = parseInt(likecounthtml.split(" ")[0]);
+            nrlikes = nrlikes-1;
+            $('#likecount').html(nrlikes+" likes");
+            var reachhtml = $('#reach').html();
+            var reach = parseInt(reachhtml.split(" ")[0]);
+            reach = reach-2;
+            $('#reach').html(reach+" reach");
+        }else{
+            isliked = true;
+            $('#likeicon').removeClass("fa-heart-o").addClass("fa-heart");
+            $('#likebutton').prop('title', 'Click to unlike');
+            var likecounthtml = $('#likecount').html();
+            var nrlikes = parseInt(likecounthtml.split(" ")[0]);
+            nrlikes = nrlikes+1;
+            $('#likecount').html(nrlikes+" likes");
+            var reachhtml = $('#reach').html();
+            var reach = parseInt(reachhtml.split(" ")[0]);
+            reach = reach+2;
+            $('#reach').html(reach+" reach");
+        }
+    });*/
+}
+
+function doDownload(){
+    $.ajax({
+            method: 'POST',
+            url: '<?php echo BASE_URL; ?>api_new/v1/json/downloads/d/'+<?php echo $this->id ?>
+           }
+    ).always(function(){
+        refreshNrDownloads();
+    });
+}
+

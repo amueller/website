@@ -4,16 +4,20 @@
     ?>
 
     <ul class="hotlinks">
-	 <li><a class="loginfirst" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-	 <li><a href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
-	 <li>   <div class="version" style="margin-bottom: -17px;">
+         <li><a id="likebutton" class="loginfirst btn btn-link" onclick="doLike()" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a></li>
+         <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+         <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json" class="loginfirst btn btn-link" onclick="doDownload()"><i class="fa fa-code fa-2x"></i></a></li>
+         <li>   
+             <div class="version" style="margin-bottom: -17px;">
 		  <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
-			  <?php foreach( $this->versions as $v ) { ?>
-				<option value="<?php echo 'd/'.$v['data_id'];?>" <?php echo $v['version'] == $this->data['version'] ? 'selected' : '';?>>v. <?php echo $v['version']; ?></option>
+                         <?php foreach ($this->versions as $v) { ?>
+                             <option value="<?php echo 'd/' . $v['data_id']; ?>" <?php echo $v['version'] == $this->data['version'] ? 'selected' : ''; ?>>v. <?php echo $v['version']; ?></option>
 			  <?php } ?>
 			</select>
-	        </div></li>
+                 </div>
+         </li>
     </ul>
+    
     <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a>
 	     <?php echo $this->data['name']; ?>
     </h1>
@@ -27,11 +31,13 @@
              endif; endif;?>
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->data['visibility']); ?>
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat( $this->data['date']); ?> by <a href="u/<?php echo $this->data['uploader_id'] ?>"><?php echo $this->data['uploader'] ?></a>
-       <?php if($this->is_owner)
-		      echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>';
-	      ?>
-
-
+       <?php if($this->is_owner): echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>'; endif;?>
+       <br>
+       <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->data)): if($this->data['nr_of_likes']!=null): $nr_l = $this->data['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
+       <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->data)): if($this->data['nr_of_downloads']!=null): $nr_d = $this->data['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+       <?php if(array_key_exists('total_downloads',$this->data)): if($this->data['total_downloads']!=null): $nr_d = $this->data['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
+       <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->data)): if($this->data['reach']!=null): $r = $this->data['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
+       <i class="fa fa-warning impact"></i><span id="impact"><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
     </div>
 
   <div class="col-xs-12 panel" onclick="showmore()">
