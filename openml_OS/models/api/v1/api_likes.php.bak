@@ -44,7 +44,7 @@ class Api_likes extends Api_model {
 
     private function likes_list() {
         $likes_res = $this->Like->get();
-        if (is_array($likes_res) == false) {
+        if (is_array($likes_res) == false || count($likes_res) == 0) {
             $this->returnError(370, $this->version);
             return;
         }
@@ -54,7 +54,7 @@ class Api_likes extends Api_model {
 
     private function likes_of_user($user_id) {
         $likes_res = $this->Like->getLikesByUser($user_id);
-        if (is_array($likes_res) == false) {
+        if (is_array($likes_res) == false || count($likes_res) == 0) {
             $this->returnError(370, $this->version);
             return;
         }
@@ -62,8 +62,6 @@ class Api_likes extends Api_model {
     }
 
     private function likes_get($user_id, $knowledge_type, $knowledge_id) {
-        $b = new stdClass();
-        $b->key = "Exists";
         if ($user_id == 'any' && $knowledge_id == 'any') {
             $likes_res = $this->Like->getLikesByType($knowledge_type);
         } else if ($user_id == 'any') {
@@ -74,11 +72,10 @@ class Api_likes extends Api_model {
             $likes_res = $this->Like->getByIds($user_id, $knowledge_type, $knowledge_id);
         }
         if (is_array($likes_res) == false || count($likes_res) == 0) {
-            $b->value = false;
-        }else{
-            $b->value = true;
+            $this->returnError(370, $this->version);
+            return;
         }
-        $this->xmlContents('boolean',$this->version,$b);
+        $this->xmlContents('likes', $this->version, array('likes' => $likes_res));
     }
 
     private function like_delete($knowledge_type, $knowledge_id) {
@@ -88,13 +85,12 @@ class Api_likes extends Api_model {
             return;
         }else{
             $like = $this->Like->getByIds($this->user_id, $knowledge_type, $knowledge_id)[0];
-            
+
+            $like_id = $like->lid;
             if ($like == false) {
                 $this->returnError(352, $this->version);
                 return;
             }
-
-            $like_id = $like->lid;
 
             if ($like->user_id != $this->user_id) {
                 $this->returnError(353, $this->version, 450, implode(" ", $like));

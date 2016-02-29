@@ -3131,10 +3131,6 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
   font-size: 200%;
 }
 
-.subvalue{
-    font-size: 150%;
-}
-
 .panel-simple{
   padding: 0px;
 }

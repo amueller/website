@@ -173,16 +173,15 @@ $.ajax({
     method:'GET',
     url:'",BASE_URL,"api_new/v1/json/likes/",$this->ion_auth->user()->row()->id,"/d/", $this->id, "'
     }).done(function(resultdata){
-        if(resultdata.getElementsByTagName('boolean').length>0){
-            if(Boolean(resultdata.getElementsByTagName('boolean')[0].textContent)){
-                isliked = true;
-                $('#likeicon').removeClass(\"fa-heart-o\").addClass(\"fa-heart\");
-                $('#likebutton').prop('title', 'Click to unlike');
-            } else{
-                isliked = false;
-                $('#likeicon').removeClass(\"fa-heart\").addClass(\"fa-heart-o\");
-                $('#likebutton').prop('title', 'Click to like');
-            }
+        console.log(resultdata);
+        if(resultdata.getElementsByTagName('like')){
+            isliked = true;
+            $('#likeicon').removeClass(\"fa-heart-o\").addClass(\"fa-heart\");
+            $('#likebutton').prop('title', 'Click to unlike');
+        }else{
+            isliked = false;
+            $('#likeicon').removeClass(\"fa-heart\").addClass(\"fa-heart-o\");
+            $('#likebutton').prop('title', 'Click to like');
         }
     }).fail(function(resultdata){
         isliked = false;
@@ -195,11 +194,11 @@ function refreshNrLikes(){
         method:'GET',
         url:'<?php echo BASE_URL; ?>api_new/v1/json/likes/any/d/<?php echo $this->id ?>'
         }).done(function(resultdata){
-            if(resultdata.getElementsByTagName('like').length>0){
-                var nrlikes = resultdata.getElementsByTagName('like').length;
-                $('#likecount').html(nrlikes+" likes");
+            if(resultdata.getElementsByTagName('like')){
+            var nrlikes = resultdata.getElementsByTagName('like').length;
+            $('#likecount').html(nrlikes+" likes");
             }else{
-                $('#likecount').html("0 likes");
+            $('#likecount').html("0 likes");
             }
         }).fail(function(resultdata){        
             $('#likecount').html("0 likes");
@@ -211,7 +210,7 @@ function refreshNrLikes(){
        method:'GET',
        url:'<?php echo BASE_URL; ?>api_new/v1/json/downloads/any/d/<?php echo $this->id ?>'
     }).done(function(resultdata){
-       if(resultdata.getElementsByTagName('download').length>0){
+       if(resultdata.getElementsByTagName('download')){
            var nrdownloads = resultdata.getElementsByTagName('download').length;
            var totaldownloads = 0;
            for(var i=0; i<nrdownloads; i++){
@@ -236,47 +235,33 @@ function doLike(){
     $.ajax({
         method: meth,
         url: '<?php echo BASE_URL; ?>api_new/v1/json/likes/d/<?php echo $this->id ?>'
-    }).done(function(resultdata){
-        if(resultdata.getElementsByTagName('like').length>0){
-            //changes already done
+    }).done(function(){console.log("Hello");}).fail(function(){console.log("Fail");});/*.always(function() {
+        if(isliked){
+            isliked = false;
+            $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
+            $('#likebutton').prop('title', 'Click to like');
+            var likecounthtml = $('#likecount').html();
+            var nrlikes = parseInt(likecounthtml.split(" ")[0]);
+            nrlikes = nrlikes-1;
+            $('#likecount').html(nrlikes+" likes");
+            var reachhtml = $('#reach').html();
+            var reach = parseInt(reachhtml.split(" ")[0]);
+            reach = reach-2;
+            $('#reach').html(reach+" reach");
         }else{
-            //undo changes
-            flipLikeHTML();
+            isliked = true;
+            $('#likeicon').removeClass("fa-heart-o").addClass("fa-heart");
+            $('#likebutton').prop('title', 'Click to unlike');
+            var likecounthtml = $('#likecount').html();
+            var nrlikes = parseInt(likecounthtml.split(" ")[0]);
+            nrlikes = nrlikes+1;
+            $('#likecount').html(nrlikes+" likes");
+            var reachhtml = $('#reach').html();
+            var reach = parseInt(reachhtml.split(" ")[0]);
+            reach = reach+2;
+            $('#reach').html(reach+" reach");
         }
-    }).fail(function(resultdata){
-        //undo changes
-        flipLikeHTML();
-    });
-    //change as if the api call is succesful
-    flipLikeHTML();
-}
-
-function flipLikeHTML(){
-    if(isliked){
-        isliked = false;
-        $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
-        $('#likebutton').prop('title', 'Click to like');
-        var likecounthtml = $('#likecount').html();
-        var nrlikes = parseInt(likecounthtml.split(" ")[0]);
-        nrlikes = nrlikes-1;
-        $('#likecount').html(nrlikes+" likes");
-        var reachhtml = $('#reach').html();
-        var reach = parseInt(reachhtml.split(" ")[0]);
-        reach = reach-2;
-        $('#reach').html(reach+" reach");
-    }else{
-        isliked = true;
-        $('#likeicon').removeClass("fa-heart-o").addClass("fa-heart");
-        $('#likebutton').prop('title', 'Click to unlike');
-        var likecounthtml = $('#likecount').html();
-        var nrlikes = parseInt(likecounthtml.split(" ")[0]);
-        nrlikes = nrlikes+1;
-        $('#likecount').html(nrlikes+" likes");
-        var reachhtml = $('#reach').html();
-        var reach = parseInt(reachhtml.split(" ")[0]);
-        reach = reach+2;
-        $('#reach').html(reach+" reach");
-    }
+    });*/
 }
 
 function doDownload(){
@@ -284,7 +269,7 @@ function doDownload(){
             method: 'POST',
             url: '<?php echo BASE_URL; ?>api_new/v1/json/downloads/d/'+<?php echo $this->id ?>
            }
-    ).done(function(){
+    ).always(function(){
         refreshNrDownloads();
     });
 }

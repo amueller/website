@@ -44,7 +44,7 @@ class Api_downloads extends Api_model {
 
     private function downloads_list() {
         $downloads_res = $this->Download->get();
-        if (is_array($downloads_res) == false) {
+        if (is_array($downloads_res) == false || count($downloads_res) == 0) {
             $this->returnError(370, $this->version);
             return;
         }
@@ -54,7 +54,7 @@ class Api_downloads extends Api_model {
 
     private function downloads_of_user($user_id) {
         $downloads_res = $this->Download->getDownloadsByUser($user_id);
-        if (is_array($downloads_res) == false) {
+        if (is_array($downloads_res) == false || count($downloads_res) == 0) {
             $this->returnError(370, $this->version);
             return;
         }
