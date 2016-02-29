@@ -324,7 +324,7 @@ class Api_flow extends Api_model {
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'implementation' ) );
+      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'flow' ) );
     }
   }
 
@@ -339,7 +339,7 @@ class Api_flow extends Api_model {
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'implementation' ) );
+      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'flow' ) );
     }
   }
 
