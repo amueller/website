@@ -11,7 +11,7 @@ class Api_model extends CI_Model {
   // taken from: http://outlandish.com/blog/xml-to-json/
   function xmlToArray($xml, $options = array()) {
     $defaults = array(
-        'namespaceSeparator' => ':',//you may want this to be something other than a colon
+        'namespaceSeparator' => '', //you may want this to be something other than a colon
         'attributePrefix' => '',    //to distinguish between attributes and nodes with the same name
         'alwaysArray' => array(),   //array of xml tag names which should always become arrays
         'autoArray' => true,        //only create arrays for tags which appear more than once
@@ -23,7 +23,7 @@ class Api_model extends CI_Model {
     $options = array_merge($defaults, $options);
     $namespaces = $xml->getDocNamespaces();
     $namespaces[''] = null; //add base (empty) namespace
-    $namespaces['oml'] = null; //ignore oml namespace
+    $namespaces['oml'] = ''; //ignore oml namespace
 
 
     //get attributes from all namespaces
