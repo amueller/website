@@ -1,21 +1,21 @@
 <?php
 class Api_model extends CI_Model {
-  
+
   protected $outputFormat = 'xml';
-  
+
   function __construct() {
     parent::__construct();
-    
+
   }
-  
+
   // taken from: http://outlandish.com/blog/xml-to-json/
   function xmlToArray($xml, $options = array()) {
     $defaults = array(
         'namespaceSeparator' => ':',//you may want this to be something other than a colon
-        'attributePrefix' => '@',   //to distinguish between attributes and nodes with the same name
+        'attributePrefix' => '',    //to distinguish between attributes and nodes with the same name
         'alwaysArray' => array(),   //array of xml tag names which should always become arrays
         'autoArray' => true,        //only create arrays for tags which appear more than once
-        'textContent' => '$',       //key used for the text content of elements
+        'textContent' => 'value',   //key used for the text content of elements
         'autoText' => true,         //skip textContent key if node has no attributes or child nodes
         'keySearch' => false,       //optional search and replace on tag and attribute names
         'keyReplace' => false       //replace values for above search values (as passed to str_replace())
@@ -23,7 +23,9 @@ class Api_model extends CI_Model {
     $options = array_merge($defaults, $options);
     $namespaces = $xml->getDocNamespaces();
     $namespaces[''] = null; //add base (empty) namespace
- 
+    $namespaces['oml'] = null; //ignore oml namespace
+
+
     //get attributes from all namespaces
     $attributesArray = array();
     foreach ($namespaces as $prefix => $namespace) {
@@ -37,7 +39,7 @@ class Api_model extends CI_Model {
             $attributesArray[$attributeKey] = (string)$attribute;
         }
     }
- 
+
     //get child nodes from all namespaces
     $tagsArray = array();
     foreach ($namespaces as $prefix => $namespace) {
@@ -45,13 +47,13 @@ class Api_model extends CI_Model {
             //recurse into child nodes
             $childArray = $this->xmlToArray($childXml, $options);
             list($childTagName, $childProperties) = each($childArray);
- 
+
             //replace characters in tag name
             if ($options['keySearch']) $childTagName =
                     str_replace($options['keySearch'], $options['keyReplace'], $childTagName);
             //add namespace prefix, if any
             if ($prefix) $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
- 
+
             if (!isset($tagsArray[$childTagName])) {
                 //only entry with this key
                 //test if tags of this type should always be arrays, no matter the element count
@@ -70,22 +72,22 @@ class Api_model extends CI_Model {
             }
         }
     }
- 
+
     //get text content of node
     $textContentArray = array();
     $plainText = trim((string)$xml);
     if ($plainText !== '') $textContentArray[$options['textContent']] = $plainText;
- 
+
     //stick it all together
     $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
             ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
- 
+
     //return node as array
     return array(
         $xml->getName() => $propertiesArray
     );
   }
-  
+
   protected function returnError( $code, $version, $httpErrorCode = 450, $additionalInfo = null ) {
     $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code][0] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
@@ -102,13 +104,13 @@ class Api_model extends CI_Model {
     foreach( $httpHeaders as $header ) {
       header( $header );
     }
-    
+
     if ($this->outputFormat == 'json') {
       $xml = simplexml_load_string($data);
       $json = json_encode($this->xmlToArray($xml));
       header('Content-length: ' . strlen($json) );
       header('Content-type: application/json; charset=utf-8');
-      
+
       echo $json;
     } else {
       header('Content-length: ' . strlen($data) );
