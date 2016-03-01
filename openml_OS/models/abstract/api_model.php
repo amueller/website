@@ -11,7 +11,7 @@ class Api_model extends CI_Model {
   // taken from: http://outlandish.com/blog/xml-to-json/
   function xmlToArray($xml, $options = array()) {
     $defaults = array(
-        'namespaceSeparator' => ':',//you may want this to be something other than a colon
+        'namespaceSeparator' => '',//you may want this to be something other than a colon
         'attributePrefix' => '',    //to distinguish between attributes and nodes with the same name
         'alwaysArray' => array(),   //array of xml tag names which should always become arrays
         'autoArray' => true,        //only create arrays for tags which appear more than once
@@ -27,6 +27,7 @@ class Api_model extends CI_Model {
     //get attributes from all namespaces
     $attributesArray = array();
     foreach ($namespaces as $prefix => $namespace) {
+        $prefix = ''; //ignore namespaces
         foreach ($xml->attributes($namespace) as $attributeName => $attribute) {
             //replace characters in attribute name
             if ($options['keySearch']) $attributeName =
@@ -41,6 +42,7 @@ class Api_model extends CI_Model {
     //get child nodes from all namespaces
     $tagsArray = array();
     foreach ($namespaces as $prefix => $namespace) {
+        $prefix = ''; //ignore namespaces
         foreach ($xml->children($namespace) as $childXml) {
             //recurse into child nodes
             $childArray = $this->xmlToArray($childXml, $options);
