@@ -12,7 +12,7 @@ class Api_model extends CI_Model {
   function xmlToArray($xml, $options = array()) {
     $defaults = array(
         'namespaceSeparator' => ':',//you may want this to be something other than a colon
-        'attributePrefix' => '@',    //to distinguish between attributes and nodes with the same name
+        'attributePrefix' => '',    //to distinguish between attributes and nodes with the same name
         'alwaysArray' => array(),   //array of xml tag names which should always become arrays
         'autoArray' => true,        //only create arrays for tags which appear more than once
         'textContent' => 'value',   //key used for the text content of elements
