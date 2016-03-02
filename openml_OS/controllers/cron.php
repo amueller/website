@@ -38,8 +38,13 @@ class Cron extends CI_Controller {
   }
 
   public function index($type, $id = false){
-      echo "starting ".$type." indexer from id ".$id;
-      $this->elasticsearch->index($type, $id);
+      if(!$id){
+        echo "starting ".$type." indexer";
+        $this->elasticsearch->index($type);
+      } else {
+        echo "starting ".$type." indexer from id ".$id;
+        $this->elasticsearch->index_from($type, $id);
+      }
   }
 
   function install_database() {
