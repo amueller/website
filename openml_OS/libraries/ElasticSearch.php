@@ -947,25 +947,27 @@ class ElasticSearch {
             $params['body'] = array();
 
             $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
-            $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
-            $evals = $this->fetch_evaluations($rid, $rid + $incr);
+            if($runs){
+              $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
+              $evals = $this->fetch_evaluations($rid, $rid + $incr);
 
-            foreach ($runs as $r) {
-                try {
-                    $params['body'][] = array(
-                        'index' => array(
-                            '_id' => $r->rid
-                        )
-                    );
-                    echo " ".$r->rid." ";
-                    $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals);
-                } catch (Exception $e) {
-                    return $e->getMessage();
-                }
+              foreach ($runs as $r) {
+                  try {
+                      $params['body'][] = array(
+                          'index' => array(
+                              '_id' => $r->rid
+                          )
+                      );
+                      echo " ".$r->rid." ";
+                      $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals);
+                  } catch (Exception $e) {
+                      return $e->getMessage();
+                  }
+              }
+              $responses = $this->client->bulk($params);
+
+              $submitted += sizeof($responses['items']);
             }
-            $responses = $this->client->bulk($params);
-
-            $submitted += sizeof($responses['items']);
             $rid += $incr;
         }
 
