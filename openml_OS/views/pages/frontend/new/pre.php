@@ -23,9 +23,14 @@ for( $i = 0; $i < count($this->task_types); ++$i ) {
 $this->responsetype = '';
 $this->response = '';
 
-$this->newtype = end(explode('/', $_SERVER['REQUEST_URI']));
+$this->newtype = $this->subpage;
 
 if ($this->subpage == 'task'){
+
+	if($this->input->get('data')){
+		$this->dataname = $this->input->get('data');
+	}
+
 $this->datasets 			= $this->Dataset->getColumnWhere( 'name', 'isOriginal = "true"', '`name` ASC' );
 $this->datasetIds 			= $this->Dataset->getColumn( 'did', 'did' );
 $this->datasetVersion		= $this->Dataset->getColumnFunction( 'CONCAT(`name`,"(",`version`,")")', '`name` ASC' );

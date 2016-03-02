@@ -154,7 +154,7 @@
         </div>
       </div>
     <?php } ?>
-  <a class="loginfirst btn btn-default btn-raised" href="new/task">Define a new task</a>
+  <a class="loginfirst btn btn-default btn-raised" href="new/task?data=<?php echo htmlentities($this->data['name'].'('.$this->data['version'].')');?>">Define a new task</a>
 
   <?php if($this->data['visibility'] != 'private'){ ?>
   <h3>Discussions</h3>

@@ -756,11 +756,11 @@ class ElasticSearch {
             )
         );
 
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
@@ -996,11 +996,11 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
@@ -1169,11 +1169,11 @@ class ElasticSearch {
             }
         }
 
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
@@ -1452,11 +1452,11 @@ class ElasticSearch {
             }
         }
 
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
+        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_likes){
             $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
+        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_downloads){
             $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
         }
