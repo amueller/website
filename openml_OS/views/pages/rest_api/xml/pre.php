@@ -15,6 +15,10 @@ $this->apiErrors[102][1] = 'In order to use the OpenML API, please authenticate 
 $this->apiErrors[103][0] = 'Authentication failed';
 $this->apiErrors[103][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
+// for function: openml.task.delete
+$this->apiErrors[104][0] = 'Admin rights are required.';
+$this->apiErrors[104][1] = 'You can not execute this operation because you are not an admin.';
+
 // for function: openml.data.description 
 $this->apiErrors[110][0] = 'Please provide data_id';
 $this->apiErrors[110][1] = 'Please provide data_id';
@@ -589,9 +593,7 @@ $this->apiErrors[460][1] = 'In order to remove your content, please authenticate
 $this->apiErrors[461][0] = 'Authentication failed';
 $this->apiErrors[461][1] = 'The session_hash was not valid. Please try to login again, or contact api administrators';
 
-// for function: openml.task.delete
-$this->apiErrors[462][0] = 'Admin rights are required.';
-$this->apiErrors[462][1] = 'You can not execute this operation because you are not an admin.';
+// deleted api error #462 -> now 104
 
 // for function: openml.task.delete
 $this->apiErrors[463][0] = 'User not found. ';
@@ -658,8 +660,8 @@ $this->apiErrors[481][0] = 'No results';
 $this->apiErrors[481][1] = 'There where no matches for this task type id. Check whether some tasks exists. ';
 
 // openml.file.upload
-$this->apiErrors[490][0] = 'Authentication failed';
-$this->apiErrors[490][1] = 'Admin rights required for this function. ';
+//$this->apiErrors[490][0] = 'Authentication failed';
+//$this->apiErrors[490][1] = 'Admin rights required for this function. ';
 
 // openml.file.upload
 $this->apiErrors[491][0] = 'File upload error';
@@ -685,5 +687,10 @@ $this->apiErrors[511][1] = 'The input parameters (task_id, setup_id, implementat
 // openml.implementations
 $this->apiErrors[512][0] = 'No results';
 $this->apiErrors[512][1] = 'There where no results. Check whether there are runs under this constraint. ';
+
+// openml.setup.differences
+$this->apiErrors[520][0] = 'Not found.';
+$this->apiErrors[520][1] = 'Setup differences not cached in database yet. '; 
+
 
 ?>

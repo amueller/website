@@ -8,6 +8,7 @@ class Api_setup extends Api_model {
     
     // load models
     $this->load->model('Algorithm_setup');
+    $this->load->model('Setup_differences');
     $this->load->model('Input_setting');
     $this->load->model('Schedule');
     $this->load->model('Setup_tag');
@@ -36,6 +37,22 @@ class Api_setup extends Api_model {
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
       $this->setup_untag($this->input->post('setup_id'),$this->input->post('tag'));
       return;
+    }
+    
+    if (count($segments) == 3 && $segments[0] == 'differences' && 
+        is_numeric($segments[1]) && is_numeric($segments[2]) && 
+        $request_type == 'post' && $this->input->post('task_id') != false) { // TODO: fix $this->inpout->post('task_id') requirement
+    	$this->setup_differences_upload($segments[1],$segments[2]);
+    	return;
+    }
+    
+    if (count($segments) >= 3 && $segments[0] == 'differences' && is_numeric($segments[1]) && is_numeric($segments[2])) {
+    	$task_id = null;
+    	if (count($segments) > 3) {
+    		$task_id = $segments[3];
+    	}
+    	$this->setup_differences($segments[1],$segments[2],$task_id);
+    	return;
     }
     
     $this->returnError( 100, $this->version );
@@ -106,6 +123,57 @@ class Api_setup extends Api_model {
     } else {
       $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'setup' ) );
     }
+  }
+  
+  private function setup_differences($setupA, $setupB, $task_id) {
+  	$sidA = min($setupA, $setupB);
+  	$sidB = max($setupA, $setupB);
+  	$taskWhere = '';
+  	
+  	if ($task_id != null) {
+  		$taskWhere = ' AND `task_id` = ' . $task_id;
+  	}
+  	
+  	$meta_array = $this->Setup_differences->getWhere(
+  		  '`sidA` = ' . $sidA . ' AND `sidB` = ' . $sidB . $taskWhere);
+  	if ($meta_array != false) {
+  		$this->xmlContents(
+  			'setup-differences', $this->version, 
+  			array('data' => $meta_array)
+  		);
+  	} else {
+  		$this->returnError(520, $this->version);
+  	}
+  }
+  
+  private function setup_differences_upload($setupA, $setupB) {
+  	$task_id = $this->input->post('task_id');
+  	$task_size = $this->input->post('task_size');
+  	$differences = $this->input->post('differences');
+  	
+  	if( $this->ion_auth->is_admin($this->user_id) == false ) {
+      $this->returnError( 104, $this->version );
+      return;
+    }
+  	
+  	$data = array(
+  		'sidA' => min($setupA,$setupB),
+  		'sidB' => max($setupA,$setupB),
+  		'task_id' => $task_id,
+  		'task_size' => $task_size,
+  		'differences' => $differences
+  	);
+  	
+  	$success = $this->Setup_differences->insert($data);
+  	
+  	// if ($success == false) {
+  	//	$this->returnError( 520, $this->version );
+  	//	return;
+  	//} else {
+  		$meta_array = $this->Setup_differences->getWhere(
+  		  '`sidA` = ' . $data['sidA'] . ' AND `sidB` = ' . $data['sidB'] . ' AND `task_id` = ' . $data['task_id']);
+  		$this->xmlContents( 'setup-differences', $this->version, array( 'data' => $meta_array ) );
+  	//}
   }
 
   private function setup_untag($id,$tag) {

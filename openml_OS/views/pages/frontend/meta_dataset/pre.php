@@ -134,12 +134,14 @@ if( $_POST || $this->input->get('check') ) {
     // TODO: implementations
     $sql_runs = 
       'SELECT `r`.`task_id`,`r`.`setup`, `r`.`error_message`, `r`.`error` ' .
-      'FROM `run` `r`, `task_inputs` `d`, `task` `t` ' .
+      'FROM `run` `r`, `task_inputs` `d`, `task` `t`, `algorithm_setup` `s` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
       'AND `d`.`input` = "source_data" ' .
       'AND `t`.`task_id` = `r`.`task_id` ' . 
+      'AND `r`.`setup` = `s`.`sid` ' .
       (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
       (($task_ids) ? ('AND `r`.`task_id` IN (' . implode( ',', $task_ids ) . ') ') : '' ) . 
+      (($flow_ids) ? ('AND `s`.`implementation_id` IN (' . implode( ',', $flow_ids ) . ') ') : '' ) . 
       (($setup_ids) ? ('AND `r`.`setup` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
       'AND `t`.`ttid` = "'.$task_type.'" ' .
       'GROUP BY `r`.`task_id`, `r`.`setup`;';
