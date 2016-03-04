@@ -5,6 +5,22 @@ class Dataset extends Database_write {
     parent::__construct();
     $this->table = 'dataset';
     $this->id_column = 'did';
+    $this->user_column = 'uploader';
+  }
+  
+  function getDatasetsOfUser($u_id, $from=null, $to=null){
+      $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;
+      
+      if($from!=null){
+        $sql .= ' AND upload_date>="'.$from.'"';
+      }
+      if($to!=null){
+        $sql .= ' AND upload_date<"'.$to.'"';
+      }
+      
+      //var_dump($sql);
+      
+      return $this->Dataset->query($sql);
   }
   
   // returns all dataset with a given feature $feature and data type $type.

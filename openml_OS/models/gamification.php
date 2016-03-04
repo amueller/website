@@ -1,6 +1,6 @@
 <?php
 
-class Like extends Database_write {
+class Gamification extends Database_write {
 
     function __construct() {
         parent::__construct();
@@ -9,7 +9,6 @@ class Like extends Database_write {
         $this->user_id_column = 'user_id';
         $this->knowledge_id_column = 'knowledge_id';
         $this->knowledge_type_column = 'knowledge_type';
-        $this->time_column = 'time';
     }
 
     function getLike($id) {
@@ -59,31 +58,6 @@ class Like extends Database_write {
             WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $k_type . '"
             AND `l`.`' . $this->knowledge_id_column . '` = "' . $k_id . '"
             AND `l`.`' . $this->user_id_column . '` = "' . $u_id . '"';
-        return $this->Like->query($sql);
-    }
-    
-    function getFromToUser($u_id, $from, $to){
-         $sql = 'SELECT `l`.*
-            FROM `' . $this->table . '` AS `l`
-            WHERE `l`.`' . $this->user_id_column . '` = ' . $u_id . '
-                AND `'.$this->time_column.'`>="'.$from.'"';
-         if($to!=null){
-            $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
-         }
-
-        return $this->Like->query($sql);
-    }
-    
-    function getFromToKnowledge($k_type, $k_id, $from, $to){
-         $sql = 'SELECT `l`.*
-            FROM `' . $this->table . '` AS `l`
-            WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $k_type . '"
-                AND `l`.`' . $this->knowledge_id_column . '` = "' . $k_id . '"
-                AND `'.$this->time_column.'`>="'.$from.'"';
-         if($to!=null){
-            $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
-         }
-
         return $this->Like->query($sql);
     }
 

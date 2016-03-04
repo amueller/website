@@ -5,10 +5,23 @@ class Implementation extends Database_write {
 		parent::__construct();
 		$this->table = 'implementation';
 		$this->id_column = 'id';
+                $this->user_column = 'uploader';
     
     $this->load->model('File');
   }
-	
+
+  function getImplementationsOfUser($u_id, $from=null, $to=null){
+      $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;
+      
+      if($from!=null){
+        $sql .= ' AND uploadDate>="'.$from.'"';
+      }
+      if($to!=null){
+        $sql .= ' AND uploadDate<"'.$to.'"';
+      }
+      return $this->Implementation->query($sql);
+  }
+  
 	function addComponent( $parent, $child, $identifier ) {
     $insert = array( 'parent' => $parent, 'child' => $child, 'identifier' => $identifier );
 		return $this->db->insert( 'implementation_component', $insert );

@@ -10,6 +10,7 @@ class Download extends Database_write {
         $this->knowledge_id_column = 'knowledge_id';
         $this->knowledge_type_column = 'knowledge_type';
         $this->nr_of_downloads_column = 'count';
+        $this->time_column = 'time';
     }
     
     function getDownloadsByUser($userid) {
@@ -53,7 +54,31 @@ class Download extends Database_write {
             AND `l`.`'.$this->user_id_column.'` = "'.$u_id.'"';
         return $this->Download->query($sql);
     }
+    
+    function getFromToUser($u_id, $from, $to){
+         $sql = 'SELECT `l`.*
+            FROM `' . $this->table . '` AS `l`
+            WHERE `l`.`' . $this->user_id_column . '` = ' . $u_id . '
+                AND `'.$this->time_column.'`>="'.$from.'"';
+         if($to!=null){
+            $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
+         }
 
+        return $this->Download->query($sql);
+    }
+
+    function getFromToKnowledge($k_type, $k_id, $from, $to){
+         $sql = 'SELECT `l`.*
+            FROM `' . $this->table . '` AS `l`
+            WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $k_type . '"
+                AND `l`.`' . $this->knowledge_id_column . '` = "' . $k_id . '"
+                AND `'.$this->time_column.'`>="'.$from.'"';
+         if($to!=null){
+            $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
+         }
+        
+        return $this->Download->query($sql);
+    }
     
     function deleteByIds($u_id,$k_type,$k_id){
         $sql = 'DELETE FROM `'.$this->table.'`
