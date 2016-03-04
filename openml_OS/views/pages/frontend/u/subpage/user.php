@@ -171,7 +171,7 @@
 </div>
 <?php } ?>
 <div class ="row">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <div class="panel panel-simple panel-success">
             <div class="panel-heading"><i class="fa fa-2x fa-database" style="color:white"></i> Data Sets</div>
             <div class="panel-body">
@@ -205,7 +205,7 @@
         </div>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <div class="panel panel-simple panel-info">
             <div class="panel-heading"><i class="fa fa-2x fa-cogs" style="color:white"></i> Flows</div>
             <div class="panel-body">
@@ -239,7 +239,38 @@
         </div>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
+        <div class="panel panel-simple panel-warning">
+            <div class="panel-heading"><i class="fa fa-2x fa-trophy" style="color:white"></i> Tasks</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="mainvalue" title="Tasks uploaded"><?php echo $this->userinfo['tasks_uploaded'];?> <i class="fa fa-cloud-upload activity"></i></div>
+                    </div>
+                </div>
+                <?php if ($this->userinfo['gamification_visibility']=='s'){ ?>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="mainvalue" title="Downloads done"><?php echo $this->userinfo['nr_of_downloads_task']; ?> <i class="fa fa-cloud-download activity"></i></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="mainvalue" title="Downloads received"><?php echo $this->userinfo['downloads_received_task']; ?> <i class="fa fa-cloud-download reach"></i></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="mainvalue" title="Likes done"><?php echo $this->userinfo['nr_of_likes_task']; ?> <i class="fa fa-heart activity"></i></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="mainvalue" title="Likes received"><?php echo $this->userinfo['likes_received_task']; ?> <i class="fa fa-heart reach"></i></div>
+                    </div>
+                </div>
+                <?php }?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
         <div class="panel panel-simple panel-danger">
             <div class="panel-heading"><i class="fa fa-2x fa-star" style="color:white"></i> Runs</div>
             <div class="panel-body">

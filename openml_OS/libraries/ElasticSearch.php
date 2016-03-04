@@ -576,6 +576,15 @@ class ElasticSearch {
             $user['runs_uploaded'] = 0;
         }
         
+
+        $tasks_up = $this->db->query('select count(task_id) as count from task where uploader=' . $d->id);
+        if ($tasks_up){
+            $user['tasks_uploaded'] = $tasks_up[0]->count;
+            $activity+=$this->activity_metrics['z']*$tasks_up[0]->count;
+        }else{
+            $user['tasks_uploaded'] = 0;
+        }
+        
         $user['nr_of_uploads'] = $user['datasets_uploaded']+$user['flows_uploaded']+$user['runs_uploaded'];
 
         $runs_data = $this->db->query('select count(rid) as count FROM run r, task_inputs t, dataset d WHERE r.task_id=t.task_id and t.input="source_data" and t.value=d.did and d.uploader=' . $d->id);
@@ -678,6 +687,20 @@ class ElasticSearch {
             $reach += $downloads_received_flow[0]->count * $this->reach_metrics['x'];
         }else{
             $user['downloads_received_flow'] = 0;
+        }        
+        $likes_received_task = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `task` WHERE task.uploader=".$d->id." AND  likes.knowledge_id=task.task_id AND likes.knowledge_type='t'");
+        if($likes_received_task){
+            $user['likes_received_task'] = $likes_received_task[0]->count;
+            $reach += $likes_received_task[0]->count * $this->reach_metrics['y'];
+        }else{
+            $user['likes_received_task'] = 0;
+        }
+        $downloads_received_task = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `task` WHERE task.uploader=".$d->id." AND downloads.knowledge_id=task.task_id AND downloads.knowledge_type='t'");
+        if($downloads_received_task){
+            $user['downloads_received_task'] = $downloads_received_task[0]->count;
+            $reach += $downloads_received_task[0]->count * $this->reach_metrics['x'];
+        }else{
+            $user['downloads_received_task'] = 0;
         }
         $likes_received_run = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `run` WHERE run.uploader=".$d->id." AND  likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
         if($likes_received_run){
