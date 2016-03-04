@@ -938,8 +938,9 @@ class ElasticSearch {
         $rid = $start_id;
         $submitted = 0;
         $incr = 100;
+        echo "Processing run ";
         while ($rid < $runmax) {
-            echo "Fetching ".$incr." runs starting from ".$rid;
+            echo $rid." ";
             set_time_limit(600);
             $runs = null;
             $runfiles = null;
@@ -958,7 +959,6 @@ class ElasticSearch {
                               '_id' => $r->rid
                           )
                       );
-                      echo " ".$r->rid." ";
                       $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals);
                   } catch (Exception $e) {
                       return $e->getMessage();
