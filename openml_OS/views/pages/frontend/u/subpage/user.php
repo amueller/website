@@ -19,6 +19,7 @@
             <i class="fa fa-fw fa-clock-o"></i> Joined <?php echo date("Y-m-d", $this->userinfo['date']); ?>
         </div>
     </div>
+    <?php if ($this->userinfo['gamification_visibility']=='s'){ ?>
     <div class="col-sm-3 score">
         <div class="well" style="font-size:120%" title="Gamification scores and number of uploads">
             <div class="row">
@@ -44,26 +45,60 @@
             
         </div>
     </div>
+    <?php } else{ ?>
+    <div class="col-sm-2 col-sm-offset-1 score">
+            <div class="well" style="font-size:120%" title="Number of uploads">
+                <div class="row">
+                    <div class="col-sm-5"><i class="fa fa-database dataset"></i></div>
+                    <div class="col-sm-7"> <?php echo $this->userinfo['datasets_uploaded']; ?></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5"><i class="fa fa-cogs flow"></i></div>
+                    <div class="col-sm-7"> <?php echo $this->userinfo['flows_uploaded']; ?></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5"><i class="fa fa-star run"></i></div>
+                    <div class="col-sm-7"> <?php echo $this->userinfo['runs_uploaded']; ?></div>
+                </div>
+            </div>
+    </div>
+    <?php } ?>
 </div>
 
+
+<?php if ($this->userinfo['gamification_visibility']=='s'){ ?>
 <div class ="row">
     <div class="col-sm-4">
-        <div class="panel panel-simple panel-success">
-            <div class="panel-heading activity-bg"  title="Activity is: 3x uploads done + 2x likes given + downloads done"><i class="fa fa-bolt fa-2x" style="color:white"></i> Activity: <?php echo $this->userinfo['activity']; ?></div>
+        <div class="panel panel-simple panel-success" id="activity-panel">
+            <div class="panel-heading activity-bg"  title="Activity is: 3x uploads done + 2x likes given + downloads done"><i class="fa fa-bolt fa-2x" style="color:white"></i> Activity: <?php echo $this->userinfo['activity']; ?>
+            <ul class="nav nav-pills activity-bg">
+                <li class="active"><a data-toggle="tab" href="#ActivityBuildup">Buildup</a></li>
+                <li><a data-toggle="tab" href="#ActivityChart">Activity last month</a></li>
+            </ul></div>
             <div class="panel-body">
-                <div class="row" title="Uploads done">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['nr_of_uploads'];?> <i class="fa fa-cloud-upload activity"></i> done</div>
+                <div class="tab-content">
+                    <div id="ActivityBuildup" class="tab-pane fade in active">
+                        <div class="row" title="Uploads done">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['nr_of_uploads']; ?> <i class="fa fa-cloud-upload activity"></i> done</div>
+                            </div>
+                        </div>
+                        <div class="row" title="Number of likes given">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['nr_of_likes']; ?> <i class="fa fa-heart activity"></i> given</div>
+                            </div>
+                        </div>
+                        <div class="row" title="Number of distinct downloads done">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['nr_of_downloads']; ?> knowledge pieces <i class="fa fa-cloud-download activity"></i></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row" title="Number of likes given">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['nr_of_likes'];?> <i class="fa fa-heart activity"></i> given</div>
-                    </div>
-                </div>
-                <div class="row" title="Number of distinct downloads done">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['nr_of_downloads'];?> knowledge pieces <i class="fa fa-cloud-download activity"></i></div>
+
+                    <div id="ActivityChart" class="tab-pane fade">
+                        <div id="activityplot" class="row">
+                            Loading...
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,17 +106,31 @@
     </div>
 
     <div class="col-sm-4">
-        <div class="panel panel-simple panel-danger">
-            <div class="panel-heading reach-bg" title="Reach is: 2x likes received + downloads received"><i class="fa fa-rss fa-2x" style="color:white"></i> Reach: <?php echo $this->userinfo['reach']; ?></div>
+        <div class="panel panel-simple panel-danger" id="reach-panel">
+            <div class="panel-heading reach-bg" title="Reach is: 2x likes received + downloads received"><i class="fa fa-rss fa-2x" style="color:white"></i> Reach: <?php echo $this->userinfo['reach']; ?>
+            <ul class="nav nav-pills reach-bg">
+                <li class="active"><a data-toggle="tab" href="#ReachBuildup">Buildup</a></li>
+                <li><a data-toggle="tab" href="#ReachChart">Reach last month</a></li>
+            </ul></div>
             <div class="panel-body">
-                <div class="row" title="Number of likes received">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['likes_received'];?> <i class="fa fa-heart reach"></i> received on uploads</div>
+                <div class="tab-content"> 
+                    <div id="ReachBuildup" class="tab-pane fade in active">
+                        <div class="row" title="Number of likes received">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['likes_received'];?> <i class="fa fa-heart reach"></i> received on uploads</div>
+                            </div>
+                        </div>
+                        <div class="row" title="Number of distinct downloads received">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['downloads_received'];?> distinct <i class="fa fa-cloud-download reach"></i> received</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row" title="Number of distinct downloads received">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['downloads_received'];?> distinct <i class="fa fa-cloud-download reach"></i> received</div>
+
+                    <div id="ReachChart" class="tab-pane fade">
+                        <div id="reachplot" class="row">
+                            Loading...
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,23 +139,37 @@
 
     <div class="col-sm-4">
         <div class="panel panel-simple panel-info">
-            <div class="panel-heading impact-bg" title="Impact is: 0.5*reach of reuse of knowledge + 0.5*impact of reuse of knowledge"><i class="material-icons" style="font-size: 28px; color:white">flare</i> Impact: <?php echo $this->userinfo['impact']; ?></div>
-            <div class="panel-body">                
-                <div class="row" title="Reach of runs/tasks using this person's data/flows">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['reach_of_reuse'];?> <i class="fa fa-rss impact"></i> of reused knowledge</div>
+            <div class="panel-heading impact-bg" title="Impact is: 0.5*reach of reuse of knowledge + 0.5*impact of reuse of knowledge"><i class="material-icons" style="font-size: 28px; color:white">flare</i> Impact: <?php echo $this->userinfo['impact']; ?>
+            <ul class="nav nav-pills impact-bg">
+                <li class="active"><a data-toggle="tab" href="#ImpactBuildup">Buildup</a></li>
+                <li><a data-toggle="tab" href="#ImpactChart">Impact last month</a></li>
+            </ul></div>
+            <div class="panel-body">  
+                <div class="tab-content"> 
+                    <div id="ImpactBuildup" class="tab-pane fade in active">              
+                        <div class="row" title="Reach of runs/tasks using this person's data/flows">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['reach_of_reuse'];?> <i class="fa fa-rss impact"></i> of reused knowledge</div>
+                            </div>
+                        </div>                
+                        <div class="row" title="Impact of runs/tasks using this person's data/flows">
+                            <div class="col-xs-12">
+                                <div class="subvalue"><?php echo $this->userinfo['impact_of_reuse'];?> <i class="material-icons impact" style="font-size: 18px;">flare</i> of reused knowledge</div>
+                            </div>
+                        </div>
                     </div>
-                </div>                
-                <div class="row" title="Impact of runs/tasks using this person's data/flows">
-                    <div class="col-xs-12">
-                        <div class="subvalue"><?php echo $this->userinfo['impact_of_reuse'];?> <i class="material-icons impact" style="font-size: 18px;">flare</i> of reused knowledge</div>
+
+                    <div id="ImpactChart" class="tab-pane fade">
+                        <div id="impactplot" class="row">
+                            Loading...
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+<?php } ?>
 <div class ="row">
     <div class="col-sm-4">
         <div class="panel panel-simple panel-success">
@@ -120,6 +183,7 @@
                         <div class="mainvalue" title="Used in runs"><?php echo $this->userinfo['runs_on_datasets']; ?> <i class="fa fa-star impact"></i></div>
                     </div>
                 </div>
+                <?php if ($this->userinfo['gamification_visibility']=='s'){ ?>
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="mainvalue" title="Downloads done"><?php echo $this->userinfo['nr_of_downloads_data']; ?> <i class="fa fa-cloud-download activity"></i></div>
@@ -136,6 +200,7 @@
                         <div class="mainvalue" title="Likes received"><?php echo $this->userinfo['likes_received_data']; ?> <i class="fa fa-heart reach"></i></div>
                     </div>
                 </div>
+                <?php }?>
             </div>
         </div>
     </div>
@@ -152,6 +217,7 @@
                         <div class="mainvalue" title="Used in runs"><?php echo $this->userinfo['runs_on_flows']; ?> <i class="fa fa-star impact"></i></div>
                     </div>
                 </div>
+                <?php if ($this->userinfo['gamification_visibility']=='s'){ ?>
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="mainvalue" title="Downloads done"><?php echo $this->userinfo['nr_of_downloads_flow']; ?> <i class="fa fa-cloud-download activity"></i></div>
@@ -168,6 +234,7 @@
                         <div class="mainvalue" title="Likes received"><?php echo $this->userinfo['likes_received_flow']; ?> <i class="fa fa-heart reach"></i></div>
                     </div>
                 </div>
+                <?php }?>
             </div>
         </div>
     </div>
@@ -181,6 +248,7 @@
                         <div class="mainvalue" title="Runs uploaded"><?php echo $this->userinfo['runs_uploaded'];?> <i class="fa fa-cloud-upload activity"></i></div>
                     </div>
                 </div>
+                <?php if ($this->userinfo['gamification_visibility']=='s'){ ?>
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="mainvalue" title="Downloads done"><?php echo $this->userinfo['nr_of_downloads_run']; ?> <i class="fa fa-cloud-download activity"></i></div>
@@ -197,6 +265,7 @@
                         <div class="mainvalue" title="Likes received"><?php echo $this->userinfo['likes_received_run']; ?> <i class="fa fa-heart reach"></i></div>
                     </div>
                 </div>
+                <?php }?>
             </div>
         </div>
     </div>

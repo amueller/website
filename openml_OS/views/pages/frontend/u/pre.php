@@ -1,6 +1,6 @@
 <?php
 
-$this->load_javascript = array('js/libs/jquery.dataTables.min.js');
+$this->load_javascript = array('js/libs/highcharts-2016.js','js/libs/highcharts-heatmap.js','js/libs/highcharts-exporting.js','js/libs/jquery.dataTables.min.js');
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/u/')) {
 	$info = explode('/', $_SERVER['REQUEST_URI']);
