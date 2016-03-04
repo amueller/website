@@ -13,8 +13,12 @@
    <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->run)): if($this->run['nr_of_likes']!=null): $nr_l = $this->run['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
    <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->run)): if($this->run['nr_of_downloads']!=null): $nr_d = $this->run['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
    <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
-   <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
-   <!--<i class="fa fa-warning impact"></i><span id="impact"><?php if(array_key_exists('impact',$this->run)): if($this->run['impact']!=null): $i = $this->run['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>-->
+   <?php if ($this->ion_auth->logged_in()) {
+            if ($this->ion_auth->user()->row()->gamification_visibility == 's') {
+                ?>
+                <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
+                <!--<i class="fa fa-warning impact"></i><span id="impact"><?php if(array_key_exists('impact',$this->run)): if($this->run['impact']!=null): $i = $this->run['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>-->
+   <?php }}?>
 </div>
 
 <?php

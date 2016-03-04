@@ -506,7 +506,7 @@ class ElasticSearch {
         $params['index'] = 'openml';
         $params['type'] = 'user';
 
-        $users = $this->userdb->query('select id, first_name, last_name, email, affiliation, country, bio, image, created_on from users where active="1"' . ($id ? ' and id=' . $id : ''));
+        $users = $this->userdb->query('select id, first_name, last_name, email, affiliation, country, bio, image, created_on, gamification_visibility from users where active="1"' . ($id ? ' and id=' . $id : ''));
 
         if ($id and ! $users)
             return 'Error: user ' . $id . ' is unknown';
@@ -546,7 +546,8 @@ class ElasticSearch {
                     'user_id' => $d->id,
                     'description' => substr($d->affiliation, 0, 100)
                 )
-            )
+            ),
+            'gamification_visibility' => $d->gamification_visibility
         );
         
         $activity = 0;
@@ -721,7 +722,13 @@ class ElasticSearch {
         
         $user['impact'] = $this->impact_metrics['x']*$user['impact_of_reuse'] + $this->impact_metrics['y']*$user['reach_of_reuse'];
         
-
+        /*$gamification_visibility = $this->userdb->query("select gamification_visibility FROM user_preferences WHERE user_id=".$d->id);
+        if($gamification_visibility){
+            $user['gamification_visibility'] = $gamification_visibility[0]->gamification_visibility;
+        }else{
+            $user['gamification_visibility'] = 's';
+        }*/
+        
         return $user;
     }
 
