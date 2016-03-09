@@ -1,5 +1,4 @@
 <?php
-
 // $this->active = 'profile';
 $this->message = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 

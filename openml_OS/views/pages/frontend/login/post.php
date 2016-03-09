@@ -2,7 +2,11 @@
 if (!empty($_POST['submitlogin'])) {
 	if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), false))
 	{
-			redirect($this->input->post('location'));
+		  if(strpos($this->input->post('location'), 'login') !== false){ //avoid redirecting to login page after successful login
+				redirect('home');
+			} else { // redirect to whereever you were on the website
+				redirect($this->input->post('location'));
+			}
 			exit();
 	}
 	else
