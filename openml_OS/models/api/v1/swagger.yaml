@@ -636,11 +636,6 @@ paths:
           description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.upload.xsd)
           required: true
           type: file
-        - name: task
-          in: formData
-          description: The actual task, being an ARFF file.
-          required: true
-          type: file
         - name: api_key
           in: query
           description: Api key to authenticate the user
@@ -695,10 +690,30 @@ paths:
                 "task": {
                   "task": [
                     {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
                       "did":"1",
                       "name":"anneal",
                       "status":"active",
                       "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data"
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
                       "quality":[
                         {
                           "name":"MajorityClassSize",
@@ -709,8 +724,8 @@ paths:
                           "value":"10.0"
                         },
                         {
-                          "name":"MinorityClassSize"
-                          ,"value":"0"
+                          "name":"MinorityClassSize",
+                          "value":"0"
                         },
                         {
                           "name":"NumBinaryAtts",
@@ -744,6 +759,128 @@ paths:
                           "name":"NumberOfSymbolicFeatures",
                           "value":"32"
                         }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
+                      ]
+                    }
+                  ]
+                }
+              }
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /task/list/{id}:
+    get:
+      summary: List all tasks for the given task type id
+      description: |
+        Returns an array with all tasks for the given task type id (1 = Supervised Classification)
+      parameters:
+        - name: id
+          in: path
+          description: On which task type id to filter the results
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A task description
+          schema:
+            $ref: '#/definitions/TaskList'
+          examples:
+            application/json: |-
+              {
+                "task": {
+                  "task": [
+                    {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data"
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
                       ]
                     }
                   ]
@@ -2217,84 +2354,149 @@ definitions:
       flow_description:
         type: object
         properties:
-          id:
+          task_id:
             type: string
-            description: ID of the flow, a positive integer
-          uploader:
+            description: ID of the task, a positive integer
+          task_type:
             type: string
-            description: The uploader of the flow
-          name:
-            type: string
-            description: The name of the flow
-          version:
-            type: string
-            description: The version of the flow, set by OpenML. A positive integer
-          version_label:
-            type: string
-            description: The version of the flow, as defined by the uploader, for reference. Can be any format as long as it is unique.
-          description:
-            type: string
-            description: Wiki description of the flow, in (Git flavoured) markdown format
-          upload_date:
-            type: string
-            description: The datetime that the flow was uploaded, format yyyy-MM-dd HH:mm:ss
-          language:
-            type: string
-            description: The programming language the flow is written in.
-          dependencies:
-            type: string
-            description: The libraries that this flow depends on, and their version numbers.
+            description: The type of the task, e.g. Supervised Classification
+          input:
+            type: array
+            items:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: The name of the input, e.g. source_data
+                data_set:
+                  type: object
+                  properties:
+                    data_set_id:
+                      type: string
+                      description: The id of the dataset
+                    target_feature:
+                      type: string
+                      description: The name of the target feature for this task
+                estimation_procedure:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: The type of procedure, e.g. crossvalidation
+                    data_splits_url:
+                      type: string
+                      description: The url where the data splits can be downloaded
+                    parameter:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            description: The name of the parameter
+                          value:
+                            type: string
+                            description: The value of the parameter
+                cost_matrix: 
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: integer
+                      format: int64
+                  description: The cost matrix, indicating the costs for each type of misclassification
+                evaluation_measures: 
+                  type: object
+                  properties:
+                    evaluation_measure: 
+                      type: string
+                      description: The evaluation measure to optimize in this task
+          output:
+            type: array
+            items:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: The name of the output, e.g. predictions
+                predictions:
+                  type: object
+                  properties:
+                    format:
+                      type: string
+                      description: The fromat of the predictions, e.g. ARFF
+                    feature:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            description: The name of the prediction feature, e.g. row_id
+                          type:
+                            type: string
+                            description: The type of the prediction feature, e.g. integer        
           tag:
             type: array
             items:
               type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
-          parameter:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the parameter
-                data_type:
-                  type: string
-                  description: The data type of the parameter
-                default_value:
-                  type: string
-                  description: The default value of the parameter
-                description:
-                  type: string
-                  description: A description of the parameter
+              description: Tags added by OpenML users. Includes study tags in the form `study_1`
   TaskList:
     type: object
     properties:
-      flows:
+      task:
         type: object
         properties:
-          flow:
+          task:
             type: array
             items:
               type: object
               properties:
-                id:
+                task_id:
                   type: string
-                  description: The flow ID
-                full_name:
+                  description: The ID of the task
+                task_type:
                   type: string
-                  description: The full flow name (name + internal version number)
+                  description: The type of task (e.g. Supervised Classificationr)
+                did:
+                  type: string
+                  description: The id of the source dataset
                 name:
                   type: string
-                  description: The flow name
-                version:
+                  description: The name of the source dataset
+                status:
                   type: string
-                  description: The internal flow version
-                external_version:
+                  description: The status of the source dataset, active, in_preparation, or deactivated
+                format:
                   type: string
-                  description: The external flow version
-                uploader:
-                  type: string
-                  description: The ID of the person who uploaded the flow
+                  description: The format of the source dataset
+                input:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of the input
+                      value:
+                        type: string
+                        description: The value of the input
+                quality:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of the quality
+                      value:
+                        type: string
+                        description: The value of the quality 
+                tag:
+                  type: array
+                  items:
+                    type: string
+                    description: Tags added by OpenML users. Includes study tags in the form `study_1`
   DataList:
     type: object
     properties:
