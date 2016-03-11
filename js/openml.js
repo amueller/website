@@ -87,18 +87,18 @@ Ps.initialize(container);
     dataType: "json"
   }).done( function( resultdata ) {
       if(type+"_delete" in resultdata){
-      id_field = resultdata[type+"_delete"]["oml:id"];
+      id_field = resultdata[type+"_delete"]["id"];
       if( id_field.length ) {
         swal("Deleted!", name + " has been deleted.", "success");
         location.reload();
       }} else {
-        code_field = resultdata.error["oml:code"];
-        message_field = resultdata.error["oml:message"];
+        code_field = resultdata.error["code"];
+        message_field = resultdata.error["message"];
         swal("Error " + code_field.text(), message_field.text(), "error");
       }
     }).fail( function( resultdata ) {
-        code_field = resultdata.error["oml:code"];
-        message_field = resultdata.error["oml:message"];
+        code_field = resultdata.error["code"];
+        message_field = resultdata.error["message"];
         if(code_field.text() == 102)
           swal("Error", "Your login has expired. Log in and try again.", "error");
         else
