@@ -706,7 +706,7 @@ paths:
                           "value":"predictive_accuracy"
                         },
                         {
-                          "name":"source_data"
+                          "name":"source_data",
                           "value":"1"
                         },
                         {
@@ -821,7 +821,7 @@ paths:
                           "value":"predictive_accuracy"
                         },
                         {
-                          "name":"source_data"
+                          "name":"source_data",
                           "value":"1"
                         },
                         {
