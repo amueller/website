@@ -39,6 +39,24 @@
                     "data"
                 ],
                 "responses": {
+                    "110": {
+                        "description": "Please provide data_id.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "111": {
+                        "description": "Unknown dataset. Data set description with data_id was not found in the database.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "112": {
+                        "description": "No access granted. This dataset is not shared with you.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "200": {
                         "description": "A dataset description",
                         "schema": {
@@ -143,6 +161,96 @@
                     "data"
                 ],
                 "responses": {
+                    "130": {
+                        "description": "Problem with file uploading. There was a problem with the file upload",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "131": {
+                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "132": {
+                        "description": "Failed to move the files. Internal server error, please contact API administrators",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "133": {
+                        "description": "Failed to make checksum of datafile. Internal server error, please contact API administrators",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "134": {
+                        "description": "Failed to insert record in database. Internal server error, please contact API administrators",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "135": {
+                        "description": "Please provide description xml.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "136": {
+                        "description": "File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "137": {
+                        "description": "Please provide API key. In order to share content, please log in or provide your API key.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "138": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact API administrators",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "139": {
+                        "description": "Combination name / version already exists. Leave version out for auto increment",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "140": {
+                        "description": "Both dataset file and dataset url provided. The system is confused since both a dataset file (post) and a dataset url (xml) are provided. Please remove one.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "141": {
+                        "description": "Neither dataset file or dataset url are provided. Please provide either a dataset file as POST variable, or a dataset url in the description XML",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "142": {
+                        "description": "Error in processing arff file. Can be a syntax error, or the specified target feature does not exists. For now, we only check on arff files. If a dataset is claimed to be in such a format, and it can not be parsed, this error is returned.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "143": {
+                        "description": "Suggested target feature not legal. It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "144": {
+                        "description": "Unable to update dataset. The dataset with id could not be found in the database. If you upload a new dataset, unset the id.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "200": {
                         "description": "Id of the uploaded dataset",
                         "schema": {
@@ -282,6 +390,12 @@
                         },
                         "examples": {
                             "application/json": "{\n  \"data\": {\n    \"dataset\": [\n      {\n        \"did\":\"1\",\n        \"name\":\"anneal\",\n        \"status\":\"active\",\n        \"format\":\"ARFF\",\n        \"quality\":[\n          {\n            \"name\":\"MajorityClassSize\",\n            \"value\":\"684\"\n          },\n          {\n            \"name\":\"MaxNominalAttDistinctValues\",\n            \"value\":\"10.0\"\n          },\n          {\n            \"name\":\"MinorityClassSize\"\n            ,\"value\":\"0\"\n          },\n          {\n            \"name\":\"NumBinaryAtts\",\n            \"value\":\"14.0\"\n          },\n          {\n            \"name\":\"NumberOfClasses\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfFeatures\",\n            \"value\":\"39\"\n          },\n          {\n            \"name\":\"NumberOfInstances\",\n            \"value\":\"898\"\n          },\n          {\n            \"name\":\"NumberOfInstancesWithMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfNumericFeatures\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfSymbolicFeatures\",\n            \"value\":\"32\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+                        }
+                    },
+                    "370": {
+                        "description": "No datasets available. There are no valid datasets in the system.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "default": {
@@ -445,6 +559,18 @@
                     "task"
                 ],
                 "responses": {
+                    "150": {
+                        "description": "Please provide task_id.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "151": {
+                        "description": "Unknown task. The task with the given id was not found in the database",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "200": {
                         "description": "A task description",
                         "schema": {
@@ -801,6 +927,18 @@
                     "flow"
                 ],
                 "responses": {
+                    "180": {
+                        "description": "Please provide flow id.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "181": {
+                        "description": "Unknown flow. The flow with the given ID was not found in the database.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "200": {
                         "description": "A flow description",
                         "schema": {
@@ -905,6 +1043,78 @@
                     "flow"
                 ],
                 "responses": {
+                    "160": {
+                        "description": "Error in file uploading. There was a problem with the file upload.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "161": {
+                        "description": "Please provide description xml.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "163": {
+                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "164": {
+                        "description": "Flow already stored in database. Please change name or version number",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "165": {
+                        "description": "Failed to insert flow. There can be many causes for this error. If you included the implements field, it should be an existing entry in the algorithm or math_function table. Otherwise it could be an internal server error. Please contact API support team.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "166": {
+                        "description": "Failed to add flow to database. Internal server error, please contact API administrators",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "167": {
+                        "description": "Illegal files uploaded. An non required file was uploaded.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "168": {
+                        "description": "The provided md5 hash equals not the server generated md5 hash of the file.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "169": {
+                        "description": "Please provide API key. In order to share content, please authenticate and provide API key.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "170": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact API administrators",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "171": {
+                        "description": "Flow already exists. This flow is already in the database",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "172": {
+                        "description": "XSD not found. Please contact API support team",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
                     "200": {
                         "description": "Id of the uploaded flow",
                         "schema": {
@@ -1371,8 +1581,11 @@
                             "application/json": "{\n  \"upload_run\": {\n    \"id\": \"2520\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
+                    "500": {
+                        "description": "Error",
+                        "examples": {
+                            "application/json": "{\n  \"200\": \"Please provide API key.\",\n  \"201\": \"Authentication failed. The API key was not valid. Please try to login again, or contact api administrators.\",\n  \"202\": \"Please provide run XML.\",\n  \"203\": \"Could not validate run xml by XSD. Please double check that the xml is valid.\",  \n  \"204\": \"Unknown task. The task with the given ID was not found in the database.\",\n  \"205\": \"Unknown flow. The flow with the given ID was not found in the database.\", \n  \"206\": \"Invalid number of files. The number of uploaded files did not match the number of files expected for the task type \", \n  \"207\": \"File upload failed. One of the files uploaded has a problem.\", \n  \"208\": \"Error inserting setup record. Please contact api administrators.\",\n  \"210\": \"Unable to store run. Please contact api administrators.\",\n  \"211\": \"Dataset not in database. One of the datasets of the task was not included in database, please contact api administrators.\",\n  \"212\": \"Unable to store file. Please contact api administrators.\",\n  \"213\": \"Parameter in run xml unknown. One of the parameters provided in the run xml is not registered as parameter for the flow nor its components.\",\n  \"214\": \"Unable to store input setting. Please contact API support team.\",\n  \"215\": \"Unable to evaluate predictions. Please contact API support team.\",\n  \"216\": \"Error thrown by Java Application. Additional information field is provided.\",\n  \"217\": \"Error processing output data: unknown or inconsistent evaluation measure. One of the provided evaluation measures could not be matched with a record in the math_function or flow table.\",\n  \"218\": \"Wrong flow associated with run. The flow implements a math_function, which is unable to generate predictions. Please select another flow.\",\n  \"219\": \"Error reading the XML document. The XML description file could not be verified.\"\n}"
+                        },
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }

@@ -83,7 +83,7 @@ class Api_data extends Api_model {
     $active = 'status = "active" and (visibility = "public" or uploader='.$this->user_id.')'; // constraints
     $datasets_res = $this->Dataset->getWhere( $active, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
-      $this->returnError( 370, $this->version );
+      $this->retu( 370, $this->version );
       return;
     }
 
@@ -116,7 +116,7 @@ class Api_data extends Api_model {
     }
 
     if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
-      $this->returnError( 111, $this->version ); // Add special error code for this case?
+      $this->returnError( 112, $this->version );
       return;
     }
 

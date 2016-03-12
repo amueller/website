@@ -1,2807 +1,671 @@
-swagger: '2.0'
+---
+swagger: "2.0"
 info:
-  title: OpenML API
-  description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint http://www.openml.org/api_new/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
-  version: 1.0.0
-host: www.openml.org
+  description: "This is a sample server Petstore server.  You can find out more about\
+    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
+    \  For this sample, you can use the api key `special-key` to test the authorization\
+    \ filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+- name: "pet"
+  description: "Everything about your Pets"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "store"
+  description: "Access to Petstore orders"
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
 schemes:
-  - http
-basePath: /api_new/v1/json
-produces:
-  - application/json
+- "http"
 paths:
-  /data/{id}:
-    get:
-      summary: Get dataset description
-      description: |
-        Returns information about a dataset. The information includes the name, information about the creator, URL to download it and more.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the dataset.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
+  /pet:
+    post:
       tags:
-        - data
+      - "pet"
+      summary: "Add a new pet to the store"
+      description: ""
+      operationId: "addPet"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Pet"
       responses:
-        '200':
-          description: A dataset description
+        405:
+          description: "Invalid input"
+    put:
+      tags:
+      - "pet"
+      summary: "Update an existing pet"
+      description: ""
+      operationId: "updatePet"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Pet"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Pet not found"
+        405:
+          description: "Validation exception"
+  /pet/findByStatus:
+    get:
+      tags:
+      - "pet"
+      summary: "Finds Pets by status"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "findPetsByStatus"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/Data'
-          examples:
-            application/json: |-
-              {
-                "data_set_description": {
-                  "id": "1",
-                  "name": "anneal",
-                  "version": "2",
-                  "description": "...",
-                  "format": "ARFF",
-                  "upload_date": "2014-04-06 23:19:20",
-                  "licence": "Public",
-                  "url": "http://www.openml.org/data/download/1/dataset_1_anneal.arff",
-                  "file_id": "1",
-                  "default_target_attribute": "class",
-                  "version_label": "2",
-                  "tag": [
-                    "study_1",
-                    "uci"
-                  ],
-                  "visibility": "public",
-                  "original_data_url": "http://www.openml.org/d/2",
-                  "status": "active",
-                  "md5_checksum": "d01f6ccd68c88b749b20bbe897de3713"
-                }
-              }
-        default:
-          description: Unexpected error
+            type: "array"
+            items:
+              $ref: "#/definitions/Pet"
+        400:
+          description: "Invalid status value"
+  /pet/findByTags:
+    get:
+      tags:
+      - "pet"
+      summary: "Finds Pets by tags"
+      description: "Muliple tags can be provided with comma separated strings. Use\
+        \ tag1, tag2, tag3 for testing."
+      operationId: "findPetsByTags"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "tags"
+        in: "query"
+        description: "Tags to filter by"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/Error'
+            type: "array"
+            items:
+              $ref: "#/definitions/Pet"
+        400:
+          description: "Invalid tag value"
+      deprecated: true
+  /pet/{petId}:
+    get:
+      tags:
+      - "pet"
+      summary: "Find pet by ID"
+      description: "Returns a single pet"
+      operationId: "getPetById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "petId"
+        in: "path"
+        description: "ID of pet to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Pet"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Pet not found"
+      security:
+      - api_key: []
+    post:
+      tags:
+      - "pet"
+      summary: "Updates a pet in the store with form data"
+      description: ""
+      operationId: "updatePetWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "petId"
+        in: "path"
+        description: "ID of pet that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the pet"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the pet"
+        required: false
+        type: "string"
+      responses:
+        405:
+          description: "Invalid input"
     delete:
-      summary: Delete dataset
-      description: |
-        Deletes a dataset. Upon success, it returns the ID of the deleted dataset.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the dataset.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - data
+      - "pet"
+      summary: "Deletes a pet"
+      description: ""
+      operationId: "deletePet"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "petId"
+        in: "path"
+        description: "Pet id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
       responses:
-        '200':
-          description: ID of the deleted dataset
-          schema:
-            type: object
-            properties:
-              data_delete:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the deleted dataset, a positive integer
-          examples:
-            application/json: |-
-              {
-                "data_delete": {
-                  "id": "4328"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /data:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Pet not found"
+  /pet/{petId}/uploadImage:
     post:
-      summary: Upload dataset
-      consumes: [multipart/form-data]
-      description: |
-        Uploads a dataset. Upon success, it returns the data id.
-      parameters:
-        - name: description
-          in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.upload.xsd)
-          required: true
-          type: file
-        - name: dataset
-          in: formData
-          description: The actual dataset, being an ARFF file.
-          required: true
-          type: file
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - data
+      - "pet"
+      summary: "uploads an image"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "petId"
+        in: "path"
+        description: "ID of pet to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
       responses:
-        '200':
-          description: Id of the uploaded dataset
+        200:
+          description: "successful operation"
           schema:
-            type: object
-            properties:
-              upload_data_set:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the uploaded dataset, a positive integer
-          examples:
-            application/json: |-
-              {
-                "upload_data_set": {
-                  "id": "4328"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /data/features/{id}:
+            $ref: "#/definitions/ApiResponse"
+  /store/inventory:
     get:
-      summary: Get data features
-      description: |
-        Returns the features of a dataset.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the dataset.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - data
+      - "store"
+      summary: "Returns pet inventories by status"
+      description: "Returns a map of status codes to quantities"
+      operationId: "getInventory"
+      produces:
+      - "application/json"
+      parameters: []
       responses:
-        '200':
-          description: All the features of the dataset
+        200:
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/DataFeatures'
-          examples:
-            application/json: |-
-              {
-                "data_features": {
-                  "feature": [
-                    {
-                      "index": "0",
-                      "name": "sepallength",
-                      "data_type": "numeric",
-                      "is_target": "false",
-                      "is_ignore": "false",
-                      "is_row_identifier": "false"
-                    },
-                    {
-                      "index": "1",
-                      "name": "sepalwidth",
-                      "data_type": "numeric",
-                      "is_target": "false",
-                      "is_ignore": "false",
-                      "is_row_identifier": "false"
-                    },
-                    {
-                      "index": "2",
-                      "name": "petallength",
-                      "data_type": "numeric",
-                      "is_target": "false",
-                      "is_ignore": "false",
-                      "is_row_identifier": "false"
-                    },
-                    {
-                      "index": "3",
-                      "name": "petalwidth",
-                      "data_type": "numeric",
-                      "is_target": "false",
-                      "is_ignore": "false",
-                      "is_row_identifier": "false"
-                    },
-                    {
-                      "index": "4",
-                      "name": "class",
-                      "data_type": "nominal",
-                      "is_target": "true",
-                      "is_ignore": "false",
-                      "is_row_identifier": "false"
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /data/qualities/{id}:
-    get:
-      summary: Get data qualities
-      description: |
-        Returns the qualities of a dataset.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the dataset.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - data
-      responses:
-        '200':
-          description: All the qualities of the dataset
-          schema:
-            $ref: '#/definitions/DataQualities'
-          examples:
-            application/json: |-
-              {
-                "data_qualities": {
-                  "quality": [
-                    {
-                      "name": "ClassCount",
-                      "value": "3.0"
-                    },
-                    {
-                      "name": "ClassEntropy",
-                      "value": "1.584962500721156"
-                    },
-                    {
-                      "name": "NumberOfClasses",
-                      "value": "3"
-                    },
-                    {
-                      "name": "NumberOfFeatures",
-                      "value": "5"
-                    },
-                    {
-                      "name": "NumberOfInstances",
-                      "value": "150"
-                    },
-                    {
-                      "name": "NumberOfInstancesWithMissingValues",
-                      "value": "0"
-                    },
-                    {
-                      "name": "NumberOfMissingValues",
-                      "value": "0"
-                    },
-                    {
-                      "name": "NumberOfNumericFeatures",
-                      "value": "4"
-                    },
-                    {
-                      "name": "NumberOfSymbolicFeatures",
-                      "value": "0"
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /data/list:
-    get:
-      summary: List all datasets
-      description: |
-        Returns an array with all datasets in the system.
-      parameters:
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - data
-      responses:
-        '200':
-          description: A dataset description
-          schema:
-            $ref: '#/definitions/DataList'
-          examples:
-            application/json: |-
-              {
-                "data": {
-                  "dataset": [
-                    {
-                      "did":"1",
-                      "name":"anneal",
-                      "status":"active",
-                      "format":"ARFF",
-                      "quality":[
-                        {
-                          "name":"MajorityClassSize",
-                          "value":"684"
-                        },
-                        {
-                          "name":"MaxNominalAttDistinctValues",
-                          "value":"10.0"
-                        },
-                        {
-                          "name":"MinorityClassSize"
-                          ,"value":"0"
-                        },
-                        {
-                          "name":"NumBinaryAtts",
-                          "value":"14.0"
-                        },
-                        {
-                          "name":"NumberOfClasses",
-                          "value":"6"
-                        },
-                        {
-                          "name":"NumberOfFeatures",
-                          "value":"39"
-                        },
-                        {
-                          "name":"NumberOfInstances",
-                          "value":"898"
-                        },
-                        {
-                          "name":"NumberOfInstancesWithMissingValues",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumberOfMissingValues",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumberOfNumericFeatures",
-                          "value":"6"
-                        },
-                        {
-                          "name":"NumberOfSymbolicFeatures",
-                          "value":"32"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /data/tag:
+            type: "object"
+            additionalProperties:
+              type: "integer"
+              format: "int32"
+      security:
+      - api_key: []
+  /store/order:
     post:
-      summary: Tag a dataset
-      description: Tags a dataset.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: data_id
-          in: formData
-          description: Id of the dataset.
-          required: true
-          type: number
-          format: integer
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - data
-      responses:
-        '200':
-          description: The id of the tagged dataset
-          schema:
-            type: object
-            properties:
-              data_tag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the tagged dataset
-          examples:
-            application/json: |-
-              {
-                "data_tag": {
-                  "id": "2"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /data/untag:
-    post:
-      summary: Untag a dataset
-      description: Untags a dataset.
-      consumes: [application/x-www-form-urlencoded]
+      - "store"
+      summary: "Place an order for a pet"
+      description: ""
+      operationId: "placeOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
       parameters:
-        - name: data_id
-          in: formData
-          description: Id of the dataset.
-          required: true
-          type: number
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - data
+      - in: "body"
+        name: "body"
+        description: "order placed for purchasing the pet"
+        required: true
+        schema:
+          $ref: "#/definitions/Order"
       responses:
-        '200':
-          description: The ID of the untagged dataset
+        200:
+          description: "successful operation"
           schema:
-            type: object
-            properties:
-              data_untag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the untagged dataset
-          examples:
-            application/json: |-
-              {
-                "data_untag": {
-                  "id": "2"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /task/{id}:
+            $ref: "#/definitions/Order"
+        400:
+          description: "Invalid Order"
+  /store/order/{orderId}:
     get:
-      summary: Get task description
-      description: |
-        Returns information about a task. The information includes the task type, input data, train/test sets, and more.
-      parameters:
-        - name: id
-          in: path
-          description: ID of the task.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - task
+      - "store"
+      summary: "Find purchase order by ID"
+      description: "For valid response try integer IDs with value >= 1 and <= 10.\
+        \ Other values will generated exceptions"
+      operationId: "getOrderById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "ID of pet that needs to be fetched"
+        required: true
+        type: "integer"
+        maximum: 10.0
+        minimum: 1.0
+        format: "int64"
       responses:
-        '200':
-          description: A task description
+        200:
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/Task'
-          examples:
-            application/json: |-
-              {
-                "task": {
-                  "task_id":"1",
-                  "task_type":"Supervised Classification",
-                  "input":[
-                    {
-                      "name":"source_data",
-                      "data_set":{
-                        "data_set_id":"1",
-                        "target_feature":"class"
-                      }
-                    },
-                    {
-                      "name":"estimation_procedure",
-                      "estimation_procedure":{
-                        "type":"crossvalidation",
-                        "data_splits_url":"http://www.openml.org/api_splits/get/1/Task_1_splits.arff",
-                        "parameter":[
-                          {
-                            "name":"number_repeats",
-                            "value":"1"
-                          },
-                          {
-                            "name":"number_folds",
-                            "value":"10"
-                          },
-                          {
-                            "name":"percentage"
-                          },
-                          {
-                            "name":"stratified_sampling",
-                            "value":"true"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "name":"cost_matrix",
-                      "cost_matrix":[]
-                    },
-                    {
-                      "name":"evaluation_measures",
-                      "evaluation_measures":
-                        {
-                          "evaluation_measure":"predictive_accuracy"
-                        }
-                    }
-                  ],
-                  "output":{
-                    "name":"predictions",
-                    "predictions":{
-                      "format":"ARFF",
-                      "feature":[
-                        {
-                          "name":"repeat",
-                          "type":"integer"
-                        },
-                        {
-                          "name":"fold",
-                          "type":"integer"
-                        },
-                        {
-                          "name":"row_id",
-                          "type":"integer"
-                        },
-                        {
-                          "name":"confidence.classname",
-                          "type":"numeric"
-                        },
-                        {
-                          "name":"prediction",
-                          "type":"string"
-                        }
-                      ]
-                    }
-                  },
-                  "tag":["basic","study_1","under100k","under1m"]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Order"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Order not found"
     delete:
-      summary: Delete task
-      description: |
-        Deletes a task. Upon success, it returns the ID of the deleted task.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the task.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - task
+      - "store"
+      summary: "Delete purchase order by ID"
+      description: "For valid response try integer IDs with positive integer value.\
+        \ Negative or non-integer values will generate API errors"
+      operationId: "deleteOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orderId"
+        in: "path"
+        description: "ID of the order that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
       responses:
-        '200':
-          description: ID of the deleted task
-          schema:
-            type: object
-            properties:
-              task_delete:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the deleted task, a positive integer
-          examples:
-            application/json: |-
-              {
-                "task_delete": {
-                  "id": "4328"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /task:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Order not found"
+  /user:
     post:
-      summary: Upload task
-      consumes: [multipart/form-data]
-      description: |
-        Uploads a task. Upon success, it returns the task id.
-      parameters:
-        - name: description
-          in: formData
-          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.upload.xsd)
-          required: true
-          type: file
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - task
-      responses:
-        '200':
-          description: Id of the uploaded task
-          schema:
-            type: object
-            properties:
-              upload_task_set:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the uploaded task, a positive integer
-          examples:
-            application/json: |-
-              {
-                "upload_task_set": {
-                  "id": "4328"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /task/list:
-    get:
-      summary: List all tasks
-      description: |
-        Returns an array with all tasks in the system.
+      - "user"
+      summary: "Create user"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/xml"
+      - "application/json"
       parameters:
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - task
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
       responses:
-        '200':
-          description: A task description
-          schema:
-            $ref: '#/definitions/TaskList'
-          examples:
-            application/json: |-
-              {
-                "task": {
-                  "task": [
-                    {
-                      "task_id":"1",
-                      "task_type":"Supervised Classification",
-                      "did":"1",
-                      "name":"anneal",
-                      "status":"active",
-                      "format":"ARFF",
-                      "input":[
-                        {
-                          "name":"estimation_procedure",
-                          "value":"1"
-                        },
-                        {
-                          "name":"evaluation_measures",
-                          "value":"predictive_accuracy"
-                        },
-                        {
-                          "name":"source_data",
-                          "value":"1"
-                        },
-                        {
-                          "name":"target_feature",
-                          "value":"class"
-                        }
-                        ],
-                      "quality":[
-                        {
-                          "name":"MajorityClassSize",
-                          "value":"684"
-                        },
-                        {
-                          "name":"MaxNominalAttDistinctValues",
-                          "value":"10.0"
-                        },
-                        {
-                          "name":"MinorityClassSize",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumBinaryAtts",
-                          "value":"14.0"
-                        },
-                        {
-                          "name":"NumberOfClasses",
-                          "value":"6"
-                        },
-                        {
-                          "name":"NumberOfFeatures",
-                          "value":"39"
-                        },
-                        {
-                          "name":"NumberOfInstances",
-                          "value":"898"
-                        },
-                        {
-                          "name":"NumberOfInstancesWithMissingValues",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumberOfMissingValues",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumberOfNumericFeatures",
-                          "value":"6"
-                        },
-                        {
-                          "name":"NumberOfSymbolicFeatures",
-                          "value":"32"
-                        }
-                        ],
-                      "tag":[
-                        "basic",
-                        "study_1",
-                        "study_7",
-                        "under100k",
-                        "under1m"
-                      ]
-                    }
-                  ]
-                }
-              }
         default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /task/list/{id}:
-    get:
-      summary: List all tasks for the given task type id
-      description: |
-        Returns an array with all tasks for the given task type id (1 = Supervised Classification)
-      parameters:
-        - name: id
-          in: path
-          description: On which task type id to filter the results
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - task
-      responses:
-        '200':
-          description: A task description
-          schema:
-            $ref: '#/definitions/TaskList'
-          examples:
-            application/json: |-
-              {
-                "task": {
-                  "task": [
-                    {
-                      "task_id":"1",
-                      "task_type":"Supervised Classification",
-                      "did":"1",
-                      "name":"anneal",
-                      "status":"active",
-                      "format":"ARFF",
-                      "input":[
-                        {
-                          "name":"estimation_procedure",
-                          "value":"1"
-                        },
-                        {
-                          "name":"evaluation_measures",
-                          "value":"predictive_accuracy"
-                        },
-                        {
-                          "name":"source_data",
-                          "value":"1"
-                        },
-                        {
-                          "name":"target_feature",
-                          "value":"class"
-                        }
-                        ],
-                      "quality":[
-                        {
-                          "name":"MajorityClassSize",
-                          "value":"684"
-                        },
-                        {
-                          "name":"MaxNominalAttDistinctValues",
-                          "value":"10.0"
-                        },
-                        {
-                          "name":"MinorityClassSize",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumBinaryAtts",
-                          "value":"14.0"
-                        },
-                        {
-                          "name":"NumberOfClasses",
-                          "value":"6"
-                        },
-                        {
-                          "name":"NumberOfFeatures",
-                          "value":"39"
-                        },
-                        {
-                          "name":"NumberOfInstances",
-                          "value":"898"
-                        },
-                        {
-                          "name":"NumberOfInstancesWithMissingValues",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumberOfMissingValues",
-                          "value":"0"
-                        },
-                        {
-                          "name":"NumberOfNumericFeatures",
-                          "value":"6"
-                        },
-                        {
-                          "name":"NumberOfSymbolicFeatures",
-                          "value":"32"
-                        }
-                        ],
-                      "tag":[
-                        "basic",
-                        "study_1",
-                        "study_7",
-                        "under100k",
-                        "under1m"
-                      ]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /task/tag:
+          description: "successful operation"
+  /user/createWithArray:
     post:
-      summary: Tag a task
-      description: Tags a task.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: task_id
-          in: formData
-          description: Id of the task.
-          required: true
-          type: number
-          format: integer
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - task
+      - "user"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "createUsersWithArrayInput"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/User"
       responses:
-        '200':
-          description: The id of the tagged task
-          schema:
-            type: object
-            properties:
-              task_tag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the tagged task
-          examples:
-            application/json: |-
-              {
-                "task_tag": {
-                  "id": "2"
-                }
-              }
         default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /task/untag:
+          description: "successful operation"
+  /user/createWithList:
     post:
-      summary: Untag a task
-      description: Untags a task.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: task_id
-          in: formData
-          description: Id of the task.
-          required: true
-          type: number
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
       tags:
-        - task
+      - "user"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "createUsersWithListInput"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/User"
       responses:
-        '200':
-          description: A the features of the task
-          schema:
-            type: object
-            properties:
-              task_untag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the untagged task
-          examples:
-            application/json: |-
-              {
-                "task_untag": {
-                  "id": "2"
-                }
-              }
         default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow/{id}:
+          description: "successful operation"
+  /user/login:
     get:
-      summary: Get flow description
-      description: |
-        Returns information about a flow. The information includes the name, information about the creator, dependencies, parameters, run instructions and more.
-      parameters:
-        - name: id
-          in: path
-          description: ID of the flow.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
       tags:
-        - flow
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
       responses:
-        '200':
-          description: A flow description
+        200:
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/Flow'
-          examples:
-            application/json: |-
-              {
-                "flow": {
-                  "id":"100",
-                  "uploader":"1",
-                  "name":"weka.J48",
-                  "version":"2",
-                  "external_version":"Weka_3.7.5_9117",
-                  "description":"...",
-                  "upload_date":"2014-04-23 18:00:36",
-                  "language":"Java",
-                  "dependencies":"Weka_3.7.5",
-                  "parameter": [
-                    {
-                      "name":"A",
-                      "data_type":"flag",
-                      "default_value":[],
-                      "description":"Laplace smoothing..."
-                    },
-                    {
-                      "name":"C",
-                      "data_type":"option",
-                      "default_value":"0.25",
-                      "description":"Set confidence threshold..."
-                    }
-                  ]
-                }
-              }
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        400:
+          description: "Invalid username/password supplied"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
         default:
-          description: Unexpected error
+          description: "successful operation"
+  /user/{username}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+    put:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
     delete:
-      summary: Delete a flow
-      description: |
-        Deletes a flow. Upon success, it returns the ID of the deleted flow.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the flow.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
       tags:
-        - flow
-      responses:
-        '200':
-          description: ID of the deleted flow
-          schema:
-            type: object
-            properties:
-              flow_delete:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the deleted flow, a positive integer
-          examples:
-            application/json: |-
-              {
-                "flow_delete": {
-                  "id": "4328"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow:
-    post:
-      summary: Upload a flow
-      consumes: [multipart/form-flow]
-      description: |
-        Uploads a flow. Upon success, it returns the flow id.
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/xml"
+      - "application/json"
       parameters:
-        - name: description
-          in: formData
-          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.implementation.upload.xsd)
-          required: true
-          type: file
-        - name: flow
-          in: formData
-          description: The actual flow, being a source (or binary) file.
-          required: false
-          type: file
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - flow
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
       responses:
-        '200':
-          description: Id of the uploaded flow
-          schema:
-            type: object
-            properties:
-              upload_flow:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the uploaded flow, a positive integer
-          examples:
-            application/json: |-
-              {
-                "upload_flow": {
-                  "id": "2520"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow/exists/{name}/{version}:
-    get:
-      summary: Check whether flow exists
-      description: |
-        Checks whether a flow with the given name and (external) version exists.
-      parameters:
-        - name: name
-          in: path
-          description: The name of the flow.
-          required: true
-          type: string
-        - name: version
-          in: path
-          description: The external version of the flow
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - flow
-      responses:
-        '200':
-          description: A list of flows
-          schema:
-            type: object
-            properties:
-              flow_exists:
-                type: object
-                properties:
-                  exists:
-                    type: string
-                    description: true or false
-                  id:
-                    type: string
-                    description: The id of the flow with the given name and (external) version
-          examples:
-            application/json: |-
-              {
-                "flow_exists": {
-                  "exists": "true",
-                  "id": "65"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow/list:
-    get:
-      summary: List all flows
-      description: |
-        Returns an array with all flows in the system.
-      parameters:
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - flow
-      responses:
-        '200':
-          description: A list of flows
-          schema:
-            $ref: '#/definitions/FlowList'
-          examples:
-            application/json: |-
-              {
-                "flows":
-                  {
-                    "flow":[
-                      {
-                        "id":"65",
-                        "full_name":"weka.RandomForest(1)",
-                        "name":"weka.RandomForest",
-                        "version":"1",
-                        "external_version":"Weka_3.7.10_9186",
-                        "uploader":"1"
-                      },
-                      {
-                        "id":"66",
-                        "full_name":"weka.IBk(1)",
-                        "name":"weka.IBk",
-                        "version":"1",
-                        "external_version":"Weka_3.7.10_8034",
-                        "uploader":"1"
-                      },
-                      {
-                        "id":"67",
-                        "full_name":"weka.BayesNet_K2(1)",
-                        "name":"weka.BayesNet_K2",
-                        "version":"1",
-                        "external_version":"Weka_3.7.10_8034",
-                        "uploader":"1"
-                      }
-                    ]
-                  }
-                }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow/owned:
-    get:
-      summary: List flows owned by you
-      description: |
-        Returns an array with all flows owned by you.
-      parameters:
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - flow
-      responses:
-        '200':
-          description: A list of flows
-          schema:
-            type: object
-            properties:
-              flow_owned:
-                type: object
-                properties:
-                  id:
-                    type: array
-                    items:
-                      type: string
-          examples:
-            application/json: |-
-              {
-                "flow_owned": {
-                  "id": [
-                    "111",
-                    "112",
-                    "113",
-                    "114",
-                    "115",
-                    "116",
-                    "117"
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow/tag:
-    post:
-      summary: Tag a flow
-      description: Tags a flow.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: flow_id
-          in: formData
-          description: Id of the flow.
-          required: true
-          type: number
-          format: integer
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - flow
-      responses:
-        '200':
-          description: The id of the tagged flow
-          schema:
-            type: object
-            properties:
-              flow_tag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the tagged flow
-          examples:
-            application/json: |-
-              {
-                "flow_tag": {
-                  "id": "2"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /flow/untag:
-    post:
-      summary: Untag a flow
-      description: Untags a flow.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: flow_id
-          in: formData
-          description: Id of the flow.
-          required: true
-          type: number
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - flow
-      responses:
-        '200':
-          description: The id of the untagged flow
-          schema:
-            type: object
-            properties:
-              flow_untag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the untagged flow
-          examples:
-            application/json: |-
-              {
-                "flow_untag": {
-                  "id": "2"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/{id}:
-    get:
-      summary: Get run description
-      description: |
-        Returns information about a run. The information includes the name, information about the creator, dependencies, parameters, run instructions and more.
-      parameters:
-        - name: id
-          in: path
-          description: ID of the run.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: A run description
-          schema:
-            $ref: '#/definitions/Run'
-          examples:
-            application/json: |-
-              {
-                "run": {
-                  "run_id":"100",
-                  "uploader":"1",
-                  "uploader_name":"Jan van Rijn",
-                  "task_id":"28",
-                  "task_type":"Supervised Classification",
-                  "task_evaluation_measure":"predictive_accuracy",
-                  "flow_id":"67",
-                  "flow_name":"weka.BayesNet_K2(1)",
-                  "setup_string":"weka.classifiers.bayes.BayesNet -- -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5",
-                  "parameter_setting": [
-                    {
-                      "name":"D",
-                      "value":"true"
-                    },
-                    {
-                      "name":"Q",
-                      "value":"weka.classifiers.bayes.net.search.local.K2"
-                    },
-                    {
-                      "name":"P",
-                      "value":"1"
-                    },
-                    {
-                      "name":"S",
-                      "value":"BAYES"
-                    }
-                  ],
-                  "input_data":
-                    {
-                      "dataset":
-                        {
-                          "did":"28",
-                          "name":"optdigits",
-                          "url":"http:\/\/www.openml.org\/data\/download\/28\/dataset_28_optdigits.arff"
-                        }
-                    },
-                  "output_data":
-                    {
-                      "file": [
-                        {
-                          "did":"48838",
-                          "file_id":"261",
-                          "name":"description",
-                          "url":"http:\/\/www.openml.org\/data\/download\/261\/weka_generated_run935374685998857626.xml"
-                        },
-                        {
-                          "did":"48839",
-                          "file_id":"262",
-                          "name":"predictions",
-                          "url":"http:\/\/www.openml.org\/data\/download\/262\/weka_generated_predictions576954524972002741.arff"
-                        }
-                      ],
-                      "evaluation": [
-                        {
-                          "name":"area_under_roc_curve",
-                          "flow_id":"4",
-                          "value":"0.990288",
-                          "array_data":"[0.99724,0.989212,0.992776,0.994279,0.980578,0.98649,0.99422,0.99727,0.994858,0.976143]"
-                        },
-                        {
-                          "name":"confusion_matrix",
-                          "flow_id":"10",
-                          "array_data":"[[544,1,0,0,7,0,1,0,0,1],[0,511,21,1,0,1,3,1,5,28],[0,7,511,1,0,1,0,3,23,11],[0,2,2,519,0,3,0,12,16,18],[0,3,0,0,528,0,4,21,6,6],[0,1,0,7,5,488,2,0,4,51],[1,7,0,0,2,0,548,0,0,0],[0,2,0,1,9,1,0,545,4,4],[1,25,2,2,3,6,2,1,503,9],[0,7,0,20,16,5,0,19,9,486]]"
-                        },
-                        {
-                          "name":"f_measure",
-                          "flow_id":"12",
-                          "value":"0.922723",
-                          "array_data":"[0.989091,0.898857,0.935041,0.92431,0.927944,0.918156,0.980322,0.933219,0.895018,0.826531]"
-                        },
-                        {
-                          "name":"kappa",
-                          "flow_id":"13",
-                          "value":"0.913601"
-                        }
-                      ]
-                    }
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      summary: Delete run
-      description: |
-        Deletes a run. Upon success, it returns the ID of the deleted run.
-      parameters:
-        - name: id
-          in: path
-          description: Id of the run.
-          required: true
-          type: number
-          format: integer
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: ID of the deleted run
-          schema:
-            type: object
-            properties:
-              data_delete:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the deleted run, a positive integer
-          examples:
-            application/json: |-
-              {
-                "run_delete": {
-                  "id": "2520"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run:
-    post:
-      summary: Upload run
-      consumes: [multipart/form-run]
-      description: |
-        Uploads a run. Upon success, it returns the run id.
-      parameters:
-        - name: description
-          in: formData
-          description: An XML file describing the run
-          required: true
-          type: file
-        - name: predictions
-          in: formData
-          description: The predictions generated by the run
-          required: true
-          type: file
-        - name: model_readable
-          in: formData
-          description: The human-readable model generated by the run
-          required: false
-          type: file
-        - name: model_serialized
-          in: formData
-          description: The serialized model generated by the run
-          required: false
-          type: file
-        - name: api_key
-          in: query
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: Id of the uploaded run
-          schema:
-            type: object
-            properties:
-              upload_flow:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the uploaded run, a positive integer
-          examples:
-            application/json: |-
-              {
-                "upload_run": {
-                  "id": "2520"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/list/run/{ids}:
-    get:
-      summary: Get runs by id(s)
-      description: |
-        Returns an array with all runs matching the given run id(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of run IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: A list of runs descriptions
-          schema:
-            $ref: '#/definitions/RunList'
-          examples:
-            application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "100",
-                      "task_id": "28",
-                      "setup_id": "12",
-                      "flow_id": "67",
-                      "uploader": "1",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "101",
-                      "task_id": "48",
-                      "setup_id": "6",
-                      "flow_id": "61",
-                      "uploader": "1",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "102",
-                      "task_id": "41",
-                      "setup_id": "3",
-                      "flow_id": "58",
-                      "uploader": "1",
-                      "error_message": []
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/list/task/{ids}:
-    get:
-      summary: Get runs by task(s)
-      description: |
-        Returns an array with all runs belonging to one of the given task(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of task IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: A list of runs descriptions
-          schema:
-            $ref: '#/definitions/RunList'
-          examples:
-            application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "142564",
-                      "task_id": "1",
-                      "setup_id": "829",
-                      "flow_id": "362",
-                      "uploader": "212",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "249273",
-                      "task_id": "1",
-                      "setup_id": "829",
-                      "flow_id": "362",
-                      "uploader": "348",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "249280",
-                      "task_id": "1",
-                      "setup_id": "829",
-                      "flow_id": "362",
-                      "uploader": "348",
-                      "error_message": []
-                    },
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/list/uploader/{ids}:
-    get:
-      summary: Get runs by uploader(s)
-      description: |
-        Returns an array with all runs uploaded by one of the given user(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: A list of runs descriptions
-          schema:
-            $ref: '#/definitions/RunList'
-          examples:
-            application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id":"45015",
-                      "task_id":"1",
-                      "setup_id":"1225",
-                      "flow_id":"673",
-                      "uploader":"1",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"45016",
-                      "task_id":"1",
-                      "setup_id":"1225",
-                      "flow_id":"673",
-                      "uploader":"1",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"54729",
-                      "task_id":"1",
-                      "setup_id":"1468",
-                      "flow_id":"707",
-                      "uploader":"1",
-                      "error_message":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/list/flow/{ids}:
-    get:
-      summary: Get runs by flow(s)
-      description: |
-        Returns an array with all runs generated by the given flow(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: A list of runs descriptions
-          schema:
-            $ref: '#/definitions/RunList'
-          examples:
-            application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id":"413",
-                      "task_id":"1",
-                      "setup_id":"10",
-                      "flow_id":"65",
-                      "uploader":"1",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"6253",
-                      "task_id":"1",
-                      "setup_id":"10",
-                      "flow_id":"65",
-                      "uploader":"17",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"10451",
-                      "task_id":"1",
-                      "setup_id":"79",
-                      "flow_id":"65",
-                      "uploader":"17",
-                      "error_message":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/list/{filters}:
-    get:
-      summary: Get runs by id, task, uploader and/or flow
-      description: |
-        Returns an array with all runs matching any or all of the given filters. You can combine any of the four above filters any way you want.
-      parameters:
-        - name: filters
-          in: path
-          description: Any combination of filters (run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: A list of runs descriptions
-          schema:
-            $ref: '#/definitions/RunList'
-          examples:
-            application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "100",
-                      "task_id": "28",
-                      "setup_id": "12",
-                      "flow_id": "67",
-                      "uploader": "1",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "101",
-                      "task_id": "48",
-                      "setup_id": "6",
-                      "flow_id": "61",
-                      "uploader": "1",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "102",
-                      "task_id": "41",
-                      "setup_id": "3",
-                      "flow_id": "58",
-                      "uploader": "1",
-                      "error_message": []
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/tag:
-    post:
-      summary: Tag a run
-      description: Tags a run.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: run_id
-          in: formData
-          description: Id of the run.
-          required: true
-          type: number
-          format: integer
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: The id of the tagged run
-          schema:
-            type: object
-            properties:
-              run_tag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the tagged run
-          examples:
-            application/json: |-
-              {
-                "run_tag": {
-                  "id": "2"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /run/untag:
-    post:
-      summary: Untag a run
-      description: Untags a run.
-      consumes: [application/x-www-form-urlencoded]
-      parameters:
-        - name: run_id
-          in: formData
-          description: Id of the run.
-          required: true
-          type: number
-        - name: tag
-          in: formData
-          description: Tag name
-          required: true
-          type: string
-        - name: api_key
-          in: formData
-          description: Api key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - run
-      responses:
-        '200':
-          description: The id of the untagged run
-          schema:
-            type: object
-            properties:
-              run_untag:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID of the untagged run
-          examples:
-            application/json: |-
-              {
-                "run_untag": {
-                  "id": "2"
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /evaluation/list/run/{ids}:
-    get:
-      summary: Get evaluations by run id(s)
-      description: |
-        Returns an array with all evaluations matching the given run id(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of run IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - evaluation
-      responses:
-        '200':
-          description: A list of evaluation descriptions
-          schema:
-            $ref: '#/definitions/EvaluationList'
-          examples:
-            application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /evaluation/list/task/{ids}:
-    get:
-      summary: Get evaluations by task(s)
-      description: |
-        Returns an array with all evaluations belonging to one of the given task(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of task IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - evaluation
-      responses:
-        '200':
-          description: A list of evaluation descriptions
-          schema:
-            $ref: '#/definitions/EvaluationList'
-          examples:
-            application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /evaluation/list/uploader/{ids}:
-    get:
-      summary: Get evaluations by uploader(s)
-      description: |
-        Returns an array with all evaluations uploaded by one of the given user(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - evaluation
-      responses:
-        '200':
-          description: A list of evaluation descriptions
-          schema:
-            $ref: '#/definitions/EvaluationList'
-          examples:
-            application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /evaluation/list/flow/{ids}:
-    get:
-      summary: Get evaluations by flow(s)
-      description: |
-        Returns an array with all evaluations generated by the given flow(s).
-      parameters:
-        - name: ids
-          in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - evaluation
-      responses:
-        '200':
-          description: A list of evaluations descriptions
-          schema:
-            $ref: '#/definitions/EvaluationList'
-          examples:
-            application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /evaluation/list/{filters}:
-    get:
-      summary: Get evaluations by run, task, uploader and or flow
-      description: |
-        Returns an array with all evaluations matching any or all of the given filters. You can combine any of the four above filters any way you want.
-      parameters:
-        - name: filters
-          in: path
-          description: Any combination of filters (run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'.
-          required: true
-          type: string
-        - name: api_key
-          in: query
-          description: API key to authenticate the user
-          required: true
-          type: string
-      tags:
-        - evaluation
-      responses:
-        '200':
-          description: A list of evaluations descriptions
-          schema:
-            $ref: '#/definitions/EvaluationList'
-          examples:
-            application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
 definitions:
-  Flow:
-    type: object
+  Order:
+    type: "object"
     properties:
-      flow_description:
-        type: object
-        properties:
-          id:
-            type: string
-            description: ID of the flow, a positive integer
-          uploader:
-            type: string
-            description: The uploader of the flow
-          name:
-            type: string
-            description: The name of the flow
-          version:
-            type: string
-            description: The version of the flow, set by OpenML. A positive integer
-          version_label:
-            type: string
-            description: The version of the flow, as defined by the uploader, for reference. Can be any format as long as it is unique.
-          description:
-            type: string
-            description: Wiki description of the flow, in (Git flavoured) markdown format
-          upload_date:
-            type: string
-            description: The datetime that the flow was uploaded, format yyyy-MM-dd HH:mm:ss
-          language:
-            type: string
-            description: The programming language the flow is written in.
-          dependencies:
-            type: string
-            description: The libraries that this flow depends on, and their version numbers.
-          tag:
-            type: array
-            items:
-              type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
-          parameter:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the parameter
-                data_type:
-                  type: string
-                  description: The data type of the parameter
-                default_value:
-                  type: string
-                  description: The default value of the parameter
-                description:
-                  type: string
-                  description: A description of the parameter
-  FlowList:
-    type: object
+      id:
+        type: "integer"
+        format: "int64"
+      petId:
+        type: "integer"
+        format: "int64"
+      quantity:
+        type: "integer"
+        format: "int32"
+      shipDate:
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+        - "placed"
+        - "approved"
+        - "delivered"
+      complete:
+        type: "boolean"
+        default: false
+    xml:
+      name: "Order"
+  User:
+    type: "object"
     properties:
-      flows:
-        type: object
-        properties:
-          flow:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: string
-                  description: The flow ID
-                full_name:
-                  type: string
-                  description: The full flow name (name + internal version number)
-                name:
-                  type: string
-                  description: The flow name
-                version:
-                  type: string
-                  description: The internal flow version
-                external_version:
-                  type: string
-                  description: The external flow version
-                uploader:
-                  type: string
-                  description: The ID of the person who uploaded the flow
-  Task:
-    type: object
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+      userStatus:
+        type: "integer"
+        format: "int32"
+        description: "User Status"
+    xml:
+      name: "User"
+  Category:
+    type: "object"
     properties:
-      flow_description:
-        type: object
-        properties:
-          task_id:
-            type: string
-            description: ID of the task, a positive integer
-          task_type:
-            type: string
-            description: The type of the task, e.g. Supervised Classification
-          input:
-            type: array
-            items:
-              type: object
-              properties:
-                name: 
-                  type: string
-                  description: The name of the input, e.g. source_data
-                data_set:
-                  type: object
-                  properties:
-                    data_set_id:
-                      type: string
-                      description: The id of the dataset
-                    target_feature:
-                      type: string
-                      description: The name of the target feature for this task
-                estimation_procedure:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      description: The type of procedure, e.g. crossvalidation
-                    data_splits_url:
-                      type: string
-                      description: The url where the data splits can be downloaded
-                    parameter:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            description: The name of the parameter
-                          value:
-                            type: string
-                            description: The value of the parameter
-                cost_matrix: 
-                  type: array
-                  items:
-                    type: array
-                    items:
-                      type: integer
-                      format: int64
-                  description: The cost matrix, indicating the costs for each type of misclassification
-                evaluation_measures: 
-                  type: object
-                  properties:
-                    evaluation_measure: 
-                      type: string
-                      description: The evaluation measure to optimize in this task
-          output:
-            type: array
-            items:
-              type: object
-              properties:
-                name: 
-                  type: string
-                  description: The name of the output, e.g. predictions
-                predictions:
-                  type: object
-                  properties:
-                    format:
-                      type: string
-                      description: The fromat of the predictions, e.g. ARFF
-                    feature:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            description: The name of the prediction feature, e.g. row_id
-                          type:
-                            type: string
-                            description: The type of the prediction feature, e.g. integer        
-          tag:
-            type: array
-            items:
-              type: string
-              description: Tags added by OpenML users. Includes study tags in the form `study_1`
-  TaskList:
-    type: object
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  Tag:
+    type: "object"
     properties:
-      task:
-        type: object
-        properties:
-          task:
-            type: array
-            items:
-              type: object
-              properties:
-                task_id:
-                  type: string
-                  description: The ID of the task
-                task_type:
-                  type: string
-                  description: The type of task (e.g. Supervised Classificationr)
-                did:
-                  type: string
-                  description: The id of the source dataset
-                name:
-                  type: string
-                  description: The name of the source dataset
-                status:
-                  type: string
-                  description: The status of the source dataset, active, in_preparation, or deactivated
-                format:
-                  type: string
-                  description: The format of the source dataset
-                input:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: The name of the input
-                      value:
-                        type: string
-                        description: The value of the input
-                quality:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: The name of the quality
-                      value:
-                        type: string
-                        description: The value of the quality 
-                tag:
-                  type: array
-                  items:
-                    type: string
-                    description: Tags added by OpenML users. Includes study tags in the form `study_1`
-  DataList:
-    type: object
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+  Pet:
+    type: "object"
+    required:
+    - "name"
+    - "photoUrls"
     properties:
-      data:
-        type: object
-        properties:
-          dataset:
-            type: array
-            items:
-              type: object
-              properties:
-                did:
-                  type: string
-                  description: The dataset ID
-                name:
-                  type: string
-                  description: The dataset name
-                status:
-                  type: string
-                  description: The dataset status, either in_preparation, active, or deactivated
-                format:
-                  type: string
-                  description: The data format of the dataset, e.g. ARFF
-                quality:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: The name of the property
-                      value:
-                        type: string
-                        description: The value of the property
-  DataQualities:
-    type: object
-    properties:
-      data_qualities:
-        type: object
-        properties:
-          quality:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the dataset quality measures
-                value:
-                  type: string
-                  description: The value for this dataset
-  DataFeatures:
-    type: object
-    properties:
-      data_features:
-        type: object
-        properties:
-          feature:
-            type: array
-            items:
-              type: object
-              properties:
-                index:
-                  type: string
-                  description: Feature index
-                name:
-                  type: string
-                  description: Feature name
-                data_type:
-                  type: string
-                  description: Feature data type
-                is_target:
-                  type: string
-                  description: Whether this feature is seen as a target feature
-                is_ignore:
-                  type: string
-                  description: Whether this feature should be ignored in modelling (e.g. every value is unique)
-                is_row_identifier:
-                  type: string
-                  description: Whether this feature is a row identifier
-  Data:
-    type: object
-    properties:
-      data_set_description:
-        type: object
-        required: [ "name", "description", "format" ]
-        properties:
-          id:
-            type: string
-            description: ID of the dataset, a positive integer
-          name:
-            type: string
-            description: The name of the dataset
-          version:
-            type: string
-            description: The version of the dataset, set by OpenML. A positive integer
-          description:
-            type: string
-            description: Wiki description of the dataset, in (Git flavoured) markdown format
-          format:
-            type: string
-            description: Data format, for instance ARFF
-          upload_date:
-            type: string
-            description: The datetime that the dataset was uploaded, format yyyy-MM-dd HH:mm:ss
-          licence:
-            type: string
-            description: The licence granted for using the dataset, for instance Public or CC-BY
-          url:
-            type: string
-            description: The URL where the data can be downloaded
-          file_id:
-            type: string
-            description: The ID of the dataset file stored on the OpenML server
-          default_target_attribute:
-            type: string
-            description: For tabular data, the name of the column that is typically used as the target attribute for that data set
-          version_label:
-            type: string
-            description: The version of the dataset, as defined by the uploader, for reference. Can be any format as long as it is unique.
-          tag:
-            type: array
-            items:
-              type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
-          visibility:
-            type: string
-            description: Who can see the dataset. For instance `public`.
-          original_data_url:
-            type: string
-            description: The URL where the original data is hosted.
-          status:
-            type: string
-            description: active, in_preparation, or deactivated
-          md5_checksum:
-            type: string
-            description: Checksum to verify downloads of the dataset
-  RunList:
-    type: object
-    properties:
-      runs:
-        type: object
-        properties:
-          run:
-            type: array
-            items:
-              type: object
-              properties:
-                run_id:
-                  type: string
-                  description: The run ID
-                task_id:
-                  type: string
-                  description: The ID of the task solved by this run
-                setup_id:
-                  type: string
-                  description: Ignore (internal representation of the parameter setting)
-                flow_id:
-                  type: string
-                  description: The ID of the flow used in this run
-                uploader:
-                  type: string
-                  description: The ID of the person uploading this run
-                error_message:
-                  type: string
-                  description: Error message generated by the run (if any)
-  EvaluationList:
-      type: object
-      properties:
-        evaluations:
-          type: object
-          properties:
-            evaluation:
-              type: array
-              items:
-                type: object
-                properties:
-                  run_id:
-                    type: string
-                    description: The run ID
-                  task_id:
-                    type: string
-                    description: The ID of the tasks solved by this run
-                  flow_id:
-                    type: string
-                    description: The ID of the flow used by this run
-                  function:
-                    type: string
-                    description: The name of the evaluation function
-                  value:
-                    type: string
-                    description: The outcome of the evaluation
-                  array_data:
-                    type: string
-                    description: For structured evaluation measures, an array of evaluation values (e.g. per-class predictions, evaluation matrices,...)
-  Run:
-    type: object
-    properties:
-      run_description:
-        type: object
-        properties:
-          id:
-            type: string
-            description: ID of the run, a positive integer
-          uploader:
-            type: string
-            description: The uploader of the run
-          uploader_name:
-            type: string
-            description: The name of the uploader of the run
-          task_id:
-            type: string
-            description: The id of the task solved by this run
-          task_type:
-            type: string
-            description: The type of task solved by this run (e.g., classification)
-          task_evaluation_measure:
-            type: string
-            description: The evaluation measure that is supposed to be optimized in the task, if any
-          flow_id:
-            type: string
-            description: The id of the flow used in this run
-          flow_name:
-            type: string
-            description: The name of the flow used in this run
-          setup_string:
-            type: string
-            description: Configuration of the flow as a string, to be interpreted by the flow, its library, or command line interface.
-          tag:
-            type: array
-            items:
-              type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
-          parameter_setting:
-            type: array
-            items:
-              type: object
-              description: Parameter settings used in this run. Can be multiple.
-              properties:
-                name:
-                  type: string
-                  description: The name of the parameter
-                value:
-                  type: string
-                  description: The value of the parameter used
-          input_data:
-            type: object
-            description: The input data for this run.
-            properties:
-              dataset:
-                type: object
-                properties:
-                  did:
-                    type: string
-                    description: The id of the dataset
-                  name:
-                    type: string
-                    description: The name of the dataset
-                  url:
-                    type: string
-                    description: The download url of the dataset
-          output_data:
-            type: object
-            description: The data generated by this run.
-            properties:
-              file:
-                type: array
-                items:
-                  type: object
-                  description: Files uploaded by the user, e.g. run description, predictions. Can be multiple.
-                  properties:
-                    did:
-                      type: string
-                      description: The id of the uploaded file
-                    file_id:
-                      type: string
-                      description: The reference id of the uploaded file, for downloading afterward
-                    name:
-                      type: string
-                      description: The name of the uploaded file (e.g., description, predictions, model,...)
-              evaluation:
-                type: array
-                items:
-                  type: object
-                  description: Evaluations uploaded by the user, e.g. runtimes, or computed by the server (after run upload). Can be multiple.
-                  properties:
-                    name:
-                      type: string
-                      description: The name of the evaluation measure
-                    flow_id:
-                      type: string
-                      description: The id of the code used to compute this evaluation method
-                    value:
-                      type: string
-                      description: The result of the evaluation
-                    array_data:
-                      type: string
-                      description: For composite evaluation measures (e.g. per-class measures, confusion matrix), a string (JSON) representation of the evaluation.
-  Error:
-    type: object
+      id:
+        type: "integer"
+        format: "int64"
+      category:
+        $ref: "#/definitions/Category"
+      name:
+        type: "string"
+        example: "doggie"
+      photoUrls:
+        type: "array"
+        xml:
+          name: "photoUrl"
+          wrapped: true
+        items:
+          type: "string"
+      tags:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        items:
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "pet status in the store"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+    xml:
+      name: "Pet"
+  ApiResponse:
+    type: "object"
     properties:
       code:
-        type: integer
-        format: int32
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
       message:
-        type: string
-      additional_message:
-        type: string
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
