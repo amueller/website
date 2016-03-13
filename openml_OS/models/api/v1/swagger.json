@@ -716,7 +716,7 @@
         },
         "/task/list/{id}": {
             "get": {
-                "summary": "List all tasks for the given task type id",
+                "summary": "List all tasks of given type",
                 "description": "Returns an array with all tasks for the given task type id (1 = Supervised Classification)\n",
                 "parameters": [
                     {
