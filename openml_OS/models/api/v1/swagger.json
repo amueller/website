@@ -40,22 +40,13 @@
                 ],
                 "responses": {
                     "110": {
-                        "description": "Please provide data_id.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide data_id."
                     },
                     "111": {
-                        "description": "Unknown dataset. Data set description with data_id was not found in the database.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Unknown dataset. Data set description with data_id was not found in the database."
                     },
                     "112": {
-                        "description": "No access granted. This dataset is not shared with you.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "No access granted. This dataset is not shared with you."
                     },
                     "200": {
                         "description": "A dataset description",
@@ -64,12 +55,6 @@
                         },
                         "examples": {
                             "application/json": "{\n  \"data_set_description\": {\n    \"id\": \"1\",\n    \"name\": \"anneal\",\n    \"version\": \"2\",\n    \"description\": \"...\",\n    \"format\": \"ARFF\",\n    \"upload_date\": \"2014-04-06 23:19:20\",\n    \"licence\": \"Public\",\n    \"url\": \"http://www.openml.org/data/download/1/dataset_1_anneal.arff\",\n    \"file_id\": \"1\",\n    \"default_target_attribute\": \"class\",\n    \"version_label\": \"2\",\n    \"tag\": [\n      \"study_1\",\n      \"uci\"\n    ],\n    \"visibility\": \"public\",\n    \"original_data_url\": \"http://www.openml.org/d/2\",\n    \"status\": \"active\",\n    \"md5_checksum\": \"d01f6ccd68c88b749b20bbe897de3713\"\n  }\n}"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -118,11 +103,23 @@
                             "application/json": "{\n  \"data_delete\": {\n    \"id\": \"4328\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "350": {
+                        "description": "Please provide API key. In order to remove your content, please authenticate."
+                    },
+                    "351": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact api administrators."
+                    },
+                    "352": {
+                        "description": "Dataset does not exists. The data ID could not be linked to an existing dataset."
+                    },
+                    "353": {
+                        "description": "Dataset is not owned by you. The dataset is owned by another user. Hence you cannot delete it."
+                    },
+                    "354": {
+                        "description": "Dataset is in use by other content. Can not be deleted. The data is used in tasks or runs. Delete other content before deleting this dataset."
+                    },
+                    "355": {
+                        "description": "Deleting dataset failed. Deleting the dataset failed. Please contact support team."
                     }
                 }
             }
@@ -162,94 +159,49 @@
                 ],
                 "responses": {
                     "130": {
-                        "description": "Problem with file uploading. There was a problem with the file upload",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Problem with file uploading. There was a problem with the file upload"
                     },
                     "131": {
-                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards"
                     },
                     "132": {
-                        "description": "Failed to move the files. Internal server error, please contact API administrators",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Failed to move the files. Internal server error, please contact API administrators"
                     },
                     "133": {
-                        "description": "Failed to make checksum of datafile. Internal server error, please contact API administrators",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Failed to make checksum of datafile. Internal server error, please contact API administrators"
                     },
                     "134": {
-                        "description": "Failed to insert record in database. Internal server error, please contact API administrators",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Failed to insert record in database. Internal server error, please contact API administrators"
                     },
                     "135": {
-                        "description": "Please provide description xml.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide description xml."
                     },
                     "136": {
-                        "description": "File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again."
                     },
                     "137": {
-                        "description": "Please provide API key. In order to share content, please log in or provide your API key.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide API key. In order to share content, please log in or provide your API key."
                     },
                     "138": {
-                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact API administrators",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact API administrators"
                     },
                     "139": {
-                        "description": "Combination name / version already exists. Leave version out for auto increment",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Combination name / version already exists. Leave version out for auto increment"
                     },
                     "140": {
-                        "description": "Both dataset file and dataset url provided. The system is confused since both a dataset file (post) and a dataset url (xml) are provided. Please remove one.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Both dataset file and dataset url provided. The system is confused since both a dataset file (post) and a dataset url (xml) are provided. Please remove one."
                     },
                     "141": {
-                        "description": "Neither dataset file or dataset url are provided. Please provide either a dataset file as POST variable, or a dataset url in the description XML",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Neither dataset file or dataset url are provided. Please provide either a dataset file as POST variable, or a dataset url in the description XML"
                     },
                     "142": {
-                        "description": "Error in processing arff file. Can be a syntax error, or the specified target feature does not exists. For now, we only check on arff files. If a dataset is claimed to be in such a format, and it can not be parsed, this error is returned.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Error in processing arff file. Can be a syntax error, or the specified target feature does not exists. For now, we only check on arff files. If a dataset is claimed to be in such a format, and it can not be parsed, this error is returned."
                     },
                     "143": {
-                        "description": "Suggested target feature not legal. It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Suggested target feature not legal. It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data."
                     },
                     "144": {
-                        "description": "Unable to update dataset. The dataset with id could not be found in the database. If you upload a new dataset, unset the id.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Unable to update dataset. The dataset with id could not be found in the database. If you upload a new dataset, unset the id."
                     },
                     "200": {
                         "description": "Id of the uploaded dataset",
@@ -269,12 +221,6 @@
                         },
                         "examples": {
                             "application/json": "{\n  \"upload_data_set\": {\n    \"id\": \"4328\"\n  }\n}"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -314,11 +260,20 @@
                             "application/json": "{\n  \"data_features\": {\n    \"feature\": [\n      {\n        \"index\": \"0\",\n        \"name\": \"sepallength\",\n        \"data_type\": \"numeric\",\n        \"is_target\": \"false\",\n        \"is_ignore\": \"false\",\n        \"is_row_identifier\": \"false\"\n      },\n      {\n        \"index\": \"1\",\n        \"name\": \"sepalwidth\",\n        \"data_type\": \"numeric\",\n        \"is_target\": \"false\",\n        \"is_ignore\": \"false\",\n        \"is_row_identifier\": \"false\"\n      },\n      {\n        \"index\": \"2\",\n        \"name\": \"petallength\",\n        \"data_type\": \"numeric\",\n        \"is_target\": \"false\",\n        \"is_ignore\": \"false\",\n        \"is_row_identifier\": \"false\"\n      },\n      {\n        \"index\": \"3\",\n        \"name\": \"petalwidth\",\n        \"data_type\": \"numeric\",\n        \"is_target\": \"false\",\n        \"is_ignore\": \"false\",\n        \"is_row_identifier\": \"false\"\n      },\n      {\n        \"index\": \"4\",\n        \"name\": \"class\",\n        \"data_type\": \"nominal\",\n        \"is_target\": \"true\",\n        \"is_ignore\": \"false\",\n        \"is_row_identifier\": \"false\"\n      }\n    ]\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "270": {
+                        "description": "Please provide dataset ID."
+                    },
+                    "271": {
+                        "description": "Unknown dataset. Data set with the given data ID was not found (or is not shared with you)."
+                    },
+                    "272": {
+                        "description": "No features found. The dataset did not contain any features, or we could not extract them."
+                    },
+                    "273": {
+                        "description": "Dataset not processed yet. The dataset was not processed yet, features are not yet available. Please wait for a few minutes."
+                    },
+                    "274": {
+                        "description": "Dataset processed with error. The feature extractor has run into an error while processing the dataset. Please check whether it is a valid supported file. If so, please contact the API admins."
                     }
                 }
             }
@@ -357,11 +312,23 @@
                             "application/json": "{\n  \"data_qualities\": {\n    \"quality\": [\n      {\n        \"name\": \"ClassCount\",\n        \"value\": \"3.0\"\n      },\n      {\n        \"name\": \"ClassEntropy\",\n        \"value\": \"1.584962500721156\"\n      },\n      {\n        \"name\": \"NumberOfClasses\",\n        \"value\": \"3\"\n      },\n      {\n        \"name\": \"NumberOfFeatures\",\n        \"value\": \"5\"\n      },\n      {\n        \"name\": \"NumberOfInstances\",\n        \"value\": \"150\"\n      },\n      {\n        \"name\": \"NumberOfInstancesWithMissingValues\",\n        \"value\": \"0\"\n      },\n      {\n        \"name\": \"NumberOfMissingValues\",\n        \"value\": \"0\"\n      },\n      {\n        \"name\": \"NumberOfNumericFeatures\",\n        \"value\": \"4\"\n      },\n      {\n        \"name\": \"NumberOfSymbolicFeatures\",\n        \"value\": \"0\"\n      }\n    ]\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "360": {
+                        "description": "Please provide data set ID"
+                    },
+                    "361": {
+                        "description": "Unknown dataset. The data set with the given ID was not found in the database, or is not shared with you."
+                    },
+                    "362": {
+                        "description": "No qualities found. The registered dataset did not contain any calculated qualities."
+                    },
+                    "363": {
+                        "description": "Dataset not processed yet. The dataset was not processed yet, no qualities are available. Please wait for a few minutes."
+                    },
+                    "364": {
+                        "description": "Dataset processed with error. The quality calculator has run into an error while processing the dataset. Please check whether it is a valid supported file. If so, contact the support team."
+                    },
+                    "365": {
+                        "description": "Interval start or end illegal. There was a problem with the interval start or end."
                     }
                 }
             }
@@ -393,16 +360,7 @@
                         }
                     },
                     "370": {
-                        "description": "No datasets available. There are no valid datasets in the system.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "No datasets available. There are no valid datasets in the system."
                     }
                 }
             }
@@ -462,11 +420,20 @@
                             "application/json": "{\n  \"data_tag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "470": {
+                        "description": "In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "471": {
+                        "description": "Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "472": {
+                        "description": "Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag."
+                    },
+                    "473": {
+                        "description": "Something went wrong inserting the tag. Please contact OpenML Team."
+                    },
+                    "474": {
+                        "description": "Internal error tagging the entity. Please contact OpenML Team."
                     }
                 }
             }
@@ -525,11 +492,20 @@
                             "application/json": "{\n  \"data_untag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "475": {
+                        "description": "Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "476": {
+                        "description": "Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "477": {
+                        "description": "Tag not found. The provided tag is not associated with the entity {dataset, flow, run}."
+                    },
+                    "478": {
+                        "description": "Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it."
+                    },
+                    "479": {
+                        "description": "Internal error removing the tag. Please contact OpenML Team."
                     }
                 }
             }
@@ -560,16 +536,10 @@
                 ],
                 "responses": {
                     "150": {
-                        "description": "Please provide task_id.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide task_id."
                     },
                     "151": {
-                        "description": "Unknown task. The task with the given id was not found in the database",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Unknown task. The task with the given id was not found in the database"
                     },
                     "200": {
                         "description": "A task description",
@@ -578,12 +548,6 @@
                         },
                         "examples": {
                             "application/json": "{\n  \"task\": {\n    \"task_id\":\"1\",\n    \"task_type\":\"Supervised Classification\",\n    \"input\":[\n      {\n        \"name\":\"source_data\",\n        \"data_set\":{\n          \"data_set_id\":\"1\",\n          \"target_feature\":\"class\"\n        }\n      },\n      {\n        \"name\":\"estimation_procedure\",\n        \"estimation_procedure\":{\n          \"type\":\"crossvalidation\",\n          \"data_splits_url\":\"http://www.openml.org/api_splits/get/1/Task_1_splits.arff\",\n          \"parameter\":[\n            {\n              \"name\":\"number_repeats\",\n              \"value\":\"1\"\n            },\n            {\n              \"name\":\"number_folds\",\n              \"value\":\"10\"\n            },\n            {\n              \"name\":\"percentage\"\n            },\n            {\n              \"name\":\"stratified_sampling\",\n              \"value\":\"true\"\n            }\n          ]\n        }\n      },\n      {\n        \"name\":\"cost_matrix\",\n        \"cost_matrix\":[]\n      },\n      {\n        \"name\":\"evaluation_measures\",\n        \"evaluation_measures\":\n          {\n            \"evaluation_measure\":\"predictive_accuracy\"\n          }\n      }\n    ],\n    \"output\":{\n      \"name\":\"predictions\",\n      \"predictions\":{\n        \"format\":\"ARFF\",\n        \"feature\":[\n          {\n            \"name\":\"repeat\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"fold\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"row_id\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"confidence.classname\",\n            \"type\":\"numeric\"\n          },\n          {\n            \"name\":\"prediction\",\n            \"type\":\"string\"\n          }\n        ]\n      }\n    },\n    \"tag\":[\"basic\",\"study_1\",\"under100k\",\"under1m\"]\n  }\n}"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -632,11 +596,20 @@
                             "application/json": "{\n  \"task_delete\": {\n    \"id\": \"4328\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "450": {
+                        "description": "Please provide API key. In order to remove your content, please authenticate."
+                    },
+                    "451": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact api administrators."
+                    },
+                    "452": {
+                        "description": "Task does not exists. The task ID could not be linked to an existing task."
+                    },
+                    "454": {
+                        "description": "Task is executed in some runs. Delete these first."
+                    },
+                    "455": {
+                        "description": "Deleting the task failed. Please contact support team."
                     }
                 }
             }
@@ -688,11 +661,20 @@
                             "application/json": "{\n  \"upload_task_set\": {\n    \"id\": \"4328\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "530": {
+                        "description": "Description file not present. Please upload the task description."
+                    },
+                    "531": {
+                        "description": "Internal error. Please contact api support team"
+                    },
+                    "532": {
+                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards"
+                    },
+                    "533": {
+                        "description": "Task already exists."
+                    },
+                    "534": {
+                        "description": "Error creating the task."
                     }
                 }
             }
@@ -766,11 +748,11 @@
                             "application/json": "{\n  \"task\": {\n    \"task\": [\n      {\n        \"task_id\":\"1\",\n        \"task_type\":\"Supervised Classification\",\n        \"did\":\"1\",\n        \"name\":\"anneal\",\n        \"status\":\"active\",\n        \"format\":\"ARFF\",\n        \"input\":[\n          {\n            \"name\":\"estimation_procedure\",\n            \"value\":\"1\"\n          },\n          {\n            \"name\":\"evaluation_measures\",\n            \"value\":\"predictive_accuracy\"\n          },\n          {\n            \"name\":\"source_data\",\n            \"value\":\"1\"\n          },\n          {\n            \"name\":\"target_feature\",\n            \"value\":\"class\"\n          }\n          ],\n        \"quality\":[\n          {\n            \"name\":\"MajorityClassSize\",\n            \"value\":\"684\"\n          },\n          {\n            \"name\":\"MaxNominalAttDistinctValues\",\n            \"value\":\"10.0\"\n          },\n          {\n            \"name\":\"MinorityClassSize\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumBinaryAtts\",\n            \"value\":\"14.0\"\n          },\n          {\n            \"name\":\"NumberOfClasses\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfFeatures\",\n            \"value\":\"39\"\n          },\n          {\n            \"name\":\"NumberOfInstances\",\n            \"value\":\"898\"\n          },\n          {\n            \"name\":\"NumberOfInstancesWithMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfNumericFeatures\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfSymbolicFeatures\",\n            \"value\":\"32\"\n          }\n          ],\n        \"tag\":[\n          \"basic\",\n          \"study_1\",\n          \"study_7\",\n          \"under100k\",\n          \"under1m\"\n        ]\n      }\n    ]\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "480": {
+                        "description": "Please provide task type ID."
+                    },
+                    "481": {
+                        "description": "No results. There where no matches for the given task type ID."
                     }
                 }
             }
@@ -830,11 +812,20 @@
                             "application/json": "{\n  \"task_tag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "470": {
+                        "description": "In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "471": {
+                        "description": "Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "472": {
+                        "description": "Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag."
+                    },
+                    "473": {
+                        "description": "Something went wrong inserting the tag. Please contact OpenML Team."
+                    },
+                    "474": {
+                        "description": "Internal error tagging the entity. Please contact OpenML Team."
                     }
                 }
             }
@@ -893,6 +884,93 @@
                             "application/json": "{\n  \"task_untag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
+                    "475": {
+                        "description": "Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "476": {
+                        "description": "Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "477": {
+                        "description": "Tag not found. The provided tag is not associated with the entity {dataset, flow, run}."
+                    },
+                    "478": {
+                        "description": "Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it."
+                    },
+                    "479": {
+                        "description": "Internal error removing the tag. Please contact OpenML Team."
+                    }
+                }
+            }
+        },
+        "/tasktype/{id}": {
+            "get": {
+                "summary": "Get task type description",
+                "description": "Returns information about a task type. The information includes a description, the given inputs and the expected outputs.\n",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the task.",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "Api key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "tasktype"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A task type description",
+                        "schema": {
+                            "$ref": "#/definitions/TaskType"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"task_type\":{\n    \"id\":\"1\",\n    \"name\":\"Supervised Classification\",\n    \"description\":\"In supervised classification, you are given ....\",\n    \"contributor\":[\"Joaquin Vanschoren\",\"Jan van Rijn\",\"Luis Torgo\",\"Bernd Bischl\"],\n    \"date\":\"24-01-2013\",\n    \"input\":[\n      {\n        \"name\":\"source_data\",\n        \"data_set\":\n          {\n            \"data_set_id\":\"[INPUT:source_data]\",\n            \"target_feature\":\"[INPUT:target_feature]\"\n          }\n      },\n      {\n        \"name\":\"estimation_procedure\",\n        \"estimation_procedure\":\n        {\n          \"type\":\"[LOOKUP:estimation_procedure.type]\",\n          \"data_splits_url\":\"splits.arff\",\n          \"parameter\":[\n            {\n              \"name\":\"number_repeats\",\n              \"value\":\"[LOOKUP:estimation_procedure.repeats]\"\n            },\n            {\n              \"name\":\"number_folds\",\n              \"value\":\"[LOOKUP:estimation_procedure.folds]\"\n            },\n            {\n              \"name\":\"percentage\",\n              \"value\":\"[LOOKUP:estimation_procedure.percentage]\"\n            },\n            {\n              \"name\":\"stratified_sampling\",\n              \"value\":\"[LOOKUP:estimation_procedure.stratified_sampling]\"\n            }\n          ]\n        }\n      },\n      {\n        \"name\":\"cost_matrix\",\n        \"cost_matrix\":\"[INPUT:cost_matrix]\"\n      },\n      {\n        \"name\":\"evaluation_measures\",\n        \"evaluation_measures\": {\n          \"evaluation_measure\":\"[INPUT:evaluation_measures]\"\n          }\n      }\n    ],\n    \"output\":{\n      \"name\":\"predictions\",\n      \"predictions\":{\n        \"format\":\"ARFF\",\n        \"feature\":[\n          {\n            \"name\":\"repeat\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"fold\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"row_id\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"confidence.classname\",\n            \"type\":\"numeric\"\n          },\n          {\n            \"name\":\"prediction\",\n            \"type\":\"string\"\n          }\n        ]\n      }\n    }\n  }\n}"
+                        }
+                    },
+                    "240": {
+                        "description": "Please provide task type ID."
+                    },
+                    "241": {
+                        "description": "Unknown task type. The task type with the given id was not found in the database"
+                    }
+                }
+            }
+        },
+        "/tasktype/list": {
+            "get": {
+                "summary": "List all task types",
+                "description": "Returns an array with all task types in the system.\n",
+                "parameters": [
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "tasktype"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A task description",
+                        "schema": {
+                            "$ref": "#/definitions/TaskTypeList"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"task_types\":{\n    \"task_type\":[\n      {\n        \"id\":\"1\",\n        \"name\":\"Supervised Classification\",\n        \"description\":\"In supervised classification, you are given ...\",\n        \"creator\":\"Joaquin Vanschoren, Jan van Rijn, Luis Torgo, Bernd Bischl\"\n      },\n      {\n        \"id\":\"2\",\n        \"name\":\"Supervised Regression\",\n        \"description\":\"Given a dataset with a numeric target ...\",\n        \"creator\":\"Joaquin Vanschoren, Jan van Rijn, Luis Torgo, Bernd Bischl\"\n      },...\n    ]\n  }\n}"
+                        }
+                    },
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
@@ -928,16 +1006,10 @@
                 ],
                 "responses": {
                     "180": {
-                        "description": "Please provide flow id.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide flow id."
                     },
                     "181": {
-                        "description": "Unknown flow. The flow with the given ID was not found in the database.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Unknown flow. The flow with the given ID was not found in the database."
                     },
                     "200": {
                         "description": "A flow description",
@@ -946,12 +1018,6 @@
                         },
                         "examples": {
                             "application/json": "{\n  \"flow\": {\n    \"id\":\"100\",\n    \"uploader\":\"1\",\n    \"name\":\"weka.J48\",\n    \"version\":\"2\",\n    \"external_version\":\"Weka_3.7.5_9117\",\n    \"description\":\"...\",\n    \"upload_date\":\"2014-04-23 18:00:36\",\n    \"language\":\"Java\",\n    \"dependencies\":\"Weka_3.7.5\",\n    \"parameter\": [\n      {\n        \"name\":\"A\",\n        \"data_type\":\"flag\",\n        \"default_value\":[],\n        \"description\":\"Laplace smoothing...\"\n      },\n      {\n        \"name\":\"C\",\n        \"data_type\":\"option\",\n        \"default_value\":\"0.25\",\n        \"description\":\"Set confidence threshold...\"\n      }\n    ]\n  }\n}"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -1000,11 +1066,23 @@
                             "application/json": "{\n  \"flow_delete\": {\n    \"id\": \"4328\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "320": {
+                        "description": "Please provide API key. In order to remove your content, please authenticate."
+                    },
+                    "321": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact api administrators ."
+                    },
+                    "322": {
+                        "description": "Flow does not exists. The flow ID could not be linked to an existing flow."
+                    },
+                    "323": {
+                        "description": "Flow is not owned by you. The flow is owned by another user. Hence you cannot delete it."
+                    },
+                    "324": {
+                        "description": "Flow is in use by other content. Can not be deleted. The flow is used in runs, evaluations or as a component of another flow. Delete other content before deleting thisflow."
+                    },
+                    "325": {
+                        "description": "Deleting flow failed. Deleting the flow failed. Please contact support team."
                     }
                 }
             }
@@ -1044,76 +1122,40 @@
                 ],
                 "responses": {
                     "160": {
-                        "description": "Error in file uploading. There was a problem with the file upload.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Error in file uploading. There was a problem with the file upload."
                     },
                     "161": {
-                        "description": "Please provide description xml.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide description xml."
                     },
                     "163": {
-                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Problem validating uploaded description file. The XML description format does not meet the standards."
                     },
                     "164": {
-                        "description": "Flow already stored in database. Please change name or version number",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Flow already stored in database. Please change name or version number"
                     },
                     "165": {
-                        "description": "Failed to insert flow. There can be many causes for this error. If you included the implements field, it should be an existing entry in the algorithm or math_function table. Otherwise it could be an internal server error. Please contact API support team.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Failed to insert flow. There can be many causes for this error. If you included the implements field, it should be an existing entry in the algorithm or math_function table. Otherwise it could be an internal server error. Please contact API support team."
                     },
                     "166": {
-                        "description": "Failed to add flow to database. Internal server error, please contact API administrators",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Failed to add flow to database. Internal server error, please contact API administrators"
                     },
                     "167": {
-                        "description": "Illegal files uploaded. An non required file was uploaded.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Illegal files uploaded. An non required file was uploaded."
                     },
                     "168": {
-                        "description": "The provided md5 hash equals not the server generated md5 hash of the file.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "The provided md5 hash equals not the server generated md5 hash of the file."
                     },
                     "169": {
-                        "description": "Please provide API key. In order to share content, please authenticate and provide API key.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Please provide API key. In order to share content, please authenticate and provide API key."
                     },
                     "170": {
-                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact API administrators",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact API administrators"
                     },
                     "171": {
-                        "description": "Flow already exists. This flow is already in the database",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "Flow already exists. This flow is already in the database"
                     },
                     "172": {
-                        "description": "XSD not found. Please contact API support team",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                        "description": "XSD not found. Please contact API support team"
                     },
                     "200": {
                         "description": "Id of the uploaded flow",
@@ -1133,12 +1175,6 @@
                         },
                         "examples": {
                             "application/json": "{\n  \"upload_flow\": {\n    \"id\": \"2520\"\n  }\n}"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -1199,11 +1235,8 @@
                             "application/json": "{\n  \"flow_exists\": {\n    \"exists\": \"true\",\n    \"id\": \"65\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "330": {
+                        "description": "Mandatory fields not present. Please provide name and external_version."
                     }
                 }
             }
@@ -1234,11 +1267,8 @@
                             "application/json": "{\n  \"flows\":\n    {\n      \"flow\":[\n        {\n          \"id\":\"65\",\n          \"full_name\":\"weka.RandomForest(1)\",\n          \"name\":\"weka.RandomForest\",\n          \"version\":\"1\",\n          \"external_version\":\"Weka_3.7.10_9186\",\n          \"uploader\":\"1\"\n        },\n        {\n          \"id\":\"66\",\n          \"full_name\":\"weka.IBk(1)\",\n          \"name\":\"weka.IBk\",\n          \"version\":\"1\",\n          \"external_version\":\"Weka_3.7.10_8034\",\n          \"uploader\":\"1\"\n        },\n        {\n          \"id\":\"67\",\n          \"full_name\":\"weka.BayesNet_K2(1)\",\n          \"name\":\"weka.BayesNet_K2\",\n          \"version\":\"1\",\n          \"external_version\":\"Weka_3.7.10_8034\",\n          \"uploader\":\"1\"\n        }\n      ]\n    }\n  }"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "500": {
+                        "description": "There where no results."
                     }
                 }
             }
@@ -1282,11 +1312,14 @@
                             "application/json": "{\n  \"flow_owned\": {\n    \"id\": [\n      \"111\",\n      \"112\",\n      \"113\",\n      \"114\",\n      \"115\",\n      \"116\",\n      \"117\"\n    ]\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "310": {
+                        "description": "Please provide API key to authenticate."
+                    },
+                    "311": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact api administrators."
+                    },
+                    "312": {
+                        "description": "No flows owned by you."
                     }
                 }
             }
@@ -1346,11 +1379,20 @@
                             "application/json": "{\n  \"flow_tag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "470": {
+                        "description": "In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "471": {
+                        "description": "Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "472": {
+                        "description": "Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag."
+                    },
+                    "473": {
+                        "description": "Something went wrong inserting the tag. Please contact OpenML Team."
+                    },
+                    "474": {
+                        "description": "Internal error tagging the entity. Please contact OpenML Team."
                     }
                 }
             }
@@ -1409,11 +1451,20 @@
                             "application/json": "{\n  \"flow_untag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "475": {
+                        "description": "Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "476": {
+                        "description": "Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "477": {
+                        "description": "Tag not found. The provided tag is not associated with the entity {dataset, flow, run}."
+                    },
+                    "478": {
+                        "description": "Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it."
+                    },
+                    "479": {
+                        "description": "Internal error removing the tag. Please contact OpenML Team."
                     }
                 }
             }
@@ -1452,11 +1503,11 @@
                             "application/json": "{\n  \"run\": {\n    \"run_id\":\"100\",\n    \"uploader\":\"1\",\n    \"uploader_name\":\"Jan van Rijn\",\n    \"task_id\":\"28\",\n    \"task_type\":\"Supervised Classification\",\n    \"task_evaluation_measure\":\"predictive_accuracy\",\n    \"flow_id\":\"67\",\n    \"flow_name\":\"weka.BayesNet_K2(1)\",\n    \"setup_string\":\"weka.classifiers.bayes.BayesNet -- -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5\",\n    \"parameter_setting\": [\n      {\n        \"name\":\"D\",\n        \"value\":\"true\"\n      },\n      {\n        \"name\":\"Q\",\n        \"value\":\"weka.classifiers.bayes.net.search.local.K2\"\n      },\n      {\n        \"name\":\"P\",\n        \"value\":\"1\"\n      },\n      {\n        \"name\":\"S\",\n        \"value\":\"BAYES\"\n      }\n    ],\n    \"input_data\":\n      {\n        \"dataset\":\n          {\n            \"did\":\"28\",\n            \"name\":\"optdigits\",\n            \"url\":\"http:\\/\\/www.openml.org\\/data\\/download\\/28\\/dataset_28_optdigits.arff\"\n          }\n      },\n    \"output_data\":\n      {\n        \"file\": [\n          {\n            \"did\":\"48838\",\n            \"file_id\":\"261\",\n            \"name\":\"description\",\n            \"url\":\"http:\\/\\/www.openml.org\\/data\\/download\\/261\\/weka_generated_run935374685998857626.xml\"\n          },\n          {\n            \"did\":\"48839\",\n            \"file_id\":\"262\",\n            \"name\":\"predictions\",\n            \"url\":\"http:\\/\\/www.openml.org\\/data\\/download\\/262\\/weka_generated_predictions576954524972002741.arff\"\n          }\n        ],\n        \"evaluation\": [\n          {\n            \"name\":\"area_under_roc_curve\",\n            \"flow_id\":\"4\",\n            \"value\":\"0.990288\",\n            \"array_data\":\"[0.99724,0.989212,0.992776,0.994279,0.980578,0.98649,0.99422,0.99727,0.994858,0.976143]\"\n          },\n          {\n            \"name\":\"confusion_matrix\",\n            \"flow_id\":\"10\",\n            \"array_data\":\"[[544,1,0,0,7,0,1,0,0,1],[0,511,21,1,0,1,3,1,5,28],[0,7,511,1,0,1,0,3,23,11],[0,2,2,519,0,3,0,12,16,18],[0,3,0,0,528,0,4,21,6,6],[0,1,0,7,5,488,2,0,4,51],[1,7,0,0,2,0,548,0,0,0],[0,2,0,1,9,1,0,545,4,4],[1,25,2,2,3,6,2,1,503,9],[0,7,0,20,16,5,0,19,9,486]]\"\n          },\n          {\n            \"name\":\"f_measure\",\n            \"flow_id\":\"12\",\n            \"value\":\"0.922723\",\n            \"array_data\":\"[0.989091,0.898857,0.935041,0.92431,0.927944,0.918156,0.980322,0.933219,0.895018,0.826531]\"\n          },\n          {\n            \"name\":\"kappa\",\n            \"flow_id\":\"13\",\n            \"value\":\"0.913601\"\n          }\n        ]\n      }\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "220": {
+                        "description": "Please provide run ID. In order to view run details, please provide the run ID"
+                    },
+                    "221": {
+                        "description": "Run not found. The run ID was invalid, run does not exist (anymore)."
                     }
                 }
             },
@@ -1504,11 +1555,20 @@
                             "application/json": "{\n  \"run_delete\": {\n    \"id\": \"2520\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "390": {
+                        "description": "Please provide API key. In order to remove your content, please authenticate."
+                    },
+                    "391": {
+                        "description": "Authentication failed. The API key was not valid. Please try to login again, or contact api administrators"
+                    },
+                    "392": {
+                        "description": "Run does not exists. The run ID could not be linked to an existing run."
+                    },
+                    "393": {
+                        "description": "Run is not owned by you. The run was owned by another user. Hence you cannot delete it."
+                    },
+                    "394": {
+                        "description": "Deleting run failed. Deleting the run failed. Please contact support team."
                     }
                 }
             }
@@ -1562,24 +1622,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Id of the uploaded run",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "upload_flow": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "ID of the uploaded run, a positive integer"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "examples": {
-                            "application/json": "{\n  \"upload_run\": {\n    \"id\": \"2520\"\n  }\n}"
-                        }
+                        "description": "Please provide your API key. It can be found under your account settings on OpenML.org."
                     },
                     "201": {
                         "description": "Authentication failed. The API key was not valid. Please try to login again, or contact api administrators."
@@ -1700,11 +1743,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "510": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space."
+                    },
+                    "511": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "512": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "513": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add more filters."
                     }
                 }
             }
@@ -1771,11 +1820,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "510": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space."
+                    },
+                    "511": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "512": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "513": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add more filters."
                     }
                 }
             }
@@ -1842,11 +1897,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "510": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space."
+                    },
+                    "511": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "512": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "513": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add more filters."
                     }
                 }
             }
@@ -1913,11 +1974,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "510": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space."
+                    },
+                    "511": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "512": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "513": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add more filters."
                     }
                 }
             }
@@ -1984,11 +2051,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "510": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space."
+                    },
+                    "511": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "512": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "513": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add more filters."
                     }
                 }
             }
@@ -2048,11 +2121,20 @@
                             "application/json": "{\n  \"run_tag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "470": {
+                        "description": "In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "471": {
+                        "description": "Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "472": {
+                        "description": "Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag."
+                    },
+                    "473": {
+                        "description": "Something went wrong inserting the tag. Please contact OpenML Team."
+                    },
+                    "474": {
+                        "description": "Internal error tagging the entity. Please contact OpenML Team."
                     }
                 }
             }
@@ -2111,11 +2193,20 @@
                             "application/json": "{\n  \"run_untag\": {\n    \"id\": \"2\"\n  }\n}"
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "475": {
+                        "description": "Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                    },
+                    "476": {
+                        "description": "Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                    },
+                    "477": {
+                        "description": "Tag not found. The provided tag is not associated with the entity {dataset, flow, run}."
+                    },
+                    "478": {
+                        "description": "Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it."
+                    },
+                    "479": {
+                        "description": "Internal error removing the tag. Please contact OpenML Team."
                     }
                 }
             }
@@ -2182,11 +2273,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "540": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results."
+                    },
+                    "541": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "542": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "543": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list."
                     }
                 }
             }
@@ -2253,11 +2350,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "540": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results."
+                    },
+                    "541": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "542": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "543": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list."
                     }
                 }
             }
@@ -2324,11 +2427,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "540": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results."
+                    },
+                    "541": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "542": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "543": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list."
                     }
                 }
             }
@@ -2395,11 +2504,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "540": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results."
+                    },
+                    "541": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "542": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "543": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list."
                     }
                 }
             }
@@ -2466,11 +2581,17 @@
                             }
                         }
                     },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
+                    "540": {
+                        "description": "Please provide at least task, flow or setup, uploader or run, to filter results."
+                    },
+                    "541": {
+                        "description": "Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers)."
+                    },
+                    "542": {
+                        "description": "There where no results. Check whether there are runs under the given constraint."
+                    },
+                    "543": {
+                        "description": "Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list."
                     }
                 }
             }
@@ -2596,10 +2717,183 @@
                 }
             }
         },
+        "TaskType": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID of the task type, a positive integer"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the task type, e.g. Supervised Classification"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the task type"
+                },
+                "contributor": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A list of people who defined the task type"
+                    }
+                },
+                "date": {
+                    "type": "string",
+                    "description": "The date when the task type was created"
+                },
+                "input": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the input, e.g. source_data"
+                            },
+                            "data_set": {
+                                "type": "object",
+                                "properties": {
+                                    "data_set_id": {
+                                        "type": "string",
+                                        "description": "The id of the dataset"
+                                    },
+                                    "target_feature": {
+                                        "type": "string",
+                                        "description": "The name of the target feature for this task"
+                                    }
+                                }
+                            },
+                            "estimation_procedure": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "description": "The type of procedure, e.g. crossvalidation"
+                                    },
+                                    "data_splits_url": {
+                                        "type": "string",
+                                        "description": "The url where the data splits can be downloaded"
+                                    },
+                                    "parameter": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "The name of the parameter"
+                                                },
+                                                "value": {
+                                                    "type": "string",
+                                                    "description": "The value of the parameter"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "cost_matrix": {
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                },
+                                "description": "The cost matrix, indicating the costs for each type of misclassification"
+                            },
+                            "evaluation_measures": {
+                                "type": "object",
+                                "properties": {
+                                    "evaluation_measure": {
+                                        "type": "string",
+                                        "description": "The evaluation measure to optimize in this task"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "output": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the output, e.g. predictions"
+                            },
+                            "predictions": {
+                                "type": "object",
+                                "properties": {
+                                    "format": {
+                                        "type": "string",
+                                        "description": "The fromat of the predictions, e.g. ARFF"
+                                    },
+                                    "feature": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "The name of the prediction feature, e.g. row_id"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "description": "The type of the prediction feature, e.g. integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "TaskTypeList": {
+            "type": "object",
+            "properties": {
+                "task_types": {
+                    "type": "object",
+                    "properties": {
+                        "task_type": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "The ID of the task type"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the task type"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "A decription of the task type"
+                                    },
+                                    "creator": {
+                                        "type": "string",
+                                        "description": "A comma-separated list of the task type creators"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "Task": {
             "type": "object",
             "properties": {
-                "flow_description": {
+                "task_description": {
                     "type": "object",
                     "properties": {
                         "task_id": {
