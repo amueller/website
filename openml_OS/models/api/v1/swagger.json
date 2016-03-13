@@ -813,13 +813,13 @@
                         }
                     },
                     "470": {
-                        "description": "In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                        "description": "In order to add a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag)."
                     },
                     "471": {
-                        "description": "Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                        "description": "Entity not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity."
                     },
                     "472": {
-                        "description": "Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag."
+                        "description": "Entity already tagged by this tag. The entity {dataset, task, flow, run} already had this tag."
                     },
                     "473": {
                         "description": "Something went wrong inserting the tag. Please contact OpenML Team."
@@ -885,19 +885,97 @@
                         }
                     },
                     "475": {
-                        "description": "Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag)."
+                        "description": "Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag)."
                     },
                     "476": {
-                        "description": "Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity."
+                        "description": "Entity {dataset, task, flow, run} not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity."
                     },
                     "477": {
-                        "description": "Tag not found. The provided tag is not associated with the entity {dataset, flow, run}."
+                        "description": "Tag not found. The provided tag is not associated with the entity {dataset, task, flow, run}."
                     },
                     "478": {
                         "description": "Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it."
                     },
                     "479": {
                         "description": "Internal error removing the tag. Please contact OpenML Team."
+                    }
+                }
+            }
+        },
+        "/tasktype/{id}": {
+            "get": {
+                "summary": "Get task type description",
+                "description": "Returns information about a task type. The information includes a description, the given inputs and the expected outputs.\n",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the task.",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "Api key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "tasktype"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A task type description",
+                        "schema": {
+                            "$ref": "#/definitions/TaskType"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"task_type\":{\n    \"id\":\"1\",\n    \"name\":\"Supervised Classification\",\n    \"description\":\"In supervised classification, you are given ...\",\n    \"contributor\":[\"Joaquin Vanschoren\",\"Jan van Rijn\",\"Luis Torgo\",\"Bernd Bischl\"],\n    \"date\":\"24-01-2013\",\n    \"input\":[\n      {\n        \"name\":\"source_data\",\n        \"data_set\":\n          {\n            \"data_set_id\":\"[INPUT:source_data]\",\n            \"target_feature\":\"[INPUT:target_feature]\"\n          }\n      },\n      {\n        \"name\":\"estimation_procedure\",\n        \"estimation_procedure\":\n        {\n          \"type\":\"[LOOKUP:estimation_procedure.type]\",\n          \"data_splits_url\":\"splits.arff\",\n          \"parameter\":[\n            {\n              \"name\":\"number_repeats\",\n              \"value\":\"[LOOKUP:estimation_procedure.repeats]\"\n            },\n            {\n              \"name\":\"number_folds\",\n              \"value\":\"[LOOKUP:estimation_procedure.folds]\"\n            },\n            {\n              \"name\":\"percentage\",\n              \"value\":\"[LOOKUP:estimation_procedure.percentage]\"\n            },\n            {\n              \"name\":\"stratified_sampling\",\n              \"value\":\"[LOOKUP:estimation_procedure.stratified_sampling]\"\n            }\n          ]\n        }\n      },\n      {\n        \"name\":\"cost_matrix\",\n        \"cost_matrix\":\"[INPUT:cost_matrix]\"\n      },\n      {\n        \"name\":\"evaluation_measures\",\n        \"evaluation_measures\": {\n          \"evaluation_measure\":\"[INPUT:evaluation_measures]\"\n          }\n      }\n    ],\n    \"output\":{\n      \"name\":\"predictions\",\n      \"predictions\":{\n        \"format\":\"ARFF\",\n        \"feature\":[\n          {\n            \"name\":\"repeat\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"fold\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"row_id\",\n            \"type\":\"integer\"\n          },\n          {\n            \"name\":\"confidence.classname\",\n            \"type\":\"numeric\"\n          },\n          {\n            \"name\":\"prediction\",\n            \"type\":\"string\"\n          }\n        ]\n      }\n    }\n  }\n}"
+                        }
+                    },
+                    "240": {
+                        "description": "Please provide task type ID."
+                    },
+                    "241": {
+                        "description": "Unknown task type. The task type with the given id was not found in the database"
+                    }
+                }
+            }
+        },
+        "/tasktype/list": {
+            "get": {
+                "summary": "List all task types",
+                "description": "Returns an array with all task types in the system.\n",
+                "parameters": [
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "tasktype"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A task description",
+                        "schema": {
+                            "$ref": "#/definitions/TaskTypeList"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"task_types\":{\n    \"task_type\":[\n      {\n        \"id\":\"1\",\n        \"name\":\"Supervised Classification\",\n        \"description\":\"In supervised classification, you are given ...\",\n        \"creator\":\"Joaquin Vanschoren, Jan van Rijn, Luis Torgo, Bernd Bischl\"\n      },\n      {\n        \"id\":\"2\",\n        \"name\":\"Supervised Regression\",\n        \"description\":\"Given a dataset with a numeric target ...\",\n        \"creator\":\"Joaquin Vanschoren, Jan van Rijn, Luis Torgo, Bernd Bischl\"\n      },{}\n    ]\n  }\n}"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -3291,9 +3369,182 @@
                                             },
                                             "array_data": {
                                                 "type": "string",
-                                                "description": "For composite evaluation measures (e.g. per-class measures, confusion matrix), a string (JSON) representation of the evaluation."
+                                                "description": "For composite evaluation measures (e.g. per-class measures, confusion matrix), a string (JSON) representation of the   evaluation."
                                             }
                                         }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "TaskType": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID of the task type, a positive integer"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the task type, e.g. Supervised Classification"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the task type"
+                },
+                "contributor": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A list of people who defined the task type"
+                    }
+                },
+                "date": {
+                    "type": "string",
+                    "description": "The date when the task type was created"
+                },
+                "input": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the input, e.g. source_data"
+                            },
+                            "data_set": {
+                                "type": "object",
+                                "properties": {
+                                    "data_set_id": {
+                                        "type": "string",
+                                        "description": "The id of the dataset"
+                                    },
+                                    "target_feature": {
+                                        "type": "string",
+                                        "description": "The name of the target feature for this task"
+                                    }
+                                }
+                            },
+                            "estimation_procedure": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "description": "The type of procedure, e.g. crossvalidation"
+                                    },
+                                    "data_splits_url": {
+                                        "type": "string",
+                                        "description": "The url where the data splits can be downloaded"
+                                    },
+                                    "parameter": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "The name of the parameter"
+                                                },
+                                                "value": {
+                                                    "type": "string",
+                                                    "description": "The value of the parameter"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "cost_matrix": {
+                                "type": "array",
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "description": "The cost matrix, indicating the costs for each type of misclassification"
+                                }
+                            },
+                            "evaluation_measures": {
+                                "type": "object",
+                                "properties": {
+                                    "evaluation_measure": {
+                                        "type": "string",
+                                        "description": "The evaluation measure to optimize in this task"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "output": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the output, e.g. predictions"
+                            },
+                            "predictions": {
+                                "type": "object",
+                                "properties": {
+                                    "format": {
+                                        "type": "string",
+                                        "description": "The format of the predictions, e.g. ARFF"
+                                    },
+                                    "feature": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "The name of the prediction feature, e.g. row_id"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "description": "The type of the prediction feature, e.g. integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "TaskTypeList": {
+            "type": "object",
+            "properties": {
+                "task_types": {
+                    "type": "object",
+                    "properties": {
+                        "task_type": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "The ID of the task type"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "The name of the task type"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "A description of the task type"
+                                    },
+                                    "creator": {
+                                        "type": "string",
+                                        "description": "A comma-separated list of the task type creators"
                                     }
                                 }
                             }
