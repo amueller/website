@@ -1,7 +1,16 @@
           <div class="page-header">
             <h1>R API</h1>
           </div>
-	The R package openML allows you to connect to the OpenML server from R scrips. Users can download and upload files, run their implementations on specific tasks, get predictions in the correct form, make SQL queries, etc. directly via R commands.
+	<p>The OpenML R package allows you to connect to the OpenML server from R scrips.
+  This means that you can download and upload data sets and tasks, run R implementations, upload your results,
+  and download all experiment results directly via R commands.</p>
+
+  <p>It is also neatly integrated into <a href="https://github.com/mlr-org/mlr">mlr</a> (Machine Learning in R),
+  which provides a unified interface to a large number of machine learning algorithms in R. As such, you can
+  easily run and compare many R algorithms on all OpenML datasets, and analyse all combined results.</p>
+
+  <p>All in a few lines of R.</p>
+
 	<h2 id="r-download">Download</h2>
 	The openML package can be downloaded from <a href="https://github.com/openml/r"> GitHub</a>. It will also be available from CRAN in the near future.
 
