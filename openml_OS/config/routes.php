@@ -41,8 +41,7 @@
 $route['default_controller'] = 'frontend';
 $route['404_override'] = 'frontend/error404';
 
-$route['api'] = 'rest_api';
-$route['api/:any'] = 'rest_api/$1';
+$route['api/:any'] = 'api_new/$1';
 
 $frontend_pages = array(
           'api_docs',
