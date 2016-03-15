@@ -5,7 +5,8 @@ class Api_model extends CI_Model {
 
   function __construct() {
     parent::__construct();
-
+    
+    $this->openmlGeneralErrorCode = 450;
   }
 
   // taken from: http://outlandish.com/blog/xml-to-json/
