@@ -92,13 +92,14 @@ class Api_data extends Api_model {
       return;
     }
 
-    $active = 'status = "active" and (visibility = "public" or uploader='.$this->user_id.')';
-    $where_tag = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag=' . $tag . ') ';
+    $active = ' AND status = "active"';
+    $where_tag = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
     $where_total = $active . $where_tag;
 
-    $datasets_res = $this->Dataset->getWhere( $where_total, 'did' );
+    $sql = 'select * from dataset where (visibility = "public" or uploader='.$this->user_id.')'. $where_total;
+    $datasets_res = $this->Dataset->query($sql);
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
-      $this->retu( 370, $this->version );
+      $this->returnError( 370, $this->version );
       return;
     }
 

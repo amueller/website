@@ -84,10 +84,11 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $where_tag = $tag == false ? '1' : ' AND `id` IN (select id from implementation_tag where tag=' . $tag . ') ';
+    $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag="' . $tag . '") ';
     $where_total = $where_tag;
 
-    $implementations = $this->Implementation->getWhere($where_total, 'id');
+    $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total;
+    $implementations = $this->Implementation->query($sql);
     if( $implementations == false ) {
       $this->returnError( 500, $this->version );
       return;

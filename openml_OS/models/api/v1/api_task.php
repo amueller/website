@@ -77,7 +77,7 @@ class Api_task extends Api_model {
     }
 
     $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
-    $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag=' . $tag . ') ';
+    $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
     $where_total = $where_type . $where_tag;
 
     $tasks_res = $this->Task->query(
@@ -102,7 +102,7 @@ class Api_task extends Api_model {
 
     $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND t.task_id IN (' . implode(',', array_keys($tasks)) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY quality like "NumberOf" desc, quality');
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' );
-    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $task_type_constraint . ' ORDER BY id');
+    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $where_total . ' ORDER BY id');
 
     for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }
     for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value; }
