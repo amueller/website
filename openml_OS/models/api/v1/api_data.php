@@ -21,8 +21,9 @@ class Api_data extends Api_model {
 
     $getpost = array('get','post');
 
-    if (count($segments) == 1 && $segments[0] == 'list') {
-      $this->data_list();
+    if (count($segments) >= 1 && $segments[0] == 'list') {
+      array_shift($segments);
+      $this->data_list($segments);
       return;
     }
 
@@ -79,9 +80,27 @@ class Api_data extends Api_model {
     $this->returnError( 100, $this->version );
   }
 
-  private function data_list() {
-    $active = 'status = "active" and (visibility = "public" or uploader='.$this->user_id.')'; // constraints
-    $datasets_res = $this->Dataset->getWhere( $active, 'did' );
+  private function data_list($segs) {
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2)
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
+
+    $tag = element('tag',$query_string);
+
+    if ($tag == false) {
+      $this->returnError( 510, $this->version );
+      return;
+    }
+    if (!(is_safe($tag))) {
+      $this->returnError(511, $this->version );
+      return;
+    }
+
+    $active = 'status = "active" and (visibility = "public" or uploader='.$this->user_id.')';
+    $where_tag = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag=' . $tag . ') ';
+    $where_total = $active . $where_tag;
+
+    $datasets_res = $this->Dataset->getWhere( $where_total, 'did' );
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->retu( 370, $this->version );
       return;

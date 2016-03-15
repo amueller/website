@@ -21,13 +21,9 @@ class Api_task extends Api_model {
 
     $getpost = array('get','post');
 
-    if (count($segments) == 1 && $segments[0] == 'list') {
-      $this->task_list();
-      return;
-    }
-
-    if (count($segments) == 2 && $segments[0] == 'list' && is_numeric($segments[1])) {
-      $this->task_list($segments[1]);
+    if (count($segments) >= 1 && $segments[0] == 'list') {
+      array_shift($segments);
+      $this->task_list($segments);
       return;
     }
 
@@ -60,7 +56,7 @@ class Api_task extends Api_model {
   }
 
 
-  private function task_list($ttid = null) {
+  private function task_list($segs) {
     // TODO: add tag / active
     //$task_type_id = $this->input->get( 'task_type_id' );
     //if( $task_type_id == false ) {
@@ -68,12 +64,31 @@ class Api_task extends Api_model {
     //  return;
     //}
     //$active = $this->input->get('active_only') ? ' AND d.status = "active" ' : '';
-    $task_type_constraint = $ttid == null ? '' : 'AND `t`.`ttid` = "'.$ttid.'" ';
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2)
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
+
+    $type = element('type',$query_string);
+    $tag = element('tag',$query_string);
+
+    if ($tag == false && $type == false ) {
+      $this->returnError( 510, $this->version );
+      return;
+    }
+    if (!(is_safe($tag) && is_safe($type))) {
+      $this->returnError(511, $this->version );
+      return;
+    }
+
+    $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
+    $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag=' . $tag . ') ';
+    $where_total = $where_type . $where_tag;
+
     $tasks_res = $this->Task->query(
       'SELECT t.task_id, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name '.
       'FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` '.
       'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
-      $task_type_constraint .
+      $where_total .
        //$active .
        ' ORDER BY task_id; ' );
     if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {

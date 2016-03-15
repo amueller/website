@@ -22,8 +22,9 @@ class Api_flow extends Api_model {
 
     $getpost = array('get','post');
 
-    if (count($segments) == 1 && $segments[0] == 'list') {
-      $this->flow_list();
+    if (count($segments) >= 1 && $segments[0] == 'list') {
+      array_shift($segments);
+      $this->flow_list($segments);
       return;
     }
 
@@ -71,9 +72,26 @@ class Api_flow extends Api_model {
   }
 
 
-  private function flow_list() {
+  private function flow_list($segs) {
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2)
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
-    $implementations = $this->Implementation->get();
+    $tag = element('tag',$query_string);
+
+    if ($tag == false) {
+      $this->returnError( 510, $this->version );
+      return;
+    }
+    if (!(is_safe($tag))) {
+      $this->returnError(511, $this->version );
+      return;
+    }
+
+    $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag=' . $tag . ') ';
+    $where_total = $where_tag;
+
+    $implementations = $this->Implementation->getWhere($where_total, 'id');
     if( $implementations == false ) {
       $this->returnError( 500, $this->version );
       return;
