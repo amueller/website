@@ -105,7 +105,7 @@ class Api_run extends Api_model {
     $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
-    $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag=' . $tag . ') ';
+    $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
 
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
