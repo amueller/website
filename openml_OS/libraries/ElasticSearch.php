@@ -947,7 +947,7 @@ class ElasticSearch {
             $evals = null;
             $params['body'] = array();
 
-            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
+            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, error, error_message FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
             if($runs){
               $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
               $evals = $this->fetch_evaluations($rid, $rid + $incr);
