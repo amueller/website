@@ -14,7 +14,7 @@ if(!empty($_POST['key-reset'])){
 if(!empty($_POST['key-degrade'])){
   $user_id = $this->ion_auth->user()->row()->id;
   $this->ion_auth->remove_from_group(NULL, $user_id);
-  $this->ion_auth->add_to_group(1, $user_id);
+  $this->ion_auth->add_to_group(3, $user_id); // readonly
   header('Location: '.$_SERVER['REQUEST_URI']);
 	die();
 }
