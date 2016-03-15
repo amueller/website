@@ -10,6 +10,15 @@ if(!empty($_POST['key-reset'])){
 	die();
 }
 
+
+if(!empty($_POST['key-degrade'])){
+  $user_id = $this->ion_auth->user()->row()->id;
+  $this->ion_auth->remove_from_group(NULL, $user_id);
+  $this->ion_auth->add_to_group(1, $user_id);
+  header('Location: '.$_SERVER['REQUEST_URI']);
+	die();
+}
+
 $this->form_validation->set_rules('first_name', 'First Name', 'xss_clean');
 $this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
 $this->form_validation->set_rules('Country', 'Country', 'xss_clean');
