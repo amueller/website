@@ -41,15 +41,6 @@
 $route['default_controller'] = 'frontend';
 $route['404_override'] = 'frontend/error404';
 
-// TODO: ugly hack!
-$route['api'] = 'api_new';
-$route['api/:any'] = 'api_new/$1';
-$route['api/:any/:any'] = 'api_new/$1/$2';
-$route['api/:any/:any/:any'] = 'api_new/$1/$2/$3';
-$route['api/:any/:any/:any/:any'] = 'api_new/$1/$2/$3/$4';
-$route['api/:any/:any/:any/:any/:any'] = 'api_new/$1/$2/$3/$4/$5';
-$route['api/:any/:any/:any/:any/:any/:any'] = 'api_new/$1/$2/$3/$4/$5/$6';
-
 $frontend_pages = array(
           'api_docs',
           'detail',
