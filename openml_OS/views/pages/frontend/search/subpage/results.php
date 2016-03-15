@@ -132,9 +132,16 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 				<?php
-				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations']))
-					echo 'No evaluations yet (or not applicable)';
-				else{
+				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations'])) {
+					echo 'No evaluations yet (or not applicable).';
+          
+          if (array_key_exists('error_message',$rs)) {
+            echo 'Client side error: ' . $rs['error_message'];
+          }
+          if (array_key_exists('error',$rs)) {
+            echo 'Evaluation Engine Exception: ' . $rs['error'];
+          }
+				} else{
 					$tn = "";
 					$vals = array();
 					foreach($rs['evaluations'] as $eval){
