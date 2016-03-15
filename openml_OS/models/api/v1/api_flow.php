@@ -84,7 +84,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag=' . $tag . ') ';
+    $where_tag = $tag == false ? '1' : ' AND `id` IN (select id from implementation_tag where tag=' . $tag . ') ';
     $where_total = $where_tag;
 
     $implementations = $this->Implementation->getWhere($where_total, 'id');
