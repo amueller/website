@@ -71,10 +71,6 @@ class Api_task extends Api_model {
     $type = element('type',$query_string);
     $tag = element('tag',$query_string);
 
-    if ($tag == false && $type == false ) {
-      $this->returnError( 510, $this->version );
-      return;
-    }
     if (!(is_safe($tag) && is_safe($type))) {
       $this->returnError(511, $this->version );
       return;

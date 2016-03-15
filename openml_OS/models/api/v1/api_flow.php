@@ -79,10 +79,6 @@ class Api_flow extends Api_model {
 
     $tag = element('tag',$query_string);
 
-    if ($tag == false) {
-      $this->returnError( 510, $this->version );
-      return;
-    }
     if (!(is_safe($tag))) {
       $this->returnError(511, $this->version );
       return;
