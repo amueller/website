@@ -123,7 +123,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.data.upload.xsd)
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.data.upload.xsd)
           required: true
           type: file
         - name: dataset
@@ -364,7 +364,7 @@ paths:
         - data
       responses:
         '200':
-          description: A dataset description
+          description: A list of datasets
           schema:
             $ref: '#/definitions/DataList'
           examples:
@@ -429,6 +429,91 @@ paths:
               }
         370:
           description: No datasets available. There are no valid datasets in the system.
+  /data/list/tag/{tag}:
+    get:
+      summary: List all datasets with the given tag
+      description: |
+        Returns an array with all datasets in the system with the given tag.
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of datasets with the given task
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No datasets available. There are no datasets in the system with the given tag.
   /data/tag:
     post:
       summary: Tag a dataset
@@ -699,7 +784,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.task.upload.xsd)
+          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.task.upload.xsd)
           required: true
           type: file
         - name: api_key
@@ -753,7 +838,7 @@ paths:
         - task
       responses:
         '200':
-          description: A task description
+          description: A list of tasks
           schema:
             $ref: '#/definitions/TaskList'
           examples:
@@ -847,7 +932,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /task/list/{id}:
+  /task/list/type/{id}:
     get:
       summary: List all tasks of given type
       description: |
@@ -868,7 +953,7 @@ paths:
         - task
       responses:
         '200':
-          description: A task description
+          description: A list of tasks
           schema:
             $ref: '#/definitions/TaskList'
           examples:
@@ -962,6 +1047,118 @@ paths:
           description: Please provide task type ID.
         481:
           description: No results. There where no matches for the given task type ID.
+  /task/list/tag/{tag}:
+    get:
+      summary: List all tasks with the given tag
+      description: |
+        Returns an array with all tasks with the given tag
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A list of tasks with the given tag
+          schema:
+            $ref: '#/definitions/TaskList'
+          examples:
+            application/json: |-
+              {
+                "task": {
+                  "task": [
+                    {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data",
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
+                      ]
+                    }
+                  ]
+                }
+              }
+        481:
+          description: No results. There where no matches for the given task tag.
   /task/tag:
     post:
       summary: Tag a task
@@ -1337,7 +1534,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/rest_api/xsd/openml.implementation.upload.xsd)
+          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.implementation.upload.xsd)
           required: true
           type: file
         - name: flow
@@ -1459,6 +1656,64 @@ paths:
       responses:
         '200':
           description: A list of flows
+          schema:
+            $ref: '#/definitions/FlowList'
+          examples:
+            application/json: |-
+              {
+                "flows":
+                  {
+                    "flow":[
+                      {
+                        "id":"65",
+                        "full_name":"weka.RandomForest(1)",
+                        "name":"weka.RandomForest",
+                        "version":"1",
+                        "external_version":"Weka_3.7.10_9186",
+                        "uploader":"1"
+                      },
+                      {
+                        "id":"66",
+                        "full_name":"weka.IBk(1)",
+                        "name":"weka.IBk",
+                        "version":"1",
+                        "external_version":"Weka_3.7.10_8034",
+                        "uploader":"1"
+                      },
+                      {
+                        "id":"67",
+                        "full_name":"weka.BayesNet_K2(1)",
+                        "name":"weka.BayesNet_K2",
+                        "version":"1",
+                        "external_version":"Weka_3.7.10_8034",
+                        "uploader":"1"
+                      }
+                    ]
+                  }
+                }
+        500:
+          description: There where no results.
+  /flow/list/tag/{tag}:
+    get:
+      summary: List all flows with the given tag
+      description: |
+        Returns an array with all flows in the system with the given tag.
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - flow
+      responses:
+        '200':
+          description: A list of flows with the given tag
           schema:
             $ref: '#/definitions/FlowList'
           examples:
@@ -1958,6 +2213,69 @@ paths:
           description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
+  /run/list/tag/{tag}:
+    get:
+      summary: Get runs by tag
+      description: |
+        Returns an array with all runs matching the given tag.
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - run
+      responses:
+        '200':
+          description: A list of runs with the given tag
+          schema:
+            $ref: '#/definitions/RunList'
+          examples:
+            application/json:
+              {
+                "runs": {
+                  "run": [
+                    {
+                      "run_id": "100",
+                      "task_id": "28",
+                      "setup_id": "12",
+                      "flow_id": "67",
+                      "uploader": "1",
+                      "error_message": []
+                    },
+                    {
+                      "run_id": "101",
+                      "task_id": "48",
+                      "setup_id": "6",
+                      "flow_id": "61",
+                      "uploader": "1",
+                      "error_message": []
+                    },
+                    {
+                      "run_id": "102",
+                      "task_id": "41",
+                      "setup_id": "3",
+                      "flow_id": "58",
+                      "uploader": "1",
+                      "error_message": []
+                    }
+                  ]
+                }
+              }
+        510:
+          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+        511:
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id, tag) did not meet the contrains (comma separated list of integers).  
+        512:
+          description: There where no results. Check whether there are runs under the given constraint.  
+        513:
+          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/task/{ids}:
     get:
       summary: Get runs by task(s)
@@ -2374,6 +2692,69 @@ paths:
           description: Please provide at least task, flow or setup, uploader or run, to filter results.
         541:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
+        542:
+          description: There where no results. Check whether there are runs under the given constraint.  
+        543:
+          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
+  /evaluation/list/tag/{tag}:
+    get:
+      summary: Get evaluations by tag
+      description: |
+        Returns an array with all evaluations matching the given tag.
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - evaluation
+      responses:
+        '200':
+          description: A list of evaluations with the given tag
+          schema:
+            $ref: '#/definitions/EvaluationList'
+          examples:
+            application/json:
+              {
+                "evaluations": {
+                  "evaluation": [
+                    {
+                      "run_id":"1",
+                      "task_id":"68",
+                      "flow_id":"61",
+                      "function":"area_under_roc_curve",
+                      "value":"0.839359",
+                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
+                    },
+                    {
+                      "run_id":"1",
+                      "task_id":"68",
+                      "flow_id":"61",
+                      "function":"f_measure",
+                      "value":"0.600026",
+                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
+                    },
+                    {
+                      "run_id":"1",
+                      "task_id":"68",
+                      "flow_id":"61",
+                      "function":"predictive_accuracy",
+                      "value":"0.614634",
+                      "array_data":[]
+                    }
+                  ]
+                }
+              }
+        540:
+          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results.
+        541:
+          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
           description: There where no results. Check whether there are runs under the given constraint.  
         543:
