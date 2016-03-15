@@ -36,13 +36,14 @@ class Api_evaluation extends Api_model {
     $uploader_id = element('uploader',$query_string);
     $run_id = element('run',$query_string);
     $function_name = element('function',$query_string);
+    $tag = element('tag',$query_string);
 
-    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false) {
+    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false) {
       $this->returnError( 540, $this->version );
       return;
     }
 
-    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($function_name))) {
+    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($function_name) && is_safe($tag))) {
       $this->returnError(541, $this->version );
       return;
     }
@@ -53,6 +54,7 @@ class Api_evaluation extends Api_model {
     $where_impl = $implementation_id == false ? '' : ' AND `s`.`implementation_id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_function = $function_name == false ? '' : ' AND `e`.`function` = "' . $function_name . '" ';
+    $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
 
     //pre-test
     $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
