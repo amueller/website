@@ -170,15 +170,17 @@ class Api_task extends Api_model {
 
   public function task_upload() {
 
-    if (isset($_FILES['description']) == false || $_FILES['source']['error'] > 0) {
+    $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
+    if( ! check_uploaded_file( $description ) ) {
       $this->returnError(530, $this->version);
       return;
     }
-
+    
     $descriptionFile = $_FILES['description']['tmp_name'];
+    
     $xsd = xsd('openml.task.upload', $this->controller, $this->version);
     if (!$xsd) {
-      $this->returnError( 531, $this->version, $this->openmlGeneralErrorCode );
+      $this->returnError(531, $this->version, $this->openmlGeneralErrorCode);
       return;
     }
 
