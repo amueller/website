@@ -12,7 +12,7 @@ if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
 elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   $post_data = array('api_key' => $this->ion_auth->user()->row()->session_hash,
 		     'data_id' => $this->id,
-                     'tag' => $_POST["newtags"]);
+                     'tag' => $_POST["deletetag"]);
   $url = 'http://www.openml.org/api/v1/data/untag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('d/'.$this->id);
