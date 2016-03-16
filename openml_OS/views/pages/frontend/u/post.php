@@ -10,6 +10,14 @@ if(!empty($_POST['key-reset'])){
 	die();
 }
 
+if(!empty($_POST['key-upgrade'])){ // upgrade and change key
+  $user_id = $this->ion_auth->user()->row()->id;
+  $this->ion_auth->remove_from_group(NULL, $user_id);
+  $this->Author->query('UPDATE users SET session_hash = md5(rand()), session_hash_date = now() where id = '.$this->ion_auth->user()->row()->id);
+  $this->ion_auth->add_to_group(2, $user_id); // std members
+  header('Location: '.$_SERVER['REQUEST_URI']);
+	die();
+}
 
 if(!empty($_POST['key-degrade'])){
   $user_id = $this->ion_auth->user()->row()->id;
