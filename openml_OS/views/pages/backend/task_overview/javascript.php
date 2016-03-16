@@ -1,11 +1,11 @@
 $(document).ready( function() {
   //check for change on the categories menu
   $('#form-task-type-tabs li a').eq($('#selectTaskType option:selected').attr('name')).tab('show');
-  
+
   $('#selectTaskType').change(function() {
     $('#form-task-type-tabs li a').eq($('#selectTaskType option:selected').attr('name')).tab('show');
   });
-  
+
   var oDatatable = $('.taskstable').dataTable( {
     "bPaginate": true,
     "aLengthMenu": [[10, 50, 100, 250, -1], [10, 50, 100, 250, "All"]],
@@ -16,7 +16,7 @@ $(document).ready( function() {
     "aaSorting": [],
     "bInfo": true
   } );
-  
+
   var oDuplicateTable = $('.duplicatetable').dataTable( {
     "bPaginate": false,
     "iDisplayLength" : -1,
@@ -30,14 +30,14 @@ $(document).ready( function() {
 
 function deleteTask( tid, msg ) {
   $.ajax({
-    type: "POST",
-    url: "<?php echo BASE_URL; ?>api/?f=openml.task.delete",
+    type: "DELETE",
+    url: "<?php echo BASE_URL; ?>/api/v1/task",
     data: 'task_id='+tid,
     dataType: "xml"
-  }).done( function( resultdata ) { 
-      
+  }).done( function( resultdata ) {
+
       id_field = $(resultdata).find("oml\\:id");
-      
+
       if( id_field.length ) {
         $("#duplicate_task_" + id_field.text() ).remove();
         if( msg ) { alert( "Task " + id_field.text() + " was deleted. " ); }
@@ -60,10 +60,9 @@ function selectDuplicateTasks() {
 }
 
 function removeSelectedTasks() {
-  $('.duplicate_checkbox').each(function() { 
+  $('.duplicate_checkbox').each(function() {
     if( $('#duplicate_checkbox_' + $( this ).data("task_id") ).prop('checked') == true ) {
       deleteTask( $( this ).data("task_id"), false );
     }
   } );
 }
-
