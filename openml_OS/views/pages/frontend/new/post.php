@@ -142,7 +142,7 @@ if($this->subpage == 'task') {
 
   $post_data = array(
       'description' => $description,
-      'session_hash' => $session_hash
+      'api_key' => $session_hash
   );
   if( $_FILES['dataset']['error'] == 0 ) {
       $post_data['dataset'] = new CurlFile($_FILES['dataset']['tmp_name'], 'text/xml');
