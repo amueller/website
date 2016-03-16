@@ -4,14 +4,14 @@
 if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
   $post_data = array('data_id' => $this->id,
                      'tag' => $_POST["newtags"]);
-  $url = BASE_URL.'/api/data/tag';
+  $url = 'http://www.openml.org/api/v1/data/tag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('d/'.$this->id);
 }
 elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   $post_data = array('data_id' => $this->id,
                      'tag' => $_POST["newtags"]);
-  $url = BASE_URL.'/api/data/untag';
+  $url = 'http://www.openml.org/api/v1/data/untag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('d/'.$this->id);
 }
