@@ -2,14 +2,18 @@
 
 //Add and remove tags
 if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
-  $post_data = array('session_hash' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ));
-  $url = BASE_URL.'/api/?f=openml.data.tag&data_id='.$this->id.'&tag='.$_POST["newtags"];
+  $post_data = array('api_key' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ),
+		     'data_id' => $this->id,
+                     'tag' => $_POST["newtags"]);
+  $url = BASE_URL.'/api/data/tag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('d/'.$this->id);
 }
 elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
-  $post_data = array('session_hash' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ));
-  $url = BASE_URL.'/api/?f=openml.data.untag&data_id='.$this->id.'&tag='.$_POST["deletetag"];
+  $post_data = array('api_key' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ),
+		     'data_id' => $this->id,
+                     'tag' => $_POST["newtags"]);
+  $url = BASE_URL.'/api/data/untag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('d/'.$this->id);
 }
