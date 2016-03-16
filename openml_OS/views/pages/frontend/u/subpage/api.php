@@ -13,11 +13,15 @@
     <p style="color:#999"><i class="fa fa-fw fa-warning"></i>This key uniquely identifies you on OpenML. Keep it secret.</p>
     
     <?php if ($this->ion_auth->in_group('members')) {?>
+      <p style="color:#999"><i class="fa fa-fw fa-warning"></i>This key can be used for read and write operations.</p>
       <form name="keydegrade" method="post">
         <input type="submit" name="key-degrade" class="btn btn-warning btn-raised" value="Make read-only" />
       </form>
     <?php } else if ($this->ion_auth->in_group('readonly')) { ?>
       <p style="color:#999"><i class="fa fa-fw fa-warning"></i>This key can be used for read operations only.</p>
+      <form name="keyupgrade" method="post">
+        <input type="submit" name="key-upgrade" class="btn btn-warning btn-raised" value="Make write key" />
+      </form>
     <?php } ?>
  </div>
 </div>
