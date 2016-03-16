@@ -12,11 +12,11 @@
     </form>
     
     <?php if ($this->ion_auth->in_group('members')) {?>
-      <form name="keydegrade" method="post">
+      <form id="keydegrade" method="post">
         <input type="submit" name="key-degrade" class="btn btn-warning btn-raised" value="Make read-only" />
       </form>
     <?php } else if ($this->ion_auth->in_group('readonly')) { ?>
-      <form name="keyupgrade" method="post">
+      <form id="keyupgrade" method="post">
         <input type="submit" name="key-upgrade" class="btn btn-warning btn-raised" value="Make write key" />
       </form>
     <?php } ?>
