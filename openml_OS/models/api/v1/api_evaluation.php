@@ -57,7 +57,7 @@ class Api_evaluation extends Api_model {
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
 
     //pre-test
-    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run;
+    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag;
     $sql_test =
       'SELECT distinct r.rid ' . 'FROM run r, algorithm_setup s ' . 'WHERE r.setup = s.sid ' . $where_runs;
     $res_test = $this->Evaluation->query( $sql_test );
@@ -68,7 +68,7 @@ class Api_evaluation extends Api_model {
     }
 
     //get evaluations
-    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_function;
+    $where_total = $where_runs . $where_function;
 
     $sql =
       'SELECT r.rid, r.task_id, s.implementation_id, s.sid, e.function, e.value, e.array_data ' .
