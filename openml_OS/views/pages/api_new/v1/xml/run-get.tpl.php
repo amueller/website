@@ -61,6 +61,17 @@
           <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
         </oml:evaluation>
       <?php endforeach; ?>
+    <?php endif; if(array_key_exists('evaluations_fold', $source->outputData) ): ?>
+      <?php foreach( $source->outputData['evaluations_fold'] as $e ): ?>
+        <oml:evaluation>
+          <oml:name><?php echo $e->{'function'}; ?></oml:name>
+          <oml:flow_id><?php echo $e->{'implementation_id'}; ?></oml:flow_id>
+          <oml:repeat><?php echo $e->{'repeat'}; ?></oml:repeat>
+          <oml:fold><?php echo $e->{'fold'}; ?></oml:fold>
+          <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
+          <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
+        </oml:evaluation>
+      <?php endforeach; ?>
     <?php endif; ?>
   </oml:output_data>
   <?php endif; ?>
