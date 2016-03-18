@@ -91,12 +91,16 @@ class Api_data extends Api_model {
       $this->returnError(511, $this->version );
       return;
     }
-
-    $active = ' AND status = "active"';
-    $where_tag = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
-    $where_total = $active . $where_tag;
-
-    $sql = 'select * from dataset where (visibility = "public" or uploader='.$this->user_id.')'. $where_total;
+    
+    $where_total = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
+    
+    $active = element('active',$query_string);
+    if ($active == 'true') {
+      $where_total .= ' AND status = "active" ';
+    }
+    
+    
+    $sql = 'select * from dataset where (visibility = "public" or uploader='.$this->user_id.') '. $where_total;
     $datasets_res = $this->Dataset->query($sql);
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->returnError( 370, $this->version );
@@ -213,18 +217,12 @@ class Api_data extends Api_model {
       $this->returnError( 135, $this->version );
       return;
     }
-
-    //check if this is an update or a new dataset
-    $update = false;
-    if($xml->children('oml', true)->{'id'}) {
-      $update = true;
-    }
-
+    
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
-
+    
     //check and register the data files, return url
     $file_id = null;
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
@@ -253,59 +251,30 @@ class Api_data extends Api_model {
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } elseif( $datasetUrlProvided ) {
       $destinationUrl = '' . $xml->children('oml', true)->url;
-    } elseif($update) {
-      $destinationUrl = false;
     } else {
       $this->returnError( 141, $this->version );
       return;
     }
+    
+    // ***** NEW DATASET *****
+    $name = '' . $xml->children('oml', true)->{'name'};
+    $version = $this->Dataset->incrementVersionNumber( $name );
 
-    //build dataset object with new fields to be stored
-    if(!$update){
-      // ***** NEW DATASET *****
-      $name = '' . $xml->children('oml', true)->{'name'};
-      $version = $this->Dataset->incrementVersionNumber( $name );
-
-      $dataset = array(
-        'name' => $name,
-        'version' => $version,
-        'url' => $destinationUrl,
-        'upload_date' => now(),
-        'last_update' => now(),
-        'uploader' => $this->user_id,
-        'isOriginal' => 'true',
-        'file_id' => $file_id
-      );
-      // extract all other necessary info from the XML description
-      $dataset = all_tags_from_xml(
-        $xml->children('oml', true),
-        $this->xml_fields_dataset, $dataset );
-    } else {
-      // ***** UPDATED DATASET *****
-      $id = $xml->children('oml', true)->{'id'};
-      $dataset = $this->Dataset->getById( $id );
-      if( $dataset === false ) {
-        $this->returnError( 144, $this->version );
-        return;
-      }
-
-      if ($destinationUrl){
-        $dataset = array(
-          'last_update' => now(),
-          'url' => $destinationUrl,
-          'file_id' => $file_id
-        );
-      } else {
-        $dataset = array(
-          'last_update' => now()
-        );
-      }
-      // extract all other necessary info from the XML description
-      $dataset = all_tags_from_xml(
-        $xml->children('oml', true),
-        $this->xml_fields_dataset_update, $dataset );
-    }
-
+    $dataset = array(
+      'name' => $name,
+      'version' => $version,
+      'url' => $destinationUrl,
+      'upload_date' => now(),
+      'last_update' => now(),
+      'uploader' => $this->user_id,
+      'isOriginal' => 'true',
+      'file_id' => $file_id
+    );
+    // extract all other necessary info from the XML description
+    $dataset = all_tags_from_xml(
+      $xml->children('oml', true),
+      $this->xml_fields_dataset, $dataset );
+    
     // handle tags
     $tags = array();
     if( array_key_exists( 'tag', $dataset ) ) {
@@ -316,9 +285,6 @@ class Api_data extends Api_model {
     /* * * *
      * THE ACTUAL INSERTION
      * * * */
-    if(!$update) {
-      // ***** NEW DATASET *****
-
       $id = $this->Dataset->insert( $dataset );
       if( ! $id ) {
         $this->returnError( 134, $this->version );
@@ -329,29 +295,6 @@ class Api_data extends Api_model {
         $error = -1;
         tag_item( 'dataset', $id, $tag, $this->user_id, $error );
       }
-      // TODO: handle tags for updated data sets as well.
-    } else {
-      // ***** UPDATED DATASET *****
-      $id =  '' . $xml->children('oml', true)->{'id'};
-
-      // ignore id, description (should not be altered)
-      unset($dataset['id']);
-      unset($dataset['description']);
-
-	    // remove ignore attributes if none specified
-      if(!array_key_exists('ignore_attribute', $dataset)) {
-        $dataset['ignore_attribute'] = NULL;
-      }
-
-      // reset data features so that they are recalculated
-      $dataset['processed'] = NULL;
-      $dataset['error'] = 'false';
-      $this->Data_feature->deleteWhere('`did` = "' . $id . '"');
-      $this->Data_quality->deleteWhere('`data` = "' . $id . '"');
-
-            // the actual update
-      $response = $this->Dataset->update( $id, $dataset );
-    }
 
     // update elastic search index.
     $this->elasticsearch->index('data', $id);
@@ -360,10 +303,9 @@ class Api_data extends Api_model {
     $this->elasticsearch->index('user', $this->user_id);
 
     // create initial wiki page
-    if(!$update) {
-      $this->wiki->export_to_wiki($id);
-    }
-
+    
+    $this->wiki->export_to_wiki($id);
+    
     // create
     $this->xmlContents( 'data-upload', $this->version, array( 'id' => $id ) );
   }

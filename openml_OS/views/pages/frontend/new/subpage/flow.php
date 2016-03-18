@@ -1,6 +1,6 @@
 <div class="panel">
 	      <h1><a href="f"><i class="fa fa-cogs"></i></a> Add flows</h1>
-	      <form method="post" id="implementationForm" action="api/?f=openml.implementation.upload" enctype="multipart/form-data">
+	      <form method="post" id="implementationForm" action="api/v1/flow" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_implementation_description" name="description" value="" />
 	      <div class="row">
 		<div class="col-md-6">

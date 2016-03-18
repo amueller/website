@@ -135,10 +135,10 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations'])) {
 					echo 'No evaluations yet (or not applicable).';
           
-          if (array_key_exists('error_message',$rs)) {
+          if (array_key_exists('error_message',$rs) &&  $rs['error_message']) {
             echo 'Client side error: ' . $rs['error_message'];
           }
-          if (array_key_exists('error',$rs)) {
+          if (array_key_exists('error',$rs) && $rs['error']) {
             echo 'Evaluation Engine Exception: ' . $rs['error'];
           }
 				} else{

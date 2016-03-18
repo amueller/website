@@ -104,9 +104,21 @@ class Api_task extends Api_model {
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' );
     $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $where_total . ' ORDER BY id');
 
-    for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }
-    for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value; }
-    for( $i = 0; $i < count($tt); ++$i ) { $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag; }
+    for($i = 0; $i < count($dq); ++$i) {
+      if (array_key_exists($dq[$i]->task_id,$tasks)) {
+        $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value;
+      }
+    }
+    for( $i = 0; $i < count($ti); ++$i ) {
+      if (array_key_exists($ti[$i]->task_id,$tasks)) {
+        $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value;
+      }
+    }
+    for( $i = 0; $i < count($tt); ++$i ) {
+      if (array_key_exists($tt[$i]->id,$tasks)) {
+        $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag; 
+      }
+    }
 
     $this->xmlContents( 'tasks', $this->version, array( 'tasks' => $tasks ) );
   }

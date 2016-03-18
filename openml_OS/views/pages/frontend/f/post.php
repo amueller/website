@@ -60,15 +60,13 @@ if($this->input->post('versions')){
 
 else{
 
-  $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
-
   $description = $this->dataoverview->generate_xml(
     'data_set_description',
     $this->config->item('xml_fields_dataset_update')
   );
   $post_data = array(
       'description' => $description,
-      'session_hash' => $session_hash
+      'api_key' => $this->ion_auth->user()->row()->session_hash
   );
   if( $_FILES['dataset']['error'] == 0 ) {
       $post_data['dataset'] = '@' . $_FILES['dataset']['tmp_name'];
@@ -78,7 +76,7 @@ else{
   //	$post_data['url'] = = $this->record->{'url'};
   //}
 
-  $url = BASE_URL.'/api/?f=openml.data.upload';
+  $url = BASE_URL.'/api/v1/data';
 
   // Send the request & save response to $resp
 
