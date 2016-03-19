@@ -27,7 +27,7 @@
             <a class="pull-right greenheader loginfirst" href="s/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
           <?php //}
                 if ($this->show_history) { ?>
-          <a class="pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
+          <a class="pull-right" href="s/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
           <?php } ?>
         </div>
       </div>

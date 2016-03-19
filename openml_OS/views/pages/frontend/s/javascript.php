@@ -22,10 +22,10 @@ $.ajax({
     $("#function-help").addClass("wiki-help-button");
     $("#function-help").html("Need help?");
     $("#gollum-editor-preview").attr("href","preview");
-    $("#version-form").attr('action', "d/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
+    $("#version-form").attr('action', "s/<?php echo $this->id; ?>/compare/<?php echo $this->wikipage; ?>");
     $("a[title*='View commit']").each(function() {
        var _href = $(this).attr("href");
-       $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
+       $(this).attr('href', 's/<?php echo $this->id; ?>/view' + _href);
     });
     $("#wiki-waiting").css("display","none");
     $("#wiki-ready").css("display","block");
@@ -53,5 +53,5 @@ $( "#gollum-editor-preview" ).click(function() {
 
 $("a[title*='View commit']").each(function() {
    var _href = $(this).attr("href");
-   $(this).attr('href', 'd/<?php echo $this->id; ?>/view' + _href);
+   $(this).attr('href', 's/<?php echo $this->id; ?>/view' + _href);
 });
