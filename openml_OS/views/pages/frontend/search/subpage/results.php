@@ -54,8 +54,14 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'desc')); ?>">Most runs</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'asc')); ?>">Fewest runs</a></li>
     <?php } ?>
+    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run"))){ ?>    
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'desc')); ?>">Most likes</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'asc')); ?>">Fewest likes</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'desc')); ?>">Most downloads</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'asc')); ?>">Fewest downloads</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'desc')); ?>">Most recent</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
+    <?php } ?>
     <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'last_update', 'order' => 'desc')); ?>">Last update</a></li>
 		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'desc')); ?>">Most instances</a></li>
@@ -132,6 +138,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 				<?php
+                                echo '<b>'.$rs['nr_of_likes'].' likes';
+                                echo ' '.$rs['nr_of_downloads'].' downloads </b>';
 				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations']))
 					echo 'No evaluations yet (or not applicable)';
 				else{
@@ -177,7 +185,9 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 		   		<a href="d/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?> </div>
 				<div class="runStats">
-					<?php echo '<b>'.$rs['runs'].' runs</b>';
+					<?php echo '<b>'.$rs['runs'].' runs';
+                                              echo ' '.$rs['nr_of_likes'].' likes';
+                                              echo ' '.$rs['nr_of_downloads'].' downloads</b>';
 					 	if(array_key_exists('qualities', $rs)){
 								$q = $rs['qualities'];
 					      if(array_key_exists('NumberOfInstances', $q))    echo ' - '.$q['NumberOfInstances'].' instances';
@@ -224,7 +234,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 					<?php
-					  echo '<b>'.$rs['runs'].' runs</b>';
+					  echo '<b>'.$rs['runs'].' runs </b>';
 						foreach( $rs as $key => $value ) {
 						if($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or $key == 'custom_testset' or !$value) { echo '';}
 						elseif(is_array($value) and array_key_exists('name', $value)){
@@ -240,7 +250,9 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<a href="f/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
-					<?php echo '<b>'.$rs['runs'].' runs</b>';?>
+					<?php echo '<b>'.$rs['runs'].' runs';
+                                              echo ' '.$rs['nr_of_likes'].' likes';
+                                              echo ' '.$rs['nr_of_downloads'].' downloads</b>';?>
         </div>
 		   <?php } ?>
 

@@ -17,7 +17,26 @@ class Run extends Database_write {
     $this->load->model('Math_function');
     $this->load->model('Runfile');
   }
+  
+  function getUploaderOf($rid){
+      $sql = 'SELECT '.$this->user_column.' as uploader FROM '.$this->table.' WHERE '.$this->id_column.'='.$rid;
+      
+      return $this->Run->query($sql);
+  }
 
+  function getRunsByFlowId($fid, $from=null, $to=null){
+      $sql = 'SELECT r.'.$this->id_column.' as id FROM `'.$this->table.'` r, `algorithm_setup` WHERE algorithm_setup.implementation_id='.$fid.' AND r.setup=algorithm_setup.sid';
+      
+      if($from!=null){
+        $sql .= ' AND r.processed>="'.$from.'"';
+      }
+      if($to!=null){
+        $sql .= ' AND r.processed<"'.$to.'"';
+      }
+      
+      return $this->Run->query($sql);
+  }
+  
   function getRunsOfUser($u_id, $from=null, $to=null){
       $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;
       

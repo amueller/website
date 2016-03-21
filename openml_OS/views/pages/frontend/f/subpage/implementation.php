@@ -1,6 +1,10 @@
 
 <ul class="hotlinks">
-<li><a id="likebutton" class="loginfirst btn btn-link" onclick="doLike()" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a></li>
+    
+<?php if ($this->ion_auth->logged_in()) {
+    if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {?>
+        <li><a id="likebutton" class="loginfirst btn btn-link" onclick="doLike()" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a></li>
+<?php }}?>
 <?php if(isset($this->flow_source_url)) { ?>
 <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
 <?php } elseif(isset($this->flow_binary_url)) { ?>

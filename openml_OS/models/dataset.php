@@ -8,6 +8,12 @@ class Dataset extends Database_write {
     $this->user_column = 'uploader';
   }
   
+  function getUploaderOf($did){
+      $sql = 'SELECT '.$this->user_column.' as uploader FROM '.$this->table.' WHERE '.$this->id_column.'='.$did;
+      
+      return $this->Dataset->query($sql);
+  }
+  
   function getDatasetsOfUser($u_id, $from=null, $to=null){
       $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;
       

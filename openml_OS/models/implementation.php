@@ -9,6 +9,12 @@ class Implementation extends Database_write {
     
     $this->load->model('File');
   }
+  
+  function getUploaderOf($fid){
+      $sql = 'SELECT '.$this->user_column.' as uploader FROM '.$this->table.' WHERE '.$this->id_column.'='.$fid;
+      
+      return $this->Implementation->query($sql);
+  }
 
   function getImplementationsOfUser($u_id, $from=null, $to=null){
       $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;

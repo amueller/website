@@ -11,6 +11,18 @@ class Task extends Database_write {
     $this->load->model('Task_inputs');
   }
   
+  function getUploaderOf($tid){
+      $sql = 'SELECT '.$this->user_column.' as uploader FROM '.$this->table.' WHERE '.$this->id_column.'='.$tid;
+      
+      return $this->Task->query($sql);
+  }
+  
+  function getTasksByDataId($did){
+      $sql = 'SELECT '.$this->id_column.' as id FROM `task_inputs` WHERE task_inputs.value='.$did.' AND task_inputs.input="source_data"';
+      
+      return $this->Task->query($sql);      
+  }
+  
   function getTasksOfUser($u_id, $from=null, $to=null){
       $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;
       

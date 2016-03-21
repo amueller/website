@@ -500,10 +500,11 @@ function updateRunModal(rid) {
 var isliked = false;
 <?php
 if ($this->ion_auth->logged_in()) {
+    if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {
 echo "
 $.ajax({
     method:'GET',
-    url:'",BASE_URL,"api_new/v1/json/likes/",$this->ion_auth->user()->row()->id,"/f/", $this->id, "'
+    url:'",BASE_URL,"api_new/v1/json/votes/up/",$this->ion_auth->user()->row()->id,"/f/", $this->id, "'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('boolean').length>0){
             if(Boolean(resultdata.getElementsByTagName('boolean')[0].textContent)){
@@ -520,12 +521,12 @@ $.ajax({
         isliked = false;
         $('#likeicon').removeClass(\"fa-heart\").addClass(\"fa-heart-o\");
         $('#likebutton').prop('title', 'Click to like');
- });";}?>
+});";}}?>
 
 function refreshNrLikes(){
     $.ajax({
         method:'GET',
-        url:'<?php echo BASE_URL; ?>api_new/v1/json/likes/any/f/<?php echo $this->id ?>'
+        url:'<?php echo BASE_URL; ?>api_new/v1/json/votes/up/any/f/<?php echo $this->id ?>'
         }).done(function(resultdata){
             if(resultdata.getElementsByTagName('like').length>0){
                 var nrlikes = resultdata.getElementsByTagName('like').length;
@@ -558,7 +559,9 @@ function refreshNrLikes(){
     });
  }
 
-
+<?php if ($this->ion_auth->logged_in()) {
+    if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {
+        echo "
 function doLike(){
     if(isliked){
         meth = 'DELETE';
@@ -567,7 +570,7 @@ function doLike(){
     }
     $.ajax({
         method: meth,
-        url: '<?php echo BASE_URL; ?>api_new/v1/json/likes/f/<?php echo $this->id ?>'
+        url: '".BASE_URL."api_new/v1/json/votes/up/f/".$this->id."'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('like').length>0){
             //changes already done
@@ -581,7 +584,7 @@ function doLike(){
     });
     //change as if the api call is succesful
     flipLikeHTML();
-}
+}";}}?>
 
 function flipLikeHTML(){
     if(isliked){
@@ -610,16 +613,18 @@ function flipLikeHTML(){
         $('#reach').html(reach+" reach");
     }
 }
-
+<?php if ($this->ion_auth->logged_in()) {
+    if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {
+        echo "
 function doDownload(){
     $.ajax({
             method: 'POST',
-            url: '<?php echo BASE_URL; ?>api_new/v1/json/downloads/f/'+<?php echo $this->id ?>
+            url: '".BASE_URL."api_new/v1/json/downloads/f/".$this->id."'
            }
     ).always(function(){
         refreshNrDownloads();
     });
-    }
+}";}}?>
 
 <?php
 }
