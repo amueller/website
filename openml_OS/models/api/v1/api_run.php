@@ -249,11 +249,13 @@ class Api_run extends Api_model {
 
     // check uploaded file
     $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
-    if( ! check_uploaded_file( $description ) ) {
-      $this->returnError( 202, $this->version );
+    $uploadError = '';
+    if(! check_uploaded_file($description,false,$uploadError)) {
+      $this->returnError(202, $this->version,$this->openmlGeneralErrorCode,$uploadError);
       return;
     }
     // validate xml
+    $xmlErrors = '';
     if( validateXml( $description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;
