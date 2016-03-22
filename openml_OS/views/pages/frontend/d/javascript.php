@@ -167,7 +167,7 @@ $("a[title*='View commit']").each(function() {
 
 var isliked = false;
 <?php if ($this->ion_auth->logged_in()) {
-      if ($this->ion_auth->user()->row()->gamification_visibility == 's') {
+      if ($this->ion_auth->user()->row()->id != $this->data['uploader_id']) {
 echo "
 $.ajax({
     method:'GET',

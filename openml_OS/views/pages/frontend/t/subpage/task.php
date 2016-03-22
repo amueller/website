@@ -40,7 +40,7 @@
                 <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->task)): if($this->task['nr_of_downloads']!=null): $nr_d = $this->task['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
                 <?php if(array_key_exists('total_downloads',$this->task)): if($this->task['total_downloads']!=null): $nr_d = $this->task['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
                 <?php if ($this->ion_auth->logged_in()) {
-                        if ($this->ion_auth->user()->row()->gamification_visibility == 's') {
+                        if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {
                             ?>
                             <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->task)): if($this->task['reach']!=null): $r = $this->task['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
                             <!--<i class="fa fa-warning impact"></i><span id="impact"><?php if(array_key_exists('impact',$this->task)): if($this->task['impact']!=null): $i = $this->task['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>-->

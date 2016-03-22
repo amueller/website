@@ -20,7 +20,7 @@
         </div>
     </div>
 <?php if ($this->ion_auth->logged_in()) {
-      if ($this->ion_auth->user()->row()->gamification_visibility == 's') {?>
+      if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
     <div class="col-sm-3 score">
         <div class="well" style="font-size:120%" title="Gamification scores and number of uploads">
             <div class="row">
@@ -84,7 +84,7 @@
     <tbody>
         
 <?php if ($this->ion_auth->logged_in()) {
-      if ($this->ion_auth->user()->row()->gamification_visibility == 's') {?>
+      if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
         <tr>            
             <td class="borderless"></td>
             <td class="borderless">Activity</td>
@@ -126,7 +126,7 @@
 
 
 <?php if ($this->ion_auth->logged_in()) {
-      if ($this->ion_auth->user()->row()->gamification_visibility == 's') {?>
+      if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
 <div class="row">    
     <ul class="nav nav-pills activity">
         <li class="col-sm-4 mainvalue active" title="Activity is: 3x uploads done + 2x likes given + downloads done"><a data-toggle="tab" onclick=redrawActivityChart("Activity")> <i class="fa fa-bolt"></i> Activity: <?php echo $this->userinfo['activity']; ?></a></li>
