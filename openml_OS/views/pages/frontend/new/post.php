@@ -148,7 +148,7 @@ if($this->subpage == 'task') {
       $post_data['dataset'] = new CurlFile($_FILES['dataset']['tmp_name'], 'text/xml');
   }
 
-  $url = 'http://www.openml.org/api/v1/data';
+  $url = BASE_URL.'api/v1/data';
   // Send the request & save response to $resp
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
   if($api_response !== false) {

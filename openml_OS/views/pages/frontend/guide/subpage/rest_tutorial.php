@@ -5,16 +5,20 @@
        <p>OpenML offers a RESTful Web API, with predictive URLs, for uploading and downloading machine learning resources. Try the <a href="api_docs">API Documentation</a> to see examples of all calls, and test them right in your browser.
        <h2>Getting started</h2>
           <p>REST services can be called using simple HTTP GET or POST actions.</p>
-          <p>The REST Endpoint URL is <code class="http">http://www.openml.org/api_new/v1/</code></p>
-          <p>The default endpoint returns data in XML. If you prefer JSON, use the endpoint <code class="http">http://www.openml.org/api_new/v1/json/</code><br>
+          <p>The REST Endpoint URL is <code class="http">http://www.openml.org/api/v1/</code></p>
+          <p>The default endpoint returns data in XML. If you prefer JSON, use the endpoint <code class="http">http://www.openml.org/api/v1/json/</code><br>
           Note that, to upload content, you still need to use XML (at least for now).</p>
 
        <h2>Authentication</h2>
        <p>To use the API, you need an API key. You can find it <a href="u#!api">in your profile</a> (after logging in).</p>
        <p>You can send your api key using Basic Auth, or by adding <code>?api_key='your key'</code> to your calls. If you are logged into OpenML.org, this will be done automatically (within the session).</p>
        <p>For instance, you can call <code>/data/{id}</code>:<br>
-         in XML: <a href="http://www.openml.org/api_new/v1/data/1">http://www.openml.org/api_new/v1/data/1</a><br>
-         in JSON: <a href="http://www.openml.org/api_new/v1/json/data/1">http://www.openml.org/api_new/v1/json/data/1</a></p>
+         in XML: <a href="http://www.openml.org/api_new/v1/data/1">http://www.openml.org/api/v1/data/1</a><br>
+         in JSON: <a href="http://www.openml.org/api_new/v1/json/data/1">http://www.openml.org/api/v1/json/data/1</a></p>
+
+       <h2>Testing</h2>
+          <p>For continuous integration and testing purposes, we have a test server offering the same API, but which does not affect the production server.</p>
+          <p>The REST Endpoint URL is <code class="http">http://test.openml.org/api/v1/</code></p>
 
       <h2>Error messages</h2>
           <p>Error messages will look like this:

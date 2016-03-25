@@ -52,7 +52,7 @@ class Data extends CI_Controller {
       }
     } // else, an appropriate message is shown.
   } else {
-    echo file_get_contents('http://www.openml.org/data/view/' . $id . '/image.png');
+    echo file_get_contents(BASE_URL.'data/view/' . $id . '/image.png');
   }
   }
 
