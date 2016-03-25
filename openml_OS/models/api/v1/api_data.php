@@ -196,20 +196,27 @@ class Api_data extends Api_model {
 
   private function data_upload() {
     // get correct description
+    $xsdFile = xsd('openml.data.upload', $this->controller, $this->version);
+    $xmlErrors = '';
+    
     if( $this->input->post('description') ) {
       // get description from string upload
       $description = $this->input->post('description', false);
-      if( validateXml( $description, xsd('openml.data.upload', $this->controller, $this->version), $xmlErrors, false ) == false ) {
-        $this->returnError( 131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+      if(validateXml($description, $xsdFile, $xmlErrors, false ) == false) {
+        $this->returnError(131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
         return;
       }
       $xml = simplexml_load_string( $description );
-    } elseif(isset($_FILES['description']) && check_uploaded_file( $_FILES['description'] ) == true) {
+    } elseif(isset($_FILES['description'])) {
+      $uploadError = '';
+      if (check_uploaded_file($_FILES['description'],false,$uploadError) == false) {
+        $this->returnError(135, $this->version,$this->openmlGeneralErrorCode,$uploadError);
+      }
       // get description from file upload
       $description = $_FILES['description'];
 
-      if( validateXml( $description['tmp_name'], xsd('openml.data.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
-        $this->returnError( 131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+      if(validateXml($description['tmp_name'], $xsdFile, $xmlErrors) == false) {
+        $this->returnError(131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
         return;
       }
       $xml = simplexml_load_file( $description['tmp_name'] );
