@@ -20,8 +20,8 @@ class ElasticSearch {
         $this->db = $this->CI->Dataset;
         $this->userdb = $this->CI->Author;
 
-        $params['hosts'] = array('http://es.openml.org');
-        //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@es.openml.org'
+        $params['hosts'] = array(ES_URL);
+        //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@'.ES_URL
         $this->client = new Elasticsearch\Client($params);
 
         $this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');

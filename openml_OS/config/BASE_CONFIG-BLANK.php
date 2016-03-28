@@ -112,6 +112,7 @@ define( 'API_KEY', 'FILL_IN_KEY' );
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * API_PASSWORD: The password that belongs to the username
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+define( 'ES_URL', 'FILL_IN' );
 define( 'ES_USERNAME', 'FILL_IN' );
 define( 'ES_PASSWORD', 'FILL_IN' );
 
