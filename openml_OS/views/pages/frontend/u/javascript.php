@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var activity = {
     startday:"",
     endday:"",
