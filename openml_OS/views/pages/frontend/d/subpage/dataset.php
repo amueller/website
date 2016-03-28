@@ -10,7 +10,7 @@
         <?php }} ?>
          <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
          <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json" class="loginfirst btn btn-link" onclick="doDownload()"><i class="fa fa-code fa-2x"></i></a></li>
-         <li>   
+         <li>
              <div class="version" style="margin-bottom: -17px;">
 		  <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">
                          <?php foreach ($this->versions as $v) { ?>
@@ -20,7 +20,7 @@
                  </div>
          </li>
     </ul>
-    
+
     <h1 class="pull-left"><a href="d"><i class="fa fa-database"></i></a>
 	     <?php echo $this->data['name']; ?>
     </h1>

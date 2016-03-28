@@ -138,8 +138,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 				<?php
-        echo '<b>'.$rs['nr_of_likes'].' likes';
-        echo ' '.$rs['nr_of_downloads'].' downloads </b>';
+        echo '<b> - '.$rs['nr_of_likes'].' likes';
+        echo ' - '.$rs['nr_of_downloads'].' downloads </b>';
 				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations'])) {
 					echo 'No evaluations yet (or not applicable).';
 
@@ -193,8 +193,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="teaser"><?php echo formatTeaser($r); ?> </div>
 				<div class="runStats">
 					<?php echo '<b>'.$rs['runs'].' runs';
-                                              echo ' '.$rs['nr_of_likes'].' likes';
-                                              echo ' '.$rs['nr_of_downloads'].' downloads</b>';
+            echo ' - '.$rs['nr_of_likes'].' likes';
+            echo ' - '.$rs['nr_of_downloads'].' downloads</b>';
 					 	if(array_key_exists('qualities', $rs)){
 								$q = $rs['qualities'];
 					      if(array_key_exists('NumberOfInstances', $q))    echo ' - '.$q['NumberOfInstances'].' instances';
