@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var activity = {
     startday:"",
     endday:"",
@@ -199,7 +200,7 @@ function redrawActivityChart(type) {
             }]
         };
         $("#activityplot").highcharts(chartOptions);
-        
+
     }
 }
 
@@ -216,8 +217,7 @@ $('#impacttoggle').click(function(){
 });
 
 <?php
-if ($this->ion_auth->logged_in()) {
-echo "
+if ($this->ion_auth->logged_in()) {?>
 $(function getLikesGiven(){
     $.ajax({
         method:'GET',
@@ -264,7 +264,7 @@ $(function getLikesGiven(){
         }else{
             console.log(\"Invalid gamification API result\");
         }
-    }).fail(function(resultdata){            
+    }).fail(function(resultdata){
             console.log(\"Gamification API failed\");
     });
 });
@@ -315,7 +315,7 @@ $(function getUploadsDone(){
         }else{
             console.log(\"Invalid gamification API result\");
         }
-    }).fail(function(resultdata){            
+    }).fail(function(resultdata){
             console.log(\"Gamification API failed\");
     });
 });
@@ -366,7 +366,7 @@ $(function getDownloadsDone(){
         }else{
             console.log(\"Invalid gamification API result\");
         }
-    }).fail(function(resultdata){            
+    }).fail(function(resultdata){
             console.log(\"Gamification API failed\");
     });
 });
@@ -418,10 +418,10 @@ $(function getActivity() {
         }else{
             console.log(\"Invalid gamification API result\");
         }
-    }).fail(function(resultdata){            
+    }).fail(function(resultdata){
             console.log(\"Gamification API failed\");
     });
-    
+
 });
 
 $(function getReach() {
@@ -436,7 +436,7 @@ $(function getReach() {
             for(var j=0; j<reach.nrdays; j++){
                 reach.total.push(parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent));
                 reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5));
-            }            
+            }
             redrawReachChart('Reach');
         }else{
             console.log(\"Invalid gamification API result\");
@@ -509,7 +509,7 @@ $(function getImpact() {
         }
     }).fail(function(resultdata){
         console.log(\"Gamification API failed\");
-    });    
+    });
 });
 
 $(function getBadges() {
@@ -530,6 +530,20 @@ $(function getBadges() {
         }
     }).fail(function(resultdata){
         console.log(\"Gamification API failed\");
-    });    
+    });
 });
-";}?>
+
+
+$('#keyupgrade').submit(function() {
+    var c = confirm("API key will be regenerated. ");
+    return c; //you can just return c because it will be true or false
+});
+
+
+
+$('#keydegrade').submit(function() {
+    var c = confirm("By doing this, API key can be used for read-operations only. Is this OK? ");
+    return c; //you can just return c because it will be true or false
+});
+
+<?php } ?>

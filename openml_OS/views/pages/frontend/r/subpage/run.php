@@ -127,7 +127,7 @@
         var disqus_shortname = 'openml'; // forum name
 	      var disqus_category_id = '3353606'; // Data category
 	      var disqus_title = '<?php echo 'Run '.$this->run_id; ?>'; // Data name
-	      var disqus_url = 'http://www.openml.org/r/<?php echo $this->run_id; ?>'; // Data url
+	      var disqus_url = '<?php echo BASE_URL;?>r/<?php echo $this->run_id; ?>'; // Data url
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {

@@ -21,13 +21,9 @@ class Api_task extends Api_model {
 
     $getpost = array('get','post');
 
-    if (count($segments) == 1 && $segments[0] == 'list') {
-      $this->task_list();
-      return;
-    }
-
-    if (count($segments) == 2 && $segments[0] == 'list' && is_numeric($segments[1])) {
-      $this->task_list($segments[1]);
+    if (count($segments) >= 1 && $segments[0] == 'list') {
+      array_shift($segments);
+      $this->task_list($segments);
       return;
     }
 
@@ -60,7 +56,7 @@ class Api_task extends Api_model {
   }
 
 
-  private function task_list($ttid = null) {
+  private function task_list($segs) {
     // TODO: add tag / active
     //$task_type_id = $this->input->get( 'task_type_id' );
     //if( $task_type_id == false ) {
@@ -68,12 +64,27 @@ class Api_task extends Api_model {
     //  return;
     //}
     //$active = $this->input->get('active_only') ? ' AND d.status = "active" ' : '';
-    $task_type_constraint = $ttid == null ? '' : 'AND `t`.`ttid` = "'.$ttid.'" ';
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2)
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
+
+    $type = element('type',$query_string);
+    $tag = element('tag',$query_string);
+
+    if (!(is_safe($tag) && is_safe($type))) {
+      $this->returnError(511, $this->version );
+      return;
+    }
+
+    $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
+    $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
+    $where_total = $where_type . $where_tag;
+
     $tasks_res = $this->Task->query(
       'SELECT t.task_id, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name '.
       'FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` '.
       'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
-      $task_type_constraint .
+      $where_total .
        //$active .
        ' ORDER BY task_id; ' );
     if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {
@@ -91,11 +102,23 @@ class Api_task extends Api_model {
 
     $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND t.task_id IN (' . implode(',', array_keys($tasks)) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY quality like "NumberOf" desc, quality');
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' );
-    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $task_type_constraint . ' ORDER BY id');
+    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $where_total . ' ORDER BY id');
 
-    for( $i = 0; $i < count($dq); ++$i ) { $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value; }
-    for( $i = 0; $i < count($ti); ++$i ) { $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value; }
-    for( $i = 0; $i < count($tt); ++$i ) { $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag; }
+    for($i = 0; $i < count($dq); ++$i) {
+      if (array_key_exists($dq[$i]->task_id,$tasks)) {
+        $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value;
+      }
+    }
+    for( $i = 0; $i < count($ti); ++$i ) {
+      if (array_key_exists($ti[$i]->task_id,$tasks)) {
+        $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value;
+      }
+    }
+    for( $i = 0; $i < count($tt); ++$i ) {
+      if (array_key_exists($tt[$i]->id,$tasks)) {
+        $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag; 
+      }
+    }
 
     $this->xmlContents( 'tasks', $this->version, array( 'tasks' => $tasks ) );
   }
@@ -159,15 +182,17 @@ class Api_task extends Api_model {
 
   public function task_upload() {
 
-    if (isset($_FILES['description']) == false || $_FILES['source']['error'] > 0) {
+    $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
+    if( ! check_uploaded_file( $description ) ) {
       $this->returnError(530, $this->version);
       return;
     }
-
+    
     $descriptionFile = $_FILES['description']['tmp_name'];
+    
     $xsd = xsd('openml.task.upload', $this->controller, $this->version);
     if (!$xsd) {
-      $this->returnError( 531, $this->version, $this->openmlGeneralErrorCode );
+      $this->returnError(531, $this->version, $this->openmlGeneralErrorCode);
       return;
     }
 

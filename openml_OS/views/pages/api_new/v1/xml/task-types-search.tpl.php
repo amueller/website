@@ -8,7 +8,7 @@
 	<?php if($task_type->contributors): foreach( getcsv($task_type->contributors) as $c ): ?>
 	<oml:contributor><?php echo $c; ?></oml:contributor>
 	<?php endforeach; endif; ?>
-   	<oml:date><?php echo dateNeat($task_type->date); ?></oml:date>
+  <oml:creation_date><?php echo $task_type->creationDate; ?></oml:creation_date>
 	<?php foreach( $io as $item ): if( $item->template_api != null ): ?>
 		<oml:<?php echo $item->io; ?> name="<?php echo $item->name; ?>"><?php echo $item->template_api; ?></oml:<?php echo $item->io; ?>>
 	<?php endif; endforeach; ?>

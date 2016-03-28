@@ -54,7 +54,7 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'desc')); ?>">Most runs</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'asc')); ?>">Fewest runs</a></li>
     <?php } ?>
-    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run"))){ ?>    
+    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run"))){ ?>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'desc')); ?>">Most likes</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'asc')); ?>">Fewest likes</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'desc')); ?>">Most downloads</a></li>
@@ -138,11 +138,18 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 				<?php
-                                echo '<b>'.$rs['nr_of_likes'].' likes';
-                                echo ' '.$rs['nr_of_downloads'].' downloads </b>';
-				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations']))
-					echo 'No evaluations yet (or not applicable)';
-				else{
+        echo '<b>'.$rs['nr_of_likes'].' likes';
+        echo ' '.$rs['nr_of_downloads'].' downloads </b>';
+				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations'])) {
+					echo 'No evaluations yet (or not applicable).';
+
+          if (array_key_exists('error_message',$rs) &&  $rs['error_message']) {
+            echo 'Client side error: ' . $rs['error_message'];
+          }
+          if (array_key_exists('error',$rs) && $rs['error']) {
+            echo 'Evaluation Engine Exception: ' . $rs['error'];
+          }
+				} else{
 					$tn = "";
 					$vals = array();
 					foreach($rs['evaluations'] as $eval){

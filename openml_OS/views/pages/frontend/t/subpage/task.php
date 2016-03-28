@@ -31,7 +31,7 @@
 
 		<h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>
 		<div class="datainfo">
-                <i class="fa fa-trophy"></i> Task <?php echo $this->task_id; ?> 
+                <i class="fa fa-trophy"></i> Task <?php echo $this->task_id; ?>
                 <i class="fa fa-flag"></i> <a href="t/type/<?php echo $this->record['type_id'];?>"><?php echo $this->record['type_name']; ?></a>
                 <i class="fa fa-database"></i> <a href="d/<?php echo $dataset_id;?>"><?php echo $dataset; ?></a>
                 <i class="fa fa-star"></i> <?php echo $this->record['runcount']; ?> runs submitted
@@ -96,7 +96,7 @@
           var disqus_shortname = 'openml'; // forum name
   	var disqus_category_id = '3353607'; // Data category
   	var disqus_title = '<?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?>'; // Data name
-  	var disqus_url = 'http://www.openml.org/t/<?php echo $this->task_id; ?>'; // Data url
+  	var disqus_url = '<?php echo BASE_URL;?>t/<?php echo $this->task_id; ?>'; // Data url
 
           /* * * DON'T EDIT BELOW THIS LINE * * */
           (function() {

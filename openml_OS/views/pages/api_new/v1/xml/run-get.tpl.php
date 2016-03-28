@@ -10,6 +10,7 @@
   <oml:flow_id><?php echo $source->setup->implementation_id; ?></oml:flow_id>
   <oml:flow_name><?php echo $source->flow_name; ?></oml:flow_name>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
+  <?php if($source->error != null):?> <oml:error><?php echo htmlspecialchars($source->error); ?></oml:error> <?php endif; ?>
   <?php if($source->error_message !== null):?> <oml:error_message><?php echo $source->error_message; ?></oml:error_message> <?php endif; ?>
   <oml:setup_string><?php echo $source->setup->setup_string; ?></oml:setup_string>
   <?php if(is_array($source->inputSetting)) foreach( $source->inputSetting as $parameter ): ?>
@@ -54,6 +55,15 @@
     <?php endif; if(array_key_exists('evaluations', $source->outputData) ): ?>
       <?php foreach( $source->outputData['evaluations'] as $e ): ?>
         <oml:evaluation>
+          <oml:name><?php echo $e->{'function'}; ?></oml:name>
+          <oml:flow_id><?php echo $e->{'implementation_id'}; ?></oml:flow_id>
+          <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
+          <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
+        </oml:evaluation>
+      <?php endforeach; ?>
+    <?php endif; if(array_key_exists('evaluations_fold', $source->outputData) ): ?>
+      <?php foreach( $source->outputData['evaluations_fold'] as $e ): ?>
+        <oml:evaluation repeat="<?php echo $e->{'repeat'}; ?>" fold="<?php echo $e->{'fold'}; ?>">
           <oml:name><?php echo $e->{'function'}; ?></oml:name>
           <oml:flow_id><?php echo $e->{'implementation_id'}; ?></oml:flow_id>
           <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>

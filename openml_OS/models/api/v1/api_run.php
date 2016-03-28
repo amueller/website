@@ -88,13 +88,14 @@ class Api_run extends Api_model {
     $implementation_id = element('flow',$query_string);
     $uploader_id = element('uploader',$query_string);
     $run_id = element('run',$query_string);
+    $tag = element('tag',$query_string);
 
-    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false) {
+    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false) {
       $this->returnError( 510, $this->version );
       return;
     }
 
-    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id))) {
+    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($tag))) {
       $this->returnError(511, $this->version );
       return;
     }
@@ -104,9 +105,10 @@ class Api_run extends Api_model {
     $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
+    $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
 
-    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_server_error;
+    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
 
     $sql =
       'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message ' .
@@ -247,11 +249,13 @@ class Api_run extends Api_model {
 
     // check uploaded file
     $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
-    if( ! check_uploaded_file( $description ) ) {
-      $this->returnError( 202, $this->version );
+    $uploadError = '';
+    if(! check_uploaded_file($description,false,$uploadError)) {
+      $this->returnError(202, $this->version,$this->openmlGeneralErrorCode,$uploadError);
       return;
     }
     // validate xml
+    $xmlErrors = '';
     if( validateXml( $description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
       return;

@@ -26,7 +26,7 @@ class Api_file extends Api_model {
   
   private function file_upload() {
     if( $this->ion_auth->is_admin($this->user_id) == false ) {
-      $this->returnError( 490, $this->version );
+      $this->returnError( 104, $this->version );
       return;
     }
 

@@ -22,8 +22,9 @@ class Api_flow extends Api_model {
 
     $getpost = array('get','post');
 
-    if (count($segments) == 1 && $segments[0] == 'list') {
-      $this->flow_list();
+    if (count($segments) >= 1 && $segments[0] == 'list') {
+      array_shift($segments);
+      $this->flow_list($segments);
       return;
     }
 
@@ -71,9 +72,23 @@ class Api_flow extends Api_model {
   }
 
 
-  private function flow_list() {
+  private function flow_list($segs) {
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2)
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
-    $implementations = $this->Implementation->get();
+    $tag = element('tag',$query_string);
+
+    if (!(is_safe($tag))) {
+      $this->returnError(511, $this->version );
+      return;
+    }
+
+    $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag="' . $tag . '") ';
+    $where_total = $where_tag;
+
+    $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total;
+    $implementations = $this->Implementation->query($sql);
     if( $implementations == false ) {
       $this->returnError( 500, $this->version );
       return;
@@ -324,7 +339,7 @@ class Api_flow extends Api_model {
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'implementation' ) );
+      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'flow' ) );
     }
   }
 
@@ -339,7 +354,7 @@ class Api_flow extends Api_model {
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'implementation' ) );
+      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'flow' ) );
     }
   }
 

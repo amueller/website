@@ -5,7 +5,7 @@
   if(false === strpos($_SERVER['REQUEST_URI'],'/new/')) {
     subpage('data');
   } else {
-    subpage($this->newtype);
+    subpage($this->subpage);
   }
 ?>
   </div>

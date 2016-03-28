@@ -27,7 +27,7 @@
             <a class="pull-right greenheader loginfirst" href="s/<?php echo $this->id; ?>/edit"><i class="fa fa-edit fa-lg"></i> Edit</a>
           <?php //}
                 if ($this->show_history) { ?>
-          <a class="pull-right" href="d/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
+          <a class="pull-right" href="s/<?php echo $this->id; ?>/history"><i class="fa fa-clock-o fa-lg"></i> History</a>
           <?php } ?>
         </div>
       </div>
@@ -50,7 +50,7 @@
   var disqus_shortname = 'openml'; // forum name
 	var disqus_category_id = '4054235'; // Data category
 	var disqus_title = '<?php echo $this->study['name']; ?>'; // Data name
-	var disqus_url = 'http://www.openml.org/s/<?php echo $this->id; ?>'; // Data url
+	var disqus_url = '<?php echo BASE_URL;?>s/<?php echo $this->id; ?>'; // Data url
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {

@@ -48,7 +48,7 @@
               $id = 'input_' . $tt->ttid . '-' . $io->name;
               $template_search = json_decode( $io->template_search );
               $name = text_neat_ucwords( $io->name );
-              $default = '';
+              $default = ($io->name == 'source_data' and isset($this->dataname)) ? $this->dataname : '';
               $placeholder = '';
               if( $template_search ) {
                 if( property_exists( $template_search, 'name' ) ) { $name = $template_search->name; }

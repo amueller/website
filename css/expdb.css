@@ -4,7 +4,7 @@
 .alertbox{
   padding-top: 20px;
   margin-bottom: -70px;
-  z-index: 1021;
+  z-index: 1031;
 }
 
 .label{
@@ -2720,6 +2720,12 @@ svg:not(:root){
 .openml-footer li{
   padding: 3px;
   text-align: right;
+}
+}
+
+@media screen and (max-width: 992px) {
+.marketing{
+  float:left;
 }
 }
 

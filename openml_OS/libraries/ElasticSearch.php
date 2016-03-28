@@ -20,8 +20,8 @@ class ElasticSearch {
         $this->db = $this->CI->Dataset;
         $this->userdb = $this->CI->Author;
 
-        $params['hosts'] = array('http://es.openml.org');
-        //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@es.openml.org'
+        $params['hosts'] = array(ES_URL);
+        //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@'.ES_URL
         $this->client = new Elasticsearch\Client($params);
 
         $this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
@@ -37,10 +37,10 @@ class ElasticSearch {
         $this->activity_metrics['x'] = 1;
         $this->activity_metrics['y'] = 2;
         $this->activity_metrics['z'] = 3;
-        
+
         $this->reach_metrics['x'] = 1;
         $this->reach_metrics['y'] = 2;
-        
+
         $this->impact_metrics['x'] = 0.5;
         $this->impact_metrics['y'] = 0.5;
 
@@ -549,9 +549,9 @@ class ElasticSearch {
             ),
             'gamification_visibility' => $d->gamification_visibility
         );
-        
+
         $activity = 0;
-        
+
         $data_up = $this->db->query('select count(did) as count from dataset where uploader=' . $d->id);
         if ($data_up){
             $user['datasets_uploaded'] = $data_up[0]->count;
@@ -575,7 +575,7 @@ class ElasticSearch {
         }else{
             $user['runs_uploaded'] = 0;
         }
-        
+
 
         $tasks_up = $this->db->query('select count(task_id) as count from task where uploader=' . $d->id);
         if ($tasks_up){
@@ -584,7 +584,7 @@ class ElasticSearch {
         }else{
             $user['tasks_uploaded'] = 0;
         }
-        
+
         $user['nr_of_uploads'] = $user['datasets_uploaded']+$user['flows_uploaded']+$user['runs_uploaded'];
 
         $runs_data = $this->db->query('select count(rid) as count FROM run r, task_inputs t, dataset d WHERE r.task_id=t.task_id and t.input="source_data" and t.value=d.did and d.uploader=' . $d->id);
@@ -595,7 +595,7 @@ class ElasticSearch {
         if ($runs_flows)
             $user['runs_on_flows'] = $runs_flows[0]->count;
 
-        
+
         $nr_of_likes_data = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE knowledge_type='d' AND user_id=".$d->id);
         if($nr_of_likes_data){
             $user['nr_of_likes_data'] = $nr_of_likes_data[0]->count;
@@ -622,7 +622,7 @@ class ElasticSearch {
         }
         $user['nr_of_likes'] = $user['nr_of_likes_data']+ $user['nr_of_likes_flow']+ $user['nr_of_likes_task']+ $user['nr_of_likes_run'];
         $activity += ($this->activity_metrics['y'] * $user['nr_of_likes']);
-        
+
         $nr_of_downloads_data = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE knowledge_type='d' AND user_id=".$d->id);
         if($nr_of_downloads_data){
             $user['nr_of_downloads_data'] = $nr_of_downloads_data[0]->count;
@@ -649,16 +649,16 @@ class ElasticSearch {
         }
         $user['nr_of_downloads'] = $user['nr_of_downloads_data']+ $user['nr_of_downloads_flow']+ $user['nr_of_downloads_task']+ $user['nr_of_downloads_run'];
         $activity += ($this->activity_metrics['x'] * $user['nr_of_downloads']);
-        
+
         $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE user_id=".$d->id);
         if($total_downloads){
             $user['total_downloads'] = $total_downloads[0]->sum;
         }else{
             $user['total_downloads'] = 0;
         }
-        
+
         $user['activity'] = $activity;
-        
+
         $reach = 0;
         $likes_received_data = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `data` WHERE data.uploader=".$d->id." AND  likes.knowledge_id=data.did AND likes.knowledge_type='d'");
         if($likes_received_data){
@@ -687,7 +687,7 @@ class ElasticSearch {
             $reach += $downloads_received_flow[0]->count * $this->reach_metrics['x'];
         }else{
             $user['downloads_received_flow'] = 0;
-        }        
+        }
         $likes_received_task = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `task` WHERE task.uploader=".$d->id." AND  likes.knowledge_id=task.task_id AND likes.knowledge_type='t'");
         if($likes_received_task){
             $user['likes_received_task'] = $likes_received_task[0]->count;
@@ -719,8 +719,8 @@ class ElasticSearch {
         $user['likes_received'] = $user['likes_received_data'] + $user['likes_received_flow'] + $user['likes_received_run'];
         $user['downloads_received'] = $user['downloads_received_data'] + $user['downloads_received_flow'] + $user['downloads_received_run'];
         $user['reach'] = $reach;
-        
-        
+
+
         $impact_reach_flow = 0;
         $impact_reach_downloads_flow = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$d->id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
         if($impact_reach_downloads_flow){
@@ -740,18 +740,18 @@ class ElasticSearch {
             $impact_reach_data += $impact_reach_likes_data[0]->count * $this->reach_metrics['y'];
         }
         $user['reach_of_reuse'] = $impact_reach_data+$impact_reach_flow;
-        
+
         $user['impact_of_reuse'] = 0;
-        
+
         $user['impact'] = $this->impact_metrics['x']*$user['impact_of_reuse'] + $this->impact_metrics['y']*$user['reach_of_reuse'];
-        
+
         /*$gamification_visibility = $this->userdb->query("select gamification_visibility FROM user_preferences WHERE user_id=".$d->id);
         if($gamification_visibility){
             $user['gamification_visibility'] = $gamification_visibility[0]->gamification_visibility;
         }else{
             $user['gamification_visibility'] = 's';
         }*/
-        
+
         return $user;
     }
 
@@ -956,7 +956,7 @@ class ElasticSearch {
             $newdata['total_downloads'] = $total_downloads[0]->sum;
         }
         $newdata['reach'] = $reach;
-        
+
         return $newdata;
     }
 
@@ -1131,32 +1131,36 @@ class ElasticSearch {
         $rid = $start_id;
         $submitted = 0;
         $incr = 100;
+        echo "Processing run ";
         while ($rid < $runmax) {
+            echo $rid." ";
             set_time_limit(600);
             $runs = null;
             $runfiles = null;
             $evals = null;
             $params['body'] = array();
 
-            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
-            $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
-            $evals = $this->fetch_evaluations($rid, $rid + $incr);
+            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, error, error_message FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
+            if($runs){
+              $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
+              $evals = $this->fetch_evaluations($rid, $rid + $incr);
 
-            foreach ($runs as $r) {
-                try {
-                    $params['body'][] = array(
-                        'index' => array(
-                            '_id' => $r->rid
-                        )
-                    );
-                    $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals);
-                } catch (Exception $e) {
-                    return $e->getMessage();
-                }
+              foreach ($runs as $r) {
+                  try {
+                      $params['body'][] = array(
+                          'index' => array(
+                              '_id' => $r->rid
+                          )
+                      );
+                      $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals);
+                  } catch (Exception $e) {
+                      return $e->getMessage();
+                  }
+              }
+              $responses = $this->client->bulk($params);
+
+              $submitted += sizeof($responses['items']);
             }
-            $responses = $this->client->bulk($params);
-
-            $submitted += sizeof($responses['items']);
             $rid += $incr;
         }
 
@@ -1177,6 +1181,8 @@ class ElasticSearch {
             ),
             'output_files' => array_key_exists($r->rid, $runfiles) ? $runfiles[$r->rid] : array(),
             'evaluations' => array_key_exists($r->rid, $evals) ? $evals[$r->rid] : array(),
+            'error' => $r->error,
+            'error_message' => $r->error_message,
             'visibility' => 'public'
         );
 
@@ -1189,7 +1195,7 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-        
+
         $reach = 0;
         $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
         if($nr_of_likes){
@@ -1276,7 +1282,7 @@ class ElasticSearch {
 
         $flows = $this->db->query('select i.*, count(rid) as runs from implementation i left join algorithm_setup s on (s.implementation_id=i.id) left join run r on (r.setup=s.sid)' . ($id ? ' where i.id=' . $id : '') . ' group by i.id');
 
-        
+
         if ($id and ! $flows)
             return 'Error: flow ' . $id . ' is unknown';
 
@@ -1398,7 +1404,7 @@ class ElasticSearch {
         if($impact_reach_likes){
             $impact_reach += $impact_reach_likes[0]->count * $this->reach_metrics['y'];
         }
-        
+
         $new_data['impact'] = $this->impact_metrics['x']*$impact_impact + $this->impact_metrics['y']*$impact_reach;
         return $new_data;
     }
@@ -1673,6 +1679,7 @@ class ElasticSearch {
                 $new_data['features'][] = $feat;
             }
         }
+
         $reach = 0;
         $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
         if($nr_of_likes){
@@ -1689,7 +1696,7 @@ class ElasticSearch {
             $new_data['total_downloads'] = $total_downloads[0]->sum;
         }
         $new_data['reach'] = $reach;
-        
+
         $impact_impact = 0;
         $impact_reach = 0;
         $impact_reach_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `task_inputs` WHERE task_inputs.value=".$d->did." AND task_inputs.input='source_data' AND downloads.knowledge_id=task_inputs.task_id AND downloads.knowledge_type='t'");
@@ -1701,7 +1708,7 @@ class ElasticSearch {
             $impact_reach += $impact_reach_likes[0]->count * $this->reach_metrics['y'];
         }
         $new_data['impact'] = $this->impact_metrics['x']*$impact_impact + $this->impact_metrics['y']*$impact_reach;
-        
+
         return $new_data;
     }
 

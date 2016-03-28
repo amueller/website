@@ -1,54 +1,44 @@
 <?php
-if( $this->user->external_source != false ) {
-	sm('Profile editing forbidden for social media users. ');
-	redirect('frontend/page/home');
+
+// Description edit
+if($this->input->post('page')){
+  // prepare to send data to gollum
+  // $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
+
+  $message = ($this->input->post('message') != 'Write a small message explaining the change.' ? $this->input->post('message') : '[no message]');
+
+  $post_data = array(
+      'page' => $this->input->post('page'),
+      'path' => $this->input->post('path'),
+      'content' => $this->input->post('content'),
+      'message' => $this->editor.': '.$message );
+
+if($this->input->post('versions')){
+  foreach($this->input->post('versions') as $k => $v){
+	$post_data['versions['.$k.']'] = $v;
+  }
 }
 
-$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean');
-$this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
-$this->form_validation->set_rules('Country', 'Country', 'xss_clean');
-$this->form_validation->set_rules('affiliation', 'Affiliation', 'xss_clean');
-$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password]');
+// check whether we are sending new data or requesting comparison
+  if($this->input->post('content'))
+	$url = 'http://wiki.openml.org/edit/'.$this->wikipage;
+  if($this->input->post('versions'))
+	$url = 'http://wiki.openml.org/compare/'.$this->wikipage;
 
-if ($this->form_validation->run() == true) {
+//call gollum
+  $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
 
-	$user = clean_array( $_POST, array( 'first_name', 'last_name', 'affiliation', 'country', 'bio', 'image' ) );
+//sync DB, search index
+  if($this->input->post('content')){
+	//update database - TO DO: check if there is a better way
+  	$this->Dataset->query('update study set description = "'.addslashes($this->input->post('content')).'" where id='.$this->id);
 
-	if( check_uploaded_file( $_FILES['image'] ) ) {
-		resize_image_squared($_FILES['image']['tmp_name'], $this->config->item('max_avatar_size') );
-		$file_id = $this->File->register_uploaded_file($_FILES['image'], 'userdata/', $this->ion_auth->user()->row()->id, 'userimage');
-		if($file_id) {
-			$user['image'] = $this->data_controller . 'view/' . $file_id . '/' . $_FILES['image']['name'];
-		}
-	}
+	//update index
+  	$this->elasticsearch->index('study', $this->id);
+  }
 
-	if( $this->input->post('password') != false ) {
-		$identity = $this->session->userdata($this->config->item('identity', 'ion_auth'));
-
-		$change = $this->ion_auth->change_password($identity, $this->input->post('password_old'), $this->input->post('password'));
-
-		if ($change == false) {
-			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			redirect('frontend/page/profile');
-		}
-	}
-
-
-	$update = $this->ion_auth->update($this->ion_auth->user()->row()->id,$user);
-
-	if($update) {
-		//$this->session->set_flashdata('message', $this->ion_auth->messages());
-		$this->elasticsearch->index('user', $this->ion_auth->user()->row()->id);
-		redirect('u/'.$this->ion_auth->user()->row()->id);
-	} else {
-		$this->session->set_flashdata('message', $this->ion_auth->errors());
-		redirect('frontend/page/profile');
-	}
-
-} else {
-
-	$this->session->set_flashdata('message', validation_errors() );
-	redirect('frontend/page/profile');
-
+//save successful, redirect to detail page
+  if($this->input->post('content'))
+  	header('Location: '.BASE_URL.'s/'.$this->id);
 }
 ?>

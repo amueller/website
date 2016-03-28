@@ -6,7 +6,7 @@ class Api_new extends CI_Controller {
   function __construct() {
     parent::__construct();
 
-    $this->controller = strtolower(get_class ($this));
+    $this->controller = 'api_new';
     $this->page = 'xml';
     $this->active = 'learn';
     $this->message = $this->session->flashdata('message'); // can be overridden

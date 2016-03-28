@@ -133,7 +133,7 @@ if($this->subpage == 'task') {
 
 } elseif($this->subpage == 'data') {
 
-  $session_hash = $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id );
+  $session_hash = $this->ion_auth->user()->row()->session_hash;
 
   $description = $this->dataoverview->generate_xml(
     'data_set_description',
@@ -142,13 +142,13 @@ if($this->subpage == 'task') {
 
   $post_data = array(
       'description' => $description,
-      'session_hash' => $session_hash
+      'api_key' => $session_hash
   );
   if( $_FILES['dataset']['error'] == 0 ) {
       $post_data['dataset'] = new CurlFile($_FILES['dataset']['tmp_name'], 'text/xml');
   }
 
-  $url = BASE_URL.'/api/?f=openml.data.upload';
+  $url = BASE_URL.'api/v1/data';
   // Send the request & save response to $resp
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
   if($api_response !== false) {
