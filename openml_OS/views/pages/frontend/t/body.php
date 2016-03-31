@@ -22,6 +22,17 @@
               </div>
             </div>
           <?php
+        } elseif ($this->record['task_id']=="9983"){ ?>
+            <div class="container-fluid topborder endless openmlsectioninfo">
+              <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
+
+                 <div class="tab-content">
+                  <h3><i class="fa fa-warning"></i> Temporarily hidden.</h3>
+                  <p>The results for this tasks are temporarily hidden. They will appear again soon.</p>
+                </div>
+              </div>
+            </div>
+          <?php
           } else { ?>
 
       <div class="tab-pane active" id="detail">
