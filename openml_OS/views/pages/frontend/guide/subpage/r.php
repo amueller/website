@@ -11,11 +11,46 @@
 
   <p>All in a few lines of R.</p>
 
-	<h2 id="r-download">Download</h2>
-	The openML package can be downloaded from <a href="https://github.com/openml/r"> GitHub</a>. It will also be available from CRAN in the near future.
 
-	<h2 id="r-start">Quick Start</h2>
-	In <a href="https://github.com/openml/r/blob/master/doc/knitted/1-Introduction.md" target="_blank">this tutorial</a>, we will show you the most important functions of this package and give you examples of standard use cases.
+  <h2 id="r-download">Example</h2>
+  <p>This example runs an mlr algorithm on an <a href="t/10">OpenML task</a>. The first time, you need to set your <a href="u#!api">API key</a> on your machine.</p>
+  <div class="codehighlight"><pre><code class="r">
+  library(mlr)
+  library(OpenML)
+  setOMLConfig(apikey = qwertyuiop1234567890) # Only the first time
+
+  task = getOMLTask(10)
+  lrn = makeLearner("classif.rpart")
+  res = runTaskMlr(task, lrn)
+  run.id = uploadOMLRun(res)
+  </code></pre></div>
+
+  <p>You can of course do many experiments at once:</p>
+  <div class="codehighlight"><pre><code class="r">
+  # A list of OpenML task ID's
+  task.ids = c(10,39)
+
+  # A list of MLR learners
+  learners = list(
+      makeLearner("classif.rpart"),
+      makeLearner("classif.randomForest")
+      )
+
+  # Loop
+  for (lrn in learners) {
+    for (id in task.ids) {
+      task = getOMLTask(id)
+      res = runTaskMlr(task, lrn)
+      run.id = uploadOMLRun(res)
+    }
+  }
+  </code></pre></div>
+
+	<h2 id="r-download">Download</h2>
+	The openML package can be downloaded from <a href="https://github.com/openml/openml-r"> GitHub</a>. It will also be available from CRAN in the near future.
+
+	<h2 id="r-start">Tutorial</h2>
+	See <a href="http://openml.github.io/openml-r" target="_blank">the tutorial</a> for the most important functions and examples of standard use cases.
 
 	<h2 id="r-reference">Reference</h2>
 	Full documentation on the packages is available from <a href="http://www.rdocumentation.org/packages/OpenML" target="_blank">R Documentation</a>.
