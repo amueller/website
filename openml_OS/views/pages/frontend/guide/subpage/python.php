@@ -32,7 +32,7 @@
   </code></pre></div>
 
   <p>The first time, you need to set up your config file (~/.openml/config) with your <a href="u#!api">API key</a>.
-  <pre><code class="python">
+  <div class="codehighlight"><pre><code class="python">
     apikey=FILL_IN_API_KEY
     cachedir=FILL_IN_CACHE_DIR
   </code></pre></div>
