@@ -37,6 +37,13 @@
     cachedir=FILL_IN_CACHE_DIR
   </code></pre></div>
 
+  <p>Also, for now, you'll need to install the developer version of the API</p>
+  <div class="codehighlight"><pre><code class="python">
+    git clone https://github.com/openml/openml-python.git
+    git checkout develop
+    python setup.py install
+  </code></pre></div>
+
   <h2 id="download">Download</h2>
 	The Python module can be downloaded from <a href="https://github.com/openml/openml-python">GitHub</a>.
 
