@@ -8,7 +8,8 @@ class Database_read extends CI_Model {
   function __construct() {
     parent::__construct();
     $this->load->model('Log');
-    $this->db = $this->load->database('read',true);
+    $this->load->model('Database_singleton');
+    $this->db = $this->Database_singleton->getReadConnection();
   }
 
   function get( $orderby = null ) {
