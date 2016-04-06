@@ -4,7 +4,7 @@ class Database_write extends Database_read {
   
   function __construct() {
     parent::__construct();
-    $this->db = $this->load->database('write',true);
+    $this->db = $this->Database_singleton->getWriteConnection();
   }
 
   function insert( $data ) {
