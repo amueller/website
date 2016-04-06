@@ -12,8 +12,8 @@ $this->emailField = array(
 );
 
 $this->password = array(
-	'placeholder' => 'Password',
-	'data-hint' => 'Your password needs at least 8 characters',
+	'placeholder' => 'Password (min 8 characters)',
+	'data-hint' => 'Your password needs at least 8 characters. Longer passwords are safer.',
 	'name' => 'password',
 	'id' => 'password',
 	'type' => 'password',

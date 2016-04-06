@@ -241,7 +241,10 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                     JavaScript is required to properly view the contents of this page!
                 </div>
             </noscript>
-            <?php if($this->message!==false and strlen($this->message) > 0): ?>
+            <?php if($this->input->post('warningmessage')!==false and strlen($this->input->post('warningmessage')) > 0){
+                    $this->message = $this->input->post('warningmessage');
+                  }
+                  if($this->message!==false and strlen($this->message) > 0): ?>
             <div class="alert alert-dismissible alert-warning">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 <?php echo $this->message; ?>
