@@ -8,6 +8,7 @@ class Database_read extends CI_Model {
   function __construct() {
     parent::__construct();
     $this->load->model('Log');
+    $this->load->model('Database_singleton');
     $this->db = $this->Database_singleton->getReadConnection();
   }
 
