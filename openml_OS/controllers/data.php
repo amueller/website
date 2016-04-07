@@ -36,6 +36,8 @@ class Data extends CI_Controller {
         $this->_header_download($file);
         readfile_chunked(DATA_PATH . $file->filepath);
       }
+    } else {
+      $this->_error403();
     }
   }
 
@@ -49,6 +51,8 @@ class Data extends CI_Controller {
         header('Content-Length: ' . $file->filesize);
         readfile(DATA_PATH . $file->filepath);
       }
+    } else {
+      $this->_error403();
     }
   }
 
