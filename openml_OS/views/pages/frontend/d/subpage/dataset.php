@@ -44,7 +44,27 @@
             if($this->ion_auth->user()->row()->gamification_visibility=='show'){?>
                 <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->data)): if($this->data['reach']!=null): $r = $this->data['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
                 <i class="material-icons impact" style="font-size: 13px">flare</i><span id="impact"><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
-            <?php }}?>
+            <?php }?>
+            <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->data)): if($this->data['nr_of_issues']!=null): $i = $this->data['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
+            <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->data)): if($this->data['nr_of_downvotes']!=null): $d = $this->data['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
+        <?php }?>
+    </div>
+
+    <div class="col-xs-12 panel collapse" id="issues">
+        <table class="table table-striped" id="issues_content">
+        </table>
+        <br>
+        <br>
+        <form role="form" id="issueform">
+            <h5>Submit a new issue for this dataset</h5>
+            <div class="form-group">
+              <label for="Reason">Issue:</label>
+              <input type="text" class="form-control" id="reason">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+            <div id="succes" class="text-center hidden">Issue Submitted!</div>
+            <div id="fail" class="text-center hidden">Can't submit issue </div>
+        </form>
     </div>
 
   <div class="col-xs-12 panel" onclick="showmore()">

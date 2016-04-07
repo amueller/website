@@ -17,6 +17,9 @@ class ElasticSearch {
         $this->CI->load->model('Run_tag');
         $this->CI->load->model('Algorithm_quality');
         $this->CI->load->model('Estimation_procedure');
+        
+        $this->CI->load->model('Downvote');
+        $this->CI->load->model('KnowledgePiece');
         $this->db = $this->CI->Dataset;
         $this->userdb = $this->CI->Author;
 
@@ -44,6 +47,22 @@ class ElasticSearch {
         $this->impact_metrics['x'] = 0.5;
         $this->impact_metrics['y'] = 0.5;
 
+        $this->mappings['downvote'] = array(
+            '_all' => array(
+                'enabled' => true,
+                'stored' => 'yes',
+                'type' => 'string',
+                'analyzer' => 'snowball'
+            ),
+            '_timestamp' => array('enabled' => true),
+            '_type' => array('enabled' => true),
+            'properties' => array(
+                'time' => array(
+                    'type' => 'date',
+                    'format' => 'yyyy-MM-dd HH:mm:ss')
+            )
+        );
+        
         $this->mappings['like'] = array(
             '_all' => array(
                 'enabled' => true,
@@ -429,6 +448,30 @@ class ElasticSearch {
         }
     }
 
+    public function index_downvote($id, $start_id = 0){
+        
+        $params['index'] = 'openml';
+        $params['type'] = 'downvote';
+
+        $downvotes = $this->CI->Downvote->getDownvote($id);
+
+        if ($id and ! $downvotes)
+            return 'Error: downvote ' . $id . ' is unknown';
+
+        foreach ($downvotes as $d) {
+            $params['body'][] = array(
+                'index' => array(
+                    '_id' => $d->did
+                )
+            );
+
+            $params['body'][] = $this->build_downvote($d);
+        }
+
+        $responses = $this->client->bulk($params);
+        return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downvotes) . ' downvotes.';
+    }
+    
     public function index_like($id, $start_id = 0){
 
         $params['index'] = 'openml';
@@ -451,6 +494,20 @@ class ElasticSearch {
 
         $responses = $this->client->bulk($params);
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($likes) . ' likes.';
+    }
+    
+    private function build_downvote($d){
+        $downvote = array(
+            'like_id' => $d->did,
+            'user_id' => $d->user_id,
+            'knowledge_type' => $d->knowledge_type,
+            'knowledge_id' => $d->knowledge_id,
+            'reason' => $d->description,
+            'orginal' => $d->original,
+            'time' => $d->time
+        );
+        return $downvote;
+        
     }
 
     private function build_like($l){
@@ -486,7 +543,6 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downloads) . ' downloads.';
     }
-
 
     private function build_download($d){
         $download = array(
@@ -549,208 +605,171 @@ class ElasticSearch {
             ),
             'gamification_visibility' => $d->gamification_visibility
         );
-
-        $activity = 0;
-
-        $data_up = $this->db->query('select count(did) as count from dataset where uploader=' . $d->id);
-        if ($data_up){
-            $user['datasets_uploaded'] = $data_up[0]->count;
-            $activity+=$this->activity_metrics['z']*$data_up[0]->count;
+        
+        $uploads = $this->CI->KnowledgePiece->getAllUploadsOfUser($d->id);
+        $data_up = 0;
+        $flow_up = 0;
+        $task_up = 0;
+        $run_up = 0;
+        $nr_of_uploads = 0;
+        if($uploads){
+            foreach($uploads as $up){
+                if($up->kt == 'd'){
+                    $data_up+=$up->count;
+                }else if($up->kt =='f'){
+                    $flow_up+=$up->count;
+                }else if($up->kt == 't'){
+                    $task_up+=$up->count;
+                }else if($up->kt == 'r'){
+                    $run_up+=$up->count;
+                }
+                $nr_of_uploads+=$up->count;                
+            }
+            $user['nr_of_uploads'] =$nr_of_uploads;
         }else{
-            $user['datasets_uploaded'] = 0;
+            $user['nr_of_uploads'] = 0;
         }
-
-        $flows_up = $this->db->query('select count(id) as count from implementation where uploader=' . $d->id);
-        if ($flows_up){
-            $user['flows_uploaded'] = $flows_up[0]->count;
-            $activity+=$this->activity_metrics['z']*$flows_up[0]->count;
-        }else{
-            $user['flows_uploaded'] = 0;
-        }
-
-        $runs_up = $this->db->query('select count(rid) as count from run where uploader=' . $d->id);
-        if ($runs_up){
-            $user['runs_uploaded'] = $runs_up[0]->count;
-            $activity+=$this->activity_metrics['z']*$runs_up[0]->count;
-        }else{
-            $user['runs_uploaded'] = 0;
-        }
-
-
-        $tasks_up = $this->db->query('select count(task_id) as count from task where uploader=' . $d->id);
-        if ($tasks_up){
-            $user['tasks_uploaded'] = $tasks_up[0]->count;
-            $activity+=$this->activity_metrics['z']*$tasks_up[0]->count;
-        }else{
-            $user['tasks_uploaded'] = 0;
-        }
-
-        $user['nr_of_uploads'] = $user['datasets_uploaded']+$user['flows_uploaded']+$user['runs_uploaded'];
+        $user['datasets_uploaded'] = $data_up;
+        $user['flows_uploaded'] = $flow_up;
+        $user['tasks_uploaded'] = $task_up;
+        $user['runs_uploaded'] = $run_up;
 
         $runs_data = $this->db->query('select count(rid) as count FROM run r, task_inputs t, dataset d WHERE r.task_id=t.task_id and t.input="source_data" and t.value=d.did and d.uploader=' . $d->id);
-        if ($runs_data)
+        if ($runs_data){
             $user['runs_on_datasets'] = $runs_data[0]->count;
+        }else{
+            $user['runs_on_flows'] = 0;
+        }
 
         $runs_flows = $this->db->query('select count(rid) as count FROM run r, algorithm_setup s, implementation i WHERE r.setup=s.sid and s.implementation_id=i.id and i.uploader=' . $d->id);
-        if ($runs_flows)
+        if ($runs_flows){
             $user['runs_on_flows'] = $runs_flows[0]->count;
+        }else{
+            $user['runs_on_flows'] = 0;
+        }
+        
+        $ld_of_user = $this->CI->KnowledgePiece->getLikesAndDownloadsOfUser($d->id);
+        $likes_of_user = 0;
+        $nr_of_likes_data = 0;
+        $nr_of_likes_flow = 0;
+        $nr_of_likes_task = 0;
+        $nr_of_likes_run = 0;
+        $downloads_of_user = 0;
+        $total_downloads = 0;
+        $nr_of_downloads_data = 0;
+        $nr_of_downloads_flow = 0;
+        $nr_of_downloads_task = 0;
+        $nr_of_downloads_run = 0;
+        if($ld_of_user){
+            foreach($ld_of_user as $ld){
+                if($ld->ldt=='l'){            
+                    if($ld->knowledge_type=='d'){
+                        $nr_of_likes_data+=$ld->count;
+                    }else if($ld->knowledge_type=='f'){
+                        $nr_of_likes_flow+=$ld->count;
+                    }else if($ld->knowledge_type=='t'){
+                        $nr_of_likes_task+=$ld->count;
+                    }else if($ld->knowledge_type=='r'){
+                        $nr_of_likes_run+=$ld->count;
+                    }
+                    $likes_of_user+=$ld->count;
+                }else if($ld->ldt=='d'){
+                    if($ld->knowledge_type=='d'){
+                        $nr_of_downloads_data+=$ld->count;
+                    }else if($ld->knowledge_type=='f'){
+                        $nr_of_downloads_flow+=$ld->count;
+                    }else if($ld->knowledge_type=='t'){
+                        $nr_of_downloads_task+=$ld->count;
+                    }else if($ld->knowledge_type=='r'){
+                        $nr_of_downloads_run+=$ld->count;
+                    }
+                    $downloads_of_user+=$ld->count;
+                    $total_downloads+=$ld->sum;
+                    
+                }
+            }
+        }
+        $user['nr_of_likes'] = $likes_of_user;
+        $user['nr_of_likes_data'] = $nr_of_likes_data;
+        $user['nr_of_likes_flow'] = $nr_of_likes_flow;
+        $user['nr_of_likes_task'] = $nr_of_likes_task;
+        $user['nr_of_likes_run'] = $nr_of_likes_run;
+        $user['nr_of_downloads'] = $downloads_of_user;
+        $user['total_downloads'] = $total_downloads;
+        $user['nr_of_downloads_data'] = $nr_of_downloads_data;
+        $user['nr_of_downloads_flow'] = $nr_of_downloads_flow;
+        $user['nr_of_downloads_task'] = $nr_of_downloads_task;
+        $user['nr_of_downloads_run'] = $nr_of_downloads_run;
+
+        $user['activity'] = ($this->activity_metrics['x'] * $user['nr_of_downloads']) + ($this->activity_metrics['y'] * $user['nr_of_likes']) + ($this->activity_metrics['z'] * $user['nr_of_uploads']);
+        
+        $ld_received = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUploadsOfUser($d->id);
+        $likes_received = 0;
+        $likes_received_data = 0;
+        $likes_received_flow = 0;
+        $likes_received_task = 0;
+        $likes_received_run = 0;
+        $downloads_received = 0;
+        $downloads_received_data = 0;
+        $downloads_received_flow = 0;
+        $downloads_received_task = 0;
+        $downloads_received_run = 0;
+        if($ld_received){
+            foreach($ld_received as $ld){
+                if($ld->ldt=='l'){
+                    if($ld->kt=='d'){
+                        $likes_received_data+=$ld->count;
+                    }else if($ld->kt=='f'){
+                        $likes_received_flow+=$ld->count;
+                    }else if($ld->kt=='t'){
+                        $likes_received_task+=$ld->count;
+                    }else if($ld->kt=='r'){
+                        $likes_received_run+=$ld->count;
+                    }
+                    $likes_received+=$ld->count;
+                }else if($ld->ldt=='d'){
+                    if($ld->kt=='d'){
+                        $downloads_received_data+=$ld->count;
+                    }else if($ld->kt=='f'){
+                        $downloads_received_flow+=$ld->count;
+                    }else if($ld->kt=='t'){
+                        $downloads_received_task+=$ld->count;
+                    }else if($ld->kt=='r'){
+                        $downloads_received_run+=$ld->count;
+                    }
+                    $downloads_received+=$ld->count;
+                }
+            }
+        }
+        $user['likes_received'] = $likes_received;
+        $user['likes_received_data'] = $likes_received_data;
+        $user['likes_received_flow'] = $likes_received_flow;
+        $user['likes_received_task'] = $likes_received_task;
+        $user['likes_received_run'] = $likes_received_run;
+        $user['downloads_received'] = $downloads_received;
+        $user['downloads_received_data'] = $downloads_received_data;
+        $user['downloads_received_flow'] = $downloads_received_flow;
+        $user['downloads_received_task'] = $downloads_received_task;
+        $user['downloads_received_run'] = $downloads_received_run; 
+        $user['reach'] = ($user['downloads_received'] * $this->reach_metrics['x']) + ($user['likes_received'] * $this->reach_metrics['y']);
 
 
-        $nr_of_likes_data = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE knowledge_type='d' AND user_id=".$d->id);
-        if($nr_of_likes_data){
-            $user['nr_of_likes_data'] = $nr_of_likes_data[0]->count;
-        }else{
-            $user['nr_of_likes_data'] = 0;
+        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUploadsOfUser($d->id);
+        $reuse_reach = 0;
+        if($ld_reuse){
+            foreach($ld_reuse as $ld){
+                if($ld->ldt=='l'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
+                }else if($ld->ldt=='d'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
+                }
+            }
         }
-        $nr_of_likes_flow = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE knowledge_type='f' AND user_id=".$d->id);
-        if($nr_of_likes_flow){
-            $user['nr_of_likes_flow'] = $nr_of_likes_flow[0]->count;
-        }else{
-            $user['nr_of_likes_flow'] = 0;
-        }
-        $nr_of_likes_task = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE knowledge_type='t' AND user_id=".$d->id);
-        if($nr_of_likes_task){
-            $user['nr_of_likes_task'] = $nr_of_likes_task[0]->count;
-        }else{
-            $user['nr_of_likes_task'] = 0;
-        }
-        $nr_of_likes_run = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `likes` WHERE knowledge_type='r' AND user_id=".$d->id);
-        if($nr_of_likes_run){
-            $user['nr_of_likes_run'] = $nr_of_likes_run[0]->count;
-        }else{
-            $user['nr_of_likes_run'] = 0;
-        }
-        $user['nr_of_likes'] = $user['nr_of_likes_data']+ $user['nr_of_likes_flow']+ $user['nr_of_likes_task']+ $user['nr_of_likes_run'];
-        $activity += ($this->activity_metrics['y'] * $user['nr_of_likes']);
-
-        $nr_of_downloads_data = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE knowledge_type='d' AND user_id=".$d->id);
-        if($nr_of_downloads_data){
-            $user['nr_of_downloads_data'] = $nr_of_downloads_data[0]->count;
-        }else{
-            $user['nr_of_downloads_data'] = 0;
-        }
-        $nr_of_downloads_flow = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE knowledge_type='f' AND user_id=".$d->id);
-        if($nr_of_downloads_flow){
-            $user['nr_of_downloads_flow'] = $nr_of_downloads_flow[0]->count;
-        }else{
-            $user['nr_of_downloads_flow'] = 0;
-        }
-        $nr_of_downloads_task = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE knowledge_type='t' AND user_id=".$d->id);
-        if($nr_of_downloads_task){
-            $user['nr_of_downloads_task'] = $nr_of_downloads_task[0]->count;
-        }else{
-            $user['nr_of_downloads_task'] = 0;
-        }
-        $nr_of_downloads_run = $this->db->query("select COUNT(DISTINCT knowledge_id, knowledge_type) as count FROM `downloads` WHERE knowledge_type='r' AND user_id=".$d->id);
-        if($nr_of_downloads_run){
-            $user['nr_of_downloads_run'] = $nr_of_downloads_run[0]->count;
-        }else{
-            $user['nr_of_downloads_run'] = 0;
-        }
-        $user['nr_of_downloads'] = $user['nr_of_downloads_data']+ $user['nr_of_downloads_flow']+ $user['nr_of_downloads_task']+ $user['nr_of_downloads_run'];
-        $activity += ($this->activity_metrics['x'] * $user['nr_of_downloads']);
-
-        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE user_id=".$d->id);
-        if($total_downloads){
-            $user['total_downloads'] = $total_downloads[0]->sum;
-        }else{
-            $user['total_downloads'] = 0;
-        }
-
-        $user['activity'] = $activity;
-
-        $reach = 0;
-        $likes_received_data = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `data` WHERE data.uploader=".$d->id." AND  likes.knowledge_id=data.did AND likes.knowledge_type='d'");
-        if($likes_received_data){
-            $user['likes_received_data'] = $likes_received_data[0]->count;
-            $reach += $likes_received_data[0]->count * $this->reach_metrics['y'];
-        }else{
-            $user['likes_received_data'] = 0;
-        }
-        $downloads_received_data = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `data` WHERE data.uploader=".$d->id." AND downloads.knowledge_id=data.did AND downloads.knowledge_type='d'");
-        if($downloads_received_data){
-            $user['downloads_received_data'] = $downloads_received_data[0]->count;
-            $reach += $downloads_received_data[0]->count * $this->reach_metrics['x'];
-        }else{
-            $user['downloads_received_data'] = 0;
-        }
-        $likes_received_flow = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `implementation` WHERE implementation.uploader=".$d->id." AND  likes.knowledge_id=implementation.id AND likes.knowledge_type='f'");
-        if($likes_received_flow){
-            $user['likes_received_flow'] = $likes_received_flow[0]->count;
-            $reach += $likes_received_flow[0]->count * $this->reach_metrics['y'];
-        }else{
-            $user['likes_received_flow'] = 0;
-        }
-        $downloads_received_flow = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `implementation` WHERE implementation.uploader=".$d->id." AND downloads.knowledge_id=implementation.id AND downloads.knowledge_type='f'");
-        if($downloads_received_flow){
-            $user['downloads_received_flow'] = $downloads_received_flow[0]->count;
-            $reach += $downloads_received_flow[0]->count * $this->reach_metrics['x'];
-        }else{
-            $user['downloads_received_flow'] = 0;
-        }
-        $likes_received_task = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `task` WHERE task.uploader=".$d->id." AND  likes.knowledge_id=task.task_id AND likes.knowledge_type='t'");
-        if($likes_received_task){
-            $user['likes_received_task'] = $likes_received_task[0]->count;
-            $reach += $likes_received_task[0]->count * $this->reach_metrics['y'];
-        }else{
-            $user['likes_received_task'] = 0;
-        }
-        $downloads_received_task = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `task` WHERE task.uploader=".$d->id." AND downloads.knowledge_id=task.task_id AND downloads.knowledge_type='t'");
-        if($downloads_received_task){
-            $user['downloads_received_task'] = $downloads_received_task[0]->count;
-            $reach += $downloads_received_task[0]->count * $this->reach_metrics['x'];
-        }else{
-            $user['downloads_received_task'] = 0;
-        }
-        $likes_received_run = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes`, `run` WHERE run.uploader=".$d->id." AND  likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
-        if($likes_received_run){
-            $user['likes_received_run'] = $likes_received_run[0]->count;
-            $reach += $likes_received_run[0]->count * $this->reach_metrics['y'];
-        }else{
-            $user['likes_received_run'] = 0;
-        }
-        $downloads_received_run = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `run` WHERE run.uploader=".$d->id." AND downloads.knowledge_id=run.rid AND downloads.knowledge_type='r'");
-        if($downloads_received_run){
-            $user['downloads_received_run'] = $downloads_received_run[0]->count;
-            $reach += $downloads_received_run[0]->count * $this->reach_metrics['x'];
-        }else{
-            $user['downloads_received_run'] = 0;
-        }
-        $user['likes_received'] = $user['likes_received_data'] + $user['likes_received_flow'] + $user['likes_received_run'];
-        $user['downloads_received'] = $user['downloads_received_data'] + $user['downloads_received_flow'] + $user['downloads_received_run'];
-        $user['reach'] = $reach;
-
-
-        $impact_reach_flow = 0;
-        $impact_reach_downloads_flow = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$d->id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
-        if($impact_reach_downloads_flow){
-            $impact_reach_flow += $impact_reach_downloads_flow[0]->count * $this->reach_metrics['x'];
-        }
-        $impact_reach_likes_flow = $this->db->query("select COUNT(DISTINCT likes.lid) as count FROM `likes`, `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$d->id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
-        if($impact_reach_likes_flow){
-            $impact_reach_flow += $impact_reach_likes_flow[0]->count * $this->reach_metrics['y'];
-        }
-        $impact_reach_downloads_data = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `task_inputs`, `data` WHERE data.uploader=".$d->id." AND task_inputs.value=data.did AND task_inputs.input='source_data' AND downloads.knowledge_id=task_inputs.task_id AND downloads.knowledge_type='t'");
-        $impact_reach_data = 0;
-        if($impact_reach_downloads_data){
-            $impact_reach_data += $impact_reach_downloads_data[0]->count * $this->reach_metrics['x'];
-        }
-        $impact_reach_likes_data = $this->db->query("select COUNT(DISTINCT likes.lid) as count FROM `likes`, `task_inputs`, `data` WHERE data.uploader=".$d->id." task_inputs.value=data.did AND task_inputs.input='source_data' AND likes.knowledge_id=task_inputs.task_id AND likes.knowledge_type='t'");
-        if($impact_reach_likes_data){
-            $impact_reach_data += $impact_reach_likes_data[0]->count * $this->reach_metrics['y'];
-        }
-        $user['reach_of_reuse'] = $impact_reach_data+$impact_reach_flow;
+        $user['reach_of_reuse'] = $reuse_reach;        
 
         $user['impact_of_reuse'] = 0;
 
         $user['impact'] = $this->impact_metrics['x']*$user['impact_of_reuse'] + $this->impact_metrics['y']*$user['reach_of_reuse'];
-
-        /*$gamification_visibility = $this->userdb->query("select gamification_visibility FROM user_preferences WHERE user_id=".$d->id);
-        if($gamification_visibility){
-            $user['gamification_visibility'] = $gamification_visibility[0]->gamification_visibility;
-        }else{
-            $user['gamification_visibility'] = 's';
-        }*/
 
         return $user;
     }
@@ -939,24 +958,59 @@ class ElasticSearch {
                 'description' => substr(implode(' ', $description), 0, 100)
             )
         );
-
+        
+        $nr_of_downvotes = 0;        
+        $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('t',$d->task_id,1);
+        if($nr_of_issues){
+            $newdata['nr_of_issues'] = count($nr_of_issues);
+            $nr_of_downvotes+=count($nr_of_issues);
+            $downvote_agrees = $this->CI->Downvote->getDownvotesByKnowledgePiece('t',$d->task_id,0);
+            if($downvote_agrees){
+                $nr_of_downvotes+=count($downvote_agrees);
+            }
+        }else{
+            $newdata['nr_of_issues'] = 0;
+        }
+        $newdata['nr_of_downvotes'] = $nr_of_downvotes;
+        
+        $ld_task = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('t',$d->task_id);
         $reach = 0;
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
-        if($nr_of_likes){
-            $newdata['nr_of_likes'] = $nr_of_likes[0]->count;
-            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
+        $nr_of_likes = 0;
+        $nr_of_downloads = 0;
+        $total_downloads = 0;
+        if($ld_task){
+            foreach($ld_task as $ld){
+                if($ld->ldt=='l'){
+                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $nr_of_likes+=$ld->count;
+                }else if($ld->ldt=='d'){
+                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $nr_of_downloads+=$ld->count;
+                    $total_downloads+=$ld->sum;
+                }
+            }
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
-        if($nr_of_downloads){
-            $newdata['nr_of_downloads'] = $nr_of_downloads[0]->count;
-            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
-        }
-        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$d->task_id." AND knowledge_type='t'");
-        if($total_downloads){
-            $newdata['total_downloads'] = $total_downloads[0]->sum;
-        }
+        $newdata['nr_of_likes'] = $nr_of_likes;
+        $newdata['nr_of_downloads'] = $nr_of_downloads;
+        $newdata['total_downloads'] = $total_downloads;
         $newdata['reach'] = $reach;
 
+        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUpload('t',$d->task_id);        
+        $reuse_reach = 0;
+        if($ld_reuse){
+            foreach($ld_reuse as $ld){
+                if($ld->ldt=='l'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
+                }else if($ld->ldt=='d'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
+                }
+            }
+        }
+        $newdata['reach_of_reuse'] = $reuse_reach;        
+
+        $newdata['impact_of_reuse'] = 0;
+        
+        $newdata['impact'] = $this->impact_metrics['x']*$newdata['impact_of_reuse'] + $this->impact_metrics['y']*$newdata['reach_of_reuse'];
         return $newdata;
     }
 
@@ -1195,22 +1249,41 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-
+        
+        $nr_of_downvotes = 0;        
+        $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,1);
+        if($nr_of_issues){
+            $new_data['nr_of_issues'] = count($nr_of_issues);
+            $nr_of_downvotes+=count($nr_of_issues);
+            $downvote_agrees = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,0);
+            if($downvote_agrees){
+                $nr_of_downvotes+=count($downvote_agrees);
+            }
+        }else{
+            $new_data['nr_of_issues'] = 0;
+        }
+        $new_data['nr_of_downvotes'] = $nr_of_downvotes;
+        
+        $ld_run = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('r',$r->rid);
         $reach = 0;
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
-        if($nr_of_likes){
-            $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
-            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
+        $nr_of_likes = 0;
+        $nr_of_downloads = 0;
+        $total_downloads = 0;
+        if($ld_run){
+            foreach($ld_run as $ld){
+                if($ld->ldt=='l'){
+                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $nr_of_likes+=$ld->count;
+                }else if($ld->ldt=='d'){
+                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $nr_of_downloads+=$ld->count;
+                    $total_downloads+=$ld->sum;
+                }
+            }
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
-        if($nr_of_downloads){
-            $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
-            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
-        }
-        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$r->rid." AND knowledge_type='r'");
-        if($total_downloads){
-            $new_data['total_downloads'] = $total_downloads[0]->sum;
-        }
+        $new_data['nr_of_likes'] = $nr_of_likes;
+        $new_data['nr_of_downloads'] = $nr_of_downloads;
+        $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
         return $new_data;
@@ -1376,36 +1449,59 @@ class ElasticSearch {
                 $new_data['parameters'][] = $par;
             }
         }
-
+        
+        $nr_of_downvotes = 0;        
+        $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('f',$d->id,1);
+        if($nr_of_issues){
+            $new_data['nr_of_issues'] = count($nr_of_issues);
+            $nr_of_downvotes+=count($nr_of_issues);
+            $downvote_agrees = $this->CI->Downvote->getDownvotesByKnowledgePiece('f',$d->id,0);
+            if($downvote_agrees){
+                $nr_of_downvotes+=count($downvote_agrees);
+            }
+        }else{
+            $new_data['nr_of_issues'] = 0;
+        }
+        $new_data['nr_of_downvotes'] = $nr_of_downvotes;
+        
+        $ld_flow = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('f',$d->id);
         $reach = 0;
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
-        if($nr_of_likes){
-            $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
-            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
+        $nr_of_likes = 0;
+        $nr_of_downloads = 0;
+        $total_downloads = 0;
+        if($ld_flow){
+            foreach($ld_flow as $ld){
+                if($ld->ldt=='l'){
+                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $nr_of_likes+=$ld->count;
+                }else if($ld->ldt=='d'){
+                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $nr_of_downloads+=$ld->count;
+                    $total_downloads+=$ld->sum;
+                }
+            }
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
-        if($nr_of_downloads){
-            $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
-            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
-        }
-        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$d->id." AND knowledge_type='f'");
-        if($total_downloads){
-            $new_data['total_downloads'] = $total_downloads[0]->sum;
-        }
+        $new_data['nr_of_likes'] = $nr_of_likes;
+        $new_data['nr_of_downloads'] = $nr_of_downloads;
+        $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
-        $impact_impact = 0;
-        $impact_reach = 0;
-        $impact_reach_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `implementation`, `run`, `algorithm_setup` WHERE algorithm_setup.implementation_id=".$d->id." AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
-        if($impact_reach_downloads){
-            $impact_reach += $impact_reach_downloads[0]->count * $this->reach_metrics['x'];
+        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUpload('f',$d->id);        
+        $reuse_reach = 0;
+        if($ld_reuse){
+            foreach($ld_reuse as $ld){
+                if($ld->ldt=='l'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
+                }else if($ld->ldt=='d'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
+                }
+            }
         }
-        $impact_reach_likes = $this->db->query("select COUNT(DISTINCT likes.lid) as count FROM `likes`, `implementation`, `run`, `algorithm_setup` WHERE algorithm_setup.implementation_id=".$d->id." AND run.setup=algorithm_setup.sid AND likes.knowledge_id=run.rid AND likes.knowledge_type='r'");
-        if($impact_reach_likes){
-            $impact_reach += $impact_reach_likes[0]->count * $this->reach_metrics['y'];
-        }
+        $new_data['reach_of_reuse'] = $reuse_reach;        
 
-        $new_data['impact'] = $this->impact_metrics['x']*$impact_impact + $this->impact_metrics['y']*$impact_reach;
+        $new_data['impact_of_reuse'] = 0;
+        
+        $new_data['impact'] = $this->impact_metrics['x']*$new_data['impact_of_reuse'] + $this->impact_metrics['y']*$new_data['reach_of_reuse'];
         return $new_data;
     }
 
@@ -1679,35 +1775,60 @@ class ElasticSearch {
                 $new_data['features'][] = $feat;
             }
         }
-
+        
+        $nr_of_downvotes = 0;        
+        $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('d',$d->did,1);
+        if($nr_of_issues){
+            $new_data['nr_of_issues'] = count($nr_of_issues);
+            $nr_of_downvotes+=count($nr_of_issues);
+            $downvote_agrees = $this->CI->Downvote->getDownvotesByKnowledgePiece('d',$d->did,0);
+            if($downvote_agrees){
+                $nr_of_downvotes+=count($downvote_agrees);
+            }
+        }else{
+            $new_data['nr_of_issues'] = 0;
+        }
+        $new_data['nr_of_downvotes'] = $nr_of_downvotes;
+        
+        
+        $ld_data = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('d',$d->did);
         $reach = 0;
-        $nr_of_likes = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `likes` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
-        if($nr_of_likes){
-            $new_data['nr_of_likes'] = $nr_of_likes[0]->count;
-            $reach += $nr_of_likes[0]->count * $this->reach_metrics['y'];
+        $nr_of_likes = 0;
+        $nr_of_downloads = 0;
+        $total_downloads = 0;
+        if($ld_data){
+            foreach($ld_data as $ld){
+                if($ld->ldt=='l'){
+                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $nr_of_likes+=$ld->count;
+                }else if($ld->ldt=='d'){
+                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $nr_of_downloads+=$ld->count;
+                    $total_downloads+=$ld->sum;
+                }
+            }
         }
-        $nr_of_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
-        if($nr_of_downloads){
-            $new_data['nr_of_downloads'] = $nr_of_downloads[0]->count;
-            $reach += $nr_of_downloads[0]->count * $this->reach_metrics['x'];
-        }
-        $total_downloads = $this->db->query("select SUM(count) as sum FROM `downloads` WHERE knowledge_id=".$d->did." AND knowledge_type='d'");
-        if($total_downloads){
-            $new_data['total_downloads'] = $total_downloads[0]->sum;
-        }
+        $new_data['nr_of_likes'] = $nr_of_likes;
+        $new_data['nr_of_downloads'] = $nr_of_downloads;
+        $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
-        $impact_impact = 0;
-        $impact_reach = 0;
-        $impact_reach_downloads = $this->db->query("select COUNT(DISTINCT user_id) as count FROM `downloads`, `task_inputs` WHERE task_inputs.value=".$d->did." AND task_inputs.input='source_data' AND downloads.knowledge_id=task_inputs.task_id AND downloads.knowledge_type='t'");
-        if($impact_reach_downloads){
-            $impact_reach += $impact_reach_downloads[0]->count * $this->reach_metrics['x'];
+        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUpload('d',$d->did);        
+        $reuse_reach = 0;
+        if($ld_reuse){
+            foreach($ld_reuse as $ld){
+                if($ld->ldt=='l'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
+                }else if($ld->ldt=='d'){
+                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
+                }
+            }
         }
-        $impact_reach_likes = $this->db->query("select COUNT(DISTINCT likes.lid) as count FROM `likes`, `task_inputs` WHERE task_inputs.value=".$d->did." AND task_inputs.input='source_data' AND likes.knowledge_id=task_inputs.task_id AND likes.knowledge_type='t'");
-        if($impact_reach_likes){
-            $impact_reach += $impact_reach_likes[0]->count * $this->reach_metrics['y'];
-        }
-        $new_data['impact'] = $this->impact_metrics['x']*$impact_impact + $this->impact_metrics['y']*$impact_reach;
+        $new_data['reach_of_reuse'] = $reuse_reach;        
+
+        $new_data['impact_of_reuse'] = 0;
+        
+        $new_data['impact'] = $this->impact_metrics['x']*$new_data['impact_of_reuse'] + $this->impact_metrics['y']*$new_data['reach_of_reuse'];
 
         return $new_data;
     }

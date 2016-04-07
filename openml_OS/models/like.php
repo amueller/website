@@ -70,7 +70,6 @@ class Like extends Database_write {
          if($to!=null){
             $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
          }
-
         return $this->Like->query($sql);
     }
     

@@ -17,17 +17,32 @@
    <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->run)): if($this->run['nr_of_downloads']!=null): $nr_d = $this->run['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
    <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
    <?php if ($this->ion_auth->logged_in()) {
-            if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {
-                ?>
+            if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                 <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
-                <!--<i class="fa fa-warning impact"></i><span id="impact"><?php if(array_key_exists('impact',$this->run)): if($this->run['impact']!=null): $i = $this->run['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>-->
-   <?php }}?>
+        <?php }?>
+            <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->run)): if($this->run['nr_of_issues']!=null): $i = $this->run['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
+            <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->run)): if($this->run['nr_of_downvotes']!=null): $d = $this->run['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
+   <?php }?>
 </div>
 
-<?php
-    //$this->elasticsearch->index('task',$this->run['run_task']['task_id']);
-    //$this->elasticsearch->index('run',0);
- ?>
+
+
+<div class="col-xs-12 panel collapse" id="issues">
+    <table class="table table-striped" id="issues_content">
+    </table>
+    <br>
+    <br>
+    <form role="form" id="issueform">
+        <h5>Submit a new issue for this run</h5>
+        <div class="form-group">
+          <label for="Reason">Issue:</label>
+          <input type="text" class="form-control" id="reason">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+        <div id="succes" class="text-center hidden">Issue Submitted!</div>
+        <div id="fail" class="text-center hidden">Can't submit issue </div>
+    </form>
+</div>
 
   <h3>Flow</h3>
   <div class="cardtable">

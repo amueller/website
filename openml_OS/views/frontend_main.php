@@ -66,6 +66,9 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
           $ch = $url[2];
           $req = array_slice($url, 2);}
         }
+        if(sizeof($url)>3){
+            $id=$url[3];
+        }
       if($ch == "")
         $ch = "home";
       $ch = explode('?',$ch)[0];
@@ -334,8 +337,13 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                 echo "'frontend/js/".$reqall."',";
               } elseif( $ch == 'api'){
                 echo "'frontend/js/api_docs',";
-              } elseif( $ch != 'backend') {?>
-              'frontend/js/<?php echo $ch;?>', <?php } ?>
+              } elseif( $ch != 'backend') {
+                if ($ch == 'u' && $id) {
+                    echo "'frontend/js/" . $ch . "/" . $id . "',";
+                } else {
+                    echo "'frontend/js/".$ch."',";
+                }
+              }?>
               'js/openmlafter.js'
             ])
 

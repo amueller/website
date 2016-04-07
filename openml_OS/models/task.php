@@ -5,7 +5,7 @@ class Task extends Database_write {
     parent::__construct();
     $this->table = 'task';
     $this->id_column = 'task_id';
-    $this->user_column = 'uploader';
+    $this->user_column = 'creator';
     
     $this->load->model('Estimation_procedure');
     $this->load->model('Task_inputs');
