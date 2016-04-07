@@ -220,24 +220,24 @@ if ($this->ion_auth->logged_in()) {?>
 $(function getLikesGiven(){
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/likes_given/u/".$this->user_id."/lastyear_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/likes_given/u/<?php echo $this->user_id;?>/lastyear_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             activity.nrdays = resultdata.getElementsByTagName('score').length;
             activity.startday = resultdata.getElementsByTagName('score')[0].getElementsByTagName('from')[0].textContent;
             activity.endday = resultdata.getElementsByTagName('score')[activity.nrdays-1].getElementsByTagName('from')[0].textContent;
             var istartday = 0;
-            if(activity.startday.split(\" \")[0]==\"Monday\"){
+            if(activity.startday.split(" ")[0]=="Monday"){
                 istartday = 6;
-            }else if(activity.startday.split(\" \")[0]==\"Tuesday\"){
+            }else if(activity.startday.split(" ")[0]=="Tuesday"){
                 istartday = 5;
-            }else if(activity.startday.split(\" \")[0]==\"Wednesday\"){
+            }else if(activity.startday.split(" ")[0]=="Wednesday"){
                 istartday = 4;
-            }else if(activity.startday.split(\" \")[0]==\"Thursday\"){
+            }else if(activity.startday.split(" ")[0]=="Thursday"){
                 istartday = 3;
-            }else if(activity.startday.split(\" \")[0]==\"Friday\"){
+            }else if(activity.startday.split(" ")[0]=="Friday"){
                 istartday = 2;
-            }else if(activity.startday.split(\" \")[0]==\"Saturday\"){
+            }else if(activity.startday.split(" ")[0]=="Saturday"){
                 istartday = 1;
             }
             for(var j=0; j<=istartday; j++){
@@ -245,7 +245,7 @@ $(function getLikesGiven(){
                     x:0,
                     y:(istartday-j),
                     value:parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent),
-                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                 });
             }
             for(var i=1; i<52; i++){
@@ -255,40 +255,40 @@ $(function getLikesGiven(){
                             x:i,
                             y:6-j,
                             value:parseInt(resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('value')[0].textContent),
-                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                         });
                     }
                 }
             }
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-            console.log(\"Gamification API failed\");
+            console.log("Gamification API failed");
     });
 });
 
 $(function getUploadsDone(){
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/uploads_done/u/".$this->user_id."/lastyear_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/uploads_done/u/<?php echo $this->user_id;?>/lastyear_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             activity.nrdays = resultdata.getElementsByTagName('score').length;
             activity.startday = resultdata.getElementsByTagName('score')[0].getElementsByTagName('from')[0].textContent;
             activity.endday = resultdata.getElementsByTagName('score')[activity.nrdays-1].getElementsByTagName('from')[0].textContent;
             var istartday = 0;
-            if(activity.startday.split(\" \")[0]==\"Monday\"){
+            if(activity.startday.split(" ")[0]=="Monday"){
                 istartday = 6;
-            }else if(activity.startday.split(\" \")[0]==\"Tuesday\"){
+            }else if(activity.startday.split(" ")[0]=="Tuesday"){
                 istartday = 5;
-            }else if(activity.startday.split(\" \")[0]==\"Wednesday\"){
+            }else if(activity.startday.split(" ")[0]=="Wednesday"){
                 istartday = 4;
-            }else if(activity.startday.split(\" \")[0]==\"Thursday\"){
+            }else if(activity.startday.split(" ")[0]=="Thursday"){
                 istartday = 3;
-            }else if(activity.startday.split(\" \")[0]==\"Friday\"){
+            }else if(activity.startday.split(" ")[0]=="Friday"){
                 istartday = 2;
-            }else if(activity.startday.split(\" \")[0]==\"Saturday\"){
+            }else if(activity.startday.split(" ")[0]=="Saturday"){
                 istartday = 1;
             }
             for(var j=0; j<=istartday; j++){
@@ -296,7 +296,7 @@ $(function getUploadsDone(){
                     x:0,
                     y:(istartday-j),
                     value:parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent),
-                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                 });
             }
             for(var i=1; i<52; i++){
@@ -306,40 +306,40 @@ $(function getUploadsDone(){
                             x:i,
                             y:6-j,
                             value:parseInt(resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('value')[0].textContent),
-                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                         });
                     }
                 }
             }
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-            console.log(\"Gamification API failed\");
+            console.log("Gamification API failed");
     });
 });
 
 $(function getDownloadsDone(){
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/downloads_done/u/".$this->user_id."/lastyear_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/downloads_done/u/<?php echo $this->user_id;?>/lastyear_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             activity.nrdays = resultdata.getElementsByTagName('score').length;
             activity.startday = resultdata.getElementsByTagName('score')[0].getElementsByTagName('from')[0].textContent;
             activity.endday = resultdata.getElementsByTagName('score')[activity.nrdays-1].getElementsByTagName('from')[0].textContent;
             var istartday = 0;
-            if(activity.startday.split(\" \")[0]==\"Monday\"){
+            if(activity.startday.split(" ")[0]=="Monday"){
                 istartday = 6;
-            }else if(activity.startday.split(\" \")[0]==\"Tuesday\"){
+            }else if(activity.startday.split(" ")[0]=="Tuesday"){
                 istartday = 5;
-            }else if(activity.startday.split(\" \")[0]==\"Wednesday\"){
+            }else if(activity.startday.split(" ")[0]=="Wednesday"){
                 istartday = 4;
-            }else if(activity.startday.split(\" \")[0]==\"Thursday\"){
+            }else if(activity.startday.split(" ")[0]=="Thursday"){
                 istartday = 3;
-            }else if(activity.startday.split(\" \")[0]==\"Friday\"){
+            }else if(activity.startday.split(" ")[0]=="Friday"){
                 istartday = 2;
-            }else if(activity.startday.split(\" \")[0]==\"Saturday\"){
+            }else if(activity.startday.split(" ")[0]=="Saturday"){
                 istartday = 1;
             }
             for(var j=0; j<=istartday; j++){
@@ -347,7 +347,7 @@ $(function getDownloadsDone(){
                     x:0,
                     y:(istartday-j),
                     value:parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent),
-                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                 });
             }
             for(var i=1; i<52; i++){
@@ -357,40 +357,40 @@ $(function getDownloadsDone(){
                             x:i,
                             y:6-j,
                             value:parseInt(resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('value')[0].textContent),
-                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                         });
                     }
                 }
             }
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-            console.log(\"Gamification API failed\");
+            console.log("Gamification API failed");
     });
 });
 
 $(function getActivity() {
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/activity/u/".$this->user_id."/lastyear_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/activity/u/<?php echo $this->user_id;?>/lastyear_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             activity.nrdays = resultdata.getElementsByTagName('score').length;
             activity.startday = resultdata.getElementsByTagName('score')[0].getElementsByTagName('from')[0].textContent;
             activity.endday = resultdata.getElementsByTagName('score')[activity.nrdays-1].getElementsByTagName('from')[0].textContent;
             var istartday = 0;
-            if(activity.startday.split(\" \")[0]==\"Monday\"){
+            if(activity.startday.split(" ")[0]=="Monday"){
                 istartday = 6;
-            }else if(activity.startday.split(\" \")[0]==\"Tuesday\"){
+            }else if(activity.startday.split(" ")[0]=="Tuesday"){
                 istartday = 5;
-            }else if(activity.startday.split(\" \")[0]==\"Wednesday\"){
+            }else if(activity.startday.split(" ")[0]=="Wednesday"){
                 istartday = 4;
-            }else if(activity.startday.split(\" \")[0]==\"Thursday\"){
+            }else if(activity.startday.split(" ")[0]=="Thursday"){
                 istartday = 3;
-            }else if(activity.startday.split(\" \")[0]==\"Friday\"){
+            }else if(activity.startday.split(" ")[0]=="Friday"){
                 istartday = 2;
-            }else if(activity.startday.split(\" \")[0]==\"Saturday\"){
+            }else if(activity.startday.split(" ")[0]=="Saturday"){
                 istartday = 1;
             }
             for(var j=0; j<=istartday; j++){
@@ -398,7 +398,7 @@ $(function getActivity() {
                     x:0,
                     y:(istartday-j),
                     value:parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent),
-                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                    name:resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                 });
             }
             for(var i=1; i<52; i++){
@@ -408,17 +408,17 @@ $(function getActivity() {
                             x:i,
                             y:6-j,
                             value:parseInt(resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('value')[0].textContent),
-                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5)
+                            name:resultdata.getElementsByTagName('score')[(i*7)+j-(6-istartday)].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5)
                         });
                     }
                 }
             }
             redrawActivityChart('Activity');
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-            console.log(\"Gamification API failed\");
+            console.log("Gamification API failed");
     });
 
 });
@@ -426,7 +426,7 @@ $(function getActivity() {
 $(function getReach() {
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/reach/u/".$this->user_id."/lastmonth_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/reach/u/<?php echo $this->user_id;?>/lastmonth_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             reach.nrdays = resultdata.getElementsByTagName('score').length;
@@ -434,14 +434,14 @@ $(function getReach() {
             reach.endday = resultdata.getElementsByTagName('score')[reach.nrdays-1].getElementsByTagName('from')[0].textContent;
             for(var j=0; j<reach.nrdays; j++){
                 reach.total.push(parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent));
-                reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5));
+                reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5));
             }
             redrawReachChart('Reach');
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-        console.log(\"Gamification API failed\");
+        console.log("Gamification API failed");
     });
 });
 
@@ -449,7 +449,7 @@ $(function getLikesReceived() {
     var totalreach = 0;
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/likes_received/u/".$this->user_id."/lastmonth_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/likes_received/u/<?php echo $this->user_id;?>/lastmonth_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             reach.nrdays = resultdata.getElementsByTagName('score').length;
@@ -457,13 +457,13 @@ $(function getLikesReceived() {
             reach.endday = resultdata.getElementsByTagName('score')[reach.nrdays-1].getElementsByTagName('from')[0].textContent;
             for(var j=0; j<reach.nrdays; j++){
                 reach.likes.push(parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent));
-                reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5));
+                reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5));
             }
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-        console.log(\"Gamification API failed\");
+        console.log("Gamification API failed");
     });
 });
 
@@ -471,7 +471,7 @@ $(function getDownloadsReceived() {
     var totalreach = 0;
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/downloads_received/u/".$this->user_id."/lastmonth_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/downloads_received/u/<?php echo $this->user_id;?>/lastmonth_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             reach.nrdays = resultdata.getElementsByTagName('score').length;
@@ -479,20 +479,20 @@ $(function getDownloadsReceived() {
             reach.endday = resultdata.getElementsByTagName('score')[reach.nrdays-1].getElementsByTagName('from')[0].textContent;
             for(var j=0; j<reach.nrdays; j++){
                 reach.downloads.push(parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent));
-                reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5));
+                reach.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5));
             }
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-        console.log(\"Gamification API failed\");
+        console.log("Gamification API failed");
     });
 });
 
 $(function getImpact() {
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/impact/u/".$this->user_id."/lastmonth_perday'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/impact/u/<?php echo $this->user_id;?>/lastmonth_perday'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('score').length>0){
             impact.nrdays = resultdata.getElementsByTagName('score').length;
@@ -500,35 +500,35 @@ $(function getImpact() {
             impact.endday = resultdata.getElementsByTagName('score')[impact.nrdays-1].getElementsByTagName('from')[0].textContent;
             for(var j=0; j<impact.nrdays; j++){
                 impact.total.push(parseInt(resultdata.getElementsByTagName('score')[j].getElementsByTagName('value')[0].textContent));
-                impact.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(\" \")[1].substring(5));
+                impact.days.push(resultdata.getElementsByTagName('score')[j].getElementsByTagName('from')[0].textContent.split(" ")[1].substring(5));
             }
             redrawImpactChart('Impact');
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-        console.log(\"Gamification API failed\");
+        console.log("Gamification API failed");
     });
 });
 
 $(function getBadges() {
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/json/gamification/badges/u/".$this->user_id."'
+        url:'<?php echo BASE_URL;?>api/v1/json/gamification/badges/u/<?php echo $this->user_id;?>'
     }).done(function(resultdata){
         if(resultdata.getElementsByTagName('badge-info').length>0){
             var info = resultdata.getElementsByTagName('badge-info');
             for(var i=0; i<info.length; i++){
                 var rank = parseInt(info[i].getElementsByTagName('acquiredrank')[0].textContent);
                 if(rank>=0){
-                    $('#badges').append('<img src=\"img/'+(info[i].getElementsByTagName('badge-image')[rank].textContent).replace(/ /g,'')+'\" style=\"width:64px;height:64px;\"> ');
+                    $('#badges').append('<img src="img/'+(info[i].getElementsByTagName('badge-image')[rank].textContent).replace(/ /g,'')+'" style="width:64px;height:64px;"> ');
                 }
             }
         }else{
-            console.log(\"Invalid gamification API result\");
+            console.log("Invalid gamification API result");
         }
     }).fail(function(resultdata){
-        console.log(\"Gamification API failed\");
+        console.log("Gamification API failed");
     });
 });
 
