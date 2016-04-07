@@ -167,10 +167,13 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             <a class="openmlsoc openmlsocicon col-xs-2 hidden-sm hidden-md hidden-lg pull-left searchicon" onclick="showsearch()"><i class="fa fa-search fa-2x"></i></a>
 
        <div class="menuicons">
-			<?php if ($this->ion_auth->logged_in()) { ?>
+			<?php if ($this->ion_auth->logged_in()) {
+        $authimg = "img/community/misc/anonymousMan.png";
+         if ($this->user){ $authimg = htmlentities( authorImage( $this->user->image ) );}
+        ?>
         <div class="nav pull-right openmlsocicons">
           <a href="#" class="dropdown-toggle openmlsoc openmlsocicon" data-toggle="dropdown" style="padding-top:12px;">
-            <img src="<?php echo htmlentities( authorImage( $this->user->image ) ); ?>" width="35" height="35" class="img-circle" alt="<?php echo $this->user->first_name . ' ' . $this->user->last_name; ?>" /></a>
+            <img src="<?php echo $authimg; ?>" width="35" height="35" class="img-circle" alt="<?php echo $this->user->first_name . ' ' . $this->user->last_name; ?>" /></a>
           <ul class="dropdown-menu">
               <li><a href="u/<?php echo $this->user->id;?>"><?php echo user_display_text(); ?></a></li>
               <li class="divider"></li>

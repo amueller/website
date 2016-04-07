@@ -1,9 +1,8 @@
   <div class="panel">
-    <?php
+      <?php
       $authimg = "img/community/misc/anonymousMan.png";
-      if ($this->author)
-        $authimg = htmlentities( authorImage( $this->author->image ) );
-    ?>
+        if ($this->author){ $authimg = htmlentities( authorImage( $this->author->image ) );}
+      ?>
      <div class="col-sm-2">
        <img src="<?php echo $authimg; ?>" width="130" height="130" class="img-circle userimage" />
      </div>

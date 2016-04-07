@@ -36,11 +36,10 @@ class Data extends CI_Controller {
         $this->_header_download($file);
         readfile_chunked(DATA_PATH . $file->filepath);
       }
-    } // else, an appropriate message is shown.
+    }
   }
 
   function view($id,$name = 'undefined') {
-    if(BASE_URL == "http://openml.org/" or BASE_URL == "http://www.openml.org/"){
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
@@ -50,10 +49,7 @@ class Data extends CI_Controller {
         header('Content-Length: ' . $file->filesize);
         readfile(DATA_PATH . $file->filepath);
       }
-    } // else, an appropriate message is shown.
-  } else {
-    echo file_get_contents(BASE_URL.'data/view/' . $id . '/image.png');
-  }
+    }
   }
 
   private function _check_rights( $file ) {
