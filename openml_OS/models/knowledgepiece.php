@@ -36,7 +36,7 @@ class KnowledgePiece extends Database_write{
     }
     
     function getAllUploadsOfUser($u_id, $from=null, $to=null){
-        $data_sql = "SELECT d.did as id, d.uploader, d.upload_date as time, 'd' as kt FROM openml_public.dataset as d WHERE d.uploader=".$u_id;
+        $data_sql = "SELECT d.did as id, d.uploader, d.upload_date as time, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id;
         $flow_sql = "SELECT f.id, f.uploader, f.uploadDate as time, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id;
         $task_sql = "SELECT t.task_id as id, t.creator as uploader, t.creation_date as time, 't' as kt FROM task as t WHERE t.creator=".$u_id;
         $run_sql = "SELECT r.rid as id, r.uploader, r.processed as time, 'r' as kt FROM run as r WHERE r.uploader=".$u_id;
@@ -59,7 +59,7 @@ class KnowledgePiece extends Database_write{
     }
     
     function getLikesOnUploadsOfUser($u_id, $from=null, $to=null){
-        $like_sql = "SELECT uploads.*,likes.user_id, likes.time FROM `likes`, (SELECT d.did as id, d.uploader, 'd' as kt FROM openml_public.dataset as d WHERE d.uploader=".$u_id."
+        $like_sql = "SELECT uploads.*,likes.user_id, likes.time FROM `likes`, (SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id."
                                                                     UNION
                                                                     SELECT f.id, f.uploader, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id."
                                                                     UNION
@@ -78,7 +78,7 @@ class KnowledgePiece extends Database_write{
     }
     
     function getDownloadsOnUploadsOfUser($u_id, $from=null, $to=null){
-        $download_sql = "SELECT uploads.*,downloads.user_id, downloads.time FROM `downloads`, (SELECT d.did as id, d.uploader, 'd' as kt FROM openml_public.dataset as d WHERE d.uploader=".$u_id."
+        $download_sql = "SELECT uploads.*,downloads.user_id, downloads.time FROM `downloads`, (SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id."
                                                                                 UNION
                                                                                 SELECT f.id, f.uploader, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id."
                                                                                 UNION
@@ -97,15 +97,15 @@ class KnowledgePiece extends Database_write{
     }
     
     function getLikesAndDownloadsOnUploadsOfUser($u_id, $from=null, $to=null){
-        $sql = "SELECT uploads.kt,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (SELECT d.did as id, d.uploader, 'd' as kt FROM openml_public.dataset as d WHERE d.uploader=".$u_id."
+        $sql = "SELECT uploads.kt,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id."
                                                                     UNION
                                                                     SELECT f.id, f.uploader, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id."
                                                                     UNION
                                                                     SELECT t.task_id as id, t.creator as uploader, 't' as kt FROM task as t WHERE t.creator=".$u_id."
                                                                     UNION
                                                                     SELECT r.rid as id, r.uploader, 'r' as kt FROM run as r WHERE r.uploader=".$u_id.") as uploads,";
-        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM openml_public.likes";
-        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM openml_public.downloads";
+        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes";
+        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads";
         $sql.="(".$like_sql." UNION ".$download_sql.") as ld WHERE ld.knowledge_id=uploads.id AND ld.knowledge_type=uploads.kt";
         if ($from != null) {
             $sql.=' AND ld.time>="' . $from . '"';
@@ -125,7 +125,7 @@ class KnowledgePiece extends Database_write{
     function getLikesAndDownloadsOnUpload($type,$id,$from=null,$to=null){
         $sql = "SELECT upload.kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (";
         if($type=='d'){
-            $sql.="SELECT d.did as id, d.uploader, 'd' as kt FROM openml_public.dataset as d WHERE d.did=".$id;
+            $sql.="SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.did=".$id;
         }else if($type=='f'){
             $sql.="SELECT f.id, f.uploader, 'f' as kt FROM implementation as f WHERE f.id=".$id;
         }else if($type=='t'){
@@ -134,8 +134,8 @@ class KnowledgePiece extends Database_write{
             $sql.="SELECT r.rid as id, r.uploader, 'r' as kt FROM run as r WHERE r.rid=".$id;
         }
         $sql.=") as upload,";
-        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM openml_public.likes";
-        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM openml_public.downloads";
+        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes";
+        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads";
         $sql.="(".$like_sql." UNION ".$download_sql.") as ld WHERE ld.knowledge_id=upload.id AND ld.knowledge_type=upload.kt";
         if ($from != null) {
             $sql.=' AND ld.time>="' . $from . '"';
@@ -152,8 +152,8 @@ class KnowledgePiece extends Database_write{
     }
     
     function getLikesAndDownloadsOfuser($u_id, $from=null, $to=null){
-        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM openml_public.likes WHERE user_id=".$u_id;
-        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM openml_public.downloads WHERE user_id=".$u_id;
+        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes WHERE user_id=".$u_id;
+        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads WHERE user_id=".$u_id;
         $sql = "SELECT ld.ldt, count(ld.user_id), sum(ld.count), DATE(ld.time) as date FROM (".$like_sql." UNION ".$download_sql.") as ld ";
         if ($from != null && $to!=null) {
             $sql .= ' WHERE ld.time>="' . $from . '"';
@@ -200,8 +200,8 @@ class KnowledgePiece extends Database_write{
         
         $sql="SELECT reuse.ot,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as reuse, (";
         
-        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM openml_public.likes";
-        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM openml_public.downloads";
+        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes";
+        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads";
         
         $sql.=$like_sql." UNION ".$download_sql.") as ld WHERE ld.knowledge_type=reuse.rt AND ld.knowledge_id=reuse.reuse_id";
         if ($from != null) {
@@ -229,8 +229,8 @@ class KnowledgePiece extends Database_write{
         }
         $sql="SELECT reuse.ot,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (".$reuse_sql.") as reuse, (";
         
-        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM openml_public.likes";
-        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM openml_public.downloads";
+        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes";
+        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads";
         
         $sql.=$like_sql." UNION ".$download_sql.") as ld WHERE ld.knowledge_type=reuse.rt AND ld.knowledge_id=reuse.reuse_id";
         if ($from != null) {
