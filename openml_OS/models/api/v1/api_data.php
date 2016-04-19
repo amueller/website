@@ -135,7 +135,9 @@ class Api_data extends Api_model {
       return;
     }
 
-    if($dataset->visibility != 'public' && $dataset->uploader != $this->user_id && !$this->ion_auth->is_admin()) {
+    if($dataset->visibility != 'public' && 
+       $dataset->uploader != $this->user_id && 
+       ($this->user_id == false || $this->ion_auth->is_admin($this->user_id))) {
       $this->returnError( 112, $this->version );
       return;
     }
