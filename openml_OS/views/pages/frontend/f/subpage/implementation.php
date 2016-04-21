@@ -4,13 +4,28 @@
 <?php if ($this->ion_auth->logged_in()) {
     if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {?>
         <li><a id="likebutton" class="loginfirst btn btn-link" onclick="doLike()" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a></li>
-<?php }}?>
-<?php if(isset($this->flow_source_url)) { ?>
-<li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-<?php } elseif(isset($this->flow_binary_url)) { ?>
-<li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+        <?php if(isset($this->flow_source_url)) { ?>
+        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+        <?php } elseif(isset($this->flow_binary_url)) { ?>
+        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+        <?php } ?>
+        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
+<?php }else{ ?>
+    <?php if(isset($this->flow_source_url)) { ?>
+    <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+    <?php } elseif(isset($this->flow_binary_url)) { ?>
+    <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+    <?php } ?>
+    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>    
+<?php }
+}else{ ?>
+    <?php if(isset($this->flow_source_url)) { ?>
+    <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+    <?php } elseif(isset($this->flow_binary_url)) { ?>
+    <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+    <?php } ?>
+    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
 <?php } ?>
-<li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
 
 <li>   <div class="version" style="margin-bottom: -17px;">
   <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">

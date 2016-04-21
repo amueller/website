@@ -24,9 +24,12 @@
                 <?php if ($this->ion_auth->logged_in()) {
                     //if ($this->ion_auth->user()->row()->id != $this->task['uploader_id']) {?>
                         <li><a id="likebutton" class="loginfirst btn btn-link" onclick="doLike()" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a><br><br></li>
-                <?php }?>
-		 <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-		 <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/?f=openml.task.get&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+                        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+                        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/?f=openml.task.get&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+                <?php } else {?>
+                    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+                    <li><a class="loginfirst btn btn-link" href="api/?f=openml.task.get&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+                <?php> } ?>
 		</ul>
 
 		<h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>

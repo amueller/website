@@ -130,11 +130,41 @@
       if ($this->ion_auth->user()->row()->gamification_visibility == 'show'  && $this->userinfo['gamification_visibility'] == 'show') {?>
 <div class="row">    
     <ul class="nav nav-pills activity">
-        <li class="col-sm-4 mainvalue active" title="Activity is: 3x uploads done + 2x likes given + downloads done"><a data-toggle="tab" onclick=redrawActivityChart("Activity")> <i class="fa fa-bolt"></i> Activity: <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity'];}else{echo 0;} ?></a></li>
-        <li class="col-sm-2 mainvalue" title="The number of uploads you have done"><a data-toggle="tab" onclick=redrawActivityChart("Uploads")><?php if(in_array('nr_of_uploads', $this->userinfo)){ echo $this->userinfo['nr_of_uploads'];}else{echo 0;} ?> <i class="fa fa-cloud-upload"></i></a></li>
-        <li class="col-sm-2 mainvalue" title="The number of likes you have done"><a data-toggle="tab" onclick=redrawActivityChart("Likes")><?php if(in_array('nr_of_likes', $this->userinfo)){ echo $this->userinfo['nr_of_likes'];}else{echo 0;} ?> <i class="fa fa-heart"></i></a></li>
-        <li class="col-sm-2 mainvalue" title="The number of things you have downloaded"><a data-toggle="tab" onclick=redrawActivityChart("Downloads")><?php if(in_array('nr_of_downloads', $this->userinfo)){ echo $this->userinfo['nr_of_downloads'];}else{echo 0;} ?> <i class="fa fa-cloud-download"></i></a></li>
-        <li class="col-sm-1 pull-right"> <a data-toggle="collapse" href="#Activity-chart"><i class="fa fa-2x fa-minus" id="activitytoggle" style="visibility: hidden"></i></a></li>
+        <li class="col-sm-4 mainvalue active" title="Activity is: 3x uploads done + 2x likes given + downloads done. 
+            Given as activty over the last year / total activity">
+            <a data-toggle="tab" onclick=redrawActivityChart("Activity")> 
+                <i class="fa fa-bolt"></i> 
+                Activity: 
+                <span id="ActivityThisYear">? /</span>
+                <span><?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity'];}else{echo 0;} ?>
+            </a>
+        </li>
+        <li class="col-sm-2 mainvalue" title="The number of uploads you have done over the last year / the total number of uploads you have done">
+            <a data-toggle="tab" onclick=redrawActivityChart("Uploads")>
+                <span id="UploadsThisYear">? /</span>
+                <span><?php if(in_array('nr_of_uploads', $this->userinfo)){ echo $this->userinfo['nr_of_uploads'];}else{echo 0;} ?> </span>
+                <i class="fa fa-cloud-upload"></i>
+            </a>
+        </li>
+        <li class="col-sm-2 mainvalue" title="The number of likes you have done over the last year / the total number of likes you have done">
+            <a data-toggle="tab" onclick=redrawActivityChart("Likes")>
+                <span id="LikesThisYear">? /</span>
+                <span><?php if(in_array('nr_of_likes', $this->userinfo)){ echo $this->userinfo['nr_of_likes'];}else{echo 0;} ?> </span>
+                <i class="fa fa-heart"></i>
+            </a>
+        </li>
+        <li class="col-sm-2 mainvalue" title="The number of things you have downloaded over the last year / the total number of things you have downloaded">
+            <a data-toggle="tab" onclick=redrawActivityChart("Downloads")>
+                <span id="DownloadsThisYear">? /</span>
+                <span><?php if(in_array('nr_of_downloads', $this->userinfo)){ echo $this->userinfo['nr_of_downloads'];}else{echo 0;} ?> </span>
+                <i class="fa fa-cloud-download"></i>
+            </a>
+        </li>
+        <li class="col-sm-1 pull-right"> 
+            <a data-toggle="collapse" href="#Activity-chart">
+                <i class="fa fa-2x fa-minus" id="activitytoggle" style="visibility: hidden"></i>
+            </a>
+        </li>
     </ul>
     <div class="col-sm-12 collapse" id="Activity-chart">
         <div id="activityplot" class="row">
@@ -144,10 +174,34 @@
 </div>
 <div class="row">
    <ul class="nav nav-pills reach">
-        <li class="col-sm-4 mainvalue active" title="Reach is: 2x likes received + downloads received"><a data-toggle="tab" onclick=redrawReachChart("Reach")> <i class="fa fa-rss"></i> Reach: <?php if(in_array('reach', $this->userinfo)){echo $this->userinfo['reach'];}else{echo 0;} ?></a></li>
-        <li class="col-sm-2 mainvalue" title="The number of likes your uploads have gotten"><a data-toggle="tab" onclick=redrawReachChart("Likes")><?php if(in_array('likes_received', $this->userinfo)){ echo $this->userinfo['likes_received'];}else{echo 0;} ?> <i class="fa fa-heart"></i></a></li>
-        <li class="col-sm-2 mainvalue" title="The number of distinct downloads of your uploads"><a data-toggle="tab" onclick=redrawReachChart("Downloads")><?php if(in_array('downloads_received', $this->userinfo)){ echo $this->userinfo['downloads_received'];}else{echo 0;} ?> <i class="fa fa-cloud-download"></i></a></li>
-        <li class="col-sm-1 pull-right"> <a data-toggle="collapse" href="#Reach-chart"><i class="fa fa-2x fa-minus" id="reachtoggle" style="visibility: hidden"></i></a></li>
+       <li class="col-sm-4 mainvalue active" title="Reach is: 2x likes received + downloads received.
+           Given as reach over the last month / total reach">
+           <a data-toggle="tab" onclick=redrawReachChart("Reach")> 
+               <i class="fa fa-rss"></i>
+               Reach: 
+               <span id="ReachThisMonth">? /</span>
+               <span><?php if(in_array('reach', $this->userinfo)){echo $this->userinfo['reach'];}else{echo 0;} ?></span>
+           </a>
+       </li>
+        <li class="col-sm-2 mainvalue" title="The number of likes your uploads have gotten over the last month / the total number of likes you have gotten">
+            <a data-toggle="tab" onclick=redrawReachChart("Likes")>
+                <span id="LikesReceivedThisMonth">? /</span>
+                <span><?php if(in_array('likes_received', $this->userinfo)){ echo $this->userinfo['likes_received'];}else{echo 0;} ?></span>
+                <i class="fa fa-heart"></i>
+            </a>
+        </li>
+        <li class="col-sm-2 mainvalue" title="The number of distinct downloads of your uploads over the last month / the total number of distinct downloads of your uploads">
+            <a data-toggle="tab" onclick=redrawReachChart("Downloads")>
+                <span id="DownloadsReceivedThisMonth">? /</span>
+                <span><?php if(in_array('downloads_received', $this->userinfo)){ echo $this->userinfo['downloads_received'];}else{echo 0;} ?></span>
+                <i class="fa fa-cloud-download"></i>
+            </a>
+        </li>
+        <li class="col-sm-1 pull-right"> 
+            <a data-toggle="collapse" href="#Reach-chart">
+                <i class="fa fa-2x fa-minus" id="reachtoggle" style="visibility: hidden"></i>
+            </a>
+        </li>
     </ul>
     <div class="col-sm-12 collapse" id="Reach-chart">
         <div id="reachplot" class="row">
@@ -156,11 +210,23 @@
     </div>
 </div>
 <div class="row">
-    <ul class="nav nav-pills impact" title="Impact is: 0.5*reach of reuse of knowledge">
-        <li class="col-sm-4 mainvalue active"><a data-toggle="tab" onclick=redrawImpactChart("Impact")> <i class="material-icons" style="font-size: 28px">flare</i> Impact: <?php if(in_array('likes_received', $this->userinfo)){echo $this->userinfo['impact'];}else{echo 0;} ?></a></li>
+    <ul class="nav nav-pills impact" title="Impact is: 0.5*reach of reuse of knowledge.
+        Given as your impact over the last month / your total impact">
+        <li class="col-sm-4 mainvalue active">
+            <a data-toggle="tab" onclick=redrawImpactChart("Impact")> 
+                <i class="material-icons" style="font-size: 28px">flare</i>
+                Impact: 
+                <span id="ImpactThisMonth">?/</span>
+                <span><?php if(in_array('impact', $this->userinfo)){echo $this->userinfo['impact'];}else{echo 0;} ?></span>
+            </a>
+        </li>
         <!--<li class="mainvalue"><a data-toggle="tab" onclick=redrawImpactChart("Reach_re")><?php/* if(in_array('reach_of_reuse', $this->userinfo)){echo $this->userinfo['reach_of_reuse'];}else{echo 0;} */?> <i class="fa fa-rss"></i></a></li>-->
         <!--<li class="mainvalue"><a data-toggle="tab" onclick=redrawImpactChart("Impact_re")><?php/* if(in_array('impact_of_reuse', $this->userinfo)){echo $this->userinfo['impact_of_reuse'];}else{echo 0;} */?> <i class="material-icons" style="font-size: 28px">flare</i></i></a></li>-->
-        <li class="col-sm-1 pull-right"> <a data-toggle="collapse" href="#Impact-chart"><i class="fa fa-2x fa-minus" id="impacttoggle" style="visibility: hidden"></i></a></li>
+        <li class="col-sm-1 pull-right"> 
+            <a data-toggle="collapse" href="#Impact-chart">
+                <i class="fa fa-2x fa-minus" id="impacttoggle" style="visibility: hidden"></i>
+            </a>
+        </li>
     </ul>
     <div class="col-sm-12 collapse" id="Impact-chart">
         <div id="impactplot" class="row">

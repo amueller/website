@@ -163,7 +163,7 @@ class KnowledgePiece extends Database_write{
     function getNumberOfLikesAndDownloadsOfuser($u_id, $from=null, $to=null){
         $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes WHERE user_id=".$u_id;
         $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads WHERE user_id=".$u_id;
-        $sql = "SELECT ld.ldt, count(ld.user_id), sum(ld.count), DATE(ld.time) as date FROM (".$like_sql." UNION ".$download_sql.") as ld ";
+        $sql = "SELECT ld.ldt, count(ld.user_id) as count, sum(ld.count) as sum, DATE(ld.time) as date FROM (".$like_sql." UNION ".$download_sql.") as ld ";
         if ($from != null && $to!=null) {
             $sql .= ' WHERE ld.time>="' . $from . '"';
             $sql .= ' AND ld.time<"' . $to . '"';
@@ -177,7 +177,6 @@ class KnowledgePiece extends Database_write{
         }else{            
             $sql.=" GROUP BY ld.ldt;";
         }
-        
         return $this->KnowledgePiece->query($sql);        
     }
     
@@ -185,7 +184,7 @@ class KnowledgePiece extends Database_write{
         $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt, task.creation_date as time FROM  task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
         $flowreuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
         $taskreuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id  AND run.uploader<>task.creator";
-        $sql="SELECT reuse.ot, count(reuse.reuse_id), DATE(reuse.time) as date FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as reuse";
+        $sql="SELECT reuse.ot, count(reuse.reuse_id) as count, DATE(reuse.time) as date FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as reuse";
         if ($from != null && $to!=null) {
             $sql .= ' WHERE reuse.time>="' . $from . '"';
             $sql .= ' AND reuse.time<"' . $to . '"';
