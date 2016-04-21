@@ -1757,11 +1757,12 @@ hr.hardSmall {
     }
 
 .datainfo {
-  color: #999;
+  color: #999 !important;
   padding-top: 3px;
   padding-bottom: 40px;
   font-size: 10pt;
   clear: both;
+  font-weight: normal !important;
 }
 
 .datainfo i{

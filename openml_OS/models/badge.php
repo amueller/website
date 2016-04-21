@@ -23,6 +23,12 @@ class Badge extends Database_write {
     }
     
     
+    public function getBadge($id){
+        $sql = "SELECT * FROM ".$this->table." WHERE ".$this->id_column." = ".$id;
+        
+        return $this->query($sql);
+    }
+    
     public function award($u_id, $r, $b_id){
         $rankdata = $this->getAwardedRank($u_id, $b_id);
         if(is_numeric($rankdata)){
@@ -56,4 +62,11 @@ class Badge extends Database_write {
             return false;
         }
     }
+
+    public function getBadgesOfUser($u_id){
+         $sql = "SELECT * FROM ".$this->table." WHERE ".$this->user_id_column." = ".$u_id;
+        
+        return $this->query($sql);
+    }
+    
 }

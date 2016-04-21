@@ -35,7 +35,16 @@ class KnowledgePiece extends Database_write{
         }
     }
     
-    function getAllUploadsOfUser($u_id, $from=null, $to=null){
+    function listAllUploadsOfUser($u_id){
+       $data_sql = "SELECT d.did as id, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id;
+        $flow_sql = "SELECT f.id, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id;
+        $task_sql = "SELECT t.task_id as id, 't' as kt FROM task as t WHERE t.creator=".$u_id;
+        $run_sql = "SELECT r.rid as id, 'r' as kt FROM run as r WHERE r.uploader=".$u_id;
+        
+        return $this->KnowledgePiece->query($data_sql." UNION ".$flow_sql." UNION ".$task_sql." UNION ".$run_sql);
+    }
+    
+    function getNumberOfUploadsOfUser($u_id, $from=null, $to=null){
         $data_sql = "SELECT d.did as id, d.uploader, d.upload_date as time, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id;
         $flow_sql = "SELECT f.id, f.uploader, f.uploadDate as time, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id;
         $task_sql = "SELECT t.task_id as id, t.creator as uploader, t.creation_date as time, 't' as kt FROM task as t WHERE t.creator=".$u_id;
@@ -96,7 +105,7 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($download_sql);
     }
     
-    function getLikesAndDownloadsOnUploadsOfUser($u_id, $from=null, $to=null){
+    function getNumberOfLikesAndDownloadsOnUploadsOfUser($u_id, $from=null, $to=null){
         $sql = "SELECT uploads.kt,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id."
                                                                     UNION
                                                                     SELECT f.id, f.uploader, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id."
@@ -122,7 +131,7 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($sql);
     }
     
-    function getLikesAndDownloadsOnUpload($type,$id,$from=null,$to=null){
+    function getNumberOfLikesAndDownloadsOnUpload($type,$id,$from=null,$to=null){
         $sql = "SELECT upload.kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (";
         if($type=='d'){
             $sql.="SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.did=".$id;
@@ -151,7 +160,7 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($sql);        
     }
     
-    function getLikesAndDownloadsOfuser($u_id, $from=null, $to=null){
+    function getNumberOfLikesAndDownloadsOfuser($u_id, $from=null, $to=null){
         $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes WHERE user_id=".$u_id;
         $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads WHERE user_id=".$u_id;
         $sql = "SELECT ld.ldt, count(ld.user_id), sum(ld.count), DATE(ld.time) as date FROM (".$like_sql." UNION ".$download_sql.") as ld ";
@@ -172,10 +181,10 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($sql);        
     }
     
-    function getReuseOfUploadsOfUser($u_id,$from=null,$to=null){
-        $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt, task.creation_date as time FROM  task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id";
-        $flowreuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid";
-        $taskreuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id";
+    function getNumberOfReusesOfUploadsOfUser($u_id,$from=null,$to=null){
+        $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt, task.creation_date as time FROM  task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
+        $flowreuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
+        $taskreuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id  AND run.uploader<>task.creator";
         $sql="SELECT reuse.ot, count(reuse.reuse_id), DATE(reuse.time) as date FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as reuse";
         if ($from != null && $to!=null) {
             $sql .= ' WHERE reuse.time>="' . $from . '"';
@@ -193,10 +202,10 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($sql);
     }
     
-    function getLikesAndDownloadsOnReuseOfUploadsOfUser($u_id,$from=null,$to=null){
-        $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt FROM  `task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id";
-        $flowreuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid";
-        $taskreuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id";
+    function getNumberOfLikesAndDownloadsOnReuseOfUploadsOfUser($u_id,$from=null,$to=null){
+        $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt FROM  `task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
+        $flowreuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
+        $taskreuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id AND run.uploader<>task.creator";
         
         $sql="SELECT reuse.ot,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as reuse, (";
         
@@ -219,13 +228,13 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($sql);        
     }
     
-    function getLikesAndDownloadsOnReuseOfUpload($type,$id,$from=null,$to=null){
+    function getNumberOfLikesAndDownloadsOnReuseOfUpload($type,$id,$from=null,$to=null){
         if($type=='d'){
-            $reuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt FROM  `task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id";
+            $reuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt FROM  `task`, `task_inputs`, `dataset` WHERE dataset.did=".$id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND task.creator<>dataset.uploader";
         }else if($type=='f'){
-            $reuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid";
+            $reuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.id=".$id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
         }else /*if($type=='t')*/{
-            $reuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt FROM `task`, `run` WHERE task.creator=".$id." AND run.task_id=task.task_id";
+            $reuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt FROM `task`, `run` WHERE task.task_id=".$id." AND run.task_id=task.task_id AND task.creator<>run.uploader";
         }
         $sql="SELECT reuse.ot,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (".$reuse_sql.") as reuse, (";
         
@@ -248,6 +257,15 @@ class KnowledgePiece extends Database_write{
         return $this->KnowledgePiece->query($sql);        
     }
     
+    function getUploadersOfReusesOfUploadsOfUser($u_id){
+        $datareuse_sql = "SELECT task.creator as uploader FROM `task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id";
+        $flowreuse_sql = "SELECT run.uploader FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid";
+        $taskreuse_sql = "SELECT run.uploader FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id";
+        
+        $sql = "SELECT DISTINCT(u.uploader) FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as u WHERE u.uploader<>".$u_id." AND u.uploader IS NOT NULL;";
+                
+        return $this->KnowledgePiece->query($sql);        
+    }
     
 }
 

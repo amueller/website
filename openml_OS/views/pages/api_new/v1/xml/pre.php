@@ -819,5 +819,14 @@ $this->apiErrors[821][1] = "Can not delete someone else's download";
 $this->apiErrors[822][0] = 'Unauthorized vote';
 $this->apiErrors[822][1] = "Can not download own uploads";
 
+//openml.gamification
+$this->apiErrors[901][0] = 'Can not complete gamification request';
+$this->apiErrors[901][1] = 'No such user';
 
+$this->apiErrors[902][0] = 'Unauthorized gamification request';
+$this->apiErrors[902][1] = 'User has hidden his/her gamification scores and badges';
+
+//openml.gamification.activity
+$this->apiErrors[903][0] = 'Invalid type';
+$this->apiErrors[903][1] = 'Activity requests can only be done for users';
 ?>

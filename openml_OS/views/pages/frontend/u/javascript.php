@@ -32,8 +32,6 @@ var impact = {
 
 function redrawImpactChart(type){
     $("#Impact-chart").collapse('show');
-    $("#impacttoggle").show();
-    $("#impacttoggle").removeClass("fa-chevron-down").addClass("fa-chevron-up");
     var values = [];
     if(type=="Impact"){
         values = impact.total;
@@ -76,13 +74,13 @@ function redrawImpactChart(type){
                 }]
         };
         $("#impactplot").highcharts(chartOptions);
+        $("#impacttoggle").css('visibility', 'visible');
+        $("#impacttoggle").removeClass("fa-plus").addClass("fa-minus");
     }
 }
 
 function redrawReachChart(type){
     $("#Reach-chart").collapse('show');
-    $("#reachtoggle").show();
-    $("#reachtoggle").removeClass("fa-chevron-down").addClass("fa-chevron-up");
     var values = [];
     if(type=="Reach"){
         values = reach.total;
@@ -123,13 +121,13 @@ function redrawReachChart(type){
                 }]
         };
         $("#reachplot").highcharts(chartOptions);
+        $("#reachtoggle").css('visibility', 'visible');
+        $("#reachtoggle").removeClass("fa-plus").addClass("fa-minus");
     }
 }
 
 function redrawActivityChart(type) {
     $("#Activity-chart").collapse('show');
-    $("#activitytoggle").show();
-    $("#activitytoggle").removeClass("fa-chevron-down").addClass("fa-chevron-up");
     var values = [];
     if(type=="Activity"){
         values = activity.total;
@@ -199,20 +197,33 @@ function redrawActivityChart(type) {
             }]
         };
         $("#activityplot").highcharts(chartOptions);
-
+        $("#activitytoggle").css('visibility', 'visible');
+        $("#activitytoggle").removeClass("fa-plus").addClass("fa-minus");
     }
 }
 
 $('#activitytoggle').click(function(){
-  $("#activitytoggle").toggleClass("fa-chevron-down fa-chevron-up");
+    if($('#Activity-chart').hasClass("in")){
+        $("#activitytoggle").removeClass("fa-minus").addClass("fa-plus");
+    }else if($('#Activity-chart').hasClass("collapse")){
+        $("#activitytoggle").removeClass("fa-plus").addClass("fa-minus");
+    }
 });
 
 $('#reachtoggle').click(function(){
-  $("#reachtoggle").toggleClass("fa-chevron-down fa-chevron-up");
+    if($('#Reach-chart').hasClass("in")){
+        $("#reachtoggle").removeClass("fa-minus").addClass("fa-plus");
+    }else if($('#Reach-chart').hasClass("collapse")){
+        $("#reachtoggle").removeClass("fa-plus").addClass("fa-minus");
+    }
 });
 
 $('#impacttoggle').click(function(){
-  $("#impacttoggle").toggleClass("fa-chevron-down fa-chevron-up");
+    if($('#Impact-chart').hasClass("in")){
+        $("#impacttoggle").removeClass("fa-minus").addClass("fa-plus");
+    }else if($('#Reach-chart').hasClass("collapse")){
+        $("#impacttoggle").removeClass("fa-plus").addClass("fa-minus");
+    }
 });
 
 <?php
@@ -383,26 +394,25 @@ $(function getImpact() {
     });
 });
 
-/*$(function getBadges() {
+$(function getBadges() {
     $.ajax({
         method:'GET',
-        url:'".BASE_URL."api_new/v1/xml/gamification/badges/u/".$this->user_id."'
+        url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/list/<?php echo $this->user_id; ?>'
     }).done(function(resultdata){
-        if(resultdata.getElementsByTagName('badge-info').length>0){
-            var info = resultdata.getElementsByTagName('badge-info');
-            for(var i=0; i<info.length; i++){
-                var rank = parseInt(info[i].getElementsByTagName('acquiredrank')[0].textContent);
-                if(rank>=0){
-                    $('#badges').append('<img src="img/'+(info[i].getElementsByTagName('badge-image')[rank].textContent).replace(/ /g,'')+'" style="width:64px;height:64px;"> ');
-                }
-            }
-        }else{
-            console.log("Invalid gamification API result");
-        }
+        $.each(resultdata['badges']['badge'], function(i,item){
+            $('#badges').append('<div class="col-sm-3">'+
+                                    '<img src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;">'+
+                                    '<br>'+
+                                    '<h3 style="padding-top:5px">'+item['name']+'</h3>'+
+                                    '<b>Current rank:</b>'+item['description_current']+
+                                    '<br>'+
+                                    '<b>Next rank:</b>'+item['description_next']+
+                                '</div>');
+        });
     }).fail(function(resultdata){
         console.log("Gamification API failed");
     });
-});*/
+});
 
 
 $('#keyupgrade').submit(function() {

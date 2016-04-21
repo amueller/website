@@ -20,6 +20,7 @@ class ElasticSearch {
         
         $this->CI->load->model('Downvote');
         $this->CI->load->model('KnowledgePiece');
+        $this->CI->load->model('Badge');
         $this->db = $this->CI->Dataset;
         $this->userdb = $this->CI->Author;
 
@@ -47,6 +48,22 @@ class ElasticSearch {
         $this->impact_metrics['x'] = 0.5;
         $this->impact_metrics['y'] = 0.5;
 
+        $this->mappings['badge'] = array(
+            '_all' => array(
+                'enabled' => true,
+                'stored' => 'yes',
+                'type' => 'string',
+                'analyzer' => 'snowball'
+            ),
+            '_timestamp' => array('enabled' => true),
+            '_type' => array('enabled' => true),
+            'properties' => array(
+                'time' => array(
+                    'type' => 'date',
+                    'format' => 'yyyy-MM-dd HH:mm:ss')
+            )
+        );
+        
         $this->mappings['downvote'] = array(
             '_all' => array(
                 'enabled' => true,
@@ -606,7 +623,7 @@ class ElasticSearch {
             'gamification_visibility' => $d->gamification_visibility
         );
         
-        $uploads = $this->CI->KnowledgePiece->getAllUploadsOfUser($d->id);
+        $uploads = $this->CI->KnowledgePiece->getNumberOfUploadsOfUser($d->id);
         $data_up = 0;
         $flow_up = 0;
         $task_up = 0;
@@ -648,7 +665,7 @@ class ElasticSearch {
             $user['runs_on_flows'] = 0;
         }
         
-        $ld_of_user = $this->CI->KnowledgePiece->getLikesAndDownloadsOfUser($d->id);
+        $ld_of_user = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOfuser($d->id);
         $likes_of_user = 0;
         $nr_of_likes_data = 0;
         $nr_of_likes_flow = 0;
@@ -703,7 +720,7 @@ class ElasticSearch {
 
         $user['activity'] = ($this->activity_metrics['x'] * $user['nr_of_downloads']) + ($this->activity_metrics['y'] * $user['nr_of_likes']) + ($this->activity_metrics['z'] * $user['nr_of_uploads']);
         
-        $ld_received = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUploadsOfUser($d->id);
+        $ld_received = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($d->id);
         $likes_received = 0;
         $likes_received_data = 0;
         $likes_received_flow = 0;
@@ -754,7 +771,7 @@ class ElasticSearch {
         $user['reach'] = ($user['downloads_received'] * $this->reach_metrics['x']) + ($user['likes_received'] * $this->reach_metrics['y']);
 
 
-        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUploadsOfUser($d->id);
+        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUploadsOfUser($d->id);
         $reuse_reach = 0;
         if($ld_reuse){
             foreach($ld_reuse as $ld){
@@ -770,6 +787,15 @@ class ElasticSearch {
         $user['impact_of_reuse'] = 0;
 
         $user['impact'] = $this->impact_metrics['x']*$user['impact_of_reuse'] + $this->impact_metrics['y']*$user['reach_of_reuse'];
+        
+        $user['badges'] = array();
+        $badges = $this->CI->Badge->getBadgesOfUser($d->id);
+        if($badges){
+            foreach($badges as $b){
+                $badge = array('badge_id'=>$b->badge_id,'rank'=>$b->rank);
+                $user['badges'][] = $badge;
+            }            
+        }        
 
         return $user;
     }
@@ -973,7 +999,7 @@ class ElasticSearch {
         }
         $newdata['nr_of_downvotes'] = $nr_of_downvotes;
         
-        $ld_task = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('t',$d->task_id);
+        $ld_task = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('t',$d->task_id);
         $reach = 0;
         $nr_of_likes = 0;
         $nr_of_downloads = 0;
@@ -995,7 +1021,7 @@ class ElasticSearch {
         $newdata['total_downloads'] = $total_downloads;
         $newdata['reach'] = $reach;
 
-        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUpload('t',$d->task_id);        
+        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload('t',$d->task_id);        
         $reuse_reach = 0;
         if($ld_reuse){
             foreach($ld_reuse as $ld){
@@ -1264,7 +1290,7 @@ class ElasticSearch {
         }
         $new_data['nr_of_downvotes'] = $nr_of_downvotes;
         
-        $ld_run = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('r',$r->rid);
+        $ld_run = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('r',$r->rid);
         $reach = 0;
         $nr_of_likes = 0;
         $nr_of_downloads = 0;
@@ -1464,7 +1490,7 @@ class ElasticSearch {
         }
         $new_data['nr_of_downvotes'] = $nr_of_downvotes;
         
-        $ld_flow = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('f',$d->id);
+        $ld_flow = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('f',$d->id);
         $reach = 0;
         $nr_of_likes = 0;
         $nr_of_downloads = 0;
@@ -1486,7 +1512,7 @@ class ElasticSearch {
         $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
-        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUpload('f',$d->id);        
+        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload('f',$d->id);        
         $reuse_reach = 0;
         if($ld_reuse){
             foreach($ld_reuse as $ld){
@@ -1791,7 +1817,7 @@ class ElasticSearch {
         $new_data['nr_of_downvotes'] = $nr_of_downvotes;
         
         
-        $ld_data = $this->CI->KnowledgePiece->getLikesAndDownloadsOnUpload('d',$d->did);
+        $ld_data = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('d',$d->did);
         $reach = 0;
         $nr_of_likes = 0;
         $nr_of_downloads = 0;
@@ -1813,7 +1839,7 @@ class ElasticSearch {
         $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
-        $ld_reuse = $this->CI->KnowledgePiece->getLikesAndDownloadsOnReuseOfUpload('d',$d->did);        
+        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload('d',$d->did);        
         $reuse_reach = 0;
         if($ld_reuse){
             foreach($ld_reuse as $ld){
