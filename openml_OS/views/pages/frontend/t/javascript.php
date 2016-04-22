@@ -519,34 +519,15 @@ $(document).ready(function() {
 }
 ?>
 
-var isliked = false;
+var isliked;
 var reason_id = -1;
 var maxreason = -1;
 getDownvotes();
 <?php if ($this->ion_auth->logged_in()) {
     //if ($this->ion_auth->user()->row()->id != $this->task['uploader_id']) {?>        
-$.ajax({
-    method:'GET',
-    url:'<?php echo BASE_URL?>api_new/v1/xml/votes/up/<?php echo $this->ion_auth->user()->row()->id ?>/t/<?php echo $this->id ?>'
-    }).done(function(resultdata){
-        if(resultdata.getElementsByTagName('value').length>0){
-            if(Boolean(resultdata.getElementsByTagName('value')[0].textContent)){
-                isliked = true;
-                $('#likeicon').removeClass("fa-heart-o").addClass("fa-heart");
-                $('#likebutton').prop('title', 'Click to unlike');
-            } else{
-                isliked = false;
-                $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
-                $('#likebutton').prop('title', 'Click to like');
-            }
-        }
-    }).fail(function(resultdata){
-        isliked = false;
-        $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
-        $('#likebutton').prop('title', 'Click to like');
-});
 
-function doLike(){
+function doLike(liked){
+    isliked = liked;
     if(isliked){
         meth = 'DELETE';
     }else{
@@ -624,6 +605,7 @@ function flipLikeHTML(){
         isliked = false;
         $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
         $('#likebutton').prop('title', 'Click to like');
+        $('#likebutton').attr('onclick', 'doLike(false)');
         var likecounthtml = $('#likecount').html();
         var nrlikes = parseInt(likecounthtml.split(" ")[0]);
         nrlikes = nrlikes-1;
@@ -636,6 +618,7 @@ function flipLikeHTML(){
         isliked = true;
         $('#likeicon').removeClass("fa-heart-o").addClass("fa-heart");
         $('#likebutton').prop('title', 'Click to unlike');
+        $('#likebutton').attr('onclick', 'doLike(true)');
         var likecounthtml = $('#likecount').html();
         var nrlikes = parseInt(likecounthtml.split(" ")[0]);
         nrlikes = nrlikes+1;

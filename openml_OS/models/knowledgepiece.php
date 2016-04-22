@@ -163,17 +163,17 @@ class KnowledgePiece extends Database_write{
     function getNumberOfLikesAndDownloadsOfuser($u_id, $from=null, $to=null){
         $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes WHERE user_id=".$u_id;
         $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads WHERE user_id=".$u_id;
-        $sql = "SELECT ld.ldt, count(ld.user_id) as count, sum(ld.count) as sum, DATE(ld.time) as date FROM (".$like_sql." UNION ".$download_sql.") as ld ";
+        $sql = "SELECT ld.ldt, ld.knowledge_type, count(ld.user_id) as count, sum(ld.count) as sum, DATE(ld.time) as date FROM (".$like_sql." UNION ".$download_sql.") as ld ";
         if ($from != null && $to!=null) {
             $sql .= ' WHERE ld.time>="' . $from . '"';
             $sql .= ' AND ld.time<"' . $to . '"';
-            $sql.=" GROUP BY ld.ldt, DATE(ld.time) ORDER BY date;";
+            $sql.=" GROUP BY ld.ldt, ld.knowledge_type, DATE(ld.time) ORDER BY date;";
         }else if ($to != null) {
             $sql .= ' WHERE ld.time<"' . $to . '"';
-            $sql.=" GROUP BY ld.ldt, DATE(ld.time) ORDER BY date;";
+            $sql.=" GROUP BY ld.ldt, ld.knowledge_type, DATE(ld.time) ORDER BY date;";
         }else if($from!=null){
             $sql .= ' WHERE ld.time>="' . $from . '"'; 
-            $sql.=" GROUP BY ld.ldt, DATE(ld.time) ORDER BY date;";           
+            $sql.=" GROUP BY ld.ldt, ld.knowledge_type, DATE(ld.time) ORDER BY date;";
         }else{            
             $sql.=" GROUP BY ld.ldt;";
         }

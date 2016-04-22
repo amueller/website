@@ -61,8 +61,28 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	$this->p['index'] = 'openml';
 	$this->p['type'] = 'flow';
 	$this->p['id'] = $this->id;
+        if ($this->ion_auth->logged_in()) {
+            $this->l = array();
+            $this->l['index'] = 'openml';
+            $this->l['type'] = 'like';
+            $json = '{
+                        "query": {
+                          "bool": {
+                            "must": [
+                              { "match": { "knowledge_type":  "f" }},
+                              { "match": { "knowledge_id": '.$this->id.'   }},
+                              { "match": { "user_id": '.$this->ion_auth->user()->row()->id.'}}
+                            ]
+                          }
+                        }
+                      }';
+            $this->l['body'] = $json;
+        }
 	try{
 		$this->flow = $this->searchclient->get($this->p)['_source'];
+                if ($this->ion_auth->logged_in()) {
+                  $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
+                }
 	} catch (Exception $e) {}
 
   if(isset($this->flow)){
