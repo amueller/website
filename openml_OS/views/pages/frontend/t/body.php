@@ -22,7 +22,7 @@
               </div>
             </div>
           <?php
-        } elseif ($this->record['task_id']=="9983"){ ?>
+        } elseif ($this->record['task_id']=="0"){ ?>
             <div class="container-fluid topborder endless openmlsectioninfo">
               <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 
