@@ -99,7 +99,7 @@ class Api_votes extends Api_model {
     
     private function down_of_piece($knowledge_type, $knowledge_id){
         $dvotes_res = $this->Downvote->getDownvotesByKnowledgePiece($knowledge_type, $knowledge_id);
-        if (is_array($dvotes_res) == false) {
+        if (is_array($dvotes_res) == false) { //fix dit
             $this->returnError(702, $this->version);
             return;
         }
