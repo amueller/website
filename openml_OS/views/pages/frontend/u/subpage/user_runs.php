@@ -7,5 +7,6 @@
       $this->sort = 'date';
       $this->specialterms = 'uploader_id:'.$this->user_id;
       loadpage('search', true, 'pre');
+      $this->dataonly = true;
       loadpage('search/subpage', true, 'results'); ?>
     </div>
