@@ -968,9 +968,10 @@ $(function(){$('#folds_<?php echo $r['evaluation_measure']; ?>').highcharts({
 var isliked;
 var reason_id = -1;
 var maxreason = -1;
-getDownvotes();
 <?php if ($this->ion_auth->logged_in()) {
     if ($this->ion_auth->user()->row()->id != $this->run['uploader_id']) {?>
+
+getYourDownvote();
 
 function doLike(liked){
     isliked = liked;
@@ -1121,9 +1122,13 @@ function getDownvotes(){
     }).fail(function(resultdata){
         $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");        
     });
+    getYourDownvote();
+}
+
+function getYourDownvote(){
     $.ajax({
         method:'GET',
-        url: '<?php echo BASE_URL?>api_new/v1/xml/votes/down/<?php echo $this->ion_auth->user()->row()->id ?>/r/<?php echo $this->id ?>'
+        url: '<?php echo BASE_URL; ?>api_new/v1/xml/votes/down/<?php echo $this->ion_auth->user()->row()->id; ?>/r/<?php echo $this->id; ?>'
     }).done(function(resultdata){
         reason_id = resultdata.getElementsByTagName('value')[0].textContent;
         if(reason_id!=-1){

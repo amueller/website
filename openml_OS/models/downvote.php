@@ -30,7 +30,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -57,7 +57,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -84,7 +84,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -112,7 +112,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -151,7 +151,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -179,7 +179,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -208,7 +208,7 @@ class Downvote extends Database_write {
             foreach($ds as $d){
                 if($d->{$this->original_column}){
                     //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
-                    $agrees = getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -244,7 +244,7 @@ class Downvote extends Database_write {
 
             $this->Downvote->query($sql);
             
-            return $this->insertByIds($u_id, $k_type, $k_id,$this->Downvote->getHighestIndex(array($this->reason_table),$this->reason_id_column),true);
+            return $this->insertByIds($u_id, $k_type, $k_id,$this->Downvote->getHighestIndex(array($this->reason_table),$this->reason_id_column)-1,true);
         }
     }
     

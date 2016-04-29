@@ -64,6 +64,18 @@
 
 <div class="col-xs-12 panel collapse" id="issues">
     <table class="table table-striped" id="issues_content">
+            <?php 
+                    //var_dump($this->downvotes); die;
+                foreach($this->downvotes as $downvote){
+                    $id = $downvote['_source']['downvote_id'];
+                    echo '<tr>'
+                    . '<td>'.$downvote['_source']['reason'].'</td>'
+                    . '<td>'.$downvote['_source']['count'].'</td>'
+                    . '<td><a href="u/'.$downvote['_source']['user_id'].'">User '.$downvote['_source']['user_id'].'</a></td>'
+                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
+                    . '</tr>';
+                }
+            ?>
     </table>
     <br>
     <br>

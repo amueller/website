@@ -77,11 +77,27 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
                         }
                       }';
             $this->l['body'] = $json;
+        
+            $this->down = array();
+            $this->down['index'] = 'openml';
+            $this->down['type'] = 'downvote';
+            $json = '{
+                        "query": {
+                          "bool": {
+                            "must": [
+                              { "match": { "knowledge_type":  "f" }},
+                              { "match": { "knowledge_id": '.$this->id.'   }}
+                            ]
+                          }
+                        }
+                      }';
+            $this->down['body'] = $json;
         }
 	try{
 		$this->flow = $this->searchclient->get($this->p)['_source'];
                 if ($this->ion_auth->logged_in()) {
                   $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
+                  $this->downvotes = $this->searchclient->search($this->down)['hits']['hits'];
                 }
 	} catch (Exception $e) {}
 

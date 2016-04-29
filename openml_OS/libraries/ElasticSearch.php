@@ -515,12 +515,13 @@ class ElasticSearch {
     
     private function build_downvote($d){
         $downvote = array(
-            'like_id' => $d->did,
+            'downvote_id' => $d->did,
             'user_id' => $d->user_id,
             'knowledge_type' => $d->knowledge_type,
             'knowledge_id' => $d->knowledge_id,
             'reason' => $d->description,
             'orginal' => $d->original,
+            'count' => $d->count,
             'time' => $d->time
         );
         return $downvote;
