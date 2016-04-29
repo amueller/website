@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel flushpanel">
     <?php
     //var_dump($this);
     $authimg = "img/community/misc/anonymousMan.png";
@@ -7,11 +7,8 @@
     ?>
     <div class="col-sm-2">
         <img src="<?php echo $authimg; ?>" width="130" height="130" class="img-circle userimage" />
-        <?php if ($this->is_owner || $this->ion_auth->is_admin()) { ?>
-            <a href="#edit" data-toggle="tab" class="btn btn-primary">Edit Profile</a><br />
-        <?php } ?>
     </div>
-    <div class="col-sm-7 userdata">
+    <div class="col-sm-10 userdata">
         <h1 class="username"><?php echo $this->userinfo['first_name'] . ' ' . $this->userinfo['last_name']; ?></h1>
         <div class="userbio"><?php echo $this->userinfo['bio']; ?></div>
         <div class="userdetails">
@@ -20,73 +17,55 @@
             <i class="fa fa-fw fa-clock-o"></i> Joined <?php echo date("Y-m-d", $this->userinfo['date']); ?>
         </div>
     </div>
-<?php if ($this->ion_auth->logged_in()) {
-      if ($this->ion_auth->user()->row()->gamification_visibility == 'show' && $this->userinfo['gamification_visibility'] == 'show') {?>
-    <div class="col-sm-3 score">
-        <div class="well" style="font-size:120%" title="Gamification scores and number of uploads">
-            <div class="row">
-                <div class="col-sm-1"><i class="fa fa-bolt activity"></i></div>
-                <div class="col-sm-4"><?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
-                <div class="col-sm-1"><i class="fa fa-database dataset"></i></div>
-                <div class="col-sm-4"> <?php if(in_array('datasets_uploaded', $this->userinfo)){ echo $this->userinfo['datasets_uploaded']; }else{echo 0;} ?></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-1"><i class="fa fa-rss reach"></i></div>
-                <div class="col-sm-4"> <?php if(in_array('reach', $this->userinfo)){ echo $this->userinfo['reach']; }else{echo 0;} ?></div>
-                <div class="col-sm-1"><i class="fa fa-cogs flow"></i></div>
-                <div class="col-sm-4"> <?php if(in_array('flows_uploaded', $this->userinfo)){ echo $this->userinfo['flows_uploaded']; }else{echo 0;} ?></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-1"><i class="material-icons impact" style="font-size: 16px;">flare</i></div>
-                <div class="col-sm-4"> <?php if(in_array('impact', $this->userinfo)){ echo $this->userinfo['impact']; }else{echo 0;} ?></div>
-                <div class="col-sm-1"><i class="fa fa-trophy task"></i></div>
-                <div class="col-sm-4"> <?php if(in_array('tasks_uploaded', $this->userinfo)){ echo $this->userinfo['tasks_uploaded']; }else{echo 0;} ?></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4"></div>
-                <div class="col-sm-1"><i class="fa fa-star run"></i></div>
-                <div class="col-sm-4"> <?php if(in_array('runs_uploaded', $this->userinfo)){ echo $this->userinfo['runs_uploaded'];}else{echo 0;} ?></div>
-            </div>
-        </div>
-        <!--<div id="badges" class="well" style="visibility:visible; font-size:120%" title="Highlighted badges">
-            <img src="img/testbadge_not_a_noob.svg" alt="nan" style="width:64px;height:64px;">
-            <img src="img/testbadge_clockwork_scientist.svg" alt="cs" style="width:64px;height:64px;">
-            <img src="img/testbadge_good_news_everyone.svg" alt="cs" style="width:64px;height:64px;">
-            <img src="img/testbadge_meteor.svg" alt="cs" style="width:64px;height:64px;">
-            <a href="/" style="position:absolute;bottom:15px;right:15px;margin:0;padding:5px 3px;" title="See all badges for this user">more...</a>
-        </div>-->
-    </div>
-    <?php } else{ ?>
-    <div class="col-sm-2 col-sm-offset-1 score">
-            <div class="well" style="font-size:120%" title="Number of uploads">
-                <div class="row">
-                    <div class="col-sm-5"><i class="fa fa-database dataset"></i></div>
-                    <div class="col-sm-7"> <?php if(in_array('datas_uploaded', $this->userinfo)){ echo $this->userinfo['datasets_uploaded'];}else{echo 0;} ?></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5"><i class="fa fa-cogs flow"></i></div>
-                    <div class="col-sm-7"> <?php if(in_array('flows_uploaded', $this->userinfo)){ echo $this->userinfo['flows_uploaded'];}else{echo 0;} ?></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5"><i class="fa fa-trophy task"></i></div>
-                    <div class="col-sm-7"> <?php if(in_array('tasks_uploaded', $this->userinfo)){ echo $this->userinfo['tasks_uploaded'];}else{echo 0;} ?></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-5"><i class="fa fa-star run"></i></div>
-                    <div class="col-sm-7"> <?php if(in_array('runs_uploaded', $this->userinfo)){ echo $this->userinfo['runs_uploaded'];}else{echo 0;} ?></div>
-                </div>
-            </div>
-    </div>
-<?php }} ?>
 </div>
 
-<table class="table usertable">
+<div class="panel">
+  <?php if ($this->ion_auth->logged_in()) {?>
+        <div class="gamestat-row">
+        <?php if ($this->ion_auth->user()->row()->gamification_visibility == 'show' && $this->userinfo['gamification_visibility'] == 'show') {?>
+            <div class="gamestat">
+              <div class="gamestat-label">Activity</div>
+              <div class="gamestat-value"><i class="fa fa-bolt activity"></i> <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
+            </div>
+            <div class="gamestat">
+              <div class="gamestat-label">Reach</div>
+              <div class="gamestat-value"><i class="fa fa-rss reach"></i> <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
+            </div>
+            <div class="gamestat">
+              <div class="gamestat-label">Impact</div>
+              <div class="gamestat-value"><i class="material-icons impact" style="font-size: 16px;">flare</i> <?php if(in_array('impact', $this->userinfo)){ echo $this->userinfo['impact']; }else{echo 0;} ?></div>
+            </div>
+        <?php }?>
+            <div class="gamestat">
+              <div class="gamestat-label">Uploads</div>
+              <div class="gamestat-value">
+                  <span><i class="fa fa-database dataset"></i> <?php if(in_array('datasets_uploaded', $this->userinfo)){ echo $this->userinfo['datasets_uploaded']; }else{echo 0;} ?></span>
+                  <span><i class="fa fa-cogs flow"></i> <?php if(in_array('flows_uploaded', $this->userinfo)){ echo $this->userinfo['flows_uploaded']; }else{echo 0;} ?></span>
+                  <span><i class="fa fa-trophy task"></i> <?php if(in_array('tasks_uploaded', $this->userinfo)){ echo $this->userinfo['tasks_uploaded']; }else{echo 0;} ?></span>
+                  <span><i class="fa fa-star run"></i> <?php if(in_array('runs_uploaded', $this->userinfo)){ echo $this->userinfo['runs_uploaded'];}else{echo 0;} ?></span>
+              </div>
+            </div>
+
+          <!--<div id="badges" class="well" style="visibility:visible; font-size:120%" title="Highlighted badges">
+              <img src="img/testbadge_not_a_noob.svg" alt="nan" style="width:64px;height:64px;">
+              <img src="img/testbadge_clockwork_scientist.svg" alt="cs" style="width:64px;height:64px;">
+              <img src="img/testbadge_good_news_everyone.svg" alt="cs" style="width:64px;height:64px;">
+              <img src="img/testbadge_meteor.svg" alt="cs" style="width:64px;height:64px;">
+              <a href="/" style="position:absolute;bottom:15px;right:15px;margin:0;padding:5px 3px;" title="See all badges for this user">more...</a>
+          </div>-->
+        </div>
+  <?php } ?>
+  <?php if ($this->is_owner || $this->ion_auth->is_admin()) { ?>
+      <a href="#edit" data-toggle="tab" class="btn btn-primary pull-right">Edit Profile</a><br />
+  <?php } ?>
+</div>
+
+<table class="table panel usertable">
     <tbody>
-        
+
 <?php if ($this->ion_auth->logged_in()) {
       if ($this->ion_auth->user()->row()->gamification_visibility == 'show'  && $this->userinfo['gamification_visibility'] == 'show') {?>
-        <tr>            
+        <tr>
             <td class="borderless"></td>
             <td class="borderless">Activity</td>
             <td class="borderless">Reach</td>
@@ -95,28 +74,28 @@
         </tr>
 <?php }} ?>
       <tr>
-         <td class="mainvalue"><div class="col-sm-1"><i class="fa fa-database dataset" ></i></div><div class="col-sm-11"> Data Sets </div></td>
+        <td class="mainvalue"><i class="fa fa-fw fa-database dataset" ></i> <a href="<?php echo BASE_URL .'u/' . $this->user_id . '/data';?>"> Data Sets</a></td>
         <td class="subvalue" ><?php if(in_array('datasets_uploaded', $this->userinfo)){echo $this->userinfo['datasets_uploaded'];}else{echo 0;}?> <i class="fa fa-cloud-upload"></i></td>
         <td class="subvalue" ><?php if(in_array('downloads_received_data', $this->userinfo)){echo $this->userinfo['downloads_received_data'];}else{echo 0;}?> <i class="fa fa-cloud-download"></i></td>
         <td class="subvalue" ><?php if(in_array('likes_received_data', $this->userinfo)){echo $this->userinfo['likes_received_data'];}else{echo 0;}?> <i class="fa fa-heart"></i></td>
         <td class="subvalue" ><?php if(in_array('runs_on_datasets', $this->userinfo)){echo $this->userinfo['runs_on_datasets'];}else{echo 0;}?> <i class="fa fa-star"></i></td>
       </tr>
       <tr>
-        <td class="mainvalue"><div class="col-sm-1"><i class="fa fa-cogs flow" ></i></div><div class="col-sm-11"> Flows </div></td>
+        <td class="mainvalue"><i class="fa fa-fw fa-cogs flow" ></i><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/flows';?>"> Flows </a></td>
         <td class="subvalue" ><?php if(in_array('flows_uploaded', $this->userinfo)){echo $this->userinfo['flows_uploaded'];}else{echo 0;}?> <i class="fa fa-cloud-upload"></i></td>
         <td class="subvalue" ><?php if(in_array('downloads_received_flow', $this->userinfo)){echo $this->userinfo['downloads_received_flow'];}else{echo 0;}?> <i class="fa fa-cloud-download"></i></td>
         <td class="subvalue" ><?php if(in_array('likes_received_flow', $this->userinfo)){echo $this->userinfo['likes_received_flow'];}else{echo 0;}?> <i class="fa fa-heart"></i></td>
         <td class="subvalue" ><?php if(in_array('runs_on_flows', $this->userinfo)){echo $this->userinfo['runs_on_flows'];}else{echo 0;}?> <i class="fa fa-star"></i></td>
       </tr>
       <tr>
-        <td class="mainvalue"><div class="col-sm-1"><i class="fa fa-trophy task" ></i></div><div class="col-sm-11"> Tasks </div></td>
+        <td class="mainvalue"><i class="fa fa-fw fa-trophy task" ></i><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/tasks';?>"> Tasks </a></td>
         <td class="subvalue" ><?php if(in_array('tasks_uploaded', $this->userinfo)){echo $this->userinfo['tasks_uploaded'];}else{echo 0;}?> <i class="fa fa-cloud-upload"></i></td>
         <td class="subvalue" ><?php if(in_array('downloads_received_task', $this->userinfo)){echo $this->userinfo['downloads_received_task'];}else{echo 0;}?> <i class="fa fa-cloud-download"></i></td>
         <td class="subvalue" ><?php if(in_array('likes_received_task', $this->userinfo)){echo $this->userinfo['likes_received_task'];}else{echo 0;}?> <i class="fa fa-heart"></i></td>
         <td></td>
       </tr>
       <tr>
-        <td class="mainvalue"><div class="col-sm-1"><i class="fa fa-star run" ></i></div><div class="col-sm-11"> Runs </div></td>
+        <td class="mainvalue"><i class="fa fa-fw fa-star run" ></i><a href="<?php echo BASE_URL .'u/' . $this->user_id . '/runs';?>"> Runs </a></td>
         <td class="subvalue" ><?php if(in_array('runs_uploaded', $this->userinfo)){echo $this->userinfo['runs_uploaded'];}else{echo 0;}?> <i class="fa fa-cloud-upload"></i></td>
         <td class="subvalue" ><?php if(in_array('downloads_received_run', $this->userinfo)){echo $this->userinfo['downloads_received_run'];}else{echo 0;}?> <i class="fa fa-cloud-download"></i></td>
         <td class="subvalue" ><?php if(in_array('likes_received_run', $this->userinfo)){echo $this->userinfo['likes_received_run'];}else{echo 0;}?> <i class="fa fa-heart"></i></td>
@@ -128,13 +107,13 @@
 
 <?php if ($this->ion_auth->logged_in()) {
       if ($this->ion_auth->user()->row()->gamification_visibility == 'show'  && $this->userinfo['gamification_visibility'] == 'show') {?>
-<div class="row">    
+<div class="panel statpanel">
     <ul class="nav nav-pills activity">
-        <li class="col-sm-4 mainvalue active" title="Activity is: 3x uploads done + 2x likes given + downloads done. 
+        <li class="col-sm-4 mainvalue active" title="Activity is: 3x uploads done + 2x likes given + downloads done.
             Given as activty over the last year / total activity">
-            <a data-toggle="tab" onclick=redrawActivityChart("Activity")> 
-                <i class="fa fa-bolt"></i> 
-                Activity: 
+            <a data-toggle="tab" onclick=redrawActivityChart("Activity")>
+                <i class="fa fa-fw fa-bolt"></i>
+                Activity:
                 <span id="ActivityThisYear">? /</span>
                 <span><?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity'];}else{echo 0;} ?>
             </a>
@@ -160,7 +139,7 @@
                 <i class="fa fa-cloud-download"></i>
             </a>
         </li>
-        <li class="col-sm-1 pull-right"> 
+        <li class="col-sm-1 pull-right">
             <a data-toggle="collapse" href="#Activity-chart">
                 <i class="fa fa-2x fa-minus" id="activitytoggle" style="visibility: hidden"></i>
             </a>
@@ -172,13 +151,13 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="panel statpanel">
    <ul class="nav nav-pills reach">
        <li class="col-sm-4 mainvalue active" title="Reach is: 2x likes received + downloads received.
            Given as reach over the last month / total reach">
-           <a data-toggle="tab" onclick=redrawReachChart("Reach")> 
-               <i class="fa fa-rss"></i>
-               Reach: 
+           <a data-toggle="tab" onclick=redrawReachChart("Reach")>
+               <i class="fa fa-fw fa-rss"></i>
+               Reach:
                <span id="ReachThisMonth">? /</span>
                <span><?php if(in_array('reach', $this->userinfo)){echo $this->userinfo['reach'];}else{echo 0;} ?></span>
            </a>
@@ -197,7 +176,7 @@
                 <i class="fa fa-cloud-download"></i>
             </a>
         </li>
-        <li class="col-sm-1 pull-right"> 
+        <li class="col-sm-1 pull-right">
             <a data-toggle="collapse" href="#Reach-chart">
                 <i class="fa fa-2x fa-minus" id="reachtoggle" style="visibility: hidden"></i>
             </a>
@@ -209,20 +188,20 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="panel statpanel">
     <ul class="nav nav-pills impact" title="Impact is: 0.5*reach of reuse of knowledge.
         Given as your impact over the last month / your total impact">
         <li class="col-sm-4 mainvalue active">
-            <a data-toggle="tab" onclick=redrawImpactChart("Impact")> 
+            <a data-toggle="tab" onclick=redrawImpactChart("Impact")>
                 <i class="material-icons" style="font-size: 28px">flare</i>
-                Impact: 
+                Impact:
                 <span id="ImpactThisMonth">?/</span>
                 <span><?php if(in_array('impact', $this->userinfo)){echo $this->userinfo['impact'];}else{echo 0;} ?></span>
             </a>
         </li>
         <!--<li class="mainvalue"><a data-toggle="tab" onclick=redrawImpactChart("Reach_re")><?php/* if(in_array('reach_of_reuse', $this->userinfo)){echo $this->userinfo['reach_of_reuse'];}else{echo 0;} */?> <i class="fa fa-rss"></i></a></li>-->
         <!--<li class="mainvalue"><a data-toggle="tab" onclick=redrawImpactChart("Impact_re")><?php/* if(in_array('impact_of_reuse', $this->userinfo)){echo $this->userinfo['impact_of_reuse'];}else{echo 0;} */?> <i class="material-icons" style="font-size: 28px">flare</i></i></a></li>-->
-        <li class="col-sm-1 pull-right"> 
+        <li class="col-sm-1 pull-right">
             <a data-toggle="collapse" href="#Impact-chart">
                 <i class="fa fa-2x fa-minus" id="impacttoggle" style="visibility: hidden"></i>
             </a>
@@ -235,11 +214,8 @@
     </div>
 </div>
 
-<div class="row">
+<div class="col-sm-12">
     <h2>Badges</h2>
     <div id="badges"></div>
 </div>
 <?php }} ?>
-
-
-

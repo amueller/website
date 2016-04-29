@@ -1763,6 +1763,7 @@ hr.hardSmall {
   font-size: 10pt;
   clear: both;
   font-weight: normal !important;
+  line-height: 170%;
 }
 
 .datainfo i{
@@ -1988,6 +1989,44 @@ html, body {
 
 .searchresult{
   margin-bottom:0px !important;
+}
+
+.gamestat-row{
+  display: inline-block;
+}
+
+.gamestat{
+  height: 50px;
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.gamestat-label{
+  display: block;
+}
+
+.gamestat-value{
+  font-size: 18px;
+  padding-top: 3px;
+  font-weight: 500;
+  display: block;
+}
+
+.gamestat-value > span{
+  padding-right: 20px;
+}
+
+.flushpanel{
+  margin-bottom:0px !important;
+}
+
+.statpanel{
+  padding:0px;
+}
+
+.statpanel > .nav-pills > li > a{
+  border-radius:0px;
 }
 
 .searchresult:hover {
@@ -3136,11 +3175,16 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 
 
 .mainvalue{
-  font-size: 200%;
+  font-size: 150%;
+}
+
+.mainvalue > a{
+  text-decoration: none;
+  color: #444;
 }
 
 .subvalue{
-    font-size: 150%;
+    font-size: 120%;
 }
 
 .panel-simple{
