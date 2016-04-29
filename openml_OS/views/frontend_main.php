@@ -45,6 +45,8 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
       	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
         <link href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/gamification.less"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <?php if( isset( $this->load_css ) ): foreach( $this->load_css as $j ): ?>
         <link rel="stylesheet" href="<?php echo $j; ?>"/>
         <?php endforeach; endif;?>
@@ -63,6 +65,9 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
         if($url[1] == 'OpenML'){
           $ch = $url[2];
           $req = array_slice($url, 2);}
+        }
+        if(sizeof($url)>3){
+            $id=$url[3];
         }
       if($ch == "")
         $ch = "home";
@@ -332,8 +337,13 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                 echo "'frontend/js/".$reqall."',";
               } elseif( $ch == 'api'){
                 echo "'frontend/js/api_docs',";
-              } elseif( $ch != 'backend') {?>
-              'frontend/js/<?php echo $ch;?>', <?php } ?>
+              } elseif( $ch != 'backend') {
+                if ($ch == 'u' && $id) {
+                    echo "'frontend/js/" . $ch . "/" . $id . "',";
+                } else {
+                    echo "'frontend/js/".$ch."',";
+                }
+              }?>
               'js/openmlafter.js'
             ])
 

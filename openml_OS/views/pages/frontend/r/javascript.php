@@ -964,3 +964,189 @@ $(function(){$('#folds_<?php echo $r['evaluation_measure']; ?>').highcharts({
 	series:[{name:'Box plot',data:<?php echo json_encode($boxplots);?>,tooltip:{headerFormat:'<em>Repeat {point.key}</em><br/>'}}]});});
 
 <?php }} endforeach; ?>
+
+var isliked;
+var reason_id = -1;
+var maxreason = -1;
+getDownvotes();
+<?php if ($this->ion_auth->logged_in()) {
+    if ($this->ion_auth->user()->row()->id != $this->run['uploader_id']) {?>
+
+function doLike(liked){
+    isliked = liked;
+    if(isliked){
+        meth = 'DELETE';
+    }else{
+        meth = 'POST';
+    }
+    $.ajax({
+        method: meth,
+        url: '<?php echo BASE_URL; ?>api_new/v1/xml/votes/up/r/<?php echo $this->id ?>'
+    }).done(function(resultdata){
+        if(resultdata.getElementsByTagName('like').length>0){
+            //changes already done
+        }else{
+            //undo changes
+            flipLikeHTML();
+        }
+    }).fail(function(resultdata){
+        //undo changes
+        flipLikeHTML();
+    });
+    //change as if the api call is succesful
+    flipLikeHTML();
+}
+
+function doDownload(){
+    $.ajax({
+            method: 'POST',
+            url: '<?php echo BASE_URL; ?>api_new/v1/xml/downloads/r/<?php echo $this->id ?>'
+           }
+    ).always(function(){
+        refreshNrDownloads();
+    });
+}
+<?php }}?>
+
+function refreshNrLikes(){
+    $.ajax({
+        method:'GET',
+        url:'<?php echo BASE_URL; ?>api_new/v1/xml/votes/up/any/r/<?php echo $this->id ?>'
+        }).done(function(resultdata){
+            if(resultdata.getElementsByTagName('like').length>0){
+                var nrlikes = resultdata.getElementsByTagName('like').length;
+                $('#likecount').html(nrlikes+" likes");
+            }else{
+                $('#likecount').html("0 likes");
+            }
+        }).fail(function(resultdata){        
+            $('#likecount').html("0 likes");
+     });
+ }
+ 
+ function refreshNrDownloads(){
+    $.ajax({
+       method:'GET',
+       url:'<?php echo BASE_URL; ?>api_new/v1/xml/downloads/any/r/<?php echo $this->id ?>'
+    }).done(function(resultdata){
+       if(resultdata.getElementsByTagName('download').length>0){
+           var nrdownloads = resultdata.getElementsByTagName('download').length;
+           var totaldownloads = 0;
+           for(var i=0; i<nrdownloads; i++){
+               totaldownloads+=parseInt(resultdata.getElementsByTagName('download')[i].getElementsByTagName('count')[0].textContent);
+           }
+           $('#downloadcount').html("downloaded by "+nrdownloads+" people, "+totaldownloads+" total downloads");
+       }else{
+           $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
+       }
+    }).fail(function(resultdata){        
+       $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
+    });
+ }
+
+function flipLikeHTML(){
+    if(isliked){
+        isliked = false;
+        $('#likeicon').removeClass("fa-heart").addClass("fa-heart-o");
+        $('#likebutton').prop('title', 'Click to like');
+        $('#likebutton').attr('onclick', 'doLike(false)');
+        var likecounthtml = $('#likecount').html();
+        var nrlikes = parseInt(likecounthtml.split(" ")[0]);
+        nrlikes = nrlikes-1;
+        $('#likecount').html(nrlikes+" likes");
+        var reachhtml = $('#reach').html();
+        var reach = parseInt(reachhtml.split(" ")[0]);
+        reach = reach-2;
+        $('#reach').html(reach+" reach");
+    }else{
+        isliked = true;
+        $('#likeicon').removeClass("fa-heart-o").addClass("fa-heart");
+        $('#likebutton').prop('title', 'Click to unlike');
+        $('#likebutton').attr('onclick', 'doLike(true)');
+        var likecounthtml = $('#likecount').html();
+        var nrlikes = parseInt(likecounthtml.split(" ")[0]);
+        nrlikes = nrlikes+1;
+        $('#likecount').html(nrlikes+" likes");
+        var reachhtml = $('#reach').html();
+        var reach = parseInt(reachhtml.split(" ")[0]);
+        reach = reach+2;
+        $('#reach').html(reach+" reach");
+    }
+}
+
+$("#issueform").submit(function(event){
+    // cancels the form submission
+    event.preventDefault();
+    var reason = $("#reason").val();
+    $("#reason").val('');
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo BASE_URL?>api_new/v1/xml/votes/down/r/<?php echo $this->id ?>/'+reason
+    }).done(function(resultdata){
+        getDownvotes();
+        $("fail").addClass("hidden");
+        $("#success").removeClass("hidden");
+    }).fail(function(resultdata){
+        $("fail").append(resultdata.getElementsByTagName("message")[0].textContent);
+        $("fail").removeClass("hidden");
+        $("#success").addClass("hidden");
+    });
+});
+
+function getDownvotes(){
+    $('#issues_content').append('<i class="fa fa-spinner fa-pulse"></i> Refreshing issues');
+    $.ajax({
+        method:'GET',
+        url: '<?php echo BASE_URL?>api_new/v1/xml/votes/down/r/<?php echo $this->id ?>'
+    }).done(function(resultdata){
+        if(resultdata.getElementsByTagName('downvote').length>0){
+            var dvotes = resultdata.getElementsByTagName('downvote');
+            $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th></th></tr>");
+            for(var i=0; i<dvotes.length; i++){
+                var id = dvotes[i].getElementsByTagName('reason_id')[0].textContent;
+                maxreason = Math.max(id,maxreason);
+                $('#issues_content').append('<tr>');
+                $('#issues_content').append('<td>'+dvotes[i].getElementsByTagName('reason')[0].textContent+'</td>');
+                $('#issues_content').append('<td>'+dvotes[i].getElementsByTagName('count')[0].textContent+'</td>');
+                $('#issues_content').append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');                
+                $('#issues_content').append('<td><a id="downvotebutton-'+id+'" class="loginfirst btn btn-link" onclick="doDownvote('+id+')" title="Click to agree"> <i id="downvoteicon-'+id+'" class="fa fa-thumbs-o-down"></i></a></td>');
+                $('#issues_content').append('</tr>');
+            }            
+            if(reason_id!=-1){
+                $('#downvoteicon-'+reason_id).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
+                $('#downvotebutton-'+reason_id).prop('title', 'Click to remove your downvote');
+            }
+            $('#issues_content').append('<br>');
+        }
+    }).fail(function(resultdata){
+        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");        
+    });
+    $.ajax({
+        method:'GET',
+        url: '<?php echo BASE_URL?>api_new/v1/xml/votes/down/<?php echo $this->ion_auth->user()->row()->id ?>/r/<?php echo $this->id ?>'
+    }).done(function(resultdata){
+        reason_id = resultdata.getElementsByTagName('value')[0].textContent;
+        if(reason_id!=-1){
+            $('#downvoteicon-'+reason_id).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
+            $('#downvotebutton-'+reason_id).prop('title', 'Click to remove your downvote');
+        }
+    });
+}
+
+function doDownvote(rid){
+    if(reason_id==rid){
+        meth= 'DELETE';
+        u = '<?php echo BASE_URL?>api_new/v1/xml/votes/down/r/<?php echo $this->id ?>';
+    }else{
+        meth= 'POST';
+        u = '<?php echo BASE_URL?>api_new/v1/xml/votes/down/r/<?php echo $this->id ?>/'+rid
+    }
+    $.ajax({
+        method: meth,
+        url: u
+    }).done(function(resultdata){
+        getDownvotes();
+    }).fail(function(resultdata){
+        
+    });
+}

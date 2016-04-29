@@ -85,9 +85,29 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 	$this->p['index'] = 'openml';
 	$this->p['type'] = 'task';
 	$this->p['id'] = $this->task_id;
+        if ($this->ion_auth->logged_in()) {
+            $this->l = array();
+            $this->l['index'] = 'openml';
+            $this->l['type'] = 'like';
+            $json = '{
+                        "query": {
+                          "bool": {
+                            "must": [
+                              { "match": { "knowledge_type":  "t" }},
+                              { "match": { "knowledge_id": '.$this->id.'   }},
+                              { "match": { "user_id": '.$this->ion_auth->user()->row()->id.'}}
+                            ]
+                          }
+                        }
+                      }';
+            $this->l['body'] = $json;
+        }
 	try{
 		$result = $this->searchclient->get($this->p);
 		$this->task = $result['_source'];
+                if ($this->ion_auth->logged_in()) {
+                  $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
+                }
 	} catch (Exception $e) {}
 
 	$task = $this->Implementation->query('SELECT t.task_id, t.ttid, tt.name, tt.description FROM task t, task_type tt WHERE t.ttid=tt.ttid and task_id=' . $this->task_id );

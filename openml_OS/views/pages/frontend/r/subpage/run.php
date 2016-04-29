@@ -1,19 +1,62 @@
 
   <ul class="hotlinks">
-   <li><a class="loginfirst" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-   <li><a class="loginfirst" href="<?php echo BASE_URL; ?>api/v1/run/<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+    <?php if ($this->ion_auth->logged_in()) {
+        if ($this->ion_auth->user()->row()->id != $this->run['uploader_id']) {?>
+            <li>
+                <?php
+                if ($this->activeuserlike) {
+                    echo '<a id="likebutton" class="loginfirst btn btn-link" onclick="doLike(true)" title="Click to like"><i id="likeicon" class="fa fa-heart fa-2x"></i></a>';
+                } else {
+                    echo '<a id="likebutton" class="loginfirst btn btn-link" onclick="doLike(false)" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a>';
+                }
+                ?>
+                <br>
+                <br>
+            </li>
+    <?php } ?>
+            <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+            <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+    <?php } else{ ?>
+        <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+        <li><a class="loginfirst btn btn-link" href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+    <?php } ?>
   </ul>
   <h1>Run <?php echo $this->run_id; ?></h1>
 
   <div class="datainfo">
      <i class="fa fa-trophy"></i> <a href="t/<?php echo $this->run['run_task']['task_id']; ?>">Task <?php echo $this->run['run_task']['task_id']; ?> (<?php echo $this->run['run_task']['tasktype']['name']; ?>)</a> <i class="fa fa-database"></i> <a href="d/<?php echo $this->run['run_task']['source_data']['data_id']; ?>"><?php echo $this->run['run_task']['source_data']['name']; ?></a>
      <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat($this->run['date']); ?> by <a href="u/<?php echo $this->run['uploader_id']; ?>"><?php echo $this->run['uploader']; ?></a>
+    <br>
+   <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->run)): if($this->run['nr_of_likes']!=null): $nr_l = $this->run['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
+   <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->run)): if($this->run['nr_of_downloads']!=null): $nr_d = $this->run['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+   <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
+   <?php if ($this->ion_auth->logged_in()) {
+            if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
+                <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
+        <?php }?>
+            <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->run)): if($this->run['nr_of_issues']!=null): $i = $this->run['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
+            <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->run)): if($this->run['nr_of_downvotes']!=null): $d = $this->run['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
+   <?php }?>
 </div>
 
-<?php
-    //$this->elasticsearch->index('task',$this->run['run_task']['task_id']);
-    //$this->elasticsearch->index('run',0);
- ?>
+
+
+<div class="col-xs-12 panel collapse" id="issues">
+    <table class="table table-striped" id="issues_content">
+    </table>
+    <br>
+    <br>
+    <form role="form" id="issueform">
+        <h5>Submit a new issue for this run</h5>
+        <div class="form-group">
+          <label for="Reason">Issue:</label>
+          <input type="text" class="form-control" id="reason">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+        <div id="succes" class="text-center hidden">Issue Submitted!</div>
+        <div id="fail" class="text-center hidden">Can't submit issue </div>
+    </form>
+</div>
 
   <h3>Flow</h3>
   <div class="cardtable">

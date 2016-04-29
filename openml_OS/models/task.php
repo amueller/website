@@ -5,9 +5,34 @@ class Task extends Database_write {
     parent::__construct();
     $this->table = 'task';
     $this->id_column = 'task_id';
+    $this->user_column = 'creator';
     
     $this->load->model('Estimation_procedure');
     $this->load->model('Task_inputs');
+  }
+  
+  function getUploaderOf($tid){
+      $sql = 'SELECT '.$this->user_column.' as uploader FROM '.$this->table.' WHERE '.$this->id_column.'='.$tid;
+      
+      return $this->Task->query($sql);
+  }
+  
+  function getTasksByDataId($did){
+      $sql = 'SELECT '.$this->id_column.' as id FROM `task_inputs` WHERE task_inputs.value='.$did.' AND task_inputs.input="source_data"';
+      
+      return $this->Task->query($sql);      
+  }
+  
+  function getTasksOfUser($u_id, $from=null, $to=null){
+      $sql = 'SELECT '.$this->id_column.' as id FROM '.$this->table.' WHERE '.$this->user_column.'='.$u_id;
+      
+      if($from!=null){
+        $sql .= ' AND creation_date>="'.$from.'"';
+      }
+      if($to!=null){
+        $sql .= ' AND creation_date<"'.$to.'"';
+      }
+      return $this->Task->query($sql);
   }
   
   function search( $task_type_id, $keyValues ) {

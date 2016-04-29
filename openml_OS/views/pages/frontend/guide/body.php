@@ -13,6 +13,9 @@
   </div>
   <div class="tab-pane" id="team">
   <?php subpage('team'); ?>
+  </div>    
+  <div class="tab-pane" id="gamification">
+  <?php subpage('gamification'); ?>
   </div>
   <div class="tab-pane" id="plugin_weka">
   <?php subpage('plugin_weka'); ?>
@@ -59,6 +62,7 @@
           <li class="active"><a href="#intro" data-toggle="tab">10 minute intro</a></li>
           <li><a href="#terms" data-toggle="tab">Honor Code and Terms</a></li>
           <li><a href="#team" data-toggle="tab">Our Team</a></li>
+          <li><a href="#gamification" data-toggle="tab">Gamification</a></li>
         </ul>
       </li>
       <li class="panel guidechapter">

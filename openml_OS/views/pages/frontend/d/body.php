@@ -5,9 +5,31 @@
     $this->p['index'] = 'openml';
     $this->p['type'] = 'data';
     $this->p['id'] = $this->id;
+    if ($this->ion_auth->logged_in()) {
+        $this->l = array();
+        $this->l['index'] = 'openml';
+        $this->l['type'] = 'like';
+        $json = '{
+                    "query": {
+                      "bool": {
+                        "must": [
+                          { "match": { "knowledge_type":  "d" }},
+                          { "match": { "knowledge_id": '.$this->id.'   }},
+                          { "match": { "user_id": '.$this->ion_auth->user()->row()->id.'}}
+                        ]
+                      }
+                    }
+                  }';
+        $this->l['body'] = $json;
+    }
     try{
       $this->data = $this->searchclient->get($this->p)['_source'];
-    } catch (Exception $e) {}
+      if ($this->ion_auth->logged_in()) {
+        $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
+      }
+    } catch (Exception $e) {
+        //var_dump($e);
+    }
 
     if(!isset($this->data)){ ?>
       <div class="container-fluid topborder endless openmlsectioninfo">
@@ -106,7 +128,7 @@
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
             <li class="active"><a href="#data_overview" data-toggle="tab">Overview</a></li>
-            <li><a class="loginfirst" href="<?php echo $this->data['url']; ?>">Download data</a></li>
+            <li><a class="loginfirst" onclick="doDownload()" href="<?php echo $this->data['url']; ?>">Download data</a></li>
             <li><a href="new/data">Submit new data</a></li>
             <li><a href="new/task">Create a task with this data set</a></li>
           </ul>

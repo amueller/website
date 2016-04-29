@@ -755,4 +755,78 @@ $this->apiErrors[551][0] = 'Delete query failed.';
 $this->apiErrors[551][1] = 'One of the delete queries failed.';
 
 
+// openml.votes.list
+$this->apiErrors[701][0] = 'List failed';
+$this->apiErrors[701][1] = 'Votes do not exists';
+
+// openml.votes.votesofuser
+$this->apiErrors[702][0] = 'List failed';
+$this->apiErrors[702][1] = 'Given user has no votes';
+
+// openml.votes.delete
+$this->apiErrors[703][0] = 'Unknown vote';
+$this->apiErrors[703][1] = 'Vote by given user on given knowledge piece, does not exists';
+
+// openml.votes.delete
+$this->apiErrors[704][0] = 'Deletion failed';
+$this->apiErrors[704][1] = 'Internal server error, please contact api administrators';
+
+// openml.votes.do
+$this->apiErrors[705][0] = 'Insertion failed';
+$this->apiErrors[705][1] = 'Internal server error, please contact api administrators';
+
+// openml.votes.do / openml.votes.delete
+$this->apiErrors[711][0] = 'Unknown knowledge type';
+$this->apiErrors[711][1] = 'The given knowledge type can not be voted on';
+
+// openml.votes.delete
+$this->apiErrors[721][0] = 'Unauthorized deletion';
+$this->apiErrors[721][1] = "Can not delete someone else's vote";
+
+// openml.votes.do
+$this->apiErrors[722][0] = 'Unauthorized vote';
+$this->apiErrors[722][1] = "Can not vote on own uploads";
+
+// openml.votes.list
+$this->apiErrors[801][0] = 'List failed';
+$this->apiErrors[801][1] = 'Downloads do not exists';
+
+// openml.votes.votesofuser
+$this->apiErrors[802][0] = 'List failed';
+$this->apiErrors[802][1] = 'Given user has no downloads';
+
+// openml.votes.delete
+$this->apiErrors[803][0] = 'Unknown vote';
+$this->apiErrors[803][1] = 'Download by given user on given knowledge piece, does not exists';
+
+// openml.votes.delete
+$this->apiErrors[804][0] = 'Deletion failed';
+$this->apiErrors[804][1] = 'Internal server error, please contact api administrators';
+
+// openml.votes.do
+$this->apiErrors[805][0] = 'Insertion failed';
+$this->apiErrors[805][1] = 'Internal server error, please contact api administrators';
+
+// openml.votes.do / openml.votes.delete
+$this->apiErrors[811][0] = 'Unknown knowledge type';
+$this->apiErrors[811][1] = 'The given knowledge type can not be downloaded on';
+
+// openml.votes.delete
+$this->apiErrors[821][0] = 'Unauthorized deletion';
+$this->apiErrors[821][1] = "Can not delete someone else's download";
+
+// openml.votes.do
+$this->apiErrors[822][0] = 'Unauthorized vote';
+$this->apiErrors[822][1] = "Can not download own uploads";
+
+//openml.gamification
+$this->apiErrors[901][0] = 'Can not complete gamification request';
+$this->apiErrors[901][1] = 'No such user';
+
+$this->apiErrors[902][0] = 'Unauthorized gamification request';
+$this->apiErrors[902][1] = 'User has hidden his/her gamification scores and badges';
+
+//openml.gamification.activity
+$this->apiErrors[903][0] = 'Invalid type';
+$this->apiErrors[903][1] = 'Activity requests can only be done for users';
 ?>
