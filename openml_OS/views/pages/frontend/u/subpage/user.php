@@ -29,7 +29,7 @@
             </div>
             <div class="gamestat">
               <div class="gamestat-label">Reach</div>
-              <div class="gamestat-value"><i class="fa fa-rss reach"></i> <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
+              <div class="gamestat-value"><i class="fa fa-rss reach"></i> <?php if(in_array('reach', $this->userinfo)){ echo $this->userinfo['reach']; }else{echo 0;}?></div>
             </div>
             <div class="gamestat">
               <div class="gamestat-label">Impact</div>
