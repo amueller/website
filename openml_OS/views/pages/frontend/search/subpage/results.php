@@ -50,31 +50,39 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
   <a data-toggle="dropdown" class="btn btn-default" href="#">Sort: <b><?php echo $this->curr_sort; ?></b> <i class="fa fa-caret-down"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task_type"))){ ?>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'match', 'order' => 'desc')); ?>">Best match</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'desc')); ?>">Most runs</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'asc')); ?>">Fewest runs</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'match', 'order' => 'desc')); ?>">Best match</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'desc')); ?>">Most runs</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'runs', 'order' => 'asc')); ?>">Fewest runs</a></li>
+    <?php } ?>
+    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run", "task"))){ ?>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'desc')); ?>">Most likes</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'asc')); ?>">Fewest likes</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'desc')); ?>">Most downloads</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'asc')); ?>">Fewest downloads</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'reach', 'order' => 'desc')); ?>">Highest Reach</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'reach', 'order' => 'asc')); ?>">Lowest Reach</a></li>
+    <?php } ?>
+    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "task"))){ ?>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'desc')); ?>">Highest Impact</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>    
     <?php } ?>
     <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run"))){ ?>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'desc')); ?>">Most likes</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'asc')); ?>">Fewest likes</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'desc')); ?>">Most downloads</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'asc')); ?>">Fewest downloads</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'desc')); ?>">Most recent</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'desc')); ?>">Most recent</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
     <?php } ?>
     <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'last_update', 'order' => 'desc')); ?>">Last update</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'desc')); ?>">Most instances</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'asc')); ?>">Fewest instances</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfFeatures', 'order' => 'desc')); ?>">Most features</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfFeatures', 'order' => 'asc')); ?>">Fewest features</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfNumericFeatures', 'order' => 'desc')); ?>">Most numeric features</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfNumericFeatures', 'order' => 'asc')); ?>">Fewest numeric features</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfMissingValues', 'order' => 'desc')); ?>">Most missing values</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfMissingValues', 'order' => 'asc')); ?>">Fewest missing values</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'desc')); ?>">Most classes</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'asc')); ?>">Fewest classes</a></li>
-		<?php } ?>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'last_update', 'order' => 'desc')); ?>">Last update</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'desc')); ?>">Most instances</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfInstances', 'order' => 'asc')); ?>">Fewest instances</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfFeatures', 'order' => 'desc')); ?>">Most features</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfFeatures', 'order' => 'asc')); ?>">Fewest features</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfNumericFeatures', 'order' => 'desc')); ?>">Most numeric features</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfNumericFeatures', 'order' => 'asc')); ?>">Fewest numeric features</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfMissingValues', 'order' => 'desc')); ?>">Most missing values</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfMissingValues', 'order' => 'asc')); ?>">Fewest missing values</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'desc')); ?>">Most classes</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'asc')); ?>">Fewest classes</a></li>
+    <?php } ?>
   </ul>
 </div>
 
@@ -138,8 +146,9 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 				<?php
-        echo '<b>'.$rs['nr_of_likes'].' likes';
-        echo ' - '.$rs['nr_of_downloads'].' downloads </b> - ';
+                                echo '<b>'.$rs['nr_of_likes'].' likes';
+                                echo ' - '.$rs['nr_of_downloads'].' downloads';
+                                echo ' - '.$rs['reach'].' reach </b> - ';
 				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations'])) {
 					echo 'No evaluations yet (or not applicable).';
 
@@ -193,11 +202,13 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="teaser"><?php echo formatTeaser($r); ?> </div>
 				<div class="runStats">
 					<?php echo '<b>'.$rs['runs'].' runs';
-            echo ' - '.$rs['nr_of_likes'].' likes';
-            echo ' - '.$rs['nr_of_downloads'].' downloads</b>';
+                                            echo ' - '.$rs['nr_of_likes'].' likes';
+                                            echo ' - '.$rs['nr_of_downloads'].' downloads';
+                                            echo ' - '.$rs['reach'].' reach';
+                                            echo ' - '.$rs['impact'].' impact </b><br>';
 					 	if(array_key_exists('qualities', $rs)){
 								$q = $rs['qualities'];
-					      if(array_key_exists('NumberOfInstances', $q))    echo ' - '.$q['NumberOfInstances'].' instances';
+					      if(array_key_exists('NumberOfInstances', $q))    echo ''.$q['NumberOfInstances'].' instances';
 					      if(array_key_exists('NumberOfFeatures', $q))     echo ' - '.$q['NumberOfFeatures'].' features';
 					      if(array_key_exists('NumberOfClasses', $q))      echo ' - '.$q['NumberOfClasses'].' classes';
 					      if(array_key_exists('NumberOfMissingValues', $q))echo ' - '.$q['NumberOfMissingValues'].' missing values';
@@ -240,15 +251,24 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 		   		<a href="t/<?php echo $r['_id']; ?>"><?php echo $rs['tasktype']['name'].' on '.$rs['source_data']['name']; ?></a>
 				</div>
 				<div class="runStats statLine">
-					<?php
-					  echo '<b>'.$rs['runs'].' runs </b>';
-						foreach( $rs as $key => $value ) {
-						if($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or $key == 'custom_testset' or !$value) { echo '';}
-						elseif(is_array($value) and array_key_exists('name', $value)){
-								echo ' - '.$key.' : '.$value['name'];}
-						elseif(!is_array($value)){
-							  echo ' - '.$key.' : '.$value;}
-					  } ?>
+                                    <?php
+                                        echo '<b>' . $rs['runs'] . ' runs';
+                                        echo ' - ' . $rs['nr_of_likes'] . ' likes';
+                                        echo ' - ' . $rs['nr_of_downloads'] . ' downloads';
+                                        echo ' - ' . $rs['reach'] . ' reach';
+                                        echo ' - ' . $rs['impact'] . ' impact </b><br>';
+                                        $to_echo = '';
+                                        foreach ($rs as $key => $value) {
+                                            if ($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or $key == 'custom_testset' or $key == 'nr_of_downloads' or $key == 'total_downloads' or $key == 'reach' or $key == 'nr_of_likes' or $key == 'nr_of_issues' or $key == 'nr_of_downvotes' or $key == 'impact' or ! $value) {
+                                                echo '';
+                                            } elseif (is_array($value) and array_key_exists('name', $value)) {
+                                                $to_echo.=$key . ' : ' . $value['name'] . ' - ';
+                                            } elseif (!is_array($value)) {
+                                                $to_echo.=$key . ' : ' . $value . ' - ';
+                                            }
+                                        }
+                                        echo substr($to_echo,0,-3);
+                                    ?>
 				</div>
 
 		   <?php } elseif($type == 'flow') { ?>
@@ -258,8 +278,10 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
 					<?php echo '<b>'.$rs['runs'].' runs';
-                                              echo ' '.$rs['nr_of_likes'].' likes';
-                                              echo ' '.$rs['nr_of_downloads'].' downloads</b>';?>
+                                              echo ' - '.$rs['nr_of_likes'].' likes';
+                                              echo ' - '.$rs['nr_of_downloads'].' downloads';
+                                                echo ' - '.$rs['reach'].' reach';
+                                                echo ' - '.$rs['impact'].' impact </b>';?>
         </div>
 		   <?php } ?>
 
