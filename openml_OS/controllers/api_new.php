@@ -14,8 +14,8 @@ class Api_new extends CI_Controller {
     $this->load->model('api/v1/Api_data');
     $this->load->model('api/v1/Api_votes');
     $this->load->model('api/v1/Api_downloads');
-    $this->load->model('api/v1/Api_gamification');
-    $this->load->model('api/v1/Api_badges');
+    //$this->load->model('api/v1/Api_gamification');
+    //$this->load->model('api/v1/Api_badges');
     $this->load->model('api/v1/Api_task');
     $this->load->model('api/v1/Api_tasktype');
     $this->load->model('api/v1/Api_flow');
