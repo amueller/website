@@ -540,6 +540,37 @@ function doDownload(){
         refreshNrDownloads();
     });
 }
+
+function doDownvote(rid){
+    if(reason_id==rid){
+        meth= 'DELETE';
+        u = '<?php echo BASE_URL?>api_new/v1/xml/votes/down/f/<?php echo $this->id ?>';
+    }else{
+        meth= 'POST';
+        u = '<?php echo BASE_URL?>api_new/v1/xml/votes/down/f/<?php echo $this->id ?>/'+rid
+    }
+    $.ajax({
+        method: meth,
+        url: u
+    }).done(function(resultdata){
+        getDownvotes();
+    }).fail(function(resultdata){
+        
+    });
+}
+
+function getYourDownvote(){
+    $.ajax({
+        method:'GET',
+        url: '<?php echo BASE_URL; ?>api_new/v1/xml/votes/down/<?php echo $this->ion_auth->user()->row()->id; ?>/f/<?php echo $this->id; ?>'
+    }).done(function(resultdata){
+        reason_id = resultdata.getElementsByTagName('value')[0].textContent;
+        if(reason_id!=-1){
+            $('#downvoteicon-'+reason_id).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
+            $('#downvotebutton-'+reason_id).prop('title', 'Click to remove your downvote');
+        }
+    });
+}
 <?php }}?>
 
 function refreshNrLikes(){
@@ -655,38 +686,11 @@ function getDownvotes(){
     }).fail(function(resultdata){
         $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");        
     });
+    <?php
+    if ($this->ion_auth->logged_in()) {
+        if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {?>
     getYourDownvote();
-}
-
-function getYourDownvote(){
-    $.ajax({
-        method:'GET',
-        url: '<?php echo BASE_URL; ?>api_new/v1/xml/votes/down/<?php echo $this->ion_auth->user()->row()->id; ?>/f/<?php echo $this->id; ?>'
-    }).done(function(resultdata){
-        reason_id = resultdata.getElementsByTagName('value')[0].textContent;
-        if(reason_id!=-1){
-            $('#downvoteicon-'+reason_id).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
-            $('#downvotebutton-'+reason_id).prop('title', 'Click to remove your downvote');
-        }
-    });
-}
-
-function doDownvote(rid){
-    if(reason_id==rid){
-        meth= 'DELETE';
-        u = '<?php echo BASE_URL?>api_new/v1/xml/votes/down/f/<?php echo $this->id ?>';
-    }else{
-        meth= 'POST';
-        u = '<?php echo BASE_URL?>api_new/v1/xml/votes/down/f/<?php echo $this->id ?>/'+rid
-    }
-    $.ajax({
-        method: meth,
-        url: u
-    }).done(function(resultdata){
-        getDownvotes();
-    }).fail(function(resultdata){
-        
-    });
+    <?php }} ?>
 }
 
 <?php

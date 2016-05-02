@@ -55,22 +55,21 @@
    <br>
        <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->flow)): if($this->flow['nr_of_likes']!=null): $nr_l = $this->flow['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
        <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->flow)): if($this->flow['nr_of_downloads']!=null): $nr_d = $this->flow['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+       <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->flow)): if($this->flow['nr_of_issues']!=null): $i = $this->flow['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
+       <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->flow)): if($this->flow['nr_of_downvotes']!=null): $d = $this->flow['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
        <?php if(array_key_exists('total_downloads',$this->flow)): if($this->flow['total_downloads']!=null): $nr_d = $this->flow['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
        <?php
        if ($this->ion_auth->logged_in()) {
            if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                 <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->flow)): if($this->flow['reach']!=null): $r = $this->flow['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
                 <i class="material-icons impact" style="font-size: 13px">flare</i><span id="impact"><?php if(array_key_exists('impact',$this->flow)): if($this->flow['impact']!=null): $i = $this->flow['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
-            <?php }?>                
-            <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->flow)): if($this->flow['nr_of_issues']!=null): $i = $this->flow['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
-            <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->flow)): if($this->flow['nr_of_downvotes']!=null): $d = $this->flow['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
+            <?php }?>
        <?php }?>
 </div>
 
 <div class="col-xs-12 panel collapse" id="issues">
     <table class="table table-striped" id="issues_content">
             <?php 
-                    //var_dump($this->downvotes); die;
                 foreach($this->downvotes as $downvote){
                     $id = $downvote['_source']['downvote_id'];
                     echo '<tr>'

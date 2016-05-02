@@ -50,7 +50,9 @@
        <?php if($this->is_owner): echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>'; endif;?>
        <br>
        <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->data)): if($this->data['nr_of_likes']!=null): $nr_l = $this->data['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
-       <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->data)): if($this->data['nr_of_downloads']!=null): $nr_d = $this->data['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+        <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->data)): if($this->data['nr_of_downloads']!=null): $nr_d = $this->data['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+        <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->data)): if($this->data['nr_of_issues']!=null): $i = $this->data['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
+        <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->data)): if($this->data['nr_of_downvotes']!=null): $d = $this->data['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
        <?php if(array_key_exists('total_downloads',$this->data)): if($this->data['total_downloads']!=null): $nr_d = $this->data['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
        <?php
         if ($this->ion_auth->logged_in()) {
@@ -58,15 +60,12 @@
                 <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->data)): if($this->data['reach']!=null): $r = $this->data['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
                 <i class="material-icons impact" style="font-size: 13px">flare</i><span id="impact"><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
             <?php }?>
-            <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->data)): if($this->data['nr_of_issues']!=null): $i = $this->data['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
-            <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->data)): if($this->data['nr_of_downvotes']!=null): $d = $this->data['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
         <?php }?>
     </div>
 
     <div class="col-xs-12 panel collapse" id="issues">
         <table class="table table-striped" id="issues_content">
             <?php 
-                    //var_dump($this->downvotes); die;
                 foreach($this->downvotes as $downvote){
                     $id = $downvote['_source']['downvote_id'];
                     echo '<tr>'

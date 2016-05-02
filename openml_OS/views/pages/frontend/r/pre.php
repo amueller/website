@@ -156,6 +156,21 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
    $this->p['index'] = 'openml';
    $this->p['type'] = 'run';
    $this->p['id'] = $this->run_id;
+        
+    $this->down = array();
+    $this->down['index'] = 'openml';
+    $this->down['type'] = 'downvote';
+    $json = '{
+                "query": {
+                  "bool": {
+                    "must": [
+                      { "match": { "knowledge_type":  "r" }},
+                      { "match": { "knowledge_id": '.$this->id.'   }}
+                    ]
+                  }
+                }
+              }';
+    $this->down['body'] = $json;
     if ($this->ion_auth->logged_in()) {
         $this->l = array();
         $this->l['index'] = 'openml';
@@ -172,27 +187,12 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
                     }
                   }';
         $this->l['body'] = $json;
-        
-            $this->down = array();
-            $this->down['index'] = 'openml';
-            $this->down['type'] = 'downvote';
-            $json = '{
-                        "query": {
-                          "bool": {
-                            "must": [
-                              { "match": { "knowledge_type":  "r" }},
-                              { "match": { "knowledge_id": '.$this->id.'   }}
-                            ]
-                          }
-                        }
-                      }';
-            $this->down['body'] = $json;
     }
    try{
      $this->run = $this->searchclient->get($this->p)['_source'];
+     $this->downvotes = $this->searchclient->search($this->down)['hits']['hits'];
         if ($this->ion_auth->logged_in()) {
           $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
-          $this->downvotes = $this->searchclient->search($this->down)['hits']['hits'];
         }
    } catch (Exception $e) {}
 
