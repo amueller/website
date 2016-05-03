@@ -83,6 +83,24 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'desc')); ?>">Most classes</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'qualities.NumberOfClasses', 'order' => 'asc')); ?>">Fewest classes</a></li>
     <?php } ?>
+    <?php if($this->filtertype and in_array($this->filtertype, array("user"))){ ?>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_uploads', 'order' => 'desc')); ?>">Most uploads done</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_uploads', 'order' => 'asc')); ?>">Fewest uploads done</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'desc')); ?>">Most likes given</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_likes', 'order' => 'asc')); ?>">Fewest likes given</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'desc')); ?>">Most downloads done</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'asc')); ?>">Fewest downloads done</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'activity', 'order' => 'desc')); ?>">Highest Activity</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'activity', 'order' => 'asc')); ?>">Highest Activity</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'likes_received', 'order' => 'desc')); ?>">Most likes received</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'likes_received', 'order' => 'asc')); ?>">Fewest likes received</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'downloads_received', 'order' => 'desc')); ?>">Most downloads received</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'downloads_received', 'order' => 'asc')); ?>">Fewest downloads received</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'reach', 'order' => 'desc')); ?>">Highest Reach</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'reach', 'order' => 'asc')); ?>">Lowest Reach</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'desc')); ?>">Highest Impact</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>    
+    <?php } ?>
   </ul>
 </div>
 
@@ -194,6 +212,13 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 						<?php if($rs['country']) echo '<i class="fa fa-fw fa-map-marker"></i>'.$rs['country'];?>
 						<i class="fa fa-fw fa-clock-o"></i>Joined <?php echo date("Y-m-d", $rs['date']); ?>
 				</div>
+                                <div class="runStats">
+                                <?php echo '<b>'.$rs['nr_of_uploads'].' uploads';
+                                    echo ' - '.$rs['activity'].' activity';
+                                    echo ' - '.$rs['reach'].' reach';
+                                    echo ' - '.$rs['impact'].' impact </b>';
+                                    ?>
+                                </div>
 
 		   <?php } elseif($type == 'data') { ?>
 				<div class="itemhead">
@@ -213,7 +238,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					      if(array_key_exists('NumberOfClasses', $q))      echo ' - '.$q['NumberOfClasses'].' classes';
 					      if(array_key_exists('NumberOfMissingValues', $q))echo ' - '.$q['NumberOfMissingValues'].' missing values';
 							}?>
-								</div>
+				</div>
 		   <?php } elseif($type == 'task_type') { ?>
 				<div class="itemhead">
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
