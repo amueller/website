@@ -407,14 +407,16 @@ $(function getBadges() {
         url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/list/<?php echo $this->user_id; ?>'
     }).done(function(resultdata){
         $.each(resultdata['badges']['badge'], function(i,item){
-            $('#badges').append('<div class="col-sm-3">'+
-                                    '<img src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;">'+
-                                    '<br>'+
-                                    '<h3 style="padding-top:5px">'+item['name']+'</h3>'+
-                                    '<b>Current rank:</b>'+item['description_current']+
-                                    '<br>'+
-                                    '<b>Next rank:</b>'+item['description_next']+
-                                '</div>');
+            if(<?php echo $this->user_id; ?> == <?php echo $this->ion_auth->user()->row()->id; ?> || item['rank']>0){
+                $('#badges').append('<div class="col-sm-3">'+
+                                        '<img src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;">'+
+                                        '<br>'+
+                                        '<h3 style="padding-top:5px">'+item['name']+'</h3>'+
+                                        '<b>Current rank:</b>'+item['description_current']+
+                                        '<br>'+
+                                        '<b>Next rank:</b>'+item['description_next']+
+                                    '</div>');
+            }
         });
     }).fail(function(resultdata){
         console.log("Gamification API failed");
