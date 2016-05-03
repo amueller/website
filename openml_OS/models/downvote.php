@@ -194,14 +194,13 @@ class Downvote extends Database_write {
         return $ds;
     }
 
-    function getByIds($u_id, $k_type, $k_id, $original=1) {
+    function getByIds($u_id, $k_type, $k_id) {
         $sql = 'SELECT `l`.*, `r`.*
             FROM `' . $this->table . '` AS `l`, `' . $this->reason_table . '` AS `r`
             WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $k_type . '"
             AND `l`.`' . $this->knowledge_id_column . '` = "' . $k_id . '"
             AND `l`.`' . $this->user_id_column . '` = "' . $u_id . '"
-            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column
-            .' AND `l`.'.$this->original_column.'='.((int)$original);
+            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column;
         
         $ds = $this->Downvote->query($sql);
         if($ds){

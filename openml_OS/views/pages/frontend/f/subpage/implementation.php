@@ -67,33 +67,51 @@
        <?php }?>
 </div>
 
-<div class="col-xs-12 panel collapse" id="issues">
-    <table class="table table-striped" id="issues_content">
+    <div class="col-xs-12 panel collapse" id="issues">
+        <table class="table table-striped" id="issues_content">
+            <tr>
+                <th>Issue</th>
+                <th>#Downvotes for this reason</th>
+                <th>By</th>
+                <th></th>
+            </tr>
             <?php 
                 foreach($this->downvotes as $downvote){
-                    $id = $downvote['_source']['downvote_id'];
+                    $id = $downvote['_source']['reason_id'];
                     echo '<tr>'
                     . '<td>'.$downvote['_source']['reason'].'</td>'
                     . '<td>'.$downvote['_source']['count'].'</td>'
                     . '<td><a href="u/'.$downvote['_source']['user_id'].'">User '.$downvote['_source']['user_id'].'</a></td>'
-                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
+                    //. '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
+                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"></a></td>'        
                     . '</tr>';
                 }
             ?>
-    </table>
-    <br>
-    <br>
-    <form role="form" id="issueform">
-        <h5>Submit a new issue for this flow</h5>
-        <div class="form-group">
-          <label for="Reason">Issue:</label>
-          <input type="text" class="form-control" id="reason">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-        <div id="succes" class="text-center hidden">Issue Submitted!</div>
-        <div id="fail" class="text-center hidden">Can't submit issue </div>
-    </form>
-</div>
+        </table>
+        <br>
+        <br>
+        <?php if ($this->ion_auth->logged_in()) {
+              if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']){
+              $nodownvote = true;
+              foreach($this->downvotes as $downvote){
+                  if($downvote['_source']['user_id'] == $this->ion_auth->user()->row()->id){
+                      $nodownvote = false;
+                  }
+              }
+              if($nodownvote){
+            ?>
+                <form role="form" id="issueform">
+                    <h5>Submit a new issue for this dataset</h5>
+                    <div class="form-group">
+                      <label for="Reason">Issue:</label>
+                      <input type="text" class="form-control" id="reason">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <div id="succes" class="text-center hidden">Issue Submitted!</div>
+                    <div id="fail" class="text-center hidden">Can't submit issue </div>
+                </form>
+            <?php }}} ?>
+    </div>
 
 <div class="col-xs-12 panel" onclick="showmore()">
   <div class="cardactions">

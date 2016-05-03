@@ -520,6 +520,7 @@ class ElasticSearch {
             'knowledge_type' => $d->knowledge_type,
             'knowledge_id' => $d->knowledge_id,
             'reason' => $d->description,
+            'reason_id' => $d->reason_id,
             'orginal' => $d->original,
             'count' => $d->count,
             'time' => $d->time

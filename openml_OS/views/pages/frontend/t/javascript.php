@@ -527,6 +527,7 @@ var maxreason = -1;
     //if ($this->ion_auth->user()->row()->id != $this->task['uploader_id']) {?>        
 
 getYourDownvote();
+setSubmitBehaviour();
 
 function doLike(liked){
     isliked = liked;
@@ -573,8 +574,31 @@ function getYourDownvote(){
     }).done(function(resultdata){
         reason_id = resultdata.getElementsByTagName('value')[0].textContent;
         if(reason_id!=-1){
-            $('#downvoteicon-'+reason_id).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
+            if(!$('#downvoteicon-'+reason_id).length){
+                $('#downvotebutton-'+reason_id).append('<i id="downvoteicon" class="fa fa-thumbs-down"/>');
+            }else{
+                $('#downvoteicon-'+reason_id).removeclass("fa-thumbs-o-down").addclass("fa-thumbs-down");
+            }
             $('#downvotebutton-'+reason_id).prop('title', 'Click to remove your downvote');
+            $('#issueform').remove();
+        }else{
+            if(!$('a[id^="downvotebutton"] > a[id^="downvoteicon"]').length){
+                $('a[id^="downvotebutton"]').append('<i id="downvoteicon" class="fa fa-thumbs-o-down"/>');
+            }
+            if(!$('#issueform').length){
+            $('#issues').append(
+                '<form role="form" id="issueform">'+
+                    '<h5>Submit a new issue for this dataset</h5>'+
+                    '<div class="form-group">'+
+                      '<label for="Reason">Issue:</label>'+
+                      '<input type="text" class="form-control" id="reason">'+
+                    '</div>'+
+                    '<button type="submit" class="btn btn-default">Submit</button>'+
+                    '<div id="succes" class="text-center hidden">Issue Submitted!</div>'+
+                    '<div id="fail" class="text-center hidden">Can\'t submit issue </div>'+
+                '</form>');
+            setSubmitBehaviour();
+            }
         }
     });
 }
@@ -591,6 +615,7 @@ function doDownvote(rid){
         method: meth,
         url: u
     }).done(function(resultdata){
+        reason_id = parseInt(resultdata.getElementsByTagName('reason_id').item(0).textContent);
         getDownvotes();
     }).fail(function(resultdata){
         
@@ -664,24 +689,27 @@ function flipLikeHTML(){
     }
 }
 
- $("#issueform").submit(function(event){
-    // cancels the form submission
-    event.preventDefault();
-    var reason = $("#reason").val();
-    $("#reason").val('');
-    $.ajax({
-        type: 'POST',
-        url: '<?php echo BASE_URL?>api_new/v1/xml/votes/down/t/<?php echo $this->id ?>/'+reason
-    }).done(function(resultdata){
-        getDownvotes();
-        $("fail").addClass("hidden");
-        $("#success").removeClass("hidden");
-    }).fail(function(resultdata){
-        $("fail").append(resultdata.getElementsByTagName("message")[0].textContent);
-        $("fail").removeClass("hidden");
-        $("#success").addClass("hidden");
-    });
-});
+function setSubmitBehaviour(){ 
+    $("#issueform").submit(function(event){
+       // cancels the form submission
+       event.preventDefault();
+       var reason = $("#reason").val();
+       $("#reason").val('');
+       $.ajax({
+           type: 'POST',
+           url: '<?php echo BASE_URL; ?>api_new/v1/xml/votes/down/t/<?php echo $this->id; ?>/'+reason
+       }).done(function(resultdata){
+           reason_id = parseInt(resultdata.getElementsByTagName('reason_id').item(0).textContent);
+           getDownvotes();
+           $("fail").addClass("hidden");
+           $("#success").removeClass("hidden");
+       }).fail(function(resultdata){
+           $("fail").append(resultdata.getElementsByTagName("message")[0].textContent);
+           $("fail").removeClass("hidden");
+           $("#success").addClass("hidden");
+       });
+   });
+}
 
 function getDownvotes(){
     $('#issues_content').append('<i class="fa fa-spinner fa-pulse"></i> Refreshing issues');
@@ -689,22 +717,48 @@ function getDownvotes(){
         method:'GET',
         url: '<?php echo BASE_URL?>api_new/v1/xml/votes/down/t/<?php echo $this->id ?>'
     }).done(function(resultdata){
-        if(resultdata.getElementsByTagName('downvote').length>0){
+        if(resultdata.getElementsByTagName('downvotes').length>0){
             var dvotes = resultdata.getElementsByTagName('downvote');
             $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th></th></tr>");
             for(var i=0; i<dvotes.length; i++){
                 var id = dvotes[i].getElementsByTagName('reason_id')[0].textContent;
                 maxreason = Math.max(id,maxreason);
-                $('#issues_content').append('<tr>');
-                $('#issues_content').append('<td>'+dvotes[i].getElementsByTagName('reason')[0].textContent+'</td>');
-                $('#issues_content').append('<td>'+dvotes[i].getElementsByTagName('count')[0].textContent+'</td>');
-                $('#issues_content').append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');                
-                $('#issues_content').append('<td><a id="downvotebutton-'+id+'" class="loginfirst btn btn-link" onclick="doDownvote('+id+')" title="Click to agree"> <i id="downvoteicon-'+id+'" class="fa fa-thumbs-o-down"></i></a></td>');
+                $('#issues_content').append('<tr id="issuerow-'+id+'">');
+                $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('reason')[0].textContent+'</td>');
+                $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('count')[0].textContent+'</td>');
+                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');                
+                $('#issuerow-'+id).append('<td><a id="downvotebutton-'+id+'" class="loginfirst btn btn-link" onclick="doDownvote('+id+')" title="Click to agree"> </a></td>');
                 $('#issues_content').append('</tr>');
-            }            
+            }
             if(reason_id!=-1){
-                $('#downvoteicon-'+reason_id).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
+                if(!$('#downvoteicon-'+reason_id).length){
+                    $('#downvotebutton-'+reason_id).append('<i id="downvoteicon-'+reason_id+'" class="fa fa-thumbs-down"/>');
+                }else{
+                    $('#downvoteicon-'+reason_id).removeclass("fa-thumbs-o-down").addclass("fa-thumbs-down");
+                }
                 $('#downvotebutton-'+reason_id).prop('title', 'Click to remove your downvote');
+                $('#issueform').remove();
+            }else{
+                for(var i=0; i<dvotes.length; i++){
+                    var id = dvotes[i].getElementsByTagName('reason_id')[0].textContent;
+                    if(!$('#downvotebutton-'+id).length){
+                        $('#downvotebutton-'+id).append('<i id="downvoteicon-'+id+'" class="fa fa-thumbs-o-down"/>');
+                    }
+                }
+                if(!$('#issueform').length){
+                    $('#issues').append(
+                        '<form role="form" id="issueform">'+
+                            '<h5>Submit a new issue for this dataset</h5>'+
+                            '<div class="form-group">'+
+                              '<label for="Reason">Issue:</label>'+
+                              '<input type="text" class="form-control" id="reason">'+
+                            '</div>'+
+                            '<button type="submit" class="btn btn-default">Submit</button>'+
+                            '<div id="succes" class="text-center hidden">Issue Submitted!</div>'+
+                            '<div id="fail" class="text-center hidden">Can\'t submit issue </div>'+
+                        '</form>');
+                    setSubmitBehaviour();
+                }
             }
             $('#issues_content').append('<br>');
         }

@@ -190,9 +190,10 @@ class Api_votes extends Api_model {
             $this->returnError(711, $this->version);
             return;
         } else {
-            $lid = $this->Like->insertByIds($this->user_id, $knowledge_type, $knowledge_id);
-
-            if (!$lid) {
+            try{
+                $lid = $this->Like->insertByIds($this->user_id, $knowledge_type, $knowledge_id);
+            }
+            catch(Exception $e) {
                 $this->returnError(705, $this->version);
                 return;
             }
@@ -219,14 +220,9 @@ class Api_votes extends Api_model {
             return;
         }else{
             $dvote = $this->Downvote->getByIds($this->user_id, $knowledge_type, $knowledge_id)[0];
-            
-            if ($dvote == false) {
-                //no issue found, but potentially an agreement
-                $dvote = $this->Downvote->getByIds($this->user_id, $knowledge_type, $knowledge_id,0)[0];
-                if($dvote == false){
-                    $this->returnError(703, $this->version);
-                    return;
-                }
+            if($dvote == false){
+                $this->returnError(703, $this->version);
+                return;
             }
 
             $dvote_id = $dvote->did;

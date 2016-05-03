@@ -29,46 +29,63 @@
     <br>
    <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->run)): if($this->run['nr_of_likes']!=null): $nr_l = $this->run['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
    <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->run)): if($this->run['nr_of_downloads']!=null): $nr_d = $this->run['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+   <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->run)): if($this->run['nr_of_issues']!=null): $i = $this->run['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
+   <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->run)): if($this->run['nr_of_downvotes']!=null): $d = $this->run['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
    <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
    <?php if ($this->ion_auth->logged_in()) {
             if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                 <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
-        <?php }?>
-            <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->run)): if($this->run['nr_of_issues']!=null): $i = $this->run['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
-            <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->run)): if($this->run['nr_of_downvotes']!=null): $d = $this->run['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
+        <?php }?>            
    <?php }?>
 </div>
 
 
 
-<div class="col-xs-12 panel collapse" id="issues">
-    <table class="table table-striped" id="issues_content">
+    <div class="col-xs-12 panel collapse" id="issues">
+        <table class="table table-striped" id="issues_content">
+            <tr>
+                <th>Issue</th>
+                <th>#Downvotes for this reason</th>
+                <th>By</th>
+                <th></th>
+            </tr>
             <?php 
-                    //var_dump($this->downvotes); die;
                 foreach($this->downvotes as $downvote){
-                    $id = $downvote['_source']['downvote_id'];
+                    $id = $downvote['_source']['reason_id'];
                     echo '<tr>'
                     . '<td>'.$downvote['_source']['reason'].'</td>'
                     . '<td>'.$downvote['_source']['count'].'</td>'
                     . '<td><a href="u/'.$downvote['_source']['user_id'].'">User '.$downvote['_source']['user_id'].'</a></td>'
-                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
+                    //. '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
+                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"></a></td>'        
                     . '</tr>';
                 }
             ?>
-    </table>
-    <br>
-    <br>
-    <form role="form" id="issueform">
-        <h5>Submit a new issue for this run</h5>
-        <div class="form-group">
-          <label for="Reason">Issue:</label>
-          <input type="text" class="form-control" id="reason">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-        <div id="succes" class="text-center hidden">Issue Submitted!</div>
-        <div id="fail" class="text-center hidden">Can't submit issue </div>
-    </form>
-</div>
+        </table>
+        <br>
+        <br>
+        <?php if ($this->ion_auth->logged_in()) {
+              if ($this->ion_auth->user()->row()->id != $this->run['uploader_id']){
+              $nodownvote = true;
+              foreach($this->downvotes as $downvote){
+                  if($downvote['_source']['user_id'] == $this->ion_auth->user()->row()->id){
+                      $nodownvote = false;
+                  }
+              }
+              if($nodownvote){
+            ?>
+                <form role="form" id="issueform">
+                    <h5>Submit a new issue for this dataset</h5>
+                    <div class="form-group">
+                      <label for="Reason">Issue:</label>
+                      <input type="text" class="form-control" id="reason">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <div id="succes" class="text-center hidden">Issue Submitted!</div>
+                    <div id="fail" class="text-center hidden">Can't submit issue </div>
+                </form>
+            <?php }}} ?>
+    </div>
 
   <h3>Flow</h3>
   <div class="cardtable">
