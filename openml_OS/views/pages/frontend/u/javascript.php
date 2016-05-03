@@ -238,6 +238,7 @@ $('#impacttoggle').click(function(){
 
 <?php
 if ($this->ion_auth->logged_in()) {?>
+getBadges();
 $(function getActivity() {
     $.ajax({
         method:'GET',
@@ -401,27 +402,39 @@ $(function getImpact() {
     });
 });
 
-$(function getBadges() {
+function checkBadge(id){
+    $.ajax({
+            method:'GET',
+            url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/check/<?php echo $this->user_id; ?>/'+id
+        }).done(function(resultdata){
+            getBadges();
+        }).fail(function(resultdata){
+            console.log("Gamification API failed");
+        });
+}
+
+function getBadges() {
     $.ajax({
         method:'GET',
         url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/list/<?php echo $this->user_id; ?>'
     }).done(function(resultdata){
+        $('#badges').html("");
         $.each(resultdata['badges']['badge'], function(i,item){
             if(<?php echo $this->user_id; ?> == <?php echo $this->ion_auth->user()->row()->id; ?> || item['rank']>0){
                 $('#badges').append('<div class="col-sm-3">'+
-                                        '<img src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;">'+
+                                        '<img class="btn" src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;" onclick="checkBadge('+item['id']+')" title="Click to evaluate rank">'+
                                         '<br>'+
-                                        '<h3 style="padding-top:5px">'+item['name']+'</h3>'+
-                                        '<b>Current rank:</b>'+item['description_current']+
+                                        '<h4 style="padding-top:5px">'+item['name']+'</h4>'+
+                                        '<b>Current rank: </b>'+item['description_current']+
                                         '<br>'+
-                                        '<b>Next rank:</b>'+item['description_next']+
+                                        '<b>Next rank: </b>'+item['description_next']+
                                     '</div>');
             }
         });
     }).fail(function(resultdata){
         console.log("Gamification API failed");
     });
-});
+}
 
 
 $('#keyupgrade').submit(function() {
