@@ -33,8 +33,14 @@ class Api_flow extends Api_model {
       return;
     }
 
+    // TODO: deprecate!
     if (count($segments) == 3 && $segments[0] == 'exists') {
       $this->flow_exists($segments[1],$segments[2]);
+      return;
+    }
+
+    if (count($segments) == 1 && $segments[0] == 'exists') {
+      $this->flow_exists($this->input->post('name'),$this->input->post('external_version'));
       return;
     }
 
