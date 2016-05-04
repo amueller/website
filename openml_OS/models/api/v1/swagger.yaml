@@ -1,12 +1,12 @@
 swagger: '2.0'
 info:
   title: OpenML API
-  description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint http://www.openml.org/api_new/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
+  description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint http://www.openml.org/api/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
   version: 1.0.0
 host: www.openml.org
 schemes:
   - http
-basePath: /api_new/v1/json
+basePath: /api/v1/json
 produces:
   - application/json
 paths:
@@ -429,9 +429,101 @@ paths:
               }
         370:
           description: No datasets available. There are no valid datasets in the system.
+  /data/list/limit/{limit}/offset/{offset}:
+    get:
+      summary: List all datasets within a range.
+      description: |
+        Returns an array with a limited number of datasets.
+      parameters:
+        - name: limit
+          in: path
+          description: Optional, although required in this interface. The maximum number of datasets to return.  Without specifying an offset, it returns the first 'limit' datasets.
+          required: true
+          type: number
+          format: integer
+        - name: offset
+          in: path
+          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, datasets 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of datasets
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No datasets available. There are no valid datasets in the system.
   /data/list/tag/{tag}:
     get:
-      summary: List all datasets with the given tag
+      summary: List all datasets with the given tag. Can also be combined with limit and offset.
       description: |
         Returns an array with all datasets in the system with the given tag.
       parameters:
@@ -932,9 +1024,130 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /task/list/limit/{limit}/offset/{offset}:
+    get:
+      summary: List all tasks within a range
+      description: |
+        Returns an array with a limited number of tasks.
+      parameters:
+        - name: limit
+          in: path
+          description: Optional, although required in this interface. The maximum number of tasks to return. Without specifying an offset, it returns the first 'limit' tasks.
+          required: true
+          type: number
+          format: integer
+        - name: offset
+          in: path
+          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, tasks 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A list of tasks
+          schema:
+            $ref: '#/definitions/TaskList'
+          examples:
+            application/json: |-
+              {
+                "task": {
+                  "task": [
+                    {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data",
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
+                      ]
+                    }
+                  ]
+                }
+              }
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /task/list/type/{id}:
     get:
-      summary: List all tasks of given type
+      summary: List all tasks of given type. Can be combined with limits and tags.
       description: |
         Returns an array with all tasks for the given task type id (1 = Supervised Classification)
       parameters:
@@ -1049,7 +1262,7 @@ paths:
           description: No results. There where no matches for the given task type ID.
   /task/list/tag/{tag}:
     get:
-      summary: List all tasks with the given tag
+      summary: List all tasks with the given tag. Can be combined with limits and task types.
       description: |
         Returns an array with all tasks with the given tag
       parameters:
@@ -1693,9 +1906,74 @@ paths:
                 }
         500:
           description: There where no results.
+  /flow/list/limit/{limit}/offset/{offset}:
+    get:
+      summary: List all flows within a range
+      description: |
+        Returns an array with the requested flows.
+      parameters:
+        - name: limit
+          in: path
+          description: Optional, although required in this interface. The maximum number of flows to return.  Without specifying an offset, it returns the first 'limit' flows.
+          required: true
+          type: number
+          format: integer
+        - name: offset
+          in: path
+          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, flows 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - flow
+      responses:
+        '200':
+          description: A list of flows
+          schema:
+            $ref: '#/definitions/FlowList'
+          examples:
+            application/json: |-
+              {
+                "flows":
+                  {
+                    "flow":[
+                      {
+                        "id":"65",
+                        "full_name":"weka.RandomForest(1)",
+                        "name":"weka.RandomForest",
+                        "version":"1",
+                        "external_version":"Weka_3.7.10_9186",
+                        "uploader":"1"
+                      },
+                      {
+                        "id":"66",
+                        "full_name":"weka.IBk(1)",
+                        "name":"weka.IBk",
+                        "version":"1",
+                        "external_version":"Weka_3.7.10_8034",
+                        "uploader":"1"
+                      },
+                      {
+                        "id":"67",
+                        "full_name":"weka.BayesNet_K2(1)",
+                        "name":"weka.BayesNet_K2",
+                        "version":"1",
+                        "external_version":"Weka_3.7.10_8034",
+                        "uploader":"1"
+                      }
+                    ]
+                  }
+                }
+        500:
+          description: There where no results.
   /flow/list/tag/{tag}:
     get:
-      summary: List all flows with the given tag
+      summary: List all flows with the given tag. Can be combined with limits.
       description: |
         Returns an array with all flows in the system with the given tag.
       parameters:
@@ -2150,6 +2428,76 @@ paths:
           description: Wrong flow associated with run. The flow implements a math_function, which is unable to generate predictions. Please select another flow.
         "219":
           description: Error reading the XML document. The XML description file could not be verified.
+  /run/list/limit/{limit}/offset/{offset}:
+    get:
+      summary: Get runs by limit/offset
+      description: |
+        Returns an array with all runs matching the given limit and offset.
+      parameters:
+        - name: limit
+          in: path
+          description: The maximum number of runs to return.  Without specifying an offset, it returns the first 'limit' runs.
+          required: true
+          type: number
+          format: integer
+        - name: offset
+          in: path
+          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, runs 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - run
+      responses:
+        '200':
+          description: A list of runs descriptions
+          schema:
+            $ref: '#/definitions/RunList'
+          examples:
+            application/json:
+              {
+                "runs": {
+                  "run": [
+                    {
+                      "run_id": "100",
+                      "task_id": "28",
+                      "setup_id": "12",
+                      "flow_id": "67",
+                      "uploader": "1",
+                      "error_message": []
+                    },
+                    {
+                      "run_id": "101",
+                      "task_id": "48",
+                      "setup_id": "6",
+                      "flow_id": "61",
+                      "uploader": "1",
+                      "error_message": []
+                    },
+                    {
+                      "run_id": "102",
+                      "task_id": "41",
+                      "setup_id": "3",
+                      "flow_id": "58",
+                      "uploader": "1",
+                      "error_message": []
+                    }
+                  ]
+                }
+              }
+        510:
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
+        511:
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
+        512:
+          description: There where no results. Check whether there are runs under the given constraint.  
+        513:
+          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/run/{ids}:
     get:
       summary: Get runs by id(s)
@@ -2206,7 +2554,7 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
@@ -2269,7 +2617,7 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id, tag) did not meet the contrains (comma separated list of integers).  
         512:
@@ -2332,7 +2680,7 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
@@ -2395,7 +2743,7 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
@@ -2458,7 +2806,7 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
@@ -2467,13 +2815,13 @@ paths:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/{filters}:
     get:
-      summary: Get runs by id, task, uploader and/or flow
+      summary: Get runs by limit, id, task, uploader and/or flow
       description: |
-        Returns an array with all runs matching any or all of the given filters. You can combine any of the four above filters any way you want.
+        Returns an array with all runs matching any or all of the given filters. You can combine any of the above filters any way you want.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'.
+          description: Any combination of filters (run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'. With or without limit.
           required: true
           type: string
         - name: api_key
@@ -2521,7 +2869,7 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results. The number of runs is huge. Please limit the result space.  
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
@@ -2696,6 +3044,76 @@ paths:
           description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
+  /evaluation/list/limit/{limit}/offset/{offset}:
+    get:
+      summary: Get evaluations by limit/offset
+      description: |
+        Returns an array with all evaluations matching the given limit/offset.
+      parameters:
+        - name: limit
+          in: path
+          description: The maximum number of datasets to return. Without specifying an offset, it returns the first 'limit' evaluations.
+          required: true
+          type: number
+          format: integer
+        - name: offset
+          in: path
+          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, evaluations 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - evaluation
+      responses:
+        '200':
+          description: A list of evaluations with the given limit/offset
+          schema:
+            $ref: '#/definitions/EvaluationList'
+          examples:
+            application/json:
+              {
+                "evaluations": {
+                  "evaluation": [
+                    {
+                      "run_id":"1",
+                      "task_id":"68",
+                      "flow_id":"61",
+                      "function":"area_under_roc_curve",
+                      "value":"0.839359",
+                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
+                    },
+                    {
+                      "run_id":"1",
+                      "task_id":"68",
+                      "flow_id":"61",
+                      "function":"f_measure",
+                      "value":"0.600026",
+                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
+                    },
+                    {
+                      "run_id":"1",
+                      "task_id":"68",
+                      "flow_id":"61",
+                      "function":"predictive_accuracy",
+                      "value":"0.614634",
+                      "array_data":[]
+                    }
+                  ]
+                }
+              }
+        540:
+          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses.
+        541:
+          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
+        542:
+          description: There where no results. Check whether there are runs under the given constraint.  
+        543:
+          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/tag/{tag}:
     get:
       summary: Get evaluations by tag
@@ -2752,7 +3170,7 @@ paths:
                 }
               }
         540:
-          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results.
+          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
           description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
@@ -2815,7 +3233,7 @@ paths:
                 }
               }
         540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
@@ -2878,7 +3296,7 @@ paths:
                 }
               }
         540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
@@ -2941,7 +3359,7 @@ paths:
                 }
               }
         540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
@@ -2950,13 +3368,13 @@ paths:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/{filters}:
     get:
-      summary: Get evaluations by run, task, uploader and or flow
+      summary: Get evaluations by run, task, uploader and or flow (with or without limit)
       description: |
         Returns an array with all evaluations matching any or all of the given filters. You can combine any of the four above filters any way you want.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'.
+          description: Any combination of filters (limit,run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'.
           required: true
           type: string
         - name: api_key
@@ -3004,7 +3422,7 @@ paths:
                 }
               }
         540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
           description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
