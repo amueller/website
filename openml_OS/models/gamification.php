@@ -140,7 +140,7 @@ class Gamification extends CI_Model{
         }
         if($reuse){
             foreach($reuse as $r){
-                $datediff = (strtotime($likeordownload->date) - strtotime($from))/(60*60*24);
+                $datediff = (strtotime($r->date) - strtotime($from))/(60*60*24);
                 $result[floor($datediff)]['reuse']+=$r->count;
                 $result[floor($datediff)]['impact']+=$r->count*$this->scores['impact']['reuse'];
             }

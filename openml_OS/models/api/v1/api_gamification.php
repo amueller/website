@@ -29,7 +29,7 @@ class Api_gamification extends Api_model {
                     return;
                 }
             }
-            if(count($segments==3)){
+            if(count($segments)==3){
                 $meth = 'get_progress_'.$score.'_whole';
                 $this->$meth($type,$id,"2013-1-1");
                 return;
