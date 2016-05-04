@@ -39,16 +39,6 @@ class ElasticSearch {
                 $this->user_names[$a->id] = $a->first_name . ' ' . $a->last_name;
             }
 
-        $this->activity_metrics['x'] = 1;
-        $this->activity_metrics['y'] = 2;
-        $this->activity_metrics['z'] = 3;
-
-        $this->reach_metrics['x'] = 1;
-        $this->reach_metrics['y'] = 2;
-
-        $this->impact_metrics['x'] = 0.5;
-        $this->impact_metrics['y'] = 0.5;
-
         $this->mappings['badge'] = array(
             '_all' => array(
                 'enabled' => true,
@@ -720,8 +710,8 @@ class ElasticSearch {
         $user['nr_of_downloads_flow'] = $nr_of_downloads_flow;
         $user['nr_of_downloads_task'] = $nr_of_downloads_task;
         $user['nr_of_downloads_run'] = $nr_of_downloads_run;
-
-        $user['activity'] = ($this->activity_metrics['x'] * $user['nr_of_downloads']) + ($this->activity_metrics['y'] * $user['nr_of_likes']) + ($this->activity_metrics['z'] * $user['nr_of_uploads']);
+        //$user['activity'] = ($this->activity_metrics['x'] * $user['nr_of_downloads']) + ($this->activity_metrics['y'] * $user['nr_of_likes']) + ($this->activity_metrics['z'] * $user['nr_of_uploads']);
+        $user['activity'] = $this->CI->Gamification->getActivityFromParts($user['nr_of_uploads'],$user['nr_of_likes'],$user['nr_of_downloads']);
         
         $ld_received = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($d->id);
         $likes_received = 0;
@@ -771,7 +761,7 @@ class ElasticSearch {
         $user['downloads_received_flow'] = $downloads_received_flow;
         $user['downloads_received_task'] = $downloads_received_task;
         $user['downloads_received_run'] = $downloads_received_run; 
-        $user['reach'] = ($user['downloads_received'] * $this->reach_metrics['x']) + ($user['likes_received'] * $this->reach_metrics['y']);
+        $user['reach'] = $this->CI->Gamification->getReachFromParts($user['likes_received'],$user['downloads_received']);
 
         $impact_struct = $this->CI->Gamification->getImpact('u',$d->id,"2013-1-1",date("Y-m-d"));
         
@@ -1002,10 +992,10 @@ class ElasticSearch {
         if($ld_task){
             foreach($ld_task as $ld){
                 if($ld->ldt=='l'){
-                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                     
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1287,10 +1277,10 @@ class ElasticSearch {
         if($ld_run){
             foreach($ld_run as $ld){
                 if($ld->ldt=='l'){
-                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                   
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1487,10 +1477,10 @@ class ElasticSearch {
         if($ld_flow){
             foreach($ld_flow as $ld){
                 if($ld->ldt=='l'){
-                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                    
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1807,10 +1797,10 @@ class ElasticSearch {
         if($ld_data){
             foreach($ld_data as $ld){
                 if($ld->ldt=='l'){
-                    $reach += ($ld->count*$this->reach_metrics['y']);
+                    $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += ($ld->count*$this->reach_metrics['x']);                    
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                    
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
