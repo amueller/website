@@ -40,7 +40,7 @@ class Api_evaluation extends Api_model {
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
 
-    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false) {
+    if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false && $limit == false) {
       $this->returnError( 540, $this->version );
       return;
     }
