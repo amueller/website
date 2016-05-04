@@ -181,7 +181,7 @@ class KnowledgePiece extends Database_write{
     }
     
     function getNumberOfReusesOfUploadsOfUser($u_id,$from=null,$to=null){
-        $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt, task.creation_date as time FROM  task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
+        $datareuse_sql = "SELECT dataset.did as oringal_id, 'd' as ot, task_inputs.task_id as reuse_id, 't' as rt, task.creation_date as time FROM  `task`, `task_inputs`, `dataset` WHERE dataset.uploader=".$u_id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
         $flowreuse_sql = "SELECT implementation.id as oringal_id, 'f' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.uploader=".$u_id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
         $taskreuse_sql = "SELECT task.task_id as oringal_id, 't' as ot, run.rid as reuse_id, 'r' as rt, run.processed as time FROM `task`, `run` WHERE task.creator=".$u_id." AND run.task_id=task.task_id  AND run.uploader<>task.creator";
         $sql="SELECT reuse.ot, count(reuse.reuse_id) as count, DATE(reuse.time) as date FROM (".$datareuse_sql." UNION ".$flowreuse_sql." UNION ".$taskreuse_sql.") as reuse";
@@ -197,6 +197,30 @@ class KnowledgePiece extends Database_write{
             $sql.=" GROUP BY reuse.ot, DATE(reuse.time) ORDER BY date;";           
         }else{            
             $sql.=" GROUP BY reuse.ot;";
+        }
+        return $this->KnowledgePiece->query($sql);
+    }
+    
+    function getNumberOfReusesOfUpload($type,$id,$from,$to){
+        if($type=='d'){
+            $sql = "SELECT 'd' as ot, count(task_inputs.task_id) as count, DATE(task.creation_date) as date FROM  task`, `task_inputs`, `dataset` WHERE dataset.did=".$id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
+        }else if($type=='f'){
+            $sql = "SELECT 'f' as ot, count(run.rid) as count, DATE(run.processed) as date FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.id=".$id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
+        }else /*if($type=='t')*/{
+            $sql = "SELECT 't' as ot, count(run.rid) as count, DATE(run.processed) as date FROM `task`, `run` WHERE task.task_id=".$id." AND run.task_id=task.task_id  AND run.uploader<>task.creator";
+        }        
+        if ($from != null && $to!=null) {
+            $sql .= ' WHERE date>="' . $from . '"';
+            $sql .= ' AND date<"' . $to . '"';
+            $sql .=" GROUP BY ot, date ORDER BY date;";
+        }else if ($to != null) {
+            $sql .= ' WHERE date<"' . $to . '"';
+            $sql .=" GROUP BY ot, date ORDER BY date;";
+        }else if($from!=null){
+            $sql .= ' WHERE date>="' . $from . '"'; 
+            $sql .=" GROUP BY ot, date ORDER BY date;";           
+        }else{            
+            $sql.=" GROUP BY ot;";
         }
         return $this->KnowledgePiece->query($sql);
     }

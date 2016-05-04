@@ -28,6 +28,11 @@ class Api_gamification extends Api_model {
                 if(!$this->checkGamificationSettings($id)){
                     return;
                 }
+            }
+            if(count($segments==3)){
+                $meth = 'get_progress_'.$score.'_whole';
+                $this->$meth($type,$id,"2013-1-1");
+                return;
             }else if($segments[3]=='today'){
                 $meth = 'get_progress_'.$score.'_whole';
                 $this->$meth($type,$id,date("Y-m-d"));
