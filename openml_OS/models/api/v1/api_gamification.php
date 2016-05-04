@@ -53,7 +53,7 @@ class Api_gamification extends Api_model {
             }else if($segments[3]=='lastday'){//progress of the last 24 hours
                 $meth = 'get_progress_'.$score.'_whole';
                 $now = date("Y-m-d H:i:s");
-                $this->$meth($type,$id,date('Y-m-d H:i:s', strtotime($now . ' -1 day'),$now));
+                $this->$meth($type,$id,date('Y-m-d H:i:s', strtotime($now . ' -1 day'),date("Y-m-d",strtotime($now. ' +1 day'))));
                 return;
             }else if($segments[3]=='lastmonth'){//progress of the last 28/29/30/31 days
                 $meth = 'get_progress_'.$score.'_whole';
@@ -63,7 +63,7 @@ class Api_gamification extends Api_model {
             }else if($segments[3]=='lastmonth_perday'){//progress for each day of the last 28/29/30/31 days
                 $meth = 'get_progress_'.$score.'_perday';
                 $now = date("Y-m-d");
-                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 month')),$now);
+                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 month')),date("Y-m-d",strtotime($now. ' +1 day')));
                 return;
             }else if($segments[3]=='lastyear'){//progress of the last 365/366 days
                 $meth = 'get_progress_'.$score."_whole";
@@ -73,7 +73,7 @@ class Api_gamification extends Api_model {
             }else if($segments[3]=='lastyear_perday'){//progress for each day of the last 365/366 days
                 $meth = 'get_progress_'.$score.'_perday';
                 $now = date("Y-m-d");
-                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 year')),$now);
+                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 year')),date("Y-m-d",strtotime($now. ' +1 day')));
                 return;                
             }else if(count($segments)==4 && is_numeric($segments[3])){ //progress of $segment[3] (ex. 2014)
                 $meth = 'get_progress_'.$score.'_whole';
@@ -163,5 +163,4 @@ class Api_gamification extends Api_model {
         return true;
     }
 }
-?>
 
