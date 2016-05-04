@@ -1016,22 +1016,16 @@ class ElasticSearch {
         $newdata['total_downloads'] = $total_downloads;
         $newdata['reach'] = $reach;
 
-        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload('t',$d->task_id);        
-        $reuse_reach = 0;
-        if($ld_reuse){
-            foreach($ld_reuse as $ld){
-                if($ld->ldt=='l'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
-                }else if($ld->ldt=='d'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
-                }
-            }
-        }
-        $newdata['reach_of_reuse'] = $reuse_reach;        
-
-        $newdata['impact_of_reuse'] = 0;
+        $impact_struct = $this->CI->Gamification->getImpact('t',$d->task_id,"2013-1-1",date("Y-m-d"));
         
-        $newdata['impact'] = $this->impact_metrics['x']*$newdata['impact_of_reuse'] + $this->impact_metrics['y']*$newdata['reach_of_reuse'];
+        $newdata['reuse'] = $impact_struct['reuse'];
+        
+        $newdata['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        
+        $newdata['reach_of_reuse'] = $impact_struct['reuse_reach'];
+
+        $newdata['impact'] = $impact_struct['impact'];
+        
         return $newdata;
     }
 
@@ -1507,22 +1501,15 @@ class ElasticSearch {
         $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
-        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload('f',$d->id);        
-        $reuse_reach = 0;
-        if($ld_reuse){
-            foreach($ld_reuse as $ld){
-                if($ld->ldt=='l'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
-                }else if($ld->ldt=='d'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
-                }
-            }
-        }
-        $new_data['reach_of_reuse'] = $reuse_reach;        
-
-        $new_data['impact_of_reuse'] = 0;
+        $impact_struct = $this->CI->Gamification->getImpact('f',$d->id,"2013-1-1",date("Y-m-d"));
         
-        $new_data['impact'] = $this->impact_metrics['x']*$new_data['impact_of_reuse'] + $this->impact_metrics['y']*$new_data['reach_of_reuse'];
+        $new_data['reuse'] = $impact_struct['reuse'];
+        
+        $new_data['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        
+        $new_data['reach_of_reuse'] = $impact_struct['reuse_reach'];
+
+        $new_data['impact'] = $impact_struct['impact'];
         return $new_data;
     }
 
@@ -1834,22 +1821,15 @@ class ElasticSearch {
         $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
 
-        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload('d',$d->did);        
-        $reuse_reach = 0;
-        if($ld_reuse){
-            foreach($ld_reuse as $ld){
-                if($ld->ldt=='l'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
-                }else if($ld->ldt=='d'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
-                }
-            }
-        }
-        $new_data['reach_of_reuse'] = $reuse_reach;        
-
-        $new_data['impact_of_reuse'] = 0;
+        $impact_struct = $this->CI->Gamification->getImpact('d',$d->did,"2013-1-1",date("Y-m-d"));
         
-        $new_data['impact'] = $this->impact_metrics['x']*$new_data['impact_of_reuse'] + $this->impact_metrics['y']*$new_data['reach_of_reuse'];
+        $new_data['reuse'] = $impact_struct['reuse'];
+        
+        $new_data['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        
+        $new_data['reach_of_reuse'] = $impact_struct['reuse_reach'];
+
+        $new_data['impact'] = $impact_struct['impact'];
 
         return $new_data;
     }
