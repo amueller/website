@@ -84,16 +84,22 @@ class Api_flow extends Api_model {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
     $tag = element('tag',$query_string);
+    $limit = element('limit',$query_string);
+    $offset = element('offset',$query_string);
 
-    if (!(is_safe($tag))) {
+    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset))) {
       $this->returnError(511, $this->version );
       return;
     }
 
     $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag="' . $tag . '") ';
     $where_total = $where_tag;
+    $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
+    if($limit != false && $offset != false){
+      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    }
 
-    $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total;
+    $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total . $where_limit;
     $implementations = $this->Implementation->query($sql);
     if( $implementations == false ) {
       $this->returnError( 500, $this->version );

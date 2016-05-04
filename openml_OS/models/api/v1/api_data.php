@@ -86,21 +86,27 @@ class Api_data extends Api_model {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
     $tag = element('tag',$query_string);
+    $limit = element('limit',$query_string);
+    $offset = element('offset',$query_string);
 
-    if (!(is_safe($tag))) {
+    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset))) {
       $this->returnError(511, $this->version );
       return;
     }
-    
+
     $where_total = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
-    
+    $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
+    if($limit != false && $offset != false){
+      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    }
+
     $active = element('active',$query_string);
     if ($active == 'true') {
       $where_total .= ' AND status = "active" ';
     }
-    
-    
-    $sql = 'select * from dataset where (visibility = "public" or uploader='.$this->user_id.') '. $where_total;
+
+
+    $sql = 'select * from dataset where (visibility = "public" or uploader='.$this->user_id.') '. $where_total . $where_limit;
     $datasets_res = $this->Dataset->query($sql);
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
       $this->returnError( 370, $this->version );
@@ -135,8 +141,8 @@ class Api_data extends Api_model {
       return;
     }
 
-    if($dataset->visibility != 'public' && 
-       $dataset->uploader != $this->user_id && 
+    if($dataset->visibility != 'public' &&
+       $dataset->uploader != $this->user_id &&
        !$this->ion_auth->is_admin($this->user_id)) {
       $this->returnError( 112, $this->version );
       return;
@@ -200,7 +206,7 @@ class Api_data extends Api_model {
     // get correct description
     $xsdFile = xsd('openml.data.upload', $this->controller, $this->version);
     $xmlErrors = '';
-    
+
     if( $this->input->post('description') ) {
       // get description from string upload
       $description = $this->input->post('description', false);
@@ -226,12 +232,12 @@ class Api_data extends Api_model {
       $this->returnError( 135, $this->version );
       return;
     }
-    
+
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
-    
+
     //check and register the data files, return url
     $file_id = null;
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
@@ -264,7 +270,7 @@ class Api_data extends Api_model {
       $this->returnError( 141, $this->version );
       return;
     }
-    
+
     // ***** NEW DATASET *****
     $name = '' . $xml->children('oml', true)->{'name'};
     $version = $this->Dataset->incrementVersionNumber( $name );
@@ -283,7 +289,7 @@ class Api_data extends Api_model {
     $dataset = all_tags_from_xml(
       $xml->children('oml', true),
       $this->xml_fields_dataset, $dataset );
-    
+
     // handle tags
     $tags = array();
     if( array_key_exists( 'tag', $dataset ) ) {
@@ -312,9 +318,9 @@ class Api_data extends Api_model {
     $this->elasticsearch->index('user', $this->user_id);
 
     // create initial wiki page
-    
+
     $this->wiki->export_to_wiki($id);
-    
+
     // create
     $this->xmlContents( 'data-upload', $this->version, array( 'id' => $id ) );
   }

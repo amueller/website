@@ -37,13 +37,15 @@ class Api_evaluation extends Api_model {
     $run_id = element('run',$query_string);
     $function_name = element('function',$query_string);
     $tag = element('tag',$query_string);
+    $limit = element('limit',$query_string);
+    $offset = element('offset',$query_string);
 
     if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false) {
       $this->returnError( 540, $this->version );
       return;
     }
 
-    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($function_name) && is_safe($tag))) {
+    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($function_name) && is_safe($tag) && is_safe($limit) && is_safe($offset))) {
       $this->returnError(541, $this->version );
       return;
     }
@@ -55,15 +57,19 @@ class Api_evaluation extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_function = $function_name == false ? '' : ' AND `e`.`function` = "' . $function_name . '" ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
+    $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
+    if($limit != false && $offset != false){
+      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    }
 
     //pre-test
     $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag;
     $sql_test =
-      'SELECT distinct r.rid ' . 'FROM run r, algorithm_setup s ' . 'WHERE r.setup = s.sid ' . $where_runs;
+      'SELECT distinct r.rid ' . 'FROM run r, algorithm_setup s ' . 'WHERE r.setup = s.sid ' . $where_runs . $where_limit ;
     $res_test = $this->Evaluation->query( $sql_test );
 
     if (count($res_test) > 10000) {
-      $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res) . ' runs; max size: 10000. ');
+      $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res_test) . ' runs; max size: 10000. Please use limit and offset. ');
       return;
     }
 
@@ -74,7 +80,7 @@ class Api_evaluation extends Api_model {
       'SELECT r.rid, r.task_id, s.implementation_id, s.sid, e.function, e.value, e.array_data ' .
       'FROM evaluation e, run r, algorithm_setup s ' .
       'WHERE r.setup = s.sid AND e.source = r.rid ' . $where_total .
-      'ORDER BY r.rid; ';
+      'ORDER BY r.rid' . $where_limit;
     $res = $this->Evaluation->query( $sql );
 
     if ($res == false) {

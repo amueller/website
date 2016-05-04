@@ -89,13 +89,15 @@ class Api_run extends Api_model {
     $uploader_id = element('uploader',$query_string);
     $run_id = element('run',$query_string);
     $tag = element('tag',$query_string);
+    $limit = element('limit',$query_string);
+    $offset = element('offset',$query_string);
 
     if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false) {
       $this->returnError( 510, $this->version );
       return;
     }
 
-    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($tag))) {
+    if (!(is_safe($task_id) && is_safe($setup_id) && is_safe($implementation_id) && is_safe($uploader_id) && is_safe($run_id) && is_safe($tag) && is_safe($limit) && is_safe($offset))) {
       $this->returnError(511, $this->version );
       return;
     }
@@ -107,13 +109,17 @@ class Api_run extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
+    $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
+    if($limit != false && $offset != false){
+      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    }
 
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
 
     $sql =
       'SELECT r.rid, r.uploader, r.task_id, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message ' .
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
-      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . $where_total;
+      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . $where_total . $where_limit;
     $res = $this->Run->query( $sql );
 
     if ($res == false) {

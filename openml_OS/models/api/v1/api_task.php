@@ -70,6 +70,8 @@ class Api_task extends Api_model {
 
     $type = element('type',$query_string);
     $tag = element('tag',$query_string);
+    $limit = element('limit',$query_string);
+    $offset = element('offset',$query_string);
 
     if (!(is_safe($tag) && is_safe($type))) {
       $this->returnError(511, $this->version );
@@ -79,6 +81,11 @@ class Api_task extends Api_model {
     $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
     $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
     $where_total = $where_type . $where_tag;
+    $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
+    if($limit != false && $offset != false){
+      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    }
+
 
     $tasks_res = $this->Task->query(
       'SELECT t.task_id, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name '.
@@ -86,7 +93,7 @@ class Api_task extends Api_model {
       'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
       $where_total .
        //$active .
-       ' ORDER BY task_id; ' );
+       ' ORDER BY task_id ' . $where_limit );
     if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {
       $this->returnError( 481, $this->version );
       return;
@@ -116,7 +123,7 @@ class Api_task extends Api_model {
     }
     for( $i = 0; $i < count($tt); ++$i ) {
       if (array_key_exists($tt[$i]->id,$tasks)) {
-        $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag; 
+        $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag;
       }
     }
 
@@ -187,9 +194,9 @@ class Api_task extends Api_model {
       $this->returnError(530, $this->version);
       return;
     }
-    
+
     $descriptionFile = $_FILES['description']['tmp_name'];
-    
+
     $xsd = xsd('openml.task.upload', $this->controller, $this->version);
     if (!$xsd) {
       $this->returnError(531, $this->version, $this->openmlGeneralErrorCode);
