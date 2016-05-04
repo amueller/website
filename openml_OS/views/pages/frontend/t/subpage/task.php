@@ -58,7 +58,7 @@
                 <?php if ($this->ion_auth->logged_in()) {
                         if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                             <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->task)): if($this->task['reach']!=null): $r = $this->task['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
-                            <i class="material-icons impact" style="font-size: 13px">flare</i><span id="impact"><?php if(array_key_exists('impact',$this->task)): if($this->task['impact']!=null): $i = $this->task['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
+                            <i class="fa fa-bolt impact"></i><!--<i class="material-icons impact" style="font-size: 13px">flare</i>--><span id="impact"><?php if(array_key_exists('impact',$this->task)): if($this->task['impact']!=null): $i = $this->task['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
                     <?php }?>                        
                <?php }?>
 </div>

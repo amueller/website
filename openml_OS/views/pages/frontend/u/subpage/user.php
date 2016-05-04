@@ -25,7 +25,7 @@
         <?php if ($this->ion_auth->user()->row()->gamification_visibility == 'show' && $this->userinfo['gamification_visibility'] == 'show') {?>
             <div class="gamestat">
               <div class="gamestat-label">Activity</div>
-              <div class="gamestat-value"><i class="fa fa-bolt activity"></i> <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
+              <div class="gamestat-value"><i class="fa fa-heartbeat activity"></i> <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
             </div>
             <div class="gamestat">
               <div class="gamestat-label">Reach</div>
@@ -33,7 +33,7 @@
             </div>
             <div class="gamestat">
               <div class="gamestat-label">Impact</div>
-              <div class="gamestat-value"><i class="material-icons impact" style="font-size: 16px;">flare</i> <?php if(in_array('impact', $this->userinfo)){ echo $this->userinfo['impact']; }else{echo 0;} ?></div>
+              <div class="gamestat-value"><i class="fa fa-bolt impact"></i><!--<i class="material-icons impact" style="font-size: 16px;">flare</i>--> <?php if(in_array('impact', $this->userinfo)){ echo $this->userinfo['impact']; }else{echo 0;} ?></div>
             </div>
         <?php }?>
             <div class="gamestat">
@@ -112,7 +112,7 @@
         <li class="col-sm-4 mainvalue active" title="Activity is: 3x uploads done + 2x likes given + downloads done.
             Given as activty over the last year / total activity">
             <a data-toggle="tab" onclick=redrawActivityChart("Activity")>
-                <i class="fa fa-fw fa-bolt"></i>
+                <i class="fa fa-fw fa-heartbeat"></i>
                 Activity:
                 <span id="ActivityThisYear">? /</span>
                 <span><?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity'];}else{echo 0;} ?>
@@ -193,7 +193,8 @@
         Given as your impact over the last month / your total impact">
         <li class="col-sm-4 mainvalue active">
             <a data-toggle="tab" onclick=redrawImpactChart("Impact")>
-                <i class="material-icons" style="font-size: 28px">flare</i>
+                <!--<i class="material-icons" style="font-size: 28px">flare</i>-->
+                <i class="fa fa-fw fa-bolt"></i>
                 Impact:
                 <span id="ImpactThisMonth">?/</span>
                 <span><?php if(in_array('impact', $this->userinfo)){echo $this->userinfo['impact'];}else{echo 0;} ?></span>

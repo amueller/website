@@ -6,7 +6,7 @@
 <p>All scores are awarded to users and involve datasets, flows, tasks and runs, or knowledge pieces in short.<p>
 <div class="row">
     <div class="col-sm-4">
-        <h4 class="activity">Activity <i class="fa fa-bolt"></i></h4>
+        <h4 class="activity">Activity <i class="fa fa-heartbeat"></i></h4>
         <p>Activity score is awarded to users for contributing to the knowledge base of OpenML. This includes uploading knowledge pieces, leaving likes and downloading new knowledge pieces. Uploads are rewarded strongest, with 3 activity, followed by likes, with 2 activity, and downloads are rewarded the least, with 1 activity.</p>
     </div>
     <div class="col-sm-4">
@@ -14,7 +14,7 @@
         <p>Reach score is awarded to knowledge pieces and by extension their uploaders for the expressed interest of other users. It is increased by 2 for every user that leaves a like on a knowledge piece and increased by 1 for every user that downloads it for the first time.</p>
     </div>
     <div class="col-sm-4">
-        <h4 class="impact">Impact <i class="material-icons" style="font-size: 16px">flare</i></h4>
+        <h4 class="impact">Impact <i class="fa fa-bolt"></i><!--<!--<i class="material-icons" style="font-size: 16px">flare</i>--></h4>
         <p>Impact score is awarded to knowledge pieces and by extension their uploaders for the reuse of these knowledge pieces. A dataset is reused if it is used as input in a task and a flow is reused in runs. Impact is increased by half of the acquired reach of a reuse. So the impact of a dataset that is used in a single task with reach 10, is 5.</p>
     </div>
 </div>

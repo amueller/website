@@ -78,7 +78,7 @@ function redrawImpactChart(type){
             },
             legend: {enabled: false},
             series: [{
-                    color: '#5d9bd1',
+                    color: '#8E24AA',
                     name: type,
                     data: values
                 }]
@@ -125,7 +125,7 @@ function redrawReachChart(type){
             },
             legend: {enabled: false},
             series: [{
-                    color: '#d9534f',
+                    color: '#8E24AA',
                     name: type,
                     data: values
                 }]
@@ -154,7 +154,7 @@ function redrawActivityChart(type) {
             chart: {
                 type: 'heatmap',
                 backgroundColor: null,
-                height:  $('#Activity-chart').width()/7
+                height:  Math.max($('#Activity-chart').width()/7,200)
             },
             exporting: false,
             credits: false,
@@ -184,14 +184,14 @@ function redrawActivityChart(type) {
                 tickLength: 0
             },
             colorAxis: {
-                min: 0,
+                type: 'logarithmic',
                 minColor: '#FFFFFF',
-                maxColor: '#62bb66'
+                maxColor: '#8E24AA'
             },
             tooltip: {
                 formatter: function () {
-                    return 'Amount of <b> '+type+' </b> was <br><b>' +
-                            this.point.value + '</b> on ' + this.point.name + ' <br>';
+                    return 'Amount of <span style="color:#8E24AA"> '+type+' </span> was <br><b>' +
+                            Math.floor(this.point.value) + '</b> on ' + this.point.name + ' <br>';
                 }
             },
             series: [{
@@ -201,7 +201,7 @@ function redrawActivityChart(type) {
                     dataLabels: {
                         enabled: false,
                         formatter: function () {
-                            return this.point.name + '<br>' + this.point.value;
+                            return this.point.name + '<br>' + Math.floor(this.point.value);
                         }
                     }
             }]
@@ -265,25 +265,25 @@ $(function getActivity() {
             activity.total.push({
                                 x:Math.floor(i/7),
                                 y:(istartday-(i%7)),
-                                value:item['activity'],
+                                value: parseInt(item['activity']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.totalscore+= +item['activity'];
             activity.likes.push({
                                 x:Math.floor(i/7),
                                 y:(istartday-(i%7)),
-                                value:item['likes'],
+                                value: parseInt(item['likes']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.likescore+= +item['likes'];
             activity.downloads.push({
                                 x:Math.floor(i/7),
                                 y:(istartday-(i%7)),
-                                value:item['downloads'],
+                                value: parseInt(item['downloads']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.downloadscore+= +item['downloads'];
             activity.uploads.push({
                                 x:Math.floor(i/7),
                                 y:(istartday-(i%7)),
-                                value:item['uploads'],
+                                value: parseInt(item['uploads']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.uploadscore+= +item['uploads'];
             activity.days.push(item['date'].split(" ")[1]);
