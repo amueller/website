@@ -78,7 +78,7 @@ function redrawImpactChart(type){
             },
             legend: {enabled: false},
             series: [{
-                    color: '#5d9bd1',
+                    color: '#8E24AA',
                     name: type,
                     data: values
                 }]
@@ -125,7 +125,7 @@ function redrawReachChart(type){
             },
             legend: {enabled: false},
             series: [{
-                    color: '#d9534f',
+                    color: '#8E24AA',
                     name: type,
                     data: values
                 }]
@@ -154,7 +154,7 @@ function redrawActivityChart(type) {
             chart: {
                 type: 'heatmap',
                 backgroundColor: null,
-                height:  $('#Activity-chart').width()/7
+                height:  Math.max($('#Activity-chart').width()/7,200)
             },
             exporting: false,
             credits: false,
@@ -184,14 +184,14 @@ function redrawActivityChart(type) {
                 tickLength: 0
             },
             colorAxis: {
-                min: 0,
+                type: 'logarithmic',
                 minColor: '#FFFFFF',
-                maxColor: '#62bb66'
+                maxColor: '#8E24AA'
             },
             tooltip: {
                 formatter: function () {
-                    return 'Amount of <b> '+type+' </b> was <br><b>' +
-                            this.point.value + '</b> on ' + this.point.name + ' <br>';
+                    return 'Amount of <span style="color:#8E24AA"> '+type+' </span> was <br><b>' +
+                            Math.floor(this.point.value) + '</b> on ' + this.point.name + ' <br>';
                 }
             },
             series: [{
@@ -201,7 +201,7 @@ function redrawActivityChart(type) {
                     dataLabels: {
                         enabled: false,
                         formatter: function () {
-                            return this.point.name + '<br>' + this.point.value;
+                            return this.point.name + '<br>' + Math.floor(this.point.value);
                         }
                     }
             }]
@@ -238,6 +238,7 @@ $('#impacttoggle').click(function(){
 
 <?php
 if ($this->ion_auth->logged_in()) {?>
+getBadges();
 $(function getActivity() {
     $.ajax({
         method:'GET',
@@ -245,15 +246,45 @@ $(function getActivity() {
         dataType:'json'
     }).done(function(resultdata){
         activity.startday = resultdata['activity-progress']['progresspart'][0]['date'];
+        var istartday = 0;
+        if(activity.startday.split(" ")[0]=="Monday"){
+            istartday = 6;
+        }else if(activity.startday.split(" ")[0]=="Tuesday"){
+            istartday = 5;
+        }else if(activity.startday.split(" ")[0]=="Wednesday"){
+            istartday = 4;
+        }else if(activity.startday.split(" ")[0]=="Thursday"){
+            istartday = 3;
+        }else if(activity.startday.split(" ")[0]=="Friday"){
+            istartday = 2;
+        }else if(activity.startday.split(" ")[0]=="Saturday"){
+            istartday = 1;
+        }
         $.each(resultdata['activity-progress']['progresspart'], function(i, item) {
             //console.log(item);
-            activity.total.push(item['activity']);
+            activity.total.push({
+                                x:Math.floor(i/7),
+                                y:(istartday-(i%7)),
+                                value: parseInt(item['activity']) + 0.000001,
+                                name: item['date'].split(" ")[1]});
             activity.totalscore+= +item['activity'];
-            activity.likes.push(item['likes']);
+            activity.likes.push({
+                                x:Math.floor(i/7),
+                                y:(istartday-(i%7)),
+                                value: parseInt(item['likes']) + 0.000001,
+                                name: item['date'].split(" ")[1]});
             activity.likescore+= +item['likes'];
-            activity.downloads.push(item['downloads']);
+            activity.downloads.push({
+                                x:Math.floor(i/7),
+                                y:(istartday-(i%7)),
+                                value: parseInt(item['downloads']) + 0.000001,
+                                name: item['date'].split(" ")[1]});
             activity.downloadscore+= +item['downloads'];
-            activity.uploads.push(item['uploads']);
+            activity.uploads.push({
+                                x:Math.floor(i/7),
+                                y:(istartday-(i%7)),
+                                value: parseInt(item['uploads']) + 0.000001,
+                                name: item['date'].split(" ")[1]});
             activity.uploadscore+= +item['uploads'];
             activity.days.push(item['date'].split(" ")[1]);
         });
@@ -401,25 +432,39 @@ $(function getImpact() {
     });
 });
 
-$(function getBadges() {
+function checkBadge(id){
+    $.ajax({
+            method:'GET',
+            url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/check/<?php echo $this->user_id; ?>/'+id
+        }).done(function(resultdata){
+            getBadges();
+        }).fail(function(resultdata){
+            console.log("Gamification API failed");
+        });
+}
+
+function getBadges() {
     $.ajax({
         method:'GET',
         url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/list/<?php echo $this->user_id; ?>'
     }).done(function(resultdata){
+        $('#badges').html("");
         $.each(resultdata['badges']['badge'], function(i,item){
-            $('#badges').append('<div class="col-sm-3">'+
-                                    '<img src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;">'+
-                                    '<br>'+
-                                    '<h3 style="padding-top:5px">'+item['name']+'</h3>'+
-                                    '<b>Current rank:</b>'+item['description_current']+
-                                    '<br>'+
-                                    '<b>Next rank:</b>'+item['description_next']+
-                                '</div>');
+            if(<?php echo $this->user_id; ?> == <?php echo $this->ion_auth->user()->row()->id; ?> || item['rank']>0){
+                $('#badges').append('<div class="col-sm-3">'+
+                                        '<img class="btn" src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;" onclick="checkBadge('+item['id']+')" title="Click to evaluate rank">'+
+                                        '<br>'+
+                                        '<h4 style="padding-top:5px">'+item['name']+'</h4>'+
+                                        '<b>Current rank: </b>'+item['description_current']+
+                                        '<br>'+
+                                        '<b>Next rank: </b>'+item['description_next']+
+                                    '</div>');
+            }
         });
     }).fail(function(resultdata){
         console.log("Gamification API failed");
     });
-});
+}
 
 
 $('#keyupgrade').submit(function() {

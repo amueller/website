@@ -20,6 +20,7 @@ class ElasticSearch {
         
         $this->CI->load->model('Downvote');
         $this->CI->load->model('KnowledgePiece');
+        $this->CI->load->model('Gamification');
         $this->CI->load->model('Badge');
         $this->db = $this->CI->Dataset;
         $this->userdb = $this->CI->Author;
@@ -515,12 +516,14 @@ class ElasticSearch {
     
     private function build_downvote($d){
         $downvote = array(
-            'like_id' => $d->did,
+            'downvote_id' => $d->did,
             'user_id' => $d->user_id,
             'knowledge_type' => $d->knowledge_type,
             'knowledge_id' => $d->knowledge_id,
             'reason' => $d->description,
+            'reason_id' => $d->reason_id,
             'orginal' => $d->original,
+            'count' => $d->count,
             'time' => $d->time
         );
         return $downvote;
@@ -651,14 +654,14 @@ class ElasticSearch {
         $user['tasks_uploaded'] = $task_up;
         $user['runs_uploaded'] = $run_up;
 
-        $runs_data = $this->db->query('select count(rid) as count FROM run r, task_inputs t, dataset d WHERE r.task_id=t.task_id and t.input="source_data" and t.value=d.did and d.uploader=' . $d->id);
+        $runs_data = $this->db->query('select count(rid) as count FROM run r, task_inputs t, dataset d WHERE r.task_id=t.task_id and t.input="source_data" and t.value=d.did and r.uploader<>d.uploader and d.uploader=' . $d->id);
         if ($runs_data){
             $user['runs_on_datasets'] = $runs_data[0]->count;
         }else{
-            $user['runs_on_flows'] = 0;
+            $user['runs_on_datasets'] = 0;
         }
 
-        $runs_flows = $this->db->query('select count(rid) as count FROM run r, algorithm_setup s, implementation i WHERE r.setup=s.sid and s.implementation_id=i.id and i.uploader=' . $d->id);
+        $runs_flows = $this->db->query('select count(rid) as count FROM run r, algorithm_setup s, implementation i WHERE r.setup=s.sid and s.implementation_id=i.id and r.uploader<>i.uploader and i.uploader=' . $d->id);
         if ($runs_flows){
             $user['runs_on_flows'] = $runs_flows[0]->count;
         }else{
@@ -770,23 +773,15 @@ class ElasticSearch {
         $user['downloads_received_run'] = $downloads_received_run; 
         $user['reach'] = ($user['downloads_received'] * $this->reach_metrics['x']) + ($user['likes_received'] * $this->reach_metrics['y']);
 
+        $impact_struct = $this->CI->Gamification->getImpact('u',$d->id,"2013-1-1",date("Y-m-d"));
+        
+        $user['reuse'] = $impact_struct['reuse'];
+        
+        $user['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        
+        $user['reach_of_reuse'] = $impact_struct['reuse_reach'];
 
-        $ld_reuse = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUploadsOfUser($d->id);
-        $reuse_reach = 0;
-        if($ld_reuse){
-            foreach($ld_reuse as $ld){
-                if($ld->ldt=='l'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['y']);
-                }else if($ld->ldt=='d'){
-                    $reuse_reach+=($ld->count*$this->reach_metrics['x']);
-                }
-            }
-        }
-        $user['reach_of_reuse'] = $reuse_reach;        
-
-        $user['impact_of_reuse'] = 0;
-
-        $user['impact'] = $this->impact_metrics['x']*$user['impact_of_reuse'] + $this->impact_metrics['y']*$user['reach_of_reuse'];
+        $user['impact'] = $impact_struct['impact'];
         
         $user['badges'] = array();
         $badges = $this->CI->Badge->getBadgesOfUser($d->id);

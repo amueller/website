@@ -20,6 +20,7 @@ class Gamification extends CI_Model{
         $this->scores['activity']['downloads'] = 1;
         $this->scores['reach']['likes'] = 2;
         $this->scores['reach']['downloads'] = 1;
+        $this->scores['impact']['reuse'] = 1;
         $this->scores['impact']['reach'] = 0.5;
     }
     
@@ -128,25 +129,34 @@ class Gamification extends CI_Model{
     
     public function getImpactArray($type,$id,$from,$to){
         $size = $this->getNumberOfDaysFromTo($from,$to);
-        $empty_val = array("reuse_reach"=>0,"recursive_impact"=>0,"impact"=>0,"date"=>"");
+        $empty_val = array("reuse"=>0,"reuse_reach"=>0,"recursive_impact"=>0,"impact"=>0,"date"=>"");
         $result = array_fill(0,$size,$empty_val);
-        if($type=='u'){            
+        if($type=='u'){
+            $reuse = $this->KnowledgePiece->getNumberOfReusesOfUploadsOfUser($id,$from,$to);
             $ld_reuse = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUploadsOfUser($id,$from,$to);
-        }else{            
+        }else{
+            $reuse = $this->KnowledgePiece->getNumberOfReusesOfUploadsOfUser($id,$from,$to);
             $ld_reuse = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload($type,$id,$from,$to);
         }
-        if($ld_reuse){
-            foreach($ld_reuse as $likeordownload){
-                $datediff = (strtotime($likeordownload->date) - strtotime($from))/(60*60*24);
-                if($likeordownload->ldt=='d'){
-                    $result[floor($datediff)]['reuse_reach']+=($likeordownload->count*$this->scores['reach']['downloads']);
-                    $result[floor($datediff)]['impact']+=(($likeordownload->count*$this->scores['reach']['downloads'])*$this->scores['impact']['reach']);
-                }else if($likeordownload->ldt=='l'){
-                    $result[floor($datediff)]['reuse_reach']+=($likeordownload->count*$this->scores['reach']['likes']);
-                    $result[floor($datediff)]['impact']+=(($likeordownload->count*$this->scores['reach']['likes'])*$this->scores['impact']['reach']);
+        if($reuse){
+            foreach($reuse as $r){
+                $datediff = (strtotime($r->date) - strtotime($from))/(60*60*24);
+                $result[floor($datediff)]['reuse']+=$r->count;
+                $result[floor($datediff)]['impact']+=$r->count*$this->scores['impact']['reuse'];
+            }
+            if($ld_reuse){
+                foreach($ld_reuse as $likeordownload){
+                    $datediff = (strtotime($likeordownload->date) - strtotime($from))/(60*60*24);
+                    if($likeordownload->ldt=='d'){
+                        $result[floor($datediff)]['reuse_reach']+=($likeordownload->count*$this->scores['reach']['downloads']);
+                        $result[floor($datediff)]['impact']+=(($likeordownload->count*$this->scores['reach']['downloads'])*$this->scores['impact']['reach']);
+                    }else if($likeordownload->ldt=='l'){
+                        $result[floor($datediff)]['reuse_reach']+=($likeordownload->count*$this->scores['reach']['likes']);
+                        $result[floor($datediff)]['impact']+=(($likeordownload->count*$this->scores['reach']['likes'])*$this->scores['impact']['reach']);
+                    }
                 }
             }
-        }        
+        }
         for($i=0; $i<count($result); $i++){
             $result[$i]['date'] = date("l Y-m-d",strtotime($from. '+'.$i.' days'));
         }
@@ -154,20 +164,28 @@ class Gamification extends CI_Model{
     }
     
     public function getImpact($type,$id,$from,$to){
-        $result_val = array("reuse_reach"=>0,"recursive_impact"=>0,"impact"=>0,"date"=>$from);
+        $result_val = array("reuse"=>0,"reuse_reach"=>0,"recursive_impact"=>0,"impact"=>0,"date"=>$from);
         if($type=='u'){
+            $reuse = $this->KnowledgePiece->getNumberOfReusesOfUploadsOfUser($id,$from,$to);
             $ld_reuse = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUploadsOfUser($id,$from,$to);
         }else{
+            $reuse = $this->KnowledgePiece->getNumberOfReusesOfUpload($type,$id,$from,$to);
             $ld_reuse = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload($type,$id,$from,$to);
         }
-        if($ld_reuse){
-            foreach($ld_reuse as $likeordownload){
-                if($likeordownload->ldt=='d'){
-                    $result_val['reuse_reach']+=($likeordownload->count*$this->scores['reach']['downloads']);
-                    $result_val['impact']+=(($likeordownload->count*$this->scores['reach']['downloads'])*$this->scores['impact']['reach']);
-                }else if($likeordownload->ldt=='l'){
-                    $result_val['reuse_reach']+=($likeordownload->count*$this->scores['reach']['likes']);
-                    $result_val['impact']+=(($likeordownload->count*$this->scores['reach']['likes'])*$this->scores['impact']['reach']);
+        if($reuse){
+            foreach($reuse as $r){
+                $result_val['reuse']+=$r->count;
+                $result_val['impact']+=($r->count*$this->scores['impact']['reuse']);
+            }
+            if($ld_reuse){
+                foreach($ld_reuse as $likeordownload){
+                    if($likeordownload->ldt=='d'){
+                        $result_val['reuse_reach']+=($likeordownload->count*$this->scores['reach']['downloads']);
+                        $result_val['impact']+=(($likeordownload->count*$this->scores['reach']['downloads'])*$this->scores['impact']['reach']);
+                    }else if($likeordownload->ldt=='l'){
+                        $result_val['reuse_reach']+=($likeordownload->count*$this->scores['reach']['likes']);
+                        $result_val['impact']+=(($likeordownload->count*$this->scores['reach']['likes'])*$this->scores['impact']['reach']);
+                    }
                 }
             }
         }

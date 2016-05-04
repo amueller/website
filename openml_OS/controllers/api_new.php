@@ -11,6 +11,7 @@ class Api_new extends CI_Controller {
     $this->active = 'learn';
     $this->message = $this->session->flashdata('message'); // can be overridden
 
+    //$this->load->model('api/v1/Api_test');
     $this->load->model('api/v1/Api_data');
     $this->load->model('api/v1/Api_votes');
     $this->load->model('api/v1/Api_downloads');

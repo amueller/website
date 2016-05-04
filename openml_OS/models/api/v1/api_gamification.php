@@ -4,8 +4,6 @@ class Api_gamification extends Api_model {
 
     protected $version = 'v1';
     
-    protected $user_id;
-    
 
     function __construct() {
         parent::__construct();
@@ -18,15 +16,22 @@ class Api_gamification extends Api_model {
 
     function bootstrap($format, $segments, $request_type, $user_id) {
         $this->outputFormat = $format;
-        $this->user_id = $user_id;
 
         if(count($segments)>=3){
             $score = $segments[0];
             $type = $segments[1];
             $id = $segments[2];
             
-            if($score=='badges'){
-                $this->checkBadges($id);
+            
+            if($type=='u' && $id!=$user_id){
+                //check gamification settings if the requesting user is not the requested user
+                if(!$this->checkGamificationSettings($id)){
+                    return;
+                }
+            }
+            if(count($segments)==3){
+                $meth = 'get_progress_'.$score.'_whole';
+                $this->$meth($type,$id,"2013-1-1");
                 return;
             }else if($segments[3]=='today'){
                 $meth = 'get_progress_'.$score.'_whole';
@@ -53,7 +58,7 @@ class Api_gamification extends Api_model {
             }else if($segments[3]=='lastday'){//progress of the last 24 hours
                 $meth = 'get_progress_'.$score.'_whole';
                 $now = date("Y-m-d H:i:s");
-                $this->$meth($type,$id,date('Y-m-d H:i:s', strtotime($now . ' -1 day'),$now));
+                $this->$meth($type,$id,date('Y-m-d H:i:s', strtotime($now . ' -1 day'),date("Y-m-d",strtotime($now. ' +1 day'))));
                 return;
             }else if($segments[3]=='lastmonth'){//progress of the last 28/29/30/31 days
                 $meth = 'get_progress_'.$score.'_whole';
@@ -63,7 +68,7 @@ class Api_gamification extends Api_model {
             }else if($segments[3]=='lastmonth_perday'){//progress for each day of the last 28/29/30/31 days
                 $meth = 'get_progress_'.$score.'_perday';
                 $now = date("Y-m-d");
-                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 month')),$now);
+                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 month')),date("Y-m-d",strtotime($now. ' +1 day')));
                 return;
             }else if($segments[3]=='lastyear'){//progress of the last 365/366 days
                 $meth = 'get_progress_'.$score."_whole";
@@ -73,7 +78,7 @@ class Api_gamification extends Api_model {
             }else if($segments[3]=='lastyear_perday'){//progress for each day of the last 365/366 days
                 $meth = 'get_progress_'.$score.'_perday';
                 $now = date("Y-m-d");
-                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 year')),$now);
+                $this->$meth($type,$id,date("Y-m-d",strtotime($now. ' -1 year')),date("Y-m-d",strtotime($now. ' +1 day')));
                 return;                
             }else if(count($segments)==4 && is_numeric($segments[3])){ //progress of $segment[3] (ex. 2014)
                 $meth = 'get_progress_'.$score.'_whole';
@@ -102,61 +107,34 @@ class Api_gamification extends Api_model {
     }
     
     protected function get_progress_impact_perday($type,$id,$from,$to){
-        if($type=='u' && $id!=$this->user_id){
-            //check gamification settings if the requesting user is not the requested user
-            if(!$this->checkGamificationSettings($id)){
-                return;
-            }
-        }
         $result = $this->Gamification->getImpactArray($type,$id,$from,$to);
         $result_wrapper = array("results"=>$result);
         $this->xmlContents('impact-progress', $this->version, $result_wrapper);
     }
     
     protected function get_progress_impact_whole($type,$id,$from,$to=null){
-        if($type=='u' && $id!=$this->user_id){
-            //check gamification settings if the requesting user is not the requested user
-            if(!$this->checkGamificationSettings($id)){
-                return;
-            }
-        }
         $result_val = $this->Gamification->getImpact($type,$id,$from,$to);
         $result_wrapper = array("results"=>array($result_val));
         $this->xmlContents('impact-progress', $this->version, $result_wrapper);
     }
     
     protected function get_progress_reach_perday($type,$id,$from,$to){
-        if($type=='u' && $id!=$this->user_id){
-            //check gamification settings if the requesting user is not the requested user
-            if(!$this->checkGamificationSettings($id)){
-                return;
-            }
-        }
         $result = $this->Gamification->getReachArray($type,$id,$from,$to);
         $result_wrapper = array("results"=>$result);
         $this->xmlContents('reach-progress', $this->version, $result_wrapper);
     }
     
-    protected function get_progress_reach_whole($type,$id,$from,$to=null){        
-        if($type=='u' && $id!=$this->user_id){
-            //check gamification settings if the requesting user is not the requested user
-            if(!$this->checkGamificationSettings($id)){
-                return;
-            }
-        }
+    protected function get_progress_reach_whole($type,$id,$from,$to=null){
         $result_val = $this->Gamification->getReach($type,$id,$from,$to);
         $result_wrapper = array("results"=>array($result_val));
         $this->xmlContents('reach-progress', $this->version, $result_wrapper);
     }
     
     protected function get_progress_activity_perday($type,$id,$from,$to){
-        if ($type == 'u' && $id!=$this->user_id){
-            //check gamification settings if the requesting user is not the requested user
-            if(!$this->checkGamificationSettings($id)){
-                return;
-            }
-        }else if($type!='u'){
-            
+        if($type!='u'){
+            //return invalid type
+            $this->returnError(903, $this->version);
+            return;            
         }
         $result = $this->Gamification->getActivityArray($id,$from,$to);
         $result_wrapper = array("results" => $result);
@@ -164,12 +142,7 @@ class Api_gamification extends Api_model {
     }
     
     protected function get_progress_activity_whole($type,$id,$from,$to=null){
-        if ($type == 'u' && $id!=$this->user_id){
-            //check gamification settings if the requesting user is not the requested user{
-            if(!$this->checkGamificationSettings($id)){
-                return;
-            }
-        }else if($type!='u'){
+        if($type!='u'){
             //return invalid type
             $this->returnError(903, $this->version);
             return;
@@ -195,5 +168,4 @@ class Api_gamification extends Api_model {
         return true;
     }
 }
-?>
 

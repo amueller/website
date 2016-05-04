@@ -5,6 +5,21 @@
     $this->p['index'] = 'openml';
     $this->p['type'] = 'data';
     $this->p['id'] = $this->id;
+        
+    $this->down = array();
+    $this->down['index'] = 'openml';
+    $this->down['type'] = 'downvote';
+    $json = '{
+                "query": {
+                  "bool": {
+                    "must": [
+                      { "match": { "knowledge_type":  "d" }},
+                      { "match": { "knowledge_id": '.$this->id.'   }}
+                    ]
+                  }
+                }
+              }';
+    $this->down['body'] = $json;
     if ($this->ion_auth->logged_in()) {
         $this->l = array();
         $this->l['index'] = 'openml';
@@ -24,6 +39,7 @@
     }
     try{
       $this->data = $this->searchclient->get($this->p)['_source'];
+      $this->downvotes = $this->searchclient->search($this->down)['hits']['hits'];
       if ($this->ion_auth->logged_in()) {
         $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
       }

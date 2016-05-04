@@ -72,6 +72,8 @@ class Api_badges extends Api_gamification {
             $this->getBadges($segments[1]);
             return;
         }
+        
+        $this->returnError(100, $this->version, 450, implode("/",$segments));
     }
     
     function testAward($u_id,$b_id){
@@ -81,8 +83,11 @@ class Api_badges extends Api_gamification {
                 return;
             }
         }
+        if($b_id>=count($this->badges)){
+            $this->returnError(950, $this->version);            
+        }
         $b = new stdClass();
-        $b->key = 'description';
+        $b->key = 'rank';
         $method = 'testAward'.str_replace(" ","",$this->badges[$b_id]->name);
         $b->value = $this->$method($u_id,$b_id);
         //update badges of this user
@@ -95,47 +100,55 @@ class Api_badges extends Api_gamification {
         $uploads = $this->KnowledgePiece->listAllUploadsOfUser($u_id);
         $rank = 0;
         $rank_two = array('d'=>false,'f'=>false,'t'=>false,'r'=>false);
-        foreach($uploads as $up){
-            if($rank<2){
-                $score = $this->Gamification->getReach($up->kt,$up->id,"2013-1-1",null);
-                if($score['reach']>100){
-                    $rank = 2;
-                    $rank_two[$up->kt] = true;
-                }else if($score['reach']>10){
-                    $rank = 1;
-                }
-            }else if(!$rank_two[$up->kt]){
-                $score = $this->Gamification->getReach($up->kt,$up->id,"2013-1-1",null);
-                if($score['reach']>100){
-                    $rank_two[$up->kt] = true;
+        if($uploads){
+            foreach($uploads as $up){
+                if($rank<2){
+                    $score = $this->Gamification->getReach($up->kt,$up->id,"2013-1-1",null);
+                    if($score['reach']>100){
+                        $rank = 2;
+                        $rank_two[$up->kt] = true;
+                    }else if($score['reach']>10){
+                        $rank = 1;
+                    }
+                }else if(!$rank_two[$up->kt]){
+                    $score = $this->Gamification->getReach($up->kt,$up->id,"2013-1-1",null);
+                    if($score['reach']>100){
+                        $rank_two[$up->kt] = true;
+                    }
                 }
             }
-        }
-        foreach($rank_two as $type){
-            if(!$type){        
-                $this->Badge->award($u_id,$rank,1);
-                return $rank;                
+            foreach($rank_two as $type){
+                if(!$type){        
+                    $this->Badge->award($u_id,$rank,1);
+                    return $rank;                
+                }
             }
+            $rank=3;
         }
-        $rank=3;
         $this->Badge->award($u_id,$rank,1);
         return $rank;
     }
     
     private function testAwardClockworkScientist($u_id){
-        $scores = $this->Gamification->getActivityArray('u',$u_id,"2013-1-1",date('Y-m-d'));
-        $rank=3;
+        $scores = $this->Gamification->getActivityArray($u_id,"2013-1-1",date('Y-m-d'));
+        $days = 0;
+        $maxdays = 0;
         for($i=0; $i<count($scores); $i++){
-            if($scores[$i]['activity']<1 && $i<count($scores)-30){
-                $rank=2;
-                $i=count($scores)-30;
-            }else if($scores[$i]['activity']<1 && $i<count($scores)-7){
-                $rank=1;
-                $i=count($scores)-7;
-            }else if($scores[$i]['activity']<1){
-                $rank=0;
-                $i=count($scores);
+            if($scores[$i]['activity']<1){
+                $maxdays = max($maxdays,$days);
+                $days = 0;
+            }else{
+                $days++;
             }
+        }
+        if($days>364){
+            $rank = 3;
+        }else if($days>29){
+            $rank = 2;
+        }else if($days>6){
+            $rank = 1;
+        }else{
+            $rank = 0;
         }
         $this->Badge->award($u_id,$rank,0);
         return $rank;
@@ -221,6 +234,7 @@ class Api_badges extends Api_gamification {
             $b['image'] = $this->badges[$badge->id]->images[$rank];
             $b['name'] = $this->badges[$badge->id]->name;
             $b['rank'] = $rank;
+            $b['id'] = $badge->id;
             $result[] = $b;
         }
         

@@ -47,8 +47,9 @@ class Api_downloads extends Api_model {
     private function downloads_list() {
         $downloads_res = $this->Download->get();
         if (is_array($downloads_res) == false) {
-            $this->returnError(801, $this->version);
-            return;
+            //$this->returnError(801, $this->version);
+            //return;
+            $downloads_res = [];
         }
 
         $this->xmlContents('downloads', $this->version, array('downloads' => $downloads_res));
@@ -57,8 +58,9 @@ class Api_downloads extends Api_model {
     private function downloads_of_user($user_id) {
         $downloads_res = $this->Download->getDownloadsByUser($user_id);
         if (is_array($downloads_res) == false) {
-            $this->returnError(802, $this->version);
-            return;
+            //$this->returnError(802, $this->version);
+            //return;
+            $downloads_res = [];
         }
         $this->xmlContents('downloads', $this->version, array('downloads' => $downloads_res));
     }
@@ -74,8 +76,9 @@ class Api_downloads extends Api_model {
             $downloads_res = $this->Download->getByIds($user_id, $knowledge_type, $knowledge_id);
         }
         if (is_array($downloads_res) == false || count($downloads_res) == 0) {
-            $this->returnError(803, $this->version);
-            return;
+            //$this->returnError(803, $this->version);
+            //return;            
+            $downloads_res = [];
         }
         $this->xmlContents('downloads', $this->version, array('downloads' => $downloads_res));
     }

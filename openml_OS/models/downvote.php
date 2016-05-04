@@ -29,7 +29,8 @@ class Downvote extends Database_write {
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -55,7 +56,8 @@ class Downvote extends Database_write {
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -81,7 +83,8 @@ class Downvote extends Database_write {
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -108,7 +111,8 @@ class Downvote extends Database_write {
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -121,6 +125,17 @@ class Downvote extends Database_write {
         }
         
         return $ds;
+    }
+
+    function getAgreements($type,$id,$reason){
+        $sql = 'SELECT `l`.*
+            FROM `' . $this->table . '` AS `l`
+            WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $type . '"
+            AND `l`.`' . $this->knowledge_id_column . '` = "' . $id . '"
+            AND `l`.'.$this->reason_column.' = '.$reason
+            .' AND `l`.'.$this->original_column.'=0';
+        
+        return $this->query($sql);
     }
     
     function getDownvotesByKnowledgePieceAndReason($type, $id, $reason, $original=1) {
@@ -135,7 +150,8 @@ class Downvote extends Database_write {
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -162,7 +178,8 @@ class Downvote extends Database_write {
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -177,20 +194,20 @@ class Downvote extends Database_write {
         return $ds;
     }
 
-    function getByIds($u_id, $k_type, $k_id, $original=1) {
+    function getByIds($u_id, $k_type, $k_id) {
         $sql = 'SELECT `l`.*, `r`.*
             FROM `' . $this->table . '` AS `l`, `' . $this->reason_table . '` AS `r`
             WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $k_type . '"
             AND `l`.`' . $this->knowledge_id_column . '` = "' . $k_id . '"
             AND `l`.`' . $this->user_id_column . '` = "' . $u_id . '"
-            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column
-            .' AND `l`.'.$this->original_column.'='.((int)$original);
+            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column;
         
         $ds = $this->Downvote->query($sql);
         if($ds){
             foreach($ds as $d){
                 if($d->{$this->original_column}){
-                    $agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    //$agrees = $this->getDownvotesByKnowledgePieceAndReason($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column},false);
+                    $agrees = $this->getAgreements($d->{$this->knowledge_type_column},$d->{$this->knowledge_id_column},$d->{$this->reason_column});
                     if($agrees){
                         $d->count = count($agrees)+1;
                     }else{
@@ -203,35 +220,6 @@ class Downvote extends Database_write {
         }
         
         return $ds;
-    }
-    
-    function getFromToUser($u_id, $from, $to, $original=1) {
-         $sql = 'SELECT `l`.*, `r`.*
-            FROM `' . $this->table . '` AS `l`, `' . $this->reason_table . '` AS `r`
-            WHERE `l`.`' . $this->user_id_column . '` = ' . $u_id . '
-                AND `'.$this->time_column.'`>="'.$from.'"
-            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column
-            .' AND `l`.'.$this->original_column.'='.((int)$original);
-         if($to!=null){
-            $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
-         }
-
-        return $this->Downvote->query($sql);
-    }
-    
-    function getFromToKnowledge($k_type, $k_id, $from, $to, $original=1) {
-         $sql = 'SELECT `l`.*, `r`.*
-            FROM `' . $this->table . '` AS `l`, `' . $this->reason_table . '` AS `r`
-            WHERE `l`.`' . $this->knowledge_type_column . '` = "' . $k_type . '"
-                AND `l`.`' . $this->knowledge_id_column . '` = "' . $k_id . '"
-                AND `'.$this->time_column.'`>="'.$from.'"
-            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column
-            .' AND `l`.'.$this->original_column.'='.((int)$original);
-         if($to!=null){
-            $sql.='AND `'.$this->time_column.'` < "'.$to.'"';
-         }
-
-        return $this->Like->query($sql);
     }
 
     function deleteByIds($u_id, $k_type, $k_id) {
@@ -255,7 +243,7 @@ class Downvote extends Database_write {
 
             $this->Downvote->query($sql);
             
-            return $this->insertByIds($u_id, $k_type, $k_id,$this->Downvote->getHighestIndex(array($this->reason_table),$this->reason_id_column),true);
+            return $this->insertByIds($u_id, $k_type, $k_id,$this->Downvote->getHighestIndex(array($this->reason_table),$this->reason_id_column)-1,true);
         }
     }
     

@@ -53,8 +53,9 @@ class Api_votes extends Api_model {
     private function up_list() {
         $likes_res = $this->Like->get();
         if (is_array($likes_res) == false) {
-            $this->returnError(701, $this->version);
-            return;
+            //$this->returnError(701, $this->version);
+            //return;
+            $likes_res = [];
         }
 
         $this->xmlContents('likes', $this->version, array('likes' => $likes_res));
@@ -63,8 +64,9 @@ class Api_votes extends Api_model {
     private function down_list() {
         $dvotes_res = $this->Downvote->get();
         if (is_array($dvotes_res) == false) {
-            $this->returnError(701, $this->version);
-            return;
+            //$this->returnError(701, $this->version);
+            //return;
+            $dvotes_res = [];
         }
 
         $this->xmlContents('downvotes', $this->version, array('downvotes' => $dvotes_res));
@@ -73,8 +75,9 @@ class Api_votes extends Api_model {
     private function up_of_user($user_id) {
         $likes_res = $this->Like->getLikesByUser($user_id);
         if (is_array($likes_res) == false) {
-            $this->returnError(702, $this->version);
-            return;
+            //$this->returnError(702, $this->version);
+            //return;
+            $likes_res = [];
         }
         $this->xmlContents('likes', $this->version, array('likes' => $likes_res));
     }
@@ -82,8 +85,9 @@ class Api_votes extends Api_model {
     private function down_of_user($user_id) {
         $dvotes_res = $this->Downvote->getDownvotesByUser($user_id);
         if (is_array($dvotes_res) == false) {
-            $this->returnError(702, $this->version);
-            return;
+            //$this->returnError(702, $this->version);
+            //return;
+            $dvotes_res = [];
         }
         $this->xmlContents('downvotes', $this->version, array('downvotes' => $dvotes_res));
     }
@@ -91,17 +95,19 @@ class Api_votes extends Api_model {
     private function up_of_piece($knowledge_type, $knowledge_id){
         $likes_res = $this->Like->getLikesByKnowledgePiece($knowledge_type, $knowledge_id);
         if (is_array($likes_res) == false) {
-            $this->returnError(702, $this->version);
-            return;
+            //$this->returnError(702, $this->version);
+            //return;
+            $likes_res = [];
         }
         $this->xmlContents('likes', $this->version, array('likes' => $likes_res));        
     }
     
     private function down_of_piece($knowledge_type, $knowledge_id){
         $dvotes_res = $this->Downvote->getDownvotesByKnowledgePiece($knowledge_type, $knowledge_id);
-        if (is_array($dvotes_res) == false) {
-            $this->returnError(702, $this->version);
-            return;
+        if (is_array($dvotes_res) == false) { //fix dit
+            //$this->returnError(702, $this->version);
+            //return;
+            $dvotes_res = [];
         }
         $this->xmlContents('downvotes', $this->version, array('downvotes' => $dvotes_res));      
     }
@@ -184,9 +190,10 @@ class Api_votes extends Api_model {
             $this->returnError(711, $this->version);
             return;
         } else {
-            $lid = $this->Like->insertByIds($this->user_id, $knowledge_type, $knowledge_id);
-
-            if (!$lid) {
+            try{
+                $lid = $this->Like->insertByIds($this->user_id, $knowledge_type, $knowledge_id);
+            }
+            catch(Exception $e) {
                 $this->returnError(705, $this->version);
                 return;
             }
@@ -213,13 +220,9 @@ class Api_votes extends Api_model {
             return;
         }else{
             $dvote = $this->Downvote->getByIds($this->user_id, $knowledge_type, $knowledge_id)[0];
-            
-            if ($dvote == false) {
-                $dvote = $this->Downvote->getByIds($this->user_id, $knowledge_type, $knowledge_id,0)[0];
-                if($dvote == false){
-                    $this->returnError(703, $this->version);
-                    return;
-                }
+            if($dvote == false){
+                $this->returnError(703, $this->version);
+                return;
             }
 
             $dvote_id = $dvote->did;

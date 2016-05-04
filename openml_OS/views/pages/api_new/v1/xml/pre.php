@@ -829,4 +829,9 @@ $this->apiErrors[902][1] = 'User has hidden his/her gamification scores and badg
 //openml.gamification.activity
 $this->apiErrors[903][0] = 'Invalid type';
 $this->apiErrors[903][1] = 'Activity requests can only be done for users';
+
+//openml.badges
+$this->apiErrors[950][0] = 'No such badge';
+$this->apiErrors[950][1] = 'Badge with the specified id does not exist';
+
 ?>
