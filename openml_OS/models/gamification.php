@@ -22,6 +22,7 @@ class Gamification extends CI_Model{
         $this->scores['reach']['downloads'] = 1;
         $this->scores['impact']['reuse'] = 1;
         $this->scores['impact']['reach'] = 0.5;
+        $this->scores['impact']['recursive'] = 0.5;
     }
     
     public function getActivityArray($id,$from,$to){
@@ -229,5 +230,22 @@ class Gamification extends CI_Model{
         return $size;
     }
 
+    
+    public function getImpactFromParts($reuse,$reuse_reach,$recurisve_impact){
+        return $reuse*$this->scores['impact']['reuse'] +
+                $reuse_reach*$this->scores['impact']['reach'] +
+                $recurisve_impact*$this->scores['impact']['recursive'];
+    }
+    
+    public function getReachFromParts($likes,$downloads){
+        return $likes*$this->scores['reach']['likes'] +
+                $downloads*$this->scores['reach']['downloads'];
+    }
+    
+    public function getActivityFromParts($uploads,$likes,$downloads){
+        return $uploads*$this->scores['activity']['uploads'] +
+                $likes*$this->scores['activity']['likes'] +
+                $downloads*$this->scores['activity']['downloads'];        
+    }
 }
 

@@ -203,24 +203,41 @@ class KnowledgePiece extends Database_write{
     
     function getNumberOfReusesOfUpload($type,$id,$from,$to){
         if($type=='d'){
-            $sql = "SELECT 'd' as ot, count(task_inputs.task_id) as count, DATE(task.creation_date) as date FROM  task`, `task_inputs`, `dataset` WHERE dataset.did=".$id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
+            $sql = "SELECT 'd' as ot, count(task_inputs.task_id) as count, DATE(task.creation_date) as date FROM  `task`, `task_inputs`, `dataset` WHERE dataset.did=".$id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND dataset.uploader<>task.creator";
         }else if($type=='f'){
             $sql = "SELECT 'f' as ot, count(run.rid) as count, DATE(run.processed) as date FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.id=".$id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
         }else /*if($type=='t')*/{
             $sql = "SELECT 't' as ot, count(run.rid) as count, DATE(run.processed) as date FROM `task`, `run` WHERE task.task_id=".$id." AND run.task_id=task.task_id  AND run.uploader<>task.creator";
-        }        
-        if ($from != null && $to!=null) {
-            $sql .= ' WHERE date>="' . $from . '"';
-            $sql .= ' AND date<"' . $to . '"';
-            $sql .=" GROUP BY ot, date ORDER BY date;";
-        }else if ($to != null) {
-            $sql .= ' WHERE date<"' . $to . '"';
-            $sql .=" GROUP BY ot, date ORDER BY date;";
-        }else if($from!=null){
-            $sql .= ' WHERE date>="' . $from . '"'; 
-            $sql .=" GROUP BY ot, date ORDER BY date;";           
-        }else{            
-            $sql.=" GROUP BY ot;";
+        }
+        if($type=='d'){
+            if ($from != null && $to!=null) {
+                $sql .= ' AND task.creation_date>="' . $from . '"';
+                $sql .= ' AND task.creation_date<"' . $to . '"';
+                $sql .=" GROUP BY ot, date ORDER BY date;";
+            }else if ($to != null) {
+                $sql .= ' AND task.creation_date<"' . $to . '"';
+                $sql .=" GROUP BY ot, date ORDER BY date;";
+            }else if($from!=null){
+                $sql .= ' WHERE task.creation_date>="' . $from . '"'; 
+                $sql .=" GROUP BY ot, date ORDER BY date;";           
+            }else{            
+                $sql.=" GROUP BY ot;";
+            }
+            
+        }else{
+            if ($from != null && $to!=null) {
+                $sql .= ' AND run.processed>="' . $from . '"';
+                $sql .= ' AND run.processed<"' . $to . '"';
+                $sql .=" GROUP BY ot, date ORDER BY date;";
+            }else if ($to != null) {
+                $sql .= ' AND run.processed<"' . $to . '"';
+                $sql .=" GROUP BY ot, date ORDER BY date;";
+            }else if($from!=null){
+                $sql .= ' WHERE run.processed>="' . $from . '"'; 
+                $sql .=" GROUP BY ot, date ORDER BY date;";           
+            }else{            
+                $sql.=" GROUP BY ot;";
+            }
         }
         return $this->KnowledgePiece->query($sql);
     }

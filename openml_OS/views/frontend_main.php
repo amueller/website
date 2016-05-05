@@ -62,13 +62,15 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
       $ch = $url[1];
       $req = array_slice($url, 1);
       if(sizeof($url)>2){
+        $id=$url[2];
         if($url[1] == 'OpenML'){
           $ch = $url[2];
-          $req = array_slice($url, 2);}
+          $req = array_slice($url, 2);
+            if(sizeof($url)>3){
+                $id=$url[3];
+            }
         }
-        if(sizeof($url)>3){
-            $id=$url[3];
-        }
+      }
       if($ch == "")
         $ch = "home";
       $ch = explode('?',$ch)[0];
