@@ -2678,7 +2678,13 @@ a:hover > .circlered{
   text-decoration: none;
 }
 
+#gollum-editor-edit-header, #gollum-editor-edit-footer, #gollum-editor-edit-sidebar{
+  display:none !important;
+}
 
+.has-sidebar #wiki-body {
+    width: 100% !important; 
+}
 
 .licences{
   margin-top: 5px;
