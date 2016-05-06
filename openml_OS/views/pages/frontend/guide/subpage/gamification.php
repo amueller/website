@@ -1,6 +1,6 @@
-<h2 id="team-core">Gamification</h2>
+<h2 id="team-core">Altmetrics and Gamification</h2>
 
-<p>Since May 2016, OpenML includes gamification. This is in the form of a score system and in the future will include badges as well. Because the system is still very much in development, the details are subject to change. Below, the score system is described in more detailed followed by our rationale for this system for those interested. If anything is unclear or you have any feedback of the system do not hesitate to let us know.</p>
+<p>To encourage open science, OpenML now includes a score system to track and reward scientific activity, reach and impact, and in the future will include further gamification features such as badges. Because the system is still experimental and very much in development, the details are subject to change. Below, the score system is described in more detailed followed by our rationale for this system for those interested. If anything is unclear or you have any feedback of the system do not hesitate to let us know.</p>
 
 <h3>The scores</h3>
 <p>All scores are awarded to users and involve datasets, flows, tasks and runs, or knowledge pieces in short.<p>
@@ -20,7 +20,7 @@
 </div>
 
 <h3>The rationale</h3>
-<p>The main reason for gamification for OpenML is to encourage participation in the website's core ideas. That is the sharing and exploration of knowledge and getting credit for your work. The <span class="activity">activity</span> score serves the encouragement of sharing and exploration. <span class="reach">Reach</span> makes exploration easier (by finding well liked, and/or often downloaded knowledge pieces), while also providing a form of credit to the user. <span class="impact">Impact</span> is another form of credit that is closer in concept to citation scores. When OpenML becomes popular enough, these scores can become true altmetrics.</p>
+<p>One of OpenML's core ideas is to create an open science environment for sharing and exploration of knowledge while getting credit for your work. The <span class="activity">activity</span> score serves the encouragement of sharing and exploration. <span class="reach">Reach</span> makes exploration easier (by finding well liked, and/or often downloaded knowledge pieces), while also providing a form of credit to the user. <span class="impact">Impact</span> is another form of credit that is closer in concept to citation scores.</p>
 
 <h3>Where to find it</h3>
 <p>The number of likes and downloads as well as the reach and impact of knowledge pieces can be found on the top of their respective pages, for example the <a href='/d/61'>Iris data set</a>. In the top right you will also find the new Like button next to the already familiar download button.</p>
@@ -31,9 +31,9 @@
 <p>Badges are intended to provide discrete goals for users to aim for. They are only in a conceptual phase, depending on the community's reaction they will be further developed. <br>
 The badges a user has acquired can be found on their user profile below the score graphs. The currently implemented badges are:</p>
 <dt>
-<dd><b>Clockwork Scientist <img src='img/clockwork_scientist_1.svg' style="width:48px;height:48px;"></b></dd> For being active every day for a period of time. 
-<dd><b>Team Player <img src='img/team_player_1.svg' style="width:48px;height:48px;"></b></dd> For collaborating with other users; reusing a knowledge piece of someone who has reused a knowledge piece of yours. 
-<dd><b>Good News Everyone <img src='img/good_news_everyone_1.svg' style="width:48px;height:48px;"></b></dd> For achieving a high reach on singular knowledge piece you uploaded. 
+<dd><b>Clockwork Scientist <img src='img/clockwork_scientist_1.svg' style="width:48px;height:48px;"></b></dd> For being active every day for a period of time.
+<dd><b>Team Player <img src='img/team_player_1.svg' style="width:48px;height:48px;"></b></dd> For collaborating with other users; reusing a knowledge piece of someone who has reused a knowledge piece of yours.
+<dd><b>Good News Everyone <img src='img/good_news_everyone_1.svg' style="width:48px;height:48px;"></b></dd> For achieving a high reach on singular knowledge piece you uploaded.
 </dt>
 </p>
 
