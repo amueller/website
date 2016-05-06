@@ -32,9 +32,11 @@ var impact = {
     nrdays:null,
     days:[],
     total:[],
-    reach:[],
-    impact:[],
+    reuse:[],
+    reach_reuse:[],
+    recursive_impact:[],
     totalscore:0,
+    reusescore:0,
     reachscore:0,
     impactscore:0
 };
@@ -45,20 +47,22 @@ function redrawImpactChart(type){
     var values = [];
     if(type=="Impact"){
         values = impact.total;
+    }else if(type=="Reuse"){
+        values= impact.reuse;
+        type ="Reuse";
     }else if(type=="Reach_re"){
-        values = impact.reach;
+        values = impact.reach_reuse;
         type ="Reach of reuse";
     }else if(type=="Impact_re"){
-        values = impact.impact;
+        values = impact.recursive_impact;
         type ="Impact of reuse";
     }
     if(values.length>0){
         $("#impactplot").empty();
         var chartOptions = {
             chart: {
-                type: 'column',
                 backgroundColor: null,
-                height: 200
+                height: 300
             },
             exporting: false,
             credits: false,
@@ -103,9 +107,8 @@ function redrawReachChart(type){
         $("#reachplot").empty();
         var chartOptions = {
             chart: {
-                type: 'column',
                 backgroundColor: null,
-                height: 200
+                height: 300
             },
             exporting: false,
             credits: false,
@@ -154,7 +157,7 @@ function redrawActivityChart(type) {
             chart: {
                 type: 'heatmap',
                 backgroundColor: null,
-                height:  Math.max($('#Activity-chart').width()/7,200)
+                height:  Math.max($('#Activity-chart').width()/7,300)
             },
             exporting: false,
             credits: false,
@@ -290,91 +293,11 @@ $(function getActivity() {
         });
         activity.nrdays = activity.total.length;
         activity.endday = resultdata['activity-progress']['progresspart'][activity.nrdays-1]['date'];
-        $("#ActivityThisYear").html(activity.totalscore+" /");
-        $("#UploadsThisYear").html(activity.uploadscore+" /");
-        $("#LikesThisYear").html(activity.likescore+" /");
-        $("#DownloadsThisYear").html(activity.downloadscore+" /");
+        $("#ActivityThisYear").html(activity.totalscore+" |");
+        $("#UploadsThisYear").html(activity.uploadscore+" |");
+        $("#LikesThisYear").html(activity.likescore+" |");
+        $("#DownloadsThisYear").html(activity.downloadscore+" |");
         redrawActivityChart('Activity');
-        /*if(resultdata.getElementsByTagName('progresspart').length>0){
-            activity.nrdays = resultdata.getElementsByTagName('progresspart').length;
-            activity.startday = resultdata.getElementsByTagName('progresspart')[0].getElementsByTagName('date')[0].textContent;
-            activity.endday = resultdata.getElementsByTagName('progresspart')[activity.nrdays-1].getElementsByTagName('date')[0].textContent;
-            var istartday = 0;
-            if(activity.startday.split(" ")[0]=="Monday"){
-                istartday = 6;
-            }else if(activity.startday.split(" ")[0]=="Tuesday"){
-                istartday = 5;
-            }else if(activity.startday.split(" ")[0]=="Wednesday"){
-                istartday = 4;
-            }else if(activity.startday.split(" ")[0]=="Thursday"){
-                istartday = 3;
-            }else if(activity.startday.split(" ")[0]=="Friday"){
-                istartday = 2;
-            }else if(activity.startday.split(" ")[0]=="Saturday"){
-                istartday = 1;
-            }
-            for(var j=0; j<=istartday; j++){
-                var name = resultdata.getElementsByTagName('progresspart')[j].getElementsByTagName('date')[0].textContent.split(" ")[1].substring(5);
-                activity.total.push({
-                    x:0,
-                    y:(istartday-j),
-                    value:parseInt(resultdata.getElementsByTagName('progresspart')[j].getElementsByTagName('activity')[0].textContent),
-                    name:name
-                });
-                activity.uploads.push({
-                    x:0,
-                    y:(istartday-j),
-                    value:parseInt(resultdata.getElementsByTagName('progresspart')[j].getElementsByTagName('uploads')[0].textContent),
-                    name:name
-                });
-                activity.downloads.push({
-                    x:0,
-                    y:(istartday-j),
-                    value:parseInt(resultdata.getElementsByTagName('progresspart')[j].getElementsByTagName('downloads')[0].textContent),
-                    name:name
-                });
-                activity.likes.push({
-                    x:0,
-                    y:(istartday-j),
-                    value:parseInt(resultdata.getElementsByTagName('progresspart')[j].getElementsByTagName('likes')[0].textContent),
-                    name:name
-                });
-            }
-            for(var i=1; i<52; i++){
-                for(var j=0; j<7; j++){
-                    if((i*7)+j-(6-istartday)<activity.nrdays){
-                        var name = resultdata.getElementsByTagName('progresspart')[(i*7)+j-(6-istartday)].getElementsByTagName('date')[0].textContent.split(" ")[1].substring(5);
-                        activity.total.push({
-                            x:i,
-                            y:6-j,
-                            value:parseInt(resultdata.getElementsByTagName('progresspart')[(i*7)+j-(6-istartday)].getElementsByTagName('activity')[0].textContent),
-                            name:name
-                        });
-                        activity.uploads.push({
-                            x:i,
-                            y:6-j,
-                            value:parseInt(resultdata.getElementsByTagName('progresspart')[(i*7)+j-(6-istartday)].getElementsByTagName('uploads')[0].textContent),
-                            name:name
-                        });
-                        activity.downloads.push({
-                            x:i,
-                            y:6-j,
-                            value:parseInt(resultdata.getElementsByTagName('progresspart')[(i*7)+j-(6-istartday)].getElementsByTagName('downloads')[0].textContent),
-                            name:name
-                        });
-                        activity.likes.push({
-                            x:i,
-                            y:6-j,
-                            value:parseInt(resultdata.getElementsByTagName('progresspart')[(i*7)+j-(6-istartday)].getElementsByTagName('likes')[0].textContent),
-                            name:name
-                        });
-                    }
-                }
-            }
-            redrawActivityChart('Activity');
-        }else{
-            console.log("Invalid gamification API result");
-        }*/
     }).fail(function(resultdata, textStatus, errorThrown){
         console.log("Gamification API failed: "+textStatus+" ("+errorThrown+")");
     });
@@ -384,26 +307,32 @@ $(function getActivity() {
 $(function getReach() {
     $.ajax({
         method:'GET',
-        url:'<?php echo BASE_URL ?>api_new/v1/json/gamification/reach/u/<?php echo $this->user_id ?>/lastmonth_perday',
+        url:'<?php echo BASE_URL ?>api_new/v1/json/gamification/reach/u/<?php echo $this->user_id ?>/lastyear_perday',
         dataType:'json'
     }).done(function(resultdata){
-        //console.log("Reach: "+resultdata['reach-progress']['progresspart']);
         reach.startday = resultdata['reach-progress']['progresspart'][0]['date'];
         $.each(resultdata['reach-progress']['progresspart'], function(i, item) {
-            //console.log(item);
-            reach.total.push(item['reach']);
-            reach.totalscore=+item['reach'];
-            reach.likes.push(item['likes']);
-            reach.likescore=+item['likes'];
-            reach.downloads.push(item['downloads']);
-            reach.downloadscore=+item['downloads'];
+            reach.total.push(reach.totalscore+parseInt(item['reach']));
+            reach.totalscore+=parseInt(item['reach']);
+            reach.likes.push(reach.likescore+parseInt(item['likes']));
+            reach.likescore+=parseInt(item['likes']);
+            reach.downloads.push(reach.downloadscore+parseInt(item['downloads']));
+            reach.downloadscore+=parseInt(item['downloads']);
             reach.days.push(item['date'].split(" ")[1]);
         });
         reach.nrdays = reach.total.length;
         reach.endday = resultdata['reach-progress']['progresspart'][reach.nrdays-1]['date'];
-        $("#ReachThisMonth").html(reach.totalscore+" /");
-        $("#LikesReceivedThisMonth").html(reach.likescore+" /");
-        $("#DownloadsReceivedThisMonth").html(reach.downloadscore+" /");
+        var alltimetotalscore = parseInt($("#ReachAllTime").text());
+        var alltimelikescore = parseInt($("#LikesReceivedAllTime").text());
+        var alltimedownloadscore = parseInt($("#DownloadsReceivedAllTime").text());
+        for(var i=0; i<reach.nrdays; i++){
+            reach.total[i]+=(alltimetotalscore-reach.totalscore);
+            reach.likes[i]+=(alltimelikescore-reach.likescore);
+            reach.downloads[i]+=(alltimedownloadscore-reach.downloadscore);
+        }
+        $("#ReachThisMonth").html(reach.totalscore+" |");
+        $("#LikesReceivedThisMonth").html(reach.likescore+" |");
+        $("#DownloadsReceivedThisMonth").html(reach.downloadscore+" |");
         redrawReachChart('Reach');
     }).fail(function(resultdata, textStatus, errorThrown){
         console.log("Gamification API failed: "+textStatus+" ("+errorThrown+")");
@@ -414,18 +343,37 @@ $(function getReach() {
 $(function getImpact() {
     $.ajax({
         method:'GET',
-        url:'<?php echo BASE_URL ?>api_new/v1/json/gamification/impact/u/<?php echo $this->user_id ?>/lastmonth_perday',
+        url:'<?php echo BASE_URL ?>api_new/v1/json/gamification/impact/u/<?php echo $this->user_id ?>/lastyear_perday',
         dataType:'json'
     }).done(function(resultdata){
         impact.startday = resultdata['impact-progress']['progresspart'][0]['date'];
         $.each(resultdata['impact-progress']['progresspart'], function(i, item) {
-            impact.total.push(item['impact']);
-            impact.totalscore=+item['impact'];
+            impact.total.push(impact.totalscore+parseInt(item['impact']));
+            impact.totalscore+=parseInt(item['impact']);
+            impact.reuse.push(impact.reusescore+parseInt(item['reuse']));
+            impact.reusescore+=parseInt(item['reuse']);
+            impact.reach_reuse.push(impact.reachscore+parseInt(item['reuse_reach']));
+            impact.reachscore+=parseInt(item['reuse_reach']);
+            impact.recursive_impact.push(impact.impactscore+parseInt(item['recursive_impact']));
+            impact.impactscore+=parseInt(item['recursive_impact']);
             impact.days.push(item['date'].split(" ")[1]);
         });
         impact.nrdays = impact.total.length;
         impact.endday = resultdata['impact-progress']['progresspart'][impact.nrdays-1]['date'];
-        $("#ImpactThisMonth").html(impact.totalscore+" /");
+        var alltimetotalscore = parseInt($("#ImpactAllTime").text());
+        var alltimereusescore = parseInt($("#ReuseAllTime").text());
+        var alltimereachreusecore = parseInt($("#ReachReuseAllTime").text());
+        var alltimeimpactreusecore = parseInt($("#ImpactReuseAllTime").text());
+        for(var i=0; i<impact.nrdays; i++){
+            impact.total[i]+=(alltimetotalscore-impact.totalscore);
+            impact.reuse[i]+=(alltimereusescore-impact.reusescore);
+            impact.reach_reuse[i]+=(alltimereachreusecore-impact.reachscore);
+            impact.recursive_impact[i]+=(alltimeimpactreusecore-impact.impactscore);
+        }
+        $("#ImpactThisMonth").html(impact.totalscore+" |");
+        $("#ReuseThisMonth").html(impact.reusescore+" |");
+        $("#ReachReuseThisMonth").html(impact.reachscore+" |");
+        $("#ImpactReuseThisMonth").html(impact.impactscore+" |");
         redrawImpactChart('Impact');
     }).fail(function(resultdata, textStatus, errorThrown){
         console.log("Gamification API failed: "+textStatus+" ("+errorThrown+")");

@@ -34,7 +34,7 @@
    <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
    <?php if ($this->ion_auth->logged_in()) {
             if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
-                <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
+                <span title="Reach is: 2x likes received + downloads received on this run."><i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span></span>
         <?php }?>            
    <?php }?>
 </div>

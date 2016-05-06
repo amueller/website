@@ -14,8 +14,8 @@
         <p>Reach score is awarded to knowledge pieces and by extension their uploaders for the expressed interest of other users. It is increased by 2 for every user that leaves a like on a knowledge piece and increased by 1 for every user that downloads it for the first time.</p>
     </div>
     <div class="col-sm-4">
-        <h4 class="impact">Impact <i class="fa fa-bolt"></i><!--<!--<i class="material-icons" style="font-size: 16px">flare</i>--></h4>
-        <p>Impact score is awarded to knowledge pieces and by extension their uploaders for the reuse of these knowledge pieces. A dataset is reused if it is used as input in a task and a flow is reused in runs. Impact is increased by half of the acquired reach of a reuse. So the impact of a dataset that is used in a single task with reach 10, is 5.</p>
+        <h4 class="impact">Impact <i class="fa fa-bolt"></i></h4>
+        <p>Impact score is awarded to knowledge pieces and by extension their uploaders for the reuse of these knowledge pieces. A dataset is reused if when it is used as input in a task while flows and tasks are reused in runs. 1 Impact is awarded for every reuse by a user that is not the uploader. Impact of a reused knowledge piece is further increased by half of the acquired reach and half of the acquired impact of a reuse, usually rounded down. So the impact of a dataset that is used in a single task with reach 10 and impact 5, is 8 (&lfloor;1+0.5*10+0.5*5 &rfloor;).</p>
     </div>
 </div>
 
@@ -38,6 +38,6 @@ The badges a user has acquired can be found on their user profile below the scor
 </p>
 
 <h3>Downvotes</h3>
-<p>Although not part of the scores, downvotes have also been introduced. They are inteded to indicate a flaw of a data set, flow, task or run that can be fixed, for example a missing description. </p>
+<p>Although not part of the scores, downvotes have also been introduced. They are intended to indicate a flaw of a data set, flow, task or run that can be fixed, for example a missing description. </p>
 <p>If you want to indicate something is wrong with a knowledge piece, click the number of issues statistic at the top the page. A panel will open where you either agree with an already raised issue anonymously or submit your own issue (not anonymously).</p>
 <p>You can also sort search results by the number of downvotes, or issues on <a href='/search'>the search page</a>.</p>
