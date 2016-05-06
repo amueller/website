@@ -245,7 +245,7 @@ class Gamification extends CI_Model{
     public function getActivityFromParts($uploads,$likes,$downloads){
         return $uploads*$this->scores['activity']['uploads'] +
                 $likes*$this->scores['activity']['likes'] +
-                $downloads*$this->scores['activity']['downloads'];        
+                $downloads*$this->scores['activity']['downloads'];
     }
 }
 

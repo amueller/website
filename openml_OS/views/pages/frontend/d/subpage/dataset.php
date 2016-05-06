@@ -57,8 +57,8 @@
        <?php
         if ($this->ion_auth->logged_in()) {
             if($this->ion_auth->user()->row()->gamification_visibility=='show'){?>
-                <i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->data)): if($this->data['reach']!=null): $r = $this->data['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span>
-                <i class="fa fa-bolt impact"></i><!--<i class="material-icons impact" style="font-size: 13px">flare</i>--><span id="impact"><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
+                <span title="Reach is: 2x likes received + downloads received on this data set."><i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->data)): if($this->data['reach']!=null): $r = $this->data['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span></span>
+                <span id="impact" title="Impact is: number or reuses of this dataset in tasks + 0.5*reach of these tasks + 0.5*impact of these tasks"><i class="fa fa-bolt impact"></i><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
             <?php }?>
         <?php }?>
     </div>

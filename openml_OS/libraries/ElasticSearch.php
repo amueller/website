@@ -767,11 +767,11 @@ class ElasticSearch {
         
         $user['reuse'] = $impact_struct['reuse'];
         
-        $user['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        $user['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
         
-        $user['reach_of_reuse'] = $impact_struct['reuse_reach'];
+        $user['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
-        $user['impact'] = $impact_struct['impact'];
+        $user['impact'] = floor($impact_struct['impact']);
         
         $user['badges'] = array();
         $badges = $this->CI->Badge->getBadgesOfUser($d->id);
@@ -1010,11 +1010,11 @@ class ElasticSearch {
         
         $newdata['reuse'] = $impact_struct['reuse'];
         
-        $newdata['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        $newdata['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
         
-        $newdata['reach_of_reuse'] = $impact_struct['reuse_reach'];
+        $newdata['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
-        $newdata['impact'] = $impact_struct['impact'];
+        $newdata['impact'] = floor($impact_struct['impact']);
         
         return $newdata;
     }
@@ -1495,11 +1495,11 @@ class ElasticSearch {
         
         $new_data['reuse'] = $impact_struct['reuse'];
         
-        $new_data['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        $new_data['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
         
-        $new_data['reach_of_reuse'] = $impact_struct['reuse_reach'];
+        $new_data['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
-        $new_data['impact'] = $impact_struct['impact'];
+        $new_data['impact'] = floor($impact_struct['impact']);
         return $new_data;
     }
 
@@ -1815,11 +1815,11 @@ class ElasticSearch {
         
         $new_data['reuse'] = $impact_struct['reuse'];
         
-        $new_data['impact_of_reuse'] = $impact_struct['recursive_impact'];
+        $new_data['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
         
-        $new_data['reach_of_reuse'] = $impact_struct['reuse_reach'];
+        $new_data['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
-        $new_data['impact'] = $impact_struct['impact'];
+        $new_data['impact'] = floor($impact_struct['impact']);
 
         return $new_data;
     }
