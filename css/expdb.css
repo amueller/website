@@ -2252,6 +2252,14 @@ html, body {
   display:inline-block;
 }
 
+.searchresult  .runStats > b > i{
+  color: rgb(0, 153, 51);
+  margin-left: 10px;
+  margin-right: 5px;
+  font-size: 13px;
+  display:inline-block;
+}
+
 .searchresult .statLine{
   margin-left: 50px;
 }

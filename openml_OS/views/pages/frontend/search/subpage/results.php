@@ -164,9 +164,9 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
 				<?php
-                                echo '<b>'.$rs['nr_of_likes'].' likes';
-                                echo ' - '.$rs['nr_of_downloads'].' downloads';
-                                echo ' - '.$rs['reach'].' reach </b> - ';
+                                echo '<b><i class="fa fa-heart"></i>'.$rs['nr_of_likes'].' likes';
+                                echo ' - <i class="fa fa-cloud-download"></i>'.$rs['nr_of_downloads'].' downloads';
+                                echo ' - <i class="fa fa-rss"></i>'.$rs['reach'].' reach </b> - ';
 				if(!array_key_exists('evaluations',$rs) or empty($rs['evaluations'])) {
 					echo 'No evaluations yet (or not applicable).';
 
@@ -212,12 +212,13 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 						<?php if($rs['country']) echo '<i class="fa fa-fw fa-map-marker"></i>'.$rs['country'];?>
 						<i class="fa fa-fw fa-clock-o"></i>Joined <?php echo date("Y-m-d", $rs['date']); ?>
 				</div>
-                                <div class="runStats">
-                                <?php echo '<b>'.$rs['nr_of_uploads'].' uploads';
-                                    echo ' - '.$rs['activity'].' activity';
-                                    echo ' - '.$rs['reach'].' reach';
-                                    echo ' - '.$rs['impact'].' impact </b>';
-                                    ?>
+                                <div class="runStats statLine">
+                                    <b>
+                                        <i class="fa fa-fw fa-cloud-upload"></i><?php echo $rs['nr_of_uploads'].' uploads'; ?>
+                                        <i class="fa fa-fw fa-heartbeat"></i><?php echo ''.$rs['activity'].' activity ';?>
+                                        <i class="fa fa-fw fa-rss"></i><?php echo ''.$rs['reach'].' reach';?>
+                                        <i class="fa fa-fw fa-bolt"></i><?php echo ''.$rs['impact'].' impact';?>
+                                    </b>
                                 </div>
 
 		   <?php } elseif($type == 'data') { ?>
@@ -225,12 +226,12 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
 		   		<a href="d/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?> </div>
-				<div class="runStats">
-					<?php echo '<b>'.$rs['runs'].' runs';
-                                            echo ' - '.$rs['nr_of_likes'].' likes';
-                                            echo ' - '.$rs['nr_of_downloads'].' downloads';
-                                            echo ' - '.$rs['reach'].' reach';
-                                            echo ' - '.$rs['impact'].' impact </b><br>';
+				<div class="runStats statLine">
+					<?php echo '<b><i class="fa fa-star"></i>'.$rs['runs'].' runs';
+                                            echo '<i class="fa fa-heart"></i>'.$rs['nr_of_likes'].' likes';
+                                            echo '<i class="fa fa-cloud-download"></i>'.$rs['nr_of_downloads'].' downloads';
+                                            echo '<i class="fa fa-rss"></i>'.$rs['reach'].' reach';
+                                            echo '<i class="fa fa-bolt"></i>'.$rs['impact'].' impact </b><br>';
 					 	if(array_key_exists('qualities', $rs)){
 								$q = $rs['qualities'];
 					      if(array_key_exists('NumberOfInstances', $q))    echo ''.$q['NumberOfInstances'].' instances';
@@ -277,11 +278,11 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
                                     <?php
-                                        echo '<b>' . $rs['runs'] . ' runs';
-                                        echo ' - ' . $rs['nr_of_likes'] . ' likes';
-                                        echo ' - ' . $rs['nr_of_downloads'] . ' downloads';
-                                        echo ' - ' . $rs['reach'] . ' reach';
-                                        echo ' - ' . $rs['impact'] . ' impact </b><br>';
+                                        echo '<b><i class="fa fa-star"></i>' . $rs['runs'] . ' runs';
+                                        echo '<i class="fa fa-heart"></i>' . $rs['nr_of_likes'] . ' likes';
+                                        echo '<i class="fa fa-download"></i>' . $rs['nr_of_downloads'] . ' downloads';
+                                        echo '<i class="fa fa-rss"></i>' . $rs['reach'] . ' reach';
+                                        echo '<i class="fa fa-bolt"></i>' . $rs['impact'] . ' impact </b><br>';
                                         $to_echo = '';
                                         foreach ($rs as $key => $value) {
                                             if ($key == 'task_id' or $key == 'suggest' or $key == 'source_data' or $key == 'visibility' or $key == 'data_splits' or $key == 'runs' or $key == 'tasktype' or $key == 'date' or $key == 'custom_testset' or $key == 'nr_of_downloads' or $key == 'total_downloads' or $key == 'reach' or $key == 'nr_of_likes' or $key == 'nr_of_issues' or $key == 'nr_of_downvotes' or $key == 'impact' or ! $value) {
@@ -302,11 +303,11 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<a href="f/<?php echo $r['_id']; ?>"><?php echo $rs['name'].' ('.$rs['version'].')'; ?></a></div>
 				<div class="teaser"><?php echo formatTeaser($r); ?></div>
 				<div class="runStats">
-					<?php echo '<b>'.$rs['runs'].' runs';
-                                              echo ' - '.$rs['nr_of_likes'].' likes';
-                                              echo ' - '.$rs['nr_of_downloads'].' downloads';
-                                                echo ' - '.$rs['reach'].' reach';
-                                                echo ' - '.$rs['impact'].' impact </b>';?>
+					<?php echo '<b><i class="fa fa-star"></i>'.$rs['runs'].' runs';
+                                              echo '<i class="fa fa-heart"></i>'.$rs['nr_of_likes'].' likes';
+                                              echo '<i class="fa fa-cloud-download"></i>'.$rs['nr_of_downloads'].' downloads';
+                                                echo '<i class="fa fa-rss"></i>'.$rs['reach'].' reach';
+                                                echo '<i class="fa fa-bolt"></i>'.$rs['impact'].' impact </b>';?>
         </div>
 		   <?php } ?>
 
