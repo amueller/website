@@ -123,6 +123,24 @@ $this->image = array(
 	'type' => 'file',
 );
 
+$this->optin_gamification = array(
+    'data-hint'=> 'Whether you want to see and participate in the gamification of OpenML, or not.',
+    'name' => 'gamification_visibility',
+    'id' => 'gamification_setting_in',
+    'type' => 'radio',
+    'value' => 'show',
+    'checked' => $this->user->gamification_visibility=='show'?TRUE:FALSE
+);
+
+$this->optout_gamification = array(
+    'data-hint'=> 'Whether you want to see and participate in the gamification of OpenML, or not.',
+    'name' => 'gamification_visibility',
+    'id' => 'gamification_setting_out',
+    'type' => 'radio',
+    'value' => 'hidden',
+    'checked' => $this->user->gamification_visibility=='show'?FALSE:TRUE
+);
+
 }
 } elseif($this->ion_auth->logged_in()){
 		header('Location: '.str_replace('/u','/u/'.$this->ion_auth->user()->row()->id, $_SERVER['REQUEST_URI']));

@@ -35,7 +35,8 @@ $this->form_validation->set_rules('password_confirm', 'Password Confirmation', '
 
 if ($this->form_validation->run() == true) {
 
-	$user = clean_array( $_POST, array( 'first_name', 'last_name', 'affiliation', 'country', 'bio', 'image' ) );
+          
+	$user = clean_array( $_POST, array( 'first_name', 'last_name', 'affiliation', 'country', 'bio', 'gamification_visibility', 'image' ) );
 
 	if( check_uploaded_file( $_FILES['image'] ) ) {
 		resize_image_squared($_FILES['image']['tmp_name'], $this->config->item('max_avatar_size') );
