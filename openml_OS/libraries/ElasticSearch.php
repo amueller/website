@@ -710,8 +710,9 @@ class ElasticSearch {
         $user['nr_of_downloads_flow'] = $nr_of_downloads_flow;
         $user['nr_of_downloads_task'] = $nr_of_downloads_task;
         $user['nr_of_downloads_run'] = $nr_of_downloads_run;
-        //$user['activity'] = ($this->activity_metrics['x'] * $user['nr_of_downloads']) + ($this->activity_metrics['y'] * $user['nr_of_likes']) + ($this->activity_metrics['z'] * $user['nr_of_uploads']);
-        $user['activity'] = $this->CI->Gamification->getActivityFromParts($user['nr_of_uploads'],$user['nr_of_likes'],$user['nr_of_downloads']);
+        if($d->gamification_visibility=='show'){
+            $user['activity'] = $this->CI->Gamification->getActivityFromParts($user['nr_of_uploads'],$user['nr_of_likes'],$user['nr_of_downloads']);
+        }
         
         $ld_received = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($d->id);
         $likes_received = 0;
@@ -760,26 +761,28 @@ class ElasticSearch {
         $user['downloads_received_data'] = $downloads_received_data;
         $user['downloads_received_flow'] = $downloads_received_flow;
         $user['downloads_received_task'] = $downloads_received_task;
-        $user['downloads_received_run'] = $downloads_received_run; 
-        $user['reach'] = $this->CI->Gamification->getReachFromParts($user['likes_received'],$user['downloads_received']);
+        $user['downloads_received_run'] = $downloads_received_run;
+        if($d->gamification_visibility=='show'){
+            $user['reach'] = $this->CI->Gamification->getReachFromParts($user['likes_received'],$user['downloads_received']);
+            
+            $impact_struct = $this->CI->Gamification->getImpact('u',$d->id,"2013-1-1",date("Y-m-d"));
+        
+            $user['reuse'] = $impact_struct['reuse'];
 
-        $impact_struct = $this->CI->Gamification->getImpact('u',$d->id,"2013-1-1",date("Y-m-d"));
-        
-        $user['reuse'] = $impact_struct['reuse'];
-        
-        $user['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
-        
-        $user['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
+            $user['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
 
-        $user['impact'] = floor($impact_struct['impact']);
-        
-        $user['badges'] = array();
-        $badges = $this->CI->Badge->getBadgesOfUser($d->id);
-        if($badges){
-            foreach($badges as $b){
-                $badge = array('badge_id'=>$b->badge_id,'rank'=>$b->rank);
-                $user['badges'][] = $badge;
-            }            
+            $user['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
+
+            $user['impact'] = floor($impact_struct['impact']);
+
+            $user['badges'] = array();
+            $badges = $this->CI->Badge->getBadgesOfUser($d->id);
+            if($badges){
+                foreach($badges as $b){
+                    $badge = array('badge_id'=>$b->badge_id,'rank'=>$b->rank);
+                    $user['badges'][] = $badge;
+                }
+            }
         }        
 
         return $user;
