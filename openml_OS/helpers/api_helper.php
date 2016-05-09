@@ -154,7 +154,8 @@ function untag_item( $type, $id, $tag, $user_id, &$error ) {
     return false;
   }
   
-  if( $tag_record->uploader != $user_id ) {
+  $is_admin = $ci->ion_auth->is_admin($user_id);
+  if( $tag_record->uploader != $user_id && $is_admin == false ) {
     $error = 478;
     return false;
   }
