@@ -197,6 +197,11 @@ $this->apiErrors[207][1] = 'One of the files uploaded has a problem';
 $this->apiErrors[208][0] = 'Error inserting setup record';
 $this->apiErrors[208][1] = 'Internal server error, please contact api administrators';
 
+
+// for function: openml.run.upload
+$this->apiErrors[209][0] = 'Error parsing arff file. ';
+$this->apiErrors[209][1] = 'The predictions arff file could not be verified. ';
+
 // for function: openml.run.upload
 $this->apiErrors[210][0] = 'Unable to store run';
 $this->apiErrors[210][1] = 'Internal server error, please contact api administrators';
@@ -236,10 +241,6 @@ $this->apiErrors[218][1] = 'The flow implements a math_function, which is unable
 // for function: openml.run.upload
 $this->apiErrors[219][0] = 'Error reading the XML document';
 $this->apiErrors[219][1] = 'The xml description file could not be verified. ';
-
-// for function: openml.run.upload
-$this->apiErrors[225][0] = 'Error verifying predictions arff';
-$this->apiErrors[225][1] = 'The predictions arff file could not be verified. ';
 
 // for function: openml.run.get
 $this->apiErrors[220][0] = 'Please provide run_id';
