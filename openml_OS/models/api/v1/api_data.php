@@ -14,6 +14,8 @@ class Api_data extends Api_model {
     $this->load->model('Data_quality_interval');
     $this->load->model('Quality');
     $this->load->model('File');
+    
+    $this->load->helper('file_upload');
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
