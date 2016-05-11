@@ -262,6 +262,16 @@ class Api_data extends Api_model {
         $this->returnError( 132, $this->version );
         return;
       }
+      
+      if (getextension($_FILES['dataset']['name']) == 'arff') {
+        $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
+        if ($uploadedFileCheck !== true) {
+          $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset file: ' . $uploadedFileCheck);
+          return;
+        }
+      
+      }
+      
       $file_record = $this->File->getById($file_id);
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } elseif( $datasetUrlProvided ) {

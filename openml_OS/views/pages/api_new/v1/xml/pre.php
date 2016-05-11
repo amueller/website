@@ -92,6 +92,10 @@ $this->apiErrors[143][1] = 'It is possible to suggest a default target feature (
 $this->apiErrors[144][0] = 'Unable to update dataset ';
 $this->apiErrors[144][1] = 'The dataset with this id could not be found in the database. If you upload a new dataset, unset the id. ';
 
+// for function: openml.data.upload
+$this->apiErrors[145][0] = 'Error parsing dataset ARFF file';
+$this->apiErrors[145][1] = 'Error parsing dataset ARFF file';
+
 
 // for function: openml.tasks.search
 $this->apiErrors[150][0] = 'Please provide task_id';

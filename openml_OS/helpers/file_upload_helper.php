@@ -148,6 +148,14 @@ function create_dir( $directory ) {
 function fileRecordToUrl( $file ) {
   return BASE_URL . 'data/download/' . $file->id . '/' . $file->filename_original;
 }
+
+function getextension($filename) {
+  if (strpos($filename,'.')) {
+    return strtolower(substr($filename,strpos($filename,'.')+1));
+  } else {
+    return false;
+  }
+}
   
 function readfile_chunked($filename,$retbytes=true) {
   $chunksize = 1*(1024*1024); // how many bytes per chunk
