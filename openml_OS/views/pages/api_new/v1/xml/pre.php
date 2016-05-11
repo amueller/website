@@ -237,6 +237,9 @@ $this->apiErrors[218][1] = 'The flow implements a math_function, which is unable
 $this->apiErrors[219][0] = 'Error reading the XML document';
 $this->apiErrors[219][1] = 'The xml description file could not be verified. ';
 
+// for function: openml.run.upload
+$this->apiErrors[225][0] = 'Error verifying predictions arff';
+$this->apiErrors[225][1] = 'The predictions arff file could not be verified. ';
 
 // for function: openml.run.get
 $this->apiErrors[220][0] = 'Please provide run_id';
@@ -245,6 +248,8 @@ $this->apiErrors[220][1] = 'In order to view run details, please provide run_id'
 // for function: openml.run.get
 $this->apiErrors[221][0] = 'Run not found';
 $this->apiErrors[221][1] = 'The run id was invalid, run not found';
+
+// range from 225 - 239: api run
 
 // for function: openml.tasks.type.search
 $this->apiErrors[240][0] = 'Please provide task_type_id';
