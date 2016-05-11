@@ -256,12 +256,6 @@ class Api_data extends Api_model {
       if( $access_control_option != 'public' ) {
         $access_control = 'private';
       }
-
-      $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
-      if($file_id === false) {
-        $this->returnError( 132, $this->version );
-        return;
-      }
       
       if (getextension($_FILES['dataset']['name']) == 'arff') {
         $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
@@ -269,7 +263,12 @@ class Api_data extends Api_model {
           $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset file: ' . $uploadedFileCheck);
           return;
         }
-      
+      }
+
+      $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
+      if($file_id === false) {
+        $this->returnError( 132, $this->version );
+        return;
       }
       
       $file_record = $this->File->getById($file_id);
