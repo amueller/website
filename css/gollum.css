@@ -118,7 +118,9 @@ a.wiki-help-button:hover{
   float: right;
 }
 
+/* overriding gollum by hiding sidebar*/
 #wiki-sidebar {
+  display:none !important;
   background-color: #f7f7f7;
   border: 1px solid #ddd;
   font-size: 13px;
@@ -164,8 +166,10 @@ a.wiki-help-button:hover{
   width: 70%;
 }
 
+/* overriding gollum by hiding headers and footers */
 #wiki-header #header-content,
 #wiki-footer #footer-content {
+  display:none !important;
   background-color: #f7f7f7;
   border: 1px solid #ddd;
   padding: 1em;
