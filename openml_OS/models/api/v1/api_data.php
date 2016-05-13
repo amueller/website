@@ -14,6 +14,8 @@ class Api_data extends Api_model {
     $this->load->model('Data_quality_interval');
     $this->load->model('Quality');
     $this->load->model('File');
+    
+    $this->load->helper('file_upload');
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
@@ -256,12 +258,21 @@ class Api_data extends Api_model {
       if( $access_control_option != 'public' ) {
         $access_control = 'private';
       }
+      
+      if (getextension($_FILES['dataset']['name']) == 'arff') {
+        $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
+        if ($uploadedFileCheck !== true) {
+          $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset file: ' . $uploadedFileCheck);
+          return;
+        }
+      }
 
       $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
       if($file_id === false) {
         $this->returnError( 132, $this->version );
         return;
       }
+      
       $file_record = $this->File->getById($file_id);
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } elseif( $datasetUrlProvided ) {

@@ -92,6 +92,10 @@ $this->apiErrors[143][1] = 'It is possible to suggest a default target feature (
 $this->apiErrors[144][0] = 'Unable to update dataset ';
 $this->apiErrors[144][1] = 'The dataset with this id could not be found in the database. If you upload a new dataset, unset the id. ';
 
+// for function: openml.data.upload
+$this->apiErrors[145][0] = 'Error parsing dataset ARFF file';
+$this->apiErrors[145][1] = 'Error parsing dataset ARFF file';
+
 
 // for function: openml.tasks.search
 $this->apiErrors[150][0] = 'Please provide task_id';
@@ -197,6 +201,11 @@ $this->apiErrors[207][1] = 'One of the files uploaded has a problem';
 $this->apiErrors[208][0] = 'Error inserting setup record';
 $this->apiErrors[208][1] = 'Internal server error, please contact api administrators';
 
+
+// for function: openml.run.upload
+$this->apiErrors[209][0] = 'Error parsing arff file. ';
+$this->apiErrors[209][1] = 'The predictions arff file could not be verified. ';
+
 // for function: openml.run.upload
 $this->apiErrors[210][0] = 'Unable to store run';
 $this->apiErrors[210][1] = 'Internal server error, please contact api administrators';
@@ -237,7 +246,6 @@ $this->apiErrors[218][1] = 'The flow implements a math_function, which is unable
 $this->apiErrors[219][0] = 'Error reading the XML document';
 $this->apiErrors[219][1] = 'The xml description file could not be verified. ';
 
-
 // for function: openml.run.get
 $this->apiErrors[220][0] = 'Please provide run_id';
 $this->apiErrors[220][1] = 'In order to view run details, please provide run_id';
@@ -245,6 +253,8 @@ $this->apiErrors[220][1] = 'In order to view run details, please provide run_id'
 // for function: openml.run.get
 $this->apiErrors[221][0] = 'Run not found';
 $this->apiErrors[221][1] = 'The run id was invalid, run not found';
+
+// range from 225 - 239: api run
 
 // for function: openml.tasks.type.search
 $this->apiErrors[240][0] = 'Please provide task_type_id';

@@ -24,6 +24,8 @@ class Api_run extends Api_model {
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
     $this->load->model('Evaluation_interval');
+    
+    $this->load->helper('arff');
 
     $this->load->model('File');
   }
@@ -326,6 +328,22 @@ class Api_run extends Api_model {
         $this->returnError( 207, $this->version, $this->openmlGeneralErrorCode, 'File predictions: ' . $message );
         return;
       }
+      
+      $predictionsFileCheck = ARFFcheck($_FILES['predictions']['tmp_name'], 1000);
+      if ($predictionsFileCheck !== true) {
+        $this->returnError(209, $this->version, $this->openmlGeneralErrorCode, 'Arff error in predictions file: ' . $predictionsFileCheck);
+        return;
+      }
+      
+      if (array_key_exists('trace',$_FILES)) {
+        $traceFileCheck = ARFFcheck($_FILES['trace']['tmp_name'], 1000);
+        if ($traceFileCheck !== true) {
+          $this->returnError(209, $this->version, $this->openmlGeneralErrorCode, 'Arff error in trace file: ' . $traceFileCheck);
+          return;
+        }
+      
+      }
+      
     }
 
     $parameters = array();
