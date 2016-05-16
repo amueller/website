@@ -1716,7 +1716,7 @@ class ElasticSearch {
             $datasets = null;
             $params['body'] = array();
 
-            $datasets = $this->db->query('select d.*, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id) where did>=' . $did . ' and rid<' . ($did + $incr) . ' group by did');
+            $datasets = $this->db->query('select d.*, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id) where did>=' . $did . ' and did<' . ($did + $incr) . ' group by did');
             if($datasets){
 
               foreach ($datasets as $d) {
