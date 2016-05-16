@@ -215,9 +215,11 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
                                 <div class="runStats statLine">
                                     <b>
                                         <i class="fa fa-fw fa-cloud-upload"></i><?php echo $rs['nr_of_uploads'].' uploads'; ?>
-                                        <i class="fa fa-fw fa-heartbeat"></i><?php echo ''.$rs['activity'].' activity ';?>
+                                        <?php if($rs['gamification_visibility']=='show'){ ?> 
+                                        <i class="fa fa-fw fa-heartbeat"></i><?php echo ''.$rs['activity'].' activity ';?> 
                                         <i class="fa fa-fw fa-rss"></i><?php echo ''.$rs['reach'].' reach';?>
                                         <i class="fa fa-fw fa-bolt"></i><?php echo ''.$rs['impact'].' impact';?>
+                                        <?php }?>
                                     </b>
                                 </div>
 

@@ -270,7 +270,7 @@ class Api_votes extends Api_model {
             if(is_numeric($reason)){
                 $dvote_id = $this->Downvote->insertByIds($this->user_id, $knowledge_type, $knowledge_id, $reason);
             }else{
-                $dvote_id = $this->Downvote->insertOriginal($this->user_id, $knowledge_type, $knowledge_id, $reason);
+                $dvote_id = $this->Downvote->insertOriginal($this->user_id, $knowledge_type, $knowledge_id, urldecode($reason));
             }
 
             if (!$dvote_id) {

@@ -263,29 +263,30 @@ $(function getActivity() {
         }else if(activity.startday.split(" ")[0]=="Saturday"){
             istartday = 1;
         }
+        console.log(istartday);
         $.each(resultdata['activity-progress']['progresspart'], function(i, item) {
             //console.log(item);
             activity.total.push({
-                                x:Math.floor(i/7),
-                                y:(istartday-(i%7)),
+                                x:Math.floor((i+istartday)/7),
+                                y:(6-((i+istartday)%7)),
                                 value: parseInt(item['activity']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.totalscore+= +item['activity'];
             activity.likes.push({
-                                x:Math.floor(i/7),
-                                y:(istartday-(i%7)),
+                                x:Math.floor((i+istartday)/7),
+                                y:(6-((i+istartday)%7)),
                                 value: parseInt(item['likes']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.likescore+= +item['likes'];
             activity.downloads.push({
-                                x:Math.floor(i/7),
-                                y:(istartday-(i%7)),
+                                x:Math.floor((i+istartday)/7),
+                                y:(6-((i+istartday)%7)),
                                 value: parseInt(item['downloads']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.downloadscore+= +item['downloads'];
             activity.uploads.push({
-                                x:Math.floor(i/7),
-                                y:(istartday-(i%7)),
+                                x:Math.floor((i+istartday)/7),
+                                y:(6-((i+istartday)%7)),
                                 value: parseInt(item['uploads']) + 0.000001,
                                 name: item['date'].split(" ")[1]});
             activity.uploadscore+= +item['uploads'];
