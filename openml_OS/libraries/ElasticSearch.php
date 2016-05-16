@@ -17,7 +17,7 @@ class ElasticSearch {
         $this->CI->load->model('Run_tag');
         $this->CI->load->model('Algorithm_quality');
         $this->CI->load->model('Estimation_procedure');
-        
+
         $this->CI->load->model('Downvote');
         $this->CI->load->model('KnowledgePiece');
         $this->CI->load->model('Gamification');
@@ -54,7 +54,7 @@ class ElasticSearch {
                     'format' => 'yyyy-MM-dd HH:mm:ss')
             )
         );
-        
+
         $this->mappings['downvote'] = array(
             '_all' => array(
                 'enabled' => true,
@@ -70,7 +70,7 @@ class ElasticSearch {
                     'format' => 'yyyy-MM-dd HH:mm:ss')
             )
         );
-        
+
         $this->mappings['like'] = array(
             '_all' => array(
                 'enabled' => true,
@@ -457,7 +457,7 @@ class ElasticSearch {
     }
 
     public function index_downvote($id, $start_id = 0){
-        
+
         $params['index'] = 'openml';
         $params['type'] = 'downvote';
 
@@ -479,7 +479,7 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downvotes) . ' downvotes.';
     }
-    
+
     public function index_like($id, $start_id = 0){
 
         $params['index'] = 'openml';
@@ -503,7 +503,7 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($likes) . ' likes.';
     }
-    
+
     private function build_downvote($d){
         $downvote = array(
             'downvote_id' => $d->did,
@@ -517,7 +517,7 @@ class ElasticSearch {
             'time' => $d->time
         );
         return $downvote;
-        
+
     }
 
     private function build_like($l){
@@ -615,7 +615,7 @@ class ElasticSearch {
             ),
             'gamification_visibility' => $d->gamification_visibility
         );
-        
+
         $uploads = $this->CI->KnowledgePiece->getNumberOfUploadsOfUser($d->id);
         $data_up = 0;
         $flow_up = 0;
@@ -633,7 +633,7 @@ class ElasticSearch {
                 }else if($up->kt == 'r'){
                     $run_up+=$up->count;
                 }
-                $nr_of_uploads+=$up->count;                
+                $nr_of_uploads+=$up->count;
             }
             $user['nr_of_uploads'] =$nr_of_uploads;
         }else{
@@ -657,7 +657,7 @@ class ElasticSearch {
         }else{
             $user['runs_on_flows'] = 0;
         }
-        
+
         $ld_of_user = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOfuser($d->id);
         $likes_of_user = 0;
         $nr_of_likes_data = 0;
@@ -672,7 +672,7 @@ class ElasticSearch {
         $nr_of_downloads_run = 0;
         if($ld_of_user){
             foreach($ld_of_user as $ld){
-                if($ld->ldt=='l'){            
+                if($ld->ldt=='l'){
                     if($ld->knowledge_type=='d'){
                         $nr_of_likes_data+=$ld->count;
                     }else if($ld->knowledge_type=='f'){
@@ -695,7 +695,7 @@ class ElasticSearch {
                     }
                     $downloads_of_user+=$ld->count;
                     $total_downloads+=$ld->sum;
-                    
+
                 }
             }
         }
@@ -713,7 +713,7 @@ class ElasticSearch {
         if($d->gamification_visibility=='show'){
             $user['activity'] = $this->CI->Gamification->getActivityFromParts($user['nr_of_uploads'],$user['nr_of_likes'],$user['nr_of_downloads']);
         }
-        
+
         $ld_received = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($d->id);
         $likes_received = 0;
         $likes_received_data = 0;
@@ -764,9 +764,9 @@ class ElasticSearch {
         $user['downloads_received_run'] = $downloads_received_run;
         if($d->gamification_visibility=='show'){
             $user['reach'] = $this->CI->Gamification->getReachFromParts($user['likes_received'],$user['downloads_received']);
-            
+
             $impact_struct = $this->CI->Gamification->getImpact('u',$d->id,"2013-1-1",date("Y-m-d"));
-        
+
             $user['reuse'] = $impact_struct['reuse'];
 
             $user['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
@@ -783,7 +783,7 @@ class ElasticSearch {
                     $user['badges'][] = $badge;
                 }
             }
-        }        
+        }
 
         return $user;
     }
@@ -972,8 +972,8 @@ class ElasticSearch {
                 'description' => substr(implode(' ', $description), 0, 100)
             )
         );
-        
-        $nr_of_downvotes = 0;        
+
+        $nr_of_downvotes = 0;
         $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('t',$d->task_id,1);
         if($nr_of_issues){
             $newdata['nr_of_issues'] = count($nr_of_issues);
@@ -986,7 +986,7 @@ class ElasticSearch {
             $newdata['nr_of_issues'] = 0;
         }
         $newdata['nr_of_downvotes'] = $nr_of_downvotes;
-        
+
         $ld_task = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('t',$d->task_id);
         $reach = 0;
         $nr_of_likes = 0;
@@ -998,7 +998,7 @@ class ElasticSearch {
                     $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                     
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1010,15 +1010,15 @@ class ElasticSearch {
         $newdata['reach'] = $reach;
 
         $impact_struct = $this->CI->Gamification->getImpact('t',$d->task_id,"2013-1-1",date("Y-m-d"));
-        
+
         $newdata['reuse'] = $impact_struct['reuse'];
-        
+
         $newdata['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
-        
+
         $newdata['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
         $newdata['impact'] = floor($impact_struct['impact']);
-        
+
         return $newdata;
     }
 
@@ -1257,8 +1257,8 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-        
-        $nr_of_downvotes = 0;        
+
+        $nr_of_downvotes = 0;
         $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,1);
         if($nr_of_issues){
             $new_data['nr_of_issues'] = count($nr_of_issues);
@@ -1271,7 +1271,7 @@ class ElasticSearch {
             $new_data['nr_of_issues'] = 0;
         }
         $new_data['nr_of_downvotes'] = $nr_of_downvotes;
-        
+
         $ld_run = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('r',$r->rid);
         $reach = 0;
         $nr_of_likes = 0;
@@ -1283,7 +1283,7 @@ class ElasticSearch {
                     $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                   
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1457,8 +1457,8 @@ class ElasticSearch {
                 $new_data['parameters'][] = $par;
             }
         }
-        
-        $nr_of_downvotes = 0;        
+
+        $nr_of_downvotes = 0;
         $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('f',$d->id,1);
         if($nr_of_issues){
             $new_data['nr_of_issues'] = count($nr_of_issues);
@@ -1471,7 +1471,7 @@ class ElasticSearch {
             $new_data['nr_of_issues'] = 0;
         }
         $new_data['nr_of_downvotes'] = $nr_of_downvotes;
-        
+
         $ld_flow = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('f',$d->id);
         $reach = 0;
         $nr_of_likes = 0;
@@ -1483,7 +1483,7 @@ class ElasticSearch {
                     $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                    
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1495,11 +1495,11 @@ class ElasticSearch {
         $new_data['reach'] = $reach;
 
         $impact_struct = $this->CI->Gamification->getImpact('f',$d->id,"2013-1-1",date("Y-m-d"));
-        
+
         $new_data['reuse'] = $impact_struct['reuse'];
-        
+
         $new_data['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
-        
+
         $new_data['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
         $new_data['impact'] = floor($impact_struct['impact']);
@@ -1669,7 +1669,7 @@ class ElasticSearch {
         );
     }
 
-    public function index_data($id, $start_id = 0) {
+    public function index_single_dataset($id) {
 
         $params['index'] = 'openml';
         $params['type'] = 'data';
@@ -1692,6 +1692,55 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
 
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($datasets) . ' datasets.';
+    }
+
+    public function index_data($id, $start_id = 0) {
+        if ($id)
+            return $this->index_single_dataset($id);
+
+        $params['index'] = 'openml';
+        $params['type'] = 'data';
+
+        $datamaxquery = $this->db->query('SELECT max(did) as maxdata from dataset');
+        $datacountquery = $this->db->query('SELECT count(did) as datacount from dataset');
+        $datamax = intval($datamaxquery[0]->maxdata);
+        $datacount = intval($datacountquery[0]->datacount);
+
+        $did = $start_id;
+        $submitted = 0;
+        $incr = 100;
+        echo "Processing dataset ";
+        while ($did < $datamax) {
+            echo $did." ";
+            set_time_limit(600);
+            $datasets = null;
+            $params['body'] = array();
+
+            $datasets = $this->db->query('select d.*, count(rid) as runs from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id) where did>=' . $did . ' and rid<' . ($did + $incr) . ' group by did');
+            if($datasets){
+
+              foreach ($datasets as $d) {
+                try {
+                  $params['body'][] = array(
+                      'index' => array(
+                          '_id' => $d->did
+                      )
+                  );
+                  $params['body'][] = $this->build_data($d);
+
+                } catch (Exception $e) {
+                    return $e->getMessage();
+                }
+              }
+
+              $responses = $this->client->bulk($params);
+
+              $submitted += sizeof($responses['items']);
+            }
+            $did += $incr;
+        }
+
+        return 'Successfully indexed ' . $submitted . ' out of ' . $datacount . ' runs.';
     }
 
     private function build_data($d) {
@@ -1776,8 +1825,8 @@ class ElasticSearch {
                 $new_data['features'][] = $feat;
             }
         }
-        
-        $nr_of_downvotes = 0;        
+
+        $nr_of_downvotes = 0;
         $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('d',$d->did,1);
         if($nr_of_issues){
             $new_data['nr_of_issues'] = count($nr_of_issues);
@@ -1790,8 +1839,8 @@ class ElasticSearch {
             $new_data['nr_of_issues'] = 0;
         }
         $new_data['nr_of_downvotes'] = $nr_of_downvotes;
-        
-        
+
+
         $ld_data = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('d',$d->did);
         $reach = 0;
         $nr_of_likes = 0;
@@ -1803,7 +1852,7 @@ class ElasticSearch {
                     $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
                     $nr_of_likes+=$ld->count;
                 }else if($ld->ldt=='d'){
-                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);                    
+                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);
                     $nr_of_downloads+=$ld->count;
                     $total_downloads+=$ld->sum;
                 }
@@ -1815,11 +1864,11 @@ class ElasticSearch {
         $new_data['reach'] = $reach;
 
         $impact_struct = $this->CI->Gamification->getImpact('d',$d->did,"2013-1-1",date("Y-m-d"));
-        
+
         $new_data['reuse'] = $impact_struct['reuse'];
-        
+
         $new_data['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
-        
+
         $new_data['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
         $new_data['impact'] = floor($impact_struct['impact']);

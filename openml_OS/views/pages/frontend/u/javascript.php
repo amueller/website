@@ -157,7 +157,7 @@ function redrawActivityChart(type) {
             chart: {
                 type: 'heatmap',
                 backgroundColor: null,
-                height:  Math.max($('#Activity-chart').width()/7,300)
+                height:  Math.max($('#Activity-chart').width()/7,200)
             },
             exporting: false,
             credits: false,
