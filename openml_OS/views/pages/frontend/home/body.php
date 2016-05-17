@@ -21,11 +21,11 @@
 </div>
 <div id="catchphrase">Exploring machine learning better, together</div><br>
 
-<!--
   <div class="col-md-6 col-md-offset-3 surveypopup">
-    <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-rocket"></i></a>
-    <div class="shortintro" style="padding-top:10px;">Register now for OpenML 2016!</div>
-  </div>-->
+    <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-heart"></i></a>
+    <div class="shortintro" style="padding-top:10px;">We're trying out a new <a href="http://www.openml.org/guide#!gamification">altmetrics and gamification</a> layer to stimulate open science.<br />Please help us and the student who developed this by <a href="https://docs.google.com/forms/d/1LadcAAF41VoqgGCe7LyEeVYrmk813w-r_5FbBMHgP6A">telling us what you think</a>. Thanks!
+    </div>
+  </div>
 
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
