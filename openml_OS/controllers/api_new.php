@@ -63,10 +63,13 @@ class Api_new extends CI_Controller {
     $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('api_key') . '"' ); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
+    $this->user_email = false;
     if($this->provided_valid_hash) {
       $this->user_id = $this->provided_valid_hash[0]->id;
+      $this->user_email = $this->ion_auth->user($this->user_id)->row()->email;
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
+      $this->user_email = $this->ion_auth->user()->row()->email;
     }
 
   }

@@ -1,10 +1,10 @@
 <?php
 
-function sendEmail ( $to, $subject, $message ) {
+function sendEmail ( $to, $subject, $message, $mailtype='html' ) {
 	$dq = &get_instance();
 	$dq->load->library('email');
 	
-	$config['mailtype'] = 'html';
+	$config['mailtype'] = $mailtype;
 	$dq->email->initialize($config);
 	
 	$dq->email->from( FROM_EMAIL_ADRESS, FROM_EMAIL_NAME );
@@ -15,6 +15,7 @@ function sendEmail ( $to, $subject, $message ) {
 	
 	return $dq->email->send();	
 }
+
 
 /**
 Validate an email address.
