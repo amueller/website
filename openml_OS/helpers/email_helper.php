@@ -1,17 +1,17 @@
 <?php
 
-function sendEmail ( $to, $subject, $message, $mailtype='html' ) {
+function sendEmail($to, $subject, $message, $mailtype='text') {
 	$dq = &get_instance();
 	$dq->load->library('email');
 	
 	$config['mailtype'] = $mailtype;
 	$dq->email->initialize($config);
 	
-	$dq->email->from( FROM_EMAIL_ADRESS, FROM_EMAIL_NAME );
-	$dq->email->to( $to );
+	$dq->email->from(FROM_EMAIL, FROM_EMAIL);
+	$dq->email->to($to);
 
-	$dq->email->subject( $subject );
-	$dq->email->message( $message );
+	$dq->email->subject($subject);
+	$dq->email->message($message);
 	
 	return $dq->email->send();	
 }
