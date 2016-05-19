@@ -7,7 +7,7 @@ function sendEmail($to, $subject, $message, $mailtype='text') {
 	$config['mailtype'] = $mailtype;
 	$dq->email->initialize($config);
 	
-	$dq->email->from(FROM_EMAIL, 'The OpenML Team');
+	$dq->email->from(EMAIL_FROM, 'The OpenML Team');
 	$dq->email->to($to);
 
 	$dq->email->subject($subject);
