@@ -416,9 +416,11 @@ function getBadges() {
         method:'GET',
         url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/list/<?php echo $this->user_id; ?>'
     }).done(function(resultdata){
+        var foundabadge = false;
         $('#badges').html("");
         $.each(resultdata['badges']['badge'], function(i,item){
             if(<?php echo $this->user_id; ?> == <?php echo $this->ion_auth->user()->row()->id; ?> || item['rank']>0){
+                foundabadge = true;
                 $('#badges').append('<div class="col-sm-3">'+
                                         '<img class="btn" src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;" onclick="checkBadge('+item['id']+')" title="Click to evaluate rank">'+
                                         '<br>'+
@@ -429,6 +431,9 @@ function getBadges() {
                                     '</div>');
             }
         });
+        if(!foundabadge){
+            $('#badges').html('This user has no badges yet.');
+        }
     }).fail(function(resultdata){
         console.log("Gamification API failed");
     });

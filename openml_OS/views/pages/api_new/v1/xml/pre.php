@@ -830,8 +830,8 @@ $this->apiErrors[822][0] = 'Unauthorized vote';
 $this->apiErrors[822][1] = "Can not download own uploads";
 
 //openml.gamification
-$this->apiErrors[901][0] = 'Can not complete gamification request';
-$this->apiErrors[901][1] = 'No such user';
+$this->apiErrors[901][0] = 'No such user';
+$this->apiErrors[901][1] = 'Can not complete gamification request';
 
 $this->apiErrors[902][0] = 'Unauthorized gamification request';
 $this->apiErrors[902][1] = 'User has hidden his/her gamification scores and badges';
