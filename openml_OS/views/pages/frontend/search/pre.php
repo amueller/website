@@ -119,16 +119,24 @@ if($this->sort and !$this->order)
    $this->order = 'desc';
 
 $this->curr_sort = "best match";
-if($this->sort=='runs' or $this->sort=='likes' or $this->sort=='downloads')
+if($this->sort=='runs')
 	$this->curr_sort = "most ".$this->sort;
+if($this->sort=='nr_of_likes')
+	$this->curr_sort = "most likes";
+if($this->sort=='nr_of_downloads')
+	$this->curr_sort = "most downloads";
 if($this->sort=='reach' or $this->sort=='impact')
 	$this->curr_sort = "highest ".$this->sort;
 if($this->sort=='date')
 	$this->curr_sort = "most recent";
 if($this->sort=='last_update')
 	$this->curr_sort = "last update";
-if($this->order=='asc' and ($this->sort=='runs' or $this->sort=='likes' or $this->sort=='downloads'))
+if($this->order=='asc' and ($this->sort=='runs'))
 	$this->curr_sort = "fewest ".$this->sort;
+if($this->order=='asc' and $this->sort=='nr_of_likes')
+	$this->curr_sort = "fewest likes";
+if($this->order=='asc' and $this->sort=='nr_of_downloads')
+	$this->curr_sort = "fewest downloads";
 if($this->order=='asc' and ($this->sort=='reach' or $this->sort=='impact'))
 	$this->curr_sort = "lowest ".$this->sort;
 if($this->order=='asc' and $this->sort=='date')
