@@ -86,6 +86,20 @@ function authorImage( $image ) {
   }
 }
 
+function largeNumberFormat($number){
+    if($number>1000000){
+        return round($number/1000000,2)."M";
+    }else if($number>100000){
+        return round($number/1000)."K";
+    }else if($number>10000){
+        return round($number/1000,1)."K";
+    }else if($number>1000){
+        return round($number/1000,2)."K";
+    }else{
+        return $number;
+    }
+}
+
 
 function sortByRuns($a, $b) {
   return $b['runs'] - $a['runs'];
