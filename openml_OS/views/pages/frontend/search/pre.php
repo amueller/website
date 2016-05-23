@@ -125,7 +125,7 @@ if($this->sort=='nr_of_likes')
 	$this->curr_sort = "most likes";
 if($this->sort=='nr_of_downloads')
 	$this->curr_sort = "most downloads";
-if($this->sort=='reach' or $this->sort=='impact')
+if($this->sort=='reach' or $this->sort=='impact' or $this->sort=='activity')
 	$this->curr_sort = "highest ".$this->sort;
 if($this->sort=='date')
 	$this->curr_sort = "most recent";
@@ -137,7 +137,7 @@ if($this->order=='asc' and $this->sort=='nr_of_likes')
 	$this->curr_sort = "fewest likes";
 if($this->order=='asc' and $this->sort=='nr_of_downloads')
 	$this->curr_sort = "fewest downloads";
-if($this->order=='asc' and ($this->sort=='reach' or $this->sort=='impact'))
+if($this->order=='asc' and ($this->sort=='reach' or $this->sort=='impact' or $this->sort=='activity'))
 	$this->curr_sort = "lowest ".$this->sort;
 if($this->order=='asc' and $this->sort=='date')
 	$this->curr_sort = "least recent";
