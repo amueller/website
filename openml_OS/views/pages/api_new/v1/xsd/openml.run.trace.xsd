@@ -3,13 +3,13 @@
   
   <xs:complexType name="trace">
     <xs:sequence>
+      <xs:element name="run_id" type="xs:nonNegativeInteger"/>
       <xs:element name="trace_iteration" minOccurs="1" maxOccurs="unbounded" type="oml:trace_iteration"/>
     </xs:sequence>
   </xs:complexType>
   
   <xs:complexType name="trace_iteration">
     <xs:sequence>
-      <xs:element name="run_id" type="xs:nonNegativeInteger"/>
       <xs:element name="repeat" type="xs:nonNegativeInteger"/>
       <xs:element name="fold" type="xs:nonNegativeInteger"/>
       <xs:element name="iteration" type="xs:nonNegativeInteger"/>
