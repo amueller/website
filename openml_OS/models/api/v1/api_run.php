@@ -473,7 +473,7 @@ class Api_run extends Api_model {
     $xsd = xsd('openml.run.trace', $this->controller, $this->version);
     
     // validate xml
-    if(validateXml( $trace['tmp_name'], $xsd, $xmlErrors) == false) {
+    if(validateXml($trace['tmp_name'], $xsd, $xmlErrors) == false) {
       $this->returnError(562, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
@@ -492,14 +492,6 @@ class Api_run extends Api_model {
       $iteration = xml2assoc($t, true);
       
       $iteration['run_id'] = $run_id;
-      
-      // assemble parameter strings seperatelly
-      $setup_string = '';
-      for ($iteration as $key => $value) {
-        if(startsWith($key,"parameter_")) {
-          
-        }
-      }
       
       $this->Trace->insert($iteration);
     }
