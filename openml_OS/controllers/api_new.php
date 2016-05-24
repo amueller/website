@@ -143,9 +143,9 @@ class Api_new extends CI_Controller {
   }
 
   private function _returnError( $code, $httpErrorCode = 450, $additionalInfo = null ) {
-    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code][0] . (($additionalInfo == null)?'':$additionalInfo) );
+    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
-    $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
+    $error['message'] = htmlentities( $this->load->apiErrors[$code] );
     $error['additional'] = htmlentities( $additionalInfo );
 
     $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
