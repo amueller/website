@@ -42,13 +42,18 @@ class Api_run extends Api_model {
       return;
     }
 
-    if (count($segments) == 1 && $segments[0] == 'evaluate') {
+    if (count($segments) == 1 && $segments[0] == 'evaluate' && $request_type == 'post') {
       $this->run_evaluate();
       return;
     }
 
-    if (count($segments) == 1 && $segments[0] == 'trace') {
-      $this->run_trace();
+    if (count($segments) == 1 && $segments[0] == 'trace' && $request_type == 'post') {
+      $this->run_trace_upload();
+      return;
+    }
+    
+    if (count($segments) == 2 && $segments[0] == 'trace' && $request_type == 'get' && is_numeric($segments[1])) {
+      $this->run_trace($segments[1]);
       return;
     }
 
@@ -466,8 +471,12 @@ class Api_run extends Api_model {
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }
-
+  
   private function run_trace() {
+    $this->returnError(101,$this->version);
+  }
+  
+  private function run_trace_upload() {
     // check uploaded file
     $trace = isset($_FILES['trace']) ? $_FILES['trace'] : false;
     if(!check_uploaded_file($trace)) {
