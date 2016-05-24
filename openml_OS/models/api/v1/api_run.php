@@ -47,6 +47,11 @@ class Api_run extends Api_model {
       return;
     }
 
+    if (count($segments) == 1 && $segments[0] == 'trace') {
+      $this->run_trace();
+      return;
+    }
+
     if (count($segments) == 1 && is_numeric($segments[0]) && in_array($request_type, $getpost)) {
       $this->run($segments[0]);
       return;
