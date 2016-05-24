@@ -275,7 +275,8 @@ $this->apiErrors[551] = 'Delete query failed.';
 
 // openml.run.trace
 $this->apiErrors[561] = 'Problem with uploaded trace file.';
-$this->apiErrors[561] = 'Problem validating xml trace file.';
+$this->apiErrors[562] = 'Problem validating xml trace file.';
+$this->apiErrors[563] = 'Problem loading xml trace file.';
 
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';
