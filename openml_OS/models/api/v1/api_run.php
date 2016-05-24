@@ -500,7 +500,7 @@ class Api_run extends Api_model {
       
       $this->Trace->insert($iteration);
     }
-    $this->db->trans_end();
+    $this->db->trans_complete();
     
     $this->xmlContents('run-trace', $this->version, array('run_id' => $run_id));
   }
