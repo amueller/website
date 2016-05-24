@@ -306,10 +306,10 @@ $(function getActivity() {
         });
         activity.nrdays = activity.total.length;
         activity.endday = resultdata['activity-progress']['progresspart'][activity.nrdays-1]['date'];
-        $("#ActivityThisYear").html(activity.totalscore+" |");
-        $("#UploadsThisYear").html(activity.uploadscore+" |");
-        $("#LikesThisYear").html(activity.likescore+" |");
-        $("#DownloadsThisYear").html(activity.downloadscore+" |");
+        $("#ActivityThisYear").html(largeNumberFormat(activity.totalscore)+" |");
+        $("#UploadsThisYear").html(largeNumberFormat(activity.uploadscore)+" |");
+        $("#LikesThisYear").html(largeNumberFormat(activity.likescore)+" |");
+        $("#DownloadsThisYear").html(largeNumberFormat(activity.downloadscore)+" |");
         redrawActivityChart('Activity');
     }).fail(function(resultdata, textStatus, errorThrown){
         console.log("Gamification API failed: "+textStatus+" ("+errorThrown+")");
@@ -346,9 +346,9 @@ $(function getReach() {
             reach.likes[i]+=(alltimelikescore-reach.likescore);
             reach.downloads[i]+=(alltimedownloadscore-reach.downloadscore);
         }
-        $("#ReachThisMonth").html(reach.totalscore+" |");
-        $("#LikesReceivedThisMonth").html(reach.likescore+" |");
-        $("#DownloadsReceivedThisMonth").html(reach.downloadscore+" |");
+        $("#ReachThisMonth").html(largeNumberFormat(reach.totalscore)+" |");
+        $("#LikesReceivedThisMonth").html(largeNumberFormat(reach.likescore)+" |");
+        $("#DownloadsReceivedThisMonth").html(largeNumberFormat(reach.downloadscore)+" |");
         redrawReachChart('Reach');
     }).fail(function(resultdata, textStatus, errorThrown){
         console.log("Gamification API failed: "+textStatus+" ("+errorThrown+")");
@@ -390,10 +390,10 @@ $(function getImpact() {
             impact.reach_reuse[i]+=(alltimereachreusecore-impact.reachscore);
             impact.recursive_impact[i]+=(alltimeimpactreusecore-impact.impactscore);
         }
-        $("#ImpactThisMonth").html(impact.totalscore+" |");
-        $("#ReuseThisMonth").html(impact.reusescore+" |");
-        $("#ReachReuseThisMonth").html(impact.reachscore+" |");
-        $("#ImpactReuseThisMonth").html(impact.impactscore+" |");
+        $("#ImpactThisMonth").html(largeNumberFormat(impact.totalscore)+" |");
+        $("#ReuseThisMonth").html(largeNumberFormat(impact.reusescore)+" |");
+        $("#ReachReuseThisMonth").html(largeNumberFormat(impact.reachscore)+" |");
+        $("#ImpactReuseThisMonth").html(largeNumberFormat(impact.impactscore)+" |");
         redrawImpactChart('Impact');
     }).fail(function(resultdata, textStatus, errorThrown){
         console.log("Gamification API failed: "+textStatus+" ("+errorThrown+")");
@@ -416,9 +416,11 @@ function getBadges() {
         method:'GET',
         url:'<?php echo BASE_URL; ?>api_new/v1/json/badges/list/<?php echo $this->user_id; ?>'
     }).done(function(resultdata){
+        var foundabadge = false;
         $('#badges').html("");
         $.each(resultdata['badges']['badge'], function(i,item){
             if(<?php echo $this->user_id; ?> == <?php echo $this->ion_auth->user()->row()->id; ?> || item['rank']>0){
+                foundabadge = true;
                 $('#badges').append('<div class="col-sm-3">'+
                                         '<img class="btn" src="'+item['image']+'" alt="'+item['name']+'" style="width:128px;height:128px;" onclick="checkBadge('+item['id']+')" title="Click to evaluate rank">'+
                                         '<br>'+
@@ -429,9 +431,26 @@ function getBadges() {
                                     '</div>');
             }
         });
+        if(!foundabadge){
+            $('#badges').html('This user has no badges yet.');
+        }
     }).fail(function(resultdata){
         console.log("Gamification API failed");
     });
+}
+
+function largeNumberFormat(number){
+    if(number>1000000){
+        return (number/1000000).toFixed(2)+"M";
+    }else if(number>100000){
+        return (number/1000).toFixed(0)+"K";
+    }else if(number>10000){
+        return (number/1000).toFixed(1)+"K";
+    }else if(number>1000){
+        return (number/1000).toFixed(2)+"K";
+    }else{
+        return number;
+    }
 }
 
 

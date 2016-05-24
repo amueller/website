@@ -5,7 +5,7 @@
             <li>
                 <?php
                 if ($this->activeuserlike) {
-                    echo '<a id="likebutton" class="loginfirst btn btn-link" onclick="doLike(true)" title="Click to like"><i id="likeicon" class="fa fa-heart fa-2x"></i></a>';
+                    echo '<a id="likebutton" class="loginfirst btn btn-link" onclick="doLike(true)" title="Click to unlike"><i id="likeicon" class="fa fa-heart fa-2x"></i></a>';
                 } else {
                     echo '<a id="likebutton" class="loginfirst btn btn-link" onclick="doLike(false)" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a>';
                 }
