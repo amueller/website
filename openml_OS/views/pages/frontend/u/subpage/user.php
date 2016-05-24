@@ -1,64 +1,6 @@
-<div class="panel flushpanel">
-    <?php
-    //var_dump($this);
-    $authimg = "img/community/misc/anonymousMan.png";
-    if ($this->author)
-        $authimg = htmlentities(authorImage($this->author->image));
-    ?>
-    <div class="col-sm-2">
-        <img src="<?php echo $authimg; ?>" width="130" height="130" class="img-circle userimage" />
-    </div>
-    <div class="col-sm-10 userdata">
-        <h1 class="username"><?php echo $this->userinfo['first_name'] . ' ' . $this->userinfo['last_name']; ?></h1>
-        <div class="userbio"><?php echo $this->userinfo['bio']; ?></div>
-        <div class="userdetails">
-            <?php if ($this->userinfo['affiliation']) echo '<i class="fa fa-fw fa-institution"></i> ' . $this->userinfo['affiliation']; ?>
-            <?php if ($this->userinfo['country']) echo '<i class="fa fa-fw fa-map-marker"></i> ' . $this->userinfo['country']; ?>
-            <i class="fa fa-fw fa-clock-o"></i> Joined <?php echo date("Y-m-d", $this->userinfo['date']); ?>
-        </div>
-    </div>
-</div>
-
-<div class="panel">
-  <?php if ($this->ion_auth->logged_in()) {?>
-        <div class="gamestat-row">
-        <?php if ($this->ion_auth->user()->row()->gamification_visibility == 'show' && $this->userinfo['gamification_visibility'] == 'show') {?>
-            <div class="gamestat">
-              <div class="gamestat-label">Activity</div>
-              <div class="gamestat-value" title="Activity is: 3x uploads done + 2x likes given + downloads done."><i class="fa fa-heartbeat activity"></i> <?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity']; }else{echo 0;}?></div>
-            </div>
-            <div class="gamestat">
-              <div class="gamestat-label">Reach</div>
-              <div class="gamestat-value" title="Reach is: 2x likes received + downloads received."><i class="fa fa-rss reach"></i> <?php if(in_array('reach', $this->userinfo)){ echo $this->userinfo['reach']; }else{echo 0;}?></div>
-            </div>
-            <div class="gamestat">
-              <div class="gamestat-label">Impact</div>
-              <div class="gamestat-value" title="Impact is: number or reuses of your uploads + 0.5*reach of reuse of your uploads + 0.5*impact of reuse of your uploads"><i class="fa fa-bolt impact"></i><!--<i class="material-icons impact" style="font-size: 16px;">flare</i>--> <?php if(in_array('impact', $this->userinfo)){ echo $this->userinfo['impact']; }else{echo 0;} ?></div>
-            </div>
-        <?php }?>
-            <div class="gamestat">
-              <div class="gamestat-label">Uploads</div>
-              <div class="gamestat-value">
-                  <span><i class="fa fa-database dataset"></i> <?php if(in_array('datasets_uploaded', $this->userinfo)){ echo $this->userinfo['datasets_uploaded']; }else{echo 0;} ?></span>
-                  <span><i class="fa fa-cogs flow"></i> <?php if(in_array('flows_uploaded', $this->userinfo)){ echo $this->userinfo['flows_uploaded']; }else{echo 0;} ?></span>
-                  <span><i class="fa fa-trophy task"></i> <?php if(in_array('tasks_uploaded', $this->userinfo)){ echo $this->userinfo['tasks_uploaded']; }else{echo 0;} ?></span>
-                  <span><i class="fa fa-star run"></i> <?php if(in_array('runs_uploaded', $this->userinfo)){ echo $this->userinfo['runs_uploaded'];}else{echo 0;} ?></span>
-              </div>
-            </div>
-
-          <!--<div id="badges" class="well" style="visibility:visible; font-size:120%" title="Highlighted badges">
-              <img src="img/testbadge_not_a_noob.svg" alt="nan" style="width:64px;height:64px;">
-              <img src="img/testbadge_clockwork_scientist.svg" alt="cs" style="width:64px;height:64px;">
-              <img src="img/testbadge_good_news_everyone.svg" alt="cs" style="width:64px;height:64px;">
-              <img src="img/testbadge_meteor.svg" alt="cs" style="width:64px;height:64px;">
-              <a href="/" style="position:absolute;bottom:15px;right:15px;margin:0;padding:5px 3px;" title="See all badges for this user">more...</a>
-          </div>-->
-        </div>
-  <?php } ?>
-  <?php if ($this->is_owner || $this->ion_auth->is_admin()) { ?>
-      <a href="#edit" data-toggle="tab" class="btn btn-primary pull-right">Edit Profile</a><br />
-  <?php } ?>
-</div>
+<?php
+    include 'profile_card.php';
+?>
 
 <table class="table panel usertable">
     <tbody>
@@ -114,27 +56,27 @@
             <a data-toggle="tab" onclick=redrawActivityChart("Activity")>
                 <i class="fa fa-fw fa-heartbeat"></i>
                 Activity:
-                <span id="ActivityThisYear">? |</span>
+                <span id="ActivityThisYear"><i class="fa fa-spinner fa-pulse"></i> |</span>
                 <span><?php if(in_array('activity', $this->userinfo)){ echo $this->userinfo['activity'];}else{echo 0;} ?>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The number of uploads you have done over the last year | the total number of uploads you have done">
             <a data-toggle="tab" onclick=redrawActivityChart("Uploads")>
-                <span id="UploadsThisYear">? |</span>
+                <span id="UploadsThisYear"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span><?php if(in_array('nr_of_uploads', $this->userinfo)){ echo $this->userinfo['nr_of_uploads'];}else{echo 0;} ?> </span>
                 <i class="fa fa-cloud-upload"></i>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The number of likes you have done over the last year | the total number of likes you have done">
             <a data-toggle="tab" onclick=redrawActivityChart("Likes")>
-                <span id="LikesThisYear">? |</span>
+                <span id="LikesThisYear"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span><?php if(in_array('nr_of_likes', $this->userinfo)){ echo $this->userinfo['nr_of_likes'];}else{echo 0;} ?> </span>
                 <i class="fa fa-heart"></i>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The number of things you have downloaded over the last year | the total number of things you have downloaded">
             <a data-toggle="tab" onclick=redrawActivityChart("Downloads")>
-                <span id="DownloadsThisYear">? |</span>
+                <span id="DownloadsThisYear"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span><?php if(in_array('nr_of_downloads', $this->userinfo)){ echo $this->userinfo['nr_of_downloads'];}else{echo 0;} ?> </span>
                 <i class="fa fa-cloud-download"></i>
             </a>
@@ -158,20 +100,20 @@
            <a data-toggle="tab" onclick=redrawReachChart("Reach")>
                <i class="fa fa-fw fa-rss"></i>
                Reach:
-               <span id="ReachThisMonth">? |</span>
+               <span id="ReachThisMonth"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                <span id="ReachAllTime"><?php if(in_array('reach', $this->userinfo)){echo $this->userinfo['reach'];}else{echo 0;} ?></span>
            </a>
        </li>
         <li class="col-sm-2 mainvalue" title="The number of likes your uploads have gotten over the last year | the total number of likes you have gotten">
             <a data-toggle="tab" onclick=redrawReachChart("Likes")>
-                <span id="LikesReceivedThisMonth">? |</span>
+                <span id="LikesReceivedThisMonth"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span id="LikesReceivedAllTime"><?php if(in_array('likes_received', $this->userinfo)){ echo $this->userinfo['likes_received'];}else{echo 0;} ?></span>
                 <i class="fa fa-heart"></i>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The number of distinct downloads of your uploads over the last year | the total number of distinct downloads of your uploads">
             <a data-toggle="tab" onclick=redrawReachChart("Downloads")>
-                <span id="DownloadsReceivedThisMonth">? |</span>
+                <span id="DownloadsReceivedThisMonth"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span id="DownloadsReceivedAllTime"><?php if(in_array('downloads_received', $this->userinfo)){ echo $this->userinfo['downloads_received'];}else{echo 0;} ?></span>
                 <i class="fa fa-cloud-download"></i>
             </a>
@@ -195,27 +137,27 @@
                 <!--<i class="material-icons" style="font-size: 28px">flare</i>-->
                 <i class="fa fa-fw fa-bolt"></i>
                 Impact:
-                <span id="ImpactThisMonth">?|</span>
+                <span id="ImpactThisMonth"><i class="fa fa-spinner fa-pulse"></i> |</span>
                 <span id="ImpactAllTime"><?php if(in_array('impact', $this->userinfo)){echo $this->userinfo['impact'];}else{echo 0;} ?></span>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The number of reuses of your uploads by other users over the last year | the total number of reuses of your uploads by other users">
             <a data-toggle="tab" onclick=redrawImpactChart("Reuse")>
-                <span id="ReuseThisMonth">? |</span>
+                <span id="ReuseThisMonth"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span id="ReuseAllTime"><?php if(in_array('reuse', $this->userinfo)){echo $this->userinfo['reuse'];}else{echo 0;} ?> </span>
                 <i class="fa fa-fw fa-refresh"></i>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The Reach achieved by reuses of your uploads by other users over the last year | the total Reach of reuses of your uploads by other users">
             <a data-toggle="tab" onclick=redrawImpactChart("Reach_re")>
-                <span id="ReachReuseThisMonth">? |</span>
+                <span id="ReachReuseThisMonth"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span id="ReachReuseAllTime"><?php if(in_array('reach_of_reuse', $this->userinfo)){echo $this->userinfo['reach_of_reuse'];}else{echo 0;} ?> </span>
                 <i class="fa fa-rss"></i><sub><i class="fa fa-fw fa-refresh"></i></sub>
             </a>
         </li>
         <li class="col-sm-2 mainvalue" title="The Impact achieved by reuses of your uploads by other users over the last year | the total Impact of reuses of your uploads by other users">
             <a data-toggle="tab" onclick=redrawImpactChart("Impact_re")>
-                <span id="ImpactReuseThisMonth">? |</span>
+                <span id="ImpactReuseThisMonth"><i class="fa fa-spinner fa-pulse"></i>  |</span>
                 <span id="ImpactReuseAllTime"><?php if(in_array('impact_of_reuse', $this->userinfo)){echo $this->userinfo['impact_of_reuse'];}else{echo 0;} ?> </span>
                 <i class="fa fa-fw fa-bolt"></i><sub><i class="fa fa-fw fa-refresh"></i></sub>
             </a>

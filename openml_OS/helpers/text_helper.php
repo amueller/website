@@ -31,6 +31,11 @@ function is_natural_number_range( $query ) {
   return preg_match('/[0-9]+..[0-9]+/', $query ) && !preg_match('/[^0-9\s.]/', $query );
 }
 
+//function startsWith($haystack, $needle) {
+//  // search backwards starting from haystack length characters from the end
+//  return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+//}
+
 
 function range_string_to_array( $range_string ) {
   $result = array();  

@@ -142,14 +142,19 @@ function redrawReachChart(type){
 function redrawActivityChart(type) {
     $("#Activity-chart").collapse('show');
     var values = [];
+    var maxval = 0;
     if(type=="Activity"){
         values = activity.total;
+        maxval = activity.totalscore+1;
     }else if(type=="Uploads"){
         values = activity.uploads;
+        maxval = activity.uploadscore+1;
     }else if(type=="Likes"){
         values = activity.likes;
+        maxval = activity.likescore+1;
     }else if(type=="Downloads"){
         values = activity.downloads;
+        maxval = activity.downloadscore+1;
     }
     if(values.length>0){
         $("#activityplot").empty();
@@ -188,6 +193,8 @@ function redrawActivityChart(type) {
             },
             colorAxis: {
                 type: 'logarithmic',
+                min: 0.1,
+                max: maxval,
                 minColor: '#FFFFFF',
                 maxColor: '#8E24AA'
             },
@@ -198,6 +205,7 @@ function redrawActivityChart(type) {
                 }
             },
             series: [{
+                    turboThreshold: 100000,
                     name: type+' per day',
                     borderWidth: 1,
                     data: values,
@@ -243,6 +251,10 @@ $('#impacttoggle').click(function(){
 if ($this->ion_auth->logged_in()) {?>
 getBadges();
 $(function getActivity() {
+    /*$("#ActivityThisYear").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#UploadsThisYear").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#LikesThisYear").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#DownloadsThisYear").html('<i class="fa fa-spinner fa-pulse"/> |');*/
     $.ajax({
         method:'GET',
         url:'<?php echo BASE_URL; ?>api_new/v1/json/gamification/activity/u/<?php echo $this->user_id; ?>/lastyear_perday',
@@ -306,6 +318,9 @@ $(function getActivity() {
 });
 
 $(function getReach() {
+    /*$("#ReachThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#LikesReceivedThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#DownloadsReceivedThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');*/
     $.ajax({
         method:'GET',
         url:'<?php echo BASE_URL ?>api_new/v1/json/gamification/reach/u/<?php echo $this->user_id ?>/lastyear_perday',
@@ -342,6 +357,10 @@ $(function getReach() {
 
 
 $(function getImpact() {
+    /*$("#ImpactThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#ReuseThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#ReachReuseThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');
+    $("#ImpactReuseThisMonth").html('<i class="fa fa-spinner fa-pulse"/> |');*/
     $.ajax({
         method:'GET',
         url:'<?php echo BASE_URL ?>api_new/v1/json/gamification/impact/u/<?php echo $this->user_id ?>/lastyear_perday',

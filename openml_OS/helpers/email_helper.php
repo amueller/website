@@ -1,20 +1,21 @@
 <?php
 
-function sendEmail ( $to, $subject, $message ) {
+function sendEmail($to, $subject, $message, $mailtype='text') {
 	$dq = &get_instance();
 	$dq->load->library('email');
 	
-	$config['mailtype'] = 'html';
+	$config['mailtype'] = $mailtype;
 	$dq->email->initialize($config);
 	
-	$dq->email->from( FROM_EMAIL_ADRESS, FROM_EMAIL_NAME );
-	$dq->email->to( $to );
+	$dq->email->from(EMAIL_FROM, 'The OpenML Team');
+	$dq->email->to($to);
 
-	$dq->email->subject( $subject );
-	$dq->email->message( $message );
+	$dq->email->subject($subject);
+	$dq->email->message($message);
 	
 	return $dq->email->send();	
 }
+
 
 /**
 Validate an email address.

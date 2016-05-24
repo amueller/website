@@ -19,6 +19,7 @@ class Api_run extends Api_model {
     $this->load->model('Task_inputs');
     $this->load->model('Author');
     $this->load->model('Implementation');
+    $this->load->model('Trace');
 
     $this->load->model('Evaluation');
     $this->load->model('Evaluation_fold');
@@ -41,8 +42,18 @@ class Api_run extends Api_model {
       return;
     }
 
-    if (count($segments) == 1 && $segments[0] == 'evaluate') {
+    if (count($segments) == 1 && $segments[0] == 'evaluate' && $request_type == 'post') {
       $this->run_evaluate();
+      return;
+    }
+
+    if (count($segments) == 1 && $segments[0] == 'trace' && $request_type == 'post') {
+      $this->run_trace_upload();
+      return;
+    }
+    
+    if (count($segments) == 2 && $segments[0] == 'trace' && $request_type == 'get' && is_numeric($segments[1])) {
+      $this->run_trace($segments[1]);
       return;
     }
 
@@ -460,8 +471,49 @@ class Api_run extends Api_model {
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }
-
-
+  
+  private function run_trace() {
+    $this->returnError(101,$this->version);
+  }
+  
+  private function run_trace_upload() {
+    // check uploaded file
+    $trace = isset($_FILES['trace']) ? $_FILES['trace'] : false;
+    if(!check_uploaded_file($trace)) {
+      $this->returnError(561,$this->version);
+      return;
+    }
+    
+    $xsd = xsd('openml.run.trace', $this->controller, $this->version);
+    
+    // validate xml
+    if(validateXml($trace['tmp_name'], $xsd, $xmlErrors) == false) {
+      $this->returnError(562, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
+      return;
+    }
+    
+    // fetch xml
+    $xml = simplexml_load_file($trace['tmp_name']);
+    if($xml === false) {
+      $this->returnError(563, $this->version);
+      return;
+    }
+    
+    $run_id = (string) $xml->children('oml', true)->{'run_id'};
+    
+    $this->db->trans_start();
+    foreach($xml->children('oml', true)->{'trace_iteration'} as $t) {
+      $iteration = xml2assoc($t, true);
+      
+      $iteration['run_id'] = $run_id;
+      
+      $this->Trace->insert($iteration);
+    }
+    $this->db->trans_complete();
+    
+    $this->xmlContents('run-trace', $this->version, array('run_id' => $run_id));
+  }
+  
   private function run_evaluate() {
 
     // check uploaded file

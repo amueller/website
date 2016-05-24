@@ -202,7 +202,14 @@ class Api_flow extends Api_model {
       // get description from file upload
       $description = $_FILES['description'];
 
-      if( validateXml( $description['tmp_name'], $xsd, $xmlErrors ) == false ) {
+      if (validateXml($description['tmp_name'], $xsd, $xmlErrors) == false) {
+        if (DEBUG) {
+          $to = $this->user_email;
+          $subject = 'OpenML Flow Upload DEBUG message. ';
+          $content = 'Filename: ' . $_FILES['description']['name'] . "\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . file_get_contents($description['tmp_name']);
+          sendEmail($to, $subject, $content,'text');
+        }
+        
         $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }

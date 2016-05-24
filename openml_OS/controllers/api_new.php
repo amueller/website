@@ -63,10 +63,13 @@ class Api_new extends CI_Controller {
     $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('api_key') . '"' ); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
+    $this->user_email = false;
     if($this->provided_valid_hash) {
       $this->user_id = $this->provided_valid_hash[0]->id;
+      $this->user_email = $this->ion_auth->user($this->user_id)->row()->email;
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
+      $this->user_email = $this->ion_auth->user()->row()->email;
     }
 
   }
@@ -140,9 +143,9 @@ class Api_new extends CI_Controller {
   }
 
   private function _returnError( $code, $httpErrorCode = 450, $additionalInfo = null ) {
-    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code][0] . (($additionalInfo == null)?'':$additionalInfo) );
+    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
-    $error['message'] = htmlentities( $this->load->apiErrors[$code][0] );
+    $error['message'] = htmlentities( $this->load->apiErrors[$code] );
     $error['additional'] = htmlentities( $additionalInfo );
 
     $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
