@@ -338,9 +338,9 @@ $(function getReach() {
         });
         reach.nrdays = reach.total.length;
         reach.endday = resultdata['reach-progress']['progresspart'][reach.nrdays-1]['date'];
-        var alltimetotalscore = parseInt($("#ReachAllTime").text());
-        var alltimelikescore = parseInt($("#LikesReceivedAllTime").text());
-        var alltimedownloadscore = parseInt($("#DownloadsReceivedAllTime").text());
+        var alltimetotalscore = parseInt($("#ReachAllTime").attr("title"));
+        var alltimelikescore = parseInt($("#LikesReceivedAllTime").attr("title"));
+        var alltimedownloadscore = parseInt($("#DownloadsReceivedAllTime").attr("title"));
         for(var i=0; i<reach.nrdays; i++){
             reach.total[i]+=(alltimetotalscore-reach.totalscore);
             reach.likes[i]+=(alltimelikescore-reach.likescore);
@@ -380,10 +380,10 @@ $(function getImpact() {
         });
         impact.nrdays = impact.total.length;
         impact.endday = resultdata['impact-progress']['progresspart'][impact.nrdays-1]['date'];
-        var alltimetotalscore = parseInt($("#ImpactAllTime").text());
-        var alltimereusescore = parseInt($("#ReuseAllTime").text());
-        var alltimereachreusecore = parseInt($("#ReachReuseAllTime").text());
-        var alltimeimpactreusecore = parseInt($("#ImpactReuseAllTime").text());
+        var alltimetotalscore = parseInt($("#ImpactAllTime").attr("title"));
+        var alltimereusescore = parseInt($("#ReuseAllTime").attr("title"));
+        var alltimereachreusecore = parseInt($("#ReachReuseAllTime").attr("title"));
+        var alltimeimpactreusecore = parseInt($("#ImpactReuseAllTime").attr("title"));
         for(var i=0; i<impact.nrdays; i++){
             impact.total[i]+=(alltimetotalscore-impact.totalscore);
             impact.reuse[i]+=(alltimereusescore-impact.reusescore);
