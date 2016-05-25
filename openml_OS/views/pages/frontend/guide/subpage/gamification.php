@@ -43,4 +43,4 @@ The badges a user has acquired can be found on their user profile below the scor
 <p>You can also sort search results by the number of downvotes, or issues on <a href='/search'>the search page</a>.</p>
 
 <h3>Opting out</h3>
-<p>If you really do not like the gamification you can opt-out by changing the setting on your profile. This hides your scores and badges from other users and hides their scores and badges from you. You will still be able to see the number the number of likes, downloads and downvotes on knowledge pieces, and your likes, downloads and downvotes will still be counted.</p> 
+<p>If you really do not like the gamification you can opt-out by changing the setting on your profile. This hides your scores and badges from other users and hides their scores and badges from you. You will still be able to see the number of likes, downloads and downvotes on knowledge pieces, and your likes, downloads and downvotes will still be counted.</p> 

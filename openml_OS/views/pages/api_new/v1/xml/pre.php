@@ -327,11 +327,8 @@ $this->apiErrors[821] = 'Unauthorized deletion';
 $this->apiErrors[822] = 'Unauthorized vote';
 
 //openml.gamification
-$this->apiErrors[901][0] = 'No such user';
-$this->apiErrors[901][1] = 'Can not complete gamification request';
-
-$this->apiErrors[902][0] = 'Unauthorized gamification request';
-$this->apiErrors[902][1] = 'User has hidden his/her gamification scores and badges';
+$this->apiErrors[901] = 'No such user';
+$this->apiErrors[902] = 'Unauthorized gamification request';
 
 //openml.gamification.activity
 $this->apiErrors[903] = 'Invalid type';
