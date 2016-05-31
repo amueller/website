@@ -52,7 +52,7 @@
 
 </div>
 
-<!--
+
 <div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
   <div class="list-group">
@@ -62,13 +62,12 @@
           </div>
           <div class="row-content">
               <h4 class="list-group-item-heading">Upcoming events</h4>
-              <p class="list-group-item-text">2-4 September 2015: <a target="_blank" href="http://eindhoven2015.openml.org/">OpenML Hackathon - register now</a></p>
-              <p class="list-group-item-text">7 September 2015: <a target="_blank" href="http://metasel-tutorial2015.inesctec.pt/">OpenML Tutorial @ ECMLPKDD</a></p>
+              <p class="list-group-item-text">5-9 September 2016: <a target="_blank" href="http://openml2016dev.openml.org/">OpenML Hackathon Fall 2016 - register now</a></p>
           </div>
       </div>
   </div>
 
-</div>-->
+</div>
 
  <div id="green" class="introsection greensection">
 
