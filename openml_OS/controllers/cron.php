@@ -142,11 +142,11 @@ class Cron extends CI_Controller {
       } else {
         $sql =
           'SELECT "run_id", "setup_id", "task_id", "' . implode( '", "', array_keys( $evaluation_keys ) ) . '" ' .
-          ', "value", "task_name"' .
+          ', "value", "task_name", "flow_name"' .
           'UNION ALL ' .
           'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
           implode( ', ', $evaluation_keys ) . ', e.value '.
-          ', CONCAT("Task_", t.task_id, "_", d.name)'.
+          ', CONCAT("Task_", t.task_id, "_", d.name), i.fullName'.
 //          ',s.setup_string ' .
 //          ',CONCAT(i.fullName, " on ", d.name) as textual '.
           'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, '. $evaluation_column .' e '.
