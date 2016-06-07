@@ -485,7 +485,7 @@ class Api_run extends Api_model {
     if (DEBUG) {
       $this->Log->profiling(__FUNCTION__, $timestamps, 
         array(
-          'start'
+          'start',
           'uploaded file handling',
           'setup searching / creation',
           'database insertions',
