@@ -38,6 +38,22 @@ class Cron extends CI_Controller {
   }
 
   public function index($type, $id = false){
+      $time_start = microtime(true);
+
+      if(!$id){
+        echo "starting ".$type." indexer";
+        $this->elasticsearch->index($type);
+      } else {
+        echo "starting ".$type." indexer from id ".$id;
+        $this->elasticsearch->index($type, $id);
+      }
+
+      $time_end = microtime(true);
+      $time = $time_end - $time_start;
+      echo "\nIndexing done in $time seconds\n";
+  }
+
+  public function indexfrom($type, $id = false){
       if(!$id){
         echo "starting ".$type." indexer";
         $this->elasticsearch->index($type);
