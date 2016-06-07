@@ -266,7 +266,7 @@ class Api_run extends Api_model {
      * Including the unsupported tasks                         *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     
-    $timestamps = array(now()); // profiling 0
+    $timestamps = array(microtime(true)); // profiling 0
     
     // check uploaded file
     $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
@@ -360,7 +360,7 @@ class Api_run extends Api_model {
       }
       
     }
-    $timestamps[] = now(); // profiling 1
+    $timestamps[] = microtime(true); // profiling 1
 
     $parameters = array();
     foreach( $parameter_objects as $p ) {
@@ -383,7 +383,7 @@ class Api_run extends Api_model {
       return;
     }
     
-    $timestamps[] = now(); // profiling 2
+    $timestamps[] = microtime(true); // profiling 2
 
     // fetch task
     $taskRecord = $this->Task->getById( $task_id );
@@ -454,7 +454,7 @@ class Api_run extends Api_model {
     }
     
     
-    $timestamps[] = now(); // profiling 3
+    $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
     $this->elasticsearch->index('run', $run->rid);
 
@@ -467,7 +467,16 @@ class Api_run extends Api_model {
       $this->elasticsearch->index('user', $datasetRecord->uploader);
     }
     
-    $timestamps[] = now(); // profiling 4
+    $timestamps[] = microtime(true); // profiling 4
+    if (DEBUG) {
+      $this->Log->profiling(__FUNCTION__, $timestamps, 
+        array(
+          'uploaded file handling',
+          'setup searching / creation',
+          'database insertions',
+          'elastic search')
+      );
+    }
 
 
     // remove scheduled task
@@ -480,18 +489,6 @@ class Api_run extends Api_model {
 
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
-    
-    $timestamps[] = now(); // profiling 5
-    if (DEBUG) {
-      $this->Log->profiling(__FUNCTION__, $timestamps, 
-        array(
-          'start',
-          'uploaded file handling',
-          'setup searching / creation',
-          'database insertions',
-          'elastic search', 'wrapping up')
-      );
-    }
   }
   
   private function run_trace() {

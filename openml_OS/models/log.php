@@ -68,7 +68,7 @@ class Log extends CI_Model {
     if($this->handle) {
       fwrite($this->handle, '[' . now() . '] [' . $function . '] '."\n");
       for($i = 0; $i < count($actions); $i+=1) {
-        fwrite($this->handle, '---- [' . $timestamps[$i] . '] ' . $actions[$i] . " \n");
+        fwrite($this->handle, '-- ' . $actions[$i] . ': ' . ($timestamps[$i+1] - $timestamps[$i]) . " sec\n");
       }
       fclose($this->handle);
     } else {
