@@ -142,7 +142,7 @@ class Cron extends CI_Controller {
       } else {
         $sql =
           'SELECT "run_id", "setup_id", "task_id", "' . implode( '", "', array_keys( $evaluation_keys ) ) . '" ' .
-          ', "value", "task_name", "flow_name"' .
+          ', "value", "task_name", "flow_name" ' .
           'UNION ALL ' .
           'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, '.
           implode( ', ', $evaluation_keys ) . ', e.value '.
