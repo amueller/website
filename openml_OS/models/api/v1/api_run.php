@@ -468,15 +468,6 @@ class Api_run extends Api_model {
     }
     
     $timestamps[] = microtime(true); // profiling 4
-    if (DEBUG) {
-      $this->Log->profiling(__FUNCTION__, $timestamps, 
-        array(
-          'uploaded file handling',
-          'setup searching / creation',
-          'database insertions',
-          'elastic search')
-      );
-    }
 
 
     // remove scheduled task
@@ -489,6 +480,17 @@ class Api_run extends Api_model {
 
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
+    
+    $timestamps[] = microtime(true); // profiling 5
+    if (DEBUG) {
+      $this->Log->profiling(__FUNCTION__, $timestamps, 
+        array(
+          'uploaded file handling',
+          'setup searching / creation',
+          'database insertions',
+          'elastic search', 'wrapping up')
+      );
+    }
   }
   
   private function run_trace() {
