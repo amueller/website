@@ -18,23 +18,21 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
- 
- 
- 
-if( $_SERVER['SERVER_NAME'] == 'localhost' ) 
+
+
+if( array_key_exists('SERVER_NAME',$_SERVER) and $_SERVER['SERVER_NAME'] == 'localhost' )
 {
   define('ENVIRONMENT', 'development');
-} 
-else if( $_SERVER['SERVER_NAME'] == 'www.janvanrijn.eu' ) 
+}
+else if( array_key_exists('SERVER_NAME',$_SERVER) and $_SERVER['SERVER_NAME'] == 'www.janvanrijn.eu' )
 {
   define('ENVIRONMENT', 'testing');
-} 
-else if( $_SERVER['SERVER_NAME'] == 'openml.liacs.nl' ) 
+}
+else if( array_key_exists('SERVER_NAME',$_SERVER) and $_SERVER['SERVER_NAME'] == 'openml.liacs.nl' )
 {
   define('ENVIRONMENT', 'staging');
-
 }
-else 
+else
 {
   define('ENVIRONMENT', 'production');
 }
@@ -56,11 +54,11 @@ if (defined('ENVIRONMENT'))
     case 'development':
       error_reporting(E_ALL);
     break;
-  
+
     case 'testing':
       error_reporting(E_ALL);
     break;
-    
+
     case 'production':
     case 'staging':
       error_reporting(0);
