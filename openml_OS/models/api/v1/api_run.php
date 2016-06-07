@@ -265,7 +265,9 @@ class Api_run extends Api_model {
      * Everything that needs to be done for EVERY task,        *
      * Including the unsupported tasks                         *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+    
+    $timestamps = array(microtime(true)); // profiling 0
+    
     // check uploaded file
     $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
     $uploadError = '';
@@ -273,6 +275,8 @@ class Api_run extends Api_model {
       $this->returnError(202, $this->version,$this->openmlGeneralErrorCode,$uploadError);
       return;
     }
+    
+    
     // validate xml
     $xmlErrors = '';
     if( validateXml( $description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
@@ -356,6 +360,7 @@ class Api_run extends Api_model {
       }
       
     }
+    $timestamps[] = microtime(true); // profiling 1
 
     $parameters = array();
     foreach( $parameter_objects as $p ) {
@@ -377,6 +382,8 @@ class Api_run extends Api_model {
       $this->returnError( 214, $this->version );
       return;
     }
+    
+    $timestamps[] = microtime(true); // profiling 2
 
     // fetch task
     $taskRecord = $this->Task->getById( $task_id );
@@ -445,7 +452,9 @@ class Api_run extends Api_model {
       $error = -1;
       tag_item( 'run', $runId, $tag, $this->user_id, $error );
     }
-
+    
+    
+    $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
     $this->elasticsearch->index('run', $run->rid);
 
@@ -457,7 +466,17 @@ class Api_run extends Api_model {
     if( $datasetRecord !== false && $datasetRecord->uploader !== false && $datasetRecord->uploader != $this->user_id && $datasetRecord->uploader != $implementation->uploader) {
       $this->elasticsearch->index('user', $datasetRecord->uploader);
     }
-
+    
+    $timestamps[] = microtime(true); // profiling 4
+    if (DEBUG) {
+      $this->Log->profiling(__FUNCTION__, $timestamps, 
+        array(
+          'uploaded file handling',
+          'setup searching / creation',
+          'database insertions',
+          'elastic search')
+      );
+    }
 
 
     // remove scheduled task
