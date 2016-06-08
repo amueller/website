@@ -106,16 +106,24 @@ class KnowledgePiece extends Database_write{
     }
 
     function getNumberOfLikesAndDownloadsOnUploadsOfUser($u_id, $from=null, $to=null){
-        $sql = "SELECT uploads.kt,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id."
-                                                                    UNION
-                                                                    SELECT f.id, f.uploader, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id."
-                                                                    UNION
-                                                                    SELECT t.task_id as id, t.creator as uploader, 't' as kt FROM task as t WHERE t.creator=".$u_id."
-                                                                    UNION
-                                                                    SELECT r.rid as id, r.uploader, 'r' as kt FROM run as r WHERE r.uploader=".$u_id.") as uploads,";
-        $like_sql = "SELECT user_id, knowledge_id, knowledge_type, 1 as count, time, 'l' as ldt FROM likes";
-        $download_sql = "SELECT user_id, knowledge_id, knowledge_type, count, time, 'd' as ldt FROM downloads";
-        $sql.="(".$like_sql." UNION ".$download_sql.") as ld WHERE ld.knowledge_id=uploads.id AND ld.knowledge_type=uploads.kt";
+        $sql = "select ld.knowledge_type,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date
+                FROM (
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, 1 as count, l.time, 'l' as ldt FROM likes l, dataset d WHERE l.knowledge_id=d.did AND l.knowledge_type='d' AND d.uploader=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, 1 as count, l.time, 'l' as ldt FROM likes l, implementation i WHERE l.knowledge_id=i.id AND l.knowledge_type='f' AND i.uploader=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, 1 as count, l.time, 'l' as ldt FROM likes l, task t WHERE l.knowledge_id=t.task_id AND l.knowledge_type='t' AND t.creator=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, 1 as count, l.time, 'l' as ldt FROM likes l, run r WHERE l.knowledge_id=r.rid AND l.knowledge_type='r' AND r.uploader=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, l.count as count, l.time, 'd' as ldt FROM downloads l, dataset d WHERE l.knowledge_id=d.did AND l.knowledge_type='d' AND d.uploader=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, l.count as count, l.time, 'd' as ldt FROM downloads l, implementation i WHERE l.knowledge_id=i.id AND l.knowledge_type='f' AND i.uploader=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, l.count as count, l.time, 'd' as ldt FROM downloads l, task t WHERE l.knowledge_id=t.task_id AND l.knowledge_type='t' AND t.creator=".$u_id."
+                UNION
+                SELECT l.user_id, l.knowledge_id, l.knowledge_type, l.count as count, l.time, 'd' as ldt FROM downloads l, run r WHERE l.knowledge_id=r.rid AND l.knowledge_type='r' AND r.uploader=".$u_id."
+                ) as ld";
         if ($from != null) {
             $sql.=' AND ld.time>="' . $from . '"';
         }
@@ -123,9 +131,9 @@ class KnowledgePiece extends Database_write{
             $sql.=' AND ld.time < "' . $to . '"';
         }
         if($from!=null || $to!=null){
-            $sql.=" GROUP BY DATE(ld.time), ld.ldt, uploads.kt ORDER BY date;";
+            $sql.=" GROUP BY DATE(ld.time), ld.ldt, ld.knowledge_type ORDER BY date;";
         }else{
-            $sql.=" GROUP BY ld.ldt, uploads.kt;";
+            $sql.=" GROUP BY ld.ldt, ld.knowledge_type;";
         }
 
         return $this->KnowledgePiece->query($sql);
