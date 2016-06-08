@@ -1,20 +1,20 @@
 <?php
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
 class Gamification extends CI_Model{
-    
+
     protected $scores = array();
-    
+
     function __construct() {
-        parent::__construct();        
-        
+        parent::__construct();
+
         $this->load->model('KnowledgePiece');
-        
+
         $this->scores['activity']['uploads'] = 3;
         $this->scores['activity']['likes'] = 2;
         $this->scores['activity']['downloads'] = 1;
@@ -24,7 +24,7 @@ class Gamification extends CI_Model{
         $this->scores['impact']['reach'] = 0.5;
         $this->scores['impact']['recursive'] = 0.5;
     }
-    
+
     public function getActivityArray($id,$from,$to){
         $size = $this->getNumberOfDaysFromTo($from,$to);
         $empty_val = array("uploads"=>0,"likes"=>0,"downloads"=>0,"activity"=>0,"date"=>"");
@@ -55,7 +55,7 @@ class Gamification extends CI_Model{
         }
         return $result;
     }
-    
+
     public function getActivity($id,$from,$to){
         $result_val = array("uploads"=>0,"likes"=>0,"downloads"=>0,"activity"=>0,"date"=>$from);
         $uploads = $this->KnowledgePiece->getNumberOfUploadsOfUser($id, $from, $to);
@@ -87,7 +87,7 @@ class Gamification extends CI_Model{
         if($type=='u'){
             $ld_received = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($id,$from,$to);
         }else{
-            $ld_received = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload($type,$id,$from,$to);            
+            $ld_received = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload($type,$id,$from,$to);
         }
         if($ld_received){
             foreach($ld_received as $likeordownload){
@@ -106,13 +106,13 @@ class Gamification extends CI_Model{
         }
         return $result;
     }
-    
+
     public function getReach($type,$id,$from,$to){
         $result_val = array("likes"=>0,"downloads"=>0,"reach"=>0,"date"=>$from);
         if($type=='u'){
             $ld_received = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($id,$from,$to);
         }else{
-            $ld_received = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload($type,$id,$from,$to);            
+            $ld_received = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload($type,$id,$from,$to);
         }
         if($ld_received){
             foreach($ld_received as $likeordownload){
@@ -127,7 +127,7 @@ class Gamification extends CI_Model{
         }
         return $result_val;
     }
-    
+
     public function getImpactArray($type,$id,$from,$to){
         $size = $this->getNumberOfDaysFromTo($from,$to);
         $empty_val = array("reuse"=>0,"reuse_reach"=>0,"recursive_impact"=>0,"impact"=>0,"date"=>"");
@@ -163,8 +163,9 @@ class Gamification extends CI_Model{
         }
         return $result;
     }
-    
+
     public function getImpact($type,$id,$from,$to){
+
         $result_val = array("reuse"=>0,"reuse_reach"=>0,"recursive_impact"=>0,"impact"=>0,"date"=>$from);
         if($type=='u'){
             $reuse = $this->KnowledgePiece->getNumberOfReusesOfUploadsOfUser($id,$from,$to);
@@ -173,6 +174,7 @@ class Gamification extends CI_Model{
             $reuse = $this->KnowledgePiece->getNumberOfReusesOfUpload($type,$id,$from,$to);
             $ld_reuse = $this->KnowledgePiece->getNumberOfLikesAndDownloadsOnReuseOfUpload($type,$id,$from,$to);
         }
+
         if($reuse){
             foreach($reuse as $r){
                 $result_val['reuse']+=$r->count;
@@ -190,10 +192,11 @@ class Gamification extends CI_Model{
                 }
             }
         }
+
         return $result_val;
     }
-    
-    private function getNumberOfDaysFromTo($from,$to){        
+
+    private function getNumberOfDaysFromTo($from,$to){
         $from_e = explode("-",$from);
         $to_e = explode("-",$to);
         $size = 0;
@@ -230,22 +233,21 @@ class Gamification extends CI_Model{
         return $size;
     }
 
-    
+
     public function getImpactFromParts($reuse,$reuse_reach,$recurisve_impact){
         return $reuse*$this->scores['impact']['reuse'] +
                 $reuse_reach*$this->scores['impact']['reach'] +
                 $recurisve_impact*$this->scores['impact']['recursive'];
     }
-    
+
     public function getReachFromParts($likes,$downloads){
         return $likes*$this->scores['reach']['likes'] +
                 $downloads*$this->scores['reach']['downloads'];
     }
-    
+
     public function getActivityFromParts($uploads,$likes,$downloads){
         return $uploads*$this->scores['activity']['uploads'] +
                 $likes*$this->scores['activity']['likes'] +
                 $downloads*$this->scores['activity']['downloads'];
     }
 }
-
