@@ -592,7 +592,6 @@ class ElasticSearch {
     }
 
     private function build_user($d) {
-        $build_start = microtime(true);
 
         $user = array(
             'user_id' => $d->id,
@@ -647,9 +646,6 @@ class ElasticSearch {
         $user['runs_uploaded'] = $run_up;
 
 
-        $time = microtime(true) - $build_start;
-        echo "\n Collect uploads done in $time seconds\n";
-
         $runs_data = $this->db->query('select count(rid) as count FROM run r, task_inputs t, dataset d WHERE r.task_id=t.task_id and t.input="source_data" and t.value=d.did and r.uploader<>d.uploader and d.uploader=' . $d->id);
         if ($runs_data){
             $user['runs_on_datasets'] = $runs_data[0]->count;
@@ -663,9 +659,6 @@ class ElasticSearch {
         }else{
             $user['runs_on_flows'] = 0;
         }
-
-        $time = microtime(true) - $build_start;
-        echo "\n Collect runs done in $time seconds\n";
 
         $ld_of_user = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOfuser($d->id);
         $likes_of_user = 0;
@@ -723,10 +716,6 @@ class ElasticSearch {
             $user['activity'] = $this->CI->Gamification->getActivityFromParts($user['nr_of_uploads'],$user['nr_of_likes'],$user['nr_of_downloads']);
         }
 
-
-        $time = microtime(true) - $build_start;
-        echo "\n Collect likes done in $time seconds\n";
-
         $ld_received = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($d->id);
         $likes_received = 0;
         $likes_received_data = 0;
@@ -777,33 +766,18 @@ class ElasticSearch {
         $user['downloads_received_run'] = $downloads_received_run;
 
 
-        $time = microtime(true) - $build_start;
-        echo "\n Collect received likes done in $time seconds\n";
-
         if($d->gamification_visibility=='show'){
             $user['reach'] = $this->CI->Gamification->getReachFromParts($user['likes_received'],$user['downloads_received']);
-
-
-                    $time = microtime(true) - $build_start;
-                    echo "\n Reach done in $time seconds\n";
 
             $impact_struct = $this->CI->Gamification->getImpact('u',$d->id,"2013-1-1",date("Y-m-d"));
 
             $user['reuse'] = $impact_struct['reuse'];
-
-
-                    $time = microtime(true) - $build_start;
-                    echo "\n Reuse done in $time seconds\n";
 
             $user['impact_of_reuse'] = floor($impact_struct['recursive_impact']);
 
             $user['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
             $user['impact'] = floor($impact_struct['impact']);
-
-
-                    $time = microtime(true) - $build_start;
-                    echo "\n Impact done in $time seconds\n";
 
             $user['badges'] = array();
             $badges = $this->CI->Badge->getBadgesOfUser($d->id);
@@ -813,15 +787,7 @@ class ElasticSearch {
                     $user['badges'][] = $badge;
                 }
             }
-
-
-                    $time = microtime(true) - $build_start;
-                    echo "\n Badges done in $time seconds\n";
         }
-
-
-        $time = microtime(true) - $build_start;
-        echo "\n Gamification done in $time seconds\n";
 
         return $user;
     }
