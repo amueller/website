@@ -314,6 +314,8 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
 
         </div>
         <script type="text/javascript">
+          var ES_URL = '<?php echo ES_URL; ?>';
+
           function downloadJSAtOnload() {
           var element3= document.createElement("script");
           element3.src = "js/libs/jquery.sharrre.js";
