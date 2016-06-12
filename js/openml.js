@@ -9,7 +9,6 @@ else if(es_url.length > 1){
   es_config['host']['port'] = 80;
   es_config['host']['path'] = '/'+es_url[1];
 }
-console.log(es_config);
 var client = new $.es.Client(es_config);
 
 /**client.ping({
