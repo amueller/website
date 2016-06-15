@@ -113,6 +113,7 @@ Ps.initialize(container);
           swal("Error", "Your login has expired. Log in and try again.", "error");
         else
           swal("Error " + code_field, message_field, "error");
+        location.reload();
     });
   }
 
