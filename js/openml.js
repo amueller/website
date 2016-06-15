@@ -104,7 +104,7 @@ Ps.initialize(container);
       }} else {
         code_field = rdata.error["code"];
         message_field = rdata.error["message"];
-        swal("Error " + code_field.text(), message_field.text(), "error");
+        swal("Error " + code_field, message_field, "error");
       }
     }).fail( function( resultdata ) {
         code_field = resultdata.responseJSON.error["code"];
@@ -112,7 +112,7 @@ Ps.initialize(container);
         if(code_field == 102)
           swal("Error", "Your login has expired. Log in and try again.", "error");
         else
-          swal("Error " + code_field.text(), message_field.text(), "error");
+          swal("Error " + code_field, message_field, "error");
     });
   }
 
