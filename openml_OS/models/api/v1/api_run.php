@@ -491,8 +491,15 @@ class Api_run extends Api_model {
     $this->xmlContents( 'run-upload', $this->version, $result );
   }
   
-  private function run_trace() {
-    $this->returnError(101,$this->version);
+  private function run_trace($run_id) {
+    $trace = $this->Trace->getWhere('run_id = ' . $run_id, 'repeat ASC, fold ASC, iteration ASC');
+    
+    if ($trace === false) {
+      $this->returnError(570,$this->version);
+      return;
+    }
+    
+    $this->xmlContents('run-trace-get', $this->version, array('run_id' => $run_id, 'trace' => $trace));
   }
   
   private function run_trace_upload() {

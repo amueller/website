@@ -273,10 +273,16 @@ $this->apiErrors[543] = 'Too many results';
 $this->apiErrors[550] = 'Admin rights are required.';
 $this->apiErrors[551] = 'Delete query failed.';
 
-// openml.run.trace
+// openml.run.trace.upload
 $this->apiErrors[561] = 'Problem with uploaded trace file.';
 $this->apiErrors[562] = 'Problem validating xml trace file.';
 $this->apiErrors[563] = 'Problem loading xml trace file.';
+
+
+// openml.run.trace (get)
+$this->apiErrors[570] = 'No successful trace associated with this run.';
+
+
 
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';
