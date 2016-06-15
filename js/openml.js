@@ -95,6 +95,7 @@ Ps.initialize(container);
     url: "http://" + location.host + "/api_new/v1/json/"+type+"/"+id,
     dataType: "json"
   }).done( function( resultdata ) {
+      console.log(resultdata);
       rdata = resultdata.responseJSON;
       if(type+"_delete" in rdata){
       id_field = rdata[type+"_delete"]["id"];
