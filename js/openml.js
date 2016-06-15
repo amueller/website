@@ -106,11 +106,11 @@ Ps.initialize(container);
         swal("Error " + code_field.text(), message_field.text(), "error");
       }
     }).fail( function( resultdata ) {
-        console.log(resultdata);
-        console.log(resultdata.error);
-        console.log(resultdata.error["code"]);
-        code_field = resultdata.error["code"];
-        message_field = resultdata.error["message"];
+        console.log(resultdata.responseJSON);
+        console.log(resultdata.responseJSON.error);
+        console.log(resultdata.responseJSON.error["code"]);
+        code_field = resultdata.responseJSON.error["code"];
+        message_field = resultdata.responseJSON.error["message"];
         if(code_field.text() == 102)
           swal("Error", "Your login has expired. Log in and try again.", "error");
         else
