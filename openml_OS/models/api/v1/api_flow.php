@@ -209,7 +209,7 @@ class Api_flow extends Api_model {
           $content = 'Filename: ' . $_FILES['description']['name'] . "\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . file_get_contents($description['tmp_name']);
           sendEmail($to, $subject, $content,'text');
         }
-        
+
         $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
@@ -284,6 +284,7 @@ class Api_flow extends Api_model {
 
     $implementation = $this->Implementation->getById( $flow_id );
     if( $implementation == false ) {
+      $this->elasticsearch->delete('flow', $flow_id);
       $this->returnError( 322, $this->version );
       return;
     }

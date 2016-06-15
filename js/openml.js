@@ -106,6 +106,7 @@ Ps.initialize(container);
         swal("Error " + code_field.text(), message_field.text(), "error");
       }
     }).fail( function( resultdata ) {
+        console.log(resultdata);
         code_field = resultdata.error["code"];
         message_field = resultdata.error["message"];
         if(code_field.text() == 102)
