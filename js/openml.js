@@ -107,6 +107,8 @@ Ps.initialize(container);
       }
     }).fail( function( resultdata ) {
         console.log(resultdata);
+        console.log(resultdata.error);
+        console.log(resultdata.error["code"]);
         code_field = resultdata.error["code"];
         message_field = resultdata.error["message"];
         if(code_field.text() == 102)
