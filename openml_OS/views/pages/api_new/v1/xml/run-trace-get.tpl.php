@@ -1,5 +1,5 @@
 <oml:trace xmlns:oml="http://openml.org/openml">
-  <oml:run_id><?php echo $run_id; ?>
+  <oml:run_id><?php echo $run_id; ?></oml:run_id>
 	<?php foreach( $trace as $t ): ?>
 	<oml:trace_iteration>
 		<oml:repeat><?php echo $t->repeat; ?></oml:repeat>
