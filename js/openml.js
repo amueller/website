@@ -95,23 +95,21 @@ Ps.initialize(container);
     url: "http://" + location.host + "/api_new/v1/json/"+type+"/"+id,
     dataType: "json"
   }).done( function( resultdata ) {
-      if(type+"_delete" in resultdata){
-      id_field = resultdata[type+"_delete"]["id"];
+      rdata = resultdata.responseJSON;
+      if(type+"_delete" in rdata){
+      id_field = rdata[type+"_delete"]["id"];
       if( id_field.length ) {
         swal("Deleted!", name + " has been deleted.", "success");
         location.reload();
       }} else {
-        code_field = resultdata.error["code"];
-        message_field = resultdata.error["message"];
+        code_field = rdata.error["code"];
+        message_field = rdata.error["message"];
         swal("Error " + code_field.text(), message_field.text(), "error");
       }
     }).fail( function( resultdata ) {
-        console.log(resultdata.responseJSON);
-        console.log(resultdata.responseJSON.error);
-        console.log(resultdata.responseJSON.error["code"]);
         code_field = resultdata.responseJSON.error["code"];
         message_field = resultdata.responseJSON.error["message"];
-        if(code_field.text() == 102)
+        if(code_field == 102)
           swal("Error", "Your login has expired. Log in and try again.", "error");
         else
           swal("Error " + code_field.text(), message_field.text(), "error");
