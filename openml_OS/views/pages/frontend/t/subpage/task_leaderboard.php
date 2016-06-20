@@ -15,14 +15,16 @@
 		<h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>
 
 		<?php if($this->record['type_name'] != 'Learning Curve'){ ?>
+        <div class="pull-right">
 		        Show evaluations for score:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawtimechart(); redrawchart();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 				</select>
+       </div>
 
-      <h3>Timeline</h3>
+      <h2>Timeline</h2>
 
 			<div class="col-sm-12 panel reflow-chart" id="data_result_time">Plotting contribution timeline <i class="fa fa-spinner fa-spin"></i></div>
 

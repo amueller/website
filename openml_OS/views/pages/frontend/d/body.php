@@ -5,7 +5,7 @@
     $this->p['index'] = 'openml';
     $this->p['type'] = 'data';
     $this->p['id'] = $this->id;
-        
+
     $this->down = array();
     $this->down['index'] = 'openml';
     $this->down['type'] = 'downvote';
@@ -76,6 +76,7 @@
     $this->p3['index'] = 'openml';
     $this->p3['type'] = 'task';
     $this->p3['body']['filter']['term']['source_data.data_id'] = $this->id;
+    $this->p3['body']['sort'] = array('runs' => array ('order' => 'desc'));
     try{
       $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
     } catch (Exception $e) {}

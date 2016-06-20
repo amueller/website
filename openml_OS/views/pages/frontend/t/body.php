@@ -36,7 +36,7 @@
           } else { ?>
 
       <div class="tab-pane active" id="detail">
-        <?php if( isset($this->task_id) ) { subpage('task'); } ?>
+        <?php if( isset($this->task_id) ) { subpage('task_results'); } ?>
       </div> <!-- end task tab -->
       <div class="tab-pane" id="taskruns">
         <?php if( isset($this->task_id) ) { subpage('task_runs'); } ?>
@@ -44,8 +44,8 @@
       <div class="tab-pane" id="people">
         <?php if( isset($this->task_id) ) { subpage('task_leaderboard'); } ?>
       </div> <!-- end task tab -->
-      <div class="tab-pane" id="results">
-        <?php if( isset($this->task_id) ) { subpage('task_results'); } ?>
+      <div class="tab-pane" id="submit">
+        <?php if( isset($this->task_id) ) { subpage('task'); } ?>
       </div> <!-- end task tab -->
 
     </div> <!-- end tabs content -->
@@ -56,9 +56,9 @@
           <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
           <ul class="sidenav nav collapse in" id="pagelist">
             <li class="active"><a href="#detail" data-toggle="tab">Overview</a></li>
-            <li><a href="#taskruns" data-toggle="tab">All runs</a></li>
-            <li><a href="#results" data-toggle="tab">Results</a></li>
             <li><a href="#people" data-toggle="tab">Leaderboard</a></li>
+            <li><a href="#submit" data-toggle="tab">How to submit</a></li>
+            <li><a href="#taskruns" data-toggle="tab">All runs</a></li>
           </ul>
         </li>
         <li class="panel guidechapter">
