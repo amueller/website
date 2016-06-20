@@ -6,20 +6,20 @@
 		<div class="col-md-6">
 		  <h2>Required information</h2>
 		  <div class="form-group">
-		    <label class="control-label" for="name">Name</label>
-		    <input type="text" class="form-control" id="name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
+		    <label class="control-label" for="in_name">Name</label>
+		    <input type="text" class="form-control" name="name" id="in_name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="description">Description</label>
-		    <textarea class="form-control" id="description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
+		    <label class="control-label" for="in_description">Description</label>
+		    <textarea class="form-control" name="description" id="in_description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="installationNotes">Instructions</label>
-		    <textarea class="form-control" id="installationNotes" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
+		    <label class="control-label" for="in_installationNotes">Instructions</label>
+		    <textarea class="form-control" name="installationNotes" id="in_installationNotes" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="source_url">Implementation</label>
-		    <input type="text" class="form-control" id="source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" />
+		    <label class="control-label" for="in_source_url">Implementation</label>
+		    <input type="text" class="form-control" name="source_url" id="in_source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" />
 		    <div class="col-md-12 input-info">And/or, upload the code (source, executable, readme) as an archive.</div>
 		    <div class="input-group">
 			<span class="input-group-btn">
@@ -29,8 +29,8 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="external_version">Version</label>
-		    <input type="text" class="form-control" id="external_version" placeholder="Version number, commit hash, ..." value=""/>
+		    <label class="control-label" for="in_external_version">Version</label>
+		    <input type="text" class="form-control" name="external_version" id="in_external_version" placeholder="Version number, commit hash, ..." value=""/>
 		  </div>
 
 		</div>
@@ -38,12 +38,12 @@
 	      <div class="col-md-6">
 		  <h2>Attribution</h2>
 		  <div class="form-group">
-		    <label class="control-label" for="creator">Author(s)</label>
-		    <input type="text" class="form-control" id="creator" placeholder="The author(s) of the implementation. Firstname Lastname, Firstname Lastname,..." value="" />
+		    <label class="control-label" for="in_creator">Author(s)</label>
+		    <input type="text" class="form-control" name="creator" id="in_creator" placeholder="The author(s) of the implementation. Firstname Lastname, Firstname Lastname,..." value="" />
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="contributor">Contributor(s)</label>
-		    <input type="text" class="form-control" id="contributor"
+		    <label class="control-label" for="in_contributor">Contributor(s)</label>
+		    <input type="text" class="form-control" id="in_contributor" name="contributor"
 			placeholder="Other contributor(s) of the implementation" value="" />
 		  </div>
 		  <div class="form-group">
@@ -63,8 +63,8 @@
 			</select>
 	          </div>
 		  <div class="form-group">
-			    <label class="control-label" for="bibliographical_reference">Citation</label>
-			    <textarea class="form-control" id="bibliographical_reference"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
+			    <label class="control-label" for="in_bibliographical_reference">Citation</label>
+			    <textarea class="form-control" name="bibliographical_reference" id="in_bibliographical_reference"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
 		  </div>
 	      </div>
 	      <div class="row">
@@ -76,23 +76,23 @@
 		  <div id="addparameter">
 		  <div class="form-group col-sm-2 stretch">
 		    <label class="sr-only" for="parname">Name</label>
-		    <input type="text" class="form-control parname" id="parname" placeholder="Name (required)">
+		    <input type="text" class="form-control parname" name="parname" id="parname" placeholder="Name (required)">
 		  </div>
 		  <div class="form-group col-sm-5 stretch">
 		    <label class="sr-only" for="parinfo">Description</label>
-		    <input type="text" class="form-control parinfo" id="parinfo" placeholder="Description (required)">
+		    <input type="text" class="form-control parinfo" name="parinfo" id="parinfo" placeholder="Description (required)">
 		  </div>
 		  <div class="form-group col-sm-1 stretch">
 		    <label class="sr-only" for="pardefault">Default</label>
-		    <input type="text" class="form-control pardefault" id="pardefault" placeholder="Default value">
+		    <input type="text" class="form-control pardefault" name="pardefault" id="pardefault" placeholder="Default value">
 		  </div>
 		  <div class="form-group col-sm-2 stretch">
 		    <label class="sr-only" for="parrange">Range</label>
-		    <input type="text" class="form-control parrange" id="parrange" placeholder="Recommended range">
+		    <input type="text" class="form-control parrange" name="parrange" id="parrange" placeholder="Recommended range">
 		  </div>
 		  <div class="form-group col-sm-1 stretch">
 		    <label class="sr-only" for="parinfo">Datatype</label>
-		    <select type="text" class="form-control pardatatype" id="pardatatype" placeholder="Data type" style="height:30px">
+		    <select type="text" class="form-control pardatatype" name="pardatatype" id="pardatatype" placeholder="Data type" style="height:30px">
   			<option>Integer</option><option>Real</option><option>Nominal</option><option>Boolean</option></select>
 		  </div>
 		</div>
@@ -101,12 +101,12 @@
 	       </div>
 
 		  <div class="form-group">
-		    <label class="control-label" for="language">Programming Language</label>
-		    <input type="text" class="form-control" id="language" placeholder="The programming language(s) used" value="" onblur=""/>
+		    <label class="control-label" for="in_language">Programming Language</label>
+		    <input type="text" class="form-control" name="language" id="in_language" placeholder="The programming language(s) used" value="" onblur=""/>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="dependencies">Dependencies</label>
-		    <input type="text" class="form-control" id="dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
+		    <label class="control-label" for="in_dependencies">Dependencies</label>
+		    <input type="text" class="form-control" name="dependencies" id="in_dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
 		  </div>
 
 		  <div class="form-group">
