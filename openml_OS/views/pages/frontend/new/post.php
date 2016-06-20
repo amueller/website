@@ -173,7 +173,7 @@ if($this->subpage == 'task') {
     $this->responsetype = 'alert alert-danger';
     $this->response = 'Could not upload data. Please fill in all required (red) fields.';
   }
-} elseif($this->subpage == 'flow') {
+ } elseif($this->subpage == 'flow') {
 
   $session_hash = $this->ion_auth->user()->row()->session_hash;
 
@@ -181,9 +181,6 @@ if($this->subpage == 'task') {
     'flow',
     $this->config->item('xml_fields_implementation')
   );
-
-  //print_r($description);
-
   $post_data = array(
       'description' => $description,
       'api_key' => $session_hash
@@ -191,7 +188,6 @@ if($this->subpage == 'task') {
   if( array_key_exists('flow',$_FILES) and $_FILES['flow']['error'] == 0 ) {
       $post_data['flow'] = new CurlFile($_FILES['flow']['tmp_name'], 'text/xml');
   }
-
   $url = BASE_URL.'api/v1/flow';
   // Send the request & save response to $resp
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );

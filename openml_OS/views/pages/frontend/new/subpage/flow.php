@@ -1,25 +1,27 @@
+<form method="post" id="implementationForm" action="" enctype="multipart/form-data">
+
 <div class="panel">
 	      <h1><a href="f"><i class="fa fa-cogs"></i></a> Add flows</h1>
-	      <form method="post" id="implementationForm" action="" enctype="multipart/form-data">
-		  <input type="hidden" id="generated_input_implementation_description" name="description" value="" />
+				<div id="responseDatasetTxt" class="<?php echo $this->responsetype; ?>"><?php echo $this->response; ?></div>
+
 	      <div class="row">
 		<div class="col-md-6">
 		  <h2>Required information</h2>
-		  <div class="form-group">
-		    <label class="control-label" for="in_name">Name</label>
-		    <input type="text" class="form-control" name="name" id="in_name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
+		  <div class="form-group has-error">
+		    <label class="control-label" for="name">Name</label>
+		    <input type="text" class="form-control" name="name" id="name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
+		  </div>
+		  <div class="form-group has-error">
+		    <label class="control-label" for="description">Description</label>
+		    <textarea class="form-control" name="description" id="description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="in_description">Description</label>
-		    <textarea class="form-control" name="description" id="in_description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
+		    <label class="control-label" for="installationNotes">Instructions</label>
+		    <textarea class="form-control" name="installationNotes" id="installationNotes" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="in_installationNotes">Instructions</label>
-		    <textarea class="form-control" name="installationNotes" id="in_installationNotes" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
-		  </div>
-		  <div class="form-group">
-		    <label class="control-label" for="in_source_url">Implementation</label>
-		    <input type="text" class="form-control" name="source_url" id="in_source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" />
+		    <label class="control-label" for="source_url">Implementation</label>
+		    <input type="text" class="form-control" name="source_url" id="source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" />
 		    <div class="col-md-12 input-info">And/or, upload the code (source, executable, readme) as an archive.</div>
 		    <div class="input-group">
 			<span class="input-group-btn">
@@ -29,8 +31,8 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="in_external_version">Version</label>
-		    <input type="text" class="form-control" name="external_version" id="in_external_version" placeholder="Version number, commit hash, ..." value=""/>
+		    <label class="control-label" for="external_version">Version</label>
+		    <input type="text" class="form-control" name="external_version" id="external_version" placeholder="Version number, commit hash, ..." value=""/>
 		  </div>
 
 		</div>
@@ -38,12 +40,12 @@
 	      <div class="col-md-6">
 		  <h2>Attribution</h2>
 		  <div class="form-group">
-		    <label class="control-label" for="in_creator">Author(s)</label>
-		    <input type="text" class="form-control" name="creator" id="in_creator" placeholder="The author(s) of the implementation. Firstname Lastname, Firstname Lastname,..." value="" />
+		    <label class="control-label" for="creator">Author(s)</label>
+		    <input type="text" class="form-control" name="creator" id="creator" placeholder="The author(s) of the implementation. Firstname Lastname, Firstname Lastname,..." value="" />
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="in_contributor">Contributor(s)</label>
-		    <input type="text" class="form-control" id="in_contributor" name="contributor"
+		    <label class="control-label" for="contributor">Contributor(s)</label>
+		    <input type="text" class="form-control" id="contributor" name="contributor"
 			placeholder="Other contributor(s) of the implementation" value="" />
 		  </div>
 		  <div class="form-group">
@@ -63,8 +65,8 @@
 			</select>
 	          </div>
 		  <div class="form-group">
-			    <label class="control-label" for="in_bibliographical_reference">Citation</label>
-			    <textarea class="form-control" name="bibliographical_reference" id="in_bibliographical_reference"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
+			    <label class="control-label" for="bibliographical_reference">Citation</label>
+			    <textarea class="form-control" name="bibliographical_reference" id="bibliographical_reference"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
 		  </div>
 	      </div>
 	      <div class="row">
@@ -101,12 +103,12 @@
 	       </div>
 
 		  <div class="form-group">
-		    <label class="control-label" for="in_language">Programming Language</label>
-		    <input type="text" class="form-control" name="language" id="in_language" placeholder="The programming language(s) used" value="" onblur=""/>
+		    <label class="control-label" for="language">Programming Language</label>
+		    <input type="text" class="form-control" name="language" id="language" placeholder="The programming language(s) used" value="" onblur=""/>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="in_dependencies">Dependencies</label>
-		    <input type="text" class="form-control" name="dependencies" id="in_dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
+		    <label class="control-label" for="dependencies">Dependencies</label>
+		    <input type="text" class="form-control" name="dependencies" id="dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
 		  </div>
 
 		  <div class="form-group">

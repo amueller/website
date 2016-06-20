@@ -15,7 +15,7 @@
             </li>
     <?php } ?>
             <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-            <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
+            <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo BASE_URL; ?>api/v1/run/<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
     <?php } else{ ?>
         <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
         <li><a class="loginfirst btn btn-link" href="<?php echo BASE_URL; ?>api/?f=openml.run.get&run_id=<?php echo $this->run_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
@@ -35,7 +35,7 @@
    <?php if ($this->ion_auth->logged_in()) {
             if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                 <span title="Reach is: 2x likes received + downloads received on this run."><i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span></span>
-        <?php }?>            
+        <?php }?>
    <?php }?>
 </div>
 
@@ -49,7 +49,7 @@
                 <th>By</th>
                 <th></th>
             </tr>
-            <?php 
+            <?php
                 foreach($this->downvotes as $downvote){
                     $id = $downvote['_source']['reason_id'];
                     echo '<tr>'
@@ -57,7 +57,7 @@
                     . '<td>'.$downvote['_source']['count'].'</td>'
                     . '<td><a href="u/'.$downvote['_source']['user_id'].'">User '.$downvote['_source']['user_id'].'</a></td>'
                     //. '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
-                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"></a></td>'        
+                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"></a></td>'
                     . '</tr>';
                 }
             ?>
