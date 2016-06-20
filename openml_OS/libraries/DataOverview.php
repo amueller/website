@@ -39,11 +39,12 @@ class DataOverview {
       $indices = array_merge( $indices, array_keys( $value ) );
     }
     sort( $indices );
-
+    //print_r($this->CI->input);
     foreach( $indices as $index ) {
       foreach( $tag_configuration as $tag_type => $tags ) {
         foreach( $tags as $tag_index => $tag_name ) {
           if( $tag_index == $index ) {
+            //print_r( $tag_name . ' ' . $this->CI->input->post( $tag_name ) );
             if( $this->CI->input->post( $tag_name ) ) {
               if( $tag_type == 'csv' ) {
 		if(is_array($this->CI->input->post($tag_name)))

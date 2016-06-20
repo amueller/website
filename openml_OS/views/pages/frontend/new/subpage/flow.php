@@ -1,24 +1,24 @@
 <div class="panel">
 	      <h1><a href="f"><i class="fa fa-cogs"></i></a> Add flows</h1>
-	      <form method="post" id="implementationForm" action="api/v1/flow" enctype="multipart/form-data">
+	      <form method="post" id="implementationForm" action="" enctype="multipart/form-data">
 		  <input type="hidden" id="generated_input_implementation_description" name="description" value="" />
 	      <div class="row">
 		<div class="col-md-6">
 		  <h2>Required information</h2>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_name">Name</label>
-		    <input type="text" class="form-control" id="input_implementation_name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
+		    <label class="control-label" for="name">Name</label>
+		    <input type="text" class="form-control" id="name" placeholder="The name of the algorithm, workflow, script, program,..." value=""/>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_description">Description</label>
-		    <textarea class="form-control" id="input_implementation_description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
+		    <label class="control-label" for="description">Description</label>
+		    <textarea class="form-control" id="description" placeholder="Short description of what is implemented. Changes from previous versions." value=""></textarea>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_description">Instructions</label>
-		    <textarea class="form-control" id="input_implementation_description" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
+		    <label class="control-label" for="installationNotes">Instructions</label>
+		    <textarea class="form-control" id="installationNotes" placeholder="If applicable, how to run OpenML tasks using this code." value=""></textarea>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="sourcefile">Implementation</label>
+		    <label class="control-label" for="source_url">Implementation</label>
 		    <input type="text" class="form-control" id="source_url" placeholder="URL where code is hosted (e.g., GitHub)" value="" />
 		    <div class="col-md-12 input-info">And/or, upload the code (source, executable, readme) as an archive.</div>
 		    <div class="input-group">
@@ -29,8 +29,8 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_version">Version</label>
-		    <input type="text" class="form-control" id="input_implementation_version" placeholder="Version number, commit hash, ..." value=""/>
+		    <label class="control-label" for="external_version">Version</label>
+		    <input type="text" class="form-control" id="external_version" placeholder="Version number, commit hash, ..." value=""/>
 		  </div>
 
 		</div>
@@ -38,17 +38,17 @@
 	      <div class="col-md-6">
 		  <h2>Attribution</h2>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_creator">Author(s)</label>
-		    <input type="text" class="form-control" id="input_implementation_creator" placeholder="The author(s) of the implementation. Firstname Lastname, Firstname Lastname,..." value="" />
+		    <label class="control-label" for="creator">Author(s)</label>
+		    <input type="text" class="form-control" id="creator" placeholder="The author(s) of the implementation. Firstname Lastname, Firstname Lastname,..." value="" />
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_contributor">Contributor(s)</label>
-		    <input type="text" class="form-control" id="input_implementation_contributor"
+		    <label class="control-label" for="contributor">Contributor(s)</label>
+		    <input type="text" class="form-control" id="contributor"
 			placeholder="Other contributor(s) of the implementation" value="" />
 		  </div>
 		  <div class="form-group">
-		  <label class="control-label" for="input_implementation_licence">Licence</label> - <a href="http://choosealicense.com/licenses/" target="_blank">Learn more</a>
-			<select class="form-control">
+		  <label class="control-label" for="licence">Licence</label> - <a href="http://choosealicense.com/licenses/" target="_blank">Learn more</a>
+			<select id="licence" class="form-control">
 			  <option>MIT License (most permissive)</option>
 			  <option>Apache License</option>
 			  <option>BSD 2-Clause License</option>
@@ -63,13 +63,9 @@
 			</select>
 	          </div>
 		  <div class="form-group">
-			    <label class="control-label" for="input_implementation_licence">Citation</label>
-			    <textarea class="form-control" id="input_implementation_licence"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
-		  <div class="form-group">
-		    <label class="control-label" for="sourcefile">Paper/preprint</label>
-		    <input type="text" class="form-control" id="source_url" placeholder="URL to paper or preprint describing the code." value="" />
+			    <label class="control-label" for="bibliographical_reference">Citation</label>
+			    <textarea class="form-control" id="bibliographical_reference"  placeholder="How to reference this work in papers." value=""></textarea>			         		  </div>
 		  </div>
-		</div>
 	      </div>
 	      <div class="row">
 	      <div class="col-md-12">
@@ -105,12 +101,12 @@
 	       </div>
 
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_language">Programming Language</label>
-		    <input type="text" class="form-control" id="input_implementation_language" placeholder="The programming language(s) used" value="" onblur=""/>
+		    <label class="control-label" for="language">Programming Language</label>
+		    <input type="text" class="form-control" id="language" placeholder="The programming language(s) used" value="" onblur=""/>
 		  </div>
 		  <div class="form-group">
-		    <label class="control-label" for="input_implementation_dependencies">Dependencies</label>
-		    <input type="text" class="form-control" id="input_implementation_dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
+		    <label class="control-label" for="dependencies">Dependencies</label>
+		    <input type="text" class="form-control" id="dependencies" placeholder="Dependencies, packages used" value="" onblur=""/>
 		  </div>
 
 		  <div class="form-group">

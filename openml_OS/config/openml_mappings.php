@@ -2,8 +2,8 @@
 
 $config['data_controller'] = BASE_URL . 'data/';
 
-$config['data_tables'] = array( 
-  'dataset','evaluation','evaluation_fold', 
+$config['data_tables'] = array(
+  'dataset','evaluation','evaluation_fold',
   'evaluation_sample', 'evaluation_interval', 'runfile');
 
 $config['xml_fields_dataset'] = array(
@@ -55,10 +55,22 @@ $config['xml_fields_dataset_update'] = array(
 
 $config['xml_fields_implementation'] = array(
   'string'  => array(
-    'name','external_version','description','licence',
-    'language','fullDescription','installationNotes','dependencies',),
-  'csv'     => array('creator','contributor','tag'),
-  'array'   => array('bibliographical_reference','parameter','component'),
+	0 => 'name',
+	1 => 'external_version',
+	2 => 'description',
+	5 => 'licence',
+	6 => 'language',
+	7 => 'fullDescription',
+	8 => 'installationNotes',
+	9 => 'dependencies'),
+  'csv'     => array(
+	3 => 'creator',
+	4 => 'contributor',
+	13 => 'tag'),
+  'array'   => array(
+	10 => 'bibliographical_reference',
+	11 => 'parameter',
+	12 => 'component'),
   'plain'   => array()
 );
 
@@ -70,7 +82,7 @@ $config['xml_fields_run'] = array(
 );
 
 $config['basic_qualities'] = array(
-  "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues", 
+  "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues",
   "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures", "MajorityClassSize", "MinorityClassSize", "MaxNominalAttDistinctValues", "NumBinaryAtts"
 );
 

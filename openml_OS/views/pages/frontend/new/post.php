@@ -173,6 +173,50 @@ if($this->subpage == 'task') {
     $this->responsetype = 'alert alert-danger';
     $this->response = 'Could not upload data. Please fill in all required (red) fields.';
   }
+} elseif($this->subpage == 'flow') {
+
+  $session_hash = $this->ion_auth->user()->row()->session_hash;
+
+  $description = $this->dataoverview->generate_xml(
+    'flow',
+    $this->config->item('xml_fields_implementation')
+  );
+
+  //print_r($description);
+
+  $post_data = array(
+      'description' => $description,
+      'api_key' => $session_hash
+  );
+  if( array_key_exists('flow',$_FILES) and $_FILES['flow']['error'] == 0 ) {
+      $post_data['flow'] = new CurlFile($_FILES['flow']['tmp_name'], 'text/xml');
+  }
+
+  $url = BASE_URL.'api/v1/flow';
+  // Send the request & save response to $resp
+  $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
+  if($api_response !== false) {
+    $xml = simplexml_load_string( $api_response );
+    $this->responsetype = 'alert alert-success';
+    $this->responsecode = -1;
+    $this->response = 'Flow was uploaded with id: ';
+    if( property_exists( $xml->children('oml', true), 'code' ) ) {
+      $this->responsetype = 'alert alert-danger';
+      $this->responsecode = $xml->children('oml', true)->code;
+      $this->response = 'Error '.$this->responsecode.': '.$xml->children('oml', true)->message;
+      if($this->responsecode=='131') $this->response .= ' Please fill in all required (red) fields, upload a file or give a URL (not both), and avoid spaces in the flow name.';
+    } else if($xml->children('oml', true)->id){
+      $this->response = '<h2><i class="fa fa-thumbs-o-up"></i> Thanks!</h2>Flow was uploaded successfully (ID = '.$xml->children('oml', true)->id .')<br> You can now <b><a href="f/'. $xml->children('oml', true)->id . '"> follow your flow on OpenML</a></b>, complete its description, track its impact, and see all ensuing results.<br><br>You can also continue to add flows below.';
+      sm($this->response);
+      su('new/flow');
+    } else {
+      print "Something went wrong. Server says:<br>";
+      print $api_response;
+    }
+  } else{
+    $this->responsetype = 'alert alert-danger';
+    $this->response = 'Could not upload flow. Please fill in all required (red) fields.';
+  }
 } elseif($this->subpage == 'study') {
   $user_id = $this->ion_auth->user()->row()->id;
   $name = $this->input->post( 'study_title' );
