@@ -942,6 +942,32 @@ h5{
   cursor: pointer !important;
 }
 
+.toolcircle {
+  border-radius: 10%;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px !important;
+  width: 60px;
+  height: 60px;
+  padding-top: 0px;
+  font-size: 15px;
+  cursor: pointer !important;
+}
+
+.toolcircle2 {
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px !important;
+  width: 60px;
+  height: 60px;
+  padding-top: 0px;
+  font-size: 15px;
+  cursor: pointer !important;
+}
+
 .circle span{
   clear: both;
   color: #666666;

@@ -46,6 +46,20 @@
     <div class="col-sm-3 dotcontainer"><a href="search?type=run" class="numberCircle"><div class="arc circlered"></div><span class="number" id="run_count"></span><span class="circlelabel">runs</span></a><br><div class="shortintro">Upload and explore all <a href="search?type=run" class="bold">results</a> online.</div></div>
 
  </div>
+
+ <div class="shortintro" style="padding-top:40px;">Download and share data, flows and runs through:</div>
+  <div class="statrow">
+     <div class="col-sm-2 col-sm-offset-1"><a href="guide#!python"><img class="toolcircle" src="img/python.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!r"><img class="toolcircle" src="img/R.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!java"><img class="toolcircle" src="img/java.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="api_docs"><img class="toolcircle" src="img/rest.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!net"><img class="toolcircle" src="img/dotnet.png" alt="icon"></a></div>
+     <div class="col-sm-2 col-sm-offset-1"><a href="guide#!python"><img class="toolcircle" src="img/sklearn.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!r"><img class="toolcircle" src="img/mlr.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!plugin_weka"><img class="toolcircle" src="img/weka.png" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!plugin_moa"><img class="toolcircle2" src="img/moa.jpeg" alt="icon"></a></div>
+     <div class="col-sm-2"><a href="guide#!plugin_rm"><img class="toolcircle2" src="img/rapidminer.png" alt="icon"></a></div>
+  </div>
 </div>
 
 </div>
