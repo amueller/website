@@ -62,7 +62,7 @@ class Task_type_inout extends Database_read {
     
     $res = array();
     
-    for ($subject as $subject) {
+    foreach ($subject as $subject) {
       $lookup_count = preg_match_all($lookup_pattern, $subject, $lookup_result);
       $input_count = preg_match_all($input_pattern, $subject, $input_result);
       $additional = array(
