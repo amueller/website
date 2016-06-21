@@ -56,15 +56,24 @@ class Task_type_inout extends Database_read {
 		return str_replace( $variables, $replace, $templates );
 	}
   
-  private function getVariables( $subject ) {
+  private function getVariables($subjects) {
     $lookup_pattern = '/(?:\[LOOKUP\:)(.*)(?:\])/';
     $input_pattern = '/(?:\[INPUT\:)(.*)(?:\])/';
-    if( is_array($subject) ) $subject = implode( '; ', $subject );
-
-    $lookup_count = preg_match_all( $lookup_pattern, $subject, $lookup_result );
-    $input_count = preg_match_all( $input_pattern, $subject, $input_result );
     
-    return array( array_merge( $lookup_result[0], $input_result[0] ), array_merge( $lookup_result[1], $input_result[1] ) );
+    $res = array();
+    
+    for ($subject as $subject) {
+      $lookup_count = preg_match_all($lookup_pattern, $subject, $lookup_result);
+      $input_count = preg_match_all($input_pattern, $subject, $input_result);
+      $additional = array(
+        array_merge($lookup_result[0], $input_result[0]), 
+        array_merge($lookup_result[1], $input_result[1])
+      );
+      
+      $res = array_merge($res, $additional);
+    }
+    
+    return $res;
   }
 }
 ?>
