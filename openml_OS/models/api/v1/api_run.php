@@ -333,7 +333,7 @@ class Api_run extends Api_model {
 
     // check whether uploaded files are present.
     
-    for ($_FILES as $key => $value) {
+    foreach ($_FILES as $key => $value) {
       $message = '';
       $extension = getExtension($_FILES[$key]['name']);
       
