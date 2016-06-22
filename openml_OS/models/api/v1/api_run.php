@@ -337,7 +337,7 @@ class Api_run extends Api_model {
       $message = '';
       $extension = getExtension($_FILES[$key]['name']);
       
-      if (/*in_array($extension,$this->config->item('allowed_extensions') == false ||*/ $extension == false)) {
+      if (/*in_array($extension,$this->config->item('allowed_extensions')) == false ||*/ $extension == false) {
         $this->returnError(206, $this->version, $this->openmlGeneralErrorCode, 'Invalid extension for file "'.$key.'". Original filename: ' . $_FILES[$key]['name']);
         return;
       }
