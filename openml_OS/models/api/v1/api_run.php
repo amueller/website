@@ -269,9 +269,9 @@ class Api_run extends Api_model {
     $timestamps = array(microtime(true)); // profiling 0
     
     // check uploaded file
-    $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
+    $description = isset($_FILES['description']) ? $_FILES['description'] : false;
     $uploadError = '';
-    if(! check_uploaded_file($description,false,$uploadError)) {
+    if(!check_uploaded_file($description,false,$uploadError)) {
       $this->returnError(202, $this->version,$this->openmlGeneralErrorCode,$uploadError);
       return;
     }
@@ -279,41 +279,41 @@ class Api_run extends Api_model {
     
     // validate xml
     $xmlErrors = '';
-    if( validateXml( $description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors ) == false ) {
-      $this->returnError( 203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+    if(validateXml($description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors) == false) {
+      $this->returnError(203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
 
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
+      $this->returnError(104, $this->version);
       return;
     }
 
     // fetch xml
-    $xml = simplexml_load_file( $description['tmp_name'] );
-    if( $xml === false ) {
-      $this->returnError( 219, $this->version );
+    $xml = simplexml_load_file($description['tmp_name']);
+    if($xml === false) {
+      $this->returnError(219, $this->version);
       return;
     }
 
     $run_xml = all_tags_from_xml(
       $xml->children('oml', true),
-      $this->xml_fields_run );
+      $this->xml_fields_run);
 
     $task_id = $run_xml['task_id'];
     $implementation_id = $run_xml['flow_id'];
-    $setup_string = array_key_exists( 'setup_string', $run_xml ) ? $run_xml['setup_string'] : null;
-    $error_message = array_key_exists( 'error_message', $run_xml ) ? $run_xml['error_message'] : false;
-    $parameter_objects = array_key_exists( 'parameter_setting', $run_xml ) ? $run_xml['parameter_setting'] : array();
-    $output_data = array_key_exists( 'output_data', $run_xml ) ? $run_xml['output_data'] : array();
-    $tags = array_key_exists( 'tag', $run_xml ) ? str_getcsv ( $run_xml['tag'] ) : array();
+    $setup_string = array_key_exists('setup_string', $run_xml) ? $run_xml['setup_string'] : null;
+    $error_message = array_key_exists('error_message', $run_xml) ? $run_xml['error_message'] : false;
+    $parameter_objects = array_key_exists('parameter_setting', $run_xml) ? $run_xml['parameter_setting'] : array();
+    $output_data = array_key_exists('output_data', $run_xml) ? $run_xml['output_data'] : array();
+    $tags = array_key_exists('tag', $run_xml) ? str_getcsv ($run_xml['tag']) : array();
 
     // the user can specify his own metrics. here we check whether these exists in the database.
-    if( $output_data != false && array_key_exists('evaluation', $output_data ) ) {
-      foreach( $output_data->children('oml',true)->{'evaluation'} as $eval ) {
+    if($output_data != false && array_key_exists('evaluation', $output_data)) {
+      foreach($output_data->children('oml',true)->{'evaluation'} as $eval) {
         $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->flow.'" AND `implements` = "'.$eval->name.'"');
-        if( $measure_id == false ) {
-          $this->returnError( 217, $this->version );
+        if($measure_id == false) {
+          $this->returnError(217, $this->version);
           return;
         }
       }
@@ -321,45 +321,49 @@ class Api_run extends Api_model {
     $predictionsUrl   = false;
 
     // fetch implementation
-    $implementation = $this->Implementation->getById( $implementation_id );
-    if( $implementation === false ) {
-      $this->returnError( 205, $this->version );
+    $implementation = $this->Implementation->getById($implementation_id);
+    if($implementation === false) {
+      $this->returnError(205, $this->version);
       return;
     }
-    if( in_array( $implementation->{'implements'}, $this->supportedMetrics ) ) {
-      $this->returnError( 218, $this->version );
+    if(in_array($implementation->{'implements'}, $this->supportedMetrics)) {
+      $this->returnError(218, $this->version);
       return;
     }
 
     // check whether uploaded files are present.
-    if($error_message == false) {
-      if( count( $_FILES ) < 2 ) {
-        $this->returnError( 206, $this->version );
-        return;
-      }
-
+    
+    for ($_FILES as $key => $value) {
       $message = '';
-      if( ! check_uploaded_file( $_FILES['predictions'], false, $message ) ) {
-        $this->returnError( 207, $this->version, $this->openmlGeneralErrorCode, 'File predictions: ' . $message );
+      $extension = getExtension($_FILES[$key]['name']);
+      
+      if (/*in_array($extension,$this->config->item('allowed_extensions') == false ||*/ $extension == false)) {
+        $this->returnError(206, $this->version, $this->openmlGeneralErrorCode, 'Invalid extension for file "'.$key.'". Original filename: ' . $_FILES[$key]['name']);
         return;
       }
       
-      $predictionsFileCheck = ARFFcheck($_FILES['predictions']['tmp_name'], 1000);
-      if ($predictionsFileCheck !== true) {
-        $this->returnError(209, $this->version, $this->openmlGeneralErrorCode, 'Arff error in predictions file: ' . $predictionsFileCheck);
+      if (!check_uploaded_file($_FILES[$key], false, $message)) {
+        $this->returnError(207, $this->version, $this->openmlGeneralErrorCode, 'Upload problem with file "'.$key.'": ' . $message);
         return;
       }
       
-      if (array_key_exists('trace',$_FILES)) {
-        $traceFileCheck = ARFFcheck($_FILES['trace']['tmp_name'], 1000);
-        if ($traceFileCheck !== true) {
-          $this->returnError(209, $this->version, $this->openmlGeneralErrorCode, 'Arff error in trace file: ' . $traceFileCheck);
+      if ($extension == 'arff') {
+        $arffCheck = ARFFcheck($_FILES[$key]['tmp_name'], 1000);
+        if ($arffCheck !== true) {
+          $this->returnError(209, $this->version, $this->openmlGeneralErrorCode, 'Arff error in predictions file: ' . $arffCheck);
           return;
         }
-      
       }
       
+      if ($extension == 'xml') {
+        $xmlCheck = simplexml_load_file($_FILES[$key]['tmp_name']);
+        if($xmlCheck === false) {
+          $this->returnError(209, $this->version, $this->openmlGeneralErrorCode, 'XML error in predictions file: ' . $xmlCheck);
+          return;
+        }
+      }
     }
+    
     $timestamps[] = microtime(true); // profiling 1
 
     $parameters = array();

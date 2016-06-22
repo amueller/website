@@ -16,4 +16,6 @@ $config['java_heap_space_web'] = '128M';
 $config['java_heap_space_cli'] = '2G';
 
 $config['email_debug'] = 'janvanrijn@gmail.com';
+
+$config['allowed_extensions'] = array('arff','csv','model','xml','rds','txt');
 ?>
