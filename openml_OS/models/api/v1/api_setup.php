@@ -70,7 +70,7 @@ class Api_setup extends Api_model {
       return;
     } else {
       // TODO: temp linking on concat of fields. should be done better
-      $this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` LEFT JOIN `input` ON CONCAT( `input`.`implementation_id` , "_", `input`.`name` ) = `input_setting`.`input` WHERE setup = "'.$setup->sid.'"');
+      $this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` `s` LEFT JOIN `input` `i` ON `s`.`input_id` = `i`.`id` WHERE setup = "'.$setup->sid.'"');
 
       $this->xmlContents( 'setup-parameters', $this->version, array( 'parameters' => $this->parameters ) );
     }
