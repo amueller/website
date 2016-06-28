@@ -218,11 +218,14 @@ class Api_task extends Api_model {
 
     $task_type_id = $xml->children('oml', true)->{'task_type_id'};
     $inputs = array();
-
+    $tags = array();
+    
     foreach($xml->children('oml', true) as $input) {
       if ($input->getName() == 'input') {
         $name = $input->attributes() . '';
         $inputs[$name] = $input . '';
+      } elseif ($input->getName() == 'tag') {
+        $tags[] = $input;
       }
     }
 
@@ -234,6 +237,8 @@ class Api_task extends Api_model {
       $this->returnError(533, $this->version, $this->openmlGeneralErrorCode, 'matched id(s): [' . implode(',', $task_ids) . ']');
       return;
     }
+    
+    
 
     // THE INSERTION
     $task = array(
@@ -258,6 +263,11 @@ class Api_task extends Api_model {
         'value' => $value
       );
       $this->Task_inputs->insert($task_input);
+    }
+    
+    foreach($tags as $tag) {
+      $error = -1;
+      tag_item('task', $id, $tag, $this->user_id, $error);
     }
 
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );

@@ -5,6 +5,7 @@
 		  <xs:element name="task_id" minOccurs="0" type="xs:integer" />
 		  <xs:element name="task_type_id" type="xs:integer" />
 		  <xs:element name="input" minOccurs="1" maxOccurs="unbounded" type="oml:feature" />		<!-- The inputs given for this task (e.g. datasets) -->
+		  <xs:element name="tag" minOccurs="0" maxOccurs="unbounded" type="oml:system_string" />
 	  </xs:sequence>
   </xs:complexType>
 
