@@ -225,7 +225,7 @@ class Api_task extends Api_model {
         $name = $input->attributes() . '';
         $inputs[$name] = $input . '';
       } elseif ($input->getName() == 'tag') {
-        $tags[] = $input;
+        $tags[] = $input . '';
       }
     }
 
