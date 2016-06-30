@@ -313,7 +313,7 @@ class Api_run extends Api_model {
       foreach($output_data->children('oml',true)->{'evaluation'} as $eval) {
         $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->flow.'" AND `implements` = "'.$eval->name.'"');
         if($measure_id == false) {
-          $this->returnError(217, $this->version);
+          $this->returnError(217, $this->version,$this->openmlGeneralErrorCode,'Measure: ' . $eval->name . '; flow: ' . $eval->flow);
           return;
         }
       }
