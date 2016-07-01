@@ -107,7 +107,7 @@ if( $_POST || $this->input->get('check') ) {
     sm('Meta dataset will be created. It can take several minutes to be generated.');
     su('frontend/page/meta_dataset#overview');
     
-  } elseif( $this->check ) {
+  } elseif($this->check) {
     $this->runs_done = 0;
     $this->runs_total = 0;
     
@@ -152,20 +152,20 @@ if( $_POST || $this->input->get('check') ) {
     $this->runs_total = count($res_tasks) * count($res_setups);
     $this->runs_done = count($res_runs);
 
-    if( $res_runs == false || $res_tasks == false || $res_setups == false ) {
+    if($res_runs == false || $res_tasks == false || $res_setups == false) {
       
       
     } else {
       $this->task_reference = array();
       $this->setup_reference = array();
       
-      foreach( $res_setups as $setup ) {
+      foreach($res_setups as $setup) {
         $this->setup_reference[$setup->sid] = array( 
           'name' => $setup->name,
           'dependencies' => $setup->dependencies, 
-          'setup_string' => $setup->setup_string );
+          'setup_string' => $setup->setup_string);
       }
-      foreach( $res_tasks as $task ) {
+      foreach($res_tasks as $task) {
         $this->task_reference[$task->task_id] = array(
           'ttid' => $task->ttid,
           'dataset' => $task->name,
@@ -175,18 +175,18 @@ if( $_POST || $this->input->get('check') ) {
       ksort($this->task_reference);
       ksort($this->setup_reference);
       
-      foreach( array_keys( $this->setup_reference ) as $s ) {
+      foreach(array_keys($this->setup_reference) as $s) {
         $this->data[$s] = array();
         $this->error[$s] = array();
         $this->warning[$s] = array();
-        foreach( array_keys( $this->task_reference ) as $t ) {
+        foreach(array_keys($this->task_reference) as $t) {
           $this->data[$s][$t] = false;
           $this->error[$s][$t] = false;
           $this->warning[$s][$t] = false;
         }
       }
       
-      foreach( $res_runs as $res ) {
+      foreach($res_runs as $res) {
         $this->data[$res->setup][$res->task_id] = true;
         if ($res->error != null) {
           $this->warning[$res->setup][$res->task_id] = $res->error;
@@ -196,12 +196,12 @@ if( $_POST || $this->input->get('check') ) {
         }
       }
       
-      if( $this->input->post('schedule') && $this->ion_auth->is_admin() ) {
+      if($this->input->post('schedule') && $this->ion_auth->is_admin()) {
         $schedule = array();
-        foreach( array_keys( $this->setup_reference ) as $s ) {
-          foreach( array_keys( $this->task_reference ) as $t ) {
-            if( $this->data[$s][$t] == false ) {
-              $schedule[] = array( 
+        foreach (array_keys($this->setup_reference) as $s) {
+          foreach (array_keys($this->task_reference) as $t) {
+            if ($this->data[$s][$t] == false) {
+              $schedule[] = array(
                 'sid' => $s,
                 'task_id' => $t,
                 'experiment' => 'form_request',
@@ -210,10 +210,15 @@ if( $_POST || $this->input->get('check') ) {
                 'dependencies' => $this->setup_reference[$s]['dependencies'],
                 'setup_string' => $this->setup_reference[$s]['setup_string'] 
               );
+              
+              if (count($schedule) > 100000) {
+                $this->Schedule->insert_batch($schedule);
+                $schedule = array();
+              }
             }
           }
         }
-        $this->Schedule->insert_batch( $schedule );
+        $this->Schedule->insert_batch($schedule);
       }
     }
   }
