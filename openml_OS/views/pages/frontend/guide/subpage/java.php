@@ -6,7 +6,7 @@
 	<p>Stable releases of the Java API are available from <a href="http://search.maven.org/#search%7Cga%7C1%7Copenml">Maven central</a>. Or, you can check out the developer version from <a href="https://github.com/openml/java"> GitHub</a>. Include the jar file in your projects as usual, or <a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">install via Maven</a>. You can also separately download <a href="downloads/apiconnector-dependencies.zip">all dependencies</a> and a <a href="downloads/apiconnector-fat.jar">fat jar</a> with all dependencies included.</p>
 
 	<h3 id="java-start">Quick Start</h3>
-	<p>Create an <code>OpenmlConnector</code> instance with your username and password. This will create a client with all OpenML functionalities.</p>
+	<p>Create an <code>OpenmlConnector</code> instance with your authentication details. This will create a client with all OpenML functionalities.</p>
 	<div class="codehighlight"><pre><code class="java">OpenmlConnector client = new OpenmlConnector("api_key");</code></pre></div>
 	<p>All functions are described in the <a href="docs" target="_blank">Java Docs</a>, and they mirror the functions from the Web API functions described below. For instance, the API function <a href="api#openml_data_description"><code>openml.data.description</code></a> has an equivalent Java function <code>openmlDataDescription(String data_id)</code>.</p>
 
