@@ -148,11 +148,20 @@ class Api_task extends Api_model {
       $this->returnError(151, $this->version);
       return;
     }
-
+    
+    $inputs = $this->Task_inputs->getAssociativeArray('input', 'value', 'task_id = ' . $task_id);
+    
+    
     $parsed_io = $this->Task_type_inout->getParsed($task_id);
     $tags = $this->Task_tag->getColumnWhere('tag', 'id = ' . $task_id);
-    //$name = 'Task ' . $task_id . ': ' . $dataset->name . '(' . $task_type->name . ')';
-    $name = 'Task ' . $task_id . ': ' . $task_type->name;
+    
+    $name = 'Task ' . $task_id . ' (' . $task_type->name . ')';
+    
+    if (array_key_exists('source_data', $inputs)) {
+      $dataset = $this->Dataset->getById($inputs['source_data']);
+      $name = 'Task ' . $task_id . ': ' . $dataset->name . '(' . $task_type->name . ')';
+    }
+    
     
     $this->xmlContents('task-get', $this->version, array('task' => $task, 'task_type' => $task_type, 'name' => $name, 'parsed_io' => $parsed_io, 'tags' => $tags));
   }
