@@ -159,7 +159,7 @@ class Api_task extends Api_model {
     
     if (array_key_exists('source_data', $inputs)) {
       $dataset = $this->Dataset->getById($inputs['source_data']);
-      $name = 'Task ' . $task_id . ': ' . $dataset->name . '(' . $task_type->name . ')';
+      $name = 'Task ' . $task_id . ': ' . $dataset->name . ' (' . $task_type->name . ')';
     }
     
     
