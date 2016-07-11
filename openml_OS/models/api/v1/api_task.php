@@ -132,26 +132,29 @@ class Api_task extends Api_model {
 
 
   private function task($task_id) {
-    if( $task_id == false ) {
-      $this->returnError( 150, $this->version );
+    if($task_id == false) {
+      $this->returnError(150, $this->version);
       return;
     }
 
-    $task = $this->Task->getById( $task_id );
-    if( $task === false ) {
-      $this->returnError( 151, $this->version );
+    $task = $this->Task->getById($task_id);
+    if($task === false) {
+      $this->returnError(151, $this->version);
       return;
     }
 
-    $task_type = $this->Task_type->getById( $task->ttid );
-    if( $task_type === false ) {
-      $this->returnError( 151, $this->version );
+    $task_type = $this->Task_type->getById($task->ttid);
+    if ($task_type === false) {
+      $this->returnError(151, $this->version);
       return;
     }
 
-    $parsed_io = $this->Task_type_inout->getParsed( $task_id );
-    $tags = $this->Task_tag->getColumnWhere( 'tag', 'id = ' . $task_id );
-    $this->xmlContents( 'task-get', $this->version, array( 'task' => $task, 'task_type' => $task_type, 'parsed_io' => $parsed_io, 'tags' => $tags ) );
+    $parsed_io = $this->Task_type_inout->getParsed($task_id);
+    $tags = $this->Task_tag->getColumnWhere('tag', 'id = ' . $task_id);
+    //$name = 'Task ' . $task_id . ': ' . $dataset->name . '(' . $task_type->name . ')';
+    $name = 'Task ' . $task_id . ': ' . $task_type->name;
+    
+    $this->xmlContents('task-get', $this->version, array('task' => $task, 'task_type' => $task_type, 'name' => $name, 'parsed_io' => $parsed_io, 'tags' => $tags));
   }
 
 
