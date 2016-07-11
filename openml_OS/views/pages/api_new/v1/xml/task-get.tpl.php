@@ -1,6 +1,6 @@
 <oml:task xmlns:oml="http://openml.org/openml">
 	<oml:task_id><?php echo $task->task_id;?></oml:task_id>
-	<oml:task_name><?php echo $name;?></oml:task_type>
+    <oml:task_name><?php echo $name; ?></oml:task_name>
 	<oml:task_type_id><?php echo $task_type->ttid;?></oml:task_type_id>
 	<oml:task_type><?php echo $task_type->name;?></oml:task_type>
 	<?php foreach( $parsed_io as $key => $item ): ?>
