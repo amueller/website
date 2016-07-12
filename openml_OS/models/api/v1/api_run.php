@@ -461,15 +461,6 @@ class Api_run extends Api_model {
     $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
     $this->elasticsearch->index('run', $run->rid);
-
-    // update usage counters
-    $this->elasticsearch->index('user', $this->user_id);
-    if($implementation->uploader != $this->user_id)
-      $this->elasticsearch->index('user', $implementation->uploader);
-    $datasetRecord = $this->Dataset->getById( $task->source_data );
-    if( $datasetRecord !== false && $datasetRecord->uploader !== false && $datasetRecord->uploader != $this->user_id && $datasetRecord->uploader != $implementation->uploader) {
-      $this->elasticsearch->index('user', $datasetRecord->uploader);
-    }
     
     $timestamps[] = microtime(true); // profiling 4
     if (DEBUG) {
