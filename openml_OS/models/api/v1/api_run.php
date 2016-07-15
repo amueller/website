@@ -244,6 +244,7 @@ class Api_run extends Api_model {
     if( is_array($evaluation_ids) && count($evaluation_ids) )
       $result = $result && $this->Output_data->deleteWhere( '`run` = "' . $run->rid  . '" AND `data` IN (' . implode( ',', $evaluation_ids ) . ')' );
 
+    $result = $result && $this->Trace->deleteWhere('`run_id` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ');
     $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ');
