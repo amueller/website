@@ -267,6 +267,9 @@ class Api_run extends Api_model {
      * Including the unsupported tasks                         *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     
+    // IMPORTANT! This function is sort of similar to "setup exists".
+    // If changing something big, also test that function. 
+     
     $timestamps = array(microtime(true)); // profiling 0
     
     // check uploaded file
@@ -368,23 +371,23 @@ class Api_run extends Api_model {
     $timestamps[] = microtime(true); // profiling 1
 
     $parameters = array();
-    foreach( $parameter_objects as $p ) {
+    foreach($parameter_objects as $p) {
       // since 'component' is an optional XML field, we add a default option
       $component = property_exists($p, 'component') ? $p->component : $implementation->id;
 
       // now find the input id
-      $input_id = $this->Input->getWhereSingle( '`implementation_id` = ' . $component . ' AND `name` = "' . $p->name . '"' );
-      if( $input_id === false ) {
-        $this->returnError( 213, $this->version );
+      $input_id = $this->Input->getWhereSingle('`implementation_id` = ' . $component . ' AND `name` = "' . $p->name . '"');
+      if($input_id === false) {
+        $this->returnError(213, $this->version, $this->openmlGeneralErrorCode, 'Name: ' . $p->name . ', flow id (component): ' . $component);
         return;
       }
 
       $parameters[$input_id->id] = $p->value . '';
     }
     // search setup ... // TODO: do something about the new parameters. Are still retrieved by ID, does not work with Weka plugin.
-    $setupId = $this->Algorithm_setup->getSetupId( $implementation, $parameters, true, $setup_string );
+    $setupId = $this->Algorithm_setup->getSetupId($implementation, $parameters, true, $setup_string);
     if( $setupId === false ) {
-      $this->returnError( 214, $this->version );
+      $this->returnError(214, $this->version);
       return;
     }
     

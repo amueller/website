@@ -282,7 +282,13 @@ $this->apiErrors[563] = 'Problem loading xml trace file.';
 // openml.run.trace (get)
 $this->apiErrors[570] = 'No successful trace associated with this run.';
 
-
+// openml.setup.exists
+$this->apiErrors[581] = 'Problem with uploading the description file. ';
+$this->apiErrors[582] = 'Could not validate run xml by xsd. ';
+$this->apiErrors[583] = 'Error reading the XML document. ';
+$this->apiErrors[584] = 'Unknown flow. ';
+$this->apiErrors[585] = 'Wrong flow associated with run: this implements a math_function. ';
+$this->apiErrors[586] = 'Parameter in run xml unknown. ';
 
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';

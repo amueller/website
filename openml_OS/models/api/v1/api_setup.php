@@ -8,9 +8,11 @@ class Api_setup extends Api_model {
     
     // load models
     $this->load->model('Algorithm_setup');
-    $this->load->model('Setup_differences');
+    $this->load->model('Implementation');
+    $this->load->model('Input');
     $this->load->model('Input_setting');
     $this->load->model('Schedule');
+    $this->load->model('Setup_differences');
     $this->load->model('Setup_tag');
   }
 
@@ -36,6 +38,11 @@ class Api_setup extends Api_model {
     
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
       $this->setup_untag($this->input->post('setup_id'),$this->input->post('tag'));
+      return;
+    }
+    
+    if (count($segments) == 1 && $segments[0] == 'exists' && $request_type == 'post') {
+      $this->setup_search();
       return;
     }
     
@@ -75,6 +82,70 @@ class Api_setup extends Api_model {
     }
   }
   
+  private function setup_exists() {
+    $description = isset($_FILES['description']) ? $_FILES['description'] : false;
+    $uploadError = '';
+    if(!check_uploaded_file($description,false,$uploadError)) {
+      $this->returnError(581, $this->version,$this->openmlGeneralErrorCode,$uploadError);
+      return;
+    }
+    
+    // validate xml
+    $xmlErrors = '';
+    if(validateXml($description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors) == false) {
+      $this->returnError(582, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
+      return;
+    }
+    
+    
+    // fetch xml
+    $xml = simplexml_load_file($description['tmp_name']);
+    if($xml === false) {
+      $this->returnError(583, $this->version);
+      return;
+    }
+    
+    $run_xml = all_tags_from_xml(
+      $xml->children('oml', true),
+      $this->xml_fields_run);
+    
+    $implementation_id = $run_xml['flow_id'];
+    $parameter_objects = array_key_exists('parameter_setting', $run_xml) ? $run_xml['parameter_setting'] : array();
+    
+    // fetch implementation
+    $implementation = $this->Implementation->getById($implementation_id);
+    if($implementation === false) {
+      $this->returnError(584, $this->version);
+      return;
+    }
+    if(in_array($implementation->{'implements'}, $this->supportedMetrics)) {
+      $this->returnError(585, $this->version);
+      return;
+    }
+    
+    $parameters = array();
+    foreach( $parameter_objects as $p ) {
+      // since 'component' is an optional XML field, we add a default option
+      $component = property_exists($p, 'component') ? $p->component : $implementation->id;
+
+      // now find the input id
+      $input_id = $this->Input->getWhereSingle('`implementation_id` = ' . $component . ' AND `name` = "' . $p->name . '"');
+      if($input_id === false) {
+        $this->returnError(586, $this->version, $this->openmlGeneralErrorCode, 'Name: ' . $p->name . ', flow id (component): ' . $component);
+        return;
+      }
+
+      $parameters[$input_id->id] = $p->value . '';
+    }
+    // search setup ... // TODO: do something about the new parameters. Are still retrieved by ID, does not work with Weka plugin.
+    $setupId = $this->Algorithm_setup->getSetupId($implementation, $parameters, false);
+    
+    $result = array('exists' => 'false', 'id' => -1);
+    if($setupId) {
+      $result = array('exists' => 'true', 'id' => $setupId);
+    }
+    $this->xmlContents('setup-exists', $this->version, $result);
+  }
   
   private function setup_delete($setup_id) {
 
