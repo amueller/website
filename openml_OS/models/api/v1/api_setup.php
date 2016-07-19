@@ -42,7 +42,7 @@ class Api_setup extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'exists' && $request_type == 'post') {
-      $this->setup_search();
+      $this->setup_exists();
       return;
     }
     
