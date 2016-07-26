@@ -606,6 +606,91 @@ paths:
               }
         370:
           description: No datasets available. There are no datasets in the system with the given tag.
+  /data/list/{filters}:
+    get:
+      summary: Get datasets by properties
+      description: |
+        Get tasks based on properties of the data - NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.
+      parameters:
+        - name: filters
+          in: path
+          description: Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, or tags.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of datasets with the given task
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No datasets available. There are no datasets in the system with the given constraints.
   /data/tag:
     post:
       summary: Tag a dataset
@@ -1376,11 +1461,11 @@ paths:
     get:
       summary: Get tasks by data properties
       description: |
-        Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all flows in the system that match the constraints.
+        Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all tasks in the system that match the constraints.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..11'. With or without limits, tags, or types.
+          description: Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, tags, or types.
           required: true
           type: string
         - name: api_key

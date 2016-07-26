@@ -452,6 +452,45 @@
                 }
             }
         },
+        "/data/list/{filters}": {
+            "get": {
+                "summary": "Get datasets by properties",
+                "description": "Get tasks based on properties of the data - NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.\n",
+                "parameters": [
+                    {
+                        "name": "filters",
+                        "in": "path",
+                        "description": "Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, or tags.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of datasets with the given task",
+                        "schema": {
+                            "$ref": "#/definitions/DataList"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"data\": {\n    \"dataset\": [\n      {\n        \"did\":\"1\",\n        \"name\":\"anneal\",\n        \"status\":\"active\",\n        \"format\":\"ARFF\",\n        \"quality\":[\n          {\n            \"name\":\"MajorityClassSize\",\n            \"value\":\"684\"\n          },\n          {\n            \"name\":\"MaxNominalAttDistinctValues\",\n            \"value\":\"10.0\"\n          },\n          {\n            \"name\":\"MinorityClassSize\"\n            ,\"value\":\"0\"\n          },\n          {\n            \"name\":\"NumBinaryAtts\",\n            \"value\":\"14.0\"\n          },\n          {\n            \"name\":\"NumberOfClasses\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfFeatures\",\n            \"value\":\"39\"\n          },\n          {\n            \"name\":\"NumberOfInstances\",\n            \"value\":\"898\"\n          },\n          {\n            \"name\":\"NumberOfInstancesWithMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfNumericFeatures\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfSymbolicFeatures\",\n            \"value\":\"32\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+                        }
+                    },
+                    "370": {
+                        "description": "No datasets available. There are no datasets in the system with the given constraints."
+                    }
+                }
+            }
+        },
         "/data/tag": {
             "post": {
                 "summary": "Tag a dataset",
@@ -937,12 +976,12 @@
         "/task/list/{filters}": {
             "get": {
                 "summary": "Get tasks by data properties",
-                "description": "Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all flows in the system that match the constraints.\n",
+                "description": "Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all tasks in the system that match the constraints.\n",
                 "parameters": [
                     {
                         "name": "filters",
                         "in": "path",
-                        "description": "Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..11'. With or without limits, tags, or types.",
+                        "description": "Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, tags, or types.",
                         "required": true,
                         "type": "string"
                     },
