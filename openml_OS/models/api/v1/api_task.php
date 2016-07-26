@@ -79,7 +79,7 @@ class Api_task extends Api_model {
     $nr_miss = element('NumberOfMissingValues',$query_string);
 
 
-    if (!(is_safe($tag) && is_safe($type))) {
+    if (!(is_safe($tag) && is_safe($type) && is_safe($limit) && is_safe($offset) && is_safe($data_id) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
       $this->returnError(511, $this->version );
       return;
     }

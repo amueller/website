@@ -14,7 +14,7 @@ class Api_data extends Api_model {
     $this->load->model('Data_quality_interval');
     $this->load->model('Quality');
     $this->load->model('File');
-    
+
     $this->load->helper('file_upload');
   }
 
@@ -90,13 +90,22 @@ class Api_data extends Api_model {
     $tag = element('tag',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
+    $nr_insts = element('NumberOfInstances',$query_string);
+    $nr_feats = element('NumberOfFeatures',$query_string);
+    $nr_class = element('NumberOfClasses',$query_string);
+    $nr_miss = element('NumberOfMissingValues',$query_string);
 
-    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset))) {
+    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
       $this->returnError(511, $this->version );
       return;
     }
 
-    $where_total = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
+    $where_tag = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
+    $where_insts = $nr_insts == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfInstances" and value ' . (strpos($nr_insts, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_insts) : '= '. $nr_insts) . ') ';
+    $where_feats = $nr_feats == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
+    $where_class = $nr_class == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
+    $where_miss = $nr_miss == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfMissingValues" and value ' . (strpos($nr_miss, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_miss) : '= '. $nr_miss) . ') ';
+    $where_total = $where_tag . $where_insts . $where_feats . $where_class . $where_miss;
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
@@ -258,7 +267,7 @@ class Api_data extends Api_model {
       if( $access_control_option != 'public' ) {
         $access_control = 'private';
       }
-      
+
       if (getextension($_FILES['dataset']['name']) == 'arff') {
         $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
         if ($uploadedFileCheck !== true) {
@@ -272,7 +281,7 @@ class Api_data extends Api_model {
         $this->returnError( 132, $this->version );
         return;
       }
-      
+
       $file_record = $this->File->getById($file_id);
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } elseif( $datasetUrlProvided ) {
