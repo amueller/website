@@ -72,6 +72,12 @@ class Api_task extends Api_model {
     $tag = element('tag',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
+    $data_id = element('data_id',$query_string);
+    $nr_insts = element('NumberOfInstances',$query_string);
+    $nr_feats = element('NumberOfFeatures',$query_string);
+    $nr_class = element('NumberOfClasses',$query_string);
+    $nr_miss = element('NumberOfMissingValues',$query_string);
+
 
     if (!(is_safe($tag) && is_safe($type))) {
       $this->returnError(511, $this->version );
@@ -80,12 +86,17 @@ class Api_task extends Api_model {
 
     $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
     $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
-    $where_total = $where_type . $where_tag;
+    $where_did = $data_id == false ? '' : ' AND `d`.`did` = '. $data_id . ' ';
+    $where_insts = $nr_insts == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfInstances" and value ' . (strpos($nr_insts, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_insts) : '= '. $nr_insts) . ') ';
+    $where_feats = $nr_feats == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
+    $where_class = $nr_class == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
+    $where_miss = $nr_miss == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfMissingValues" and value ' . (strpos($nr_miss, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_miss) : '= '. $nr_miss) . ') ';
+    $where_total = $where_type . $where_tag . $where_did . $where_insts . $where_feats . $where_class . $where_miss;
+    $where_task_total = $where_type . $where_tag;
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
-
 
     $tasks_res = $this->Task->query(
       'SELECT t.task_id, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name '.
@@ -109,7 +120,7 @@ class Api_task extends Api_model {
 
     $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND t.task_id IN (' . implode(',', array_keys($tasks)) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY quality like "NumberOf" desc, quality');
     $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' );
-    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $where_total . ' ORDER BY id');
+    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $where_task_total . ' ORDER BY id');
 
     for($i = 0; $i < count($dq); ++$i) {
       if (array_key_exists($dq[$i]->task_id,$tasks)) {
