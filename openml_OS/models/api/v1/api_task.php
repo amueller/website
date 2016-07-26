@@ -113,17 +113,17 @@ class Api_task extends Api_model {
 
     for($i = 0; $i < count($dq); ++$i) {
       if (array_key_exists($dq[$i]->task_id,$tasks)) {
-        $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $dq[$i]->value;
+        $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $this->xmlEscape($dq[$i]->value);
       }
     }
     for( $i = 0; $i < count($ti); ++$i ) {
       if (array_key_exists($ti[$i]->task_id,$tasks)) {
-        $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $ti[$i]->value;
+        $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $this->xmlEscape($ti[$i]->value);
       }
     }
     for( $i = 0; $i < count($tt); ++$i ) {
       if (array_key_exists($tt[$i]->id,$tasks)) {
-        $tasks[$tt[$i]->id]->tags[] = $tt[$i]->tag;
+        $tasks[$tt[$i]->id]->tags[] = $this->xmlEscape($tt[$i]->tag);
       }
     }
 
@@ -148,21 +148,21 @@ class Api_task extends Api_model {
       $this->returnError(151, $this->version);
       return;
     }
-    
+
     $inputs = $this->Task_inputs->getAssociativeArray('input', 'value', 'task_id = ' . $task_id);
-    
-    
+
+
     $parsed_io = $this->Task_type_inout->getParsed($task_id);
     $tags = $this->Task_tag->getColumnWhere('tag', 'id = ' . $task_id);
-    
+
     $name = 'Task ' . $task_id . ' (' . $task_type->name . ')';
-    
+
     if (array_key_exists('source_data', $inputs)) {
       $dataset = $this->Dataset->getById($inputs['source_data']);
       $name = 'Task ' . $task_id . ': ' . $dataset->name . ' (' . $task_type->name . ')';
     }
-    
-    
+
+
     $this->xmlContents('task-get', $this->version, array('task' => $task, 'task_type' => $task_type, 'name' => $name, 'parsed_io' => $parsed_io, 'tags' => $tags));
   }
 
@@ -231,7 +231,7 @@ class Api_task extends Api_model {
     $task_type_id = $xml->children('oml', true)->{'task_type_id'};
     $inputs = array();
     $tags = array();
-    
+
     foreach($xml->children('oml', true) as $input) {
       if ($input->getName() == 'input') {
         $name = $input->attributes() . '';
@@ -249,8 +249,8 @@ class Api_task extends Api_model {
       $this->returnError(533, $this->version, $this->openmlGeneralErrorCode, 'matched id(s): [' . implode(',', $task_ids) . ']');
       return;
     }
-    
-    
+
+
 
     // THE INSERTION
     $task = array(
@@ -276,7 +276,7 @@ class Api_task extends Api_model {
       );
       $this->Task_inputs->insert($task_input);
     }
-    
+
     foreach($tags as $tag) {
       $error = -1;
       tag_item('task', $id, $tag, $this->user_id, $error);
