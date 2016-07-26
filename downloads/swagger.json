@@ -936,8 +936,8 @@
         },
         "/task/list/{filters}": {
             "get": {
-                "summary": "Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types.",
-                "description": "Returns an array with all flows in the system that match the constraints.\n",
+                "summary": "Get tasks by data properties",
+                "description": "Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all flows in the system that match the constraints.\n",
                 "parameters": [
                     {
                         "name": "filters",

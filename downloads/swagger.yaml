@@ -107,11 +107,11 @@ paths:
         351:
           description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators.
         352:
-          description: Dataset does not exists. The data ID could not be linked to an existing dataset.
+          description: Dataset does not exists. The data ID could not be linked to an existing dataset. 
         353:
-          description: Dataset is not owned by you. The dataset is owned by another user. Hence you cannot delete it.
+          description: Dataset is not owned by you. The dataset is owned by another user. Hence you cannot delete it. 
         354:
-          description: Dataset is in use by other content. Can not be deleted. The data is used in tasks or runs. Delete other content before deleting this dataset.
+          description: Dataset is in use by other content. Can not be deleted. The data is used in tasks or runs. Delete other content before deleting this dataset.  
         355:
           description: Deleting dataset failed. Deleting the dataset failed. Please contact support team.
   /data:
@@ -158,33 +158,33 @@ paths:
                 }
               }
         130:
-          description: Problem with file uploading. There was a problem with the file upload
+          description: Problem with file uploading. There was a problem with the file upload 
         131:
-          description: Problem validating uploaded description file. The XML description format does not meet the standards
+          description: Problem validating uploaded description file. The XML description format does not meet the standards 
         132:
-          description: Failed to move the files. Internal server error, please contact API administrators
+          description: Failed to move the files. Internal server error, please contact API administrators 
         133:
-          description: Failed to make checksum of datafile. Internal server error, please contact API administrators
+          description: Failed to make checksum of datafile. Internal server error, please contact API administrators 
         134:
-          description: Failed to insert record in database. Internal server error, please contact API administrators
+          description: Failed to insert record in database. Internal server error, please contact API administrators 
         135:
-          description: Please provide description xml.
+          description: Please provide description xml. 
         136:
           description: File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.
         137:
           description: Please provide API key. In order to share content, please log in or provide your API key.
         138:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact API administrators
+          description: Authentication failed. The API key was not valid. Please try to login again, or contact API administrators 
         139:
-          description: Combination name / version already exists. Leave version out for auto increment
+          description: Combination name / version already exists. Leave version out for auto increment 
         140:
           description: Both dataset file and dataset url provided. The system is confused since both a dataset file (post) and a dataset url (xml) are provided. Please remove one.
         141:
-          description: Neither dataset file or dataset url are provided. Please provide either a dataset file as POST variable, or a dataset url in the description XML
+          description: Neither dataset file or dataset url are provided. Please provide either a dataset file as POST variable, or a dataset url in the description XML 
         142:
-          description: Error in processing arff file. Can be a syntax error, or the specified target feature does not exists. For now, we only check on arff files. If a dataset is claimed to be in such a format, and it can not be parsed, this error is returned.
+          description: Error in processing arff file. Can be a syntax error, or the specified target feature does not exists. For now, we only check on arff files. If a dataset is claimed to be in such a format, and it can not be parsed, this error is returned.  
         143:
-          description: Suggested target feature not legal. It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data.
+          description: Suggested target feature not legal. It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data.  
         144:
           description: Unable to update dataset. The dataset with id could not be found in the database. If you upload a new dataset, unset the id.
   /data/features/{id}:
@@ -266,7 +266,7 @@ paths:
         272:
           description: No features found. The dataset did not contain any features, or we could not extract them.
         273:
-          description: Dataset not processed yet. The dataset was not processed yet, features are not yet available. Please wait for a few minutes.
+          description: Dataset not processed yet. The dataset was not processed yet, features are not yet available. Please wait for a few minutes.  
         274:
           description: Dataset processed with error. The feature extractor has run into an error while processing the dataset. Please check whether it is a valid supported file. If so, please contact the API admins.
   /data/qualities/{id}:
@@ -650,13 +650,13 @@ paths:
                 }
               }
         470:
-          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
+          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag). 
         471:
-          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
         472:
           description: Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag.
         473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.
+          description: Something went wrong inserting the tag. Please contact OpenML Team.  
         474:
           description: Internal error tagging the entity. Please contact OpenML Team.
   /data/untag:
@@ -704,11 +704,11 @@ paths:
         475:
           description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
         476:
-          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
         477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}.
+          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}. 
         478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it.
+          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
         479:
           description: Internal error removing the tag. Please contact OpenML Team.
   /task/{id}:
@@ -819,7 +819,7 @@ paths:
         150:
           description: Please provide task_id.
         151:
-          description: Unknown task. The task with the given id was not found in the database
+          description: Unknown task. The task with the given id was not found in the database 
     delete:
       summary: Delete task
       description: |
@@ -906,15 +906,15 @@ paths:
                 }
               }
         530:
-          description: Description file not present. Please upload the task description.
+          description: Description file not present. Please upload the task description.  
         531:
           description: Internal error. Please contact api support team
         532:
-          description: Problem validating uploaded description file. The XML description format does not meet the standards
+          description: Problem validating uploaded description file. The XML description format does not meet the standards 
         533:
-          description: Task already exists.
+          description: Task already exists.  
         534:
-          description: Error creating the task.
+          description: Error creating the task.  
   /task/list:
     get:
       summary: List all tasks
@@ -1374,9 +1374,9 @@ paths:
           description: No results. There where no matches for the given task tag.
   /task/list/{filters}:
     get:
-      summary: Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types.
+      summary: Get tasks by data properties
       description: |
-        Returns an array with all flows in the system that match the constraints.
+        Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all flows in the system that match the constraints.
       parameters:
         - name: filters
           in: path
@@ -1528,13 +1528,13 @@ paths:
                 }
               }
         470:
-          description: In order to add a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag).
+          description: In order to add a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag). 
         471:
-          description: Entity not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity. 
         472:
           description: Entity already tagged by this tag. The entity {dataset, task, flow, run} already had this tag.
         473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.
+          description: Something went wrong inserting the tag. Please contact OpenML Team.  
         474:
           description: Internal error tagging the entity. Please contact OpenML Team.
   /task/untag:
@@ -1582,11 +1582,11 @@ paths:
         475:
           description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag).
         476:
-          description: Entity {dataset, task, flow, run} not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity {dataset, task, flow, run} not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity. 
         477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, task, flow, run}.
+          description: Tag not found. The provided tag is not associated with the entity {dataset, task, flow, run}. 
         478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it.
+          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
         479:
           description: Internal error removing the tag. Please contact OpenML Team.
   /tasktype/{id}:
@@ -1701,7 +1701,7 @@ paths:
         240:
           description: Please provide task type ID.
         241:
-          description: Unknown task type. The task type with the given id was not found in the database
+          description: Unknown task type. The task type with the given id was not found in the database 
   /tasktype/list:
     get:
       summary: List all task types
@@ -1843,11 +1843,11 @@ paths:
         321:
           description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators .
         322:
-          description: Flow does not exists. The flow ID could not be linked to an existing flow.
+          description: Flow does not exists. The flow ID could not be linked to an existing flow. 
         323:
-          description: Flow is not owned by you. The flow is owned by another user. Hence you cannot delete it.
+          description: Flow is not owned by you. The flow is owned by another user. Hence you cannot delete it. 
         324:
-          description: Flow is in use by other content. Can not be deleted. The flow is used in runs, evaluations or as a component of another flow. Delete other content before deleting thisflow.
+          description: Flow is in use by other content. Can not be deleted. The flow is used in runs, evaluations or as a component of another flow. Delete other content before deleting thisflow.  
         325:
           description: Deleting flow failed. Deleting the flow failed. Please contact support team.
   /flow:
@@ -1900,23 +1900,23 @@ paths:
         163:
           description: Problem validating uploaded description file. The XML description format does not meet the standards.
         164:
-          description: Flow already stored in database. Please change name or version number
+          description: Flow already stored in database. Please change name or version number 
         165:
           description: Failed to insert flow. There can be many causes for this error. If you included the implements field, it should be an existing entry in the algorithm or math_function table. Otherwise it could be an internal server error. Please contact API support team.
         166:
-          description: Failed to add flow to database. Internal server error, please contact API administrators
+          description: Failed to add flow to database. Internal server error, please contact API administrators 
         167:
-          description: Illegal files uploaded. An non required file was uploaded.
+          description: Illegal files uploaded. An non required file was uploaded. 
         168:
           description: The provided md5 hash equals not the server generated md5 hash of the file.
         169:
           description: Please provide API key. In order to share content, please authenticate and provide API key.
         170:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact API administrators
+          description: Authentication failed. The API key was not valid. Please try to login again, or contact API administrators 
         171:
-          description: Flow already exists. This flow is already in the database
+          description: Flow already exists. This flow is already in the database 
         172:
-          description: XSD not found. Please contact API support team
+          description: XSD not found. Please contact API support team 
   /flow/exists/{name}/{version}:
     get:
       summary: Check whether flow exists
@@ -2232,13 +2232,13 @@ paths:
                 }
               }
         470:
-          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
+          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag). 
         471:
-          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
         472:
           description: Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag.
         473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.
+          description: Something went wrong inserting the tag. Please contact OpenML Team.  
         474:
           description: Internal error tagging the entity. Please contact OpenML Team.
   /flow/untag:
@@ -2286,11 +2286,11 @@ paths:
         475:
           description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
         476:
-          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
         477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}.
+          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}. 
         478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it.
+          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
         479:
           description: Internal error removing the tag. Please contact OpenML Team.
   /run/{id}:
@@ -2401,7 +2401,7 @@ paths:
                 }
               }
         220:
-          description: Please provide run ID. In order to view run details, please provide the run ID
+          description: Please provide run ID. In order to view run details, please provide the run ID 
         221:
           description: Run not found. The run ID was invalid, run does not exist (anymore).
     delete:
@@ -2444,11 +2444,11 @@ paths:
         390:
           description: Please provide API key. In order to remove your content, please authenticate.
         391:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators
+          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators 
         392:
-          description: Run does not exists. The run ID could not be linked to an existing run.
+          description: Run does not exists. The run ID could not be linked to an existing run. 
         393:
-          description: Run is not owned by you. The run was owned by another user. Hence you cannot delete it.
+          description: Run is not owned by you. The run was owned by another user. Hence you cannot delete it. 
         394:
           description: Deleting run failed. Deleting the run failed. Please contact support team.
   /run:
@@ -2515,7 +2515,7 @@ paths:
         "205":
           description: Unknown flow. The flow with the given ID was not found in the database.
         "206":
-          description: Invalid number of files. The number of uploaded files did not match the number of files expected for the task type
+          description: Invalid number of files. The number of uploaded files did not match the number of files expected for the task type 
         "207":
           description: File upload failed. One of the files uploaded has a problem.
         "208":
@@ -2603,11 +2603,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/run/{ids}:
@@ -2666,11 +2666,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/tag/{tag}:
@@ -2729,11 +2729,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id, tag) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id, tag) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/task/{ids}:
@@ -2792,11 +2792,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/uploader/{ids}:
@@ -2855,11 +2855,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/flow/{ids}:
@@ -2918,11 +2918,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/list/{filters}:
@@ -2981,11 +2981,11 @@ paths:
                 }
               }
         510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.
+          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
         511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         512:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         513:
           description: Too many results. Given the constraints, there were still too many results. Please add more filters.
   /run/tag:
@@ -3032,13 +3032,13 @@ paths:
                 }
               }
         470:
-          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
+          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag). 
         471:
-          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
         472:
           description: Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag.
         473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.
+          description: Something went wrong inserting the tag. Please contact OpenML Team.  
         474:
           description: Internal error tagging the entity. Please contact OpenML Team.
   /run/untag:
@@ -3086,11 +3086,11 @@ paths:
         475:
           description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
         476:
-          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity.
+          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
         477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}.
+          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}. 
         478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it.
+          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
         479:
           description: Internal error removing the tag. Please contact OpenML Team.
   /evaluation/list/run/{ids}:
@@ -3151,9 +3151,9 @@ paths:
         540:
           description: Please provide at least task, flow or setup, uploader or run, to filter results.
         541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/limit/{limit}/offset/{offset}:
@@ -3221,9 +3221,9 @@ paths:
         540:
           description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
-          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/tag/{tag}:
@@ -3284,9 +3284,9 @@ paths:
         540:
           description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
-          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/task/{ids}:
@@ -3347,9 +3347,9 @@ paths:
         540:
           description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/uploader/{ids}:
@@ -3410,9 +3410,9 @@ paths:
         540:
           description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/flow/{ids}:
@@ -3473,9 +3473,9 @@ paths:
         540:
           description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
   /evaluation/list/{filters}:
@@ -3536,9 +3536,9 @@ paths:
         540:
           description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
         541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).
+          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
         542:
-          description: There where no results. Check whether there are runs under the given constraint.
+          description: There where no results. Check whether there are runs under the given constraint.  
         543:
           description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
 definitions:
@@ -3643,7 +3643,7 @@ definitions:
             items:
               type: object
               properties:
-                name:
+                name: 
                   type: string
                   description: The name of the input, e.g. source_data
                 data_set:
@@ -3675,7 +3675,7 @@ definitions:
                           value:
                             type: string
                             description: The value of the parameter
-                cost_matrix:
+                cost_matrix: 
                   type: array
                   items:
                     type: array
@@ -3683,10 +3683,10 @@ definitions:
                       type: integer
                       format: int64
                   description: The cost matrix, indicating the costs for each type of misclassification
-                evaluation_measures:
+                evaluation_measures: 
                   type: object
                   properties:
-                    evaluation_measure:
+                    evaluation_measure: 
                       type: string
                       description: The evaluation measure to optimize in this task
           output:
@@ -3694,7 +3694,7 @@ definitions:
             items:
               type: object
               properties:
-                name:
+                name: 
                   type: string
                   description: The name of the output, e.g. predictions
                 predictions:
@@ -3713,7 +3713,7 @@ definitions:
                             description: The name of the prediction feature, e.g. row_id
                           type:
                             type: string
-                            description: The type of the prediction feature, e.g. integer
+                            description: The type of the prediction feature, e.g. integer        
           tag:
             type: array
             items:
@@ -3769,7 +3769,7 @@ definitions:
                         description: The name of the quality
                       value:
                         type: string
-                        description: The value of the quality
+                        description: The value of the quality 
                 tag:
                   type: array
                   items:
@@ -4098,7 +4098,7 @@ definitions:
         items:
           type: object
           properties:
-            name:
+            name: 
               type: string
               description: The name of the input, e.g. source_data
             data_set:
@@ -4130,7 +4130,7 @@ definitions:
                       value:
                         type: string
                         description: The value of the parameter
-            cost_matrix:
+            cost_matrix: 
               type: array
               items:
                 type: array
@@ -4138,10 +4138,10 @@ definitions:
                   type: integer
                   format: int64
                 description: The cost matrix, indicating the costs for each type of misclassification
-            evaluation_measures:
+            evaluation_measures: 
               type: object
               properties:
-                evaluation_measure:
+                evaluation_measure: 
                   type: string
                   description: The evaluation measure to optimize in this task
       output:
@@ -4149,7 +4149,7 @@ definitions:
         items:
           type: object
           properties:
-            name:
+            name: 
               type: string
               description: The name of the output, e.g. predictions
             predictions:
@@ -4168,7 +4168,7 @@ definitions:
                         description: The name of the prediction feature, e.g. row_id
                       type:
                         type: string
-                        description: The type of the prediction feature, e.g. integer
+                        description: The type of the prediction feature, e.g. integer  
   TaskTypeList:
     type: object
     properties:
