@@ -100,7 +100,18 @@ if( $_POST || $this->input->get('check') ) {
       'setups' => $setup_ids ? implode( ', ', $setup_ids ) : null,
       'functions' => $functions ? $functions : null,
       'user_id' => $this->ion_auth->get_user_id() );
-    if( $type == 'qualities' ) unset( $md['functions'] );  
+    
+    if ($type == 'qualities') {
+      unset($md['functions']);
+      unset($md['setups']);
+      unset($md['flows']);
+    }
+    
+    if ($type == 'inputs') {
+      unset($md['functions']);
+      unset($md['datasets']);
+      unset($md['tasks']);
+    }
       
     $res = $this->Meta_dataset->insert( $md );
 
