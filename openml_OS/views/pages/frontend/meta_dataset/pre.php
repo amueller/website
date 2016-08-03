@@ -53,11 +53,11 @@ if( $_POST || $this->input->get('check') ) {
   $setup_ids   = ($setups)  ? $this->Setup_tag->get_ids( explode( ',', $setups ) ) : null;
   
   
-  if($dataset_ids == false && $task_ids === false && $type != 'inputs') {
+  if($type != 'inputs' && $dataset_ids == false && $task_ids === false) {
     sm('Wrong input: Either of the input fields (datasets, tasks) had no results. ' );
     su('frontend/page/meta_dataset');
   }
-  if($type =! 'features' && $flow_ids == false && $setup_ids == false) {
+  if($type != 'features' && $flow_ids == false && $setup_ids == false) {
     sm('Wrong input: Either of the input fields (implementations, setups) had no results. ' );
     su('frontend/page/meta_dataset');
   }
