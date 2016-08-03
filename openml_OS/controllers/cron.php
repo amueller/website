@@ -133,7 +133,7 @@ class Cron extends CI_Controller {
 
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
 
-      if( $meta_dataset->type == 'qualities' ) {
+      if($meta_dataset->type == 'qualities') {
         $quality_keys_string = '';
         if( $quality_keys ) {
           $quality_keys_string = implode( ', ', $quality_keys ) . ',';
@@ -155,7 +155,7 @@ class Cron extends CI_Controller {
           'ENCLOSED BY "\"" ' .
           'LINES TERMINATED BY "\n" ' .
           ';';
-      } else {
+      } elseif($meta_dataset->type == 'evaluations') {
         $sql =
           'SELECT "run_id", "setup_id", "task_id", "' . implode( '", "', array_keys( $evaluation_keys ) ) . '" ' .
           ', "value", "task_name", "flow_name" ' .
@@ -179,6 +179,23 @@ class Cron extends CI_Controller {
           'ENCLOSED BY "\"" ' .
           'LINES TERMINATED BY "\n" ' .
           ';';
+      } elseif($meta_dataset->type == 'inputs') {
+        $sql = 
+          'SELECT is.setup, i.fullname AS flowname, ip.name, is.value ' .
+          'FROM `input_setting` `is` , input `ip`, algorithm_setup s, implementation i ' .
+          'WHERE ip.id = is.input_id ' .
+          'AND ip.implementation_id = i.id ' .
+          'AND is.setup = s.sid ' .
+          'AND s.implementation_id = i.id ' .
+          $flow_constr . $setup_constr . 
+          'INTO OUTFILE "'. $tmp_path .'" ' . 
+          'FIELDS TERMINATED BY "," ' .
+          'ENCLOSED BY "\"" ' .
+          'LINES TERMINATED BY "\n" ' .
+          ';';
+      } else {
+        $this->_error_meta_dataset( $meta_dataset->id, 'Meta dataset type not recognized: ' . $meta_dataset->type, $meta_dataset->user_id );
+        return;
       }
 
       $this->Dataset->query( $sql );

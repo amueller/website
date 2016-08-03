@@ -53,11 +53,11 @@ if( $_POST || $this->input->get('check') ) {
   $setup_ids   = ($setups)  ? $this->Setup_tag->get_ids( explode( ',', $setups ) ) : null;
   
   
-  if( $dataset_ids === false || $flow_ids === false ) {
+  if($dataset_ids == false && $task_ids === false && $type != 'inputs') {
     sm('Wrong input: Either of the input fields (datasets, tasks) had no results. ' );
     su('frontend/page/meta_dataset');
   }
-  if( $type == 'evaluations' && ( $flow_ids === false || $setup_ids === false ) ) {
+  if($type =! 'features' && $flow_ids == false && $setup_ids == false) {
     sm('Wrong input: Either of the input fields (implementations, setups) had no results. ' );
     su('frontend/page/meta_dataset');
   }
@@ -65,7 +65,7 @@ if( $_POST || $this->input->get('check') ) {
   if( $this->input->post('create') == true ) {
     $functions = $this->input->post('functions');
 
-    $legal_functions = $this->Math_function->getColumnWhere( 'name', 'functionType = "EvaluationFunction"'  );
+    $legal_functions = $this->Math_function->getColumnWhere('name', 'functionType = "EvaluationFunction"');
 
     $illegal_value = array();
     foreach( $functions as $f ) {

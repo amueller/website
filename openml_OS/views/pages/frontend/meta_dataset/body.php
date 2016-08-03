@@ -18,6 +18,7 @@
                 <div class="col-md-10">
                   <input type="radio" name="type" value="evaluations" checked="checked" /> Evaluations 
                   <input type="radio" name="type" value="qualities" /> Meta-features
+                  <input type="radio" name="type" value="inputs" /> Parameter Settings
                   <span class="help-block">Select output: meta-features per dataset or evaluations per run.</span>
                 </div>
               </div>
