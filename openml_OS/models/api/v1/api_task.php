@@ -70,6 +70,7 @@ class Api_task extends Api_model {
 
     $type = element('type',$query_string);
     $tag = element('tag',$query_string);
+    $status = element('status',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
     $data_id = element('data_id',$query_string);
@@ -91,6 +92,9 @@ class Api_task extends Api_model {
     $where_feats = $nr_feats == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
     $where_class = $nr_class == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
     $where_miss = $nr_miss == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfMissingValues" and value ' . (strpos($nr_miss, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_miss) : '= '. $nr_miss) . ') ';
+    // by default, only return active tasks
+    $where_status = $status == false ? ' AND status = "active" ' : ' AND status = "'. $status . '" ';
+
     $where_total = $where_type . $where_tag . $where_did . $where_insts . $where_feats . $where_class . $where_miss;
     $where_task_total = $where_type . $where_tag;
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;

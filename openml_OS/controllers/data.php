@@ -94,7 +94,7 @@ class Data extends CI_Controller {
 
   private function _header_download($file) {
     header('Content-Description: File Transfer');
-    header('Content-Type: ' . $file->mime_type);
+    header('Content-Type: ' . ($file->extension == 'arff' ? 'text/plain' : $file->mime_type));
     header('Content-Disposition: attachment; filename='.basename($file->filename_original));
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
