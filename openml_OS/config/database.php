@@ -1,4 +1,6 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 /*
 | -------------------------------------------------------------------
 | DATABASE CONNECTIVITY SETTINGS
@@ -12,14 +14,17 @@
 | EXPLANATION OF VARIABLES
 | -------------------------------------------------------------------
 |
+|	['dsn']      The full DSN string describe a connection to the database.
 |	['hostname'] The hostname of your database server.
 |	['username'] The username used to connect to the database
 |	['password'] The password used to connect to the database
 |	['database'] The name of the database you want to connect to
-|	['dbdriver'] The database type. ie: mysql.  Currently supported:
-				 mysql, mysqli, postgre, odbc, mssql, sqlite, oci8
+|	['dbdriver'] The database driver. e.g.: mysqli.
+|			Currently supported:
+|				 cubrid, ibase, mssql, mysql, mysqli, oci8,
+|				 odbc, pdo, postgre, sqlite, sqlite3, sqlsrv
 |	['dbprefix'] You can add an optional prefix, which will be added
-|				 to the table name when using the  Active Record class
+|				 to the table name when using the  Query Builder class
 |	['pconnect'] TRUE/FALSE - Whether to use a persistent connection
 |	['db_debug'] TRUE/FALSE - Whether database errors should be displayed.
 |	['cache_on'] TRUE/FALSE - Enables/disables query caching
@@ -34,67 +39,105 @@
 | 				 multi-byte character set and are running versions lower than these.
 | 				 Sites using Latin-1 or UTF-8 database character set and collation are unaffected.
 |	['swap_pre'] A default table prefix that should be swapped with the dbprefix
-|	['autoinit'] Whether or not to automatically initialize the database.
+|	['encrypt']  Whether or not to use an encrypted connection.
+|
+|			'mysql' (deprecated), 'sqlsrv' and 'pdo/sqlsrv' drivers accept TRUE/FALSE
+|			'mysqli' and 'pdo/mysql' drivers accept an array with the following options:
+|
+|				'ssl_key'    - Path to the private key file
+|				'ssl_cert'   - Path to the public key certificate file
+|				'ssl_ca'     - Path to the certificate authority file
+|				'ssl_capath' - Path to a directory containing trusted CA certificats in PEM format
+|				'ssl_cipher' - List of *allowed* ciphers to be used for the encryption, separated by colons (':')
+|				'ssl_verify' - TRUE/FALSE; Whether verify the server certificate or not ('mysqli' only)
+|
+|	['compress'] Whether or not to use client compression (MySQL only)
 |	['stricton'] TRUE/FALSE - forces 'Strict Mode' connections
 |							- good for ensuring strict SQL while developing
+|	['ssl_options']	Used to set various SSL options that can be used when making SSL connections.
+|	['failover'] array - A array with 0 or more data for connections if the main should fail.
+|	['save_queries'] TRUE/FALSE - Whether to "save" all executed queries.
+| 				NOTE: Disabling this will also effectively disable both
+| 				$this->db->last_query() and profiling of DB queries.
+| 				When you run a query, with this setting set to TRUE (default),
+| 				CodeIgniter will store the SQL statement for debugging purposes.
+| 				However, this may cause high memory usage, especially if you run
+| 				a lot of SQL queries ... disable this to avoid that problem.
 |
 | The $active_group variable lets you choose which connection group to
 | make active.  By default there is only one group (the 'default' group).
 |
-| The $active_record variables lets you determine whether or not to load
-| the active record class
+| The $query_builder variables lets you determine whether or not to load
+| the query builder class.
 */
-
 $active_group = 'default';
-$active_record = TRUE;
+$query_builder = TRUE;
 
-$db['default']['hostname'] = DB_HOST_OPENML;
-$db['default']['username'] = DB_USER_OPENML;
-$db['default']['password'] = DB_PASS_OPENML;
-$db['default']['database'] = DB_NAME_OPENML;
-$db['default']['dbdriver'] = 'mysqli';
-$db['default']['dbprefix'] = '';
-$db['default']['pconnect'] = FALSE;
-$db['default']['db_debug'] = DEBUG;
-$db['default']['cache_on'] = FALSE;
-$db['default']['cachedir'] = '';
-$db['default']['char_set'] = 'utf8';
-$db['default']['dbcollat'] = 'utf8_general_ci';
-$db['default']['swap_pre'] = '';
-$db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = FALSE;
+$db['default'] = array(
+	'dsn'	=> '',
+	'hostname' => DB_HOST_OPENML,
+	'username' => DB_USER_OPENML,
+	'password' => DB_PASS_OPENML,
+	'database' => DB_NAME_OPENML,
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
 
-$db['read']['hostname'] = DB_HOST_EXPDB;
-$db['read']['username'] = DB_USER_EXPDB_READ;
-$db['read']['password'] = DB_PASS_EXPDB_READ;
-$db['read']['database'] = DB_NAME_EXPDB;
-$db['read']['dbdriver'] = 'mysqli';
-$db['read']['dbprefix'] = '';
-$db['read']['pconnect'] = FALSE;
-$db['read']['db_debug'] = DEBUG;
-$db['read']['cache_on'] = FALSE;
-$db['read']['cachedir'] = '';
-$db['read']['char_set'] = 'utf8';
-$db['read']['dbcollat'] = 'utf8_general_ci';
-$db['read']['swap_pre'] = '';
-$db['read']['autoinit'] = TRUE;
-$db['read']['stricton'] = FALSE;
 
-$db['write']['hostname'] = DB_HOST_EXPDB;
-$db['write']['username'] = DB_USER_EXPDB_WRITE;
-$db['write']['password'] = DB_PASS_EXPDB_WRITE;
-$db['write']['database'] = DB_NAME_EXPDB;
-$db['write']['dbdriver'] = 'mysqli';
-$db['write']['dbprefix'] = '';
-$db['write']['pconnect'] = FALSE;
-$db['write']['db_debug'] = DEBUG;
-$db['write']['cache_on'] = FALSE;
-$db['write']['cachedir'] = '';
-$db['write']['char_set'] = 'utf8';
-$db['write']['dbcollat'] = 'utf8_general_ci';
-$db['write']['swap_pre'] = '';
-$db['write']['autoinit'] = TRUE;
-$db['write']['stricton'] = FALSE;
+$db['read'] = array(
+	'dsn'	=> '',
+	'hostname' => DB_HOST_EXPDB,
+	'username' => DB_USER_EXPDB_READ,
+	'password' => DB_PASS_EXPDB_READ,
+	'database' => DB_NAME_EXPDB,
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
 
-/* End of file database.php */
-/* Location: ./application/config/database.php */
+
+
+$db['write'] = array(
+	'dsn'	=> '',
+	'hostname' => DB_HOST_EXPDB,
+	'username' => DB_HOST_EXPDB_WRITE,
+	'password' => DB_HOST_EXPDB_WRITE,
+	'database' => DB_HOST_EXPDB,
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
