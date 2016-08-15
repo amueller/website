@@ -126,7 +126,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$application_folder = 'application';
+	$application_folder = 'openml_OS';
 
 /*
  *---------------------------------------------------------------
