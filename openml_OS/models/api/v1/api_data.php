@@ -556,48 +556,48 @@ class Api_data extends Api_model {
 
   private function data_qualities_upload() {
     // get correct description
-    if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
-      $this->returnError( 382, $this->version );
+    if (isset($_FILES['description']) == false || check_uploaded_file($_FILES['description']) == false) {
+      $this->returnError(382, $this->version);
       return;
     }
 
     // get description from string upload
     $description = $_FILES['description'];
-    if( validateXml( $description['tmp_name'], xsd('openml.data.qualities', $this->controller, $this->version), $xmlErrors ) == false ) {
-      $this->returnError( 383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+    if (validateXml($description['tmp_name'], xsd('openml.data.qualities', $this->controller, $this->version), $xmlErrors) == false) {
+      $this->returnError(383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
 
     if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
+      $this->returnError(104, $this->version);
       return;
     }
 
-    $xml = simplexml_load_file( $description['tmp_name'] );
+    $xml = simplexml_load_file($description['tmp_name']);
     $did = ''. $xml->children('oml', true)->{'did'};
 
-    $dataset = $this->Dataset->getById( $did );
-    if( $dataset == false ) {
-      $this->returnError( 384, $this->version );
+    $dataset = $this->Dataset->getById($did);
+    if ($dataset == false) {
+      $this->returnError(384, $this->version);
       return;
     }
 
     // prepare array for updating data object
-    $data = array( 'processed' => now() );
-    if( $xml->children('oml', true)->{'error'} ) {
+    $data = array('processed' => now());
+    if ($xml->children('oml', true)->{'error'}) {
       $data['error'] = "true";
     }
-    $this->Dataset->update( $did, $data );
+    $this->Dataset->update($did, $data);
 
 
-    $all_qualities = $this->Quality->getColumnWhere( 'name', '`type` = "DataQuality"' );
+    $all_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
 
-    $qualities = $this->Data_quality->getAssociativeArray( 'quality', 'value', '`data` = "' . $dataset->did . '"' );
+    $qualities = $this->Data_quality->getAssociativeArray('quality', 'value', '`data` = "' . $dataset->did . '"');
 
     // check and collect the qualities
     $newQualities = array();
-    foreach( $xml->children('oml', true)->{'quality'} as $q ) {
-      $quality = xml2object( $q, true );
+    foreach ($xml->children('oml', true)->{'quality'} as $q) {
+      $quality = xml2object($q, true);
 
       /*if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
         $this->returnError( 385, $this->openmlGeneralErrorCode, $quality->name );
@@ -607,29 +607,29 @@ class Api_data extends Api_model {
           $this->returnError( 386, $this->openmlGeneralErrorCode, $quality->name );
           return;
         }
-      } else*/if( is_array( $all_qualities ) == false || in_array( $quality->name, $all_qualities ) == false ) {
-        $this->returnError( 387, $this->version, $this->openmlGeneralErrorCode, $quality->name );
+      } else*/if (is_array($all_qualities) == false || in_array($quality->name, $all_qualities) == false) {
+        $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, $quality->name);
         return;
       } else {
         $newQualities[] = $quality;
       }
 
-      if( property_exists( $quality, 'interval_start' ) ) {
+      if (property_exists($quality, 'interval_start')) {
 
       } else {
 
       }
     }
 
-    if( count( $newQualities) == 0 ) {
-      $this->returnError( 388, $this->version );
+    if (count($newQualities) == 0) {
+      $this->returnError(388, $this->version);
       return;
     }
 
     $success = true;
     $this->db->trans_start();
-    foreach( $newQualities as $index => $quality ) {
-      if( property_exists( $quality, 'interval_start' ) ) {
+    foreach ($newQualities as $index => $quality) {
+      if (property_exists($quality, 'interval_start')) {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name,
@@ -637,14 +637,14 @@ class Api_data extends Api_model {
           'interval_end' => $quality->interval_end,
           'value' => $quality->value
         );
-        $this->Data_quality_interval->insert_ignore( $data );
+        $this->Data_quality_interval->insert_ignore($data);
       } else {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name,
           'value' => $quality->value
         );
-        $this->Data_quality->insert_ignore( $data );
+        $this->Data_quality->insert_ignore($data);
       }
     }
     $this->db->trans_complete();
@@ -652,10 +652,10 @@ class Api_data extends Api_model {
     // add to elastic search index.
     $this->elasticsearch->index('data', $dataset->did);
 
-    if( $success ) {
-      $this->xmlContents( 'data-qualities-upload', $this->version, array( 'did' => $dataset->did ) );
+    if ($success) {
+      $this->xmlContents('data-qualities-upload', $this->version, array('did' => $dataset->did));
     } else {
-      $this->returnError( 389, $this->version );
+      $this->returnError(389, $this->version);
       return;
     }
   }
