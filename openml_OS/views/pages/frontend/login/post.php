@@ -5,7 +5,7 @@ if (!empty($_POST['submitlogin'])) {
 		  if(strpos($this->input->post('location'), 'login') !== false){ //avoid redirecting to login page after successful login
 				redirect('home');
 			} else { // redirect to whereever you were on the website
-				redirect($this->input->post('location'));
+				redirect(BASE_URL . $this->input->post('location'));
 			}
 			exit();
 	}
