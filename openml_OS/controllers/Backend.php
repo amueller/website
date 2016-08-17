@@ -18,8 +18,7 @@ class Backend extends CI_Controller {
     $this->load->model('Task_type_inout');
     $this->load->model('Estimation_procedure');
     $this->load->model('Run');
-
-    $this->load->model('Thread');
+    
     $this->load->model('Category');
     $this->load->model('Author');
 
