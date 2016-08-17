@@ -5,7 +5,12 @@ if (!empty($_POST['submitlogin'])) {
 		  if(strpos($this->input->post('location'), 'login') !== false){ //avoid redirecting to login page after successful login
 				redirect('home');
 			} else { // redirect to whereever you were on the website
-				redirect(BASE_URL . $this->input->post('location'));
+			  // remove tailing slash
+			  $loc = $this->input->post('location');
+			  if (substr($loc,0,1) === '/') {
+			    $loc = substr($loc,1);
+			  }
+				redirect(BASE_URL . $loc);
 			}
 			exit();
 	}
