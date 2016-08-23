@@ -77,6 +77,7 @@
     $this->p3['type'] = 'task';
     $this->p3['body']['filter']['term']['source_data.data_id'] = $this->id;
     $this->p3['body']['sort'] = array('runs' => array ('order' => 'desc'));
+    $this->p3['body']['size'] = 1000;
     try{
       $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
     } catch (Exception $e) {}
