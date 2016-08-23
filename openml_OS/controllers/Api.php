@@ -1,5 +1,5 @@
 <?php
-require_once('api_new.php');
+require_once('Api_new.php');
 
 class Api extends Api_new {
 
