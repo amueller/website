@@ -194,7 +194,7 @@ class Api_flow extends Api_model {
       $description = $this->input->post('description');
       $xmlErrors = "";
       if( validateXml( $description, $xsd, $xmlErrors, false ) == false ) {
-        $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+        $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors, false );
         return;
       }
       $xml = simplexml_load_string( $description );
