@@ -3,8 +3,7 @@ if (!$this->ion_auth->logged_in()) {
 	redirect('login');
 }
 
-$this->form_validation->set_rules('title', 		'Title', 	'xss_clean');
-$this->form_validation->set_rules('body', 		'Body', 	'required|xss_clean');
+$this->form_validation->set_rules('body', 		'Body', 	'required');
 
 if ($this->form_validation->run() == true) {
 	$thread = array(

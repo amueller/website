@@ -27,15 +27,12 @@ if(!empty($_POST['key-degrade'])){
 	die();
 }
 
-$this->form_validation->set_rules('first_name', 'First Name', 'xss_clean');
-$this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
-$this->form_validation->set_rules('Country', 'Country', 'xss_clean');
-$this->form_validation->set_rules('affiliation', 'Affiliation', 'xss_clean');
+$this->form_validation->set_rules('last_name', 'Last Name', 'required');
 $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password]');
 
 if ($this->form_validation->run() == true) {
 
-          
+
 	$user = clean_array( $_POST, array( 'first_name', 'last_name', 'affiliation', 'country', 'bio', 'gamification_visibility', 'image' ) );
 
 	if( check_uploaded_file( $_FILES['image'] ) ) {
