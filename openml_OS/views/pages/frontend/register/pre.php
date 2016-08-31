@@ -9,6 +9,7 @@ $this->emailField = array(
 	'id' => 'email',
 	'type' => 'email',
 	'value' => $this->input->post('email'),
+	'class' => 'form-control floating-label'
 );
 
 $this->password = array(
@@ -17,6 +18,7 @@ $this->password = array(
 	'name' => 'password',
 	'id' => 'password',
 	'type' => 'password',
+	'class' => 'form-control floating-label'
 );
 
 $this->password_confirm = array(
@@ -24,6 +26,7 @@ $this->password_confirm = array(
 	'name' => 'password_confirm',
 	'id' => 'password_confirm',
 	'type' => 'password',
+	'class' => 'form-control floating-label'
 );
 
 $this->first_name = array(
@@ -33,6 +36,7 @@ $this->first_name = array(
 	'id' => 'first_name',
 	'type' => 'text',
 	'value' => $this->input->post('first_name'),
+	'class' => 'form-control floating-label'
 );
 
 $this->last_name = array(
@@ -41,6 +45,7 @@ $this->last_name = array(
 	'id' => 'last_name',
 	'type' => 'text',
 	'value' => $this->input->post('last_name'),
+	'class' => 'form-control floating-label'
 );
 
 $this->country = array(
@@ -49,6 +54,7 @@ $this->country = array(
 	'id' => 'country',
 	'type' => 'text',
 	'value' => $this->input->post('country'),
+	'class' => 'form-control floating-label'
 );
 
 $this->bio = array(
@@ -58,6 +64,7 @@ $this->bio = array(
 	'id' => 'bio',
 	'type' => 'text',
 	'value' => $this->input->post('bio'),
+	'class' => 'form-control floating-label'
 );
 
 $this->affiliation = array(
@@ -67,6 +74,7 @@ $this->affiliation = array(
 	'id' => 'affiliation',
 	'type' => 'text',
 	'value' => $this->input->post('affiliation'),
+	'class' => 'form-control floating-label'
 );
 
 $this->image = array(

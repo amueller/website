@@ -30,9 +30,10 @@
         <?php echo form_input($this->country);?>
         <?php echo form_input($this->bio);?>
         <input type="text" readonly="" class="form-control floating-label" placeholder="Upload picture...">
-        <?php echo form_input_nostyle($this->image);?>
+        <?php echo form_input($this->image);?>
       </div>
-      <div class="form-group"><?php echo form_submit('submit', 'Join');?></div>
+      <div class="form-group"><?php echo form_submit('submit', 'Join', array(
+        'class' => 'btn btn-default btn-material-green'));?></div>
     </fieldset>
     <?php echo form_close();?>
     </div>
