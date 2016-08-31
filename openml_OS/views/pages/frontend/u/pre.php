@@ -45,6 +45,7 @@ $this->emailField = array(
 	'id' => 'email',
 	'type' => 'email',
 	'value' => $this->user->email,
+	'class' => 'form-control floating-label'
 );
 
 $this->password_new = array(
@@ -53,6 +54,7 @@ $this->password_new = array(
 	'name' => 'password',
 	'id' => 'password',
 	'type' => 'password',
+	'class' => 'form-control floating-label'
 );
 
 $this->password_confirm = array(
@@ -61,6 +63,7 @@ $this->password_confirm = array(
 	'name' => 'password_confirm',
 	'id' => 'password_confirm',
 	'type' => 'password',
+	'class' => 'form-control floating-label'
 );
 
 $this->password_old = array(
@@ -69,6 +72,7 @@ $this->password_old = array(
 	'name' => 'password_old',
 	'id' => 'password_old',
 	'type' => 'password',
+	'class' => 'form-control floating-label'
 );
 
 
@@ -79,6 +83,7 @@ $this->first_name = array(
 	'id' => 'first_name',
 	'type' => 'text',
 	'value' => $this->user->first_name,
+	'class' => 'form-control floating-label'
 );
 
 $this->last_name = array(
@@ -87,6 +92,7 @@ $this->last_name = array(
 	'id' => 'last_name',
 	'type' => 'text',
 	'value' => $this->user->last_name,
+	'class' => 'form-control floating-label'
 );
 
 $this->country = array(
@@ -95,6 +101,7 @@ $this->country = array(
 	'id' => 'country',
 	'type' => 'text',
 	'value' => $this->user->country,
+	'class' => 'form-control floating-label'
 );
 
 $this->bio = array(
@@ -104,6 +111,7 @@ $this->bio = array(
 	'id' => 'bio',
 	'type' => 'text',
 	'value' => $this->user->bio,
+	'class' => 'form-control floating-label'
 );
 
 $this->affiliation = array(
@@ -113,6 +121,7 @@ $this->affiliation = array(
 	'id' => 'affiliation',
 	'type' => 'text',
 	'value' => $this->user->affiliation,
+	'class' => 'form-control floating-label'
 );
 
 $this->image = array(
@@ -121,6 +130,7 @@ $this->image = array(
 	'name' => 'image',
 	'id' => 'image',
 	'type' => 'file',
+	'class' => 'form-control floating-label'
 );
 
 $this->optin_gamification = array(
