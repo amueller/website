@@ -1,6 +1,7 @@
 /*::-webkit-scrollbar {
     display: none;
 }*/
+
 .alertbox{
   padding-top: 20px;
   margin-bottom: -70px;
@@ -2464,10 +2465,10 @@ a.bold:hover{
 }
 
 .arc {
-	height: 76px;
-	width: 76px;
-	left: 0;
-	top: 0;
+	height: 84px;
+	width: 84px;
+	left: -3px;
+	top: -5px;
 	position: absolute;
   box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
 
