@@ -31,7 +31,7 @@ class Api_query extends CI_Controller {
     switch($partialCommand) {
       case 'sele':
       case 'desc':
-        if( $this->db->_error_number() == 0 ) {
+        if( $result !== false ) {
           $this->myStatus = 'SQL was processed: ' . $result->num_rows() . ' rows selected. ';
         } else {
           $this->error = true;

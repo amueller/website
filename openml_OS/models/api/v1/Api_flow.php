@@ -194,6 +194,13 @@ class Api_flow extends Api_model {
       $description = $this->input->post('description');
       $xmlErrors = "";
       if( validateXml( $description, $xsd, $xmlErrors, false ) == false ) {
+        if (DEBUG) {
+          $to = $this->user_email;
+          $subject = 'OpenML Flow Upload DEBUG message. ';
+          $content = "Uploaded by POST field.\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . $this->input->post('description');
+          sendEmail($to, $subject, $content,'text');
+        }
+        
         $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }
