@@ -52,6 +52,48 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'frontend';
 $route['404_override'] = 'frontend/error404';
 $route['translate_uri_dashes'] = FALSE;
-$route['(:any)/(:any)/(:any)']   = 'frontend/page/$1/$2/$3';
-$route['(:any)/(:any)']   = 'frontend/page/$1/$2';
-$route['(:any)']   = 'frontend/page/$1';
+
+$frontend_pages = array(
+          'api_docs',
+          'detail',
+          'developers',
+          'home',
+          'learn_sql',
+          'login',
+          'overview',
+          'discuss',
+          'detail',
+          'developers',
+          'home',
+          'learn_sql',
+          'login',
+          'meta_dataset',
+          'overview',
+          'password_forgot',
+          'password_reset',
+          'plugins',
+          'profile',
+          'profile_activate',
+          'register',
+          'search',
+          'new',
+          'd',
+          'f',
+          'r',
+          's',
+          't',
+	        'tt',
+          'a',
+          'u',
+          'share',
+	        'guide',
+          'preview',
+          'query',
+          'project' );
+
+foreach( $frontend_pages as $page ) {
+  $route['(:any)/(:any)/(:any)']   = 'frontend/page/$1/$2/$3';
+  $route[$page]     = 'frontend/page/'.$page;
+  $route[$page.'/(:any)']   = 'frontend/page/'.$page.'/$1';
+  $route[$page.'/(:any)/(:any)']   = 'frontend/page/'.$page.'/$1/$2';
+}
