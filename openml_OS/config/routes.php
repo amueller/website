@@ -92,7 +92,6 @@ $frontend_pages = array(
           'project' );
 
 foreach( $frontend_pages as $page ) {
-  $route['(:any)/(:any)/(:any)']   = 'frontend/page/$1/$2/$3';
   $route[$page]     = 'frontend/page/'.$page;
   $route[$page.'/(:any)']   = 'frontend/page/'.$page.'/$1';
   $route[$page.'/(:any)/(:any)']   = 'frontend/page/'.$page.'/$1/$2';
