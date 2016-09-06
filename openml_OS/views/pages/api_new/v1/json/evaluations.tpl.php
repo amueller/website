@@ -8,6 +8,7 @@
    "setup_id":<?php echo $e->sid; ?>,
    "flow_id":<?php echo $e->implementation_id; ?>,
    "flow_name":<?php echo $e->fullName; ?>,
+   "data_name":<?php echo $e->name; ?>,
    "function":"<?php echo $e->{'function'}; ?>"
    <?php if($e->value != null): ?>,"value":<?php echo $e->value; ?><?php endif; ?>
    <?php if($e->array_data != null): ?>,"array_data":<?php echo $e->array_data; ?><?php endif; ?>
