@@ -115,7 +115,7 @@ class Api_model extends CI_Model {
         $json = $this->load->view($jsonTemplate, $source, true);
         header('Content-length: ' . strlen($json) );
         header('Content-type: application/json; charset=utf-8');
-        echo $data;
+        echo $json;
       } else { // use xml template and convert to json
         $data = $this->load->view($view, $source, true);
         $xml = simplexml_load_string($data);
