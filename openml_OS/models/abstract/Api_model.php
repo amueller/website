@@ -111,7 +111,7 @@ class Api_model extends CI_Model {
 
     if ($this->outputFormat == 'json') {
       $jsonTemplate = 'pages/'.$this->controller.'/' . $version . '/json/'.$xmlFile.'.tpl.php';
-      if (file_exists(APPPATH . $jsonTemplate)) { // if we have native json templates
+      if (file_exists(APPPATH . 'views/' . $jsonTemplate)) { // if we have native json templates
         $json = $this->load->view($jsonTemplate, $source, true);
         header('Content-length: ' . strlen($json) );
         header('Content-type: application/json; charset=utf-8');
