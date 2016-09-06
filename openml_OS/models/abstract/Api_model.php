@@ -93,7 +93,7 @@ class Api_model extends CI_Model {
     );
   }
 
-  protected function returnError( $code, $version, $httpErrorCode = 450, $additionalInfo = null ) {
+  public function returnError( $code, $version, $httpErrorCode = 450, $additionalInfo = null ) {
     $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code] );
@@ -105,19 +105,23 @@ class Api_model extends CI_Model {
 
   protected function xmlContents( $xmlFile, $version, $source, $httpHeaders = array() ) {
     $view = 'pages/'.$this->controller.'/' . $version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
-    $data = $this->load->view( $view, $source, true );
     foreach( $httpHeaders as $header ) {
       header( $header );
     }
 
     if ($this->outputFormat == 'json') {
-      $xml = simplexml_load_string($data);
-      $json = json_encode($this->xmlToArray($xml));
-      header('Content-length: ' . strlen($json) );
-      header('Content-type: application/json; charset=utf-8');
-
+      $jsonTemplate = 'pages/'.$this->controller.'/' . $version . '/json/'.$xmlFile.'.tpl.php';
+      if (file_exists(APPPATH . $jsonTemplate)) { // if we have native json templates
+        $json = json_encode($this->xmlToArray($xml));
+      } else { // use xml template and convert to json
+        $data = $this->load->view($view, $source, true);
+        $xml = simplexml_load_string($data);
+        header('Content-length: ' . strlen($json));
+        header('Content-type: application/json; charset=utf-8');
+      }
       echo $json;
-    } else {
+    } else { // output format = xml, use plain xml templates
+      $data = $this->load->view($view, $source, true);
       header('Content-length: ' . strlen($data) );
       header('Content-type: text/xml; charset=utf-8');
       echo $data;

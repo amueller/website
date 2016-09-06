@@ -104,12 +104,12 @@ class Api_new extends CI_Controller {
 
     if ($this->authenticated == false) {
       if ($this->provided_hash) {
-        $this->_returnError( 103 );
+        $this->Api_model->returnError( 103 );
       } else {
-        $this->_returnError( 102 );
+        $this->Api_model->returnError( 102 );
       }
     } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd') {
-       $this->_returnError( 100 );
+       $this->Api_model->returnError( 100 );
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
     } else {
@@ -140,27 +140,6 @@ class Api_new extends CI_Controller {
       $this->page_body = '<div class="baseNormalContent">Pagina niet gevonden.
                 <a href="'.home().'">Klik hier</a> om terug te keren naar de hoofdpagina.</div>';
     $this->load->view('frontend_main');
-  }
-
-  private function _returnError( $code, $httpErrorCode = 450, $additionalInfo = null ) {
-    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
-    $error['code'] = $code;
-    $error['message'] = htmlentities( $this->load->apiErrors[$code] );
-    $error['additional'] = htmlentities( $additionalInfo );
-
-    $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode );
-    $this->_xmlContents( 'error-message', $error, $httpHeaders );
-  }
-
-  private function _xmlContents( $xmlFile, $source, $httpHeaders = array() ) {
-    $view = 'pages/'.$this->controller.'/' . $this->version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
-    $data = $this->load->view( $view, $source, true );
-    header('Content-length: ' . strlen($data) );
-    header('Content-type: text/xml; charset=utf-8');
-    foreach( $httpHeaders as $header ) {
-      header( $header );
-    }
-    echo $data;
   }
 }
 ?>
