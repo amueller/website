@@ -112,14 +112,18 @@ class Api_model extends CI_Model {
     if ($this->outputFormat == 'json') {
       $jsonTemplate = 'pages/'.$this->controller.'/' . $version . '/json/'.$xmlFile.'.tpl.php';
       if (file_exists(APPPATH . $jsonTemplate)) { // if we have native json templates
-        $json = json_encode($this->xmlToArray($xml));
+        $json = $this->load->view($jsonTemplate, $source, true);
+        header('Content-length: ' . strlen($json) );
+        header('Content-type: application/json; charset=utf-8');
+        echo $data;
       } else { // use xml template and convert to json
         $data = $this->load->view($view, $source, true);
         $xml = simplexml_load_string($data);
+        $json = json_encode($this->xmlToArray($xml));
         header('Content-length: ' . strlen($json));
         header('Content-type: application/json; charset=utf-8');
+        echo $json;
       }
-      echo $json;
     } else { // output format = xml, use plain xml templates
       $data = $this->load->view($view, $source, true);
       header('Content-length: ' . strlen($data) );
