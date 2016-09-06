@@ -77,7 +77,7 @@
 </xs:simpleType>
 <xs:simpleType name="casual_string"> <!-- Subset on xs:string. Slightly restricted form of string, but not neccessarilly URL-friendly -->
   <xs:restriction base="xs:string">
-     <xs:pattern value="([a-zA-Z0-9_\-\.\(\)])+"/>
+     <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)])+"/>
   </xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="basic_latin">
