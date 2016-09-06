@@ -1,8 +1,8 @@
 {"data":{"dataset":[
-  <?php $first = TRUE;
-        foreach( $datasets as $data ):
+  <?php $first = true;
+        foreach ($datasets as $data):
           echo ($first ? "" : ",");
-          $first = FALSE; ?>
+          $first = false; ?>
   {"did":<?php echo $data->did; ?>,
    "name":<?php echo $data->name; ?>,
    "version":<?php echo $data->version; ?>,
