@@ -104,12 +104,12 @@ class Api_new extends CI_Controller {
 
     if ($this->authenticated == false) {
       if ($this->provided_hash) {
-        $this->Api_model->returnError( 103 );
+        $this->Api_data->returnError( 103, $this->version );
       } else {
-        $this->Api_model->returnError( 102 );
+        $this->Api_data->returnError( 102, $this->version );
       }
     } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd') {
-       $this->Api_model->returnError( 100 );
+       $this->Api_data->returnError( 100, $this->version );
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
     } else {
