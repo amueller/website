@@ -1,7 +1,8 @@
 {"evaluations":{"evaluation":[
   <?php $first = TRUE;
         foreach( $datasets as $data ):
-          ($first ? $first = FALSE : echo ","); ?>
+          echo ($first ? "" : ",");
+          $first = FALSE; ?>
   {"run_id":<?php echo $e->rid; ?>,
    "task_id":<?php echo $e->task_id; ?>,
    "setup_id":<?php echo $e->sid; ?>,

@@ -1,7 +1,8 @@
 {"data":{"dataset":[
   <?php $first = TRUE;
         foreach( $datasets as $data ):
-          ($first ? $first = FALSE : echo ","); ?>
+          echo ($first ? "" : ",");
+          $first = FALSE; ?>
   {"did":<?php echo $data->did; ?>,
    "name":<?php echo $data->name; ?>,
    "version":<?php echo $data->version; ?>,
@@ -11,7 +12,8 @@
    "quality":[
     <?php $firstq = TRUE;
           foreach( $data->qualities as $quality => $value ):
-            ($firstq ? $firstq = FALSE : echo ","); ?>
+            echo ($firstq ? "" : ",");
+            $firstq = FALSE; ?>
     {"name":<?php echo $quality; ?>,
      "value":<?php echo $value; ?>
     }

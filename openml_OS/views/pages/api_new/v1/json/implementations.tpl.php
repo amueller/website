@@ -1,12 +1,15 @@
-<oml:flows xmlns:oml="http://openml.org/openml">
-	<?php foreach( $implementations as $i ): ?>
-  <oml:flow>
-    <oml:id><?php echo $i->id; ?></oml:id>
-    <oml:full_name><?php echo $i->fullName; ?></oml:full_name>
-    <oml:name><?php echo $i->name; ?></oml:name>
-    <oml:version><?php echo $i->version; ?></oml:version>
-    <oml:external_version><?php echo $i->external_version; ?></oml:external_version>
-    <oml:uploader><?php echo $i->uploader; ?></oml:uploader>
-  </oml:flow>
+{"flows":{"flow":[
+  <?php $first = TRUE;
+        foreach( $implementations as $i ):
+          echo ($first ? "" : ",");
+          $first = FALSE; ?>
+  {"id":<?php echo $i->id; ?>,
+   "full_name":<?php echo $i->fullName; ?>,
+   "name":<?php echo $i->name; ?>,
+   "version":<?php echo $i->version; ?>,
+   "external_version":<?php echo $i->external_version; ?>,
+   "uploader":<?php echo $i->uploader; ?>
+  }
   <?php endforeach; ?>
-</oml:flows>
+  ]}
+}
