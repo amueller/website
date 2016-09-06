@@ -1,22 +1,44 @@
-<oml:tasks xmlns:oml="http://openml.org/openml">
-  <?php foreach( $tasks as $task ): ?>
-  <oml:task>
-    <oml:task_id><?php echo $task->task_id; ?></oml:task_id>
-    <oml:task_type_id><?php echo $task->ttid; ?></oml:task_type_id>
-    <oml:task_type><?php echo $task->name; ?></oml:task_type>
-    <oml:did><?php echo $task->did; ?></oml:did>
-    <oml:name><?php echo $task->dataset_name; ?></oml:name>
-    <oml:status><?php echo $task->status; ?></oml:status>
-    <oml:format><?php echo $task->format; ?></oml:format>
-    <?php if( property_exists( $task, 'inputs' ) ): foreach( $task->inputs as $input => $value ): ?>
-      <oml:input name="<?php echo $input; ?>"><?php echo $value; ?></oml:input>
+{"tasks":{"task":[
+  <?php $first = TRUE;
+        foreach( $tasks as $task ):
+          echo ($first ? "" : ",");
+          $first = FALSE; ?>
+  { "task_id":<?php echo $task->task_id; ?>,
+    "task_type_id":<?php echo $task->ttid; ?>,
+    "task_type":<?php echo $task->name; ?>,
+    "did":<?php echo $task->did; ?>,
+    "name":<?php echo $task->dataset_name; ?>,
+    "status":<?php echo $task->status; ?>,
+    "format":<?php echo $task->format; ?>
+    <?php if( property_exists( $task, 'inputs' ) ): ?>
+    ,"input": [
+      <?php $first_in = TRUE;
+            foreach( $task->inputs as $input => $value ):
+            echo ($first_in ? "" : ",");
+            $first_in = FALSE; ?>
+      {"name":<?php echo $input; ?>,
+       "value":<?php echo $value; ?>}
     <?php endforeach; endif; ?>
-    <?php if( property_exists( $task, 'qualities' ) ): foreach( $task->qualities as $quality => $value ): ?>
-      <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
+    ]
+    <?php if( property_exists( $task, 'qualities' ) ): ?>
+    ,"quality": [
+      <?php $first_q = TRUE;
+            foreach( $task->qualities as $quality => $value ):
+            echo ($first_q ? "" : ",");
+            $first_q = FALSE; ?>
+      {"name":<?php echo $input; ?>,
+       "value":<?php echo $value; ?>}
     <?php endforeach; endif; ?>
-    <?php if( property_exists( $task, 'tags' ) ): foreach( $task->tags as $tag ): ?>
-      <oml:tag><?php echo $tag; ?></oml:tag>
+    ]
+    <?php if( property_exists( $task, 'tags' ) ): ?>
+    ,"tags": [
+      <?php $first_t = TRUE;
+            foreach( $task->tags as $tag ):
+            echo ($first_t ? "" : ",");
+            $first_t = FALSE; ?>
+      echo $tag;
     <?php endforeach; endif; ?>
-  </oml:task>
-  <?php endforeach; ?>
-</oml:tasks>
+    ]
+  }
+  ]}
+}
