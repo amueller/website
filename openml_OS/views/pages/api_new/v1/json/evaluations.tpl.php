@@ -1,6 +1,6 @@
 {"evaluations":{"evaluation":[
   <?php $first = TRUE;
-        foreach( $datasets as $data ):
+        foreach( $evaluations as $e ):
           echo ($first ? "" : ",");
           $first = FALSE; ?>
   {"run_id":<?php echo $e->rid; ?>,
