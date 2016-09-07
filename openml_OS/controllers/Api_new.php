@@ -123,7 +123,7 @@ class Api_new extends CI_Controller {
     $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . '/xsd/' . $filename . '.xsd';
     if(is_safe($filename) && file_exists($filepath)) {
       header('Content-type: text/xml; charset=utf-8');
-      echo file_get_contents(xsd($filename,$this->controller,$version));
+      echo file_get_contents($filepath);
     } else {
       $this->error404();
     }
@@ -133,7 +133,7 @@ class Api_new extends CI_Controller {
     $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . '/xml_example/' . $filename . '.xsd';
     if(is_safe($filename) && file_exists($filepath)) {
       header('Content-type: text/xml; charset=utf-8');
-      echo file_get_contents(xsd($filename,$this->controller,$version));
+      echo file_get_contents($filepath);
     } else {
       $this->error404();
     }
