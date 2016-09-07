@@ -42,7 +42,11 @@
            <ul class="sidenav nav collapse in" id="pagelist">
              <li class="active"><a href="#flow_overview" data-toggle="tab">Overview</a></li>
              <li><a href="search?q=+run_flow.flow_id%3A<?php echo $this->id; ?>&type=run">All runs</a></li>
-             <li><a class="loginfirst" href="<?php echo $this->record->{'binary_file_id'}; ?>">Download flow</a></li>
+             <!--<?php if(isset($this->flow_source_url)) { ?>
+             <li><a class="loginfirst" onclick="doDownload()" href="<?php echo $this->flow_source_url; ?>">Download source</a></li>
+             <?php } elseif(isset($this->flow_binary_url)) { ?>
+             <li><a class="loginfirst" onclick="doDownload()" href="<?php echo $this->flow_binary_url; ?>">Download binary</a></li>
+             <?php } ?>-->
              <li><a href="new/flow">Submit new flow</a></li>
            </ul>
          </li>

@@ -66,7 +66,7 @@
 
 </div>
 
-
+<!--
 <div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
   <div class="list-group">
@@ -82,7 +82,7 @@
   </div>
 
 </div>
-
+-->
  <div id="green" class="introsection greensection">
 
       <h1><i class="fa fa-rocket fa-lg"></i><br>For the curious</h1>
