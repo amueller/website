@@ -28,8 +28,8 @@
             $first_q = FALSE; ?>
       {"name":"<?php echo $quality; ?>",
        "value":<?php echo $value; ?>}
-    <?php endforeach; endif; ?>
-    ]
+    <?php endforeach; ?>]
+    <?php endif; ?>
     <?php if( property_exists( $task, 'tags' ) ): ?>
     ,"tags": [
       <?php $first_t = TRUE;

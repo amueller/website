@@ -112,13 +112,26 @@ class Api_new extends CI_Controller {
        $this->Api_data->returnError( 100, $this->version );
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
+    } else if($type == 'xml_example') {
+      $this->xml_example($segs[0], 'v1');
     } else {
       $this->{'Api_'.$type}->bootstrap($outputFormat, $segs, $request_type, $this->user_id);
     }
   }
 
   public function xsd($filename,$version) {
-    if(is_safe($filename) && file_exists(xsd($filename,$this->controller,$version))) {
+    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . 'xsd/' . $filename . '.xsd';
+    if(is_safe($filename) && file_exists($filepath)) {
+      header('Content-type: text/xml; charset=utf-8');
+      echo file_get_contents(xsd($filename,$this->controller,$version));
+    } else {
+      $this->error404();
+    }
+  }
+
+  public function xml_example($filename,$version) {
+    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . 'xml_example/' . $filename . '.xsd';
+    if(is_safe($filename) && file_exists($filepath)) {
       header('Content-type: text/xml; charset=utf-8');
       echo file_get_contents(xsd($filename,$this->controller,$version));
     } else {
