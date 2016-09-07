@@ -37,8 +37,9 @@
             echo ($first_t ? "" : ",");
             $first_t = FALSE; ?>
       "<?php echo $tag;?>"
-    <?php endforeach; endif; ?>
+    <?php endforeach; ?>
     ]
+    <?php endif; ?>
   }
 <?php endforeach; ?>
   ]}
