@@ -88,8 +88,8 @@ class Api_task extends Api_model {
 
     $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
     $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
-    $where_did = $data_id == false ? '' : ' AND `d`.`did` = "'. $data_id . '"';
-    $where_data_name = $data_name == false ? '' : ' AND `d`.`name` = '. $data_name . ' ';
+    $where_did = $data_id == false ? '' : ' AND `d`.`did` = '. $data_id . '';
+    $where_data_name = $data_name == false ? '' : ' AND `d`.`name` = "'. $data_name . '"';
     $where_insts = $nr_insts == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfInstances" and value ' . (strpos($nr_insts, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_insts) : '= '. $nr_insts) . ') ';
     $where_feats = $nr_feats == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
     $where_class = $nr_class == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
