@@ -164,22 +164,6 @@ function untag_item( $type, $id, $tag, $user_id, &$error ) {
   return true;
 }
 
-function xsd( $name, $controller = null, $versionName = null ) {
-  $version = '';
-  if(!$controller) {
-    $controller = 'rest_api';
-  }
-  if ($versionName) {
-    $version = $versionName . '/';
-  }
-  $filename = APPPATH.'views/pages/' . $controller . '/' . $version . 'xsd/' . $name . '.xsd';
-  if (file_exists($filename) == false) {
-    return false;
-  } else{
-    return $filename;
-  }
-}
-
 function sub_xml( $xmlFile, $source, $version = 0 ) {
   $ci = &get_instance();
   if ($version === 0) {
