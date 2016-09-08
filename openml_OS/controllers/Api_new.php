@@ -108,7 +108,7 @@ class Api_new extends CI_Controller {
       } else {
         $this->Api_data->returnError( 102, $this->version );
       }
-    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd') {
+    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd' && $type != 'xml_example') {
        $this->Api_data->returnError( 100, $this->version );
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
@@ -120,20 +120,20 @@ class Api_new extends CI_Controller {
   }
 
   public function xsd($filename,$version) {
-    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . 'xsd/' . $filename . '.xsd';
+    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . '/xsd/' . $filename . '.xsd';
     if(is_safe($filename) && file_exists($filepath)) {
       header('Content-type: text/xml; charset=utf-8');
-      echo file_get_contents(xsd($filename,$this->controller,$version));
+      echo file_get_contents($filepath);
     } else {
       $this->error404();
     }
   }
 
   public function xml_example($filename,$version) {
-    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . 'xml_example/' . $filename . '.xsd';
+    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . '/xml_example/' . $filename . '.xml';
     if(is_safe($filename) && file_exists($filepath)) {
       header('Content-type: text/xml; charset=utf-8');
-      echo file_get_contents(xsd($filename,$this->controller,$version));
+      echo file_get_contents($filepath);
     } else {
       $this->error404();
     }

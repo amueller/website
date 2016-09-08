@@ -74,7 +74,7 @@ class Api_task extends Api_model {
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
     $data_id = element('data_id',$query_string);
-    $data_name = element('data_name',$query_string);
+    $data_name = element('DataName',$query_string);
     $nr_insts = element('NumberOfInstances',$query_string);
     $nr_feats = element('NumberOfFeatures',$query_string);
     $nr_class = element('NumberOfClasses',$query_string);
