@@ -108,7 +108,7 @@ class Api_new extends CI_Controller {
       } else {
         $this->Api_data->returnError( 102, $this->version );
       }
-    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd') {
+    } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd' && $type != 'xml_example') {
        $this->Api_data->returnError( 100, $this->version );
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
