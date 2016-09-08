@@ -74,11 +74,11 @@ class Api_task extends Api_model {
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
     $data_id = element('data_id',$query_string);
-    $data_name = element('DataName',$query_string);
-    $nr_insts = element('NumberOfInstances',$query_string);
-    $nr_feats = element('NumberOfFeatures',$query_string);
-    $nr_class = element('NumberOfClasses',$query_string);
-    $nr_miss = element('NumberOfMissingValues',$query_string);
+    $data_name = element('data_name',$query_string);
+    $nr_insts = element('number_instances',$query_string);
+    $nr_feats = element('number_features',$query_string);
+    $nr_class = element('number_classes',$query_string);
+    $nr_miss = element('number_missing_values',$query_string);
 
 
     if (!(is_safe($tag) && is_safe($type) && is_safe($limit) && is_safe($offset) && is_safe($data_id) && is_safe($data_name) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {

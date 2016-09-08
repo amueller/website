@@ -88,14 +88,14 @@ class Api_data extends Api_model {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
     $tag = element('tag',$query_string);
-    $name = element('DataName',$query_string);
+    $name = element('data_name',$query_string);
     $status = element('status',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
-    $nr_insts = element('NumberOfInstances',$query_string);
-    $nr_feats = element('NumberOfFeatures',$query_string);
-    $nr_class = element('NumberOfClasses',$query_string);
-    $nr_miss = element('NumberOfMissingValues',$query_string);
+    $nr_insts = element('number_instances',$query_string);
+    $nr_feats = element('number_features',$query_string);
+    $nr_class = element('number_classes',$query_string);
+    $nr_miss = element('number_missing_values',$query_string);
 
     if (!(is_safe($tag) && is_safe($limit) && is_safe($offset) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
       $this->returnError(511, $this->version );
