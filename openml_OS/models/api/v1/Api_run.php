@@ -25,7 +25,7 @@ class Api_run extends Api_model {
     $this->load->model('Evaluation_fold');
     $this->load->model('Evaluation_sample');
     $this->load->model('Evaluation_interval');
-    
+
     $this->load->helper('arff');
 
     $this->load->model('File');
@@ -51,7 +51,7 @@ class Api_run extends Api_model {
       $this->run_trace_upload();
       return;
     }
-    
+
     if (count($segments) == 2 && $segments[0] == 'trace' && is_numeric($segments[1])) {
       $this->run_trace($segments[1]);
       return;
@@ -143,6 +143,12 @@ class Api_run extends Api_model {
     if (count($res) > 10000) {
       $this->returnError(513, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res) . '; max size: 10000. ');
       return;
+    }
+
+    $dt = $this->Run_tag->query('SELECT id, tag FROM run_tag WHERE `id` IN (' . implode(',', array_keys( $res) ) . ') ORDER BY `id`');
+
+    foreach( $dt as $tag ) {
+      $res[$tag->id]->tags[] = $tag->tag;
     }
 
     $this->xmlContents( 'runs', $this->version, array( 'runs' => $res ) );
@@ -266,12 +272,12 @@ class Api_run extends Api_model {
      * Everything that needs to be done for EVERY task,        *
      * Including the unsupported tasks                         *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    
+
     // IMPORTANT! This function is sort of similar to "setup exists".
-    // If changing something big, also test that function. 
-     
+    // If changing something big, also test that function.
+
     $timestamps = array(microtime(true)); // profiling 0
-    
+
     // check uploaded file
     $description = isset($_FILES['description']) ? $_FILES['description'] : false;
     $uploadError = '';
@@ -279,8 +285,8 @@ class Api_run extends Api_model {
       $this->returnError(202, $this->version,$this->openmlGeneralErrorCode,$uploadError);
       return;
     }
-    
-    
+
+
     // validate xml
     $xmlErrors = '';
     if(validateXml($description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors) == false) {
@@ -336,21 +342,21 @@ class Api_run extends Api_model {
     }
 
     // check whether uploaded files are present.
-    
+
     foreach ($_FILES as $key => $value) {
       $message = '';
       $extension = getExtension($_FILES[$key]['name']);
-      
+
       if (/*in_array($extension,$this->config->item('allowed_extensions')) == false ||*/ $extension == false) {
         $this->returnError(206, $this->version, $this->openmlGeneralErrorCode, 'Invalid extension for file "'.$key.'". Original filename: ' . $_FILES[$key]['name']);
         return;
       }
-      
+
       if (!check_uploaded_file($_FILES[$key], false, $message)) {
         $this->returnError(207, $this->version, $this->openmlGeneralErrorCode, 'Upload problem with file "'.$key.'": ' . $message);
         return;
       }
-      
+
       if ($extension == 'arff') {
         $arffCheck = ARFFcheck($_FILES[$key]['tmp_name'], 1000);
         if ($arffCheck !== true) {
@@ -358,7 +364,7 @@ class Api_run extends Api_model {
           return;
         }
       }
-      
+
       if ($extension == 'xml') {
         $xmlCheck = simplexml_load_file($_FILES[$key]['tmp_name']);
         if($xmlCheck === false) {
@@ -367,7 +373,7 @@ class Api_run extends Api_model {
         }
       }
     }
-    
+
     $timestamps[] = microtime(true); // profiling 1
 
     $parameters = array();
@@ -390,7 +396,7 @@ class Api_run extends Api_model {
       $this->returnError(214, $this->version);
       return;
     }
-    
+
     $timestamps[] = microtime(true); // profiling 2
 
     // fetch task
@@ -460,15 +466,15 @@ class Api_run extends Api_model {
       $error = -1;
       tag_item( 'run', $runId, $tag, $this->user_id, $error );
     }
-    
-    
+
+
     $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
     $this->elasticsearch->index('run', $run->rid);
-    
+
     $timestamps[] = microtime(true); // profiling 4
     if (DEBUG) {
-      $this->Log->profiling(__FUNCTION__, $timestamps, 
+      $this->Log->profiling(__FUNCTION__, $timestamps,
         array(
           'uploaded file handling',
           'setup searching / creation',
@@ -489,18 +495,18 @@ class Api_run extends Api_model {
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }
-  
+
   private function run_trace($run_id) {
     $trace = $this->Trace->getWhere('run_id = ' . $run_id, 'repeat ASC, fold ASC, iteration ASC');
-    
+
     if ($trace === false) {
       $this->returnError(570,$this->version);
       return;
     }
-    
+
     $this->xmlContents('run-trace-get', $this->version, array('run_id' => $run_id, 'trace' => $trace));
   }
-  
+
   private function run_trace_upload() {
     // check uploaded file
     $trace = isset($_FILES['trace']) ? $_FILES['trace'] : false;
@@ -508,37 +514,37 @@ class Api_run extends Api_model {
       $this->returnError(561,$this->version);
       return;
     }
-    
+
     $xsd = xsd('openml.run.trace', $this->controller, $this->version);
-    
+
     // validate xml
     if(validateXml($trace['tmp_name'], $xsd, $xmlErrors) == false) {
       $this->returnError(562, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
-    
+
     // fetch xml
     $xml = simplexml_load_file($trace['tmp_name']);
     if($xml === false) {
       $this->returnError(563, $this->version);
       return;
     }
-    
+
     $run_id = (string) $xml->children('oml', true)->{'run_id'};
-    
+
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'trace_iteration'} as $t) {
       $iteration = xml2assoc($t, true);
-      
+
       $iteration['run_id'] = $run_id;
-      
+
       $this->Trace->insert($iteration);
     }
     $this->db->trans_complete();
-    
+
     $this->xmlContents('run-trace', $this->version, array('run_id' => $run_id));
   }
-  
+
   private function run_evaluate() {
 
     // check uploaded file

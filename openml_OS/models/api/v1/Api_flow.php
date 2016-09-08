@@ -105,6 +105,13 @@ class Api_flow extends Api_model {
       $this->returnError( 500, $this->version );
       return;
     }
+
+    $dt = $this->Implementation_tag->query('SELECT id, tag FROM implementation_tag WHERE `id` IN (' . implode(',', array_keys( $implementations) ) . ') ORDER BY `id`');
+
+    foreach( $dt as $tag ) {
+      $implementations[$tag->id]->tags[] = $tag->tag;
+    }
+
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }
 
@@ -200,7 +207,7 @@ class Api_flow extends Api_model {
           $content = "Uploaded by POST field.\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . $this->input->post('description');
           sendEmail($to, $subject, $content,'text');
         }
-        
+
         $this->returnError( 163, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
         return;
       }

@@ -17,15 +17,17 @@
      "value":"<?php echo $value; ?>"
     }
     <?php endforeach; ?>
-    ],
-    "tags":[
-     <?php $firstt = TRUE;
-           foreach( $data->tags as $tag ):
-             echo ($firstt ? "" : ",");
-             $firstt = FALSE;
-             echo '"'.$tag.'"';
-           endforeach; ?>
-     ]
+    ]
+    <?php if( property_exists( $data, 'tags' ) ): ?>
+    ,"tags": [
+      <?php $first_t = TRUE;
+            foreach( $data->tags as $tag ):
+            echo ($first_t ? "" : ",");
+            $first_t = FALSE; ?>
+      "<?php echo $tag;?>"
+    <?php endforeach; ?>
+    ]
+    <?php endif; ?>
   }
   <?php endforeach; ?>
   ]}

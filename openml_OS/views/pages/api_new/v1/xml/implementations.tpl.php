@@ -7,6 +7,9 @@
     <oml:version><?php echo $i->version; ?></oml:version>
     <oml:external_version><?php echo $i->external_version; ?></oml:external_version>
     <oml:uploader><?php echo $i->uploader; ?></oml:uploader>
+		<?php if( property_exists( $i, 'tags' ) ): foreach( $i->tags as $tag ): ?>
+			<oml:tag><?php echo $tag; ?></oml:tag>
+		<?php endforeach; endif; ?>
   </oml:flow>
   <?php endforeach; ?>
 </oml:flows>
