@@ -98,38 +98,9 @@ class Implementation extends Database_write {
         $where[$item] = null;
       }
     }
-    $candidates = $this->Implementation->getWhere($where);
+    $candidates = $this->Implementation->getColumnWhere('id', $where);
     if(is_array($candidates)) {
-      foreach( $candidates as $candidate ) {
-        $valid_duplicate = true; // TODO: Continue outerloop when false. 
-        
-        // check parameters
-        $params = $this->Input->getColumnFunctionWhere( 'count(*)', 'implementation_id = "'.$candidate->id.'"' );
-        if( $params[0] != xml_size( $xml, 'parameter' ) ) $valid_duplicate = false;
-        foreach( $xml->children('oml', true)->parameter as $p ) {
-          if( $this->Input->compareToXML( $p, $candidate->id ) === false ) {
-            $valid_duplicate = false;
-          }
-        }
-        // check bibrefs
-        $bibrefs = $this->Bibliographical_reference->getColumnFunctionWhere( 'count(*)', 'implementation_id = "'.$candidate->id.'"' );
-        
-        if( $bibrefs[0] != xml_size( $xml, 'bibliographical_reference' ) ) $valid_duplicate = false;
-        foreach( $xml->children('oml', true)->bibliographical_reference as $b ) {
-          if( $this->Bibliographical_reference->compareToXML( $b, $candidate->id ) === false ) $valid_duplicate = false;
-        }
-        // check components
-        $components = $this->getComponents( $candidate );
-        if( count($components) != xml_size( $xml, 'component' ) ) { $valid_duplicate = false; }
-        foreach( $xml->children('oml', true)->component as $i ) {
-          if( $this->Implementation_component->compareToXML( $i, $candidate->id ) === false ) $valid_duplicate = false;
-        }
-        
-        if($valid_duplicate) {
-          // passed all checks :)
-          return $candidate->id;
-        }
-      }
+      return implode(',', $candidates);
     }
     // none of the implementations matched
     return false;
