@@ -11,7 +11,7 @@
    "data_name":"<?php echo $e->name; ?>",
    "function":"<?php echo $e->{'function'}; ?>"
    <?php if($e->value != null): ?>,"value":<?php echo $e->value; ?><?php endif; ?>
-   <?php if($e->array_data != null): ?>,"array_data":<?php echo utf8_decode($e->array_data); ?><?php endif; ?>
+   <?php if($e->array_data != null): ?>,"array_data":<?php echo quote_array_strings($e->array_data); ?><?php endif; ?>
   }
   <?php endforeach; ?>
   ]}
