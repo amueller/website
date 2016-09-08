@@ -88,7 +88,7 @@ class Api_data extends Api_model {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
 
     $tag = element('tag',$query_string);
-    $name = element('name',$query_string);
+    $name = element('DataName',$query_string);
     $status = element('status',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
