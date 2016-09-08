@@ -438,7 +438,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "A list of datasets with the given task",
+                        "description": "A list of datasets with the given tag",
                         "schema": {
                             "$ref": "#/definitions/DataList"
                         },
@@ -452,15 +452,54 @@
                 }
             }
         },
+        "/data/list/status/{status}": {
+            "get": {
+                "summary": "List all datasets with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.",
+                "description": "Returns an array with all datasets in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.\n",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "path",
+                        "description": "The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of datasets with the given status",
+                        "schema": {
+                            "$ref": "#/definitions/DataList"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"data\": {\n    \"dataset\": [\n      {\n        \"did\":\"1\",\n        \"name\":\"anneal\",\n        \"status\":\"active\",\n        \"format\":\"ARFF\",\n        \"quality\":[\n          {\n            \"name\":\"MajorityClassSize\",\n            \"value\":\"684\"\n          },\n          {\n            \"name\":\"MaxNominalAttDistinctValues\",\n            \"value\":\"10.0\"\n          },\n          {\n            \"name\":\"MinorityClassSize\"\n            ,\"value\":\"0\"\n          },\n          {\n            \"name\":\"NumBinaryAtts\",\n            \"value\":\"14.0\"\n          },\n          {\n            \"name\":\"NumberOfClasses\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfFeatures\",\n            \"value\":\"39\"\n          },\n          {\n            \"name\":\"NumberOfInstances\",\n            \"value\":\"898\"\n          },\n          {\n            \"name\":\"NumberOfInstancesWithMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfNumericFeatures\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfSymbolicFeatures\",\n            \"value\":\"32\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+                        }
+                    },
+                    "370": {
+                        "description": "No datasets available. There are no datasets in the system with the given status."
+                    }
+                }
+            }
+        },
         "/data/list/{filters}": {
             "get": {
                 "summary": "Get datasets by properties",
-                "description": "Get tasks based on properties of the data - NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.\n",
+                "description": "Get tasks based on properties of the data - number_instances, number_features, number_classes or number_missing_values. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.\n",
                 "parameters": [
                     {
                         "name": "filters",
                         "in": "path",
-                        "description": "Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, or tags.",
+                        "description": "Any combination of filters (data_id, data_name, number_instances, number_features, number_classes, number_missing_values) and corresponding values or ranges, e.g. 'number_instances/0..50/number_features/0..10'. With or without limits, or tags.",
                         "required": true,
                         "type": "string"
                     },
@@ -887,6 +926,45 @@
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
+                    }
+                }
+            }
+        },
+        "/task/list/status/{status}": {
+            "get": {
+                "summary": "List all tasks with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.",
+                "description": "Returns an array with all tasks in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.\n",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "path",
+                        "description": "The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of tasks with the given status",
+                        "schema": {
+                            "$ref": "#/definitions/DataList"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"data\": {\n    \"dataset\": [\n      {\n        \"did\":\"1\",\n        \"name\":\"anneal\",\n        \"status\":\"active\",\n        \"format\":\"ARFF\",\n        \"quality\":[\n          {\n            \"name\":\"MajorityClassSize\",\n            \"value\":\"684\"\n          },\n          {\n            \"name\":\"MaxNominalAttDistinctValues\",\n            \"value\":\"10.0\"\n          },\n          {\n            \"name\":\"MinorityClassSize\"\n            ,\"value\":\"0\"\n          },\n          {\n            \"name\":\"NumBinaryAtts\",\n            \"value\":\"14.0\"\n          },\n          {\n            \"name\":\"NumberOfClasses\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfFeatures\",\n            \"value\":\"39\"\n          },\n          {\n            \"name\":\"NumberOfInstances\",\n            \"value\":\"898\"\n          },\n          {\n            \"name\":\"NumberOfInstancesWithMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfNumericFeatures\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfSymbolicFeatures\",\n            \"value\":\"32\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+                        }
+                    },
+                    "370": {
+                        "description": "No tasks available. There are no tasks in the system with the given status."
                     }
                 }
             }

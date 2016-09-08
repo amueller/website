@@ -541,7 +541,7 @@ paths:
         - data
       responses:
         '200':
-          description: A list of datasets with the given task
+          description: A list of datasets with the given tag
           schema:
             $ref: '#/definitions/DataList'
           examples:
@@ -606,15 +606,100 @@ paths:
               }
         370:
           description: No datasets available. There are no datasets in the system with the given tag.
+  /data/list/status/{status}:
+    get:
+      summary: List all datasets with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.
+      description: |
+        Returns an array with all datasets in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
+      parameters:
+        - name: status
+          in: path
+          description: The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of datasets with the given status
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No datasets available. There are no datasets in the system with the given status.
   /data/list/{filters}:
     get:
       summary: Get datasets by properties
       description: |
-        Get tasks based on properties of the data - NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.
+        Get tasks based on properties of the data - number_instances, number_features, number_classes or number_missing_values. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, or tags.
+          description: Any combination of filters (data_id, data_name, number_instances, number_features, number_classes, number_missing_values) and corresponding values or ranges, e.g. 'number_instances/0..50/number_features/0..10'. With or without limits, or tags.
           required: true
           type: string
         - name: api_key
@@ -1230,6 +1315,91 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /task/list/status/{status}:
+    get:
+      summary: List all tasks with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.
+      description: |
+        Returns an array with all tasks in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
+      parameters:
+        - name: status
+          in: path
+          description: The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of tasks with the given status
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No tasks available. There are no tasks in the system with the given status.
   /task/list/type/{id}:
     get:
       summary: List all tasks of given type.
