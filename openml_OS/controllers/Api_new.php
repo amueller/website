@@ -130,7 +130,7 @@ class Api_new extends CI_Controller {
   }
 
   public function xml_example($filename,$version) {
-    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . '/xml_example/' . $filename . '.xsd';
+    $filepath = APPPATH.'views/pages/' . $this->controller . '/' . $version . '/xml_example/' . $filename . '.xml';
     if(is_safe($filename) && file_exists($filepath)) {
       header('Content-type: text/xml; charset=utf-8');
       echo file_get_contents($filepath);
