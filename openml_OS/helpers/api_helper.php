@@ -79,7 +79,6 @@ function all_tags_from_xml( $xml, $configuration = array(), $return_array = arra
   return $return_array;
 }
 
-
 function tag_item( $type, $id, $tag, $user_id, &$error ) {
   $ci = &get_instance();
   $taggable = $ci->config->item( 'taggable_entities' );
@@ -162,6 +161,20 @@ function untag_item( $type, $id, $tag, $user_id, &$error ) {
   
   $ci->{$model_name_tag}->delete( array( $id, $tag ) );
   return true;
+}
+
+function xsd( $name, $controller, $versionName = null ) {
+  $version = '';
+  
+  if ($versionName) {
+    $version = $versionName . '/';
+  }
+  $filename = APPPATH.'views/pages/' . $controller . '/' . $version . 'xsd/' . $name . '.xsd';
+  if (file_exists($filename) == false) {
+    return false;
+  } else{
+    return $filename;
+  }
 }
 
 function sub_xml( $xmlFile, $source, $version = 0 ) {
