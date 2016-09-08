@@ -367,7 +367,7 @@
         },
         "/data/list/limit/{limit}/offset/{offset}": {
             "get": {
-                "summary": "List all datasets within a range.",
+                "summary": "List datasets within a range.",
                 "description": "Returns an array with a limited number of datasets.\n",
                 "parameters": [
                     {
@@ -415,8 +415,8 @@
         },
         "/data/list/tag/{tag}": {
             "get": {
-                "summary": "List all datasets with the given tag. Can also be combined with limit and offset.",
-                "description": "Returns an array with all datasets in the system with the given tag.\n",
+                "summary": "List datasets with given tag.",
+                "description": "Returns an array with all datasets in the system with the given tag. Can also be combined with limit and offset.\n",
                 "parameters": [
                     {
                         "name": "tag",
@@ -454,7 +454,7 @@
         },
         "/data/list/status/{status}": {
             "get": {
-                "summary": "List all datasets with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.",
+                "summary": "List datasets with given status",
                 "description": "Returns an array with all datasets in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.\n",
                 "parameters": [
                     {
@@ -881,7 +881,7 @@
         },
         "/task/list/limit/{limit}/offset/{offset}": {
             "get": {
-                "summary": "List all tasks within a range",
+                "summary": "List tasks within a range",
                 "description": "Returns an array with a limited number of tasks.\n",
                 "parameters": [
                     {
@@ -932,7 +932,7 @@
         },
         "/task/list/status/{status}": {
             "get": {
-                "summary": "List all tasks with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.",
+                "summary": "List tasks with given status",
                 "description": "Returns an array with all tasks in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.\n",
                 "parameters": [
                     {
@@ -951,7 +951,7 @@
                     }
                 ],
                 "tags": [
-                    "data"
+                    "task"
                 ],
                 "responses": {
                     "200": {
@@ -971,7 +971,7 @@
         },
         "/task/list/type/{id}": {
             "get": {
-                "summary": "List all tasks of given type.",
+                "summary": "List tasks of given type.",
                 "description": "Returns an array with all tasks for the given task type id (1 = Supervised Classification). Can be combined with limits and tags.\n",
                 "parameters": [
                     {
@@ -1014,7 +1014,7 @@
         },
         "/task/list/tag/{tag}": {
             "get": {
-                "summary": "List all tasks with the given tag.",
+                "summary": "List tasks with given tag.",
                 "description": "Returns an array with all tasks with the given tag. Can be combined with limits and task types.\n",
                 "parameters": [
                     {
@@ -1608,7 +1608,7 @@
         },
         "/flow/list/limit/{limit}/offset/{offset}": {
             "get": {
-                "summary": "List all flows within a range",
+                "summary": "List flows within a range",
                 "description": "Returns an array with the requested flows.\n",
                 "parameters": [
                     {
@@ -1656,7 +1656,7 @@
         },
         "/flow/list/tag/{tag}": {
             "get": {
-                "summary": "List all flows with the given tag. Can be combined with limits.",
+                "summary": "List flows with given tag.",
                 "description": "Returns an array with all flows in the system with the given tag.\n",
                 "parameters": [
                     {

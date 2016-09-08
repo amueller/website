@@ -431,7 +431,7 @@ paths:
           description: No datasets available. There are no valid datasets in the system.
   /data/list/limit/{limit}/offset/{offset}:
     get:
-      summary: List all datasets within a range.
+      summary: List datasets within a range.
       description: |
         Returns an array with a limited number of datasets.
       parameters:
@@ -523,9 +523,9 @@ paths:
           description: No datasets available. There are no valid datasets in the system.
   /data/list/tag/{tag}:
     get:
-      summary: List all datasets with the given tag. Can also be combined with limit and offset.
+      summary: List datasets with given tag.
       description: |
-        Returns an array with all datasets in the system with the given tag.
+        Returns an array with all datasets in the system with the given tag. Can also be combined with limit and offset.
       parameters:
         - name: tag
           in: path
@@ -608,7 +608,7 @@ paths:
           description: No datasets available. There are no datasets in the system with the given tag.
   /data/list/status/{status}:
     get:
-      summary: List all datasets with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.
+      summary: List datasets with given status
       description: |
         Returns an array with all datasets in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
       parameters:
@@ -1196,7 +1196,7 @@ paths:
             $ref: '#/definitions/Error'
   /task/list/limit/{limit}/offset/{offset}:
     get:
-      summary: List all tasks within a range
+      summary: List tasks within a range
       description: |
         Returns an array with a limited number of tasks.
       parameters:
@@ -1317,7 +1317,7 @@ paths:
             $ref: '#/definitions/Error'
   /task/list/status/{status}:
     get:
-      summary: List all tasks with the given status, either 'active', 'deactivated', or 'in_preparation'. Can also be combined with limit and offset, or other filters.
+      summary: List tasks with given status
       description: |
         Returns an array with all tasks in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
       parameters:
@@ -1332,7 +1332,7 @@ paths:
           required: true
           type: string
       tags:
-        - data
+        - task
       responses:
         '200':
           description: A list of tasks with the given status
@@ -1402,7 +1402,7 @@ paths:
           description: No tasks available. There are no tasks in the system with the given status.
   /task/list/type/{id}:
     get:
-      summary: List all tasks of given type.
+      summary: List tasks of given type.
       description: |
         Returns an array with all tasks for the given task type id (1 = Supervised Classification). Can be combined with limits and tags.
       parameters:
@@ -1517,7 +1517,7 @@ paths:
           description: No results. There where no matches for the given task type ID.
   /task/list/tag/{tag}:
     get:
-      summary: List all tasks with the given tag.
+      summary: List tasks with given tag.
       description: |
         Returns an array with all tasks with the given tag. Can be combined with limits and task types.
       parameters:
@@ -2275,7 +2275,7 @@ paths:
           description: There where no results.
   /flow/list/limit/{limit}/offset/{offset}:
     get:
-      summary: List all flows within a range
+      summary: List flows within a range
       description: |
         Returns an array with the requested flows.
       parameters:
@@ -2340,7 +2340,7 @@ paths:
           description: There where no results.
   /flow/list/tag/{tag}:
     get:
-      summary: List all flows with the given tag. Can be combined with limits.
+      summary: List flows with given tag.
       description: |
         Returns an array with all flows in the system with the given tag.
       parameters:
