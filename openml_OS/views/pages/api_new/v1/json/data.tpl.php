@@ -17,7 +17,15 @@
      "value":"<?php echo $value; ?>"
     }
     <?php endforeach; ?>
-    ]
+    ],
+    "tags":[
+     <?php $firstt = TRUE;
+           foreach( $data->tags as $tag ):
+             echo ($firstt ? "" : ",");
+             $firstt = FALSE;
+             echo '"'.$tag.'"';
+           endforeach; ?>
+     ]
   }
   <?php endforeach; ?>
   ]}

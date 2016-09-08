@@ -142,6 +142,12 @@ class Api_data extends Api_model {
       $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
     }
 
+    $dt = $this->Dataset_tag->query('SELECT id, tag FROM dataset_tag WHERE `id` IN (' . implode(',', array_keys( $datasets) ) . ') ORDER BY `id`');
+
+    foreach( $dt as $tag ) {
+      $datasets[$tag->id]->tags[] = $tag->tag;
+    }
+
     $this->xmlContents( 'data', $this->version, array( 'datasets' => $datasets ) );
   }
 

@@ -9,6 +9,9 @@
     <?php foreach( $data->qualities as $quality => $value ): ?>
     <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
     <?php endforeach; ?>
+    <?php foreach( $data->tags as $tag ): ?>
+    <oml:tag><?php echo $tag; ?></oml:tag>
+    <?php endforeach; ?>
   </oml:dataset>
   <?php endforeach; ?>
 </oml:data>
