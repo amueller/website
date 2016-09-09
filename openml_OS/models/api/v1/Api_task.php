@@ -70,6 +70,7 @@ class Api_task extends Api_model {
 
     $type = element('type',$query_string);
     $tag = element('tag',$query_string);
+    $data_tag = element('data_tag',$query_string);
     $status = element('status',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
@@ -80,14 +81,14 @@ class Api_task extends Api_model {
     $nr_class = element('number_classes',$query_string);
     $nr_miss = element('number_missing_values',$query_string);
 
-
-    if (!(is_safe($tag) && is_safe($status) && is_safe($type) && is_safe($limit) && is_safe($offset) && is_safe($data_id) && is_safe($data_name) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
+    if (!(is_safe($tag) && is_safe($data_tag) && is_safe($status) && is_safe($type) && is_safe($limit) && is_safe($offset) && is_safe($data_id) && is_safe($data_name) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
       $this->returnError(511, $this->version );
       return;
     }
 
     $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
     $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
+    $where_data_tag = $data_tag == false ? '' : ' AND `d`.`did` IN (select id from dataset_tag where tag="' . $data_tag . '") ';
     $where_status = $status == false ? '' : ' AND `d`.`status` = '. $status;
     $where_did = $data_id == false ? '' : ' AND `d`.`did` = '. $data_id;
     $where_data_name = $data_name == false ? '' : ' AND `d`.`name` = "'. $data_name . '"';
@@ -98,7 +99,7 @@ class Api_task extends Api_model {
     // by default, only return active tasks
     $where_status = $status == false ? ' AND status = "active" ' : ' AND status = "'. $status . '" ';
 
-    $where_total = $where_type . $where_tag . $where_status . $where_did . $where_data_name . $where_insts . $where_feats . $where_class . $where_miss;
+    $where_total = $where_type . $where_tag . $where_data_tag . $where_status . $where_did . $where_data_name . $where_insts . $where_feats . $where_class . $where_miss;
     $where_task_total = $where_type . $where_tag;
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
