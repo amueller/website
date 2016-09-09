@@ -26,12 +26,9 @@
                             <br>
                             <br>
                         </li>
-                        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-                        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/?f=openml.task.get&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
-                <?php } else { ?>
-                    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
-                    <li><a class="loginfirst btn btn-link" href="api/?f=openml.task.get&task_id=<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
-                <?php } ?>
+                        <?php } ?>
+                        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/v1/json/task/<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>JSON</li>
+                        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/v1/task/<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
     </ul>
 
     <h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>

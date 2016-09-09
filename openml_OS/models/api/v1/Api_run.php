@@ -145,7 +145,12 @@ class Api_run extends Api_model {
       return;
     }
 
-    $dt = $this->Run_tag->query('SELECT id, tag FROM run_tag WHERE `id` IN (' . implode(',', array_keys( $res) ) . ') ORDER BY `id`');
+    $run_ids = array();
+    foreach( $res as $r ) {
+      $run_ids[] = $r->rid;
+    }
+
+    $dt = $this->Run_tag->query('SELECT id, tag FROM run_tag WHERE `id` IN (' . implode(',', $run_ids ) . ') ORDER BY `id`');
 
     foreach( $dt as $tag ) {
       $res[$tag->id]->tags[] = $tag->tag;
