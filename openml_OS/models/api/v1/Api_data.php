@@ -275,8 +275,8 @@ class Api_data extends Api_model {
       }
       $access_control = 'public';
       $access_control_option = $xml->children('oml', true)->{'visibility'};
-      if( $access_control_option != 'public' ) {
-        $access_control = 'private';
+      if($access_control_option != false) {
+        $access_control = $access_control_option;
       }
 
       if (getextension($_FILES['dataset']['name']) == 'arff') {
