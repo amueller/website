@@ -1517,9 +1517,9 @@ paths:
           description: No results. There where no matches for the given task type ID.
   /task/list/tag/{tag}:
     get:
-      summary: List tasks with given tag.
+      summary: List tasks with given tag
       description: |
-        Returns an array with all tasks with the given tag. Can be combined with limits and task types.
+        Returns an array with all tasks with the given tag. Can be combined with limits and other filters.
       parameters:
         - name: tag
           in: path
@@ -1627,6 +1627,118 @@ paths:
               }
         481:
           description: No results. There where no matches for the given task tag.
+  /task/list/data_tag/{tag}:
+    get:
+      summary: List tasks with the given data tag
+      description: |
+        Returns an array with all tasks where the underlying dataset has the given tag. Can be combined with limits and other filters.
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A list of tasks where the underlying dataset has the given tag
+          schema:
+            $ref: '#/definitions/TaskList'
+          examples:
+            application/json: |-
+              {
+                "task": {
+                  "task": [
+                    {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data",
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
+                      ]
+                    }
+                  ]
+                }
+              }
+        481:
+          description: No results. There where no matches for the given data tag.
   /task/list/{filters}:
     get:
       summary: Get tasks by data properties

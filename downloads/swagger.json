@@ -1014,8 +1014,8 @@
         },
         "/task/list/tag/{tag}": {
             "get": {
-                "summary": "List tasks with given tag.",
-                "description": "Returns an array with all tasks with the given tag. Can be combined with limits and task types.\n",
+                "summary": "List tasks with given tag",
+                "description": "Returns an array with all tasks with the given tag. Can be combined with limits and other filters.\n",
                 "parameters": [
                     {
                         "name": "tag",
@@ -1047,6 +1047,45 @@
                     },
                     "481": {
                         "description": "No results. There where no matches for the given task tag."
+                    }
+                }
+            }
+        },
+        "/task/list/data_tag/{tag}": {
+            "get": {
+                "summary": "List tasks with the given data tag",
+                "description": "Returns an array with all tasks where the underlying dataset has the given tag. Can be combined with limits and other filters.\n",
+                "parameters": [
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "description": "The tag on which to filter the results",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "task"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of tasks where the underlying dataset has the given tag",
+                        "schema": {
+                            "$ref": "#/definitions/TaskList"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"task\": {\n    \"task\": [\n      {\n        \"task_id\":\"1\",\n        \"task_type\":\"Supervised Classification\",\n        \"did\":\"1\",\n        \"name\":\"anneal\",\n        \"status\":\"active\",\n        \"format\":\"ARFF\",\n        \"input\":[\n          {\n            \"name\":\"estimation_procedure\",\n            \"value\":\"1\"\n          },\n          {\n            \"name\":\"evaluation_measures\",\n            \"value\":\"predictive_accuracy\"\n          },\n          {\n            \"name\":\"source_data\",\n            \"value\":\"1\"\n          },\n          {\n            \"name\":\"target_feature\",\n            \"value\":\"class\"\n          }\n          ],\n        \"quality\":[\n          {\n            \"name\":\"MajorityClassSize\",\n            \"value\":\"684\"\n          },\n          {\n            \"name\":\"MaxNominalAttDistinctValues\",\n            \"value\":\"10.0\"\n          },\n          {\n            \"name\":\"MinorityClassSize\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumBinaryAtts\",\n            \"value\":\"14.0\"\n          },\n          {\n            \"name\":\"NumberOfClasses\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfFeatures\",\n            \"value\":\"39\"\n          },\n          {\n            \"name\":\"NumberOfInstances\",\n            \"value\":\"898\"\n          },\n          {\n            \"name\":\"NumberOfInstancesWithMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfMissingValues\",\n            \"value\":\"0\"\n          },\n          {\n            \"name\":\"NumberOfNumericFeatures\",\n            \"value\":\"6\"\n          },\n          {\n            \"name\":\"NumberOfSymbolicFeatures\",\n            \"value\":\"32\"\n          }\n          ],\n        \"tag\":[\n          \"basic\",\n          \"study_1\",\n          \"study_7\",\n          \"under100k\",\n          \"under1m\"\n        ]\n      }\n    ]\n  }\n}"
+                        }
+                    },
+                    "481": {
+                        "description": "No results. There where no matches for the given data tag."
                     }
                 }
             }
