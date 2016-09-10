@@ -7,7 +7,7 @@ if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
                      'tag' => $_POST["newtags"]);
   $url = BASE_URL.'api/v1/run/tag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
-  redirect('r/'.$this->id);
+  redirect('r/'.$this->id, 'refresh');
 }
 elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   $post_data = array('api_key' => $this->ion_auth->user()->row()->session_hash,
@@ -15,7 +15,7 @@ elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
                      'tag' => $_POST["deletetag"]);
   $url = BASE_URL.'api/v1/run/untag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
-  redirect('r/'.$this->id);
+  redirect('r/'.$this->id, 'refresh');
 }
 
 ?>
