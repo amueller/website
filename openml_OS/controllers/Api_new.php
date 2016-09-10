@@ -150,8 +150,7 @@ class Api_new extends CI_Controller {
   private function _show_webpage() {
     $this->page = 'api_docs';
     if(!loadpage($this->page,true,'pre'))
-      $this->page_body = '<div class="baseNormalContent">Pagina niet gevonden.
-                <a href="'.home().'">Klik hier</a> om terug te keren naar de hoofdpagina.</div>';
+      $this->page_body = '<div class="alertbox col-md-12"><div class="alert alert-dismissible alert-warning">API request unknown. Please check the <a href="api_docs">API Documentation</a>.</div></div>';
     $this->load->view('frontend_main');
   }
 }
