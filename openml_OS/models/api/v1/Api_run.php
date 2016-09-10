@@ -145,18 +145,19 @@ class Api_run extends Api_model {
       return;
     }
 
-    $run_ids = array();
+    // make associative array
+    $runs = array();
     foreach( $res as $r ) {
-      $run_ids[] = $r->rid;
+      $runs[$r->rid] = $r;
     }
 
-    $dt = $this->Run_tag->query('SELECT id, tag FROM run_tag WHERE `id` IN (' . implode(',', $run_ids ) . ') ORDER BY `id`');
-
+    // attach tags
+    $dt = $this->Run_tag->query('SELECT id, tag FROM run_tag WHERE `id` IN (' . implode(',', array_keys($runs)) . ') ORDER BY `id`');
     foreach( $dt as $tag ) {
-      $res[$tag->id]->tags[] = $tag->tag;
+      $runs[$tag->id]->tags[] = $tag->tag;
     }
 
-    $this->xmlContents( 'runs', $this->version, array( 'runs' => $res ) );
+    $this->xmlContents( 'runs', $this->version, array( 'runs' => $runs ) );
   }
 
 
