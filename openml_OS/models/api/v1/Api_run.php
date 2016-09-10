@@ -658,9 +658,9 @@ class Api_run extends Api_model {
       $res = $this->Run->query( $sql );
       $run = mysql_fetch_assoc($res);
 
-      tag_item( 'data', $run['did'], $tag, $this->user_id, $error );
+      tag_item( 'dataset', $run['did'], $tag, $this->user_id, $error );
       tag_item( 'task', $run['task_id'], $tag, $this->user_id, $error );
-      tag_item( 'flow', $run['id'], $tag, $this->user_id, $error );
+      tag_item( 'implementation', $run['id'], $tag, $this->user_id, $error );
       $this->elasticsearch->index('study', end(explode('_',$tag)));
     }
 
