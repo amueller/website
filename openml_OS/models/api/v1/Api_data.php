@@ -691,9 +691,12 @@ class Api_data extends Api_model {
     $error = -1;
     $result = untag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
 
-
     //update index
     $this->elasticsearch->index('data', $data_id);
+    //update studies
+    if(startsWith($tag,'study_')){
+      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    }
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );

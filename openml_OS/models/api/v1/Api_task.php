@@ -332,6 +332,10 @@ class Api_task extends Api_model {
 
     //update index
     $this->elasticsearch->index('task', $id);
+    //update studies
+    if(startsWith($tag,'study_')){
+      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    }
 
     if( $result == false ) {
       $this->returnError( $error, $this->version );
