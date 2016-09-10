@@ -652,6 +652,15 @@ class Api_run extends Api_model {
     $this->elasticsearch->index('run', $id);
     //update studies
     if(startsWith($tag,'study_')){
+      $sql =
+        'select r.task_id, d.did, i.id FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
+        'WHERE r.setup = s.sid AND i.id = s.implementation_id AND r.rid='.$id;
+      $res = $this->Run->query( $sql );
+      $run = mysql_fetch_assoc($res);
+
+      tag_item( 'data', $run['did'], $tag, $this->user_id, $error );
+      tag_item( 'task', $run['task_id'], $tag, $this->user_id, $error );
+      tag_item( 'flow', $run['id'], $tag, $this->user_id, $error );
       $this->elasticsearch->index('study', end(explode('_',$tag)));
     }
 
