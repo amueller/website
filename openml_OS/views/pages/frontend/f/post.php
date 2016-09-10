@@ -2,17 +2,22 @@
 
 //Add and remove tags
 if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
-  $post_data = array('session_hash' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ));
-  $url = BASE_URL.'/api/flow/tag/flow_id/'.$this->id.'/tag/'.$_POST["newtags"];
+  $post_data = array('api_key' => $this->ion_auth->user()->row()->session_hash,
+		     'flow_id' => $this->id,
+                     'tag' => $_POST["newtags"]);
+  $url = BASE_URL.'api/v1/flow/tag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('f/'.$this->id);
 }
 elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
-  $post_data = array('session_hash' => $this->Api_session->createByUserId( $this->ion_auth->user()->row()->id ));
-  $url = BASE_URL.'/api/flow/untag/flow_id/'.$this->id.'/tag/'.$_POST["deletetag"];
+  $post_data = array('api_key' => $this->ion_auth->user()->row()->session_hash,
+		     'flow_id' => $this->id,
+                     'tag' => $_POST["deletetag"]);
+  $url = BASE_URL.'api/v1/flow/untag';
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('f/'.$this->id);
 }
+
 // Description edit
 elseif($this->input->post('page')){
 // prepare to send data to gollum

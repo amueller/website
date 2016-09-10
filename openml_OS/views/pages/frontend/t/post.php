@@ -1,4 +1,23 @@
 <?php
+
+//Add and remove tags
+if(isset($_POST["newtags"]) and !empty($_POST["newtags"])){
+  $post_data = array('api_key' => $this->ion_auth->user()->row()->session_hash,
+		     'task_id' => $this->id,
+                     'tag' => $_POST["newtags"]);
+  $url = BASE_URL.'api/v1/task/tag';
+  $api_response = $this->curlhandler->post_helper($url,$post_data);
+  redirect('t/'.$this->id);
+}
+elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
+  $post_data = array('api_key' => $this->ion_auth->user()->row()->session_hash,
+		     'task_id' => $this->id,
+                     'tag' => $_POST["deletetag"]);
+  $url = BASE_URL.'api/v1/task/untag';
+  $api_response = $this->curlhandler->post_helper($url,$post_data);
+  redirect('t/'.$this->id);
+}
+
 /* TASK SEARCH */
 $ttid = $this->input->post('task_type');
 $this->att = 'results';
