@@ -364,7 +364,7 @@ class Api_flow extends Api_model {
     $result = tag_item( 'implementation', $id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('flow', $id);
+    $this->elasticsearch->update_tags('flow', $id);
     //update studies
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));
@@ -383,7 +383,7 @@ class Api_flow extends Api_model {
     $result = untag_item( 'implementation', $id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('flow', $id);
+    $this->elasticsearch->update_tags('flow', $id);
     //update studies
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));

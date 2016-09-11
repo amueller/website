@@ -311,7 +311,8 @@ class Api_task extends Api_model {
 
 
     //update index
-    $this->elasticsearch->index('task', $id);
+    $this->elasticsearch->update_tags('task', $id);
+
     //update studies
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));
@@ -331,7 +332,7 @@ class Api_task extends Api_model {
     $result = untag_item( 'task', $id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('task', $id);
+    $this->elasticsearch->update_tags('task', $id);
     //update studies
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));

@@ -674,7 +674,7 @@ class Api_data extends Api_model {
     $result = tag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('data', $data_id);
+    $this->elasticsearch->update_tags('data', $data_id);
     //update studies
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));
@@ -692,7 +692,7 @@ class Api_data extends Api_model {
     $result = untag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('data', $data_id);
+    $this->elasticsearch->update_tags('data', $data_id);
     //update studies
     if(startsWith($tag,'study_')){
       $this->elasticsearch->index('study', end(explode('_',$tag)));

@@ -1159,6 +1159,31 @@ class ElasticSearch {
         $this->client->update($params);
     }
 
+    //update tags for given type and id
+    public function update_tags($type, $id) {
+        $tagtable = "";
+        if($type = 'flow')
+          $tagtable = "implementation_tag";
+        elseif($type = 'data')
+          $tagtable = "dataset_tag";
+        elseif($type = 'run')
+          $tagtable = "run_tag";
+        elseif($type = 'task')
+          $tagtable = "task_tag";
+
+        $tags = $this->db->query('select tag FROM '.$tagtable.' WHERE id='.$id);
+        $ts = array();
+        foreach ($tags as $t) {
+          $ts[] = '"'.$t.'"';
+        }
+
+        $params['index'] = 'openml';
+        $params['type'] = $type;
+        $params['id'] = $id;
+        $params['body'] = array('doc' => array('tags' => $ts));
+        $this->client->update($params);
+    }
+
     private function index_single_run($id) {
 
         $params['index'] = 'openml';

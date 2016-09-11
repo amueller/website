@@ -649,7 +649,7 @@ class Api_run extends Api_model {
     $result = tag_item( 'run', $id, $tag, $this->user_id, $error );
 
     //update index
-    $this->elasticsearch->index('run', $id);
+    $this->elasticsearch->update_tags('run', $run['id']);
     //update studies
     if(startsWith($tag,'study_')){
       $sql =
@@ -661,9 +661,9 @@ class Api_run extends Api_model {
       tag_item( 'dataset', $run['did'], $tag, $this->user_id, $error );
       tag_item( 'task', $run['task_id'], $tag, $this->user_id, $error );
       tag_item( 'implementation', $run['id'], $tag, $this->user_id, $error );
-      $this->elasticsearch->index('data', $run['did']);
-      $this->elasticsearch->index('task', $run['task_id']);
-      $this->elasticsearch->index('flow', $run['id']);
+      $this->elasticsearch->update_tags('data', $run['did']);
+      $this->elasticsearch->update_tags('task', $run['task_id']);
+      $this->elasticsearch->update_tags('flow', $run['id']);
       $this->elasticsearch->index('study', end(explode('_',$tag)));
     }
 
