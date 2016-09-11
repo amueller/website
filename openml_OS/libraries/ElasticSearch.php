@@ -1161,20 +1161,22 @@ class ElasticSearch {
 
     //update tags for given type and id
     public function update_tags($type, $id) {
-        $tagtable = "";
+        $tagtable = $this->CI->Run_tag;
         if($type == 'flow')
-          $tagtable = "implementation_tag";
+          $tagtable = $this->CI->Implementation_tag;
         elseif($type == 'data')
-          $tagtable = "dataset_tag";
-        elseif($type == 'run')
-          $tagtable = "run_tag";
+          $tagtable = $this->CI->Dataset_tag;
         elseif($type == 'task')
-          $tagtable = "task_tag";
+          $tagtable = $this->CI->Task_tag;
 
-        $tags = $this->db->query('select tag FROM '.$tagtable.' WHERE id='.$id);
         $ts = array();
-        foreach ($tags as $t) {
-          $ts[] = '"'.$t.'"';
+        $tags = $tagtable->getAssociativeArray('tag', 'uploader', 'id = ' . $id);
+        if ($tags != false) {
+            foreach ($tags as $t => $u) {
+                $ts[] = array(
+                    'tag' => $t,
+                    'uploader' => $u);
+            }
         }
 
         $params['index'] = 'openml';
