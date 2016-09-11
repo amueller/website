@@ -661,6 +661,9 @@ class Api_run extends Api_model {
       tag_item( 'dataset', $run['did'], $tag, $this->user_id, $error );
       tag_item( 'task', $run['task_id'], $tag, $this->user_id, $error );
       tag_item( 'implementation', $run['id'], $tag, $this->user_id, $error );
+      $this->elasticsearch->index('data', $run['did']);
+      $this->elasticsearch->index('task', $run['task_id']);
+      $this->elasticsearch->index('flow', $run['id']);
       $this->elasticsearch->index('study', end(explode('_',$tag)));
     }
 
