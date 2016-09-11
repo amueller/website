@@ -63,6 +63,11 @@ class Cron extends CI_Controller {
       }
   }
 
+  public function update_tag($type, $id){
+      echo "tagging ".$type." ".$id;
+      $this->elasticsearch->update_tags($type, $id);
+  }
+
   function install_database() {
     $models = directory_map(DATA_PATH . 'sql/', 1);
 
@@ -180,15 +185,15 @@ class Cron extends CI_Controller {
           'LINES TERMINATED BY "\n" ' .
           ';';
       } elseif($meta_dataset->type == 'inputs') {
-        $sql = 
+        $sql =
           'SELECT is.setup, i.fullname AS flowname, ip.name, is.value ' .
           'FROM `input_setting` `is` , input `ip`, algorithm_setup s, implementation i ' .
           'WHERE ip.id = is.input_id ' .
           'AND ip.implementation_id = i.id ' .
           'AND is.setup = s.sid ' .
           'AND s.implementation_id = i.id ' .
-          $flow_constr . $setup_constr . 
-          'INTO OUTFILE "'. $tmp_path .'" ' . 
+          $flow_constr . $setup_constr .
+          'INTO OUTFILE "'. $tmp_path .'" ' .
           'FIELDS TERMINATED BY "," ' .
           'ENCLOSED BY "\"" ' .
           'LINES TERMINATED BY "\n" ' .

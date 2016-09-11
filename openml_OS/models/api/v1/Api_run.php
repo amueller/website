@@ -656,15 +656,16 @@ class Api_run extends Api_model {
         'select r.task_id, d.did, i.id FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
         'WHERE r.setup = s.sid AND i.id = s.implementation_id AND r.rid='.$id;
       $res = $this->Run->query($sql);
-      $run = mysql_fetch_assoc($res);
-
-      tag_item( 'dataset', $run['did'], $tag, $this->user_id, $error );
-      tag_item( 'task', $run['task_id'], $tag, $this->user_id, $error );
-      tag_item( 'implementation', $run['id'], $tag, $this->user_id, $error );
-      $this->elasticsearch->update_tags('data', $run['did']);
-      $this->elasticsearch->update_tags('task', $run['task_id']);
-      $this->elasticsearch->update_tags('flow', $run['id']);
+      if($res){
+      $r = $res[0];
+      tag_item( 'dataset', $r->did, $tag, $this->user_id, $error );
+      tag_item( 'task', $r->task_id, $tag, $this->user_id, $error );
+      tag_item( 'implementation', $r->id, $tag, $this->user_id, $error );
+      $this->elasticsearch->update_tags('data', $r->did);
+      $this->elasticsearch->update_tags('task', $r->task_id);
+      $this->elasticsearch->update_tags('flow', $r->id);
       $this->elasticsearch->index('study', end(explode('_',$tag)));
+    }
     }
 
     if( $result == false ) {
