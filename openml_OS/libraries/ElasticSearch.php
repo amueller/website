@@ -1162,13 +1162,13 @@ class ElasticSearch {
     //update tags for given type and id
     public function update_tags($type, $id) {
         $tagtable = "";
-        if($type = 'flow')
+        if($type == 'flow')
           $tagtable = "implementation_tag";
-        elseif($type = 'data')
+        elseif($type == 'data')
           $tagtable = "dataset_tag";
-        elseif($type = 'run')
+        elseif($type == 'run')
           $tagtable = "run_tag";
-        elseif($type = 'task')
+        elseif($type == 'task')
           $tagtable = "task_tag";
 
         $tags = $this->db->query('select tag FROM '.$tagtable.' WHERE id='.$id);
