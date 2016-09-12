@@ -77,7 +77,7 @@ class Api_evaluation extends Api_model {
     $where_total = $where_runs . $where_function;
 
     $sql =
-      'SELECT r.rid, r.task_id, s.implementation_id, s.sid, e.function, e.value, e.array_data, i.fullName, d.name ' .
+      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, e.function, e.value, e.array_data, i.fullName, d.name ' .
       'FROM evaluation e, run r, algorithm_setup s, implementation i, dataset d, task_inputs t ' .
       'WHERE r.setup = s.sid AND e.source = r.rid AND s.implementation_id = i.id AND r.task_id = t.task_id AND t.input="source_data" AND t.value=d.did ' . $where_total .
       'ORDER BY r.rid' . $where_limit;

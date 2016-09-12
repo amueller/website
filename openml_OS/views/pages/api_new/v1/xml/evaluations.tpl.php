@@ -8,6 +8,7 @@
     <oml:flow_name><?php echo $e->fullName; ?></oml:flow_name>
     <oml:data_name><?php echo $e->name; ?></oml:data_name>
     <oml:function><?php echo $e->{'function'}; ?></oml:function>
+    <oml:upload_time><?php echo $r->start_time; ?></oml:upload_time>
     <?php if($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
     <?php if($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
   </oml:evaluation>

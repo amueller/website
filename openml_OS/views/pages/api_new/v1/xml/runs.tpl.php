@@ -6,6 +6,7 @@
     <oml:setup_id><?php echo $r->setup; ?></oml:setup_id>
     <oml:flow_id><?php echo $r->flow_id; ?></oml:flow_id>
     <oml:uploader><?php echo $r->uploader; ?></oml:uploader>
+		<oml:upload_time><?php echo $r->start_time; ?></oml:upload_time>
     <oml:error_message><?php echo $r->error_message; ?></oml:error_message>
 		<?php if( property_exists( $r, 'tags' ) ): foreach( $r->tags as $tag ): ?>
 			<oml:tag><?php echo $tag; ?></oml:tag>

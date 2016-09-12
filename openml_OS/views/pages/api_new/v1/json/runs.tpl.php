@@ -8,6 +8,7 @@
    "setup_id":<?php echo  $r->setup; ?>,
    "flow_id":<?php echo $r->flow_id; ?>,
    "uploader":<?php echo $r->uploader; ?>,
+   "upload_time":"<?php echo $r->start_time; ?>",
    "error_message":"<?php echo $r->error_message; ?>"
 	 <?php if( property_exists( $r, 'tags' ) ): ?>
 	 ,"tags": [
