@@ -83,7 +83,7 @@
             <?php }}} ?>
     </div>
 
-  <h3>Flow</h3>
+  <h3 style="padding-top:0px;margin-top:-10px;">Flow</h3>
   <div class="cardtable">
     <div class='table-responsive'><table class='table'>
     <tr class="cardrow"><td><a href="f/<?php echo $this->run['run_flow']['flow_id']; ?>"><?php echo $this->run['run_flow']['name']; ?></a></td><td><?php echo $this->flow['description']; ?></td></tr>
