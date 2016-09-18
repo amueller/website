@@ -100,10 +100,16 @@ class Api_flow extends Api_model {
     }
 
     $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total . $where_limit;
-    $implementations = $this->Implementation->query($sql);
-    if( $implementations == false ) {
+    $implementations_res = $this->Implementation->query($sql);
+    if( $implementations_res == false ) {
       $this->returnError( 500, $this->version );
       return;
+    }
+
+    // make associative
+    $implementations = array();
+    foreach( $implementations_res as $implementation ) {
+      $implementations[$implementation->id] = $implementation;
     }
 
     $dt = $this->Implementation_tag->query('SELECT id, tag FROM implementation_tag WHERE `id` IN (' . implode(',', array_keys( $implementations) ) . ') ORDER BY `id`');
