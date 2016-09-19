@@ -64,9 +64,9 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
     <?php } ?>
     <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "task"))){ ?>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'desc')); ?>">Highest Impact</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>    
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>
     <?php } ?>
-    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run"))){ ?>
+    <?php if($this->filtertype and in_array($this->filtertype, array("data", "flow", "run", "user"))){ ?>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'desc')); ?>">Most recent</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'date', 'order' => 'asc')); ?>">Least recent</a></li>
     <?php } ?>
@@ -99,7 +99,7 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'reach', 'order' => 'desc')); ?>">Highest Reach</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'reach', 'order' => 'asc')); ?>">Lowest Reach</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'desc')); ?>">Highest Impact</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>    
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>
     <?php } ?>
   </ul>
 </div>
@@ -215,8 +215,8 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
                                 <div class="runStats statLine">
                                     <b>
                                         <i class="fa fa-fw fa-cloud-upload"></i><?php echo $rs['nr_of_uploads'].' uploads'; ?>
-                                        <?php if($rs['gamification_visibility']=='show'){ ?> 
-                                        <i class="fa fa-fw fa-heartbeat"></i><?php echo ''.$rs['activity'].' activity ';?> 
+                                        <?php if($rs['gamification_visibility']=='show'){ ?>
+                                        <i class="fa fa-fw fa-heartbeat"></i><?php echo ''.$rs['activity'].' activity ';?>
                                         <i class="fa fa-fw fa-rss"></i><?php echo ''.$rs['reach'].' reach';?>
                                         <i class="fa fa-fw fa-bolt"></i><?php echo ''.$rs['impact'].' impact';?>
                                         <?php }?>
