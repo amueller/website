@@ -28,7 +28,7 @@ if(!empty($_POST['key-degrade'])){
 }
 
 $this->form_validation->set_rules('last_name', 'Last Name', 'required');
-$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password]');
+$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
 
 if ($this->form_validation->run() == true) {
 
