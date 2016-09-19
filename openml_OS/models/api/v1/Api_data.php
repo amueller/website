@@ -90,7 +90,7 @@ class Api_data extends Api_model {
       if (in_array($segs[$i], $legal_filters) == false) {
         $this->returnError(370, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
         return;
-      }    
+      }
     }
     $tag = element('tag',$query_string);
     $name = element('data_name',$query_string);

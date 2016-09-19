@@ -255,6 +255,7 @@ $this->apiErrors[510] = 'Please provide at least task, flow or setup, uploader o
 $this->apiErrors[511] = 'Input not safe';
 $this->apiErrors[512] = 'No results';
 $this->apiErrors[513] = 'Too many results';
+$this->apiErrors[514] = 'Illegal filter specified';
 
 // openml.estimationprocedure.list
 $this->apiErrors[520] = 'No results';

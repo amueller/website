@@ -92,10 +92,16 @@ class Api_run extends Api_model {
 
 
   private function run_list($segs) {
+    $legal_filters = array('tag', 'setup', 'flow', 'uploader', 'run', 'tag', 'limit', 'offset');
     $query_string = array();
-    for ($i = 0; $i < count($segs); $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
-
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(514, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }
+    }
+    
     $task_id = element('task', $query_string);
     $setup_id = element('setup',$query_string);
     $implementation_id = element('flow',$query_string);
