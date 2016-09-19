@@ -92,7 +92,7 @@ class Api_run extends Api_model {
 
 
   private function run_list($segs) {
-    $legal_filters = array('tag', 'setup', 'flow', 'uploader', 'run', 'tag', 'limit', 'offset');
+    $legal_filters = array('task', 'setup', 'flow', 'uploader', 'run', 'tag', 'limit', 'offset');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
