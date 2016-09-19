@@ -235,9 +235,10 @@ $this->apiErrors[478] = 'Tag is not owned by you';
 // for function: openml.data.tag (again)
 $this->apiErrors[479] = 'Internal error removing the tag. ';
 
-// openml.tasks
-$this->apiErrors[480] = 'Please provide task_type_id';
-$this->apiErrors[481] = 'No results';
+// openml.task.list
+$this->apiErrors[480] = 'Illegal filter specified';
+$this->apiErrors[481] = 'Input not safe';
+$this->apiErrors[482] = 'No results';
 
 // openml.file.upload
 $this->apiErrors[490] = 'Authentication failed';

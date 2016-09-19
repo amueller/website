@@ -57,17 +57,15 @@ class Api_task extends Api_model {
 
 
   private function task_list($segs) {
-    // TODO: add tag / active
-    //$task_type_id = $this->input->get( 'task_type_id' );
-    //if( $task_type_id == false ) {
-    //  $this->_returnError( 480 );
-    //  return;
-    //}
-    //$active = $this->input->get('active_only') ? ' AND d.status = "active" ' : '';
+    $legal_filters = ('type', 'tag', 'data_tag', 'status', 'limit', 'offset', 'data_id', 'data_name', 'number_instances', 'number_features', 'number_classes', 'number_missing_values');
     $query_string = array();
-    for ($i = 0; $i < count($segs); $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
-
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(480, $this->version, $this->openmlGeneralErrorCode, 'illegal filter: ' . $segs[$i]);
+        return;
+      }
+    }
     $type = element('type',$query_string);
     $tag = element('tag',$query_string);
     $data_tag = element('data_tag',$query_string);
@@ -82,7 +80,7 @@ class Api_task extends Api_model {
     $nr_miss = element('number_missing_values',$query_string);
 
     if (!(is_safe($tag) && is_safe($data_tag) && is_safe($status) && is_safe($type) && is_safe($limit) && is_safe($offset) && is_safe($data_id) && is_safe($data_name) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
-      $this->returnError(511, $this->version );
+      $this->returnError(481, $this->version );
       return;
     }
 
@@ -114,7 +112,7 @@ class Api_task extends Api_model {
        //$active .
        ' ORDER BY task_id ' . $where_limit );
     if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {
-      $this->returnError( 481, $this->version );
+      $this->returnError( 482, $this->version );
       return;
     }
     // make associative array from it
