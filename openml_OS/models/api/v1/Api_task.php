@@ -62,7 +62,7 @@ class Api_task extends Api_model {
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
       if (in_array($segs[$i], $legal_filters) == false) {
-        $this->returnError(480, $this->version, $this->openmlGeneralErrorCode, 'illegal filter: ' . $segs[$i]);
+        $this->returnError(480, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
         return;
       }
     }

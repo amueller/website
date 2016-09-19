@@ -83,10 +83,15 @@ class Api_data extends Api_model {
   }
 
   private function data_list($segs) {
+    $legal_filters = array('tag', 'status', 'limit', 'offset', 'data_name', 'number_instances', 'number_features', 'number_classes', 'number_missing_values');
     $query_string = array();
-    for ($i = 0; $i < count($segs); $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
-
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(370, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }    
+    }
     $tag = element('tag',$query_string);
     $name = element('data_name',$query_string);
     $status = element('status',$query_string);
@@ -98,7 +103,7 @@ class Api_data extends Api_model {
     $nr_miss = element('number_missing_values',$query_string);
 
     if (!(is_safe($tag) && is_safe($limit) && is_safe($offset) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
-      $this->returnError(511, $this->version );
+      $this->returnError(371, $this->version );
       return;
     }
 
@@ -125,7 +130,7 @@ class Api_data extends Api_model {
     $sql = 'select * from dataset where (visibility = "public" or uploader='.$this->user_id.') '. $where_total . $where_limit;
     $datasets_res = $this->Dataset->query($sql);
     if( is_array( $datasets_res ) == false || count( $datasets_res ) == 0 ) {
-      $this->returnError( 370, $this->version );
+      $this->returnError( 372, $this->version );
       return;
     }
 

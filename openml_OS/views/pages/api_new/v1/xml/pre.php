@@ -147,7 +147,9 @@ $this->apiErrors[364] = 'Dataset processed with error';
 $this->apiErrors[365] = 'Interval start or end illegal';
 
 // for function: openml.data
-$this->apiErrors[370] = 'No datasets available';
+$this->apiErrors[370] = 'Illegal filter specified';
+$this->apiErrors[371] = 'Input not safe';
+$this->apiErrors[372] = 'No results';
 
 // for function: openml.qualities.upload
 $this->apiErrors[380] = 'Please provide API key';
