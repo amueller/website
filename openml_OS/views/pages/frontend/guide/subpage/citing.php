@@ -22,3 +22,6 @@
 <p>Sharing data and code is crucial for reproducibility and scientific progress, and should be rewarded. If you are
    reusing any of the shared data sets, flows or runs/studies, please honor their respective licences and citation requests.
    OpenML cleary shows these requests when they apply.</p>
+
+<h2 id="terms-data">Other acknowledgements</h2>
+The anonymous robot icon was <a href='http://www.freepik.com/free-vector/funny-robots-avatars_764474.htm'>designed by Freepik</a>.
