@@ -12,7 +12,7 @@ class Schedule extends Database_write {
     $setup_tag_clause = $setup_tag ? ' AND s.tag = "' . $setup_tag . '" ' : '';
     $setup_id_clause = $setup_id ? ' AND sch.sid = "' . $setup_id . '" ' : '';
 	  $sql = 
-	    'SELECT * FROM `schedule` `sch` '.
+	    'SELECT `sch`.* FROM `schedule` `sch` '.
 	    'LEFT JOIN `task_tag` `t` ON `sch`.`task_id` = `t`.`id` '.
 	    'LEFT JOIN `setup_tag` `s` ON `sch`.`sid` = `s`.`id` ' .
 	    'WHERE `dependencies` = "' . $workbench . '" AND `active` = "true" '.
