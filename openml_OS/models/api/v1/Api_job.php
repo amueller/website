@@ -15,7 +15,7 @@ class Api_job extends Api_model {
     
     $getpost = array('get','post');
     
-    if (count($segments) == 1 && $segments[0] == 'request' ) {
+    if (count($segments) == 1 && $segments[0] == 'request') {
       $this->job_request();
       return;
     }
@@ -25,22 +25,25 @@ class Api_job extends Api_model {
   
   
   private function job_request() {
-    $workbench = $this->input->get_post('workbench');
-    $task_type_id = $this->input->get_post('task_type_id');
+    $workbench = safe($this->input->get_post('workbench'));
+    $task_type_id = safe($this->input->get_post('task_type_id'));
+    $task_tag = safe($this->input->get_post('task_tag'));
+    $setup_tag = safe($this->input->get_post('setup_tag'));
+    $setup_id = safe($this->input->get_post('setup_id'));
 
     if( $workbench == false || $task_type_id == false ) {
-      $this->returnError( 340, $this->version );
+      $this->returnError(340, $this->version);
       return;
     }
 
-    $job = $this->Schedule->getJob( $workbench, $task_type_id );
+    $job = $this->Schedule->getJob($workbench, $task_type_id, $task_tag, $setup_tag, $setup_id);
 
-    if( $job == false ) {
-      $this->returnError( 341, $this->version );
+    if($job == false) {
+      $this->returnError(341, $this->version);
       return;
     }
 
-    $this->xmlContents( 'run-getjob', $this->version, array( 'source' => $job ) );
+    $this->xmlContents('run-getjob', $this->version, array('source' => $job));
   }
 }
 ?>
