@@ -16,7 +16,7 @@ class Schedule extends Database_write {
 	    'LEFT JOIN `task_tag` `t` ON `sch`.`task_id` = `t`.`id` '.
 	    'LEFT JOIN `setup_tag` `s` ON `sch`.`sid` = `s`.`id` ' .
 	    'WHERE `dependencies` = "' . $workbench . '" AND `active` = "true" '.
-	    'AND `ttid` = "' . $task_type . $task_tag_clause . $setup_tag_clause . $setup_id_clause . '" '.
+	    'AND `ttid` = "' . $task_type . '" ' . $task_tag_clause . $setup_tag_clause . $setup_id_clause . ' '.
 	    'ORDER BY last_assigned ASC limit 0,1; ';
     $res = $this->query($sql);
 
