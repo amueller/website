@@ -10,7 +10,7 @@ class Schedule extends Database_write {
   function getJob($workbench, $task_type, $task_tag = null, $setup_tag = null, $setup_id = null) {
     $task_tag_clause = $task_tag ? ' AND t.tag = "' . $task_tag . '" ' : '';
     $setup_tag_clause = $setup_tag ? ' AND s.tag = "' . $setup_tag . '" ' : '';
-    $setup_id_clause = $setup_id ? ' AND sch.sid = "' . $setup_id . '" '
+    $setup_id_clause = $setup_id ? ' AND sch.sid = "' . $setup_id . '" ';
 	  $sql = 
 	    'SELECT * FROM `schedule` `sch` '.
 	    'LEFT JOIN `task_tag` `t` ON `sch`.`task_id` = `t`.`id` '.
