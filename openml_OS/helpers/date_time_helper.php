@@ -35,7 +35,7 @@ function dateNeat( $datetime ) {
 	return $date_array[2] . '-' . $date_array[1] . '-' . $date_array[0];
 }
 
-function dateXml($dateTime) {
+function dateXml($datetime) {
   $dt_array = explode( ' ', $datetime );
   return $dt_array[0] . 'T' . $dt_array[1];
 }
