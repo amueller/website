@@ -303,19 +303,22 @@ class Api_task extends Api_model {
   }
 
   private function task_tag($id, $tag) {
-
     $error = -1;
     $result = tag_item( 'task', $id, $tag, $this->user_id, $error );
 
+    try {
+      //update index
+      $this->elasticsearch->update_tags('task', $id);
 
-    //update index
-    $this->elasticsearch->update_tags('task', $id);
-
-    //update studies
-    if(startsWith($tag,'study_')){
-      $this->elasticsearch->index('study', end(explode('_',$tag)));
+      //update studies
+      if(startsWith($tag,'study_')){
+        $this->elasticsearch->index('study', end(explode('_',$tag)));
+      }
+    } catch (Exception $e) {  
+      $this->returnError(105, $this->version);
+      return;
     }
-
+    
     if( $result == false ) {
       $this->returnError( $error, $this->version );
       return;
@@ -332,7 +335,7 @@ class Api_task extends Api_model {
     //update index
     $this->elasticsearch->update_tags('task', $id);
     //update studies
-    if(startsWith($tag,'study_')){
+    if(startsWith($tag,'study_')) {
       $this->elasticsearch->index('study', end(explode('_',$tag)));
     }
 
