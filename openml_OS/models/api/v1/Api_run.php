@@ -653,25 +653,31 @@ class Api_run extends Api_model {
   private function run_tag($id,$tag) {
     $error = -1;
     $result = tag_item( 'run', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->update_tags('run', $id);
-    //update studies
-    if(startsWith($tag,'study_')){
-      $sql =
-        'select r.task_id, d.did, i.id FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
-        'WHERE r.setup = s.sid AND i.id = s.implementation_id AND r.rid='.$id;
-      $res = $this->Run->query($sql);
-      if($res){
-      $r = $res[0];
-      tag_item( 'dataset', $r->did, $tag, $this->user_id, $error );
-      tag_item( 'task', $r->task_id, $tag, $this->user_id, $error );
-      tag_item( 'implementation', $r->id, $tag, $this->user_id, $error );
-      $this->elasticsearch->update_tags('data', $r->did);
-      $this->elasticsearch->update_tags('task', $r->task_id);
-      $this->elasticsearch->update_tags('flow', $r->id);
-      $this->elasticsearch->index('study', end(explode('_',$tag)));
-    }
+    
+    try {
+      //update index
+      $this->elasticsearch->update_tags('run', $id);
+    
+      //update studies
+      if (startsWith($tag,'study_')) {
+        $sql =
+          'select r.task_id, d.did, i.id FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
+          'WHERE r.setup = s.sid AND i.id = s.implementation_id AND r.rid='.$id;
+        $res = $this->Run->query($sql);
+        if ($res) {
+          $r = $res[0];
+          tag_item( 'dataset', $r->did, $tag, $this->user_id, $error );
+          tag_item( 'task', $r->task_id, $tag, $this->user_id, $error );
+          tag_item( 'implementation', $r->id, $tag, $this->user_id, $error );
+          $this->elasticsearch->update_tags('data', $r->did);
+          $this->elasticsearch->update_tags('task', $r->task_id);
+          $this->elasticsearch->update_tags('flow', $r->id);
+          $this->elasticsearch->index('study', end(explode('_',$tag)));
+        }
+      }
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
     }
 
     if( $result == false ) {
@@ -684,12 +690,17 @@ class Api_run extends Api_model {
   private function run_untag($id,$tag) {
     $error = -1;
     $result = untag_item( 'run', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->index('run', $id);
-    //update studies
-    if(startsWith($tag,'study_')){
-      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    
+    try {
+      //update index
+      $this->elasticsearch->index('run', $id);
+      //update studies
+      if(startsWith($tag,'study_')){
+        $this->elasticsearch->index('study', end(explode('_',$tag)));
+      }
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
     }
 
     if( $result == false ) {

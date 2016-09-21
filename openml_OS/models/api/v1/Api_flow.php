@@ -368,12 +368,17 @@ class Api_flow extends Api_model {
 
     $error = -1;
     $result = tag_item( 'implementation', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->update_tags('flow', $id);
-    //update studies
-    if(startsWith($tag,'study_')){
-      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    
+    try {
+      //update index
+      $this->elasticsearch->update_tags('flow', $id);
+      //update studies
+      if(startsWith($tag,'study_')){
+        $this->elasticsearch->index('study', end(explode('_',$tag)));
+      }
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
     }
 
     if( $result == false ) {
@@ -387,12 +392,17 @@ class Api_flow extends Api_model {
 
     $error = -1;
     $result = untag_item( 'implementation', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->update_tags('flow', $id);
-    //update studies
-    if(startsWith($tag,'study_')){
-      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    
+    try {
+      //update index
+      $this->elasticsearch->update_tags('flow', $id);
+      //update studies
+      if(startsWith($tag,'study_')){
+        $this->elasticsearch->index('study', end(explode('_',$tag)));
+      }
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
     }
 
     if( $result == false ) {

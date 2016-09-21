@@ -184,10 +184,15 @@ class Api_setup extends Api_model {
 
     $error = -1;
     $result = tag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->index('setup', $id);
-
+    
+    try {
+      //update index
+      $this->elasticsearch->index('setup', $id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
+    }
+    
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
@@ -250,10 +255,15 @@ class Api_setup extends Api_model {
     
     $error = -1;
     $result = untag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->index('setup', $id);
-
+    
+    try {
+      //update index
+      $this->elasticsearch->index('setup', $id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
+    }
+    
     if( $result == false ) {
       $this->returnError( $error, $this->version );
     } else {
