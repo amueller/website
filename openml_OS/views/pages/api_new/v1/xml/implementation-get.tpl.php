@@ -28,14 +28,18 @@ $mapping = array(
 
 <oml:flow xmlns:oml="http://openml.org/openml">
   <?php 
-  foreach( $mapping as $key => $value ) {
-    if( property_exists( $source, $value ) ){
-      if( is_array( $source->$value ) ) {
-        if( count( $source->$value ) > 0 ) {
-          sub_xml( 'implementation-get.' . $value, array( 'source' => $source->$value ), 'v1' );
+  foreach ($mapping as $key => $value) {
+    if (property_exists($source, $value)) {
+      if (is_array($source->$value)) {
+        if (count($source->$value) > 0 ) {
+          sub_xml('implementation-get.' . $value, array('source' => $source->$value), 'v1');
         }
-      } elseif( $source->$value != false && $source->$value !== null ) { 
-        echo '<oml:'.$key.'>'.htmlentities($source->$value).'</oml:'.$key.'>' . "\n";
+      } elseif ($source->$value != false && $source->$value !== null) {
+        $val = $source->$value;
+        if ($key == 'upload_date') {
+          $val = dateXml($val);
+        }
+        echo '<oml:'.$key.'>'.htmlentities($val).'</oml:'.$key.'>' . "\n";
       }
     }
   }?>
