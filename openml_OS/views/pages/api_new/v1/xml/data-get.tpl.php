@@ -7,7 +7,7 @@
   <?php if( is_array( $creator ) ) foreach( $creator as $c ): ?><oml:creator><?php echo htmlspecialchars($c); ?></oml:creator><?php endforeach; ?>
 	<?php if( is_array( $contributor ) ) foreach( $contributor as $c ): ?><oml:contributor><?php echo htmlspecialchars($c); ?></oml:contributor><?php endforeach; ?>
 	<?php if ($collection_date != null): ?> <oml:collection_date><?php echo htmlspecialchars($collection_date); ?></oml:collection_date><?php endif; ?>
-	<oml:upload_date><?php echo htmlspecialchars($upload_date); ?></oml:upload_date>
+	<oml:upload_date><?php echo htmlspecialchars(dateXml($upload_date)); ?></oml:upload_date>
   <?php if ($language != null): ?><oml:language><?php echo htmlspecialchars($language); ?></oml:language><?php endif; ?>
   <?php if ($licence != null): ?><oml:licence><?php echo htmlspecialchars($licence); ?></oml:licence><?php endif; ?>
   <oml:url><?php echo htmlspecialchars($url); ?></oml:url>

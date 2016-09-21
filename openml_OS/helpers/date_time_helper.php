@@ -35,6 +35,11 @@ function dateNeat( $datetime ) {
 	return $date_array[2] . '-' . $date_array[1] . '-' . $date_array[0];
 }
 
+function dateXml($dateTime) {
+  $dt_array = explode( ' ', $datetime );
+  return $dt_array[0] . 'T' . $dt_array[1];
+}
+
 function now_run() {
 	return date("D M d H:i:s e Y"); 
 }

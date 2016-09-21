@@ -298,6 +298,9 @@ class Api_task extends Api_model {
       $error = -1;
       tag_item('task', $id, $tag, $this->user_id, $error);
     }
+    
+    // update elastic search index.
+    $this->elasticsearch->index('task', $id);
 
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
   }
