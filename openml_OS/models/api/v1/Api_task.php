@@ -304,7 +304,7 @@ class Api_task extends Api_model {
 
   private function task_tag($id, $tag) {
     $error = -1;
-    $result = tag_item( 'task', $id, $tag, $this->user_id, $error );
+    $result = tag_item('task', $id, $tag, $this->user_id, $error);
 
     try {
       //update index
@@ -331,12 +331,17 @@ class Api_task extends Api_model {
 
     $error = -1;
     $result = untag_item( 'task', $id, $tag, $this->user_id, $error );
-
-    //update index
-    $this->elasticsearch->update_tags('task', $id);
-    //update studies
-    if(startsWith($tag,'study_')) {
-      $this->elasticsearch->index('study', end(explode('_',$tag)));
+    
+    try {
+      //update index
+      $this->elasticsearch->update_tags('task', $id);
+      //update studies
+      if(startsWith($tag,'study_')) {
+        $this->elasticsearch->index('study', end(explode('_',$tag)));
+      }
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
     }
 
     if( $result == false ) {
