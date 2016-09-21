@@ -52,7 +52,7 @@ class Api_task extends Api_model {
       return;
     }
 
-    $this->returnError( 100, $this->version );
+    $this->returnError(100, $this->version);
   }
 
 
@@ -314,8 +314,8 @@ class Api_task extends Api_model {
       if(startsWith($tag,'study_')){
         $this->elasticsearch->index('study', end(explode('_',$tag)));
       }
-    } catch (Exception $e) {  
-      $this->returnError(105, $this->version);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
       return;
     }
     

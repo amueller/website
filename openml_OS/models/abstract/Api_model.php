@@ -94,14 +94,21 @@ class Api_model extends CI_Model {
     );
   }
 
-  public function returnError( $code, $version, $httpErrorCode = 450, $additionalInfo = null ) {
-    $this->Log->api_error( 'error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
+  public function returnError($code, $version, $httpErrorCode = 450, $additionalInfo = null, $emailLog = false) {
+    $this->Log->api_error('error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code] );
     $error['additional'] = htmlentities( $additionalInfo );
 
     $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode . ' Api Error' );
     $this->xmlContents( 'error-message', $version, $error, $httpHeaders );
+    
+    if ($emailLog && defined('EMAIL_API_LOG')) { 
+      $to = EMAIL_API_LOG;
+      $subject = 'OpenML API Exception: ' . $code;
+      $content = 'Time: ' . now() . "\nUser: ". $this->user_id . ' (' . $this->user_email . ')' . "\nMessage: " . $error['message'] . "\nException Message: " . $emailLog;
+      sendEmail($to, $subject, $content,'text');
+    }
   }
 
   protected function xmlContents( $xmlFile, $version, $source, $httpHeaders = array() ) {

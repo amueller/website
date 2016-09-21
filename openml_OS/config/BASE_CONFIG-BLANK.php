@@ -137,6 +137,12 @@ define( 'CMD_PREFIX', '');
 define( 'EMAIL_FROM', 'noreply@openml.org' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * EMAIL_API_LOG: The email address to which critical API errors 
+ * get reported
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+define( 'EMAIL_API_LOG', 'api@openml.org' );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DISQUS_USERNAME: The username for the discuss plug-in.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'DISQUS_USERNAME', 'DISQUS USERNAME HERE' );
