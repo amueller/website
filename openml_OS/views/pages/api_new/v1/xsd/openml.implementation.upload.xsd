@@ -94,7 +94,7 @@
     <xs:restriction base="xs:string">
       <xs:pattern value="\p{IsBasicLatin}*"/>
       <xs:maxLength value="128" />
-      <xs:minLength value="1" />
+      <!-- <xs:minLength value="1" /> Cannot ensure this, due to default value (flags) -->
     </xs:restriction>
 </xs:simpleType>
 </xs:schema>
