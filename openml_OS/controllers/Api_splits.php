@@ -21,7 +21,7 @@ class Api_splits extends CI_Controller {
     
     $this->db = $this->load->database('read',true);
     $this->task_types = array( 1, 2, 3, 6, 7 );
-    $this->evaluation = PATH . APPPATH . 'third_party/OpenML/Java/evaluate.jar';
+    $this->evaluation = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $this->config = " -config 'cache_allowed=false;server=http://www.openml.org/;api_key=".API_KEY."' ";
   }
   
