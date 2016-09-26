@@ -36,7 +36,7 @@ class Api_query extends CI_Controller {
         } else {
           $mysql_error = $this->db->error();
           $this->error = true;
-          $this->myStatus = 'Error '. $mysql_error->code . ': '. $mysql_error->message;
+          $this->myStatus = 'Error '. $mysql_error['code'] . ': '. $mysql_error['message'];
           $this->load->view('json/free_query');
           return;
         }
