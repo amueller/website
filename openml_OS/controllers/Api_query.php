@@ -34,8 +34,9 @@ class Api_query extends CI_Controller {
         if( $result !== false ) {
           $this->myStatus = 'SQL was processed: ' . $result->num_rows() . ' rows selected. ';
         } else {
+          $mysql_error = $this->db->error();
           $this->error = true;
-          $this->myStatus = 'Error '. $this->db->_error_number() . ': '. $this->db->_error_message();
+          $this->myStatus = 'Error '. $mysql_error->code . ': '. $mysql_error->message;
           $this->load->view('json/free_query');
           return;
         }
