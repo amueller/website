@@ -1039,7 +1039,7 @@ class ElasticSearch {
     private function fetch_runfiles($min, $max) {
         $index = array();
         foreach ($this->db->query('SELECT source, field, name, format, file_id from runfile where source >= ' . $min . ' and source < ' . $max) as $r) {
-            $index[$r->source][$r->field]['url'] = 'http://openml.org/data/download/' . $r->file_id . '/' . $r->name;
+            $index[$r->source][$r->field]['url'] = BASE_URL . 'data/download/' . $r->file_id . '/' . $r->name;
             $index[$r->source][$r->field]['format'] = $r->format;
         }
         return $index;
