@@ -1793,6 +1793,10 @@ hr.hardSmall {
   line-height: 170%;
 }
 
+.datainfo a{
+  color: #27b6ba;
+}
+
 .datainfo i{
   margin-left: 10px;
   margin-right: 5px;
@@ -2632,7 +2636,7 @@ a:hover > .circlered{
 
 .hideContent {
     overflow: hidden;
-    height: 10.5em;
+    height: 11.3em;
 }
 
 .hideContent::after {
@@ -2640,8 +2644,8 @@ a:hover > .circlered{
   text-align: center;
   width: 100%;
   color: #485451;
-  top: 12em;
-  content: "click for more";
+  top: 13em;
+  content: '\25BE  Show all';
 }
 
 .hideFeatures {
