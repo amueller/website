@@ -19,8 +19,9 @@
 
 .head{
   margin-top: 40px;
-  height: 160px;
+  height: 190px;
   text-align: center;
+  overflow: hidden;
 }
 
 .img-guide-wrapper{
