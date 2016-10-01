@@ -82,7 +82,7 @@ left:0;
 #beta{
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  color: #999;
+  color: #485451;
   font-size: 15px;
   position: relative;
   float: right;
@@ -98,7 +98,7 @@ left:0;
   text-decoration:none;
   display:inline-block;
   overflow: visible;
-  color: #999;
+  color: #485451;
 }
 
 .optslider{
@@ -343,7 +343,7 @@ select{
   overflow:hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color:#999;
+  color:#485451;
 }
 
 
@@ -499,7 +499,7 @@ select{
 }
 
 .greenheader{
-  color: #757575;
+  color: #485451;
 }
 
 .yellowheader{
@@ -667,7 +667,7 @@ select{
 }
 
 .openmlsectioninfo{
-  background: #ececec;
+  background: #f8f8f8;
   font-family: "RobotoDraft","Roboto",sans-serif;
   font-size: 14px;
   padding-top: 20px;
@@ -685,7 +685,7 @@ select{
 }
 
 .topborder{
-  background: #ececec;
+  background: #f8f8f8;
 /*    overflow: hidden;*/
     position: relative;
     backface-visibility: hidden;
@@ -779,18 +779,18 @@ select{
 
 .openmlsectioninfo h1{
   font-size: 40px;
-  color: #757575 !important;
+  color: #485451 !important;
   margin-bottom: 20px;
 }
 
 .simpleheader h1{
   font-size: 40px;
-  color: #757575 !important;
+  color: #485451 !important;
   margin-bottom: 20px;
 }
 
 .openmlsectioninfo h1 > a{
-  color: #757575 !important;
+  color: #485451 !important;
 }
 
 
@@ -892,7 +892,7 @@ h4{
   margin-top: 20px;
   font-size: 20px;
   border-bottom: 1px solid #cecece;
-  color: #757575;
+  color: #485451;
 }
 
 h5{
@@ -900,7 +900,7 @@ h5{
   font-weigth: 200;
   margin-top: 30px;
   font-size: 17px;
-  color: #757575;
+  color: #485451;
 }
 
 
@@ -1048,7 +1048,7 @@ h5{
 }
 
 .nav-grey > li > a{
-  color: #757575;
+  color: #485451;
   font-family: 'Roboto', sans-serif;
   padding-right: 0px;
 }
@@ -1239,7 +1239,7 @@ opacity:0.6;
 }
 .sharrre .count {
   line-height: 20px;
-  color:#757575;
+  color:#485451;
   display:none;
   font-size:12px;
   float: center;
@@ -1267,13 +1267,13 @@ a:hover .count {
 
 .openml-contact a{
   text-decoration: none;
-  color: #757575;
+  color: #485451;
   font-size: 11px;
 }
 
 .openml-contact a:hover{
   text-decoration: none;
-  color: #757575;
+  color: #485451;
 }
 
 .openml-contact-footer{
@@ -1396,7 +1396,7 @@ ul.openml-contact {
     right: 0;
     min-width: 100%;
     min-height: 100%;
-    font-size: 999px;
+    font-size: 485451px;
     text-align: right;
     filter: alpha(opacity=0);
     opacity: 0;
@@ -1407,12 +1407,12 @@ ul.openml-contact {
 
 .input-info-first{
   padding-left:0px;
-  color: #999;
+  color: #485451;
   font-size: 12px;
 }
 
 .input-info{
-  color: #999;
+  color: #485451;
   font-size: 12px;
   margin-top:10px;
   padding-left:0px;
@@ -1622,7 +1622,7 @@ ul.footer{
 li.footerhead{
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  color: #999999;
+  color: #485451485451;
 }
 
 footer > p{
@@ -1784,7 +1784,7 @@ hr.hardSmall {
     }
 
 .datainfo {
-  color: #999 !important;
+  color: #485451 !important;
   padding-top: 3px;
   padding-bottom: 40px;
   font-size: 10pt;
@@ -1964,7 +1964,7 @@ html, body {
 .searchstats{
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  color: #999;
+  color: #485451;
   font-size: 20px;
   padding-top:15px;
 }
@@ -2105,7 +2105,7 @@ html, body {
 }
 
 .menuaction{
-  color: #999;
+  color: #485451;
   text-align: right;
   height: 18px;
   padding-top: 3px;
@@ -2129,7 +2129,7 @@ html, body {
 
 .cardaction{
   margin-left: 5px;
-  color: #999;
+  color: #485451;
   font-size: 14px;
   text-decoration: none;
   margin-left: auto;
@@ -2189,7 +2189,7 @@ html, body {
   display:inline-block;
   font-size: 22px;
   font-family: 'RobotoDraft', sans-serif;
-  font-weight: 300 !important;  color: #757575;
+  font-weight: 300 !important;  color: #485451;
   margin-top: 0px;
 }
 
@@ -2229,7 +2229,7 @@ html, body {
 }
 
 .searchresult i{
-  color: #999;
+  color: #485451;
   margin-left: 10px;
   margin-right: 20px;
   font-size: 18px;
@@ -2246,7 +2246,7 @@ html, body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color:#999;
+  color:#485451;
 }
 
 .searchresult  .update_comment{
@@ -2332,7 +2332,7 @@ html, body {
 }
 
 .ui-menu-item span{
-  color: #999;
+  color: #485451;
 }
 
 .ui-state-hover, .ui-state-focus{
@@ -2343,7 +2343,7 @@ html, body {
 .help-block, .help-block2{
   font-size: 12px;
   font-weight: 100;
-  color: #999;
+  color: #485451;
 }
 
 .social {
@@ -2395,7 +2395,7 @@ html, body {
   margin-bottom: 20px;
   display: inline-block;
   line-height: 18px;
-  color: #999999;
+  color: #485451485451;
   padding-top:80px;
   padding-bottom:60px;
 }
@@ -2418,7 +2418,7 @@ html, body {
 a.bold{
     text-decoration: none;
     font-weight: bold;
-    color: #757575;
+    color: #485451;
 }
 
 a.bold:hover{
@@ -2540,7 +2540,7 @@ a:hover > .circlered{
 .shortintro{
    font-size: 16px;
    font-weight: 300;
-   color: #757575;
+   color: #485451;
    padding-bottom:30px;
 }
 
@@ -2570,7 +2570,7 @@ a:hover > .circlered{
 .qualities {
   margin-bottom: 20px;
   display: inline-block;
-  color: #999999;
+  color: #485451485451;
 }
 
 .qualrow{
@@ -2639,7 +2639,7 @@ a:hover > .circlered{
   position: absolute;
   text-align: center;
   width: 100%;
-  color: #999;
+  color: #485451;
   top: 12em;
   content: "click for more";
 }
@@ -2687,7 +2687,7 @@ a:hover > .circlered{
 }
 
 .searchall {
-  color: #757575;
+  color: #485451;
   text-decoration: none;
   position: absolute;
   top: 13px;
@@ -2706,7 +2706,7 @@ a:hover > .circlered{
 }
 
 #wiki-waiting{
-  color:#999;
+  color:#485451;
 }
 
 #wiki-ready{
@@ -3032,13 +3032,13 @@ svg:not(:root){
 }
 
 .icongray i {
-  color: #757575;
+  color: #485451;
   display: inline-block;
   margin-right: 3px;
 }
 
 .sidenav > li.topactive > .icongray {
-  color: #757575;
+  color: #485451;
 }
 
 .iconpurple i {
@@ -3200,7 +3200,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 }
 
 .userdetails i{
-  color: #999;
+  color: #485451;
 }
 
 .panel:after{
@@ -3344,7 +3344,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
   font-size: 18px;
   font-weight: 300;
   line-height: 24px;
-  color: #999;
+  color: #485451;
   text-align: center;
 }
 .marketing img {
@@ -3412,7 +3412,7 @@ body.stop-scrolling {
   margin-top: -200px;
   overflow: hidden;
   display: none;
-  z-index: 99999; }
+  z-index: 48545199; }
   @media all and (max-width: 540px) {
     .sweet-alert {
       width: auto;
