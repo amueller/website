@@ -4,7 +4,7 @@ if (!$this->ion_auth->logged_in()) {
   su('login');
 }
 
-$this->measures = array("area_under_roc_curve", "predictive_accuracy", "build_cpu_time", "usercpu_time_millis", "cortana_quality");
+$this->measures = array("area_under_roc_curve", "predictive_accuracy", "build_cpu_time", "usercpu_time_millis", "cortana_quality", "number_of_instances");
 
 $sql = 'SELECT `m`.`id`, `m`.`request_date`, `m`.`type`, ' .
        'IF(CHAR_LENGTH(`m`.`datasets`)>20, CONCAT( "<span>", SUBSTRING(`m`.`datasets`, 1, 15), "...</span>"), `m`.`datasets`) AS `datasets`, ' .
