@@ -245,19 +245,47 @@ class Api_task extends Api_model {
 
     $xml = simplexml_load_file($descriptionFile);
 
-    $task_type_id = $xml->children('oml', true)->{'task_type_id'};
+    $task_type_id = intval($xml->children('oml', true)->{'task_type_id'});
     $inputs = array();
     $tags = array();
-
+    
+    // for legal input check
+    $legal_inputs = $this->Task_type_inout->getAssociativeArray('name', 'requirement', 'ttid = ' . $task_type_id . ' AND io = "input"');
+    // for required input check
+    $required_inputs = $this->Task_type_inout->getAssociativeArray('name', 'requirement', 'ttid = ' . $task_type_id . ' AND io = "input" AND requirement = "required"');
+    
     foreach($xml->children('oml', true) as $input) {
+      // iterate over all fields, to extract tags and inputs. 
       if ($input->getName() == 'input') {
         $name = $input->attributes() . '';
+        
+        // check if input is no duplicate
+        if (array_key_exists($name, $inputs)) {
+          $this->returnError(536, $this->version, $this->openmlGeneralErrorCode, 'problematic input: ' . $name);
+          return;
+        }
+        
+        // check if input is legal
+        if (array_key_exists($name, $legal_inputs) == false) {
+          $this->returnError(535, $this->version, $this->openmlGeneralErrorCode, 'problematic input: ' . $name);
+          return;
+        }
+        
         $inputs[$name] = $input . '';
+        // maybe a required input is satisfied
+        unset($required_inputs[$name]);
+        
       } elseif ($input->getName() == 'tag') {
         $tags[] = $input . '';
       }
     }
-
+    
+    // required inputs should be empty by now
+    if (count($required_inputs) > 0) {
+      $this->returnError(537, $this->version, $this->openmlGeneralErrorCode, 'problematic input(s): ' . implode(', ', array_keys($required_inputs)));
+      return;
+    }
+    
     $search = $this->Task->search($task_type_id, $inputs);
     if ($search) {
       $task_ids = array();

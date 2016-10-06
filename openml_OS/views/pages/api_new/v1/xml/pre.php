@@ -267,6 +267,9 @@ $this->apiErrors[531] = 'Xsd not found';
 $this->apiErrors[532] = 'Problem validating uploaded description file';
 $this->apiErrors[533] = 'Task already exists.';
 $this->apiErrors[534] = 'Error creating the task.';
+$this->apiErrors[535] = 'Task contains illegal inputs.';
+$this->apiErrors[536] = 'Task contains duplicate inputs.';
+$this->apiErrors[537] = 'Task does not contain all required inputs.';
 
 // openml.evaluations.list
 $this->apiErrors[540] = 'Please provide at least task, flow or setup, uploader or run, to filter results. ';
