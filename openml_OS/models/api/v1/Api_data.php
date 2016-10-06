@@ -203,16 +203,16 @@ class Api_data extends Api_model {
     $tasks = $this->Task->getTasksWithValue( array( 'source_data' => $dataset->did ) );
 
     if( $tasks !== false ) {
-      $task_ids = array();
-      foreach( $tasks as $t ) { $task_ids[] = $t->task_id; }
+      //$task_ids = array();
+      //foreach( $tasks as $t ) { $task_ids[] = $t->task_id; }
 
-      $runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
+      //$runs = $this->Run->getWhere( 'task_id IN ("'.implode('","', $task_ids).'")' );
 
 
-      if( $runs ) {
+      //if( $runs ) {
         $this->returnError( 354, $this->version );
         return;
-      }
+      //}
     }
 
     $result = $this->Dataset->delete( $dataset->did );

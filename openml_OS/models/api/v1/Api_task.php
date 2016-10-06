@@ -271,6 +271,10 @@ class Api_task extends Api_model {
           return;
         }
         
+        // TODO: custom check. if key is source data, check if dataset exists. 
+        // TODO: custom check. if key is estimation procedure, check if EP exists (and collides with task_type_id). 
+        // TODO: custom check. if key is target value, check if it exists. 
+        
         $inputs[$name] = $input . '';
         // maybe a required input is satisfied
         unset($required_inputs[$name]);
