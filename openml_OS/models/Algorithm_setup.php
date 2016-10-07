@@ -12,7 +12,8 @@ class Algorithm_setup extends Database_write {
     $paramString = '';
     $valueString = '';
     
-    ksort( $parameters );
+    // the OLD way of finding a parameter setup. 
+    /*ksort( $parameters );
     
     foreach( $parameters as $key => $value ) {
       $paramString .= ',' . $this->db->escape_str( $key );
@@ -24,6 +25,17 @@ class Algorithm_setup extends Database_write {
     } else {
       $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` WHERE `implementation_id` = "'.$implementation->id.'" AND `nr_parameters` IS NULL LIMIT 0,1';
     }
+    */
+    
+    // the new way
+    $leftJoin = '';
+    $where = '';
+    foreach($parameters as $key => $value) {
+      // key = the input_id, value = the value
+      $leftJoin .= ' `input_setting` `i'.$key.'` ON `i'.$key.'`.`setup` = `s`.`sid` AND `i'.$key.'`.`input_id` = "'.$key.'" ';
+      $where .= ' AND `i'.$key.'`.`value` = "'.$this->db->escape($value).'" ';
+    }
+    $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` ' . $leftJoin . ' WHERE `implementation_id` = "' . $implementation->id . '" AND ISNULL(`nr_parameters`,0) = ' . count($parameters) . $where ' LIMIT 0,1;';
     
     $result = $this->db->query( $sql )->result();
     
