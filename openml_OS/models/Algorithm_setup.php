@@ -32,10 +32,10 @@ class Algorithm_setup extends Database_write {
     $where = '';
     foreach($parameters as $key => $value) {
       // key = the input_id, value = the value
-      $leftJoin .= ' `input_setting` `i'.$key.'` ON `i'.$key.'`.`setup` = `s`.`sid` AND `i'.$key.'`.`input_id` = "'.$key.'" ';
+      $leftJoin .= 'LEFT JOIN `input_setting` `i'.$key.'` ON `i'.$key.'`.`setup` = `s`.`sid` AND `i'.$key.'`.`input_id` = "'.$key.'" ';
       $where .= ' AND `i'.$key.'`.`value` = "'.$this->db->escape($value).'" ';
     }
-    $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` ' . $leftJoin . ' WHERE `implementation_id` = "' . $implementation->id . '" AND ISNULL(`nr_parameters`,0) = ' . count($parameters) . $where ' LIMIT 0,1;';
+    $sql = 'SELECT `sid`,`implementation_id`,`nr_parameters` FROM `algorithm_setup` AS `s` LEFT JOIN (SELECT `setup`, COUNT(*) AS `nr_parameters` FROM `input_setting` GROUP BY `setup`) AS `p` ON `s`.`sid` = `p`.`setup` ' . $leftJoin . ' WHERE `implementation_id` = "' . $implementation->id . '" AND (`nr_parameters`+IFNULL(`nr_parameters`,0)) = ' . count($parameters) . $where . ' LIMIT 0,1;';
     
     $result = $this->db->query( $sql )->result();
     
