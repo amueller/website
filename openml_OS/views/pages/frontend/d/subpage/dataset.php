@@ -216,13 +216,13 @@
 		<h3><?php echo count($this->tasks); ?> tasks</h3>
 		<?php foreach( $this->tasks as $q){?>
       <div class="searchresult panel">
-        <div class="itemheadfull">
+        <div class="itemheadfull" <?php echo ($q['runs'] ? '' : 'style="opacity: 0.5"'); ?>>
           <i class="fa fa-trophy fa-lg" style="color:#fb8c00;"></i>
           <a href="t/<?php echo $q['task_id']; ?>"><?php echo $q['tasktype']['name'].' on '.$q['source_data']['name']; ?></a>
         </div>
-        <div class="runStats statLine">
+        <div class="runStats statLine" <?php echo ($q['runs'] ? '' : 'style="opacity: 0.5"'); ?>>
           <?php
-            echo '<b>'.$q['runs'].' runs</b>';
+            echo '<b>'.($q['runs'] ? $q['runs'] : '0').' runs</b>';
             echo ' - estimation_procedure: '.$q['estimation_procedure']['name'];
             if(array_key_exists('evaluation_measures',$q)) echo ' - evaluation_measure: '.$q['evaluation_measures'];
             if(array_key_exists('target_feature',$q)) echo ' - target_feature: '.$q['target_feature'];
