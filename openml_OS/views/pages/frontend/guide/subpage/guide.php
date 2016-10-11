@@ -76,14 +76,13 @@
 </p>
 
 	<h3 id="g_rest" class="text-info"><i class="fa fa-cloud fa-fw"></i> REST API</h3>
-<p>OpenML also offers a <a href="#rest_services">REST API</a> which allows you to talk to OpenML directly. Most communication is done using XML, but we also offer JSON endpoints for convenience.
+<p>OpenML also offers a REST API which allows you to talk to OpenML directly. Most communication is done using XML, but we also offer JSON endpoints for convenience.
 <ul>
 <li><a href="#rest_tutorial" data-toggle="tab">REST Tutorial</a></li>
-<li><a href="#rest_services" data-toggle="tab">List of REST services</a></li>
+<li><a href="http://www.openml.org/api_docs">REST API Reference</a></li>
 <li><a href="#json" data-toggle="tab">JSON Endpoints</a></li>
 </ul>
 </p>
-
 
 <h3 class="text-muted"><i class="fa fa-folder fa-fw"></i> Projects (under construction)</h3>
 <p>You can combine data sets, flows and runs into projects, to collaborate with others online, or simply keep a log of your work.</p>
