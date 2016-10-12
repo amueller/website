@@ -56,9 +56,9 @@
 
 <p>Currently, OpenML is integrated, or being integrated, into the following environments. Follow the links to detailed instructions.
 <ul class="nav-tab">
-<li><a href="#plugin_weka" data-toggle="tab">WEKA, Waikato Environment for Knowledge Analysis</a></li>
-<li><a href="#plugin_moa" data-toggle="tab">MOA, Massive Online Analysis</a></li>
-<li><a href="#plugin_rm" data-toggle="tab">RapidMiner</a></li>
+<li><a href="guide#!plugin_weka" data-toggle="tab">WEKA, Waikato Environment for Knowledge Analysis</a></li>
+<li><a href="guide#!plugin_moa" data-toggle="tab">MOA, Massive Online Analysis</a></li>
+<li><a href="guide#!plugin_rm" data-toggle="tab">RapidMiner</a></li>
 </ul>
 
 <h3 id="g_apis" class="text-warning"><i class="fa fa-rocket fa-fw"></i> Programming APIs</h3>
@@ -69,18 +69,18 @@
 
 <p>Follow the links for detailed documentation:</p>
 <ul>
-<li><a href="#java" data-toggle="tab">Java</a></li>
-<li><a href="#r" data-toggle="tab">R</a></li>
-<li><a href="#python" data-toggle="tab">Python</a></li>
+<li><a href="guide#!java" data-toggle="tab">Java</a></li>
+<li><a href="guide#!r" data-toggle="tab">R</a></li>
+<li><a href="guide#!python" data-toggle="tab">Python</a></li>
 </ul>
 </p>
 
 	<h3 id="g_rest" class="text-info"><i class="fa fa-cloud fa-fw"></i> REST API</h3>
 <p>OpenML also offers a REST API which allows you to talk to OpenML directly. Most communication is done using XML, but we also offer JSON endpoints for convenience.
 <ul>
-<li><a href="#rest_tutorial" data-toggle="tab">REST Tutorial</a></li>
+<li><a href="guide#!rest_tutorial" data-toggle="tab">REST Tutorial</a></li>
 <li><a href="http://www.openml.org/api_docs">REST API Reference</a></li>
-<li><a href="#json" data-toggle="tab">JSON Endpoints</a></li>
+<li><a href="guide#!json" data-toggle="tab">JSON Endpoints</a></li>
 </ul>
 </p>
 
