@@ -35,6 +35,8 @@
                         hljs.highlightBlock(e)
                     });
 
+                    swaggerUi.options.host = '<?php echo BASE_URL; ?>';
+
                     if (swaggerUi.options.url) {
                         $('#input_baseUrl').val(swaggerUi.options.url);
                     }
@@ -56,6 +58,7 @@
               },
             });
 
+
             function addApiKeyAuthorization() {
                 var key = encodeURIComponent($('#input_apiKey')[0].value);
                 if (key && key.trim() != "") {
@@ -64,7 +67,6 @@
                     log("added key " + key);
                 }
                 <?php if(isset($this->api_key) and $this->api_key){ ?>
-                  console.log('<?php echo $this->api_key; ?>');
                   $('input[name="api_key"]').val('<?php echo $this->api_key; ?>');
                   $('*[data-label="api_key"]').addClass('hide');
                 <?php } ?>
@@ -84,7 +86,6 @@
                     console.log.apply(console, arguments);
                 }
             }
-            console.log('hello');
             $('#resources_container').css('background-color', 'rgba(0,0,0,0.1)');
             $('label[for=input-api-token]').val('Version');
 

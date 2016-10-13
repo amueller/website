@@ -5,7 +5,6 @@
         "description": "REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint http://www.openml.org/api/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.",
         "version": "1.0.0"
     },
-    "host": "www.openml.org",
     "schemes": [
         "http"
     ],
