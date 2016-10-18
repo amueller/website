@@ -29,6 +29,7 @@ class Api_new extends CI_Controller {
     $this->load->model('api/v1/Api_job');
     $this->load->model('api/v1/Api_user');
     $this->load->model('Study');
+    $this->load->model('Math_function');
 
     $this->load->model('Log');
     $this->load->model('Api_session');
@@ -72,7 +73,7 @@ class Api_new extends CI_Controller {
       $this->user_email = $this->ion_auth->user()->row()->email;
     }
     
-    $this->supportedMetrics = $this->MathFunction->getColumnWhere('name', 'functionType = "EvaluationFunction"');
+    $this->supportedMetrics = $this->Math_function->getColumnWhere('name', 'functionType = "EvaluationFunction"');
   }
 
   public function index() {
