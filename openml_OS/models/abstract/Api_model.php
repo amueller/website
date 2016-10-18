@@ -225,7 +225,7 @@ class Api_model extends CI_Model {
     
     try {
       //update index
-      $this->elasticsearch->update_tags($special_name, $data_id);
+      $this->elasticsearch->update_tags($special_name, $id);
       //update studies
       foreach ($this->Study_tag->studiesToUpdate($tag, $currentTime, $this->user_id) as $study_id) {
         $this->elasticsearch->index('study', $study_id);
@@ -240,7 +240,7 @@ class Api_model extends CI_Model {
       'entity-tag.tpl.php', 
       $this->version, 
       array(
-        'id' => $data_id, 
+        'id' => $id, 
         'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag'),
         'tags' => $tags
       )
