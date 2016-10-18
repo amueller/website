@@ -43,12 +43,12 @@ class Api_task extends Api_model {
     }
 
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->entity_untag('task', $this->input->post('task_id'), $this->input->post('tag'), false, 'task');
+      $this->entity_tag_untag('task', $this->input->post('task_id'), $this->input->post('tag'), false, 'task');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->entity_untag('task', $this->input->post('task_id'), $this->input->post('tag'), true, 'task');
+      $this->entity_tag_untag('task', $this->input->post('task_id'), $this->input->post('tag'), true, 'task');
       return;
     }
 

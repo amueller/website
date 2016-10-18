@@ -78,12 +78,12 @@ class Api_run extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->entity_untag('run', $this->input->post('run_id'), $this->input->post('tag'), false, 'run');
+      $this->entity_tag_untag('run', $this->input->post('run_id'), $this->input->post('tag'), false, 'run');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->entity_untag('run', $this->input->post('run_id'), $this->input->post('tag'), true, 'run');
+      $this->entity_tag_untag('run', $this->input->post('run_id'), $this->input->post('tag'), true, 'run');
       return;
     }
 

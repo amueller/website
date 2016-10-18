@@ -65,12 +65,12 @@ class Api_flow extends Api_model {
     }
 
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->entity_untag('implementation', $this->input->post('flow_id'), $this->input->post('tag'), false, 'flow');
+      $this->entity_tag_untag('implementation', $this->input->post('flow_id'), $this->input->post('tag'), false, 'flow');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->entity_untag('implementation', $this->input->post('flow_id'), $this->input->post('tag'), true, 'flow');
+      $this->entity_tag_untag('implementation', $this->input->post('flow_id'), $this->input->post('tag'), true, 'flow');
       return;
     }
 
