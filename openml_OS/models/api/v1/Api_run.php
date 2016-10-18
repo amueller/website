@@ -417,7 +417,8 @@ class Api_run extends Api_model {
       $this->returnError( 204, $this->version );
       return;
     }
-    $task = end( $this->Task->tasks_crosstabulated( $taskRecord->ttid, true, array(), false, $task_id ) );
+    $fetchedTasks = $this->Task->tasks_crosstabulated($taskRecord->ttid, true, array(), false, $task_id);
+    $task = end($fetchedTasks);
 
     // now create a run
 
