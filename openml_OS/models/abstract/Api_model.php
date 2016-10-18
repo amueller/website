@@ -241,8 +241,9 @@ class Api_model extends CI_Model {
       $this->version, 
       array(
         'id' => $data_id, 
-        'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag')),
+        'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag'),
         'tags' => $tags
+      )
     );
   }
 }
