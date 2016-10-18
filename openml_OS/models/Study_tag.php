@@ -17,10 +17,12 @@ class Study_tag extends Database_write {
       'AND (t.window_end IS NULL OR t.window_end > "' . $time . '")';
     
     $res = array();
-    foreach( $data->result() as $row ) {
+    $data = $this->query($sql);
+    if (!$data) return false;
+    foreach($data->result() as $row) {
       $res[] = $row->{'tag'};
     }
-    return count( $res ) > 0 ? $res : false;
+    return $res;
   }
 }
 ?>
