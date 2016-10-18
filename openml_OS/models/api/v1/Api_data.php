@@ -14,6 +14,7 @@ class Api_data extends Api_model {
     $this->load->model('Data_quality_interval');
     $this->load->model('Quality');
     $this->load->model('File');
+    $this->load->model('Study_tag');
 
     $this->load->helper('file_upload');
   }
@@ -70,16 +71,16 @@ class Api_data extends Api_model {
     }
 
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->data_tag($this->input->post('data_id'),$this->input->post('tag'));
+      $this->entity_tag('dataset', $this->input->post('data_id'), $this->input->post('tag'), false, 'data');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->data_untag($this->input->post('data_id'),$this->input->post('tag'));
+      $this->entity_untag('dataset', $this->input->post('data_id'), $this->input->post('tag'), true, 'data');
       return;
     }
 
-    $this->returnError( 100, $this->version );
+    $this->returnError(100, $this->version);
   }
 
   private function data_list($segs) {
@@ -352,7 +353,7 @@ class Api_data extends Api_model {
 
     // update counters
     $this->elasticsearch->index('user', $this->user_id);
-
+    
     // create initial wiki page
 
     $this->wiki->export_to_wiki($id);
@@ -670,53 +671,6 @@ class Api_data extends Api_model {
     } else {
       $this->returnError(389, $this->version);
       return;
-    }
-  }
-
-
-  private function data_tag($data_id, $tag) {
-    $error = -1;
-    $result = tag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
-
-    try {
-      //update index
-      $this->elasticsearch->update_tags('data', $data_id);
-      //update studies
-      if(startsWith($tag,'study_')){
-        $this->elasticsearch->index('study', end(explode('_',$tag)));
-      }
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-    } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $data_id, 'type' => 'data' ) );
-    }
-  }
-
-  private function data_untag($data_id, $tag) {
-    $error = -1;
-    $result = untag_item( 'dataset', $data_id, $tag, $this->user_id, $error );
-    
-    try {
-      //update index
-      $this->elasticsearch->update_tags('data', $data_id);
-      //update studies
-      if(startsWith($tag,'study_')){
-        $this->elasticsearch->index('study', end(explode('_',$tag)));
-      }
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-    
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-    } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $data_id, 'type' => 'data' ) );
     }
   }
 }

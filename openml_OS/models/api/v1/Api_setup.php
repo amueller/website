@@ -32,12 +32,12 @@ class Api_setup extends Api_model {
     }
     
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->setup_tag($this->input->post('setup_id'),$this->input->post('tag'));
+      $this->entity_untag('algorithm_setup', $this->input->post('setup_id'), $this->input->post('tag'), false, 'setup');
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->setup_untag($this->input->post('setup_id'),$this->input->post('tag'));
+      $this->entity_untag('algorithm_setup', $this->input->post('setup_id'), $this->input->post('tag'), true, 'setup');
       return;
     }
     
@@ -179,27 +179,6 @@ class Api_setup extends Api_model {
     $this->xmlContents( 'setup-delete', $this->version, array( 'setup' => $setup ) );
   }
   
-  
-  private function setup_tag($id,$tag) {
-
-    $error = -1;
-    $result = tag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
-    
-    try {
-      //update index
-      $this->elasticsearch->index('setup', $id);
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-    
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-    } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'setup' ) );
-    }
-  }
-  
   private function setup_differences($setupA, $setupB, $task_id) {
   	$sidA = min($setupA, $setupB);
   	$sidB = max($setupA, $setupB);
@@ -249,26 +228,6 @@ class Api_setup extends Api_model {
   		  '`sidA` = ' . $data['sidA'] . ' AND `sidB` = ' . $data['sidB'] . ' AND `task_id` = ' . $data['task_id']);
   		$this->xmlContents( 'setup-differences', $this->version, array( 'data' => $meta_array ) );
   	//}
-  }
-
-  private function setup_untag($id,$tag) {
-    
-    $error = -1;
-    $result = untag_item( 'algorithm_setup', $id, $tag, $this->user_id, $error );
-    
-    try {
-      //update index
-      $this->elasticsearch->index('setup', $id);
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-    
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-    } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'setup' ) );
-    }
   }
 }
 ?>

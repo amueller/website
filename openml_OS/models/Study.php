@@ -5,15 +5,30 @@ class Study extends Database_write {
     parent::__construct();
     $this->table = 'study';
     $this->id_column = 'id';
+    
+    $this->load->model('Study_tag');
   }
 
-  function create( $name, $description, $creator ) {
-
+  function create($name, $description, $creator) {
     // insert
-    $study_id = $this->insert( array( 'name' => $name, 'description' => $description, 'creator' => $creator ) );
-
+    $schedule_data = array(
+      'name' => $name, 
+      'description' => $description, 
+      'creator' => $creator);
+    $study_id = $this->insert($schedule_data);
+    
+    $tag_data = array(
+      'study_id' => $study_id,
+      'tag' => 'study_' . $study_id,
+      'window_start' => now(),
+      'window_end' => null,
+      'write_access' => 'private'
+    );
+    
+    $this->Study_tag->insert($tag_data);
+    
     // add to elastic search index.
-    $this->elasticsearch->index('study', $study_id );
+    $this->elasticsearch->index('study', $study_id);
 
     // add to wiki
     $this->wiki->export_study_to_wiki($study_id);

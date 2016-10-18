@@ -6,6 +6,7 @@ class Api_model extends CI_Model {
   function __construct() {
     parent::__construct();
     $this->load->helper('text');
+    $this->legal_tag_entities = array('data','task','flow','setup','run');
     
     $this->openmlGeneralErrorCode = 450;
   }
@@ -138,6 +139,111 @@ class Api_model extends CI_Model {
       header('Content-type: text/xml; charset=utf-8');
       echo $data;
     }
+  }
+  
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   * @function entity_tag_untag:
+   *    tags or untags an entity (data, flow, task, setup, run)
+   *
+   * @param type (string):
+   *    in {dataset, implementation, run, task, algorithm_setup} (pointing 
+   *    to a database table)
+   * @param entity_id (int):
+   *    the id in the table mentioned by type
+   * @param tag (str):
+   *    the name of the tag
+   * @param do_untag (bool):
+   *    tags iff false, untags iff false
+   * @param special_name (str): 
+   *    used by ES and the xml tag. (data, flow, task, setup, run)
+   *
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  protected function entity_tag_untag($type, $entity_id, $tag, $do_untag, $special_name) {
+    // checks if type in {dataset, implementation, run, task, algorithm_setup}
+    $taggable = $ci->config->item('taggable_entities');
+    if(!in_array($type, array_keys($taggable))) {
+      $this->returnError(470, $this->version);
+      return;
+    }
+    
+    if ($entity_id == false || $tag == false) {
+      $this->returnError(471, $this->version);
+      return;
+    }
+    
+    $model_name_entity = ucfirst($type);
+    $model_name_tag = ucfirst($taggable[$type]);
+    $currentTime = now();
+    
+    $entity = $ci->{$model_name_entity}->getById($id);
+    if (!$entity) {
+      $this->returnError(472, $this->version);
+      return;
+    }
+    
+    
+    if ($do_untag) {
+      /* * * * * * * * * * *
+       *     U N T A G     *
+       * * * * * * * * * * */
+      $tag_record = $ci->{$model_name_tag}->getWhereSingle('id = ' . $id . ' AND tag = "' . $tag . '"');
+      if ($tag_record == false) {
+        $this->returnError(475, $this->version);
+        return;
+      }
+      
+      $is_admin = $ci->ion_auth->is_admin($this->user_id);
+      if ($tag_record->uploader != $this->user_id && $is_admin == false) {
+        $this->returnError(476, $this->version);
+        return;
+      }
+      
+      $this->{$model_name_tag}->delete( array( $id, $tag ) );
+    } else {
+      /* * * * * * * * * * *
+       *       T A G       *
+       * * * * * * * * * * */
+      $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
+      if($tags != false && in_array($tag, $tags)) {
+        $this->returnError(473, $this->version);
+        return;
+      }
+      
+      $tag_data = array(
+        'id' => $id,
+        'tag' => $tag,
+        'uploader' => $this->user_id,
+        'date' => $currentTime
+      );
+
+      $res = $this->{$model_name_tag}->insert($tag_data);
+      if ($res == false) {
+        $this->returnError(474, $this->version);
+        return;
+      }
+    }
+    
+    try {
+      //update index
+      $this->elasticsearch->update_tags($special_name, $data_id);
+      //update studies
+      foreach ($this->Study_tag->studiesToUpdate($tag, $currentTime, $this->user_id) as $study_id) {
+        $this->elasticsearch->index('study', $study_id));
+      }
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
+      return;
+    }
+    
+    $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
+    $this->xmlContents(
+      'entity-tag.tpl.php', 
+      $this->version, 
+      array(
+        'id' => $data_id, 
+        'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag')),
+        'tags' => $tags
+    );
   }
 }
 ?>

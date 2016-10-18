@@ -1,5 +1,5 @@
 <?php
-class Schedule extends Database_write {
+class Schedule extends Database_write { 
 
   function __construct() {
     parent::__construct();

@@ -43,12 +43,12 @@ class Api_task extends Api_model {
     }
 
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->task_tag($this->input->post('task_id'),$this->input->post('tag'));
+      $this->entity_untag('task', $this->input->post('task_id'), $this->input->post('tag'), false, 'task');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->task_untag($this->input->post('task_id'),$this->input->post('tag'));
+      $this->entity_untag('task', $this->input->post('task_id'), $this->input->post('tag'), true, 'task');
       return;
     }
 
@@ -335,56 +335,6 @@ class Api_task extends Api_model {
     $this->elasticsearch->index('task', $id);
 
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
-  }
-
-  private function task_tag($id, $tag) {
-    $error = -1;
-    $result = tag_item('task', $id, $tag, $this->user_id, $error);
-
-    try {
-      //update index
-      $this->elasticsearch->update_tags('task', $id);
-
-      //update studies
-      if(startsWith($tag,'study_')){
-        $this->elasticsearch->index('study', end(explode('_',$tag)));
-      }
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-    
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-      return;
-    } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'task' ) );
-    }
-  }
-
-  private function task_untag($id, $tag) {
-
-    $error = -1;
-    $result = untag_item( 'task', $id, $tag, $this->user_id, $error );
-    
-    try {
-      //update index
-      $this->elasticsearch->update_tags('task', $id);
-      //update studies
-      if(startsWith($tag,'study_')) {
-        $this->elasticsearch->index('study', end(explode('_',$tag)));
-      }
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-      return;
-    } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'task' ) );
-    }
   }
 }
 ?>

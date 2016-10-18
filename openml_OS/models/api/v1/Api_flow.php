@@ -65,12 +65,12 @@ class Api_flow extends Api_model {
     }
 
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->flow_tag($this->input->post('flow_id'),$this->input->post('tag'));
+      $this->entity_untag('implementation', $this->input->post('flow_id'), $this->input->post('tag'), false, 'flow');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->flow_untag($this->input->post('flow_id'),$this->input->post('tag'));
+      $this->entity_untag('implementation', $this->input->post('flow_id'), $this->input->post('tag'), true, 'flow');
       return;
     }
 
@@ -362,55 +362,5 @@ class Api_flow extends Api_model {
 
     $this->flow_delete($flow_id);
   }
-
-
-  private function flow_tag($id, $tag) {
-
-    $error = -1;
-    $result = tag_item( 'implementation', $id, $tag, $this->user_id, $error );
-    
-    try {
-      //update index
-      $this->elasticsearch->update_tags('flow', $id);
-      //update studies
-      if(startsWith($tag,'study_')){
-        $this->elasticsearch->index('study', end(explode('_',$tag)));
-      }
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-    } else {
-      $this->xmlContents( 'entity-tag', $this->version, array( 'id' => $id, 'type' => 'flow' ) );
-    }
-  }
-
-  private function flow_untag($id, $tag) {
-
-    $error = -1;
-    $result = untag_item( 'implementation', $id, $tag, $this->user_id, $error );
-    
-    try {
-      //update index
-      $this->elasticsearch->update_tags('flow', $id);
-      //update studies
-      if(startsWith($tag,'study_')){
-        $this->elasticsearch->index('study', end(explode('_',$tag)));
-      }
-    } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
-    }
-
-    if( $result == false ) {
-      $this->returnError( $error, $this->version );
-    } else {
-      $this->xmlContents( 'entity-untag', $this->version, array( 'id' => $id, 'type' => 'flow' ) );
-    }
-  }
-
 }
 ?>

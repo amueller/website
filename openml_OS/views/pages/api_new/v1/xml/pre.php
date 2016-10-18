@@ -222,21 +222,15 @@ $this->apiErrors[464] = 'User has content';
 $this->apiErrors[465] = 'Deleting user failed.';
 $this->apiErrors[465] = 'Deleting user failed.';
 
-// for function: openml.data.tag
-$this->apiErrors[470] = 'Please give entity_id {data_id, flow_id, run_id} and tag.';
-$this->apiErrors[471] = 'Entity not found.';
-$this->apiErrors[472] = 'Entity already tagged by this tag. ';
-$this->apiErrors[473] = 'Database problem inserting tag. ';
-$this->apiErrors[474] = 'Internal error tagging the entity. ';
+// for function: openml.(entity).(un)tag
+$this->apiErrors[470] = 'Internal error tagging the entity. ';
+$this->apiErrors[471] = 'Please give entity_id {data_id, flow_id, run_id} and tag.';
+$this->apiErrors[472] = 'Entity not found.';
+$this->apiErrors[473] = 'Entity already tagged by this tag. ';
+$this->apiErrors[474] = 'Database problem inserting tag. ';
+$this->apiErrors[475] = 'Tag not found.';
+$this->apiErrors[476] = 'Tag is not owned by you';
 
-// for function: openml.data.untag
-$this->apiErrors[475] = 'Please give entity_id {data_id, flow_id, run_id} and tag.';
-$this->apiErrors[476] = 'Entity {dataset, flow, run} not found.';
-$this->apiErrors[477] = 'Tag not found.';
-$this->apiErrors[478] = 'Tag is not owned by you';
-
-// for function: openml.data.tag (again)
-$this->apiErrors[479] = 'Internal error removing the tag. ';
 
 // openml.task.list
 $this->apiErrors[480] = 'Illegal filter specified';
