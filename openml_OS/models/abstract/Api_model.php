@@ -240,7 +240,7 @@ class Api_model extends CI_Model {
     
     $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
     $this->xmlContents(
-      'entity-tag.tpl.php', 
+      'entity-tag', 
       $this->version, 
       array(
         'id' => $id, 
