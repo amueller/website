@@ -158,7 +158,7 @@ class Api_model extends CI_Model {
    *    used by ES and the xml tag. (data, flow, task, setup, run)
    *
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-  protected function entity_tag_untag($type, $entity_id, $tag, $do_untag, $special_name) {
+  protected function entity_tag_untag($type, $id, $tag, $do_untag, $special_name) {
     // checks if type in {dataset, implementation, run, task, algorithm_setup}
     $taggable = $this->config->item('taggable_entities');
     if(!in_array($type, array_keys($taggable))) {
@@ -166,7 +166,7 @@ class Api_model extends CI_Model {
       return;
     }
     
-    if ($entity_id == false || $tag == false) {
+    if ($id == false || $tag == false) {
       $this->returnError(471, $this->version);
       return;
     }
