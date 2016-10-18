@@ -741,6 +741,7 @@ class ElasticSearch {
                     }
                     $likes_received+=$ld->count;
                 }else if($ld->ldt=='d'){
+                  if (property_exists($ld, 'kt')) { // TODO: THIS IS A BUG! How can it not have a knowlegde piece ? (issue #70 on github)
                     if($ld->kt=='d'){
                         $downloads_received_data+=$ld->count;
                     }else if($ld->kt=='f'){
@@ -750,7 +751,8 @@ class ElasticSearch {
                     }else if($ld->kt=='r'){
                         $downloads_received_run+=$ld->count;
                     }
-                    $downloads_received+=$ld->count;
+                  }
+                  $downloads_received+=$ld->count;
                 }
             }
         }
