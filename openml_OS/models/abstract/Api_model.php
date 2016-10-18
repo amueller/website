@@ -160,7 +160,7 @@ class Api_model extends CI_Model {
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   protected function entity_tag_untag($type, $entity_id, $tag, $do_untag, $special_name) {
     // checks if type in {dataset, implementation, run, task, algorithm_setup}
-    $taggable = $ci->config->item('taggable_entities');
+    $taggable = $this->config->item('taggable_entities');
     if(!in_array($type, array_keys($taggable))) {
       $this->returnError(470, $this->version);
       return;
@@ -175,7 +175,7 @@ class Api_model extends CI_Model {
     $model_name_tag = ucfirst($taggable[$type]);
     $currentTime = now();
     
-    $entity = $ci->{$model_name_entity}->getById($id);
+    $entity = $this->{$model_name_entity}->getById($id);
     if (!$entity) {
       $this->returnError(472, $this->version);
       return;
@@ -186,13 +186,13 @@ class Api_model extends CI_Model {
       /* * * * * * * * * * *
        *     U N T A G     *
        * * * * * * * * * * */
-      $tag_record = $ci->{$model_name_tag}->getWhereSingle('id = ' . $id . ' AND tag = "' . $tag . '"');
+      $tag_record = $this->{$model_name_tag}->getWhereSingle('id = ' . $id . ' AND tag = "' . $tag . '"');
       if ($tag_record == false) {
         $this->returnError(475, $this->version);
         return;
       }
       
-      $is_admin = $ci->ion_auth->is_admin($this->user_id);
+      $is_admin = $this->ion_auth->is_admin($this->user_id);
       if ($tag_record->uploader != $this->user_id && $is_admin == false) {
         $this->returnError(476, $this->version);
         return;
