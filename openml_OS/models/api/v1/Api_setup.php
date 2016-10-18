@@ -118,6 +118,7 @@ class Api_setup extends Api_model {
       $this->returnError(584, $this->version);
       return;
     }
+    // makes sure that the implementation is not a math_function
     if(in_array($implementation->{'implements'}, $this->supportedMetrics)) {
       $this->returnError(585, $this->version);
       return;

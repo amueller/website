@@ -71,7 +71,8 @@ class Api_new extends CI_Controller {
       $this->user_id = $this->ion_auth->user()->row()->id;
       $this->user_email = $this->ion_auth->user()->row()->email;
     }
-
+    
+    $this->supportedMetrics = $this->MathFunction->getColumnWhere('name', 'functionType = "EvaluationFunction"');
   }
 
   public function index() {
