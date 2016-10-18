@@ -472,7 +472,7 @@ class Api_run extends Api_model {
     }
     
     // attach input data
-    $inputData = $this->Run->inputData( $runId, $task->source_data, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
+    $inputData = $this->Run->inputData( $runId, $task['source_data'], 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {
       $errorCode = 211;
       return false;
