@@ -71,12 +71,12 @@ class Api_data extends Api_model {
     }
 
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
-      $this->entity_tag('dataset', $this->input->post('data_id'), $this->input->post('tag'), false, 'data');
+      $this->entity_tag_untag('dataset', $this->input->post('data_id'), $this->input->post('tag'), false, 'data');
       return;
     }
 
     if (count($segments) == 1 && $segments[0] == 'untag' && $request_type == 'post') {
-      $this->entity_untag('dataset', $this->input->post('data_id'), $this->input->post('tag'), true, 'data');
+      $this->entity_tag_untag('dataset', $this->input->post('data_id'), $this->input->post('tag'), true, 'data');
       return;
     }
 
