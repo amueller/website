@@ -227,8 +227,11 @@ class Api_model extends CI_Model {
       //update index
       $this->elasticsearch->update_tags($special_name, $id);
       //update studies
-      foreach ($this->Study_tag->studiesToUpdate($tag, $currentTime, $this->user_id) as $study_id) {
-        $this->elasticsearch->index('study', $study_id);
+      $studies_to_update = $this->Study_tag->studiesToUpdate($tag, $currentTime, $this->user_id);
+      if ($studies_to_update != false) {
+        foreach ($studies_to_update as $study_id) {
+          $this->elasticsearch->index('study', $study_id);
+        }
       }
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
