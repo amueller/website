@@ -13,7 +13,7 @@ class Study_tag extends Database_write {
       'SELECT t.tag FROM study_tag t, study s ' . 
       'WHERE t.study_id = s.id AND tag = "' . $tag . '" ' .
       'AND (t.write_access = public OR s.creator = "' . $user_id . '") ' .
-      'AND (t.window_start IS NULL OR t.window_start < "' . $time . '")'
+      'AND (t.window_start IS NULL OR t.window_start < "' . $time . '")' .
       'AND (t.window_end IS NULL OR t.window_end > "' . $time . '")';
     
     $res = array();
