@@ -57,8 +57,9 @@ $this->apiErrors[181] = 'Unknown flow';
 
 
 // for function: openml.run.upload
-$this->apiErrors[202] = 'Please provide run xml';
-$this->apiErrors[203] = 'Could not validate run xml by xsd';
+$this->apiErrors[201] = 'Please provide run xml';
+$this->apiErrors[202] = 'Could not validate run xml by xsd';
+$this->apiErrors[203] = 'Error reading the run XML';
 $this->apiErrors[204] = 'Unknown task';
 $this->apiErrors[205] = 'Unknown flow';
 $this->apiErrors[206] = 'Invalid file type uploaded';
@@ -74,7 +75,7 @@ $this->apiErrors[215] = 'Unable to evaluate predictions';
 $this->apiErrors[216] = 'Error thrown by Java Application';
 $this->apiErrors[217] = 'Error processing output data: unknown or inconsistent evaluation measure';
 $this->apiErrors[218] = 'Wrong flow associated with run: this implements a math_function';
-$this->apiErrors[219] = 'Error reading the XML document';
+$this->apiErrors[219] = 'Task does not contain field: source_data';
 
 // for function: openml.run.get
 $this->apiErrors[220] = 'Please provide run_id';

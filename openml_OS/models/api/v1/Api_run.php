@@ -294,7 +294,7 @@ class Api_run extends Api_model {
     $description = isset($_FILES['description']) ? $_FILES['description'] : false;
     $uploadError = '';
     if(!check_uploaded_file($description,false,$uploadError)) {
-      $this->returnError(202, $this->version,$this->openmlGeneralErrorCode,$uploadError);
+      $this->returnError(201, $this->version,$this->openmlGeneralErrorCode,$uploadError);
       return;
     }
 
@@ -302,7 +302,7 @@ class Api_run extends Api_model {
     // validate xml
     $xmlErrors = '';
     if(validateXml($description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors) == false) {
-      $this->returnError(203, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
+      $this->returnError(202, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
 
@@ -314,7 +314,7 @@ class Api_run extends Api_model {
     // fetch xml
     $xml = simplexml_load_file($description['tmp_name']);
     if($xml === false) {
-      $this->returnError(219, $this->version);
+      $this->returnError(203, $this->version);
       return;
     }
 
@@ -412,20 +412,24 @@ class Api_run extends Api_model {
     $timestamps[] = microtime(true); // profiling 2
 
     // fetch task
-    $taskRecord = $this->Task->getById( $task_id );
-    if( $taskRecord === false ) {
+    $taskRecord = $this->Task->getById($task_id);
+    if($taskRecord === false) {
       $this->returnError( 204, $this->version );
       return;
     }
-    $fetchedTasks = $this->Task->tasks_crosstabulated($taskRecord->ttid, true, array(), false, $task_id);
-    $task = end($fetchedTasks);
-
+    
+    $task = $this->getTaskValuesAssoc($task_id);
+    if (array_key_exists('source_data', $task) == false) {
+      $this->returnError( 219, $this->version );
+      return;
+    }
+    
+    
     // now create a run
-
     $runData = array(
       'uploader' => $this->user_id,
       'setup' => $setupId,
-      'task_id' => $task->task_id,
+      'task_id' => $task_id,
       'start_time' => now(),
       'status' => ($error_message == false) ? 'OK' : 'error',
       'error_message' => ($error_message == false) ? null : $error_message,
@@ -466,7 +470,7 @@ class Api_run extends Api_model {
       }
       $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
-
+    
     // attach input data
     $inputData = $this->Run->inputData( $runId, $task->source_data, 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {
@@ -498,7 +502,7 @@ class Api_run extends Api_model {
 
 
     // remove scheduled task
-    $this->Schedule->deleteWhere( 'task_id = "' . $task->task_id . '" AND sid = "' . $setupId . '"' );
+    $this->Schedule->deleteWhere( 'task_id = "' . $task_id . '" AND sid = "' . $setupId . '"' );
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Now the stuff that needs to be done for the special     *

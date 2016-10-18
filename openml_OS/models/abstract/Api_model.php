@@ -225,7 +225,9 @@ class Api_model extends CI_Model {
     
     try {
       //update index
-      $this->elasticsearch->update_tags($special_name, $id);
+      if ($special_name != 'setup') { // setups can not be indexed
+        $this->elasticsearch->update_tags($special_name, $id);
+      }
       //update studies
       $studies_to_update = $this->Study_tag->studiesToUpdate($tag, $currentTime, $this->user_id);
       if ($studies_to_update != false) {
