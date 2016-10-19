@@ -23,6 +23,7 @@
     <oml:data_id><?php echo $data_id; ?></oml:data_id>
     <?php endforeach;?>
   </oml:data>
+  <?php endif; ?>
   
   <?php if (is_array($tasks)):?>
   <oml:tasks>
@@ -30,5 +31,6 @@
     <oml:task_id><?php echo $task_id; ?></oml:task_id>
     <?php endforeach;?>
   </oml:tasks>
+  <?php endif; ?>
   
 </oml:study>
