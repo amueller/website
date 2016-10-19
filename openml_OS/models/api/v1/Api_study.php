@@ -46,21 +46,27 @@ class Api_study extends Api_model {
   }
   
   private function study_get($study_id,$knowledge_type) {
+    $valid_knowlegde_types = array('runs', 'flows', 'setups', 'data', 'tasks', NULL);
+    if (!in_array($knowledge_type, $valid_knowlegde_types)) {
+      $this->returnError(600, $this->version);
+      return;
+    } 
+    
     $study = $this->Study->getById($study_id);
     
     if ($study == false) {
-      $this->returnError(600, $this->version);
+      $this->returnError(601, $this->version);
       return;
     }
     
     if ($study->creator != $this->user_id && $study->visibility != 'public') {
-      $this->returnError(601, $this->version);
+      $this->returnError(602, $this->version);
       return;
     }
     
     $tags = $this->Study_tag->getWhere('study_id = ' . $study->id);
     if ($tags == false) {
-      $this->returnError(602, $this->version);
+      $this->returnError(603, $this->version);
       return;
     }
     $this->xmlContents('study-get', $this->version, array('study' => $study, 'tags' => $tags));

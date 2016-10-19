@@ -298,9 +298,10 @@ $this->apiErrors[590] = 'No studies available. ';
 
 
 // openml.study.get
-$this->apiErrors[600] = 'Study does not exists. ';
-$this->apiErrors[601] = 'Study not visible for you. ';
-$this->apiErrors[602] = 'Study does not contain any associated tags (should have at least one). ';
+$this->apiErrors[600] = 'Api function invoked wrong. Unknown knowledge type. ';
+$this->apiErrors[601] = 'Study does not exists. ';
+$this->apiErrors[602] = 'Study not visible for you. ';
+$this->apiErrors[603] = 'Study does not contain any associated tags (should have at least one). ';
 
 
 // openml.votes.list
