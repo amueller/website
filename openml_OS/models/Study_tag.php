@@ -32,12 +32,12 @@ class Study_tag extends Database_write {
   
   function getTaskIdsFromStudy($study_id) {
     $sql = 
-      'SELECT t.task_id, GROUP_CONCAT(st.tag) AS tags '.
+      'SELECT task.task_id, GROUP_CONCAT(st.tag) AS tags '.
       'FROM study s, study_tag st, task_tag t, task '.
       'WHERE task.task_id = t.id AND t.tag = st.tag AND st.study_id = s.id '.
       $this->getRestrictions($study_id) .
-      'GROUP BY t.task_id';
-    return $this->getColumnFromSql('did', $sql);
+      'GROUP BY task.task_id';
+    return $this->getColumnFromSql('task_id', $sql);
   }
   
   private function getRestrictions($study_id) {
