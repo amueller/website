@@ -60,6 +60,16 @@ class Study_tag extends Database_write {
     return $this->getColumnFromSql('sid', $sql);
   }
   
+  function getRunIdsFromStudy($study_id) {
+    $sql = 
+      'SELECT r.rid, GROUP_CONCAT(st.tag) AS tags '.
+      'FROM study s, study_tag st, run_tag t, run r '.
+      'WHERE r.rid = t.id AND t.tag = st.tag AND st.study_id = s.id '.
+      $this->getRestrictions($study_id) .
+      'GROUP BY r.rid';
+    return $this->getColumnFromSql('rid', $sql);
+  }
+  
   private function getRestrictions($study_id) {
     return 'AND s.id = ' . $study_id . ' ' .
       'AND (st.window_start IS NULL OR t.date > st.window_start) '.
