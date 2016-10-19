@@ -20,12 +20,12 @@ class Api_study extends Api_model {
       return;
     }
 
-    if (count($segments) == 1 && is_numeric($segments[1])) {
+    if (count($segments) == 1 && is_numeric($segments[0])) {
       $this->study_get($segments[0], null);
       return;
     }
 
-    if (count($segments) == 2 && is_numeric($segments[1])) {
+    if (count($segments) == 2 && is_numeric($segments[0])) {
       $this->study_get($segments[0], $segments[1]);
       return;
     }
