@@ -25,7 +25,7 @@ class Study_tag extends Database_write {
       'SELECT d.did, d.name, GROUP_CONCAT(st.tag) AS tags '.
       'FROM study s, study_tag st, dataset_tag t, dataset d '.
       'WHERE d.did = t.id AND t.tag = st.tag AND st.study_id = s.id '.
-      $this->getRestrictions($study_id)
+      $this->getRestrictions($study_id) .
       'GROUP BY d.did';
     return $this->getColumnFromSql('did', $sql);
   }
@@ -35,7 +35,7 @@ class Study_tag extends Database_write {
       'SELECT t.task_id, GROUP_CONCAT(st.tag) AS tags '.
       'FROM study s, study_tag st, task_tag t, task '.
       'WHERE task.task_id = t.id AND t.tag = st.tag AND st.study_id = s.id '.
-      $this->getRestrictions($study_id)
+      $this->getRestrictions($study_id) .
       'GROUP BY t.task_id';
     return $this->getColumnFromSql('did', $sql);
   }
