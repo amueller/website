@@ -43,10 +43,10 @@ class Study_tag extends Database_write {
   function getFlowIdsFromStudy($study_id) {
     $sql = 
       'SELECT i.id, i.name, GROUP_CONCAT(st.tag) AS tags '.
-      'FROM study s, study_tag st, flow_tag t, implementation i '.
+      'FROM study s, study_tag st, implementation_tag t, implementation i '.
       'WHERE i.id = t.id AND t.tag = st.tag AND st.study_id = s.id '.
       $this->getRestrictions($study_id) .
-      'GROUP BY d.did';
+      'GROUP BY i.id';
     return $this->getColumnFromSql('did', $sql);
   }
   
