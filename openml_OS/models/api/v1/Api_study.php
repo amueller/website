@@ -102,7 +102,7 @@ class Api_study extends Api_model {
       'data' => $data, 
       'tasks' => $tasks, 
       'flows' => $flows, 
-      'setup' => $setups, 
+      'setups' => $setups, 
       'runs' => $runs
     );
     
