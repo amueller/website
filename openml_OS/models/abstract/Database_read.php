@@ -82,8 +82,8 @@ class Database_read extends CI_Model {
     $res = array();
     $data = $this->query($sql);
     if (!$data) return false;
-    foreach($data->result() as $row) {
-      $res[] = $row->{'tag'};
+    foreach($data as $row) {
+      $res[] = $row->{column};
     }
     return $res;
   }
