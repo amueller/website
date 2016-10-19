@@ -19,14 +19,14 @@
   
   <?php if (is_array($data)):?>
   <oml:data>
-    <?phpforeach($data as $data_id): ?>
+    <?php foreach($data as $data_id): ?>
     <oml:data_id><?php echo $data_id; ?></oml:data_id>
     <?php endforeach;?>
   </oml:data>
   
   <?php if (is_array($tasks)):?>
   <oml:tasks>
-    <?phpforeach($task as $task_id): ?>
+    <?php foreach($task as $task_id): ?>
     <oml:task_id><?php echo $task_id; ?></oml:task_id>
     <?php endforeach;?>
   </oml:tasks>
