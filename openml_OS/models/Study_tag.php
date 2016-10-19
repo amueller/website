@@ -47,7 +47,7 @@ class Study_tag extends Database_write {
       'WHERE i.id = t.id AND t.tag = st.tag AND st.study_id = s.id '.
       $this->getRestrictions($study_id) .
       'GROUP BY i.id';
-    return $this->getColumnFromSql('did', $sql);
+    return $this->getColumnFromSql('id', $sql);
   }
   
   function getSetupIdsFromStudy($study_id) {
