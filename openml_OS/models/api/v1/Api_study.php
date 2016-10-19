@@ -53,7 +53,7 @@ class Api_study extends Api_model {
       return;
     }
     
-    if ($study->creator != $user_id && $study->visibility != 'public') {
+    if ($study->creator != $this->user_id && $study->visibility != 'public') {
       $this->returnError(601, $this->version);
       return;
     }
