@@ -40,6 +40,26 @@ class Study_tag extends Database_write {
     return $this->getColumnFromSql('task_id', $sql);
   }
   
+  function getFlowIdsFromStudy($study_id) {
+    $sql = 
+      'SELECT i.id, i.name, GROUP_CONCAT(st.tag) AS tags '.
+      'FROM study s, study_tag st, flow_tag t, implementation i '.
+      'WHERE i.id = t.id AND t.tag = st.tag AND st.study_id = s.id '.
+      $this->getRestrictions($study_id) .
+      'GROUP BY d.did';
+    return $this->getColumnFromSql('did', $sql);
+  }
+  
+  function getSetupIdsFromStudy($study_id) {
+    $sql = 
+      'SELECT a.sid, GROUP_CONCAT(st.tag) AS tags '.
+      'FROM study s, study_tag st, setup_tag t, algorithm_setup a '.
+      'WHERE a.sid = t.id AND t.tag = st.tag AND st.study_id = s.id '.
+      $this->getRestrictions($study_id) .
+      'GROUP BY a.sid';
+    return $this->getColumnFromSql('sid', $sql);
+  }
+  
   private function getRestrictions($study_id) {
     return 'AND s.id = ' . $study_id . ' ' .
       'AND (st.window_start IS NULL OR t.date > st.window_start) '.

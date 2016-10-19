@@ -84,6 +84,18 @@ class Api_study extends Api_model {
       $tasks = $this->Study_tag->getTaskIdsFromStudy($study->id);
     }
     
+    if ($knowledge_type == null || $knowledge_type == 'flows') {
+      $flows = $this->Study_tag->getFlowIdsFromStudy($study->id);
+    }
+    
+    if ($knowledge_type == null || $knowledge_type == 'setups') {
+      $setups = $this->Study_tag->getSetupIdsFromStudy($study->id);
+    }
+    
+    if ($knowledge_type == null || $knowledge_type == 'runs') {
+      $runs = $this->Study_tag->getRunIdsFromStudy($study->id);
+    }
+    
     $template_values = array(
       'study' => $study, 
       'tags' => $tags, 

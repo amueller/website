@@ -33,4 +33,28 @@
   </oml:tasks>
   <?php endif; ?>
   
+  <?php if (is_array($flows)): ?>
+  <oml:flows>
+    <?php foreach($flows as $flow_id): ?>
+    <oml:flow_id><?php echo $flow_id; ?></oml:flow_id>
+    <?php endforeach;?>
+  </oml:flows>
+  <?php endif; ?>
+  
+  <?php if (is_array($setups)): ?>
+  <oml:setups>
+    <?php foreach($setups as $setup_id): ?>
+    <oml:setup_id><?php echo $setup_id; ?></oml:setup_id>
+    <?php endforeach;?>
+  </oml:setups>
+  <?php endif; ?>
+  
+  <?php if (is_array($runs)): ?>
+  <oml:runs>
+    <?php foreach($runs as $run_id): ?>
+    <oml:run_id><?php echo $run_id; ?></oml:run_id>
+    <?php endforeach;?>
+  </oml:runs>
+  <?php endif; ?>
+  
 </oml:study>
