@@ -83,7 +83,7 @@ class Database_read extends CI_Model {
     $data = $this->query($sql);
     if (!$data) return false;
     foreach($data as $row) {
-      $res[] = $row->{column};
+      $res[] = $row->{$column};
     }
     return $res;
   }
