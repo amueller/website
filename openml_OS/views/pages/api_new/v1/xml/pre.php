@@ -294,7 +294,11 @@ $this->apiErrors[585] = 'Wrong flow associated with run: this implements a math_
 $this->apiErrors[586] = 'Parameter in run xml unknown. ';
 
 // openml.study.list
-$this->apiErrors[591] = 'No studies available. ';
+$this->apiErrors[590] = 'No studies available. ';
+
+
+// openml.study.get
+$this->apiErrors[600] = 'Study does not exists. ';
 
 
 // openml.votes.list

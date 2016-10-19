@@ -14,9 +14,19 @@ class Api_study extends Api_model {
     
     $getpost = array('get','post');
 
-    if (count($segments) >= 1 && $segments[0] == 'list') {
+    if (count($segments) == 1 && $segments[0] == 'list') {
       array_shift($segments);
       $this->study_list($segments);
+      return;
+    }
+
+    if (count($segments) == 1 && is_numeric($segments[1])) {
+      $this->study_get($segments[0], null);
+      return;
+    }
+
+    if (count($segments) == 2 && is_numeric($segments[1])) {
+      $this->study_get($segments[0], $segments[1]);
       return;
     }
     
@@ -28,11 +38,32 @@ class Api_study extends Api_model {
     $studies = $this->Study->getWhere('visibility = "public" or creator = ' . $this->user_id);
     
     if (count($studies) == 0) {
-      $this->returnError(591, $this->version );
+      $this->returnError(590, $this->version );
       return;
     }
 
     $this->xmlContents('study-list', $this->version, array('studies' => $studies));
+  }
+  
+  private function study_get($study_id,$knowledge_type) {
+    $study = $this->Study->getById($study_id);
+    
+    if ($study == false) {
+      $this->returnError(600, $this->version);
+      return;
+    }
+    
+    if ($study->creator != $user_id && $study->visibility != 'public') {
+      $this->returnError(601, $this->version);
+      return;
+    }
+    
+    $tags = $this->Study_tag->getWhere('study_id = ' . $study->id);
+    if ($tags == false) {
+      $this->returnError(602, $this->version);
+      return;
+    }
+    $this->xmlContents('study-get', $this->version, array('study' => $study, 'tags' => $tags));
   }
 }
 ?>
