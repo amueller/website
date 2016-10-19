@@ -70,9 +70,29 @@ class Api_study extends Api_model {
       return;
     }
     
-    $data = $this->Study_tag->getDataIdsFromStudy($study->id);
+    $data = null;
+    $tasks = null;
+    $flows = null;
+    $setups = null;
+    $runs = null;
     
-    $template_values = array('study' => $study, 'tags' => $tags, 'data' => $data);
+    if ($knowledge_type == null || $knowledge_type == 'data') {
+      $data = $this->Study_tag->getDataIdsFromStudy($study->id);
+    }
+    
+    if ($knowledge_type == null || $knowledge_type == 'tasks') {
+      $tasks = $this->Study_tag->getTaskIdsFromStudy($study->id);
+    }
+    
+    $template_values = array(
+      'study' => $study, 
+      'tags' => $tags, 
+      'data' => $data, 
+      'tasks' => $tasks, 
+      'flows' => $flows, 
+      'setup' => $setups, 
+      'runs' => $runs
+    );
     
     $this->xmlContents('study-get', $this->version, $template_values);
   }

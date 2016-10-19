@@ -16,7 +16,19 @@
     <oml:write_access><?php echo $tag->write_access; ?></oml:write_access>
   </oml:tag>
   <?php endforeach; ?>
-  <?php foreach($data as $did): ?>
-  <oml:did><?php echo $did; ?></oml:did>
-  <?php endforeach; ?>
+  
+  <?php if (is_array($data)):?>
+  <oml:data>
+    <?phpforeach($data as $data_id): ?>
+    <oml:data_id><?php echo $data_id; ?></oml:data_id>
+    <?php endforeach;?>
+  </oml:data>
+  
+  <?php if (is_array($tasks)):?>
+  <oml:tasks>
+    <?phpforeach($task as $task_id): ?>
+    <oml:task_id><?php echo $task_id; ?></oml:task_id>
+    <?php endforeach;?>
+  </oml:tasks>
+  
 </oml:study>
