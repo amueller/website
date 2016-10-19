@@ -27,7 +27,7 @@
   
   <?php if (is_array($tasks)):?>
   <oml:tasks>
-    <?php foreach($task as $task_id): ?>
+    <?php foreach($tasks as $task_id): ?>
     <oml:task_id><?php echo $task_id; ?></oml:task_id>
     <?php endforeach;?>
   </oml:tasks>
