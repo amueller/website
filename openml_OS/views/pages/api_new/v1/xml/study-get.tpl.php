@@ -6,7 +6,7 @@
   <oml:creator><?php echo $study->creator; ?></oml:creator>
   <?php foreach($tags as $tag): ?>
   <oml:tag>
-    <oml:name><?php echo $tag->name; ?></oml:name>
+    <oml:name><?php echo $tag->tag; ?></oml:name>
     <?php if ($tag->window_start != null): ?>
     <oml:window_start><?php echo $tag->window_start; ?></oml:window_start> <!-- only entities tagged after this moment will be included in the study -->
     <?php endif; ?>
