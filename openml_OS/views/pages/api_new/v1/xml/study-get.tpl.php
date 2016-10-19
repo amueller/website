@@ -16,4 +16,7 @@
     <oml:write_access><?php echo $tag->write_access; ?></oml:write_access>
   </oml:tag>
   <?php endforeach; ?>
+  <?php foreach($data as $did): ?>
+  <oml:did><?php echo $did; ?></oml:did>
+  <?php endforeach; ?>
 </oml:study>

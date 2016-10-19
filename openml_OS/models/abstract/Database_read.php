@@ -78,6 +78,16 @@ class Database_read extends CI_Model {
     return count( $res ) > 0 ? $res : false;
   }
   
+  function getColumnFromSql($column, $sql) {
+    $res = array();
+    $data = $this->query($sql);
+    if (!$data) return false;
+    foreach($data->result() as $row) {
+      $res[] = $row->{'tag'};
+    }
+    return $res;
+  }
+  
   function getColumnFunctionWhere( $function, $where, $orderby = null ) {
     $this->db->where( $where );
     return $this->getColumnFunction( $function, $orderby );

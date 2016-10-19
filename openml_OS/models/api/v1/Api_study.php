@@ -69,7 +69,12 @@ class Api_study extends Api_model {
       $this->returnError(603, $this->version);
       return;
     }
-    $this->xmlContents('study-get', $this->version, array('study' => $study, 'tags' => $tags));
+    
+    $data = $this->Study_tag->getDataIdsFromStudy($study->id);
+    
+    $template_values = array('study' => $study, 'tags' => $tags, 'data' => $data);
+    
+    $this->xmlContents('study-get', $this->version, $template_values);
   }
 }
 ?>
