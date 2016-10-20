@@ -10,13 +10,13 @@
     <oml:format><?php echo $task->format; ?></oml:format>
   <?php if ($task->task_inputs):
     $task_inputs = explode(',', $task->task_inputs);
-    $input_values = explode(',', $task->input_values);
+    $input_values = str_getcsv($task->input_values);
     for ($i = 0; $i < count($task_inputs); ++$i): ?>
       <oml:input name="<?php echo $task_inputs[$i]; ?>"><?php echo $input_values[$i]; ?></oml:input>
   <?php endfor; endif; ?>
   <?php if ($task->qualities):
     $qualities = explode(',', $task->qualities);
-    $values = explode(',', $task->quality_values);
+    $values = str_getcsv($task->quality_values);
     for ($i = 0; $i < count($qualities); ++$i): ?>
       <oml:quality name="<?php echo $qualities[$i]; ?>"><?php echo $values[$i]; ?></oml:quality>
   <?php endfor; endif; ?>
