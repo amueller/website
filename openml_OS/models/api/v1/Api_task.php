@@ -108,7 +108,7 @@ class Api_task extends Api_model {
             'FROM `task` `t` , `task_type` `tt` , `task_inputs` `ti` , `task_inputs` `source` , `dataset` `d` ' .
             'WHERE `ti`.`task_id` = `t`.`task_id` AND `source`.`input` = "source_data" ' .
             'AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` ' .
-            'AND `tt`.`ttid` = `t`.`ttid` AND `ti`.`input` IN ("' . implode('","', $this->config->item('basic_task_inputs')).'") ' . 
+            'AND `tt`.`ttid` = `t`.`ttid` AND `ti`.`input` IN ("' . implode('","', $this->config->item('basic_taskinputs')).'") ' . 
             $where_total . ' ' .
             'GROUP BY t.task_id ' . $where_limit;
     $tags = 'SELECT `core`.*, CONCAT(\'"\', GROUP_CONCAT(`task_tag`.`tag` SEPARATOR \'","\'),\'"\') AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
