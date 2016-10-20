@@ -104,14 +104,14 @@ class Api_task extends Api_model {
     }
     
     // three level query. in case scalability once forces us to drop some info. 
-    $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `source`.`value` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , GROUP_CONCAT( `ti`.`input` ) AS `task_inputs` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`value` SEPARATOR \'","\'),\'"\') AS `input_values` ' .
+    $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `source`.`value` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`inputs` SEPARATOR \'","\'),\'"\') AS `task_inputs` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`value` SEPARATOR \'","\'),\'"\') AS `input_values` ' .
             'FROM `task` `t` , `task_type` `tt` , `task_inputs` `ti` , `task_inputs` `source` , `dataset` `d` ' .
             'WHERE `ti`.`task_id` = `t`.`task_id` AND `source`.`input` = "source_data" ' .
             'AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` ' .
             'AND `tt`.`ttid` = `t`.`ttid` ' . $where_total . ' ' .
             'GROUP BY t.task_id ' . $where_limit;
-    $tags = 'SELECT `core`.*, GROUP_CONCAT(`task_tag`.`tag`) AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
-    $full = 'SELECT tags.*, GROUP_CONCAT(`quality`) AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $tags . ') tags ON dq.data = tags.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY tags.task_id;';
+    $tags = 'SELECT `core`.*, CONCAT(\'"\', GROUP_CONCAT(`task_tag`.`tag` SEPARATOR \'","\'),\'"\') AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
+    $full = 'SELECT tags.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $tags . ') tags ON dq.data = tags.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY tags.task_id;';
     
     $tasks_res = $this->Task->query($full);
     
