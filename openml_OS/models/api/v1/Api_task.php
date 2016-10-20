@@ -104,7 +104,7 @@ class Api_task extends Api_model {
     }
     
     // three level query. in case scalability once forces us to drop some info. 
-    $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `source`.`value` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`inputs` SEPARATOR \'","\'),\'"\') AS `task_inputs` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`value` SEPARATOR \'","\'),\'"\') AS `input_values` ' .
+    $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `source`.`value` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`input` SEPARATOR \'","\'),\'"\') AS `task_inputs` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`value` SEPARATOR \'","\'),\'"\') AS `input_values` ' .
             'FROM `task` `t` , `task_type` `tt` , `task_inputs` `ti` , `task_inputs` `source` , `dataset` `d` ' .
             'WHERE `ti`.`task_id` = `t`.`task_id` AND `source`.`input` = "source_data" ' .
             'AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` ' .
