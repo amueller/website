@@ -60,13 +60,16 @@ class Api_new extends CI_Controller {
 
     $this->data_controller = $this->config->item('data_controller');
 
-    // some user authentication things.
-    $this->provided_hash = $this->input->get_post('api_key') != false;
-    $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('api_key') . '"' ); // TODO: and add date?
+    // some user authentication things. 
+    // used the stfu operator as CI throws notice otherwise
+    // (http://php.net/manual/en/language.operators.errorcontrol.phps)
+    $getPostHash = @$this->input->get_post('api_key');
+    $this->provided_hash = $getPostHash != false;
+    $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $getPostHash . '"' ); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     $this->user_email = false;
-    if($this->provided_valid_hash) {
+    if($this->provided_hash && $this->provided_valid_hash) {
       $this->user_id = $this->provided_valid_hash[0]->id;
       $this->user_email = $this->ion_auth->user($this->user_id)->row()->email;
     } elseif($this->ion_auth->logged_in()) {
