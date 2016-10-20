@@ -105,20 +105,20 @@ class Api_task extends Api_model {
     }
     
     
-    $quality_join = 'SELECT `data`, GROUP_CONCAT(`quality`) AS qualities, GROUP_CONCAT(`value`) AS `quality_values` FROM `data_quality` WHERE quality IN ("'. implode('","', $this->config->item('basic_qualities')).'") GROUP BY `data`';
-    $ti_join = 'SELECT task_id, GROUP_CONCAT( input ) AS task_inputs, GROUP_CONCAT( value ) AS input_values FROM task_inputs GROUP BY task_id';
+    $quality_join = 'SELECT `data`, GROUP_CONCAT(`quality`) AS `qualities`, GROUP_CONCAT(`value`) AS `quality_values` FROM `data_quality` WHERE `quality` IN ("'. implode('","', $this->config->item('basic_qualities')).'") GROUP BY `data`';
+    $ti_join = 'SELECT `task_id`, GROUP_CONCAT(`input`) AS `task_inputs`, GROUP_CONCAT(`value`) AS `input_values` FROM `task_inputs` GROUP BY `task_id`';
     
     $tasks_res = $this->Task->query(
-      'SELECT t.task_id, t.ttid, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name, GROUP_CONCAT(tag) AS `tags`, GROUP_CONCAT(ti.inputs) AS `task_inputs`, GROUP_CONCAT(ti.values) AS `task_values`, dq.qualities, dq.quality_values'.
-      'FROM `task` `t` LEFT JOIN task_tag ON t.task_id = task_tag.id ' .
+      'SELECT `t`.`task_id`, `t`.`ttid`, `tt`.`name`, `source`.`value` AS `did`, `d`.`status`, `d`.`format`, `d`.`name` AS `dataset_name`, GROUP_CONCAT(`tag`) AS `tags`, `ti`.`task_inputs`, `ti`.`task_values`, `dq`.`qualities`, `dq`.`quality_values` '.
+      'FROM `task` `t` LEFT JOIN `task_tag` ON `t`.`task_id` = `task_tag`.`id` ' .
       'LEFT JOIN ('.$ti_join.') ti ON t.task_id = ti.task_id, ' .
       '`task_inputs` `source`, ' .
       '`dataset` `d` LEFT JOIN ('.$quality_join.') dq ON d.did = dq.data, '.
       '`task_type` `tt` ' .
       'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
       $where_total .
-      'GROUP BY t.task_id ' .
-      'ORDER BY task_id ' . $where_limit);
+      'GROUP BY `t`.`task_id` ' .
+      'ORDER BY `t`.`task_id` ' . $where_limit);
     
     if(is_array($tasks_res) == false || count($tasks_res) == 0) {
       $this->returnError(482, $this->version);
