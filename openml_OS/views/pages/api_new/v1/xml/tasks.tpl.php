@@ -8,15 +8,21 @@
     <oml:name><?php echo $task->dataset_name; ?></oml:name>
     <oml:status><?php echo $task->status; ?></oml:status>
     <oml:format><?php echo $task->format; ?></oml:format>
-    <?php if( property_exists( $task, 'inputs' ) ): foreach( $task->inputs as $input => $value ): ?>
-      <oml:input name="<?php echo $input; ?>"><?php echo $value; ?></oml:input>
-    <?php endforeach; endif; ?>
-    <?php if( property_exists( $task, 'qualities' ) ): foreach( $task->qualities as $quality => $value ): ?>
-      <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
-    <?php endforeach; endif; ?>
-    <?php if( property_exists( $task, 'tags' ) ): foreach( $task->tags as $tag ): ?>
-      <oml:tag><?php echo $tag; ?></oml:tag>
-    <?php endforeach; endif; ?>
+  <?php if($task->qualities):
+    $task_inputs = explode(',', $task->task_inputs);
+    $input_values = explode(',', $task->input_values);
+    for ($i = 0; $i < count($task_inputs); ++$i): ?>
+      <oml:input name="<?php echo $task_inputs[$i]; ?>"><?php echo $input_values[$i]; ?></oml:input>
+  <?php endforeach; endif; ?>
+  <?php if($task->qualities):
+    $qualities = explode(',', $task->qualities);
+    $values = explode(',', $task->quality_values);
+    for ($i = 0; $i < count($qualities); ++$i): ?>
+      <oml:quality name="<?php echo $qualities[$i]; ?>"><?php echo $values[$i]; ?></oml:quality>
+  <?php endforeach; endif; ?>
+  <?php if($task->tags)): foreach(explode(',', $task->tags as $tag): ?>
+    <oml:tag><?php echo $tag; ?></oml:tag>
+  <?php endforeach; endif; ?>
   </oml:task>
   <?php endforeach; ?>
 </oml:tasks>

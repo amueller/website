@@ -105,46 +105,23 @@ class Api_task extends Api_model {
     }
 
     $tasks_res = $this->Task->query(
-      'SELECT t.task_id, t.ttid, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name '.
-      'FROM `task` `t`, `task_inputs` `source`, `dataset` `d`, `task_type` `tt` '.
+      'SELECT t.task_id, t.ttid, tt.name, source.value as did, d.status, d.format, d.name AS dataset_name, GROUP_CONCAT(tag) AS `tags`, GROUP_CONCAT(ti.inputs) AS `task_inputs`, GROUP_CONCAT(ti.values) AS `task_values`, GROUP_CONCAT(`dq`.`quality`) AS `qualities`, GROUP_CONCAT(`dq`.`value`) AS `quality_values` '.
+      'FROM `task` `t` LEFT JOIN task_tag ON t.task_id = task_tag.id ' .
+      'LEFT JOIN task_inputs ti ON t.task_id = ti.task_id, ' .
+      '`task_inputs` `source`, ' .
+      '`dataset` `d` LEFT JOIN data_quality dq ON d.did = dq.data AND dq.quality IN ("'. implode('","', $this->config->item('basic_qualities')).'"), '.
+      '`task_type` `tt` ' .
       'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
       $where_total .
-       //$active .
-       ' ORDER BY task_id ' . $where_limit );
-    if( is_array( $tasks_res ) == false || count( $tasks_res ) == 0 ) {
-      $this->returnError( 482, $this->version );
+      'GROUP BY t.task_id ' .
+      'ORDER BY task_id ' . $where_limit);
+    
+    if(is_array($tasks_res) == false || count($tasks_res) == 0) {
+      $this->returnError(482, $this->version);
       return;
     }
-    // make associative array from it
-    $dids = array();
-    $tasks = array();
-    foreach( $tasks_res as $task ) {
-      $tasks[$task->task_id] = $task;
-      $tasks[$task->task_id]->qualities = array();
-      $tasks[$task->task_id]->inputs = array();
-    }
 
-    $dq = $this->Data_quality->query('SELECT t.task_id, q.data, q.quality, q.value FROM data_quality q, task_inputs t WHERE t.input = "source_data" AND t.value = q.data AND t.task_id IN (' . implode(',', array_keys($tasks)) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY quality like "NumberOf" desc, quality');
-    $ti = $this->Task_inputs->getWhere( 'task_id IN (' . implode(',', array_keys($tasks) ) . ')', '`task_id`' );
-    $tt = $this->Task_tag->query('SELECT tt.id, tt.tag FROM task_tag tt, task t WHERE tt.id = t.task_id ' . $where_task_total . ' ORDER BY id');
-
-    for($i = 0; $i < count($dq); ++$i) {
-      if (array_key_exists($dq[$i]->task_id,$tasks)) {
-        $tasks[$dq[$i]->task_id]->qualities[$dq[$i]->quality] = $this->xmlEscape($dq[$i]->value);
-      }
-    }
-    for( $i = 0; $i < count($ti); ++$i ) {
-      if (array_key_exists($ti[$i]->task_id,$tasks)) {
-        $tasks[$ti[$i]->task_id]->inputs[$ti[$i]->input] = $this->xmlEscape($ti[$i]->value);
-      }
-    }
-    for( $i = 0; $i < count($tt); ++$i ) {
-      if (array_key_exists($tt[$i]->id,$tasks)) {
-        $tasks[$tt[$i]->id]->tags[] = $this->xmlEscape($tt[$i]->tag);
-      }
-    }
-
-    $this->xmlContents( 'tasks', $this->version, array( 'tasks' => $tasks ) );
+    $this->xmlContents( 'tasks', $this->version, array( 'tasks' => $tasks_res ) );
   }
 
 
