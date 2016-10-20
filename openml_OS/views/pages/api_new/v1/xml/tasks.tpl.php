@@ -13,13 +13,13 @@
     $input_values = explode(',', $task->input_values);
     for ($i = 0; $i < count($task_inputs); ++$i): ?>
       <oml:input name="<?php echo $task_inputs[$i]; ?>"><?php echo $input_values[$i]; ?></oml:input>
-  <?php endforeach; endif; ?>
+  <?php endfor; endif; ?>
   <?php if($task->qualities):
     $qualities = explode(',', $task->qualities);
     $values = explode(',', $task->quality_values);
     for ($i = 0; $i < count($qualities); ++$i): ?>
       <oml:quality name="<?php echo $qualities[$i]; ?>"><?php echo $values[$i]; ?></oml:quality>
-  <?php endforeach; endif; ?>
+  <?php endfor; endif; ?>
   <?php if($task->tags)): foreach(explode(',', $task->tags as $tag): ?>
     <oml:tag><?php echo $tag; ?></oml:tag>
   <?php endforeach; endif; ?>
