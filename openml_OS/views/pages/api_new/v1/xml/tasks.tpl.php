@@ -8,7 +8,7 @@
     <oml:name><?php echo $task->dataset_name; ?></oml:name>
     <oml:status><?php echo $task->status; ?></oml:status>
     <oml:format><?php echo $task->format; ?></oml:format>
-  <?php if($task->qualities):
+  <?php if($task->task_inputs):
     $task_inputs = explode(',', $task->task_inputs);
     $input_values = explode(',', $task->input_values);
     for ($i = 0; $i < count($task_inputs); ++$i): ?>
