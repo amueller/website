@@ -8,7 +8,7 @@
     <oml:uploader><?php echo $r->uploader; ?></oml:uploader>
 		<oml:upload_time><?php echo $r->start_time; ?></oml:upload_time>
     <oml:error_message><?php echo $r->error_message; ?></oml:error_message>
-		<?php if( property_exists( $r, 'tags' ) ): foreach( $r->tags as $tag ): ?>
+		<?php if($r->tags != false): foreach(implode(',', $r->tags) as $tag): ?>
 			<oml:tag><?php echo $tag; ?></oml:tag>
 		<?php endforeach; endif; ?>
   </oml:run>

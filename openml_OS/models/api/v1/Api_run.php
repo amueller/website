@@ -128,6 +128,7 @@ class Api_run extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
+    
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
@@ -136,10 +137,15 @@ class Api_run extends Api_model {
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
 
     $sql =
-      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message ' .
-      'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" LEFT JOIN dataset d ON t.value = d.did , algorithm_setup s, implementation i ' .
-      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . $where_total . $where_limit;
-    $res = $this->Run->query( $sql );
+      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, GROUP_CONCAT(tag) AS tags ' .
+      'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
+      'LEFT JOIN dataset d ON t.value = d.did '.
+      'LEFT JOIN run_tag ON r.rid = run_tag.id, algorithm_setup s, implementation i ' .
+      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . 
+      $where_total . 
+      'GROUP BY r.rid '
+      $where_limit;
+    $res = $this->Run->query($sql);
 
     if ($res == false) {
       $this->returnError(512, $this->version);
@@ -151,19 +157,7 @@ class Api_run extends Api_model {
       return;
     }
 
-    // make associative array
-    $runs = array();
-    foreach( $res as $r ) {
-      $runs[$r->rid] = $r;
-    }
-
-    // attach tags
-    $dt = $this->Run_tag->query('SELECT id, tag FROM run_tag WHERE `id` IN (' . implode(',', array_keys($runs)) . ') ORDER BY `id`');
-    foreach( $dt as $tag ) {
-      $runs[$tag->id]->tags[] = $tag->tag;
-    }
-
-    $this->xmlContents( 'runs', $this->version, array( 'runs' => $runs ) );
+    $this->xmlContents( 'runs', $this->version, array( 'runs' => $res ) );
   }
 
 
