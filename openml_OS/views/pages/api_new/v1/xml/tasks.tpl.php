@@ -20,7 +20,7 @@
     for ($i = 0; $i < count($qualities); ++$i): ?>
       <oml:quality name="<?php echo $qualities[$i]; ?>"><?php echo $values[$i]; ?></oml:quality>
   <?php endfor; endif; ?>
-  <?php if ($task->tags): foreach(explode(',', $task->tags as $tag): ?>
+  <?php if ($task->tags): foreach(explode(',', $task->tags) as $tag): ?>
     <oml:tag><?php echo $tag; ?></oml:tag>
   <?php endforeach; endif; ?>
   </oml:task>
