@@ -109,7 +109,7 @@ class Api_task extends Api_model {
     $ti_join = 'SELECT `task_id`, GROUP_CONCAT(`input`) AS `task_inputs`, GROUP_CONCAT(`value`) AS `input_values` FROM `task_inputs` GROUP BY `task_id`';
     
     $tasks_res = $this->Task->query(
-      'SELECT `t`.`task_id`, `t`.`ttid`, `tt`.`name`, `source`.`value` AS `did`, `d`.`status`, `d`.`format`, `d`.`name` AS `dataset_name`, GROUP_CONCAT(`tag`) AS `tags`, `ti`.`task_inputs`, `ti`.`task_values`, `dq`.`qualities`, `dq`.`quality_values` '.
+      'SELECT `t`.`task_id`, `t`.`ttid`, `tt`.`name`, `source`.`value` AS `did`, `d`.`status`, `d`.`format`, `d`.`name` AS `dataset_name`, GROUP_CONCAT(`tag`) AS `tags`, `ti`.`task_inputs`, `ti`.`input_values`, `dq`.`qualities`, `dq`.`quality_values` '.
       'FROM `task` `t` LEFT JOIN `task_tag` ON `t`.`task_id` = `task_tag`.`id` ' .
       'LEFT JOIN ('.$ti_join.') ti ON t.task_id = ti.task_id, ' .
       '`task_inputs` `source`, ' .
