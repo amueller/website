@@ -95,14 +95,16 @@ class Api_model extends CI_Model {
     );
   }
 
-  public function returnError($code, $version, $httpErrorCode = 450, $additionalInfo = null, $emailLog = false) {
+  public function returnError($code, $version, $httpErrorCode = 450, $additionalInfo = null, $emailLog = false, $supress_output = false) {
     $this->Log->api_error('error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code] );
     $error['additional'] = htmlentities( $additionalInfo );
-
-    $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode . ' Api Error' );
-    $this->xmlContents( 'error-message', $version, $error, $httpHeaders );
+    
+    if (!$supress_output) {
+      $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode . ' Api Error' );
+      $this->xmlContents('error-message', $version, $error, $httpHeaders);
+    }
     
     if ($emailLog && defined('EMAIL_API_LOG')) { 
       $to = EMAIL_API_LOG;
@@ -112,7 +114,7 @@ class Api_model extends CI_Model {
     }
   }
 
-  protected function xmlContents( $xmlFile, $version, $source, $httpHeaders = array() ) {
+  protected function xmlContents($xmlFile, $version, $source, $httpHeaders = array()) {
     $view = 'pages/'.$this->controller.'/' . $version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
     foreach( $httpHeaders as $header ) {
       header( $header );
@@ -158,17 +160,18 @@ class Api_model extends CI_Model {
    *    used by ES and the xml tag. (data, flow, task, setup, run)
    *
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-  protected function entity_tag_untag($type, $id, $tag, $do_untag, $special_name) {
+  protected function entity_tag_untag($type, $id, $tag, $do_untag, $special_name, $supress_output = false) {
     // checks if type in {dataset, implementation, run, task, algorithm_setup}
     $taggable = $this->config->item('taggable_entities');
     if(!in_array($type, array_keys($taggable))) {
+      
       $this->returnError(470, $this->version);
-      return;
+      return false;
     }
     
     if ($id == false || $tag == false) {
       $this->returnError(471, $this->version);
-      return;
+      return false;
     }
     
     $model_name_entity = ucfirst($type);
@@ -178,7 +181,7 @@ class Api_model extends CI_Model {
     $entity = $this->{$model_name_entity}->getById($id);
     if (!$entity) {
       $this->returnError(472, $this->version);
-      return;
+      return false;
     }
     
     
@@ -189,13 +192,13 @@ class Api_model extends CI_Model {
       $tag_record = $this->{$model_name_tag}->getWhereSingle('id = ' . $id . ' AND tag = "' . $tag . '"');
       if ($tag_record == false) {
         $this->returnError(475, $this->version);
-        return;
+        return false;
       }
       
       $is_admin = $this->ion_auth->is_admin($this->user_id);
       if ($tag_record->uploader != $this->user_id && $is_admin == false) {
         $this->returnError(476, $this->version);
-        return;
+        return false;
       }
       
       $this->{$model_name_tag}->delete( array( $id, $tag ) );
@@ -206,7 +209,7 @@ class Api_model extends CI_Model {
       $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
       if($tags != false && in_array($tag, $tags)) {
         $this->returnError(473, $this->version);
-        return;
+        return false;
       }
       
       $tag_data = array(
@@ -219,7 +222,7 @@ class Api_model extends CI_Model {
       $res = $this->{$model_name_tag}->insert($tag_data);
       if ($res == false) {
         $this->returnError(474, $this->version);
-        return;
+        return false;
       }
     }
     
@@ -237,19 +240,21 @@ class Api_model extends CI_Model {
       }
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
-      return;
+      return false;
     }
     
-    $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
-    $this->xmlContents(
-      'entity-tag', 
-      $this->version, 
-      array(
-        'id' => $id, 
-        'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag'),
-        'tags' => $tags
-      )
-    );
+    if (!$supress_output) {
+      $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
+      $this->xmlContents(
+        'entity-tag', 
+        $this->version, 
+        array(
+          'id' => $id, 
+          'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag'),
+          'tags' => $tags)
+      );
+    }
+    return true;
   }
 }
 ?>

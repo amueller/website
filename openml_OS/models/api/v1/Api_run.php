@@ -472,11 +472,6 @@ class Api_run extends Api_model {
       return false;
     }
 
-    // tag it, if neccessary
-    foreach( $tags as $tag ) {
-      $this->entity_tag_untag('run', $runId, $tag, false, 'run');
-    }
-
 
     $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
@@ -492,16 +487,17 @@ class Api_run extends Api_model {
           'elastic search')
       );
     }
-
-
+    
+    // tag it, if neccessary
+    foreach($tags as $tag) {
+      $success = $this->entity_tag_untag('run', $runId, $tag, false, 'run', true);
+      // if tagging went wrong, an error is displayed. (TODO: something else?)
+      if (!$success) return;
+    }
+    
     // remove scheduled task
     $this->Schedule->deleteWhere( 'task_id = "' . $task_id . '" AND sid = "' . $setupId . '"' );
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * Now the stuff that needs to be done for the special     *
-     * supported tasks, like classification, regression        *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+    
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }

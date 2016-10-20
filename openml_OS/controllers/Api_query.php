@@ -2,8 +2,8 @@
 class Api_query extends CI_Controller {
 
   function __construct() {
-        parent::__construct();
-
+    parent::__construct();
+    
     $this->db = $this->load->database('read',true);
   }
 

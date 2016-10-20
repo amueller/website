@@ -29,11 +29,7 @@ class Frontend extends CI_Controller {
     $this->load->model('Run_tag');
 
     $this->load->model('Meta_dataset');
-    $this->load->model('Category');
-    $this->load->model('Thread');
     $this->load->model('Author');
-    $this->load->model('Api_session');
-    $this->load->model('Vipercharts');
 
     $this->load->helper('table');
     $this->load->helper('tasksearch');

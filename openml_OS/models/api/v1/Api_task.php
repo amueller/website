@@ -94,31 +94,26 @@ class Api_task extends Api_model {
     $where_feats = $nr_feats == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
     $where_class = $nr_class == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
     $where_miss = $nr_miss == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfMissingValues" and value ' . (strpos($nr_miss, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_miss) : '= '. $nr_miss) . ') ';
-    // by default, only return active tasks
-    $where_status = $status == false ? ' AND status = "active" ' : ' AND status = "'. $status . '" ';
 
     $where_total = $where_type . $where_tag . $where_data_tag . $where_status . $where_did . $where_data_name . $where_insts . $where_feats . $where_class . $where_miss;
     $where_task_total = $where_type . $where_tag;
+    
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
     
+    // three level query. in case scalability once forces us to drop some info. 
+    $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `source`.`value` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , GROUP_CONCAT( `ti`.`input` ) AS `task_inputs` , GROUP_CONCAT( `ti`.`value` ) AS `input_values` ' .
+            'FROM `task` `t` , `task_type` `tt` , `task_inputs` `ti` , `task_inputs` `source` , `dataset` `d` ' .
+            'WHERE `ti`.`task_id` = `t`.`task_id` AND `source`.`input` = "source_data" ' .
+            'AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` ' .
+            'AND `tt`.`ttid` = `t`.`ttid` ' . $where_total .
+            'GROUP BY t.task_id' . $where_limit;
+    $tags = 'SELECT `core`.*, GROUP_CONCAT(`task_tag`.`tag`) AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
+    $full = 'SELECT tags.*, GROUP_CONCAT(`quality`) AS `qualities`, GROUP_CONCAT(`value`) AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $tags . ') tags ON dq.data = fullres.did GROUP BY tags.task_id WHERE dq.task_id IN ' . implode('","', $this->config->item('basic_qualities')).'");';
     
-    $quality_join = 'SELECT `data`, GROUP_CONCAT(`quality`) AS `qualities`, GROUP_CONCAT(`value`) AS `quality_values` FROM `data_quality` WHERE `quality` IN ("'. implode('","', $this->config->item('basic_qualities')).'") GROUP BY `data`';
-    $ti_join = 'SELECT `task_id`, GROUP_CONCAT(`input`) AS `task_inputs`, GROUP_CONCAT(`value`) AS `input_values` FROM `task_inputs` GROUP BY `task_id`';
-    
-    $tasks_res = $this->Task->query(
-      'SELECT `t`.`task_id`, `t`.`ttid`, `tt`.`name`, `source`.`value` AS `did`, `d`.`status`, `d`.`format`, `d`.`name` AS `dataset_name`, GROUP_CONCAT(`tag`) AS `tags`, `ti`.`task_inputs`, `ti`.`input_values`, `dq`.`qualities`, `dq`.`quality_values` '.
-      'FROM `task` `t` LEFT JOIN `task_tag` ON `t`.`task_id` = `task_tag`.`id` ' .
-      'LEFT JOIN ('.$ti_join.') ti ON t.task_id = ti.task_id, ' .
-      '`task_inputs` `source`, ' .
-      '`dataset` `d` LEFT JOIN ('.$quality_join.') dq ON d.did = dq.data, '.
-      '`task_type` `tt` ' .
-      'WHERE `source`.`input` = "source_data" AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND `tt`.`ttid` = `t`.`ttid` ' .
-      $where_total .
-      'GROUP BY `t`.`task_id` ' .
-      'ORDER BY `t`.`task_id` ' . $where_limit);
+    $task_res = $this->Task->query($full);
     
     if(is_array($tasks_res) == false || count($tasks_res) == 0) {
       $this->returnError(482, $this->version);
@@ -306,13 +301,15 @@ class Api_task extends Api_model {
       );
       $this->Task_inputs->insert($task_input);
     }
-
-    foreach($tags as $tag) {
-      $this->entity_tag_untag('task', $id, $tag, false, 'task');
-    }
     
     // update elastic search index.
     $this->elasticsearch->index('task', $id);
+
+    foreach($tags as $tag) {
+      $this->entity_tag_untag('task', $id, $tag, false, 'task', true);
+      // if tagging went wrong, an error is displayed. (TODO: something else?)
+      if (!$success) return;
+    }
 
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
   }

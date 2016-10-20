@@ -2,7 +2,7 @@
 class Javascript extends CI_Controller {
 
 	function __construct() {
-        parent::__construct();
+    parent::__construct();
 
 		$this->load->model('Dataset');
 		$this->load->model('Math_function');

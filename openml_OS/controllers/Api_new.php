@@ -29,11 +29,11 @@ class Api_new extends CI_Controller {
     $this->load->model('api/v1/Api_job');
     $this->load->model('api/v1/Api_user');
     $this->load->model('api/v1/Api_study');
+    
     $this->load->model('Study');
     $this->load->model('Math_function');
 
     $this->load->model('Log');
-    $this->load->model('Api_session');
     $this->load->model('Author');
 
     // helper

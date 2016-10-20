@@ -11,7 +11,6 @@ class Data extends CI_Controller {
     $this->load->Model('File');
     $this->load->Model('Implementation');
     $this->load->Model('Author');
-    $this->load->Model('Api_session');
 
     $this->load->helper('file_upload');
 

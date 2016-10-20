@@ -19,7 +19,6 @@ class Backend extends CI_Controller {
     $this->load->model('Estimation_procedure');
     $this->load->model('Run');
     
-    $this->load->model('Category');
     $this->load->model('Author');
 
     $this->load->helper('table');
