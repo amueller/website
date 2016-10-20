@@ -81,9 +81,19 @@ $config['xml_fields_run'] = array(
   'plain'   => array( 'output_data' )
 );
 
+// qualities to show in, e.g., task list
 $config['basic_qualities'] = array(
   "NumberOfInstances", "NumberOfFeatures", "NumberOfClasses", "NumberOfMissingValues",
-  "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures", "MajorityClassSize", "MinorityClassSize", "MaxNominalAttDistinctValues", "NumBinaryAtts"
+  "NumberOfInstancesWithMissingValues", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures", 
+  "MajorityClassSize", "MinorityClassSize", "MaxNominalAttDistinctValues", "NumBinaryAtts"
+);
+
+// task inputs to show in, e.g., task list
+$config['basic_taskinputs'] = array(
+  "cost_matrix", "estimation_procedure", "evaluation_measures", "source_data", 
+  "target_feature", "target_value", "number_samples", "source_data_labeled", 
+  "target_feature_event", "target_feature_left", "target_feature_right", 
+  "quality_measure", "target_value", "time_limit"
 );
 
 $config['taggable_entities'] = array(
