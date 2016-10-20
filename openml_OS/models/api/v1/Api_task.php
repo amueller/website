@@ -308,8 +308,7 @@ class Api_task extends Api_model {
     }
 
     foreach($tags as $tag) {
-      $error = -1;
-      tag_item('task', $id, $tag, $this->user_id, $error);
+      $this->entity_tag_untag('task', $id, $tag, false, 'task');
     }
     
     // update elastic search index.

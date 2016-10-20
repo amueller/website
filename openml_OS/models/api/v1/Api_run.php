@@ -474,8 +474,7 @@ class Api_run extends Api_model {
 
     // tag it, if neccessary
     foreach( $tags as $tag ) {
-      $error = -1;
-      tag_item( 'run', $runId, $tag, $this->user_id, $error );
+      $this->entity_tag_untag('run', $runId, $tag, false, 'run');
     }
 
 
