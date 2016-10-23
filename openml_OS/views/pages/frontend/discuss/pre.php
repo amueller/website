@@ -8,9 +8,9 @@ $this->icons = array( 'general' => 'fa fa-circle-thin fa-lg', 'flow' => 'fa fa-c
 $this->colors = array( 'general' => '#9c27b0', 'flow' => '#428bca', 'data' => '#3d8b3d', 'run' => '#d9534f', 'user' => '#e91e63', 'task' => '#fb8c00', 'task_type' => '#ff5722', 'measure' => '#9c27b0');
 $this->activetab = 'recent';
 
-foreach($this->categories as $c) {
-	$this->threads[$c->id] = $this->Thread->getByCategoryId( $c->id, 0, 5, 'post_date DESC' );
-}
+//foreach($this->categories as $c) {
+//	$this->threads[$c->id] = $this->Thread->getByCategoryId( $c->id, 0, 5, 'post_date DESC' );
+//}
 
 /// general topics
 if(false !== strpos($_SERVER['REQUEST_URI'],'/tid/')){
