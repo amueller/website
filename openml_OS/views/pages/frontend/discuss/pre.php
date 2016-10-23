@@ -1,7 +1,7 @@
 <?php
 $this->counter = 0;
-$this->threadsPerCategory = $this->Category->threadsPerCategory();
-$this->categories 		  = $this->Category->get();
+//$this->threadsPerCategory = $this->Category->threadsPerCategory();
+//$this->categories 		  = $this->Category->get();
 $this->threads 			  = array();
 $this->category_code = array('3200853' => 'general', '3353609' => 'data', '3353608' => 'flow', '3353607' => 'task', '3353606' => 'run', '3760343' => 'task_type');
 $this->icons = array( 'general' => 'fa fa-circle-thin fa-lg', 'flow' => 'fa fa-cogs fa-lg', 'data' => 'fa fa-database fa-lg', 'run' => 'fa fa-star fa-lg', 'user' => 'fa fa-user fa-lg', 'task' => 'fa fa-trophy fa-lg', 'task_type' => 'fa fa-flask fa-lg', 'measure' => 'fa fa-bar-chart-o fa-lg');
