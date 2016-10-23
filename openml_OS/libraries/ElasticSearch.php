@@ -1276,8 +1276,8 @@ class ElasticSearch {
             ),
             'output_files' => array_key_exists($r->rid, $runfiles) ? $runfiles[$r->rid] : array(),
             'evaluations' => array_key_exists($r->rid, $evals) ? $evals[$r->rid] : array(),
-            'error' => $r->error,
-            'error_message' => $r->error_message,
+            'error' => (isset($r->error) ? $r->error : ""),
+            'error_message' => (isset($r->error_message) ? $r->error_message : ""),
             'visibility' => 'public'
         );
 
