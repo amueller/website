@@ -147,6 +147,7 @@
       if(array_key_exists('data',$r)){
         echo $r['data'];
       }
+      /* TODO: currently not implemented
       if($r['evaluation_measure'] == "area_under_roc_curve"){
         $charts = $this->Vipercharts->getWhere( 'run_id = ' . $this->run['run_id'] );
 
@@ -167,7 +168,7 @@
             </div>
           </div><?php
         }
-      }
+      }*/
       ?>
     </div></div></td></tr>
     <?php endforeach; ?>
