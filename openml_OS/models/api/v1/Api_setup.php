@@ -78,7 +78,7 @@ class Api_setup extends Api_model {
     } else {
       $this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` `s` , `input` `i` WHERE `s`.`input_id` = `i`.`id` AND setup = "'.$setup->sid.'"');
 
-      $this->xmlContents( 'setup-parameters', $this->version, array( 'parameters' => $this->parameters ) );
+      $this->xmlContents( 'setup-parameters', $this->version, array( 'parameters' => $this->parameters, 'setup' => $setup ) );
     }
   }
   

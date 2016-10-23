@@ -1,4 +1,5 @@
 <oml:setup_parameters xmlns:oml="http://openml.org/openml">
+  <oml:flow_id><?php echo $setup->implementation_id; ?></oml:flow_id>
 <?php foreach($parameters as $p): ?>
 	<oml:parameter>
 		<oml:full_name><?php echo htmlspecialchars($p->fullName); ?></oml:full_name>
