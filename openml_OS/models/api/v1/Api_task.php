@@ -87,13 +87,13 @@ class Api_task extends Api_model {
     $where_type = $type == false ? '' : 'AND `t`.`ttid` = "'.$type.'" ';
     $where_tag = $tag == false ? '' : ' AND `t`.`task_id` IN (select id from task_tag where tag="' . $tag . '") ';
     $where_data_tag = $data_tag == false ? '' : ' AND `d`.`did` IN (select id from dataset_tag where tag="' . $data_tag . '") ';
-    $where_status = $status == false ? '' : ' AND `d`.`status` = '. $status . ' ';
     $where_did = $data_id == false ? '' : ' AND `d`.`did` = '. $data_id . ' ';
     $where_data_name = $data_name == false ? '' : ' AND `d`.`name` = "'. $data_name . '"';
     $where_insts = $nr_insts == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfInstances" and value ' . (strpos($nr_insts, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_insts) : '= '. $nr_insts) . ') ';
     $where_feats = $nr_feats == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
     $where_class = $nr_class == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
     $where_miss = $nr_miss == false ? '' : ' AND `d`.`did` IN (select data from data_quality dq where quality="NumberOfMissingValues" and value ' . (strpos($nr_miss, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_miss) : '= '. $nr_miss) . ') ';
+    $where_status = $status == false ? ' AND status = "active" ' : ' AND status = "'. $status . '" ';
 
     $where_total = $where_type . $where_tag . $where_data_tag . $where_status . $where_did . $where_data_name . $where_insts . $where_feats . $where_class . $where_miss;
     $where_task_total = $where_type . $where_tag;
