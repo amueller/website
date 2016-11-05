@@ -1,5 +1,6 @@
 {"tasks":{"task":[
   <?php $first = TRUE;
+        if($tasks):
         foreach( $tasks as $task ):
           echo ($first ? "" : ",");
           $first = FALSE; ?>
@@ -18,8 +19,9 @@
             $first_in = FALSE; ?>
       {"name":"<?php echo $input; ?>",
        "value":"<?php echo $value; ?>"}
-    <?php endforeach; endif; ?>
+    <?php endforeach; ?>
     ]
+    <?php endif; ?>
     <?php if( property_exists( $task, 'qualities' ) ): ?>
     ,"quality": [
       <?php $first_q = TRUE;
@@ -41,6 +43,6 @@
     ]
     <?php endif; ?>
   }
-<?php endforeach; ?>
+<?php endforeach; endif; ?>
   ]}
 }
