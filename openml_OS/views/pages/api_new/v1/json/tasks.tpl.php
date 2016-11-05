@@ -25,17 +25,19 @@
     <?php if( property_exists( $task, 'qualities' ) ): ?>
     ,"quality": [
       <?php $first_q = TRUE;
-            foreach( $task->qualities as $quality => $value ):
-            echo ($first_q ? "" : ",");
-            $first_q = FALSE; ?>
-      {"name":"<?php echo $quality; ?>",
-       "value":<?php echo $value; ?>}
-    <?php endforeach; ?>]
+            $qualities = str_getcsv($task->qualities);
+            $values = str_getcsv($task->quality_values);
+            for ($i = 0; $i < count($qualities); ++$i):
+              echo ($first_q ? "" : ",");
+              $first_q = FALSE; ?>
+      {"name":"<?php echo $qualities[$i]; ?>",
+       "value":<?php echo $values[$i]; ?>}
+    <?php endfor; ?>]
     <?php endif; ?>
     <?php if( property_exists( $task, 'tags' ) ): ?>
     ,"tags": [
       <?php $first_t = TRUE;
-            foreach( $task->tags as $tag ):
+            foreach( str_getcsv($task->tags) as $tag ):
             echo ($first_t ? "" : ",");
             $first_t = FALSE; ?>
       "<?php echo $tag;?>"
