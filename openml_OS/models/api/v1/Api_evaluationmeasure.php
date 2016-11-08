@@ -26,6 +26,7 @@ class Api_evaluationmeasure extends Api_model {
   
   
   private function evaluationmeasure_list() {
+    $data = new stdClass();
     $data->measures = $this->Math_function->getWhere( 'functionType = "EvaluationFunction"' );
     $this->xmlContents( 'evaluation-measures', $this->version, $data );
   }
