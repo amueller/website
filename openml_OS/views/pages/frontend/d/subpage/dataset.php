@@ -137,7 +137,7 @@
   </div>
 
 
-  <h3><?php echo $this->data['qualities']['NumberOfFeatures']; ?> features</h3>
+  <h3><?php echo 0+$this->data['qualities']['NumberOfFeatures']; ?> features</h3>
 <?php
   if (!empty($this->data['features'])){ ?>
       <div class="cardtable">
