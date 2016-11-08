@@ -55,7 +55,8 @@
       <?php if(array_key_exists('total_downloads',$this->data)): if($this->data['total_downloads']!=null): $nr_td = $this->data['total_downloads']; else: $nr_td = 0; endif; echo ', '.$nr_td.' total downloads'; endif; ?></span>
         <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->data)): if($this->data['nr_of_issues']!=null): $i = $this->data['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
         <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->data)): if($this->data['nr_of_downvotes']!=null): $d = $this->data['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?>
-        <?php if(array_key_exists('error_message',$this->data) and $this->data['error_message']){?><br><i class="fa fa-warning task"></i> <?php echo $this->data['error_message']; } ?>
+        <?php if(array_key_exists('error_message',$this->data) and $this->data['error_message']){?><br><i class="fa fa-warning task"></i>
+          <?php if(startsWith('error_message','keyword')){echo 'Dataset does not seem to be valid ARFF: ';} echo $this->data['error_message']; } ?>
         </span>
        <?php
         if ($this->ion_auth->logged_in()) {
