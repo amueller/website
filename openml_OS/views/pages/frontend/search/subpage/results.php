@@ -171,10 +171,10 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					echo 'No evaluations yet (or not applicable).';
 
           if (array_key_exists('error_message',$rs) &&  $rs['error_message']) {
-            echo 'Client side error: ' . $rs['error_message'];
+            echo '<span class="task"> Client side error: ' . $rs['error_message'] . '</span>';
           }
           if (array_key_exists('error',$rs) && $rs['error']) {
-            echo 'Evaluation Engine Exception: ' . $rs['error'];
+            echo '<span class="task">  Evaluation Engine Exception: ' . $rs['error'] . '</span>';
           }
 				} else{
 					$tn = "";
