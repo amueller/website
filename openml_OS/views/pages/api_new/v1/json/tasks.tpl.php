@@ -11,25 +11,22 @@
     "name":"<?php echo $task->dataset_name; ?>",
     "status":"<?php echo $task->status; ?>",
     "format":"<?php echo $task->format; ?>"
-    <?php if( property_exists( $task, 'inputs' ) ): ?>
+    <?php if ($task->task_inputs): ?>
     ,"input": [
-      <?php $first_in = TRUE;
-            foreach( $task->inputs as $input => $value ):
-            echo ($first_in ? "" : ",");
-            $first_in = FALSE; ?>
-      {"name":"<?php echo $input; ?>",
-       "value":"<?php echo $value; ?>"}
-    <?php endforeach; ?>
-    ]
+      <?php $task_inputs = str_getcsv($task->task_inputs);
+            $input_values = str_getcsv($task->input_values);
+            for ($i = 0; $i < count($task_inputs); ++$i):
+              echo ($i == 0 ? "" : ","); ?>
+      {"name":"<?php echo $task_inputs[$i]; ?>",
+       "value":<?php echo $input_values[$i]; ?>}
+    <?php endfor; ?>]
     <?php endif; ?>
-    <?php if( property_exists( $task, 'qualities' ) ): ?>
+    <?php  if ($task->qualities): ?>
     ,"quality": [
-      <?php $first_q = TRUE;
-            $qualities = str_getcsv($task->qualities);
+      <?php $qualities = str_getcsv($task->qualities);
             $values = str_getcsv($task->quality_values);
             for ($i = 0; $i < count($qualities); ++$i):
-              echo ($first_q ? "" : ",");
-              $first_q = FALSE; ?>
+              echo ($i == 0 ? "" : ","); ?>
       {"name":"<?php echo $qualities[$i]; ?>",
        "value":<?php echo $values[$i]; ?>}
     <?php endfor; ?>]
