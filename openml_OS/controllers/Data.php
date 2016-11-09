@@ -15,8 +15,9 @@ class Data extends CI_Controller {
     $this->load->helper('file_upload');
 
     // authentication
-    $this->provided_hash = $this->input->get_post('api_key') != false;
-    $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $this->input->get_post('api_key') . '"' ); // TODO: and add date?
+    $getPostHash = @$this->input->get_post('api_key');
+    $this->provided_hash = $getPostHash != false;
+    $this->provided_valid_hash = $this->Author->getWhere('session_hash = "' . $getPostHash . '"'); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     if($this->provided_valid_hash) {
@@ -29,7 +30,7 @@ class Data extends CI_Controller {
   function download($id,$name = 'undefined') {
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
-      if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
+      if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
         $this->_error404();
       } else {
         $this->_header_download($file);
@@ -43,7 +44,7 @@ class Data extends CI_Controller {
   function view($id,$name = 'undefined') {
     $file = $this->File->getById($id);
     if( $this->_check_rights( $file ) ) {
-      if($file === false || file_exists(DATA_PATH . $file->filepath) === false ) {
+      if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
         $this->_error404();
       } else {
         header('Content-type: ' . $file->mime_type);
