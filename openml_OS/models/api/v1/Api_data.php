@@ -149,10 +149,10 @@ class Api_data extends Api_model {
     }
 
     $dt = $this->Dataset_tag->query('SELECT id, tag FROM dataset_tag WHERE `id` IN (' . implode(',', array_keys( $datasets) ) . ') ORDER BY `id`');
-
+    if($dt){
     foreach( $dt as $tag ) {
       $datasets[$tag->id]->tags[] = $tag->tag;
-    }
+    }}
 
     $this->xmlContents( 'data', $this->version, array( 'datasets' => $datasets ) );
   }
@@ -353,7 +353,7 @@ class Api_data extends Api_model {
 
     // update counters
     $this->elasticsearch->index('user', $this->user_id);
-    
+
     // create initial wiki page
 
     $this->wiki->export_to_wiki($id);

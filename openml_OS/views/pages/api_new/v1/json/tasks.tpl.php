@@ -18,7 +18,7 @@
             for ($i = 0; $i < count($task_inputs); ++$i):
               echo ($i == 0 ? "" : ","); ?>
       {"name":"<?php echo $task_inputs[$i]; ?>",
-       "value":<?php echo $input_values[$i]; ?>}
+       "value":"<?php echo $input_values[$i]; ?>"}
     <?php endfor; ?>]
     <?php endif; ?>
     <?php  if ($task->qualities): ?>
@@ -28,7 +28,7 @@
             for ($i = 0; $i < count($qualities); ++$i):
               echo ($i == 0 ? "" : ","); ?>
       {"name":"<?php echo $qualities[$i]; ?>",
-       "value":<?php echo $values[$i]; ?>}
+       "value":"<?php echo $values[$i]; ?>"}
     <?php endfor; ?>]
     <?php endif; ?>
     <?php if( property_exists( $task, 'tags' ) ): ?>
