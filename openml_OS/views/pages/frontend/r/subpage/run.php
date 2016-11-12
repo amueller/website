@@ -113,7 +113,7 @@
           <div class="row-content">
               <div class="least-content"><?php echo $v['format']; ?></div>
               <div class="list-group-item-heading"><?php echo ucfirst(str_replace("_"," ",$k)); ?></div>
-              <p class="list-group-item-text"><?php echo $this->file_descriptions[$k]; ?></p>
+              <p class="list-group-item-text"><?php echo $this->file_descriptions[strtolower($k)]; ?></p>
           </div>
       </div>
       <div class="list-group-separator"></div>
