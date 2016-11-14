@@ -26,13 +26,22 @@
    <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->run)): if($this->run['nr_of_likes']!=null): $nr_l = $this->run['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
    <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->run)): if($this->run['nr_of_downloads']!=null): $nr_d = $this->run['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
    <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->run)): if($this->run['nr_of_issues']!=null): $i = $this->run['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
-   <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->run)): if($this->run['nr_of_downvotes']!=null): $d = $this->run['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
-   <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
+   <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->run)): if($this->run['nr_of_downvotes']!=null): $d = $this->run['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?>
+   </span>
    <?php if ($this->ion_auth->logged_in()) {
             if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                 <span title="Reach is: 2x likes received + downloads received on this run."><i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->run)): if($this->run['reach']!=null): $r = $this->run['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span></span>
         <?php }?>
    <?php }?>
+   <?php if(array_key_exists('total_downloads',$this->run)): if($this->run['total_downloads']!=null): $nr_d = $this->run['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
+   <?php
+     if (array_key_exists('error_message',$this->run) &&  $this->run['error_message']) {
+       echo '<br><span class="text-warning"><i class="fa fa-warning task"></i> Client side error: ' . $this->run['error_message'] . '</span>';
+     }
+     if (array_key_exists('error',$this->run) && $this->run['error']) {
+       echo '<br><span class="text-warning"><i class="fa fa-warning task"></i> Evaluation Engine Exception: ' . $this->run['error'] . '</span>';
+     }
+   ?>
 </div>
 
 
@@ -104,7 +113,7 @@
           <div class="row-content">
               <div class="least-content"><?php echo $v['format']; ?></div>
               <div class="list-group-item-heading"><?php echo ucfirst(str_replace("_"," ",$k)); ?></div>
-              <p class="list-group-item-text"><?php echo $this->file_descriptions[$k]; ?></p>
+              <p class="list-group-item-text"><?php echo $this->file_descriptions[strtolower($k)]; ?></p>
           </div>
       </div>
       <div class="list-group-separator"></div>

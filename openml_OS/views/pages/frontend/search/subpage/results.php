@@ -171,10 +171,10 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 					echo 'No evaluations yet (or not applicable).';
 
           if (array_key_exists('error_message',$rs) &&  $rs['error_message']) {
-            echo 'Client side error: ' . $rs['error_message'];
+            echo '<span class="task"> Client side error: ' . $rs['error_message'] . '</span>';
           }
           if (array_key_exists('error',$rs) && $rs['error']) {
-            echo 'Evaluation Engine Exception: ' . $rs['error'];
+            echo '<span class="task">  Evaluation Engine Exception: ' . $rs['error'] . '</span>';
           }
 				} else{
 					$tn = "";
@@ -280,7 +280,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				</div>
 				<div class="runStats statLine">
                                     <?php
-                                        echo '<b><i class="fa fa-star"></i>' . $rs['runs'] . ' runs';
+                                        echo '<b><i class="fa fa-star"></i>' . (0+$rs['runs']) . ' runs';
                                         echo '<i class="fa fa-heart"></i>' . $rs['nr_of_likes'] . ' likes';
                                         echo '<i class="fa fa-download"></i>' . $rs['nr_of_downloads'] . ' downloads';
                                         echo '<i class="fa fa-rss"></i>' . $rs['reach'] . ' reach';

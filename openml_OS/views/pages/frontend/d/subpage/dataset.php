@@ -62,6 +62,8 @@
                 <span id="impact" title="Impact is: number or reuses of this dataset in tasks + 0.5*reach of these tasks + 0.5*impact of these tasks"><i class="fa fa-bolt impact"></i><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
             <?php }?>
         <?php }?>
+        <?php if(array_key_exists('error_message',$this->data) and $this->data['error_message']){?><br><i class="fa fa-warning task"></i><span class="text-warning">
+          <?php if(startsWith('error_message','keyword')){echo 'Dataset does not seem to be valid ARFF: ';} echo $this->data['error_message'] . '</span>'; } ?>
     </div>
 
     <div class="col-xs-12 panel collapse" id="issues">
@@ -137,7 +139,7 @@
   </div>
 
 
-  <h3><?php echo $this->data['qualities']['NumberOfFeatures']; ?> features</h3>
+  <h3><?php echo 0+$this->data['qualities']['NumberOfFeatures']; ?> features</h3>
 <?php
   if (!empty($this->data['features'])){ ?>
       <div class="cardtable">
