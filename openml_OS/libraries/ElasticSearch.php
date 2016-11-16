@@ -1832,7 +1832,7 @@ class ElasticSearch {
         }
 
         $new_data['features'] = array();
-        $features = $this->db->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE did=" . $d->did . " order by is_target limit 100");
+        $features = $this->db->query("SELECT name, `index`, data_type, is_target, is_row_identifier, is_ignore, NumberOfDistinctValues, NumberOfMissingValues, MinimumValue, MaximumValue, MeanValue, StandardDeviation, ClassDistribution FROM `data_feature` WHERE did=" . $d->did . " order by is_target limit 1000");
         if ($features != false) {
             foreach ($features as $f) {
                 $feat = array(
