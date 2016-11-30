@@ -292,10 +292,16 @@ class Api_run extends Api_model {
       return;
     }
 
-
     // validate xml
     $xmlErrors = '';
     if(validateXml($description['tmp_name'], xsd('openml.run.upload', $this->controller, $this->version), $xmlErrors) == false) {
+      if (DEBUG) {
+        $to = $this->user_email;
+        $subject = 'OpenML Flow Upload DEBUG message. ';
+        $content = 'Filename: ' . $_FILES['description']['name'] . "\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . file_get_contents($description['tmp_name']);
+        sendEmail($to, $subject, $content,'text');
+      }
+      
       $this->returnError(202, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }

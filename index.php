@@ -99,7 +99,12 @@ switch (ENVIRONMENT)
  * Introduced by Jan van Rijn, no official code igniter feature.
  */
 
- require_once( 'openml_OS/config/BASE_CONFIG.php' );
+$base_config = 'openml_OS/config/BASE_CONFIG.php';
+if (!file_exists($base_config)) {
+  die('Can\'t find mandatory OpenML config file: BASE_CONFIG.php (can be copied from template)');
+}
+ 
+ require_once($base_config);
 
 /*
  *---------------------------------------------------------------
