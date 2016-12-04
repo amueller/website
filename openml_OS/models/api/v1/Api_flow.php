@@ -403,13 +403,18 @@ class Api_flow extends Api_model {
     if( $res === false ) {
       return false;
     }
-    foreach( $tags as $tag ) {
-      $error = -1;
-      $this->entity_tag_untag('implementation', $res, $tag, false, 'flow', true);
-    }
-
+    
     // add to elastic search index.
     $this->elasticsearch->index('flow', $res);
+    
+    foreach( $tags as $tag ) {
+      $error = -1;
+      $res = $this->entity_tag_untag('implementation', $res, $tag, false, 'flow', true);
+      if ($res != true) { // TODO: do something better
+        exit();
+      }
+    }
+
 
     // insert all important "components"
     foreach( $implementation_objects as $key => $value ) {
