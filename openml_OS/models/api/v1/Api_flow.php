@@ -283,7 +283,7 @@ class Api_flow extends Api_model {
       }
     }
 
-    $impl = insertImplementationFromXML( $xml->children('oml', true), $this->xml_fields_implementation, $implementation );
+    $impl = $this->insertImplementationFromXML( $xml->children('oml', true), $this->xml_fields_implementation, $implementation );
     if( $impl == false ) {
       $this->returnError( 165, $this->version );
       return;
@@ -361,6 +361,95 @@ class Api_flow extends Api_model {
     }
 
     $this->flow_delete($flow_id);
+  }
+  
+  private function insertImplementationFromXML( $xml, $configuration, $implementation_base = array() ) {
+    $implementation_objects = all_tags_from_xml( $xml, array_custom_filter($configuration, array('plain','array')) );
+    $implementation = all_tags_from_xml( $xml, array_custom_filter($configuration, array('string','csv')), $implementation_base );
+
+    // insert the implementation itself
+    $version = $this->Implementation->incrementVersionNumber( $implementation['name'] );
+    $implementation['fullName'] = $implementation['name'] . '(' . $version . ')';
+    $implementation['version'] = $version;
+
+    if( array_key_exists( 'source_md5', $implementation ) ) {
+      if( array_key_exists( 'external_version', $implementation ) === false ) {
+        $implementation['external_version'] = $implementation['source_md5'];
+      }
+    } elseif( array_key_exists( 'binary_md5', $implementation ) ) {
+      if( array_key_exists( 'external_version', $implementation ) === false ) {
+        $implementation['external_version'] = $implementation['binary_md5'];
+      }
+    }
+
+    if( array_key_exists( 'implements', $implementation ) ) {
+      if( in_array( $implementation['implements'], $this->supportedMetrics ) == false &&
+          in_array( $implementation['implements'], $this->supportedAlgorithms == false ) ) {
+        return false;
+      }
+    }
+
+    // information illegal to insert
+    unset($implementation['source_md5']);
+    unset($implementation['binary_md5']);
+
+    // tags also not insertable. but handled differently.
+    $tags = array();
+    if( array_key_exists( 'tag', $implementation ) ) {
+      $tags = str_getcsv( $implementation['tag'] );
+      unset( $implementation['tag'] );
+    }
+    $res = $this->Implementation->insert( $implementation );
+    if( $res === false ) {
+      return false;
+    }
+    foreach( $tags as $tag ) {
+      $error = -1;
+      $this->entity_tag_untag('implementation', $res, $tag, false, 'flow', true);
+    }
+
+    // add to elastic search index.
+    $this->elasticsearch->index('flow', $res);
+
+    // insert all important "components"
+    foreach( $implementation_objects as $key => $value ) {
+
+      if( $key == 'component' ) {
+        foreach($value as $entry) {
+          $component = $entry->flow->children('oml', true);
+          $similarComponent = $this->Implementation->compareToXml( $entry->flow );
+          if( $similarComponent === false ) {
+            $component->version = $this->Implementation->incrementVersionNumber( $component->name );
+            $componentFullName = $component->name . '(' . $component->version . ')';
+            $succes = $this->insertImplementationFromXML(
+              $component,
+              $configuration,
+              array( 'uploadDate' => now(), 'uploader' => $implementation['uploader'] ) );
+
+            if($succes == false) { return false; }
+            $this->Implementation->addComponent( $res, $succes, trim($entry->identifier) );
+          } else {
+            $this->Implementation->addComponent( $res, $similarComponent, trim($entry->identifier) );
+          }
+        }
+      } elseif( $key == 'parameter' ) {
+        foreach( $value as $entry ) {
+          $children = $entry->children('oml', true);
+          $succes = $this->Input->insert(
+            array(
+              'fullName' => $implementation['fullName'] . '_' . $children->name,
+              'implementation_id' => $res,
+              'name' => trim($children->name),
+              'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
+              'description' => property_exists( $children, 'description') ? trim($children->description) : null,
+              'dataType' => property_exists( $children, 'data_type') ? trim($children->data_type) : null,
+              'recommendedRange' => property_exists( $children, 'recommended_range') ? trim($children->recommendedRange) : null
+            )
+          );
+        }
+      }
+    }
+    return $res;
   }
 }
 ?>
