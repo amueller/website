@@ -399,17 +399,17 @@ class Api_flow extends Api_model {
       $tags = str_getcsv( $implementation['tag'] );
       unset( $implementation['tag'] );
     }
-    $res = $this->Implementation->insert( $implementation );
-    if( $res === false ) {
+    $flow_id = $this->Implementation->insert( $implementation );
+    if( $flow_id === false ) {
       return false;
     }
     
     // add to elastic search index.
-    $this->elasticsearch->index('flow', $res);
+    $this->elasticsearch->index('flow', $flow_id);
     
     foreach( $tags as $tag ) {
       $error = -1;
-      $res = $this->entity_tag_untag('implementation', $res, $tag, false, 'flow', true);
+      $res = $this->entity_tag_untag('implementation', $flow_id, $tag, false, 'flow', true);
       if ($res != true) { // TODO: do something better
         exit();
       }
@@ -432,9 +432,9 @@ class Api_flow extends Api_model {
               array( 'uploadDate' => now(), 'uploader' => $implementation['uploader'] ) );
 
             if($succes == false) { return false; }
-            $this->Implementation->addComponent( $res, $succes, trim($entry->identifier) );
+            $this->Implementation->addComponent( $flow_id, $succes, trim($entry->identifier) );
           } else {
-            $this->Implementation->addComponent( $res, $similarComponent, trim($entry->identifier) );
+            $this->Implementation->addComponent( $flow_id, $similarComponent, trim($entry->identifier) );
           }
         }
       } elseif( $key == 'parameter' ) {
@@ -443,7 +443,7 @@ class Api_flow extends Api_model {
           $succes = $this->Input->insert(
             array(
               'fullName' => $implementation['fullName'] . '_' . $children->name,
-              'implementation_id' => $res,
+              'implementation_id' => $flow_id,
               'name' => trim($children->name),
               'defaultValue' => property_exists( $children, 'default_value') ? trim($children->default_value) : null,
               'description' => property_exists( $children, 'description') ? trim($children->description) : null,
@@ -454,7 +454,7 @@ class Api_flow extends Api_model {
         }
       }
     }
-    return $res;
+    return $flow_id;
   }
 }
 ?>
