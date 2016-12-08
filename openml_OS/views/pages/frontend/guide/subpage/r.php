@@ -46,6 +46,9 @@
   }
   </code></pre></div>
 
+  <p><a href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example&OPENMLKEY=<?php echo $this->api_key;?>">Try it out!</a></p>
+
+
 	<h2 id="r-download">Download</h2>
 	The openML package can be downloaded from <a href="https://github.com/openml/openml-r"> GitHub</a>. It will also be available from CRAN in the near future.
 
