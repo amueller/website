@@ -208,7 +208,7 @@ class Api_model extends CI_Model {
        * * * * * * * * * * */
       $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
       if($tags != false && in_array($tag, $tags)) {
-        $this->returnError(473, $this->version);
+        $this->returnError(473, $this->version, 450, 'id=' . $id . '; tag=' . $tag);
         return false;
       }
       

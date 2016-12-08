@@ -71,21 +71,21 @@
 </xs:simpleType>
 <xs:simpleType name="casual_string1024"> <!-- Subset on xs:string. Slightly restricted form of string, but not neccessarilly URL-friendly -->
   <xs:restriction base="xs:string">
-    <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)])+"/>
+    <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)=])+"/>
     <xs:maxLength value="1024" />
      <xs:minLength value="1" />
   </xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="casual_string128"> <!-- Subset on xs:string. Slightly restricted form of string, but not neccessarilly URL-friendly -->
   <xs:restriction base="xs:string">
-    <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)])+"/>
+    <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)=])+"/>
     <xs:maxLength value="128" />
      <xs:minLength value="1" />
   </xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="casual_string64"> <!-- Subset on xs:string. Slightly restricted form of string, but not neccessarilly URL-friendly -->
   <xs:restriction base="xs:string">
-    <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)])+"/>
+    <xs:pattern value="([a-zA-Z0-9_\-\.,\(\)]=)+"/>
     <xs:maxLength value="64" />
      <xs:minLength value="1" />
   </xs:restriction>
