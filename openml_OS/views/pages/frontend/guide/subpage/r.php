@@ -11,6 +11,9 @@
 
   <p>All in a few lines of R.</p>
 
+  <h2 id="r-demo">Demo</h2>
+  <p>You can try it out yourself in a Jupyter Notebook running in the everware cloud. You'll need an OpenML account as well as a <a href="www.github.com">GitHub</a> account for this service to work properly. It may take a few minutes to spin up.</p>
+  <p><a class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example&OPENMLKEY=<?php echo $this->api_key;?>">Launch demo</a></p>
 
   <h2 id="r-download">Example</h2>
   <p>This example runs an mlr algorithm on an <a href="t/10">OpenML task</a>. The first time, you need to set your <a href="u#!api">API key</a> on your machine.</p>
@@ -45,10 +48,6 @@
     }
   }
   </code></pre></div>
-
-  <h2 id="r-demo">Demo</h2>
-  <p>You can try it out yourself in a notebook running in the everware cloud. You'll need an OpenML account as well as a <a href="www.github.com">GitHub</a> account for this service to work properly. It may take a few minutes to spin up.</p>
-  <p><a class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example&OPENMLKEY=<?php echo $this->api_key;?>">Launch the demo!</a></p>
 
 	<h2 id="r-download">Download</h2>
 	The openML package can be downloaded from <a href="https://github.com/openml/openml-r"> GitHub</a>. It will also be available from CRAN in the near future.

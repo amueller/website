@@ -66,7 +66,7 @@
 
 </div>
 
-<!--
+
 <div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
   <div class="list-group">
@@ -75,14 +75,24 @@
               <img class="circle" src="img/colorballs2.jpg" alt="icon">
           </div>
           <div class="row-content">
-              <h4 class="list-group-item-heading">Upcoming events</h4>
-              <p class="list-group-item-text">5-9 September 2016: <a target="_blank" href="http://openml2016dev.openml.org/">OpenML Hackathon Fall 2016 - register now</a></p>
+              <h4 class="list-group-item-heading">News</h4>
+              <p class="list-group-item-text">The next OpenML hackathon will be Feb 27 - Mar 3 at LMU Munich</a></p>
+              <p class="list-group-item-text">OpenML won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize!</a></p>
+          </div>
+      </div>
+      <div class="list-group-item">
+          <div class="row-picture">
+              <img class="circle" src="img/osr.png" alt="icon">
+          </div>
+          <div class="row-content">
+              <h4 class="list-group-item-heading">OpenML on Open Science Radio</h4>
+              <p class="list-group-item-text"><a href="http://www.openscienceradio.de/2016/10/28/osr059-openml-en/">Check out the podcast.</a></p>
           </div>
       </div>
   </div>
 
 </div>
--->
+
  <div id="green" class="introsection greensection">
 
       <h1><i class="fa fa-rocket fa-lg"></i><br>For the curious</h1>
