@@ -76,7 +76,7 @@
           </div>
           <div class="row-content">
               <h4 class="list-group-item-heading">News</h4>
-              <p class="list-group-item-text">The next OpenML hackathon will be Feb 27 - Mar 3 at LMU Munich</a></p>
+              <p class="list-group-item-text">The <a href="http://openml2017dev.openml.org">next OpenML hackathon</a> will be Feb 27 - Mar 3 at LMU Munich</a></p>
               <p class="list-group-item-text">OpenML won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize!</a></p>
           </div>
       </div>
