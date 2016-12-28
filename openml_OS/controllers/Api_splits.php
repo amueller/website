@@ -73,15 +73,35 @@ class Api_splits extends CI_Controller {
     }
   }
   
-  function get( $task_id ) {
+  function challenge($task_id, $testtrain) {
+    if (is_numeric($task_id) == false) {
+      die('argument 1 should be numeric');
+    }
+    if (in_array($testtrain, array('test', 'train') == false)) {
+      die('argument 2 should be in {test,train}');
+    }
+    
+    $command = 'java -jar '.$this->evaluation.' -f "challenge" -t ' . $task_id . ' -mode "' . $testtrain . '" ' . $this->config;
+    
+    $this->Log->cmd('API Splits::challenge(' . $task_id . ', '.$testtrain.')', $command);
+    
+    if(function_enabled('system')) {
+      header('Content-type: text/plain');
+      system(CMD_PREFIX . $command);
+    } else {
+      die('failed to generate arff file: php "system" function disabled. ');
+    }
+  }
+  
+  function get($task_id) {
     $filepath = $this->directory . '/' . $task_id . '.arff';
-    if( file_exists( $filepath ) == false ) {
-      $this->generate( $task_id, $filepath );
+    if (file_exists($filepath) == false) {
+      $this->generate($task_id, $filepath);
     }
     
     header('Content-type: text/plain');
-    header('Content-Length: ' . filesize( $filepath ) );
-    readfile_chunked( $filepath );
+    header('Content-Length: ' . filesize($filepath));
+    readfile_chunked($filepath);
   }
   
   function md5( $task_id ) {
