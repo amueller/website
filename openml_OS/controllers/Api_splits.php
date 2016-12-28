@@ -20,7 +20,8 @@ class Api_splits extends CI_Controller {
     $this->load->helper('file_upload');
     
     $this->db = $this->load->database('read',true);
-    $this->task_types = array( 1, 2, 3, 6, 7 );
+    $this->task_types = array(1, 2, 3, 6, 7);
+    $this->challenge_types = array(9);
     $this->evaluation = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
     $this->config = " -config 'cache_allowed=false;server=http://www.openml.org/;api_key=".API_KEY."' ";
   }
@@ -79,6 +80,11 @@ class Api_splits extends CI_Controller {
     }
     if (in_array($testtrain, array('test', 'train') == false)) {
       die('argument 2 should be in {test,train}');
+    }
+    
+    $task = $this->Task->getById( $task_id );
+    if($task === false || in_array( $task->ttid, $this->challenge_types ) === false) {
+      die('Task not valid challenge.');
     }
     
     $command = 'java -jar '.$this->evaluation.' -f "challenge" -t ' . $task_id . ' -mode "' . $testtrain . '" ' . $this->config;
