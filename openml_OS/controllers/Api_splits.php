@@ -23,7 +23,7 @@ class Api_splits extends CI_Controller {
     $this->task_types = array(1, 2, 3, 6, 7);
     $this->challenge_types = array(9);
     $this->evaluation = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
-    $this->config = " -config 'cache_allowed=false;server=http://www.openml.org/;api_key=".API_KEY."' ";
+    $this->config = " -config 'cache_allowed=false;server=".BASE_URL.";api_key=".API_KEY."' ";
   }
   
   function different_predictions($run_ids) {
