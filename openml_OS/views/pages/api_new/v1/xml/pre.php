@@ -303,6 +303,23 @@ $this->apiErrors[601] = 'Study does not exists. ';
 $this->apiErrors[602] = 'Study not visible for you. ';
 $this->apiErrors[603] = 'Study does not contain any associated tags (should have at least one). ';
 
+// openml.run.attach (611-630)
+$this->apiErrors[611] = 'Run not found';
+$this->apiErrors[612] = 'Task not found';
+$this->apiErrors[613] = 'Runfile record not found';
+$this->apiErrors[614] = 'File record not found';
+$this->apiErrors[615] = 'User not equal to run owner';
+$this->apiErrors[616] = 'Task not of valid challenge type';
+$this->apiErrors[617] = 'Run already processed';
+$this->apiErrors[618] = 'Wrong number of uploaded files (should be 2)';
+$this->apiErrors[619] = 'Unallowed extension';
+$this->apiErrors[620] = 'Problem with file upload';
+$this->apiErrors[621] = 'Arff validation error';
+$this->apiErrors[622] = 'XML validation error';
+$this->apiErrors[623] = 'Description MD5 not equal to stored MD5';
+$this->apiErrors[624] = 'Prediction file with this index already exists';
+$this->apiErrors[625] = 'File registration error';
+$this->apiErrors[626] = 'Runfile record error';
 
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';
