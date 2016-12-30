@@ -291,7 +291,7 @@ class Api_run extends Api_model {
       return;
     }
     
-    $description_record = $this->Runfile->getWhere('source = ' . $run->id . ' AND field = "description"');
+    $description_record = $this->Runfile->getWhere('`source` = "' . $run->rid . '" AND `field` = "description"');
     if ($description_record === false) {
       $this->returnError(613, $this->version);
       return;

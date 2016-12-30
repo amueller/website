@@ -3,11 +3,11 @@
 	<?php if( isset( $run_files ) ): ?>
 
 		<?php foreach( $run_files as $key => $value ): ?>
-		<oml:file>
+		<oml:predictionfile>
 			<oml:name><?php echo $value->name; ?></oml:name>
 			<oml:upload_time><?php echo $value->upload_time; ?></oml:upload_time>
 			<oml:file_id><?php echo $value->file_id; ?></oml:file_id>
-		</oml:file>
+		</oml:predictionfile>
 		<?php endforeach;?>
 	<?php endif; ?>
 </oml:upload_run_attach>
