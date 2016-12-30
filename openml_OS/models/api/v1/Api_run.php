@@ -396,7 +396,7 @@ class Api_run extends Api_model {
       return;
     }
     
-    $run_files = $this->Runfile->getWhere('source = ' . $run->id . ' AND field LIKE "predictions%"');
+    $run_files = $this->Runfile->getWhere('`source` = "' . $run->rid . '" AND `field` LIKE "predictions%"');
     
     $this->xmlContents('run-upload-attach', $this->version, array('run_id' => $run->rid, 'files' => $run_files));
   }
