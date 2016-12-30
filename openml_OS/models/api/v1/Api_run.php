@@ -291,7 +291,7 @@ class Api_run extends Api_model {
       return;
     }
     
-    $description_record = $this->Runfile->getSingleWhere('`source` = "' . $run->rid . '" AND `field` = "description"');
+    $description_record = $this->Runfile->getWhereSingle('`source` = "' . $run->rid . '" AND `field` = "description"');
     if ($description_record === false) {
       $this->returnError(613, $this->version);
       return;
@@ -360,7 +360,7 @@ class Api_run extends Api_model {
     }
     
     // check description (md5 should be the same as current known description)
-    $description_md5 = md5_file($_FILES['description']);
+    $description_md5 = md5_file($_FILES['description']['tmp_name']);
     if ($description_md5 != $description->md5_hash) {
       $this->returnError(623, $this->version);
       return;
@@ -398,7 +398,7 @@ class Api_run extends Api_model {
     
     $run_files = $this->Runfile->getWhere('source = ' . $run->id . ' AND field LIKE "predictions%"');
     
-    $this->xmlContents('run-upload-attach', $this->version, array('run_id' => $run->id, 'files' => $run_files));
+    $this->xmlContents('run-upload-attach', $this->version, array('run_id' => $run->rid, 'files' => $run_files));
   }
   
   private function run_upload() {
