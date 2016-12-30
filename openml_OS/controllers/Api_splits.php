@@ -74,12 +74,16 @@ class Api_splits extends CI_Controller {
     }
   }
   
-  function challenge($task_id, $testtrain) {
+  function challenge($task_id, $testtrain, $offset) {
     if (is_numeric($task_id) == false) {
       die('argument 1 should be numeric');
     }
     if (in_array($testtrain, array('test', 'train') == false)) {
       die('argument 2 should be in {test,train}');
+    }
+    $offset = "";
+    if (is_numeric($offset)) {
+      $offset = ' -o ' . $offset . ' ';
     }
     
     $task = $this->Task->getById( $task_id );
@@ -87,7 +91,7 @@ class Api_splits extends CI_Controller {
       die('Task not valid challenge.');
     }
     
-    $command = 'java -jar '.$this->evaluation.' -f "challenge" -t ' . $task_id . ' -mode "' . $testtrain . '" ' . $this->config;
+    $command = 'java -jar '.$this->evaluation.' -f "challenge" -t ' . $task_id . ' -mode "' . $testtrain . '" ' . $offset . $this->config;
     
     $this->Log->cmd('API Splits::challenge(' . $task_id . ', '.$testtrain.')', $command);
     
