@@ -74,7 +74,7 @@ class Api_splits extends CI_Controller {
     }
   }
   
-  function challenge($task_id, $testtrain, $offset) {
+  function challenge($task_id, $testtrain, $offset_arg) {
     if (is_numeric($task_id) == false) {
       die('argument 1 should be numeric');
     }
@@ -82,8 +82,8 @@ class Api_splits extends CI_Controller {
       die('argument 2 should be in {test,train}');
     }
     $offset = "";
-    if (is_numeric($offset)) {
-      $offset = ' -o ' . $offset . ' ';
+    if (is_numeric($offset_arg)) {
+      $offset = ' -o ' . $offset_arg . ' ';
     }
     
     $task = $this->Task->getById( $task_id );
