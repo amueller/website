@@ -45,6 +45,8 @@
       <xs:element name="did" type="xs:integer"/> <!-- A reference to the runfiles table, by did. Added by server. Ignored when uploading a run-->
       <xs:element name="file_id" type="xs:integer"/> <!-- Added by server. Ignored when uploading a run.-->
       <xs:element name="name" type="oml:casual_string128"/> <!-- The name of the dataset. Added by server. Ignored when uploading a run -->
+      <xs:element name="format" type="oml:system_string128"/> <!-- The format. Added by server. Ignored when uploading a run -->
+      <xs:element name="upload_time" type="xs:string"/> <!-- The upload time. Added by server. Ignored when uploading a run -->
       <xs:element name="url" type="xs:anyURI"/> <!-- A url to the datset. Added by server. Ignored when uploading a run -->
     </xs:sequence>
   </xs:complexType>
