@@ -49,7 +49,9 @@
         <oml:did><?php echo $r->did; ?></oml:did>
         <oml:file_id><?php echo $r->file_id; ?></oml:file_id>
         <oml:name><?php echo $r->field; ?></oml:name>
-        <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl( $f ); ?></oml:url>
+        <oml:format><?php echo $r->format; ?></oml:format>
+        <oml:upload_time><?php echo $r->upload_time; ?></oml:upload_time>
+        <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl($f); ?></oml:url>
       </oml:file>
       <?php endforeach; ?>
     <?php endif; if(array_key_exists('evaluations', $source->outputData) ): ?>
