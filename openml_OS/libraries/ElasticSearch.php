@@ -42,12 +42,9 @@ class ElasticSearch {
         $this->mappings['badge'] = array(
             '_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'time' => array(
                     'type' => 'date',
@@ -58,12 +55,9 @@ class ElasticSearch {
         $this->mappings['downvote'] = array(
             '_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'time' => array(
                     'type' => 'date',
@@ -74,12 +68,9 @@ class ElasticSearch {
         $this->mappings['like'] = array(
             '_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'time' => array(
                     'type' => 'date',
@@ -90,12 +81,9 @@ class ElasticSearch {
         $this->mappings['download'] = array(
             '_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'time' => array(
                     'type' => 'date',
@@ -106,12 +94,9 @@ class ElasticSearch {
         $this->mappings['data'] = array(
             '_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'date' => array(
                     'type' => 'date',
@@ -148,20 +133,14 @@ class ElasticSearch {
                     'index' => 'not_analyzed'),
                 'suggest' => array(
                     'type' => 'completion',
-                    'index_analyzer' => 'simple',
-                    'search_analyzer' => 'simple',
-                    'payloads' => true,
-                    'max_input_length' => 100)
+                    'analyzer' => 'standard')
             )
         );
         $this->mappings['flow'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'date' => array(
                     'type' => 'date',
@@ -200,21 +179,15 @@ class ElasticSearch {
                 ),
                 'suggest' => array(
                     'type' => 'completion',
-                    'index_analyzer' => 'standard',
-                    'search_analyzer' => 'standard',
-                    'payloads' => true,
-                    'max_input_length' => 100
+                    'analyzer' => 'standard'
                 )
             )
         );
         $this->mappings['user'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'date' => array(
                     'type' => 'date',
@@ -226,30 +199,22 @@ class ElasticSearch {
                 ),
                 'suggest' => array(
                     'type' => 'completion',
-                    'index_analyzer' => 'standard',
-                    'search_analyzer' => 'standard',
-                    'payloads' => true,
-                    'max_input_length' => 100
+                    'analyzer' => 'standard'
                 )
             )
         );
         $this->mappings['task'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'date' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'),
                 'suggest' => array(
                     'type' => 'completion',
-                    'index_analyzer' => 'standard',
-                    'search_analyzer' => 'standard',
-                    'payloads' => true,
+                    'analyzer' => 'standard'
                 ),
                 'tags' => array(
                     'type' => 'nested',
@@ -264,12 +229,9 @@ class ElasticSearch {
         );
         $this->mappings['task_type'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'description' => array(
                     'type' => 'string',
@@ -284,21 +246,15 @@ class ElasticSearch {
                     'format' => 'yyyy-MM-dd HH:mm:ss'),
                 'suggest' => array(
                     'type' => 'completion',
-                    'index_analyzer' => 'standard',
-                    'search_analyzer' => 'standard',
-                    'payloads' => true,
-                    'max_input_length' => 100
+                    'analyzer' => 'standard'
                 )
             )
         );
         $this->mappings['run'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'date' => array(
                     'type' => 'date',
@@ -328,12 +284,9 @@ class ElasticSearch {
         );
         $this->mappings['study'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'date' => array(
                     'type' => 'date',
@@ -348,12 +301,9 @@ class ElasticSearch {
         );
         $this->mappings['measure'] = array('_all' => array(
                 'enabled' => true,
-                'stored' => 'yes',
                 'type' => 'string',
                 'analyzer' => 'snowball'
             ),
-            '_timestamp' => array('enabled' => true),
-            '_type' => array('enabled' => true),
             'properties' => array(
                 'description' => array(
                     'type' => 'string',
@@ -368,10 +318,7 @@ class ElasticSearch {
                     'format' => 'yyyy-MM-dd HH:mm:ss'),
                 'suggest' => array(
                     'type' => 'completion',
-                    'index_analyzer' => 'standard',
-                    'search_analyzer' => 'standard',
-                    'payloads' => true,
-                    'max_input_length' => 100
+                    'analyzer' => 'standard'
                 )
             )
         );
@@ -512,7 +459,7 @@ class ElasticSearch {
             'knowledge_id' => $d->knowledge_id,
             'reason' => $d->description,
             'reason_id' => $d->reason_id,
-            'orginal' => $d->original,
+            'original' => $d->original,
             'count' => $d->count,
             'time' => $d->time
         );
@@ -606,13 +553,7 @@ class ElasticSearch {
             'visibility' => 'public',
             'suggest' => array(
                 'input' => array($d->first_name, $d->last_name),
-                'output' => $d->first_name . ' ' . $d->last_name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'user',
-                    'user_id' => $d->id,
-                    'description' => substr($d->affiliation, 0, 100)
-                )
+                'weight' => 5
             ),
             'gamification_visibility' => $d->gamification_visibility
         );
@@ -829,13 +770,7 @@ class ElasticSearch {
             'visibility' => $d->visibility,
             'suggest' => array(
                 'input' => array($d->name, $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'study',
-                    'study_id' => $d->id,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 5
             )
         );
         $study['datasets_included'] = 0;
@@ -919,7 +854,7 @@ class ElasticSearch {
         $description = array();
         $description[] = $d->name;
 
-        $task = $this->db->query('SELECT i.input, ti.type, i.value  FROM task_inputs i, task_type_inout ti, task t  where i.input=ti.name and ti.ttid=t.ttid and t.task_id=i.task_id and i.task_id=' . $d->task_id);
+        $task = $this->db->query('SELECT i.input, ti.type, i.value  FROM task_inputs i, task_type_inout ti, task t  where i.input=ti.name and ti.ttid=t.ttid and t.task_id=i.task_id and i.task_id=' . $d->task_id . ' order by ti.type');
         $did = 0;
         if ($task) {
             foreach ($task as $t) {
@@ -971,12 +906,7 @@ class ElasticSearch {
 
         $newdata['suggest'] = array(
             'input' => $description,
-            'output' => 'Task ' . $d->task_id,
-            'payload' => array(
-                'type' => 'task',
-                'task_id' => $d->task_id,
-                'description' => substr(implode(' ', $description), 0, 100)
-            )
+            'weight' => '3'
         );
 
         $nr_of_downvotes = 0;
@@ -1365,13 +1295,7 @@ class ElasticSearch {
             'date' => $d->date,
             'suggest' => array(
                 'input' => array($d->name, $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'task_type',
-                    'tt_id' => $d->ttid,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 2
             ),
         );
 
@@ -1436,13 +1360,7 @@ class ElasticSearch {
             'visibility' => $d->visibility,
             'suggest' => array(
                 'input' => array(str_replace("weka.", "", $d->name), $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'flow',
-                    'flow_id' => $d->id,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 5
             )
         );
 
@@ -1617,13 +1535,7 @@ class ElasticSearch {
             'date' => $d->date,
             'suggest' => array(
                 'input' => array($d->name, $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'estimation_procedure',
-                    'proc_id' => $d->id,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 2
             )
         );
     }
@@ -1643,13 +1555,7 @@ class ElasticSearch {
             'date' => $d->date,
             'suggest' => array(
                 'input' => array($d->name, $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'evaluation_measure',
-                    'eval_id' => $id,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 2
             )
         );
     }
@@ -1667,13 +1573,7 @@ class ElasticSearch {
             'date' => $d->date,
             'suggest' => array(
                 'input' => array($d->name, $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'data_quality',
-                    'quality_id' => $id,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 2
             )
         );
     }
@@ -1691,13 +1591,7 @@ class ElasticSearch {
             'date' => $d->date,
             'suggest' => array(
                 'input' => array($d->name, $d->description),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'data_quality',
-                    'quality_id' => $id,
-                    'description' => substr($d->description, 0, 100)
-                )
+                'weight' => 2
             )
         );
     }
@@ -1723,6 +1617,11 @@ class ElasticSearch {
         }
 
         $responses = $this->client->bulk($params);
+
+        if($responses['errors'] == True){
+          $err = $responses['items'][0]['index']['error'];
+          return 'ERROR: Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
+        }
 
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($datasets) . ' datasets.';
     }
@@ -1804,13 +1703,8 @@ class ElasticSearch {
             'ignore_attribute' => $d->ignore_attribute,
             'runs' => $this->checkNumeric($d->runs),
             'suggest' => array(
-                'input' => array($d->name, substr($headless_description, 0, 100)),
-                'output' => $d->name,
-                'weight' => 5,
-                'payload' => array(
-                    'type' => 'data',
-                    'data_id' => $d->did,
-                    'description' => substr($headless_description, 0, 100)
+                'input' => array($d->name, substr($headless_description, 0, 500))
+                'weight' => 5
                 )
             )
         );
@@ -1854,7 +1748,7 @@ class ElasticSearch {
                     $feat['mean'] = $f->MeanValue;
                     $feat['stdev'] = $f->StandardDeviation;
                 } elseif ($f->data_type == "nominal") {
-                    $feat['distr'] = json_decode($f->ClassDistribution);
+                    $feat['distr'] = $this->array_map_recursive('strval',json_decode($f->ClassDistribution));
                 }
                 $new_data['features'][] = $feat;
             }
@@ -1917,6 +1811,14 @@ class ElasticSearch {
             return doubleval($v);
         else
             return $v;
+    }
+
+    public function array_map_recursive($callback, $array) {
+       $func = function ($item) use (&$func, &$callback) {
+         return is_array($item) ? array_map($func, $item) : call_user_func($callback, $item);
+       };
+
+       return array_map($func, $array);
     }
 
 }

@@ -6,6 +6,8 @@ class ElasticSearchLibrary {
     $this->searchclient = null;
     try {
       $params['hosts'] = array (ES_URL);
+      $params['user'] = array (ES_USERNAME);
+      $params['pass'] = array (ES_PASSWORD);
       $this->searchclient = new Elasticsearch\Client($params);
     } catch( Exception $e ) {}
   }
