@@ -167,12 +167,12 @@ elseif($this->terms != 'match_all' and $this->coreterms != ''){
 
 $this->active_tab = gu('tab');
 $jsonfilters = array();
+$jsonshould = array();
 
 //visibility
-if (!$this->ion_auth->logged_in()) {
-	$jsonfilters[] = '{ "term" : { "visibility" : "public" } }';
-} else {
-	$jsonfilters[] = '{ "or" : [ { "term" : { "visibility" : "public" } }, { "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } } ] }';
+$jsonshould[] = '{ "term" : { "visibility" : "public" } }';
+if ($this->ion_auth->logged_in()) {
+	$jsonshould[] = '{ "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } }';
 }
 
 //search filters
@@ -186,7 +186,7 @@ foreach($this->filters as $k => $v){
 		if(count($parts) == 2)
 			$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gte" : '.$parts[0].', "lte" : '.$parts[1].' } } }';
 		}
-	elseif($k == 'type')
+	elseif($k == 'type' or $k == 'measure_type' )
     $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   elseif($k == 'tags.tag')
     $jsonfilters[] = '{ "nested": { "path": "tags", "filter": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';
@@ -196,6 +196,7 @@ foreach($this->filters as $k => $v){
 $fjson = implode(",",$jsonfilters);
 if(count($jsonfilters)>1)
 	$fjson = '{ "and" : ['.$fjson.'] }';
+$sjson = '['.implode(",",$jsonshould).']';
 
 $params['index'] = 'openml';
 if($this->filtertype)
@@ -205,7 +206,7 @@ $params['body']  = '{'.
    '"from" : '. ($this->from ? $this->from : 0) .',
     "size" : '. $this->size .','.
     ($this->listids ? '"fields" : [],' : '').'
-    "query" : { "filtered" : { "query" : {'.$query.'}, "filter": '.($fjson ? $fjson : '').'}},'.
+    "query" : { "bool" : { "must" : {'.$query.'}, '. ($fjson ? '"filter": '.($fjson ? $fjson : '').', ' : '') .'"should": '.($sjson ? $sjson : '').' }},'.
     (($this->sort and $this->sort!='match') ? '"sort" : { "'.$this->sort.'" : { "order": "'.$this->order.'"}},' : '').
     ($this->coreterms == '' ? '' :
     '"highlight" : {
@@ -231,7 +232,7 @@ $time_start = microtime_float();
 // launch query
 try {
 	$this->results = $this->searchclient->search($params);
-  //print_r($this->results);
+ // print_r($this->results);
 } catch (Exception $e) {
 	$this->results = array();
 	$this->results['hits'] = array();

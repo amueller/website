@@ -13,10 +13,11 @@ window.onresize = function(event) {
       $('#data_count').html((res['data'] ? res['data'] : '0'));
       $('#task_count').html((res['task'] ? res['task'] : '0'));
       $('#flow_count').html((res['flow'] ? res['flow'] : '0'));
-      $('#run_count').html((res['run'] ? res['run'] : '0'));
+      $('#run_count').html((res['run'] ? res['run'] : '0'));    
     });
   }
   update();
   //Run the update function once every 5 seconds
   setInterval(update, 5000);
 })();
+

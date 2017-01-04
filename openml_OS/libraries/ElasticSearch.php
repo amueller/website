@@ -25,9 +25,9 @@ class ElasticSearch {
         $this->db = $this->CI->Dataset;
         $this->userdb = $this->CI->Author;
 
-        $params['hosts'] = array(ES_URL);
+        $hosts = array(ES_URL);
         //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@'.ES_URL
-        $this->client = new Elasticsearch\Client($params);
+        $this->client = Elasticsearch\ClientBuilder::create()->setHosts($hosts)->build();
 
         $this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
         $this->flow_names = $this->CI->Implementation->getAssociativeArray('id', 'fullName', 'name IS NOT NULL');
@@ -313,6 +313,10 @@ class ElasticSearch {
                     'type' => 'string',
                     'analyzer' => 'snowball'
                 ),
+                'measure_type' => array(
+                    'type' => 'text',
+                    'fielddata' => true
+                ),
                 'date' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'),
@@ -549,7 +553,7 @@ class ElasticSearch {
             'country' => $d->country,
             'bio' => $d->bio,
             'image' => $d->image,
-            'date' => $d->created_on,
+            'date' => date("Y-m-d H:i:s", $d->created_on),
             'visibility' => 'public',
             'suggest' => array(
                 'input' => array($d->first_name, $d->last_name),
@@ -1265,7 +1269,7 @@ class ElasticSearch {
         $params['index'] = 'openml';
         $params['type'] = 'task_type';
 
-        $types = $this->db->query('SELECT tt.ttid, tt.name, tt.description, count(task_id) as tasks, tt.date FROM task_type tt, task t where tt.ttid=t.ttid' . ($id ? ' and tt.ttid=' . $id : '') . ' group by tt.ttid');
+        $types = $this->db->query('SELECT tt.ttid, tt.name, tt.description, count(task_id) as tasks, tt.creationDate FROM task_type tt, task t where tt.ttid=t.ttid' . ($id ? ' and tt.ttid=' . $id : '') . ' group by tt.ttid');
 
         if ($id and ! $types)
             return 'Error: task type ' . $id . ' is unknown';
@@ -1523,7 +1527,7 @@ class ElasticSearch {
     private function build_procedure($d) {
         return array(
             'proc_id' => $d->id,
-            'type' => 'estimation_procedure',
+            'measure_type' => 'estimation_procedure',
             'task_type' => $d->ttid,
             'name' => $d->name,
             'description' => $d->description,
@@ -1544,7 +1548,7 @@ class ElasticSearch {
         $id = str_replace("_", "-", $d->name);
         return array(
             'eval_id' => $id,
-            'type' => 'evaluation_measure',
+            'measure_type' => 'evaluation_measure',
             'name' => $d->name,
             'description' => $d->description,
             'min' => $d->min,
@@ -1564,11 +1568,9 @@ class ElasticSearch {
         $id = str_replace("_", "-", $d->name);
         return array(
             'quality_id' => $id,
-            'type' => 'data_quality',
+            'measure_type' => 'data_quality',
             'name' => $d->name,
             'description' => $d->description,
-            'function' => $d->function,
-            'priority' => $d->priority,
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
@@ -1582,11 +1584,9 @@ class ElasticSearch {
         $id = str_replace("_", "-", $d->name);
         return array(
             'quality_id' => $id,
-            'type' => 'flow_quality',
+            'measure_type' => 'flow_quality',
             'name' => $d->name,
             'description' => $d->description,
-            'function' => $d->function,
-            'priority' => $d->priority,
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
@@ -1703,9 +1703,8 @@ class ElasticSearch {
             'ignore_attribute' => $d->ignore_attribute,
             'runs' => $this->checkNumeric($d->runs),
             'suggest' => array(
-                'input' => array($d->name, substr($headless_description, 0, 500))
+                'input' => array($d->name, substr($headless_description, 0, 500)),
                 'weight' => 5
-                )
             )
         );
 
@@ -1822,3 +1821,4 @@ class ElasticSearch {
     }
 
 }
+

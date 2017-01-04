@@ -1,26 +1,19 @@
 <?php
-/**
- * User: zach
- * Date: 01/20/2014
- * Time: 14:34:49 pm
- */
 
 namespace Elasticsearch\Endpoints;
 
 use Elasticsearch\Common\Exceptions\InvalidArgumentException;
-use Elasticsearch\Endpoints\AbstractEndpoint;
 use Elasticsearch\Common\Exceptions;
 
 /**
  * Class Search
  *
  * @category Elasticsearch
- * @package Elasticsearch\Endpoints
- * @author   Zachary Tong <zachary.tong@elasticsearch.com>
+ * @package  Elasticsearch\Endpoints
+ * @author   Zachary Tong <zach@elastic.co>
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache2
- * @link     http://elasticsearch.org
+ * @link     http://elastic.co
  */
-
 class Search extends AbstractEndpoint
 {
     /**
@@ -36,15 +29,14 @@ class Search extends AbstractEndpoint
         }
 
         $this->body = $body;
+
         return $this;
     }
-
-
 
     /**
      * @return string
      */
-    protected function getURI()
+    public function getURI()
     {
         $index = $this->index;
         $type = $this->type;
@@ -61,11 +53,10 @@ class Search extends AbstractEndpoint
         return $uri;
     }
 
-
     /**
      * @return string[]
      */
-    protected function getParamWhitelist()
+    public function getParamWhitelist()
     {
         return array(
             'analyzer',
@@ -73,7 +64,6 @@ class Search extends AbstractEndpoint
             'default_operator',
             'df',
             'explain',
-            'fields',
             'from',
             'ignore_unavailable',
             'allow_no_indices',
@@ -83,6 +73,8 @@ class Search extends AbstractEndpoint
             'lowercase_expanded_terms',
             'preference',
             'q',
+            'query_cache',
+            'request_cache',
             'routing',
             'scroll',
             'search_type',
@@ -99,14 +91,16 @@ class Search extends AbstractEndpoint
             'suggest_text',
             'timeout',
             'version',
+            'fielddata_fields',
+            'docvalue_fields',
+            'filter_path'
         );
     }
-
 
     /**
      * @return string
      */
-    protected function getMethod()
+    public function getMethod()
     {
         return 'GET';
     }

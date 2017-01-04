@@ -99,6 +99,7 @@ function removeFilters()
     bindInput("flow_id");
     bindInput("version");
     bindInput("type");
+    bindInput("measure_type");    
     bindInput("task_id");
     bindInput("source_data");
     bindInput("target_feature");
