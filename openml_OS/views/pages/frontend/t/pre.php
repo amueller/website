@@ -17,21 +17,6 @@ if($this->input->get('sort'))
 $this->active_tab = gu('tab');
 if($this->active_tab == false) $this->active_tab = 'searchtab';
 
-// task types
-$this->tasktypes =  array();
-$types = $this->Implementation->query('SELECT tt.ttid, tt.name, tt.description, count(t.task_id) as tasks FROM task_type tt left join task t on t.ttid=tt.ttid group by tt.ttid order by tasks desc');
-if( $types != false ) {
-	  foreach( $types as $i ) {
-		  $result = array(
-			  'id' => $i->ttid,
-			  'name' => $i->name,
-			  'description' => $i->description,
-			  'tasks' => $i->tasks
-		  );
-		  $this->tasktypes[] = $result;
-	  }
-}
-
 /// TYPE DETAIL
 
 $this->record = array();

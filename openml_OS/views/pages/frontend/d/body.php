@@ -75,11 +75,11 @@
     $this->p3 = array();
     $this->p3['index'] = 'openml';
     $this->p3['type'] = 'task';
-    $this->p3['body']['filter']['term']['source_data.data_id'] = $this->id;
+    $this->p3['body']['query']['term']['source_data.data_id'] = $this->id;
     $this->p3['body']['sort'] = array('tasktype.tt_id' => array ('order' => 'asc'), 'runs' => array ('order' => 'desc'));
     $this->p3['body']['size'] = 1000;
     try{
-      $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
+        $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
     } catch (Exception $e) {}
 
     //get properties
@@ -87,14 +87,26 @@
     $this->p4['index'] = 'openml';
     $this->p4['type'] = 'measure';
     $this->p4['body']['size'] = 1000;
-    $this->p4['body']['query']['bool']['must']['match_all'] = array();
+    $this->p4['body']['query']['bool']['must']['match_all'] = (object)[];
     $this->p4['body']['query']['bool']['filter']['term']['measure_type'] = "data_quality";
     $this->p4['body']['sort'] = array('priority');
     try {
       $responses = $this->searchclient->search($this->p4);
-      var_dump($responses);
       $this->dataproperties = array_column($responses['hits']['hits'],'_source');
-    }} catch (Exception $e) {}
+    } catch (Exception $e) {}
+
+    //get measures
+    $this->p4 = array();
+    $this->p4['index'] = 'openml';
+    $this->p4['type'] = 'measure';
+    $this->p4['body']['size'] = 1000;
+    $this->p4['body']['query']['bool']['must']['match_all'] = (object)[];
+    $this->p4['body']['query']['bool']['filter']['term']['measure_type'] = "evaluation_measure";
+    $this->p4['body']['sort'] = array('priority');
+    try {
+      $responses = $this->searchclient->search($this->p4);
+      $this->allmeasures = array_column($responses['hits']['hits'],'_source');
+    } catch (Exception $e) {}
 
     // block unauthorized access
     $this->blocked = false;

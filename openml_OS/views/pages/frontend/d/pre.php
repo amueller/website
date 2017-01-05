@@ -31,7 +31,6 @@
   	$this->showallfeatures = true;
 
   $this->displayName = false;
-  $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
   $this->current_measure = 'predictive_accuracy';
 
   // Making sure we know who is editing

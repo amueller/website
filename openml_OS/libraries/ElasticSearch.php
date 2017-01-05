@@ -28,7 +28,7 @@ class ElasticSearch {
         $hosts = array(ES_URL);
         //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@'.ES_URL
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts($hosts)->build();
-        $init_indexer = False;
+        $this->init_indexer = False;
     }
 
     public function initialize(){
@@ -225,6 +225,7 @@ class ElasticSearch {
                         'tag' => array('type' => 'string'),
                         'uploader' => array('type' => 'string'))),
                 'task_id' => array('type' => 'long'),
+                'tasktype.tt_id' => array('type' => 'long'),
                 'date' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss')
@@ -334,7 +335,7 @@ class ElasticSearch {
                 )
             )
 	);
-	$init_indexer = True;	
+	$this->init_indexer = True;	
     }
 
     public function test() {
@@ -347,13 +348,13 @@ class ElasticSearch {
         return array_keys($array_data['openml']['mappings']);
     }
 
-    public function index($type, $id = false) {
-        if(!$init_indexer)
+    public function index($type, $id = false, $altmetrics=False) {
+        if(!$this->init_indexer)
 	     $this->initialize();
 	$method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
-                return $this->$method_name($id);
+                return $this->$method_name($id, $altmetrics);
             } catch (Exception $e) {
                 // TODO: log?
             }
@@ -362,13 +363,13 @@ class ElasticSearch {
         }
     }
 
-    public function index_from($type, $id = false) {
-        if(!$init_indexer)
+    public function index_from($type, $id = false, $altmetrics=False) {
+        if(!$this->init_indexer)
              $this->initialize();
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
-                return $this->$method_name(false, $id);
+                return $this->$method_name(false, $id, $altmetrics);
             } catch (Exception $e) {
                 // TODO: log?
             }
@@ -396,7 +397,7 @@ class ElasticSearch {
     }
 
     public function initialize_index($t) {
-        if(!$init_indexer)
+        if(!$this->init_indexer)
              $this->initialize();
         $params['index'] = 'openml';
         $params['type'] = $t;
@@ -406,7 +407,7 @@ class ElasticSearch {
         return 'Successfully reinitialized index for ' . $t;
     }
 
-    public function index_downvote($id, $start_id = 0){
+    public function index_downvote($id, $start_id = 0, $altmetrics=False){
 
         $params['index'] = 'openml';
         $params['type'] = 'downvote';
@@ -430,7 +431,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downvotes) . ' downvotes.';
     }
 
-    public function index_like($id, $start_id = 0){
+    public function index_like($id, $start_id = 0, $altmetrics=False){
 
         $params['index'] = 'openml';
         $params['type'] = 'like';
@@ -481,7 +482,7 @@ class ElasticSearch {
         return $like;
     }
 
-    public function index_download($id, $start_id = 0){
+    public function index_download($id, $start_id = 0, $altmetrics=False){
         $params['index'] = 'openml';
         $params['type'] = 'download';
 
@@ -517,7 +518,7 @@ class ElasticSearch {
 
     }
 
-    public function index_user($id, $start_id = 0) {
+    public function index_user($id, $start_id = 0, $altmetrics=False) {
 
         $params['index'] = 'openml';
         $params['type'] = 'user';
@@ -738,7 +739,7 @@ class ElasticSearch {
         return $user;
     }
 
-    public function index_study($id, $start_id = 0) {
+    public function index_study($id, $start_id = 0, $altmetrics=False) {
 
         $params['index'] = 'openml';
         $params['type'] = 'study';
@@ -800,7 +801,7 @@ class ElasticSearch {
         return $study;
     }
 
-    public function index_task($id, $start_id = 0) {
+    public function index_task($id, $start_id = 0, $altmetrics=False) {
         $params['index'] = 'openml';
         $params['type'] = 'task';
 
@@ -1143,7 +1144,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['_id']) . ' run(s).';
     }
 
-    public function index_run($id, $start_id = 0) {
+    public function index_run($id, $start_id = 0, $altmetrics=False) {
         if ($id)
             return $this->index_single_run($id);
 
@@ -1263,7 +1264,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_task_type($id, $start_id = 0) {
+    public function index_task_type($id, $start_id = 0, $altmetrics=False) {
 
         $params['index'] = 'openml';
         $params['type'] = 'task_type';
@@ -1316,7 +1317,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_flow($id, $start_id = 0) {
+    public function index_flow($id, $start_id = 0, $altmetrics=False) {
 
         $params['index'] = 'openml';
         $params['type'] = 'flow';
@@ -1460,7 +1461,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_measure($id, $start_id = 0) {
+    public function index_measure($id, $start_id = 0, $altmetrics=False) {
 
         $params['index'] = 'openml';
         $params['type'] = 'measure';
@@ -1625,7 +1626,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($datasets) . ' datasets.';
     }
 
-    public function index_data($id, $start_id = 0) {
+    public function index_data($id, $start_id = 0, $altmetrics=False) {
         if ($id)
             return $this->index_single_dataset($id);
 
@@ -1657,7 +1658,7 @@ class ElasticSearch {
                           '_id' => $d->did
                       )
                   );
-                  $params['body'][] = $this->build_data($d);
+                  $params['body'][] = $this->build_data($d, $altmetrics);
 
                 } catch (Exception $e) {
                     return $e->getMessage();
@@ -1674,7 +1675,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . $submitted . ' out of ' . $datacount . ' runs.';
     }
 
-    private function build_data($d) {
+    private function build_data($d, $altmetrics=False) {
         $headless_description = trim(preg_replace('/\s+/', ' ', preg_replace('/^\*{2,}.*/m', '', $d->description)));
         $new_data = array(
             'data_id' => $d->did,
@@ -1706,7 +1707,6 @@ class ElasticSearch {
                 'weight' => 5
             )
         );
-
 
         $new_data['qualities'] = array();
         $qualities = $this->CI->Data_quality->getAssociativeArray('quality', 'value', 'data = ' . $d->did . ' and value<>"NaN"');
@@ -1745,12 +1745,24 @@ class ElasticSearch {
                     $feat['max'] = $f->MaximumValue;
                     $feat['mean'] = $f->MeanValue;
                     $feat['stdev'] = $f->StandardDeviation;
-                } elseif ($f->data_type == "nominal") {
+                } elseif ($f->data_type == "nominal" and is_array($f->ClassDistribution)) {
                     $feat['distr'] = $this->array_map_recursive('strval',json_decode($f->ClassDistribution));
                 }
                 $new_data['features'][] = $feat;
             }
         }
+      $new_data['nr_of_issues'] = 0;
+      $new_data['nr_of_downvotes'] = 0;
+      $new_data['nr_of_likes'] = 0;
+      $new_data['nr_of_downloads'] = 0;
+      $new_data['total_downloads'] = 0;
+      $new_data['reach'] = 0;
+      $new_data['reuse'] = 0;
+      $new_data['impact_of_reuse'] = 0;
+      $new_data['reach_of_reuse'] = 0;
+      $new_data['impact'] = 0;
+
+      if($altmetrics){
 
         $nr_of_downvotes = 0;
         $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('d',$d->did,1);
@@ -1798,6 +1810,7 @@ class ElasticSearch {
         $new_data['reach_of_reuse'] = floor($impact_struct['reuse_reach']);
 
         $new_data['impact'] = floor($impact_struct['impact']);
+       }
 
         return $new_data;
     }
