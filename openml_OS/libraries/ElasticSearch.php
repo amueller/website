@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class ElasticSearch {
-
+	
     public function __construct() {
         $this->CI = &get_instance();
         $this->CI->load->model('Dataset');
@@ -28,8 +28,11 @@ class ElasticSearch {
         $hosts = array(ES_URL);
         //, http://'.ES_USERNAME.':'.ES_PASSWORD.'@'.ES_URL
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts($hosts)->build();
+        $init_indexer = False;
+    }
 
-        $this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
+    public function initialize(){
+	$this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
         $this->flow_names = $this->CI->Implementation->getAssociativeArray('id', 'fullName', 'name IS NOT NULL');
         $this->procedure_names = $this->CI->Estimation_procedure->getAssociativeArray('id', 'name', 'name IS NOT NULL');
         $this->user_names = array();
@@ -136,7 +139,7 @@ class ElasticSearch {
                     'analyzer' => 'standard')
             )
         );
-        $this->mappings['flow'] = array('_all' => array(
+          $this->mappings['flow'] = array('_all' => array(
                 'enabled' => true,
                 'type' => 'string',
                 'analyzer' => 'snowball'
@@ -298,8 +301,9 @@ class ElasticSearch {
                     'analyzer' => 'keyword'
                 )
             )
-        );
-        $this->mappings['measure'] = array('_all' => array(
+        ); 
+
+	$this->mappings['measure'] = array('_all' => array(
                 'enabled' => true,
                 'type' => 'string',
                 'analyzer' => 'snowball'
@@ -317,6 +321,10 @@ class ElasticSearch {
                     'type' => 'text',
                     'fielddata' => true
                 ),
+                'priority' => array(
+                    'type' => 'text',
+                    'fielddata' => true
+                ),
                 'date' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'),
@@ -325,7 +333,8 @@ class ElasticSearch {
                     'analyzer' => 'standard'
                 )
             )
-        );
+	);
+	$init_indexer = True;	
     }
 
     public function test() {
@@ -339,7 +348,9 @@ class ElasticSearch {
     }
 
     public function index($type, $id = false) {
-        $method_name = 'index_' . $type;
+        if(!$init_indexer)
+	     $this->initialize();
+	$method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
                 return $this->$method_name($id);
@@ -352,6 +363,8 @@ class ElasticSearch {
     }
 
     public function index_from($type, $id = false) {
+        if(!$init_indexer)
+             $this->initialize();
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
@@ -383,28 +396,14 @@ class ElasticSearch {
     }
 
     public function initialize_index($t) {
-
-        $this->mapping_delete($t);
-
+        if(!$init_indexer)
+             $this->initialize();
         $params['index'] = 'openml';
         $params['type'] = $t;
         $params['body'][$t] = $this->mappings[$t];
         $this->client->indices()->putMapping($params);
 
         return 'Successfully reinitialized index for ' . $t;
-    }
-
-    public function mapping_delete($m) {
-        $params['index'] = 'openml';
-        $array_data = $this->client->indices()->getMapping($params);
-        $keys = array_keys($array_data['openml']['mappings']);
-        if (in_array($m, $keys)) {
-            $params = array(
-                'index' => 'openml',
-                'type' => $m
-            );
-            $this->client->indices()->deleteMapping($params);
-        }
     }
 
     public function index_downvote($id, $start_id = 0){

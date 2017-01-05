@@ -87,12 +87,14 @@
     $this->p4['index'] = 'openml';
     $this->p4['type'] = 'measure';
     $this->p4['body']['size'] = 1000;
-    $this->p4['body']['query']['filtered']['query']['match_all'] = array();
-    $this->p4['body']['query']['filtered']['filter']['term']['type'] = "data_quality";
-    $this->p4['body']['sort'] = array('priority','name');
+    $this->p4['body']['query']['bool']['must']['match_all'] = array();
+    $this->p4['body']['query']['bool']['filter']['term']['measure_type'] = "data_quality";
+    $this->p4['body']['sort'] = array('priority');
     try {
-      $this->dataproperties = array_column($this->searchclient->search($this->p4)['hits']['hits'],'_source');
-    } catch (Exception $e) {}
+      $responses = $this->searchclient->search($this->p4);
+      var_dump($responses);
+      $this->dataproperties = array_column($responses['hits']['hits'],'_source');
+    }} catch (Exception $e) {}
 
     // block unauthorized access
     $this->blocked = false;
