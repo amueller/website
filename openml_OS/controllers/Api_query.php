@@ -12,7 +12,8 @@ class Api_query extends CI_Controller {
   }
 
   function free_query() {
-    $this->id = $this->input->get_post('id');
+    if(isset($_POST['id']))
+       $this->id = $this->input->get_post('id');
     $query = $this->input->get_post('q');
 
     $query = urldecode($query);

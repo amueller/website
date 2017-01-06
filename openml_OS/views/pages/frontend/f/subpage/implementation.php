@@ -194,7 +194,7 @@
 	    <?php
 	      $taskparams['index'] = 'openml';
 	      $taskparams['type']  = 'task_type';
-	      $taskparams['body']['query']['match_all'] = array();
+	      $taskparams['body']['query']['match_all'] = (object)[];
 	      $alltasks = $this->searchclient->search($taskparams)['hits']['hits'];
 	    ?>
       <div style="float:right">
@@ -246,7 +246,7 @@
         var disqus_shortname = 'openml'; // forum name
 	var disqus_category_id = '3353608'; // Data category
 	var disqus_title = '<?php echo $this->displayName; ?>'; // Data name
-	var disqus_url = BASE_URL.'f/<?php echo $this->id; ?>'; // Data url
+	var disqus_url = '<?php echo BASE_URL.'f/'.$this->id; ?>'; // Data url
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {

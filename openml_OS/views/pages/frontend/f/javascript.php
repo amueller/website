@@ -162,7 +162,7 @@ function fnFetchParams ( oTable, row, column )
     var aData = oTable.fnGetData( row );
 
 	$.ajax({
-		url: '<?php echo BASE_URL; ?>api/?f=openml.setup.parameters&setup_id='+aData[column],
+		url: '<?php echo BASE_URL; ?>api/v1/setup/'+aData[column],
 		context: document.body,
 		dataType: 'text'
 	}).done(function(xml){fetch_params_succes(xml,aData[column])});
@@ -344,8 +344,9 @@ client.search({
   size: '10000',
   body: {
 		_source: [ "run_id", "run_task.source_data.name", "run_task.source_data.data_id", "run_flow.parameters.parameter", "run_flow.parameters.value", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
-    filter: {
-      and: [
+    query: { 
+      bool: {
+      	must: [
                   {
                       term: {
                           "run_flow.flow_id": <?php echo $this->id; ?>
@@ -357,6 +358,7 @@ client.search({
                       }
                   }
               ]
+	}
     },
     sort: [
     {
@@ -376,6 +378,7 @@ client.search({
   var data = resp.hits.hits;
   if(!data[0]){
     $('#runcount').html('0');
+    $('#code_result_visualize').html("No data to show.");
   } else {
     $('#runcount').html(data.length);
 	var catcount = 0;
@@ -439,7 +442,7 @@ client.search({
 	coderesultchart = new Highcharts.Chart(options);
 
 
-}}).fail(function(){ console.log('failure', arguments); });
+}}).fail(function(){ $('#code_result_visualize').html("No data to show."); console.log('failure', arguments); });
 
 
 }

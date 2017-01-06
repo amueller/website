@@ -281,7 +281,8 @@ class ElasticSearch {
                 'evaluations' => array(
                     'type' => 'nested',
                     'properties' => array(
-                        'evaluation_measure' => array('type' => 'string')
+                        'evaluation_measure' => array('type' => 'string'),
+                        'value' => array('type' => 'string', 'fielddata' => true)
                     )
                 )
             )
@@ -300,6 +301,10 @@ class ElasticSearch {
                 'uploader' => array(
                     'type' => 'string',
                     'analyzer' => 'keyword'
+                ),
+                'suggest' => array(
+                    'type' => 'completion',
+                    'analyzer' => 'standard'
                 )
             )
         ); 
@@ -348,7 +353,7 @@ class ElasticSearch {
         return array_keys($array_data['openml']['mappings']);
     }
 
-    public function index($type, $id = false, $altmetrics=False) {
+    public function index($type, $id = false, $altmetrics=True) {
         if(!$this->init_indexer)
 	     $this->initialize();
 	$method_name = 'index_' . $type;
@@ -416,7 +421,6 @@ class ElasticSearch {
 
         if ($id and ! $downvotes)
             return 'Error: downvote ' . $id . ' is unknown';
-
         foreach ($downvotes as $d) {
             $params['body'][] = array(
                 'index' => array(
@@ -760,6 +764,12 @@ class ElasticSearch {
         }
 
         $responses = $this->client->bulk($params);
+
+        if($responses['errors'] == True and array_key_exists('error', $responses['items'][0]['index'])){
+          $err = $responses['items'][0]['index']['error'];
+          return 'ERROR: Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
+        }
+
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($studies) . ' studies.';
     }
 
@@ -1181,7 +1191,7 @@ class ElasticSearch {
                               '_id' => $r->rid
                           )
                       );
-                      $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals);
+                      $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals, $altmetrics);
                   } catch (Exception $e) {
                       return $e->getMessage();
                   }
@@ -1196,7 +1206,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . $submitted . ' out of ' . $runcount . ' runs.';
     }
 
-    private function build_run($r, $setups, $runfiles, $evals) {
+    private function build_run($r, $setups, $runfiles, $evals, $altmetrics=False) {
         $new_data = array(
             'run_id' => $r->rid,
             'uploader' => array_key_exists($r->uploader, $this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
@@ -1224,7 +1234,18 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-
+	
+        $new_data['nr_of_issues'] = 0;
+        $new_data['nr_of_downvotes'] = 0;
+        $new_data['nr_of_likes'] = 0;
+        $new_data['nr_of_downloads'] = 0;
+        $new_data['total_downloads'] = 0;
+        $new_data['reach'] = 0;
+        $new_data['reuse'] = 0;
+        $new_data['impact_of_reuse'] = 0;
+        $new_data['reach_of_reuse'] = 0;
+        $new_data['impact'] = 0;
+	if($altmetrics){
         $nr_of_downvotes = 0;
         $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,1);
         if($nr_of_issues){
@@ -1260,7 +1281,7 @@ class ElasticSearch {
         $new_data['nr_of_downloads'] = $nr_of_downloads;
         $new_data['total_downloads'] = $total_downloads;
         $new_data['reach'] = $reach;
-
+	}
         return $new_data;
     }
 
@@ -1340,6 +1361,11 @@ class ElasticSearch {
 
         $responses = $this->client->bulk($params);
 
+        if($responses['errors'] == True){
+          $err = $responses['items'][0]['index']['error'];
+          return 'ERROR: Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
+        }
+	
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($flows) . ' flows.';
     }
 
@@ -1745,9 +1771,13 @@ class ElasticSearch {
                     $feat['max'] = $f->MaximumValue;
                     $feat['mean'] = $f->MeanValue;
                     $feat['stdev'] = $f->StandardDeviation;
-                } elseif ($f->data_type == "nominal" and is_array($f->ClassDistribution)) {
-                    $feat['distr'] = $this->array_map_recursive('strval',json_decode($f->ClassDistribution));
-                }
+                } elseif ($f->data_type == "nominal") {
+                    $distr = json_decode($f->ClassDistribution);
+		    if(is_array($distr))
+			$feat['distr'] = $this->array_map_recursive('strval',json_decode($f->ClassDistribution));
+                    else
+			$feat['distr'] = [];
+		}
                 $new_data['features'][] = $feat;
             }
         }

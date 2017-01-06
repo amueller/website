@@ -14,7 +14,7 @@
         <div class="userdetails">
             <?php if ($this->userinfo['affiliation']) echo '<i class="fa fa-fw fa-institution"></i> ' . $this->userinfo['affiliation']; ?>
             <?php if ($this->userinfo['country']) echo '<i class="fa fa-fw fa-map-marker"></i> ' . $this->userinfo['country']; ?>
-            <i class="fa fa-fw fa-clock-o"></i> Joined <?php echo date("Y-m-d", $this->userinfo['date']); ?>
+            <i class="fa fa-fw fa-clock-o"></i> Joined <?php echo substr($this->userinfo['date'],0,10); ?>
         </div>
     </div>
 </div>
