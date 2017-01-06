@@ -691,9 +691,10 @@ class Api_run extends Api_model {
   private function run_evaluate() {
 
     // check uploaded file
-    $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
-    if( ! check_uploaded_file( $description ) ) {
-      $this->returnError( 422, $this->version );
+    $description = isset( $_FILES['description']) ? $_FILES['description'] : false;
+    $error_message = null;
+    if(!check_uploaded_file($description, false, $error_message)) {
+      $this->returnError(422, $this->version, $this->openmlGeneralErrorCode, $error_message);
       return;
     }
 
