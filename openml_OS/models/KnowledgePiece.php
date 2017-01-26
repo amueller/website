@@ -140,7 +140,7 @@ class KnowledgePiece extends Database_write{
     }
 
     function getNumberOfLikesAndDownloadsOnUpload($type,$id,$from=null,$to=null){
-        $sql = "SELECT upload.kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (";
+        $sql = "SELECT upload.kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt".($from != null || $to !=null ? ", DATE(ld.time) as date" : "")." FROM (";
         if($type=='d'){
             $sql.="SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.did=".$id;
         }else if($type=='f'){
