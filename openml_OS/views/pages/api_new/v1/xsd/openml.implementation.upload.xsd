@@ -11,7 +11,7 @@
     <xs:element name="uploader" minOccurs="0" type="xs:int"/>  <!-- The user that uploaded the flow. Added by the server. Ignored when uploaded manually. -->
     <!-- dublin core -->
     <xs:element name="name" type="oml:casual_string1024"/> <!-- The name given to this flow, serializable -->
-    <xs:element name="custom_name" minOccurs="0" type="oml:casual_string128"/> <!-- Custom name given to this flow by the owner -->
+    <xs:element name="custom_name" minOccurs="0" type="oml:basic_latin128"/> <!-- Custom name given to this flow by the owner -->
     <xs:element name="class_name"  minOccurs="0" type="oml:casual_string128"/> <!-- The (dev language) name of the class -->
     <xs:element name="version" minOccurs="0" type="xs:int"/> <!-- The version of the flow. Default is 1. Ignored at upload time. -->
     <xs:element name="external_version" minOccurs="0" type="oml:system_string128"/> <!-- A external version, defined by the user. In combination with the name, it must be unique. It is recommended to use the md5 hash of the source code, that way any change in source code will give a unique version number (like GitHub does). It can be used to retrieve the flow later on. If left empty, an md5 hash of either the source or the binary file will be used. -->
