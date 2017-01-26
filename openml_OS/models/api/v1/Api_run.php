@@ -644,8 +644,13 @@ class Api_run extends Api_model {
     $this->db->trans_complete();
 
     // update elastic search index.
-    $this->elasticsearch->index('run', $run_id );
-
+    try {
+      $this->elasticsearch->index('run', $run_id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class().'.'.__FUNCTION__.':' $e->getMessage());
+      return;
+    }
+    
     $this->xmlContents( 'run-evaluate', $this->version, array( 'run_id' => $run_id ) );
   }
 }
