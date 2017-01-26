@@ -105,13 +105,13 @@
     //old method facebook: "http://graph.facebook.com/?id={url}&callback=?",
     //facebook : "http://api.ak.facebook.com/restserver.php?v=1.0&method=links.getStats&urls={url}&format=json"
 
-    twitter: "http://opensharecount.com/count.json?url={url}",
-    digg: "http://services.digg.com/2.0/story.getInfo?links={url}&type=javascript&callback=?",
-    delicious: 'http://feeds.delicious.com/v2/json/urlinfo/data?url={url}&callback=?',
+    twitter: "https://opensharecount.com/count.json?url={url}",
+    digg: "https://services.digg.com/2.0/story.getInfo?links={url}&type=javascript&callback=?",
+    delicious: 'https://feeds.delicious.com/v2/json/urlinfo/data?url={url}&callback=?',
     //stumbleupon: "http://www.stumbleupon.com/services/1.01/badge.getinfo?url={url}&format=jsonp&callback=?",
     stumbleupon: "",
-    linkedin: "http://www.linkedin.com/countserv/count/share?format=jsonp&url={url}&callback=?",
-    pinterest: "http://api.pinterest.com/v1/urls/count.json?url={url}&callback=?"
+    linkedin: "https://www.linkedin.com/countserv/count/share?format=jsonp&url={url}&callback=?",
+    pinterest: "https://api.pinterest.com/v1/urls/count.json?url={url}&callback=?"
   },
   /* Load share buttons asynchronously
   ================================================== */

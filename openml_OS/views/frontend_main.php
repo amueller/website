@@ -23,11 +23,11 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
         <meta name="viewport" content="width=device-width">
         <title>OpenML</title>
         <meta name="description" content="OpenML: exploring machine learning better, together. An open science platform for machine learning.">
-	      <link href="http://www.openml.org/img/expdblogo2.png" rel="image_src" />
+	      <link href="https://www.openml.org/img/expdblogo2.png" rel="image_src" />
         <meta name="author" content="Joaquin Vanschoren">
         <meta property="og:title" content="OpenML"/>
-        <meta property="og:url" content="http://www.openml.org"/>
-        <meta property="og:image" content="http://www.openml.org/img/expdblogo2.png"/>
+        <meta property="og:url" content="https://www.openml.org"/>
+        <meta property="og:image" content="https://www.openml.org/img/expdblogo2.png"/>
         <meta property="og:site_name" content="OpenML: exploring machine learning better, together."/>
         <meta property="og:description" content="OpenML: exploring machine learning better, together. An open science platform for machine learning."/>
         <meta property="og:type" content="Science"/>
@@ -43,7 +43,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
         <link rel="stylesheet" href="css/bootstrap-select.css">
         <link rel="stylesheet" href="css/perfect-scrollbar.min.css">
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-      	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+      	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
         <link href="https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/gamification.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
