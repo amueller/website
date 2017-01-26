@@ -647,7 +647,7 @@ class Api_run extends Api_model {
     try {
       $this->elasticsearch->index('run', $run_id);
     } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class().'.'.__FUNCTION__.':' $e->getMessage());
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
     
