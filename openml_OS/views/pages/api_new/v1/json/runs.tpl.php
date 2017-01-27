@@ -9,7 +9,8 @@
    "flow_id":<?php echo $r->flow_id; ?>,
    "uploader":<?php echo $r->uploader; ?>,
    "upload_time":"<?php echo $r->start_time; ?>",
-   "error_message":"<?php echo $r->error_message; ?>"
+   "error_message":"<?php echo $r->error_message; ?>",
+   "run_details":"<?php echo $r->run_details; ?>"
 	 <?php if($r->tags): ?>
 	 ,"tags": [
 		 <?php $first_t = TRUE;

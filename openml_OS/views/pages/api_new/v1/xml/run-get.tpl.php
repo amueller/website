@@ -12,6 +12,7 @@
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
   <?php if($source->error != null):?> <oml:error><?php echo htmlspecialchars($source->error); ?></oml:error> <?php endif; ?>
   <?php if($source->error_message !== null):?> <oml:error_message><?php echo $source->error_message; ?></oml:error_message> <?php endif; ?>
+  <?php if($source->run_details !== null):?> <oml:run_details><?php echo $source->run_details; ?></oml:run_details> <?php endif; ?>
   <oml:setup_string><?php echo htmlspecialchars($source->setup->setup_string); ?></oml:setup_string>
   <?php if(is_array($source->inputSetting)) foreach( $source->inputSetting as $parameter ): ?>
     <oml:parameter_setting>
@@ -49,9 +50,7 @@
         <oml:did><?php echo $r->did; ?></oml:did>
         <oml:file_id><?php echo $r->file_id; ?></oml:file_id>
         <oml:name><?php echo $r->field; ?></oml:name>
-        <oml:format><?php echo $r->format; ?></oml:format>
-        <oml:upload_time><?php echo $r->upload_time; ?></oml:upload_time>
-        <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl($f); ?></oml:url>
+        <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl( $f ); ?></oml:url>
       </oml:file>
       <?php endforeach; ?>
     <?php endif; if(array_key_exists('evaluations', $source->outputData) ): ?>

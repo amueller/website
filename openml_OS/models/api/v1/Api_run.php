@@ -76,12 +76,7 @@ class Api_run extends Api_model {
       $this->run_upload();
       return;
     }
-    
-    if (count($segments) == 2 && is_numeric($segments[0]) && is_numeric($segments[1]) && $request_type == 'post') {
-      $this->run_upload_attach($segments[0], $segments[1]);
-      return;
-    }
-    
+
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
       $this->entity_tag_untag('run', $this->input->post('run_id'), $this->input->post('tag'), false, 'run');
       return;
@@ -106,7 +101,7 @@ class Api_run extends Api_model {
         return;
       }
     }
-    
+
     $task_id = element('task', $query_string);
     $setup_id = element('setup',$query_string);
     $implementation_id = element('flow',$query_string);
@@ -133,7 +128,7 @@ class Api_run extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
-    
+
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
@@ -142,12 +137,12 @@ class Api_run extends Api_model {
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
 
     $sql =
-      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, GROUP_CONCAT(tag) AS tags ' .
+      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details GROUP_CONCAT(tag) AS tags ' .
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
       'LEFT JOIN dataset d ON t.value = d.did '.
       'LEFT JOIN run_tag ON r.rid = run_tag.id, algorithm_setup s, implementation i ' .
-      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . 
-      $where_total . 
+      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
+      $where_total .
       'GROUP BY r.rid ' .
       $where_limit;
     $res = $this->Run->query($sql);
@@ -277,130 +272,6 @@ class Api_run extends Api_model {
     $this->xmlContents( 'run-reset', $this->version, array( 'run' => $run ) );
   }
 
-  private function run_upload_attach($run_id, $index) {
-    // get run, task and current description
-    $run = $this->Run->getById($run_id);
-    if ($run === false) {
-      $this->returnError(611, $this->version);
-      return;
-    }
-    
-    $task = $this->Task->getById($run->task_id);
-    if ($task === false) {
-      $this->returnError(612, $this->version);
-      return;
-    }
-    
-    $description_record = $this->Runfile->getWhereSingle('`source` = "' . $run->rid . '" AND `field` = "description"');
-    if ($description_record === false) {
-      $this->returnError(613, $this->version);
-      return;
-    }
-    
-    $description = $this->File->getById($description_record->file_id);
-    if ($description === false) {
-      $this->returnError(614, $this->version);
-      return;
-    }
-    
-    // check user
-    if ($run->uploader != $this->user_id) {
-      $this->returnError(615, $this->version);
-      return;
-    }
-    
-    // check task type (should be 9)
-    if ($task->ttid != 9) {
-      $this->returnError(616, $this->version);
-      return;
-    }
-    
-    // check if run is not processed yet
-    if ($run->processed != null) {
-      $this->returnError(617, $this->version);
-      return;
-    }
-    
-    // check num files (exactly 2, description and predictions)
-    if (count($_FILES) != 2) {
-      $this->returnError(618, $this->version);
-      return;
-    }
-    
-    // check uploaded file (format arff, arff checker)
-    foreach ($_FILES as $key => $value) { // TODO: integrate with existing (duplicate) code
-      $message = '';
-      $extension = getExtension($_FILES[$key]['name']);
-
-      if (in_array($extension,$this->config->item('allowed_extensions')) == false || $extension == false) {
-        $this->returnError(619, $this->version, $this->openmlGeneralErrorCode, 'Invalid extension for file "'.$key.'". Original filename: ' . $_FILES[$key]['name']);
-        return;
-      }
-
-      if (!check_uploaded_file($_FILES[$key], false, $message)) {
-        $this->returnError(620, $this->version, $this->openmlGeneralErrorCode, 'Upload problem with file "'.$key.'": ' . $message);
-        return;
-      }
-
-      if ($extension == 'arff') {
-        $arffCheck = ARFFcheck($_FILES[$key]['tmp_name'], 1000);
-        if ($arffCheck !== true) {
-          $this->returnError(621, $this->version, $this->openmlGeneralErrorCode, 'Arff error in predictions file: ' . $arffCheck);
-          return;
-        }
-      }
-
-      if ($extension == 'xml') {
-        $xmlCheck = simplexml_load_file($_FILES[$key]['tmp_name']);
-        if($xmlCheck === false) {
-          $this->returnError(622, $this->version, $this->openmlGeneralErrorCode, 'XML error in predictions file: ' . $xmlCheck);
-          return;
-        }
-      }
-    }
-    
-    // check description (md5 should be the same as current known description)
-    $description_md5 = md5_file($_FILES['description']['tmp_name']);
-    if ($description_md5 != $description->md5_hash) {
-      $this->returnError(623, $this->version);
-      return;
-    }
-    
-    // check if runfile with index does not exist yet
-    if ($this->Runfile->getWhere('source = ' . $run->id . ' AND field = "predictions_' . $index . '"')) {
-      $this->returnError(624, $this->version);
-      return;
-    }
-    
-    // register file
-    $file_id = $this->File->register_uploaded_file($_FILES['predictions'], $this->data_folders['run'], $this->user_id, 'predictions');
-    if(!$file_id) {
-      $this->returnError(625, $this->version);
-      return;
-    }
-    $file_record = $this->File->getById($file_id);
-    
-    // attach predictions to run
-    $record = array(
-      'source' => $run->rid,
-      'field' => 'predictions_' . $index,
-      'name' => $_FILES['predictions']['name'],
-      'format' => $file_record->extension,
-      'file_id' => $file_id,
-      'upload_time' => now()
-    );
-    $did = $this->Runfile->insert($record);
-    
-    if ($did === false) {
-      $this->returnError(626, $this->version);
-      return;
-    }
-    
-    $run_files = $this->Runfile->getWhere('`source` = "' . $run->rid . '" AND `field` LIKE "predictions%"');
-    
-    $this->xmlContents('run-upload-attach', $this->version, array('run_id' => $run->rid, 'files' => $run_files));
-  }
-  
   private function run_upload() {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -430,7 +301,7 @@ class Api_run extends Api_model {
         $content = 'Filename: ' . $_FILES['description']['name'] . "\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . file_get_contents($description['tmp_name']);
         sendEmail($to, $subject, $content,'text');
       }
-      
+
       $this->returnError(202, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
@@ -455,6 +326,7 @@ class Api_run extends Api_model {
     $implementation_id = $run_xml['flow_id'];
     $setup_string = array_key_exists('setup_string', $run_xml) ? $run_xml['setup_string'] : null;
     $error_message = array_key_exists('error_message', $run_xml) ? $run_xml['error_message'] : false;
+    $run_details = array_key_exists('run_details', $run_xml) ? $run_xml['run_details'] : null;
     $parameter_objects = array_key_exists('parameter_setting', $run_xml) ? $run_xml['parameter_setting'] : array();
     $output_data = array_key_exists('output_data', $run_xml) ? $run_xml['output_data'] : array();
     $tags = array_key_exists('tag', $run_xml) ? str_getcsv ($run_xml['tag']) : array();
@@ -546,14 +418,14 @@ class Api_run extends Api_model {
       $this->returnError( 204, $this->version );
       return;
     }
-    
+
     $task = $this->Task_inputs->getTaskValuesAssoc($task_id);
     if (array_key_exists('source_data', $task) == false) {
       $this->returnError( 219, $this->version );
       return;
     }
-    
-    
+
+
     // now create a run
     $runData = array(
       'uploader' => $this->user_id,
@@ -562,6 +434,7 @@ class Api_run extends Api_model {
       'start_time' => now(),
       'status' => ($error_message == false) ? 'OK' : 'error',
       'error_message' => ($error_message == false) ? null : $error_message,
+      'run_details' => ($run_details == false) ? null : $run_details,
       'experiment' => '-1',
     );
     $runId = $this->Run->insert( $runData );
@@ -590,9 +463,7 @@ class Api_run extends Api_model {
         'field' => $key,
         'name' => $value['name'],
         'format' => $file_record->extension,
-        'file_id' => $file_id,
-        'upload_time' => now()
-       );
+        'file_id' => $file_id );
 
       $did = $this->Runfile->insert( $record );
       if( $did == false ) {
@@ -601,7 +472,7 @@ class Api_run extends Api_model {
       }
       $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
-    
+
     // attach input data
     $inputData = $this->Run->inputData( $runId, $task['source_data'], 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {
@@ -624,17 +495,17 @@ class Api_run extends Api_model {
           'elastic search')
       );
     }
-    
+
     // tag it, if neccessary
     foreach($tags as $tag) {
       $success = $this->entity_tag_untag('run', $runId, $tag, false, 'run', true);
       // if tagging went wrong, an error is displayed. (TODO: something else?)
       if (!$success) return;
     }
-    
+
     // remove scheduled task
     $this->Schedule->deleteWhere( 'task_id = "' . $task_id . '" AND sid = "' . $setupId . '"' );
-    
+
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }
@@ -691,10 +562,9 @@ class Api_run extends Api_model {
   private function run_evaluate() {
 
     // check uploaded file
-    $description = isset( $_FILES['description']) ? $_FILES['description'] : false;
-    $error_message = null;
-    if(!check_uploaded_file($description, false, $error_message)) {
-      $this->returnError(422, $this->version, $this->openmlGeneralErrorCode, $error_message);
+    $description = isset( $_FILES['description'] ) ? $_FILES['description'] : false;
+    if( ! check_uploaded_file( $description ) ) {
+      $this->returnError( 422, $this->version );
       return;
     }
 
