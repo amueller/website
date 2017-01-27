@@ -76,7 +76,7 @@ class Api_run extends Api_model {
       $this->run_upload();
       return;
     }
-    
+
     if (count($segments) == 1 && $segments[0] == 'tag' && $request_type == 'post') {
       $this->entity_tag_untag('run', $this->input->post('run_id'), $this->input->post('tag'), false, 'run');
       return;
@@ -101,7 +101,7 @@ class Api_run extends Api_model {
         return;
       }
     }
-    
+
     $task_id = element('task', $query_string);
     $setup_id = element('setup',$query_string);
     $implementation_id = element('flow',$query_string);
@@ -128,7 +128,7 @@ class Api_run extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
-    
+
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
@@ -137,12 +137,12 @@ class Api_run extends Api_model {
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
 
     $sql =
-      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, GROUP_CONCAT(tag) AS tags ' .
+      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details GROUP_CONCAT(tag) AS tags ' .
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
       'LEFT JOIN dataset d ON t.value = d.did '.
       'LEFT JOIN run_tag ON r.rid = run_tag.id, algorithm_setup s, implementation i ' .
-      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' . 
-      $where_total . 
+      'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
+      $where_total .
       'GROUP BY r.rid ' .
       $where_limit;
     $res = $this->Run->query($sql);
@@ -301,7 +301,7 @@ class Api_run extends Api_model {
         $content = 'Filename: ' . $_FILES['description']['name'] . "\nXSD Validation Message: " . $xmlErrors . "\n=====BEGIN XML=====\n" . file_get_contents($description['tmp_name']);
         sendEmail($to, $subject, $content,'text');
       }
-      
+
       $this->returnError(202, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
@@ -326,6 +326,7 @@ class Api_run extends Api_model {
     $implementation_id = $run_xml['flow_id'];
     $setup_string = array_key_exists('setup_string', $run_xml) ? $run_xml['setup_string'] : null;
     $error_message = array_key_exists('error_message', $run_xml) ? $run_xml['error_message'] : false;
+    $run_details = array_key_exists('run_details', $run_xml) ? $run_xml['run_details'] : null;
     $parameter_objects = array_key_exists('parameter_setting', $run_xml) ? $run_xml['parameter_setting'] : array();
     $output_data = array_key_exists('output_data', $run_xml) ? $run_xml['output_data'] : array();
     $tags = array_key_exists('tag', $run_xml) ? str_getcsv ($run_xml['tag']) : array();
@@ -417,14 +418,14 @@ class Api_run extends Api_model {
       $this->returnError( 204, $this->version );
       return;
     }
-    
+
     $task = $this->Task_inputs->getTaskValuesAssoc($task_id);
     if (array_key_exists('source_data', $task) == false) {
       $this->returnError( 219, $this->version );
       return;
     }
-    
-    
+
+
     // now create a run
     $runData = array(
       'uploader' => $this->user_id,
@@ -433,6 +434,7 @@ class Api_run extends Api_model {
       'start_time' => now(),
       'status' => ($error_message == false) ? 'OK' : 'error',
       'error_message' => ($error_message == false) ? null : $error_message,
+      'run_details' => ($run_details == false) ? null : $run_details,
       'experiment' => '-1',
     );
     $runId = $this->Run->insert( $runData );
@@ -470,7 +472,7 @@ class Api_run extends Api_model {
       }
       $this->Run->outputData( $run->rid, $did, 'runfile', $key );
     }
-    
+
     // attach input data
     $inputData = $this->Run->inputData( $runId, $task['source_data'], 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
     if( $inputData === false ) {
@@ -493,17 +495,17 @@ class Api_run extends Api_model {
           'elastic search')
       );
     }
-    
+
     // tag it, if neccessary
     foreach($tags as $tag) {
       $success = $this->entity_tag_untag('run', $runId, $tag, false, 'run', true);
       // if tagging went wrong, an error is displayed. (TODO: something else?)
       if (!$success) return;
     }
-    
+
     // remove scheduled task
     $this->Schedule->deleteWhere( 'task_id = "' . $task_id . '" AND sid = "' . $setupId . '"' );
-    
+
     // and present result, in effect only a run_id.
     $this->xmlContents( 'run-upload', $this->version, $result );
   }

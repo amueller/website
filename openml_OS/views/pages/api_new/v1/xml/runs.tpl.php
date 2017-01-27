@@ -8,6 +8,7 @@
     <oml:uploader><?php echo $r->uploader; ?></oml:uploader>
 		<oml:upload_time><?php echo $r->start_time; ?></oml:upload_time>
     <oml:error_message><?php echo $r->error_message; ?></oml:error_message>
+    <oml:run_details><?php echo $r->run_details; ?></oml:run_details>
 		<?php if($r->tags != false): foreach(explode(',', $r->tags) as $tag): ?>
 			<oml:tag><?php echo $tag; ?></oml:tag>
 		<?php endforeach; endif; ?>
