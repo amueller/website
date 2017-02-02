@@ -159,7 +159,7 @@ client.search({
   size: '5000',
 	body: {
 		_source: [ "run_id", "date", "run_flow.name", "run_flow.flow_id", "uploader", "uploader_id", "evaluations.evaluation_measure", "evaluations.value" ],
-		filter: {
+		query: {
 			term: {
 				'run_task.task_id': current_task
 			}
@@ -240,7 +240,7 @@ client.search({
 		options2.series[i].point = {
                     events: {
                         //click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
-												click: function() { window.open('http://www.openml.org/r/' + this.r);}
+												click: function() { window.open('https://www.openml.org/r/' + this.r);}
 										}
                 };
 		<?php } ?>
@@ -357,7 +357,7 @@ options = {
 		point: {
                     events: {
                         //click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
-												click: function() { window.open('http://www.openml.org/r/' + this.r);}
+												click: function() { window.open('https://www.openml.org/r/' + this.r);}
                     }
                 }
             }]
@@ -369,7 +369,7 @@ client.search({
   size: '5000',
   body: {
 		_source: [ "run_id", "run_flow.name", "run_flow.flow_id", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
-    filter: {
+    query: {
       term: {
         'run_task.task_id': current_task
       }
