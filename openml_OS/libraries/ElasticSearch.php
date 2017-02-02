@@ -560,7 +560,7 @@ class ElasticSearch {
             'date' => date("Y-m-d H:i:s", $d->created_on),
             'visibility' => 'public',
             'suggest' => array(
-                'input' => array($d->first_name, $d->last_name),
+                'input' => array($d->first_name . ' ', $d->last_name . ' '),
                 'weight' => 5
             ),
             'gamification_visibility' => $d->gamification_visibility
@@ -783,7 +783,7 @@ class ElasticSearch {
             'uploader' => array_key_exists($d->creator, $this->user_names) ? $this->user_names[$d->creator] : 'Unknown',
             'visibility' => $d->visibility,
             'suggest' => array(
-                'input' => array($d->name, $d->description),
+                'input' => array($d->name, $d->description . ' '),
                 'weight' => 5
             )
         );
@@ -919,7 +919,7 @@ class ElasticSearch {
         }
 
         $newdata['suggest'] = array(
-            'input' => $description,
+            'input' => $description . ' ',
             'weight' => '3'
         );
 
@@ -1319,7 +1319,7 @@ class ElasticSearch {
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
-                'input' => array($d->name, $d->description),
+                'input' => array($d->name, $d->description . ' '),
                 'weight' => 2
             ),
         );
@@ -1569,7 +1569,7 @@ class ElasticSearch {
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
-                'input' => array($d->name, $d->description),
+                'input' => array($d->name, $d->description . ' '),
                 'weight' => 2
             )
         );
@@ -1589,7 +1589,7 @@ class ElasticSearch {
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
-                'input' => array($d->name, $d->description),
+                'input' => array($d->name, $d->description . ' '),
                 'weight' => 2
             )
         );
@@ -1605,7 +1605,7 @@ class ElasticSearch {
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
-                'input' => array($d->name, $d->description),
+                'input' => array($d->name, $d->description . ' '),
                 'weight' => 2
             )
         );
@@ -1621,7 +1621,7 @@ class ElasticSearch {
             'visibility' => 'public',
             'date' => $d->date,
             'suggest' => array(
-                'input' => array($d->name, $d->description),
+                'input' => array($d->name, $d->description . ' '),
                 'weight' => 2
             )
         );
@@ -1734,7 +1734,7 @@ class ElasticSearch {
             'ignore_attribute' => $d->ignore_attribute,
             'runs' => $this->checkNumeric($d->runs),
             'suggest' => array(
-                'input' => array($d->name, substr($headless_description, 0, 500)),
+                'input' => array($d->name, substr($headless_description, 0, 500) . ' '),
                 'weight' => 5
             )
         );
