@@ -38,8 +38,7 @@ class Wiki {
 	      'format' => 'md',
 	      'message' => 'Automatically added');
 
-	$url = 'http://wiki.openml.org/create';
-
+	$url = WIKI_URL . '/create';
 	//call gollum
   	$api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );
 	if(strlen($api_response)>0)
@@ -69,7 +68,7 @@ class Wiki {
 	      'format' => 'md',
 	      'message' => 'Automatically added');
 
-	$url = 'http://wiki.openml.org/create';
+	$url = WIKI_URL . '/create';
 
 	//call gollum
   	$api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );
@@ -94,7 +93,7 @@ class Wiki {
         'format' => 'md',
         'message' => 'Automatically added on creation');
 
-  $url = 'http://wiki.openml.org/create';
+  $url = WIKI_URL . '/create';
 
   //call gollum
     $api_response = $this->CI->curlhandler->post_multipart_helper( $url, $post_data );

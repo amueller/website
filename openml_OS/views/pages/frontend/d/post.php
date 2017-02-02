@@ -38,12 +38,13 @@ if($this->input->post('versions')){
 
 // check whether we are sending new data or requesting comparison
   if($this->input->post('content'))
-	$url = 'http://wiki.openml.org/edit/'.$this->wikipage;
+	$url = WIKI_URL . '/edit/'.$this->wikipage;
   if($this->input->post('versions'))
-	$url = 'http://wiki.openml.org/compare/'.$this->wikipage;
+	$url = WIKI_URL . '/compare/'.$this->wikipage;
 
 //call gollum
   $api_response = $this->curlhandler->post_multipart_helper( $url, $post_data );
+
 
 //sync DB, search index
   if($this->input->post('content')){

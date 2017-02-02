@@ -15,7 +15,7 @@ $(document).ready(function() {
 // Loading the Wiki through CORS. This allows it to be loaded from anywhere.
 $.ajax({
   type: 'GET',
-  url: '<?php echo 'http://wiki.openml.org/'.$this->url;?>',
+  url: '<?php echo WIKI_URL . '/'.$this->url;?>',
   contentType: 'text/plain',
   xhrFields: { withCredentials: false },
   headers: {  },

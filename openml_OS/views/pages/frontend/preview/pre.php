@@ -12,7 +12,7 @@ $opts = array('http' =>
 
 $context  = stream_context_create($opts);
 
-$result = file_get_contents('http://wiki.openml.org/preview', false, $context);
+$result = file_get_contents(WIKI_URL . '/preview', false, $context);
 
 $preamble = '<span class="label label-danger" style="font-weight:200">This is a preview. Changes are not yet saved.</span><br><br>';
 

@@ -1362,9 +1362,14 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
 
         if($responses['errors'] == True){
-          $err = $responses['items'][0]['index']['error'];
-          return 'ERROR: Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
-        }
+	  foreach ($responses['items'] as $res){
+		if(array_key_exists('error',$res['index'])){
+			$err = $res['index']['error'];
+			print_r($res);
+          		return 'ERROR for ID ' . $res['index']['_id'] . ' : Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
+	  	}
+	  }
+	}
 	
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($flows) . ' flows.';
     }
@@ -1377,7 +1382,7 @@ class ElasticSearch {
             'version' => $d->version,
             'external_version' => $d->external_version,
             'licence' => $d->licence,
-            'description' => $d->description,
+            'description' => (strlen($d->description) > 0 ? $d->description : 'No description'),
             'full_description' => $d->fullDescription,
             'installation_notes' => $d->installationNotes,
             'uploader' => array_key_exists($d->uploader, $this->user_names) ? $this->user_names[$d->uploader] : 'Unknown',
@@ -1389,7 +1394,7 @@ class ElasticSearch {
             'runs' => $this->checkNumeric($d->runs),
             'visibility' => $d->visibility,
             'suggest' => array(
-                'input' => array(str_replace("weka.", "", $d->name), $d->description),
+                'input' => array(str_replace("weka.", "", $d->name), $d->description . ' '),
                 'weight' => 5
             )
         );

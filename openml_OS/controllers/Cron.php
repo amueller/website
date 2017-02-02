@@ -58,7 +58,7 @@ class Cron extends CI_Controller {
         $this->elasticsearch->index($type);
       } else {
         echo "starting ".$type." indexer from id ".$id;
-        $this->elasticsearch->index_from($type, $id);
+        echo $this->elasticsearch->index_from($type, $id);
       }
   }
 
