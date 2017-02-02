@@ -58,7 +58,7 @@ $(document).ready(function() {
 		<?php echo column_widths($this->dt_main['column_widths']); ?>
         "bPaginate": true
     });
-
+    
     /* Add event listener for opening and closing details
      * Note that the indicator for showing which row is open is not controlled by DataTables, rather it is done here
      */
