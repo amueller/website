@@ -173,9 +173,9 @@ $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType =
   $this->dt_main['column_widths']    = array(1,1,0,30,30);
   $this->dt_main['column_content']  = array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
   $this->dt_main['column_source']    = array('wrapper','db','db','doublewrapper','db','db');
-  $this->dt_main['group_by']     = 'l.implementation_id, l.sid';
+  $this->dt_main['group_by']     = 'l.implementation_id';
 
-  $this->dt_main['base_sql']     =   'SELECT SQL_CALC_FOUND_ROWS MAX(`r`.`rid`) AS `rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
+  $this->dt_main['base_sql']     =   'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
                     'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
                     'WHERE `r`.`setup`=`l`.`sid` ' .
                     'AND `l`.`implementation_id` = `i`.`id` ' .
