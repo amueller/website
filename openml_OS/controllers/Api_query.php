@@ -134,7 +134,8 @@ class Api_query extends CI_Controller {
     $columnsSQL = array();
     for($i = 0; $i < count($columns); ++$i) {
       $columnsSQL[$i]   = '`' . str_replace('.','`.`',$columns[$i]) . '`';
-      $columnsOutput[$i]   = end( explode('.',$columns[$i]) );
+      $array_variable = explode('.',$columns[$i]);
+      $columnsOutput[$i]   = end($array_variable);
     }
 
     if ( $this->input->post('iDisplayStart') !== false && $this->input->post('iDisplayLength') != '-1' ) {
