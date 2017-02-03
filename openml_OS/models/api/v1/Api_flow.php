@@ -359,7 +359,7 @@ class Api_flow extends Api_model {
     foreach ($queries as $table => $query) {
       $res = $this->Implementation->query($query);
       if ($res == false) {
-        $this->returnError(551, $this->version, $this->openmlGeneralErrorCode, 'In query: ' . $query);
+        $this->returnError(551, $this->version, $this->openmlGeneralErrorCode, 'In query table: ' . $table);
         return;
       }
     }
