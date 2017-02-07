@@ -118,7 +118,7 @@ jQuery.loadScript = function (url, callback) {
 // Loading the Wiki through CORS. This allows it to be loaded from anywhere.
 $.ajax({
   type: 'GET',
-  url: '<?php echo 'http://wiki.openml.org/'.$this->url;?>',
+  url: '<?php echo 'https://wiki.openml.org/'.$this->url;?>',
   contentType: 'text/plain',
   xhrFields: { withCredentials: false },
   headers: {  },

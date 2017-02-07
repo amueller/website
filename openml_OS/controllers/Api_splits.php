@@ -20,9 +20,10 @@ class Api_splits extends CI_Controller {
     $this->load->helper('file_upload');
     
     $this->db = $this->load->database('read',true);
-    $this->task_types = array( 1, 2, 3, 6, 7 );
+    $this->task_types = array(1, 2, 3, 6, 7);
+    $this->challenge_types = array(9);
     $this->evaluation = APPPATH . 'third_party/OpenML/Java/evaluate.jar';
-    $this->config = " -config 'cache_allowed=false;server=http://www.openml.org/;api_key=".API_KEY."' ";
+    $this->config = " -config 'cache_allowed=false;server=".BASE_URL.";api_key=".API_KEY."' ";
   }
   
   function different_predictions($run_ids) {
@@ -73,15 +74,49 @@ class Api_splits extends CI_Controller {
     }
   }
   
-  function get( $task_id ) {
+  function challenge($task_id, $testtrain, $offset_arg, $size_arg) {
+    if (is_numeric($task_id) == false) {
+      die('argument 1 should be numeric');
+    }
+    if (in_array($testtrain, array('test', 'train') == false)) {
+      die('argument 2 should be in {test,train}');
+    }
+    $offset = "";
+    $size = "";
+    if (is_numeric($offset_arg)) {
+      $offset = ' -o ' . $offset_arg . ' ';
+      
+      if (is_numeric($size_arg)) {
+        $size = ' -size ' . $size_arg . ' ';
+      }
+    }
+    
+    $task = $this->Task->getById( $task_id );
+    if($task === false || in_array( $task->ttid, $this->challenge_types ) === false) {
+      die('Task not valid challenge.');
+    }
+    
+    $command = 'java -jar '.$this->evaluation.' -f "challenge" -t ' . $task_id . ' -mode "' . $testtrain . '" ' . $offset . $size . $this->config;
+    
+    $this->Log->cmd('API Splits::challenge(' . $task_id . ', '.$testtrain.')', $command);
+    
+    if(function_enabled('system')) {
+      header('Content-type: text/plain');
+      system(CMD_PREFIX . $command);
+    } else {
+      die('failed to generate arff file: php "system" function disabled. ');
+    }
+  }
+  
+  function get($task_id) {
     $filepath = $this->directory . '/' . $task_id . '.arff';
-    if( file_exists( $filepath ) == false ) {
-      $this->generate( $task_id, $filepath );
+    if (file_exists($filepath) == false) {
+      $this->generate($task_id, $filepath);
     }
     
     header('Content-type: text/plain');
-    header('Content-Length: ' . filesize( $filepath ) );
-    readfile_chunked( $filepath );
+    header('Content-Length: ' . filesize($filepath));
+    readfile_chunked($filepath);
   }
   
   function md5( $task_id ) {

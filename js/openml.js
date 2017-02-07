@@ -1,16 +1,20 @@
+var es_config = {};
+es_config['host'] = ES_URL;
+var client = new $.es.Client(es_config);
+/**
 var es_url = ES_URL.split("/");
 var es_config = {};
 if(es_url.length == 1)
   es_config['hosts'] = es_url[0];
 else if(es_url.length > 1){
   es_config['host'] = {};
-  es_config['host']['protocol'] = 'http';
+  es_config['host']['protocol'] = 'https';
   es_config['host']['host'] = es_url[0];
-  es_config['host']['port'] = 80;
+  es_config['host']['port'] = 443;
   es_config['host']['path'] = '/'+es_url[1];
 }
 var client = new $.es.Client(es_config);
-
+**/
 /**client.ping({
 requestTimeout: 1000,
 // undocumented params are appended to the query string

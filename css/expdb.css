@@ -24,6 +24,7 @@
   overflow: hidden;
 }
 
+
 .img-guide-wrapper{
   width: 65%;
   margin: 0 auto;
@@ -2782,6 +2783,10 @@ a:hover > .circlered{
 
 .highcharts-tooltip > path{
   display: none;
+}
+
+.highcharts-tooltip[style*="top: -9999px"] {
+    display: none;
 }
 
 .codehighlight{

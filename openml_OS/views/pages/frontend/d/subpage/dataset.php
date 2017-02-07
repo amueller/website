@@ -228,6 +228,7 @@
             echo ' - estimation_procedure: '.$q['estimation_procedure']['name'];
             if(array_key_exists('evaluation_measures',$q)) echo ' - evaluation_measure: '.$q['evaluation_measures'];
             if(array_key_exists('target_feature',$q)) echo ' - target_feature: '.$q['target_feature'];
+            if(array_key_exists('cost_matrix',$q)) echo ' - cost matrix: '.$q['cost_matrix'];
             ?>
         </div>
       </div>
