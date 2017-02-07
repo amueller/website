@@ -445,6 +445,9 @@ class ElasticSearch {
         if ($id and ! $likes)
             return 'Error: like ' . $id . ' is unknown';
 
+        if (! $likes)
+            return 'Error: no likes found';
+
         foreach ($likes as $l) {
             $params['body'][] = array(
                 'index' => array(
