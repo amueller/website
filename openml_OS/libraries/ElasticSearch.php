@@ -919,7 +919,7 @@ class ElasticSearch {
         }
 
         $newdata['suggest'] = array(
-            'input' => array($description . ' '),
+            'input' => $description,
             'weight' => '3'
         );
 
