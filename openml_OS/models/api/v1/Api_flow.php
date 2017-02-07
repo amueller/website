@@ -340,7 +340,7 @@ class Api_flow extends Api_model {
     try {
       $this->elasticsearch->delete('flow', $flow_id);
     } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
     
