@@ -226,8 +226,14 @@ class Api_run extends Api_model {
       $this->returnError( 394, $this->version );
       return;
     }
-
-    $this->elasticsearch->delete('run', $run_id);
+    
+    try {
+      $this->elasticsearch->delete('run', $run_id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      return;
+    }
+    
     $this->xmlContents( 'run-delete', $this->version, array( 'run' => $run ) );
   }
 
@@ -615,8 +621,13 @@ class Api_run extends Api_model {
 
     $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
-    $this->elasticsearch->index('run', $run->rid);
-
+    
+    try {
+      $this->elasticsearch->index('run', $run->rid);
+    } catch (Exception $e) {
+      // TODO: should log
+    }
+    
     $timestamps[] = microtime(true); // profiling 4
     if (DEBUG) {
       $this->Log->profiling(__FUNCTION__, $timestamps,
@@ -779,8 +790,13 @@ class Api_run extends Api_model {
     $this->db->trans_complete();
 
     // update elastic search index.
-    $this->elasticsearch->index('run', $run_id );
-
+    try {
+      $this->elasticsearch->index('run', $run_id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      return;
+    }
+    
     $this->xmlContents( 'run-evaluate', $this->version, array( 'run_id' => $run_id ) );
   }
 }

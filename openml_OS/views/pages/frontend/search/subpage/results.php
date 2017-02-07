@@ -142,7 +142,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 	<div class="searchresult panel">
 		<?php if ($this->ion_auth->logged_in() and (array_key_exists('uploader_id',$rs) and $this->user_id == $rs['uploader_id']) or $this->ion_auth->is_admin()){ ?>
 			<div class="actionicon">
-				<div class="delete_action" data-type="<?php echo $r['_type'];?>" data-id="<?php echo $r['_id'];?>" data-name="<?php echo (array_key_exists('name',$rs) ? $rs['name'].' ('.$rs['version'].')' : $r['_type'].' '.$r['_id']);?>"><i class="fa fa-2x fa-trash"></i></div>
+				<div class="delete_action" data-type="<?php echo $r['_type'];?>" data-id="<?php echo $r['_id'];?>" data-name="<?php echo (array_key_exists('name',$rs) ? $rs['name'].(array_key_exists('version',$rs) ? ' ('.$rs['version'].')' : ' ') : $r['_type'].' '.$r['_id']);?>"><i class="fa fa-2x fa-trash"></i></div>
 			</div>
 		<?php } ?>
 
@@ -210,7 +210,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				  <div class="runStats statLine">
 						<?php if($rs['affiliation']) echo '<i class="fa fa-fw fa-institution"></i>'.$rs['affiliation'];?>
 						<?php if($rs['country']) echo '<i class="fa fa-fw fa-map-marker"></i>'.$rs['country'];?>
-						<i class="fa fa-fw fa-clock-o"></i>Joined <?php echo date("Y-m-d", $rs['date']); ?>
+						<i class="fa fa-fw fa-clock-o"></i>Joined <?php echo substr($rs['date'],0,10); ?>
 				</div>
                                 <div class="runStats statLine">
                                     <b>
@@ -265,12 +265,12 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 		   <?php } elseif($type == 'measure') { ?>
 				<div class="itemhead">
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
-		   		<a href="<?php echo $this->measures[$rs['type']].'/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a></div>
+		   		<a href="<?php echo $this->measures[$rs['measure_type']].'/'.$r['_id']; ?>"><?php echo $rs['name']; ?></a></div>
 				<div class="teaser">
 					<?php echo formatTeaser($r); ?>
 				</div>
 				<div class="runStats">
-					<?php echo str_replace('_',' ',$rs['type']); ?>
+					<?php echo str_replace('_',' ',$rs['measure_type']); ?>
 				</div>
 
 		   <?php } elseif($type == 'task') { ?>

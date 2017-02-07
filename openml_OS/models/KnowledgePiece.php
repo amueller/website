@@ -106,7 +106,7 @@ class KnowledgePiece extends Database_write{
     }
 
     function getNumberOfLikesAndDownloadsOnUploadsOfUser($u_id, $from=null, $to=null){
-        $sql = "select ld.knowledge_type,count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date
+        $sql = "select ld.knowledge_type as kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date
                 FROM (
                 SELECT l.user_id, l.knowledge_id, l.knowledge_type, 1 as count, l.time, 'l' as ldt FROM likes l, dataset d WHERE l.knowledge_id=d.did AND l.knowledge_type='d' AND d.uploader=".$u_id."
                 UNION
@@ -131,7 +131,7 @@ class KnowledgePiece extends Database_write{
             $sql.=' AND ld.time < "' . $to . '"';
         }
         if($from!=null || $to!=null){
-            $sql.=" GROUP BY DATE(ld.time), ld.ldt, ld.knowledge_type ORDER BY date;";
+            $sql.=" GROUP BY DATE(ld.time), ld.ldt, kt ORDER BY date;";
         }else{
             $sql.=" GROUP BY ld.ldt, ld.knowledge_type;";
         }
@@ -140,7 +140,7 @@ class KnowledgePiece extends Database_write{
     }
 
     function getNumberOfLikesAndDownloadsOnUpload($type,$id,$from=null,$to=null){
-        $sql = "SELECT upload.kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt, DATE(ld.time) as date FROM (";
+        $sql = "SELECT upload.kt, count(ld.user_id) as count, SUM(ld.count) as sum, ld.ldt".($from != null || $to !=null ? ", DATE(ld.time) as date" : "")." FROM (";
         if($type=='d'){
             $sql.="SELECT d.did as id, d.uploader, 'd' as kt FROM dataset as d WHERE d.did=".$id;
         }else if($type=='f'){

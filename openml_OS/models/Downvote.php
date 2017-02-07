@@ -22,8 +22,7 @@ class Downvote extends Database_write {
     function getDownvote($id) {
         $sql = 'SELECT `l`.*, `r`.*
             FROM `' . $this->table . '` AS `l`, `' . $this->reason_table . '` AS `r`
-            WHERE `l`.`' . $this->id_column . '` = "' . $id . '" 
-            AND `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column;
+            WHERE `l`.'.$this->reason_column.' = `r`.'.$this->reason_id_column . ($id ? ' AND `l`.`' . $this->id_column . '` = ' . $id : "");
 
         $ds = $this->Downvote->query($sql);
         if($ds){

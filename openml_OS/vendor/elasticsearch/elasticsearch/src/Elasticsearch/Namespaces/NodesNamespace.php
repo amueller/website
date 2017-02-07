@@ -1,9 +1,4 @@
 <?php
-/**
- * User: zach
- * Date: 1/20/14
- * Time: 3:21 PM
- */
 
 namespace Elasticsearch\Namespaces;
 
@@ -12,9 +7,9 @@ namespace Elasticsearch\Namespaces;
  *
  * @category Elasticsearch
  * @package  Elasticsearch\Namespaces\NodesNamespace
- * @author   Zachary Tong <zachary.tong@elasticsearch.com>
+ * @author   Zachary Tong <zach@elastic.co>
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache2
- * @link     http://elasticsearch.org
+ * @link     http://elastic.co
  */
 class NodesNamespace extends AbstractNamespace
 {
@@ -47,9 +42,8 @@ class NodesNamespace extends AbstractNamespace
 
         $index_metric = $this->extractArgument($params, 'index_metric');
 
-
         /** @var callback $endpointBuilder */
-        $endpointBuilder = $this->dicEndpoints;
+        $endpointBuilder = $this->endpoints;
 
         /** @var \Elasticsearch\Endpoints\Cluster\Nodes\Stats $endpoint */
         $endpoint = $endpointBuilder('Cluster\Nodes\Stats');
@@ -57,8 +51,8 @@ class NodesNamespace extends AbstractNamespace
                  ->setMetric($metric)
                  ->setIndexMetric($index_metric)
                  ->setParams($params);
-        $response = $endpoint->performRequest();
-        return $response['data'];
+
+        return $this->performRequest($endpoint);
     }
 
     /**
@@ -78,14 +72,14 @@ class NodesNamespace extends AbstractNamespace
         $metric = $this->extractArgument($params, 'metric');
 
         /** @var callback $endpointBuilder */
-        $endpointBuilder = $this->dicEndpoints;
+        $endpointBuilder = $this->endpoints;
 
         /** @var \Elasticsearch\Endpoints\Cluster\Nodes\Info $endpoint */
         $endpoint = $endpointBuilder('Cluster\Nodes\Info');
         $endpoint->setNodeID($nodeID)->setMetric($metric);
         $endpoint->setParams($params);
-        $response = $endpoint->performRequest();
-        return $response['data'];
+
+        return $this->performRequest($endpoint);
     }
 
     /**
@@ -103,16 +97,15 @@ class NodesNamespace extends AbstractNamespace
     {
         $nodeID = $this->extractArgument($params, 'node_id');
 
-
         /** @var callback $endpointBuilder */
-        $endpointBuilder = $this->dicEndpoints;
+        $endpointBuilder = $this->endpoints;
 
         /** @var \Elasticsearch\Endpoints\Cluster\Nodes\HotThreads $endpoint */
         $endpoint = $endpointBuilder('Cluster\Nodes\HotThreads');
         $endpoint->setNodeID($nodeID);
         $endpoint->setParams($params);
-        $response = $endpoint->performRequest();
-        return $response['data'];
+
+        return $this->performRequest($endpoint);
     }
 
     /**
@@ -128,17 +121,14 @@ class NodesNamespace extends AbstractNamespace
     {
         $nodeID = $this->extractArgument($params, 'node_id');
 
-
         /** @var callback $endpointBuilder */
-        $endpointBuilder = $this->dicEndpoints;
+        $endpointBuilder = $this->endpoints;
 
         /** @var \Elasticsearch\Endpoints\Cluster\Nodes\Shutdown $endpoint */
         $endpoint = $endpointBuilder('Cluster\Nodes\Shutdown');
         $endpoint->setNodeID($nodeID);
         $endpoint->setParams($params);
-        $response = $endpoint->performRequest();
-        return $response['data'];
+
+        return $this->performRequest($endpoint);
     }
-
-
 }

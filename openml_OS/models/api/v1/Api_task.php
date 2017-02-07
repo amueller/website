@@ -188,8 +188,14 @@ class Api_task extends Api_model {
       $this->returnError( 455, $this->version );
       return;
     }
-
-    $this->elasticsearch->delete('task', $task_id);
+    
+    try {
+      $this->elasticsearch->delete('task', $task_id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      return;
+    }
+    
     $this->xmlContents( 'task-delete', $this->version, array( 'task' => $task ) );
   }
 
@@ -303,13 +309,17 @@ class Api_task extends Api_model {
       $this->Task_inputs->insert($task_input);
     }
     
-    // update elastic search index.
-    $this->elasticsearch->index('task', $id);
-
     foreach($tags as $tag) {
       $this->entity_tag_untag('task', $id, $tag, false, 'task', true);
       // if tagging went wrong, an error is displayed. (TODO: something else?)
       if (!$success) return;
+    }
+    
+    // update elastic search index.
+    try {
+      $this->elasticsearch->index('task', $id);
+    } catch (Exception $e) {
+      // TODO: should be logged. 
     }
 
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );

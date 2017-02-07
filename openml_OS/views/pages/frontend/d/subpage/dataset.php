@@ -202,7 +202,7 @@
           echo $qval;
         } ?>
       </div>
-      <div class="datadescription"><?php echo $dp['description'].' '.$dp['function'];?></div>
+      <div class="datadescription"><?php echo $dp['description'];?></div>
       </div>
       <?php }}} ?> </div>
       <?php } else {
@@ -225,7 +225,7 @@
         <div class="runStats statLine" <?php echo ($q['runs'] ? '' : 'style="opacity: 0.5"'); ?>>
           <?php
             echo '<b>'.($q['runs'] ? $q['runs'] : '0').' runs</b>';
-            echo ' - estimation_procedure: '.$q['estimation_procedure']['name'];
+            if(array_key_exists('estimation_procedure',$q)) echo ' - estimation_procedure: '.$q['estimation_procedure']['name'];
             if(array_key_exists('evaluation_measures',$q)) echo ' - evaluation_measure: '.$q['evaluation_measures'];
             if(array_key_exists('target_feature',$q)) echo ' - target_feature: '.$q['target_feature'];
             if(array_key_exists('cost_matrix',$q)) echo ' - cost matrix: '.$q['cost_matrix'];

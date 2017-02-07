@@ -46,8 +46,7 @@ class Frontend extends CI_Controller {
     $this->page = 'home'; // default value
     $this->subpage = false;
 
-    $params['hosts'] = array (ES_URL);
-    $this->searchclient = new Elasticsearch\Client($params);
+    $this->searchclient = $this->elasticsearch->client;
   }
 
   public function index() {

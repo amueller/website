@@ -224,8 +224,14 @@ class Api_data extends Api_model {
       $this->returnError( 355, $this->version );
       return;
     }
-
-    $this->elasticsearch->delete('data', $data_id);
+    
+    try {
+      $this->elasticsearch->delete('data', $data_id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      return;
+    }
+    
     $this->xmlContents( 'data-delete', $this->version, array( 'dataset' => $dataset ) );
   }
 
@@ -347,15 +353,18 @@ class Api_data extends Api_model {
         $error = -1;
         tag_item( 'dataset', $id, $tag, $this->user_id, $error );
       }
-
-    // update elastic search index.
-    $this->elasticsearch->index('data', $id);
-
-    // update counters
-    $this->elasticsearch->index('user', $this->user_id);
-
+    
+    try {
+      // update elastic search index.
+      $this->elasticsearch->index('data', $id);
+    
+      // update counters
+      $this->elasticsearch->index('user', $this->user_id);
+    } catch (Exception $e) {
+      // TODO: should log
+    }
+    
     // create initial wiki page
-
     $this->wiki->export_to_wiki($id);
 
     // create
@@ -664,8 +673,13 @@ class Api_data extends Api_model {
     $this->db->trans_complete();
 
     // add to elastic search index.
-    $this->elasticsearch->index('data', $dataset->did);
-
+    try {
+      $this->elasticsearch->index('data', $dataset->did);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      return;
+    }
+    
     if ($success) {
       $this->xmlContents('data-qualities-upload', $this->version, array('did' => $dataset->did));
     } else {

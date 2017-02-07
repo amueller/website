@@ -63,8 +63,14 @@ class Api_user extends Api_model {
       $this->returnError( 465, $this->version );
       return;
     }
-
-    $this->elasticsearch->delete('user', $this->user_id);
+    
+    try {
+      $this->elasticsearch->delete('user', $this->user_id);
+    } catch (Exception $e) {
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      return;
+    }
+    
     $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
   }
 

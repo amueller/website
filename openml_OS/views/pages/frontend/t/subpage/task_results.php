@@ -34,7 +34,7 @@
     <h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>
     <div class="datainfo">
                 <i class="fa fa-trophy"></i> Task <?php echo $this->task_id; ?>
-                <i class="fa fa-flag"></i> <a href="t/type/<?php echo $this->record['type_id'];?>"><?php echo $this->record['type_name']; ?></a>
+                <i class="fa fa-flag"></i> <a href="tt/<?php echo $this->record['type_id'];?>"><?php echo $this->record['type_name']; ?></a>
                 <i class="fa fa-database"></i> <a href="d/<?php echo $dataset_id;?>"><?php echo $dataset; ?></a>
                 <i class="fa fa-star"></i> <?php echo $this->record['runcount']; ?> runs submitted
                 <br>

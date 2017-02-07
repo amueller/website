@@ -1,9 +1,4 @@
 <?php
-/**
- * User: zach
- * Date: 5/1/13
- * Time: 10:00 PM
- */
 
 namespace Elasticsearch\Serializers;
 
@@ -12,14 +7,12 @@ namespace Elasticsearch\Serializers;
  *
  * @category Elasticsearch
  * @package  Elasticsearch\Serializers\JSONSerializer
- * @author   Zachary Tong <zachary.tong@elasticsearch.com>
+ * @author   Zachary Tong <zach@elastic.co>
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache2
- * @link     http://elasticsearch.org
+ * @link     http://elastic.co
  */
 class ArrayToJSONSerializer implements SerializerInterface
 {
-
-
     /**
      * Serialize assoc array into JSON string
      *
@@ -32,17 +25,14 @@ class ArrayToJSONSerializer implements SerializerInterface
         if (is_string($data) === true) {
             return $data;
         } else {
-            $data = json_encode($data);
+            $data = json_encode($data, JSON_PRESERVE_ZERO_FRACTION);
             if ($data === '[]') {
                 return '{}';
             } else {
                 return $data;
             }
         }
-
-
     }
-
 
     /**
      * Deserialize JSON into an assoc array
@@ -55,6 +45,5 @@ class ArrayToJSONSerializer implements SerializerInterface
     public function deserialize($data, $headers)
     {
         return json_decode($data, true);
-
     }
 }

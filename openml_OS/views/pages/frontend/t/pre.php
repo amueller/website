@@ -17,21 +17,6 @@ if($this->input->get('sort'))
 $this->active_tab = gu('tab');
 if($this->active_tab == false) $this->active_tab = 'searchtab';
 
-// task types
-$this->tasktypes =  array();
-$types = $this->Implementation->query('SELECT tt.ttid, tt.name, tt.description, count(t.task_id) as tasks FROM task_type tt left join task t on t.ttid=tt.ttid group by tt.ttid order by tasks desc');
-if( $types != false ) {
-	  foreach( $types as $i ) {
-		  $result = array(
-			  'id' => $i->ttid,
-			  'name' => $i->name,
-			  'description' => $i->description,
-			  'tasks' => $i->tasks
-		  );
-		  $this->tasktypes[] = $result;
-	  }
-}
-
 /// TYPE DETAIL
 
 $this->record = array();
@@ -188,9 +173,9 @@ $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType =
   $this->dt_main['column_widths']    = array(1,1,0,30,30);
   $this->dt_main['column_content']  = array('<a data-toggle="modal" href="r/[CONTENT]/html" data-target="#runModal"><i class="fa fa-info-circle"></i></a>',null,null,'<a href="f/[CONTENT1]">[CONTENT2]</a>',null,null);
   $this->dt_main['column_source']    = array('wrapper','db','db','doublewrapper','db','db');
-  $this->dt_main['group_by']     = 'l.implementation_id';
+  $this->dt_main['group_by']     = 'l.implementation_id,l.sid'; # TODO: in order to fix datatables error I added l.sid to group by statem. Maybe rewriting the code is better - JvR 3/2/17
 
-  $this->dt_main['base_sql']     =   'SELECT SQL_CALC_FOUND_ROWS `r`.`rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
+  $this->dt_main['base_sql']     =   'SELECT SQL_CALC_FOUND_ROWS MAX(`r`.`rid`) AS `rid`, `l`.`sid`, concat(`i`.`id`, "~", `i`.`fullName`) as fullName, round(max(`e`.`value`),4) AS `value` ' .
                     'FROM algorithm_setup `l`, evaluation `e`, run `r`, implementation `i` ' .
                     'WHERE `r`.`setup`=`l`.`sid` ' .
                     'AND `l`.`implementation_id` = `i`.`id` ' .

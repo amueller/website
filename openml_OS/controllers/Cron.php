@@ -32,7 +32,6 @@ class Cron extends CI_Controller {
     $this->load->model('Estimation_procedure');
     $this->load->model('Run');
     $this->load->Library('elasticSearch');
-    $this->load->Library('elasticSearchLibrary');
 
     $this->dir_suffix = 'dataset/cron/';
   }
@@ -59,7 +58,7 @@ class Cron extends CI_Controller {
         $this->elasticsearch->index($type);
       } else {
         echo "starting ".$type." indexer from id ".$id;
-        $this->elasticsearch->index_from($type, $id);
+        echo $this->elasticsearch->index_from($type, $id);
       }
   }
 

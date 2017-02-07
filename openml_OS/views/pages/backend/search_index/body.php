@@ -10,7 +10,9 @@
 	<?php } ?>
 <div class="col-lg-12">
 	<h1>Elasticsearch indexer</h1>
-	Status: <?php if($this->elasticsearch->test()) echo 'Connection successful. Happy indexing!'; else echo 'Connection failed. Likely, Elasticsearch is not running.'; ?>
+	Status: <?php
+if($this->elasticsearch->test()) echo 'Connection successful. Happy indexing!'; else echo 'Connection failed. Likely, Elasticsearch is not running.';
+ ?>
 </div>
 <div class="col-sm-6">
 	<h2>Rebuild indices</h2>
