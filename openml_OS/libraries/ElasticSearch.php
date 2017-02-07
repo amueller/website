@@ -1291,7 +1291,7 @@ class ElasticSearch {
         $params['index'] = 'openml';
         $params['type'] = 'task_type';
 
-        $types = $this->db->query('SELECT tt.ttid, tt.name, tt.description, count(task_id) as tasks, tt.creationDate FROM task_type tt, task t where tt.ttid=t.ttid' . ($id ? ' and tt.ttid=' . $id : '') . ' group by tt.ttid');
+        $types = $this->db->query('SELECT tt.ttid, tt.name, tt.description, count(task_id) as tasks, tt.creationDate as date FROM task_type tt, task t where tt.ttid=t.ttid' . ($id ? ' and tt.ttid=' . $id : '') . ' group by tt.ttid');
 
         if ($id and ! $types)
             return 'Error: task type ' . $id . ' is unknown';
