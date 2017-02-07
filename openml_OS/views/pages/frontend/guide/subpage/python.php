@@ -29,13 +29,11 @@
     task = tasks.get_task(10)
     clf = ensemble.RandomForestClassifier()
     run = runs.run_task(task, clf)
-    return_code, response = run.publish()
+    
+    run = runs.run_task(task, clf)
+    run.publish()
 
-    # get the run id for reference
-    if(return_code == 200):
-      response_dict = xmltodict.parse(response)
-      run_id = response_dict['oml:upload_run']['oml:run_id']
-      print("Uploaded run with id %s. Check it at www.openml.org/r/%s" % (run_id,run_id))
+    print("Uploaded run with id %s. Check it at www.openml.org/r/%s" %(run.run_id,run.run_id))
   </code></pre></div>
 
   <p>The first time, you need to set up your config file (~/.openml/config) with your <a href="u#!api">API key</a>.

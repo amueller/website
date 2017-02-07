@@ -346,18 +346,22 @@ class Api_flow extends Api_model {
     }
 
     $condition = 'SELECT rid FROM run r, algorithm_setup s WHERE s.sid = r.setup AND s.implementation_id = ' . $flow_id;
-
-    $res = $this->Implementation->query('DELETE FROM evaluation WHERE source IN ('.$condition.');');
-    $res = $res && $this->Implementation->query('DELETE FROM evaluation_fold WHERE source IN ('.$condition.');');
-    $res = $res && $this->Implementation->query('DELETE FROM evaluation_sample WHERE source IN ('.$condition.');');
-    $res = $res && $this->Implementation->query('DELETE FROM runfile WHERE source IN ('.$condition.');');
-    $res = $res && $this->Implementation->query('DELETE FROM run WHERE setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$flow_id.');');
-    $res = $res && $this->Implementation->query('DELETE FROM algorithm_setup WHERE implementation_id = ' . $flow_id . ';');
-
-    if ($res == false) {
-      $this->returnError( 551, $this->version );
-      return;
-
+    
+    $queries = array(
+      'evaluation' => 'DELETE FROM evaluation WHERE source IN ('.$condition.');',
+      'evaluation_fold' => 'DELETE FROM evaluation_fold WHERE source IN ('.$condition.');',
+      'evaluation_sample' => 'DELETE FROM evaluation_sample WHERE source IN ('.$condition.');',
+      'runfile' => 'DELETE FROM runfile WHERE source IN ('.$condition.');',
+      'run' => 'DELETE FROM run WHERE setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$flow_id.');',
+      'algorithm_setup' => 'DELETE FROM algorithm_setup WHERE implementation_id = ' . $flow_id . ';'
+    );
+    
+    foreach ($queries as $table => $query) {
+      $res = $this->Implementation->query($query);
+      if ($res == false) {
+        $this->returnError(551, $this->version, $this->openmlGeneralErrorCode, 'In query table: ' . $table);
+        return;
+      }
     }
 
     $this->flow_delete($flow_id);
