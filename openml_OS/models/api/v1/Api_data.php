@@ -228,7 +228,7 @@ class Api_data extends Api_model {
     try {
       $this->elasticsearch->delete('data', $data_id);
     } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
     
@@ -676,7 +676,7 @@ class Api_data extends Api_model {
     try {
       $this->elasticsearch->index('data', $dataset->did);
     } catch (Exception $e) {
-      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $this->get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
+      $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
     
