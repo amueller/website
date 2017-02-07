@@ -374,7 +374,7 @@ class Api_run extends Api_model {
     }
     
     // check if runfile with index does not exist yet
-    if ($this->Runfile->getWhere('source = ' . $run->id . ' AND field = "predictions_' . $index . '"')) {
+    if ($this->Runfile->getWhere('source = ' . $run->rid . ' AND field = "predictions_' . $index . '"')) {
       $this->returnError(624, $this->version);
       return;
     }
