@@ -14,7 +14,7 @@
     <select class="form-control input-small selectpicker" name="tasktype" id="tasktype.tt_id">
        <option value="">Task type</option>
 	    <?php
-	      $p['body']['query']['match_all'] = array();
+	      $p['body']['query']['match_all'] = (object)[];
         $results = $this->searchclient->search($p);
 	      $alltasks = $results['hits']['hits'];
 	      foreach($alltasks as $h){?>

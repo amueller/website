@@ -15,7 +15,7 @@
         $p = array();
         $p['index'] = 'openml';
         $p['type'] = 'task_type';
-	      $p['body']['query']['match_all'] = array();
+	      $p['body']['query']['match_all'] = (object)[];
         $results = $this->searchclient->search($p);
 	      $alltasks = $results['hits']['hits'];
 	      foreach($alltasks as $h){?>
