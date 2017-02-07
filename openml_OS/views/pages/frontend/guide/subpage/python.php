@@ -14,6 +14,10 @@
   <p>You can try it out yourself in a Jupyter Notebook running in the everware cloud. You'll need an OpenML account as well as a <a href="www.github.com">GitHub</a> account for this service to work properly. It may take a few minutes to spin up.</p>
   <p><a target="_blank" class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example_python&OPENMLKEY=<?php echo $this->api_key;?>">Launch demo</a></p>
 
+  <h2 id="r-demo">Course</h2>
+  <p>We are currently building a machine learning course with many more examples. All materials are available as Jupyter Notebooks running in the everware cloud. You'll need an OpenML account as well as a <a href="www.github.com">GitHub</a> account for this service to work properly. It may take a few minutes to spin up.</p>
+  <p><a target="_blank" class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/machine_learning_introduction&OPENMLKEY=<?php echo $this->api_key;?>">Launch course</a></p>
+
   <h2 id="r-download">Example</h2>
   <p>This example runs an scikit-learn algorithm on an <a href="t/10">OpenML task</a>.</p>
   <div class="codehighlight"><pre><code class="python">
@@ -25,13 +29,11 @@
     task = tasks.get_task(10)
     clf = ensemble.RandomForestClassifier()
     run = runs.run_task(task, clf)
-    return_code, response = run.publish()
+    
+    run = runs.run_task(task, clf)
+    run.publish()
 
-    # get the run id for reference
-    if(return_code == 200):
-      response_dict = xmltodict.parse(response)
-      run_id = response_dict['oml:upload_run']['oml:run_id']
-      print("Uploaded run with id %s. Check it at www.openml.org/r/%s" % (run_id,run_id))
+    print("Uploaded run with id %s. Check it at www.openml.org/r/%s" %(run.run_id,run.run_id))
   </code></pre></div>
 
   <p>The first time, you need to set up your config file (~/.openml/config) with your <a href="u#!api">API key</a>.

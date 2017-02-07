@@ -12,7 +12,7 @@
     $task_inputs = str_getcsv($task->task_inputs);
     $input_values = str_getcsv($task->input_values);
     for ($i = 0; $i < count($task_inputs); ++$i): ?>
-      <oml:input name="<?php echo $task_inputs[$i]; ?>"><?php echo $input_values[$i]; ?></oml:input>
+      <oml:input name="<?php echo $task_inputs[$i]; ?>"><?php echo htmlspecialchars($input_values[$i]); ?></oml:input>
   <?php endfor; endif; ?>
   <?php if ($task->qualities):
     $qualities = str_getcsv($task->qualities);

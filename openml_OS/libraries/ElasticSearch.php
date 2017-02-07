@@ -1179,7 +1179,7 @@ class ElasticSearch {
             $evals = null;
             $params['body'] = array();
 
-            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, error, error_message FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
+            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, error, error_message, run_details FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
             if($runs){
               $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
               $evals = $this->fetch_evaluations($rid, $rid + $incr);
@@ -1222,6 +1222,7 @@ class ElasticSearch {
             'evaluations' => array_key_exists($r->rid, $evals) ? $evals[$r->rid] : array(),
             'error' => (isset($r->error) ? $r->error : ""),
             'error_message' => (isset($r->error_message) ? $r->error_message : ""),
+            'run_details' => (isset($r->run_details) ? $r->run_details : ""),
             'visibility' => 'public'
         );
 
