@@ -919,7 +919,7 @@ class ElasticSearch {
         }
 
         $newdata['suggest'] = array(
-            'input' => $description . ' ',
+            'input' => array($description . ' '),
             'weight' => '3'
         );
 
@@ -1391,7 +1391,7 @@ class ElasticSearch {
             'creator' => $d->creator,
             'contributor' => $d->contributor,
             'dependencies' => $d->dependencies,
-            'date' => $d->uploadDate,
+            'date' => str_replace($d->uploadDate, "0000-00-00 00:00:00", ""),
             'runs' => $this->checkNumeric($d->runs),
             'visibility' => $d->visibility,
             'suggest' => array(
