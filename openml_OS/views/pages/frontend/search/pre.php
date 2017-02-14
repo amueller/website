@@ -55,6 +55,7 @@ if(isset ($this->specialterms))
 else{
   $this->specialterms = "";
 	$this->terms = safe($this->input->get('q'));
+  $this->terms = str_replace('lt;','<',$this->terms);
   $this->terms = explode('/',$this->terms)[0];
 }
 $this->coreterms = "";
@@ -195,7 +196,7 @@ foreach($this->filters as $k => $v){
 }
 $fjson = implode(",",$jsonfilters);
 if(count($jsonfilters)>1)
-	$fjson = '{ "and" : ['.$fjson.'] }';
+	$fjson = '['.$fjson.']';
 $sjson = '['.implode(",",$jsonshould).']';
 
 $params['index'] = 'openml';
@@ -232,7 +233,7 @@ $time_start = microtime_float();
 // launch query
 try {
 	$this->results = $this->searchclient->search($params);
- // print_r($this->results);
+  // print_r($this->results);
 } catch (Exception $e) {
 	$this->results = array();
 	$this->results['hits'] = array();
