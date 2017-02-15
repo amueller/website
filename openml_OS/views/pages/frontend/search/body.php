@@ -19,7 +19,7 @@
         <li>
           <button class="btn btn-default btn-material-<?php echo $this->materialcolor;?>" id="research">Search</button>
         </li>
-        <li><a><i class="fa fa-lg fa-fw fa-info-circle"></i>You can use 1..10, >10,...</a>
+        <li><a style="cursor:default;"><i class="fa fa-lg fa-fw fa-info-circle"></i>You can use 1..10, >10, <10</a>
             <a id="removefilters"><i class="fa fa-lg fa-fw fa-trash-o"></i>Remove all filters</a></li>
         <?php } ?>
       </ul>
