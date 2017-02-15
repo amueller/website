@@ -191,8 +191,8 @@
                         <li>Community mailing list</li>
                         <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank">openml@googlegroups.com <i class="fa fa-envelope fa-fw"></i></a></li>
 
-           		          <li>Generously funded by</li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
-                        <li>Hosted for you by</li><li> <a href="http://dtai.cs.kuleuven.be" target="_blank">University of Leuven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden</a>, <a href="http://www.tue.nl/universiteit/faculteiten/faculteit-w-i/onderzoek/de-onderzoeksinstituten/data-science-center-eindhoven-dsce/" target="_blank">Eindhoven</a></li>
+           		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
+                        <li>Hosted for you by</li><li> <a href="https://www.tue.nl/en/university/departments/mathematics-and-computer-science/research/research-institutes/data-science-center-eindhoven-dsce/" target="_blank">TU Eindhoven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
                     </ul>
 
 		  </div>
