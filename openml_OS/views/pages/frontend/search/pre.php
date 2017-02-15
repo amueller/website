@@ -56,6 +56,7 @@ else{
   $this->specialterms = "";
 	$this->terms = safe($this->input->get('q'));
   $this->terms = str_replace('lt;','<',$this->terms);
+  $this->terms = str_replace('gt;','>',$this->terms);
   $this->terms = explode('/',$this->terms)[0];
 }
 $this->coreterms = "";
@@ -175,6 +176,8 @@ $jsonshould[] = '{ "term" : { "visibility" : "public" } }';
 if ($this->ion_auth->logged_in()) {
 	$jsonshould[] = '{ "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } }';
 }
+
+//print_r($this->filters);
 
 //search filters
 foreach($this->filters as $k => $v){

@@ -3,7 +3,7 @@ function updateUploader(name){
   console.log('Uploader is ' + name);
   $('#uploader').val(name+'');
   updateQuery("uploader");
-  $('#searchform').submit();
+  submitSearch();
 }
 
 
@@ -38,8 +38,13 @@ function updateQuery(type)
   $("#openmlsearch").val(query);
 }
 
+function submitSearch() {
+  var omlq = $('#openmlsearch').val().replace('>','gt;').replace('<','lt;');
+  $('#openmlsearch').val(encodeURI(omlq));
+  $('#searchform').submit();
+}
 
-  $(document).ready(function () {
+$(document).ready(function () {
 
 
 // Reset all search filters
@@ -62,10 +67,10 @@ function removeFilters()
 
  function bindInput(elem){
    $('#'+elem.replace(/\./g, '\\.')).bind("keyup change", function(event) {
-     if (event.keyCode == 13) { $('#searchform').submit();}
+     if (event.keyCode == 13) { submitSearch(); }
      else {
        updateQuery(elem);
-     }});      
+     }});
  }
 
     // fetch counts for menu bar
@@ -99,16 +104,16 @@ function removeFilters()
     bindInput("flow_id");
     bindInput("version");
     bindInput("type");
-    bindInput("measure_type");    
+    bindInput("measure_type");
     bindInput("task_id");
     bindInput("source_data");
     bindInput("target_feature");
     bindInput("evaluation_measures");
 
     //buttons
-    $("#removefilters").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
-    $("#removefilters2").click(function() { console.log("click"); removeFilters(); $('#searchform').submit();});
-    $('#research').click(function() { $('#searchform').submit();});
+    $("#removefilters").click(function() { removeFilters(); submitSearch();});
+    $("#removefilters2").click(function() { removeFilters(); submitSearch();});
+    $('#research').click(function() { submitSearch(); });
 
 
     <?php
@@ -133,6 +138,7 @@ function removeFilters()
     	    } );
 
     	$('.topmenu').show();
+
 
     function toggleResults( resultgroup ) {
     	var oDatatable = $('#tableview').dataTable(); // is not reinitialisation, see docs.
