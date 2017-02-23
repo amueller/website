@@ -50,6 +50,7 @@ $this->apiErrors[169] = 'Please provide API key';
 $this->apiErrors[170] = 'Authentication failed';
 $this->apiErrors[171] = 'flow already exists';
 $this->apiErrors[172] = 'Xsd not found';
+$this->apiErrors[173] = 'Failed to store uploaded files to disk';
 
 // for function: openml.flow.get
 $this->apiErrors[180] = 'Please provide flow_id';

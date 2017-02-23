@@ -265,7 +265,7 @@ class Api_flow extends Api_model {
 
       $file_id = $this->File->register_uploaded_file($_FILES[$key], $this->data_folders['implementation'] . $key . '/', $this->user_id, 'implementation');
       if($file_id === false) {
-        $this->returnError( 165, $this->version );
+        $this->returnError( 173, $this->version );
         return;
       }
       $file_record = $this->File->getById($file_id);
