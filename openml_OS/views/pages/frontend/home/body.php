@@ -20,13 +20,14 @@
 <div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
 <div id="catchphrase">Exploring machine learning better, together</div><br>
-  <!--
+
   <div class="col-md-6 col-md-offset-3 surveypopup">
     <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-heart"></i></a>
-    <div class="shortintro" style="padding-top:10px;">We're trying out a new <a href="http://www.openml.org/guide#!gamification">altmetrics and gamification</a> layer to stimulate open science.<br />Please help us and the student who developed this by <a href="https://docs.google.com/forms/d/1LadcAAF41VoqgGCe7LyEeVYrmk813w-r_5FbBMHgP6A/viewform">telling us what you think</a>. Thanks!
+    <div class="shortintro" style="padding-top:10px;">
+      The <a href="http://openml2017dev.openml.org">OpenML hackathon</a> is now LIVE. Join us on <a href="openml.slack.com">Slack</a> (<a href="mailto:openmachinelearning@gmail.com" target="_blank">request invite</a>).</a>
     </div>
   </div>
--->
+
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
 
@@ -69,14 +70,13 @@
 
 <div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
-  <div class="list-group">
+  <div class="list-group"  style="font-size:11pt">
       <div class="list-group-item">
           <div class="row-picture">
               <img class="circle" src="img/colorballs2.jpg" alt="icon">
           </div>
           <div class="row-content">
               <h4 class="list-group-item-heading">News</h4>
-              <p class="list-group-item-text">The <a href="http://openml2017dev.openml.org">next OpenML hackathon</a> will be Feb 27 - Mar 3 at LMU Munich</a></p>
               <p class="list-group-item-text">OpenML won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize!</a></p>
           </div>
       </div>
