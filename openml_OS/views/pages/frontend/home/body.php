@@ -3,7 +3,7 @@
 </div> -->
 <!-- Main hero unit for a primary marketing message or call to action -->
 <canvas id="c" width="400" height="400"></canvas>
-<div class="col-md-12">
+<div class="col-md-12" style="display:none">
           <a data-toggle="collapse" data-target="#social-bar" class="openmlsoc openmlsocicon" style="padding-right: 10px; padding-top:25px; color:#666;"><i class="fa fa-share-alt fa-2x"></i></a>
 
         <div class="collapse" id="social-bar">
