@@ -203,7 +203,6 @@ $(function() {
              obj_text = item['_source']['name'];
              obj_description = 'v.'+item['_source']['version']+', '+item['_source']['dependencies']+', '+item['_source']['description']
            }
-           console.log(obj_image);
            return {
               type: item['_type'],
               id: item['_id'],

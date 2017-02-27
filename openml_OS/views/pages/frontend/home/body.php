@@ -3,7 +3,7 @@
 </div> -->
 <!-- Main hero unit for a primary marketing message or call to action -->
 <canvas id="c" width="400" height="400"></canvas>
-<div class="col-md-12" style="display:none">
+<div class="col-md-12">
           <a data-toggle="collapse" data-target="#social-bar" class="openmlsoc openmlsocicon" style="padding-right: 10px; padding-top:25px; color:#666;"><i class="fa fa-share-alt fa-2x"></i></a>
 
         <div class="collapse" id="social-bar">
@@ -13,7 +13,6 @@
             <!--<div id="linkedin" data-url="openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="linkedin"></div>-->
         </div>
 </div>
-
 <div class="marketing">
 <div class="col-md-12">
 
@@ -179,7 +178,7 @@
 		  <div class="col-xs-12 col-sm-6 pull-right-lg contactfooter">
                     <ul class="openml-contact-footer">
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
-                        <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
+                        <li><a href="https://twitter.com/intent/tweet?screen_name=open_ml&text=%23openml.org" data-related="open_ml"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
 			<li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-2x"></i><br />comment</a></li>
                         <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-2x"></i><br />comment</a></li>
                         <li><a href="discuss"><i class="fa fa-comments-o fa-2x"></i><br />discuss</a></li>
@@ -199,7 +198,7 @@
 
 		  <div class="col-xs-12 col-sm-6 pull-left centerfooter">
         <div class="twitter-header">
-         <a href="https://twitter.com/intent/tweet?text=%23OpenML" data-related="joavanschoren"><i class="fa fa-twitter fa-2x"></i></a>
+         <a href="https://twitter.com/intent/tweet?text=%23OpenML" data-related="open_ml"><i class="fa fa-twitter fa-2x"></i></a>
         </div>
         <a class="twitter-timeline" data-chrome="noheader" data-dnt="true" href="https://twitter.com/joavanschoren/timelines/616186899376525312" data-widget-id="616191425143816192">Click here if tweets don't load.</a>
         <script defer="defer">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>

@@ -300,7 +300,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank"><i class="fa fa-users fa-fw fa-lg"></i></a></li>
                <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-fw fa-lg"></i></a></li>
                <li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-fw fa-lg"></i></a></li>
-               <li><a href="https://twitter.com/intent/tweet?screen_name=joavanschoren&text=%23openml.org" data-related="joavanschoren"><i class="fa fa-twitter fa-fw fa-lg"></i></a></li>
+               <li><a href="https://twitter.com/intent/tweet?screen_name=open_ml&text=%23openml.org" data-related="open_ml"><i class="fa fa-twitter fa-fw fa-lg"></i></a></li>
                <li><a href="https://github.com/openml/OpenML/issues?q=is%3Aopen"><i class="fa fa-github fa-fw fa-lg"></i></a></li>
              </ul>
             </li>
@@ -317,9 +317,9 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
           var ES_URL = '<?php echo ES_URL; ?>';
 
           function downloadJSAtOnload() {
-          var element3= document.createElement("script");
-          element3.src = "js/libs/jquery.sharrre.js";
-          document.body.appendChild(element3);
+          //var element3= document.createElement("script");
+          //element3.src = "js/libs/jquery.sharrre.js";
+          //document.body.appendChild(element3);
           }
 
           !function(e,t,r){function n(){for(;d[0]&&"loaded"==d[0][f];)c=d.shift(),c[o]=!i.parentNode.insertBefore(c,i)}for(var s,a,c,d=[],i=e.scripts[0],o="onreadystatechange",f="readyState";s=r.shift();)a=e.createElement(t),"async"in i?(a.async=!1,e.head.appendChild(a)):i[f]?(d.push(a),a[o]=n):e.write("<"+t+' src="'+s+'" defer></'+t+">"),a.src=s}(document,"script",[
