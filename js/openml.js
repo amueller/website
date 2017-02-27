@@ -189,7 +189,7 @@ $(function() {
            obj_text = item['text'];
            obj_image = '<i class="' + icons[item['_type']] + '"></i>';
            if(item['_type'] == 'data'){
-             obj_description = (typeof item['_source']['suggest']['input'][1] === 'string' ? item['_source']['suggest']['input'][1].substring(0,50) : '')
+             obj_description = (typeof item['_source']['suggest']['input'][1] === 'string' ? item['_source']['suggest']['input'][1].substring(0,70) : '')
            }
            else if(item['_type'] == 'task'){
              obj_description = item['_source']['suggest']['input'][0] + ', target ' + item['_source']['suggest']['input'][4] + ', with ' +  item['_source']['suggest']['input'][2]

@@ -193,7 +193,7 @@ foreach($this->filters as $k => $v){
 	elseif($k == 'type' or $k == 'measure_type' )
     $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   elseif($k == 'tags.tag')
-    $jsonfilters[] = '{ "nested": { "path": "tags", "filter": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';
+    $jsonfilters[] = '{ "nested": { "path": "tags", "query": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';
   else
 		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.str_replace('_',' ',$v).'"} }';
 }
