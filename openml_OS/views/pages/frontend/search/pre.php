@@ -91,7 +91,7 @@ $this->listids = safe($this->input->get('listids'));
 $this->table = safe($this->input->get('table'));
 
 $size = explode('/',$this->input->get('size'))[0];
-$this->size = (safe($size) ? safe($size) : 100);
+$this->size = min((safe($size) ? safe($size) : 100),10000);
 
 // some fields can be set beforehand. If not, set them to appropriate defaults.
 if($this->input->get('from'))
@@ -162,7 +162,7 @@ if($this->listids and $this->coreterms != ''){
 }
 elseif($this->terms != 'match_all' and $this->coreterms != ''){
 	$query = '"query_string" : {
-	            "fields" : ["name^5", "first_name^5", "last_name^5", "description^2","_all"],
+	            "stored_fields" : ["name^5", "first_name^5", "last_name^5", "description^2","_all"],
 	            "query" : "'.$this->coreterms.'"
 	          }';
 }
@@ -209,7 +209,7 @@ $params['body']  = '{'.
     ($this->table ? '"_source" : ["data_id","name","version","runs","qualities"],' : '').
    '"from" : '. ($this->from ? $this->from : 0) .',
     "size" : '. $this->size .','.
-    ($this->listids ? '"fields" : [],' : '').'
+    ($this->listids ? '"stored_fields" : [],' : '').'
     "query" : { "bool" : { "must" : {'.$query.'}, '. ($fjson ? '"filter": '.($fjson ? $fjson : '').', ' : '') .'"should": '.($sjson ? $sjson : '').' }},'.
     (($this->sort and $this->sort!='match') ? '"sort" : { "'.$this->sort.'" : { "order": "'.$this->order.'"}},' : '').
     ($this->coreterms == '' ? '' :
