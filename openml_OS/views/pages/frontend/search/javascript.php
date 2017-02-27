@@ -1,6 +1,5 @@
 // auto-suggest for the filters
 function updateUploader(name){
-  console.log('Uploader is ' + name);
   $('#uploader').val(name+'');
   updateQuery("uploader");
   submitSearch();
@@ -161,26 +160,24 @@ function removeFilters()
           my: "left top+13" // Shift 0px to the left, 20px down.
       },
       source: function(request, fresponse) {
-        client.suggest({
+        client.search({
           index: 'openml',
           type: 'user',
           body: {
-            mysuggester: {
-              text: request.term,
-              completion: {
-                field: 'suggest',
-                size: 10
+              suggest: {
+                mysuggester: {
+                  prefix: request.term,
+                  completion: { field: 'suggest' }
+                }
               }
-            }
           }
         }, function (error, response) {
-          fresponse($.map(response['mysuggester'][0]['options'], function(item) {
-            console.log(item['text']);
-            if(item['payload']['type'] == 'user'){
+          fresponse($.map(response['suggest']['mysuggester'][0]['options'], function(item) {
+            if(item['_type'] == 'user'){
             return {
-              type: item['payload']['type'],
-              id: item['payload'][item['payload']['type']+'_id'],
-              text: item['text']
+              type: item['_type'],
+              id: item['_id'],
+              text: item['_source']['first_name']+' '+item['_source']['last_name']
             };}
           }));
         });

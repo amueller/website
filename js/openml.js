@@ -22,7 +22,8 @@ var icons = {
   data : 'fa fa-database',
   run  : 'fa fa-star',
   user : 'fa fa-user',
-  task : 'fa fa-trophy'
+  task : 'fa fa-trophy',
+  study : 'fa fa-flask'
 };
 
 
@@ -35,7 +36,8 @@ var urlprefix = {
   data : 'd',
   run  : 'r',
   user : 'u',
-  task : 't'
+  task : 't',
+  study : 's'
 };
 
 // scrolls left menu to top
@@ -169,32 +171,53 @@ $(function() {
         my: "left top+13" // Shift 0px to the left, 20px down.
     },
     source: function(request, fresponse) {
-      client.suggest({
+      client.search({
         index: 'openml',
         body: {
-          mysuggester: {
-            text: request.term,
-            completion: {
-              field: 'suggest',
-              size: 10
+          suggest: {
+            mysuggester: {
+              prefix: request.term,
+              completion: { field: 'suggest' }
             }
           }
         }
       }, function (error, response) {
-        fresponse($.map(response['mysuggester'][0]['options'], function(item) {
-          console.log(item);
-          return {
-            type: item['payload']['type'],
-            id: item['payload'][item['payload']['type']+'_id'],
-            description: (typeof myVar === 'string' ? item['payload']['description'].substring(0,50) : ''),
-            text: item['text']
+        fresponse($.map(response['suggest']['mysuggester'][0]['options'], function(item) {
+          if(item['_type'] == 'data' && (item['_source']['visibility'] != 'public' || item['_source']['status'] != 'active')){}
+          else{
+           obj_description = '';
+           obj_text = item['text'];
+           obj_image = '<i class="' + icons[item['_type']] + '"></i>';
+           if(item['_type'] == 'data'){
+             obj_description = (typeof item['_source']['suggest']['input'][1] === 'string' ? item['_source']['suggest']['input'][1].substring(0,50) : '')
+           }
+           else if(item['_type'] == 'task'){
+             obj_description = item['_source']['suggest']['input'][0] + ', target ' + item['_source']['suggest']['input'][4] + ', with ' +  item['_source']['suggest']['input'][2]
+           }
+           else if(item['_type'] == 'user'){
+             obj_text = item['_source']['first_name']+' '+item['_source']['last_name'];
+             obj_description = item['_source']['affiliation']+', '+item['_source']['bio'];
+             obj_image = '<img src="'+item['_source']['image']+'" width=25, height=25, class="img-circle" onerror="this.src=\'img/community/misc/anonymousMan.png\'">';
+           }
+           else if(item['_type'] == 'flow'){
+             obj_text = item['_source']['name'];
+             obj_description = 'v.'+item['_source']['version']+', '+item['_source']['dependencies']+', '+item['_source']['description']
+           }
+           console.log(obj_image);
+           return {
+              type: item['_type'],
+              id: item['_id'],
+              description: obj_description,
+              text: obj_text,
+              image: obj_image
+            }
           };
         }));
       });
     }
   }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
     return $( "<li>" )
-    .append( '<a href="' + urlprefix[item.type] + '/' + item.id +'"><i class="' + icons[item.type] + '"></i> ' + item.text + ' <span>' + item.description + '</span></a>' )
+    .append( '<a href="' + urlprefix[item.type] + '/' + item.id +'">' + item.image + ' ' + item.text + ' <span>' + item.description + '</span></a>' )
     .appendTo( ul );
   }
 
