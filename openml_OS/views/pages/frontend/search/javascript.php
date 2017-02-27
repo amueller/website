@@ -45,7 +45,6 @@ function submitSearch() {
 
 $(document).ready(function () {
 
-
 // Reset all search filters
 function removeFilters()
 {
