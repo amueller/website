@@ -631,7 +631,7 @@ $('#googleplus').sharrre({
   share: {
     googlePlus: true
   },
-  urlCurl: 'javascript/page/share',
+  urlCurl: 'frontend/page/share/sharrre.php',
   enableHover: false,
   enableTracking: false,
   click: function(api, options){
