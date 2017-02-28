@@ -78,7 +78,7 @@ class Api_splits extends CI_Controller {
     if (is_numeric($task_id) == false) {
       die('argument 1 should be numeric');
     }
-    if (in_array($testtrain, array('test', 'train') == false)) {
+    if (in_array($testtrain, array('test', 'train')) == false) {
       die('argument 2 should be in {test,train}');
     }
     $offset = "";
