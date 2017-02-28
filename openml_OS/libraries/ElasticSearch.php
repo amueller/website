@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class ElasticSearch {
-	
+
     public function __construct() {
         $this->CI = &get_instance();
         $this->CI->load->model('Dataset');
@@ -307,7 +307,7 @@ class ElasticSearch {
                     'analyzer' => 'standard'
                 )
             )
-        ); 
+        );
 
 	$this->mappings['measure'] = array('_all' => array(
                 'enabled' => true,
@@ -340,7 +340,7 @@ class ElasticSearch {
                 )
             )
 	);
-	$this->init_indexer = True;	
+	$this->init_indexer = True;
     }
 
     public function test() {
@@ -368,7 +368,7 @@ class ElasticSearch {
         }
     }
 
-    public function index_from($type, $id = false, $altmetrics=False) {
+    public function index_from($type, $id = false, $altmetrics=True) {
         if(!$this->init_indexer)
              $this->initialize();
         $method_name = 'index_' . $type;
@@ -851,8 +851,12 @@ class ElasticSearch {
     }
 
     private function build_single_task($id) {
+        $time = microtime(true);
         $task = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id=' . $id . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
-        return $this->build_task($task[0]);
+        $t = $this->build_task($task[0]);
+        echo "Build task: ".(microtime(true) - $time)."\r\n";
+        $time = microtime(true);
+        return $t;
     }
 
     private function build_task($d) {
@@ -981,6 +985,22 @@ class ElasticSearch {
         if ($setups)
             foreach ($setups as $v) {
                 $index[$v->setup][] = array('parameter' => $v->fullName, 'value' => $v->value);
+            }
+        return $index;
+    }
+
+    private function fetch_tasks($id = false) {
+        $index = array();
+        $tasks = $this->db->query("SELECT t.task_id, tt.name, i.value AS did, d.name AS dname, ep.name AS epname FROM task_inputs i, task_inputs i2, estimation_procedure ep,
+          task t, task_type tt, dataset d WHERE t.task_id = i.task_id AND t.task_id = i2.task_id AND i.input = 'source_data' AND i2.input = 'estimation_procedure' AND
+          t.ttid = tt.ttid AND d.did = i.value AND ep.id = i2.value" . ($id ? ' and t.task_id=' . $id : ''));
+        if ($tasks)
+            foreach ($tasks as $v) {
+              $index[$v->task_id]['task_id'] = $v->task_id;
+              $index[$v->task_id]['tasktype']['name'] = $v->name;
+              $index[$v->task_id]['source_data']['data_id'] = $v->did;
+              $index[$v->task_id]['source_data']['name'] = $v->dname;
+              $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
             }
         return $index;
     }
@@ -1146,9 +1166,10 @@ class ElasticSearch {
             return 'Error: run ' . $id . ' is unknown';
 
         $setups = $this->fetch_setups($run[0]->setup);
+        $tasks = $this->fetch_tasks($run[0]->task_id);
         $runfiles = $this->fetch_runfiles($id, $id + 1);
         $evals = $this->fetch_evaluations($id, $id + 1);
-        $params['body'] = $this->build_run($run[0], $setups, $runfiles, $evals);
+        $params['body'] = $this->build_run($run[0], $setups, $tasks, $runfiles, $evals);
         //echo json_encode($params);
         $responses = $this->client->index($params);
         //print_r($responses);
@@ -1157,7 +1178,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['_id']) . ' run(s).';
     }
 
-    public function index_run($id, $start_id = 0, $altmetrics=False) {
+    public function index_run($id, $start_id = 0, $altmetrics=True) {
         if ($id)
             return $this->index_single_run($id);
 
@@ -1165,6 +1186,8 @@ class ElasticSearch {
         $params['type'] = 'run';
 
         $setups = $this->fetch_setups();
+        $tasks = $this->fetch_tasks();
+
         $runmaxquery = $this->db->query('SELECT max(rid) as maxrun from run');
         $runcountquery = $this->db->query('SELECT count(rid) as runcount from run');
         $runmax = intval($runmaxquery[0]->maxrun);
@@ -1194,27 +1217,29 @@ class ElasticSearch {
                               '_id' => $r->rid
                           )
                       );
-                      $params['body'][] = $this->build_run($r, $setups, $runfiles, $evals, $altmetrics);
+                      $params['body'][] = $this->build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics);
                   } catch (Exception $e) {
                       return $e->getMessage();
                   }
               }
               $responses = $this->client->bulk($params);
-
               $submitted += sizeof($responses['items']);
+            }
+            else{
+              echo "No runs ";
             }
             $rid += $incr;
         }
-
         return 'Successfully indexed ' . $submitted . ' out of ' . $runcount . ' runs.';
     }
 
-    private function build_run($r, $setups, $runfiles, $evals, $altmetrics=False) {
+    private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
+        $time = microtime(true);
         $new_data = array(
             'run_id' => $r->rid,
             'uploader' => array_key_exists($r->uploader, $this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
             'uploader_id' => intval($r->uploader),
-            'run_task' => $this->build_single_task($r->task_id),
+            'run_task' => $tasks[$r->task_id],
             'date' => $r->start_time,
             'run_flow' => array(
                 'flow_id' => $r->implementation_id,
@@ -1238,7 +1263,7 @@ class ElasticSearch {
                     'uploader' => $u);
             }
         }
-	
+
         $new_data['nr_of_issues'] = 0;
         $new_data['nr_of_downvotes'] = 0;
         $new_data['nr_of_likes'] = 0;
@@ -1249,43 +1274,43 @@ class ElasticSearch {
         $new_data['impact_of_reuse'] = 0;
         $new_data['reach_of_reuse'] = 0;
         $new_data['impact'] = 0;
-	if($altmetrics){
-        $nr_of_downvotes = 0;
-        $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,1);
-        if($nr_of_issues){
-            $new_data['nr_of_issues'] = count($nr_of_issues);
-            $nr_of_downvotes+=count($nr_of_issues);
-            $downvote_agrees = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,0);
-            if($downvote_agrees){
-                $nr_of_downvotes+=count($downvote_agrees);
-            }
-        }else{
-            $new_data['nr_of_issues'] = 0;
-        }
-        $new_data['nr_of_downvotes'] = $nr_of_downvotes;
+      	if($altmetrics){
+              $nr_of_downvotes = 0;
+              $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,1);
+              if($nr_of_issues){
+                  $new_data['nr_of_issues'] = count($nr_of_issues);
+                  $nr_of_downvotes+=count($nr_of_issues);
+                  $downvote_agrees = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,0);
+                  if($downvote_agrees){
+                      $nr_of_downvotes+=count($downvote_agrees);
+                  }
+              }else{
+                  $new_data['nr_of_issues'] = 0;
+              }
+              $new_data['nr_of_downvotes'] = $nr_of_downvotes;
 
-        $ld_run = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('r',$r->rid);
-        $reach = 0;
-        $nr_of_likes = 0;
-        $nr_of_downloads = 0;
-        $total_downloads = 0;
-        if($ld_run){
-            foreach($ld_run as $ld){
-                if($ld->ldt=='l'){
-                    $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
-                    $nr_of_likes+=$ld->count;
-                }else if($ld->ldt=='d'){
-                    $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);
-                    $nr_of_downloads+=$ld->count;
-                    $total_downloads+=$ld->sum;
-                }
-            }
-        }
-        $new_data['nr_of_likes'] = $nr_of_likes;
-        $new_data['nr_of_downloads'] = $nr_of_downloads;
-        $new_data['total_downloads'] = $total_downloads;
-        $new_data['reach'] = $reach;
-	}
+              $ld_run = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUpload('r',$r->rid);
+              $reach = 0;
+              $nr_of_likes = 0;
+              $nr_of_downloads = 0;
+              $total_downloads = 0;
+              if($ld_run){
+                  foreach($ld_run as $ld){
+                      if($ld->ldt=='l'){
+                          $reach += $this->CI->Gamification->getReachFromParts($ld->count,0);
+                          $nr_of_likes+=$ld->count;
+                      }else if($ld->ldt=='d'){
+                          $reach += $this->CI->Gamification->getReachFromParts(0,$ld->count);
+                          $nr_of_downloads+=$ld->count;
+                          $total_downloads+=$ld->sum;
+                      }
+                  }
+              }
+              $new_data['nr_of_likes'] = $nr_of_likes;
+              $new_data['nr_of_downloads'] = $nr_of_downloads;
+              $new_data['total_downloads'] = $total_downloads;
+              $new_data['reach'] = $reach;
+      	}
         return $new_data;
     }
 
@@ -1374,7 +1399,7 @@ class ElasticSearch {
 	  	}
 	  }
 	}
-	
+
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($flows) . ' flows.';
     }
 
@@ -1872,4 +1897,3 @@ class ElasticSearch {
     }
 
 }
-
