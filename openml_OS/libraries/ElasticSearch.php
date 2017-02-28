@@ -355,8 +355,8 @@ class ElasticSearch {
 
     public function index($type, $id = false, $altmetrics=True) {
         if(!$this->init_indexer)
-	     $this->initialize();
-	$method_name = 'index_' . $type;
+	      $this->initialize();
+	      $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
                 return $this->$method_name($id, $altmetrics);
@@ -990,6 +990,7 @@ class ElasticSearch {
     }
 
     private function fetch_tasks($id = false) {
+        $targets = $this->fetch_targets($id);
         $index = array();
         $tasks = $this->db->query("SELECT t.task_id, tt.name, i.value AS did, d.name AS dname, ep.name AS epname FROM task_inputs i, task_inputs i2, estimation_procedure ep,
           task t, task_type tt, dataset d WHERE t.task_id = i.task_id AND t.task_id = i2.task_id AND i.input = 'source_data' AND i2.input = 'estimation_procedure' AND
@@ -1001,6 +1002,22 @@ class ElasticSearch {
               $index[$v->task_id]['source_data']['data_id'] = $v->did;
               $index[$v->task_id]['source_data']['name'] = $v->dname;
               $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
+              $index[$v->task_id]['target_values'] = $targets[$v->did]['target_values'];
+            }
+        return $index;
+    }
+
+    private function fetch_targets($id = false) {
+        $index = array();
+        $data = $this->db->query("SELECT did, data_type, ClassDistribution FROM data_feature WHERE is_target='true'" . ($id ? ' and did=' . $id : ''));
+        if ($data)
+            foreach ($data as $v) {
+              if ($v->data_type == "nominal") {
+                  $distr = json_decode($v->ClassDistribution);
+                  if ($distr) {
+                      $index[$v->did]['target_values'] = $distr[0];
+                  }
+              }
             }
         return $index;
     }
@@ -1234,7 +1251,6 @@ class ElasticSearch {
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
-        $time = microtime(true);
         $new_data = array(
             'run_id' => $r->rid,
             'uploader' => array_key_exists($r->uploader, $this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
