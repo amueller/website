@@ -187,7 +187,7 @@
         ?>
       <div class="searchresult panel">
       <div class="itemhead">
-      <a href="a/data-qualities/<?php echo $dp['name']; ?>" class="iconpurple">
+      <a href="a/data-qualities/<?php echo str_replace("_", "-", $dp['name']); ?>" class="iconpurple">
       <i class="fa fa-fw fa-bar-chart"></i> <?php echo $dp['name']; ?></a>
       </div>
       <div class="dataproperty"><?php

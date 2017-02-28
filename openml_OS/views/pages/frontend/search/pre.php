@@ -50,6 +50,9 @@ function addToGET($keyvalue){
 
 /// SEARCH
 $this->ref_url = 'search';
+if(!isset($this->filtertype) and $this->input->get('type'))
+	$this->filtertype = safe($this->input->get('type'));
+
 if(isset ($this->specialterms))
 	$this->terms = $this->specialterms;
 else{
@@ -59,6 +62,7 @@ else{
   $this->terms = str_replace('gt;','>',$this->terms);
   $this->terms = explode('/',$this->terms)[0];
 }
+
 $this->coreterms = "";
 $this->filters = array();
 $this->dataonly = 0;
@@ -98,8 +102,6 @@ if($this->input->get('from'))
 	$this->from = safe($this->input->get('from'));
 if(!isset($this->from))
 	$this->from = 0;
-if(!isset($this->filtertype) and $this->input->get('type'))
-	$this->filtertype = safe($this->input->get('type'));
 if($this->input->get('dataonly'))
 	$this->dataonly = safe($this->input->get('dataonly'));
 if(!isset($this->filtertype))
@@ -171,11 +173,15 @@ $this->active_tab = gu('tab');
 $jsonfilters = array();
 $jsonshould = array();
 
-//visibility
+//visibility defaults
 $jsonshould[] = '{ "term" : { "visibility" : "public" } }';
 if ($this->ion_auth->logged_in()) {
 	$jsonshould[] = '{ "term" : { "uploader_id" : "'.$this->ion_auth->user()->row()->id.'" } }';
 }
+if($this->filtertype == 'data' and false === strpos($this->terms,'status')){
+  $jsonfilters[] = '{ "term" : { "status" : "active" } }';
+}
+
 
 //print_r($this->filters);
 
@@ -194,6 +200,8 @@ foreach($this->filters as $k => $v){
     $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   elseif($k == 'tags.tag')
     $jsonfilters[] = '{ "nested": { "path": "tags", "query": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';
+  elseif($k == 'status')
+		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   else
 		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.str_replace('_',' ',$v).'"} }';
 }

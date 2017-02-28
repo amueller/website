@@ -38,7 +38,7 @@ function updateQuery(type)
 }
 
 function submitSearch() {
-  var omlq = $('#openmlsearch').val().replace('>','gt;').replace('<','lt;');
+  var omlq = $('#openmlsearch').val().replace('>','gt;').replace('<','lt;');  
   $('#openmlsearch').val(encodeURI(omlq));
   $('#searchform').submit();
 }
@@ -107,6 +107,7 @@ function removeFilters()
     bindInput("source_data");
     bindInput("target_feature");
     bindInput("evaluation_measures");
+    bindInput("status");
 
     //buttons
     $("#removefilters").click(function() { removeFilters(); submitSearch();});
