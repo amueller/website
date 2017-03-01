@@ -412,7 +412,7 @@ class ElasticSearch {
         return 'Successfully reinitialized index for ' . $t;
     }
 
-    public function index_downvote($id, $start_id = 0, $altmetrics=False){
+    public function index_downvote($id, $start_id = 0, $altmetrics=True){
 
         $params['index'] = 'openml';
         $params['type'] = 'downvote';
@@ -435,7 +435,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downvotes) . ' downvotes.';
     }
 
-    public function index_like($id, $start_id = 0, $altmetrics=False){
+    public function index_like($id, $start_id = 0, $altmetrics=True){
 
         $params['index'] = 'openml';
         $params['type'] = 'like';
@@ -489,7 +489,7 @@ class ElasticSearch {
         return $like;
     }
 
-    public function index_download($id, $start_id = 0, $altmetrics=False){
+    public function index_download($id, $start_id = 0, $altmetrics=True){
         $params['index'] = 'openml';
         $params['type'] = 'download';
 
@@ -525,7 +525,7 @@ class ElasticSearch {
 
     }
 
-    public function index_user($id, $start_id = 0, $altmetrics=False) {
+    public function index_user($id, $start_id = 0, $altmetrics=True) {
 
         $params['index'] = 'openml';
         $params['type'] = 'user';
@@ -570,6 +570,7 @@ class ElasticSearch {
         );
 
         $uploads = $this->CI->KnowledgePiece->getNumberOfUploadsOfUser($d->id);
+        print_r($uploads);
         $data_up = 0;
         $flow_up = 0;
         $task_up = 0;
@@ -746,7 +747,7 @@ class ElasticSearch {
         return $user;
     }
 
-    public function index_study($id, $start_id = 0, $altmetrics=False) {
+    public function index_study($id, $start_id = 0, $altmetrics=True) {
 
         $params['index'] = 'openml';
         $params['type'] = 'study';
@@ -814,7 +815,7 @@ class ElasticSearch {
         return $study;
     }
 
-    public function index_task($id, $start_id = 0, $altmetrics=False) {
+    public function index_task($id, $start_id = 0, $altmetrics=True) {
         $params['index'] = 'openml';
         $params['type'] = 'task';
 
@@ -1330,7 +1331,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_task_type($id, $start_id = 0, $altmetrics=False) {
+    public function index_task_type($id, $start_id = 0, $altmetrics=True) {
 
         $params['index'] = 'openml';
         $params['type'] = 'task_type';
@@ -1383,7 +1384,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_flow($id, $start_id = 0, $altmetrics=False) {
+    public function index_flow($id, $start_id = 0, $altmetrics=True) {
 
         $params['index'] = 'openml';
         $params['type'] = 'flow';
@@ -1537,7 +1538,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_measure($id, $start_id = 0, $altmetrics=False) {
+    public function index_measure($id, $start_id = 0, $altmetrics=True) {
 
         $params['index'] = 'openml';
         $params['type'] = 'measure';
@@ -1702,7 +1703,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($datasets) . ' datasets.';
     }
 
-    public function index_data($id, $start_id = 0, $altmetrics=False) {
+    public function index_data($id, $start_id = 0, $altmetrics=True) {
         if ($id)
             return $this->index_single_dataset($id);
 
@@ -1751,7 +1752,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . $submitted . ' out of ' . $datacount . ' runs.';
     }
 
-    private function build_data($d, $altmetrics=False) {
+    private function build_data($d, $altmetrics=True) {
         $headless_description = trim(preg_replace('/\s+/', ' ', preg_replace('/^\*{2,}.*/m', '', $d->description)));
         $new_data = array(
             'data_id' => $d->did,
