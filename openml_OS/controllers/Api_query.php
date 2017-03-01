@@ -16,7 +16,7 @@ class Api_query extends CI_Controller {
        $this->id = $this->input->get_post('id');
     $query = $this->input->get_post('q');
 
-    $query = urldecode($query);
+    $query = html_entity_decode($query, ENT_COMPAT | ENT_HTML401, 'ISO-8859-1');
     $starttime = microtime(true);
     $result = $this->db->query( $query );
     $this->msc = microtime(true) - $starttime;
