@@ -11,6 +11,7 @@ class Api_data extends Api_model {
     $this->load->model('Dataset_tag');
     $this->load->model('Data_feature');
     $this->load->model('Data_quality');
+    $this->load->model('Feature_quality');
     $this->load->model('Data_quality_interval');
     $this->load->model('Quality');
     $this->load->model('File');
