@@ -1,5 +1,5 @@
 <?php
-class Data_quality extends Database_write {
+class Feature_quality extends Database_write {
   
   function __construct() {
     parent::__construct();
