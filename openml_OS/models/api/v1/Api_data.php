@@ -624,13 +624,13 @@ class Api_data extends Api_model {
 	  if (property_exists($quality, 'feature_index')) {
 		// check if valid feature quality		  
 		if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
-		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name);
+		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name . '. Legal Feature Qualities: ' . implode(', ', $all_feature_qualities));
 		  return;
 		}
 	  } else {
 		// check if valid data quality
 		if (is_array($all_data_qualities) == false || in_array($quality->name, $all_data_qualities) == false) {
-		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name);
+		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name . '. Legal Data Qualities: ' . implode(', ', $all_data_qualities));
 		  return;
 		}
 	  }
