@@ -613,42 +613,29 @@ class Api_data extends Api_model {
     $this->Dataset->update($did, $data);
 
 
-    $all_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
-
-    $qualities = $this->Data_quality->getAssociativeArray('quality', 'value', '`data` = "' . $dataset->did . '"');
-
+    $all_data_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
+    $all_feature_qualities = $this->Quality->getColumnWhere('name', '`type` = "FeatureQuality"');
+	
     // check and collect the qualities
     $newQualities = array();
     foreach ($xml->children('oml', true)->{'quality'} as $q) {
       $quality = xml2object($q, true);
-
-      /*if( array_key_exists( $quality->name, $newQualities ) ) { // quality calculated twice
-        $this->returnError( 385, $this->openmlGeneralErrorCode, $quality->name );
-        return;
-      } elseif( $qualities != false && array_key_exists( $quality->name, $qualities ) ) { // prior to this run, we already got this quality
-        if( abs( $qualities[$quality->name] - $quality->value ) > $this->config->item('double_epsilon') ) {
-          $this->returnError( 386, $this->openmlGeneralErrorCode, $quality->name );
-          return;
-        }
-      } else*/if (is_array($all_qualities) == false || in_array($quality->name, $all_qualities) == false) {
-        $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, $quality->name);
-        return;
-      } else {
-        $newQualities[] = $quality;
-      }
-
-      if (property_exists($quality, 'interval_start')) {
-
-      } else {
-
-      }
+	  
+	  if (property_exists($quality, 'feature_index')) {
+		// check if valid feature quality		  
+		if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
+		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name);
+		  return;
+		}
+	  } else {
+		// check if valid data quality
+		if (is_array($all_data_qualities) == false || in_array($quality->name, $all_data_qualities) == false) {
+		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name);
+		  return;
+		}
+	  }
     }
-
-    if (count($newQualities) == 0) {
-      $this->returnError(388, $this->version);
-      return;
-    }
-
+	
     $success = true;
     $this->db->trans_start();
     foreach ($newQualities as $index => $quality) {
@@ -661,7 +648,15 @@ class Api_data extends Api_model {
           'value' => $quality->value
         );
         $this->Data_quality_interval->insert_ignore($data);
-      } else {
+      } if (property_exists($quality, 'feature_index')) {
+        $data = array(
+          'data' => $dataset->did,
+          'feature_index' => $quality->feature_index,
+          'quality' => $quality->name,
+          'value' => $quality->value
+        );
+        $this->Feature_quality->insert_ignore($data);
+	  } else {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name,
