@@ -634,6 +634,8 @@ class Api_data extends Api_model {
 		  return;
 		}
 	  }
+	  
+	  $newQualities[] = $quality;
     }
 	
     $success = true;
