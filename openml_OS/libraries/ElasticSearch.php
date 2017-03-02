@@ -570,7 +570,6 @@ class ElasticSearch {
         );
 
         $uploads = $this->CI->KnowledgePiece->getNumberOfUploadsOfUser($d->id);
-        print_r($uploads);
         $data_up = 0;
         $flow_up = 0;
         $task_up = 0;
@@ -1194,7 +1193,6 @@ class ElasticSearch {
         $params['body'] = $this->build_run($run[0], $setups, $tasks, $runfiles, $evals);
         //echo json_encode($params);
         $responses = $this->client->index($params);
-        //print_r($responses);
         $this->update_runcounts($run[0]);
 
         return 'Successfully indexed ' . sizeof($responses['_id']) . ' run(s).';
@@ -1415,8 +1413,7 @@ class ElasticSearch {
 	  foreach ($responses['items'] as $res){
 		if(array_key_exists('error',$res['index'])){
 			$err = $res['index']['error'];
-			print_r($res);
-          		return 'ERROR for ID ' . $res['index']['_id'] . ' : Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
+  		return 'ERROR for ID ' . $res['index']['_id'] . ' : Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
 	  	}
 	  }
 	}
