@@ -66,13 +66,13 @@ class Api_data extends Api_model {
       return;
     }
     
-    if (count($segments) == 2 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
-      $this->feature_qualities_list($segments[1]);
+    if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
+      $this->feature_qualities_list($segments[2]);
       return;
     }
     
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
-      $this->feature_qualities($segments[1]);
+      $this->feature_qualities($segments[2]);
       return;
     }
 
