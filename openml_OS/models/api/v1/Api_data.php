@@ -65,12 +65,12 @@ class Api_data extends Api_model {
       $this->data_qualities($segments[1]);
       return;
     }
-	
-	if (count($segments) == 2 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
+    
+    if (count($segments) == 2 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
       $this->feature_qualities_list($segments[1]);
       return;
     }
-	
+    
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
       $this->feature_qualities($segments[1]);
       return;
@@ -718,20 +718,20 @@ class Api_data extends Api_model {
           'quality' => $quality->name,
           'interval_start' => $quality->interval_start,
           'interval_end' => $quality->interval_end);
-		if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
+        if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality_interval->insert_ignore($data);
       } if (property_exists($quality, 'feature_index')) {
         $data = array(
           'data' => $dataset->did,
           'feature_index' => $quality->feature_index,
           'quality' => $quality->name);
-		if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
+        if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Feature_quality->insert_ignore($data);
       } else {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name);
-		if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
+        if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality->insert_ignore($data);
       }
     }
