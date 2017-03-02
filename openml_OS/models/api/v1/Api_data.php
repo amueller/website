@@ -65,6 +65,17 @@ class Api_data extends Api_model {
       $this->data_qualities($segments[1]);
       return;
     }
+	
+	if (count($segments) == 2 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
+      $this->feature_qualities_list($segments[1]);
+      return;
+    }
+	
+    if (count($segments) == 3 && $segments[1] == 'qualities' && $segments[0] == 'features' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
+      $this->feature_qualities($segments[1]);
+      return;
+    }
+
 
     if (count($segments) == 1 && $segments[0] == 'qualities' && $request_type == 'post') {
       $this->data_qualities_upload($segments[0]);
