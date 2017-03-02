@@ -577,6 +577,50 @@ class Api_data extends Api_model {
 
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
+  
+  private function feature_qualities($data_id) {
+    if( $data_id == false ) {
+      $this->returnError( 360, $this->version );
+      return;
+    }
+    $dataset = $this->Dataset->getById( $data_id );
+    if( $dataset === false ) {
+      $this->returnError( 361, $this->version );
+      return;
+    }
+
+    if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
+      $this->returnError( 361, $this->version ); // Add special error code for this case?
+      return;
+    }
+
+    if( $dataset->processed == NULL) {
+      $this->returnError( 363, $this->version );
+      return;
+    }
+
+    if( $dataset->error != "false") {
+      $this->returnError( 364, $this->version );
+      return;
+    }
+    
+    $dataset->feature_qualities = $this->Feature_quality->getWhere( 'data = "' . $dataset->did . '"' );
+
+    if( $dataset->feature_qualities === false ) {
+      $this->returnError( 362, $this->version );
+      return;
+    }
+    if( is_array( $dataset->feature_qualities ) === false ) {
+      $this->returnError( 362, $this->version );
+      return;
+    }
+    if( count( $dataset->feature_qualities ) === 0 ) {
+      $this->returnError( 362, $this->version );
+      return;
+    }
+
+    $this->xmlContents( 'feature-qualities', $this->version, $dataset );
+  }
 
   private function data_qualities_upload() {
     // get correct description
