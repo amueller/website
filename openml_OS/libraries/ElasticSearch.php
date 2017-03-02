@@ -355,7 +355,7 @@ class ElasticSearch {
 
     public function index($type, $id = false, $altmetrics=True) {
         if(!$this->init_indexer)
-	      $this->initialize();
+	         $this->initialize();
 	      $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {

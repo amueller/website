@@ -61,7 +61,7 @@ class KnowledgePiece extends Database_write{
             $upload_sql .= ' WHERE uploads.time>="' . $from . '"';
             $upload_sql.=" GROUP BY uploads.kt, DATE(uploads.time) ORDER BY date;";
         }else{
-            $upload_sql.=" GROUP BY uploads.kt;";
+            $upload_sql.=" GROUP BY uploads.kt, DATE(uploads.time) ORDER BY date;";
         }
 
         return $this->KnowledgePiece->query($upload_sql);
@@ -133,7 +133,7 @@ class KnowledgePiece extends Database_write{
         if($from!=null || $to!=null){
             $sql.=" GROUP BY DATE(ld.time), ld.ldt, kt ORDER BY date;";
         }else{
-            $sql.=" GROUP BY ld.ldt, ld.knowledge_type;";
+            $sql.=" GROUP BY DATE(ld.time), ld.ldt, ld.knowledge_type;";
         }
 
         return $this->KnowledgePiece->query($sql);
@@ -183,7 +183,7 @@ class KnowledgePiece extends Database_write{
             $sql .= ' WHERE ld.time>="' . $from . '"';
             $sql.=" GROUP BY ld.ldt, ld.knowledge_type, DATE(ld.time) ORDER BY date;";
         }else{
-            $sql.=" GROUP BY ld.ldt;";
+            $sql.=" GROUP BY ld.ldt, ld.knowledge_type, DATE(ld.time) ORDER BY date;";
         }
         return $this->KnowledgePiece->query($sql);
     }
