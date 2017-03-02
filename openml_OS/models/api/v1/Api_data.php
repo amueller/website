@@ -65,6 +65,17 @@ class Api_data extends Api_model {
       $this->data_qualities($segments[1]);
       return;
     }
+    
+    if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
+      $this->feature_qualities_list($segments[2]);
+      return;
+    }
+    
+    if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
+      $this->feature_qualities($segments[2]);
+      return;
+    }
+
 
     if (count($segments) == 1 && $segments[0] == 'qualities' && $request_type == 'post') {
       $this->data_qualities_upload($segments[0]);
@@ -507,7 +518,22 @@ class Api_data extends Api_model {
         $qualities[] = $r->name;
       }
     } else {
-      $this->returnError( 520, $this->version );
+      $this->returnError( 641, $this->version );
+      return;
+    }
+    $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
+  }
+  
+  
+    private function feature_qualities_list() {
+    $result = $this->Quality->allFeatureQualitiesUsed( );
+    $qualities = array();
+    if($result != false) {
+      foreach( $result as $r ) {
+        $qualities[] = $r->name;
+      }
+    } else {
+      $this->returnError( 651, $this->version );
       return;
     }
     $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
@@ -577,6 +603,50 @@ class Api_data extends Api_model {
 
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
+  
+  private function feature_qualities($data_id) {
+    if( $data_id == false ) {
+      $this->returnError( 631, $this->version );
+      return;
+    }
+    $dataset = $this->Dataset->getById( $data_id );
+    if( $dataset === false ) {
+      $this->returnError( 632, $this->version );
+      return;
+    }
+
+    if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
+      $this->returnError( 632, $this->version ); // Add special error code for this case?
+      return;
+    }
+
+    if( $dataset->processed == NULL) {
+      $this->returnError( 634, $this->version );
+      return;
+    }
+
+    if( $dataset->error != "false") {
+      $this->returnError( 635, $this->version );
+      return;
+    }
+    
+    $dataset->feature_qualities = $this->Feature_quality->getWhere( 'data = "' . $dataset->did . '"' );
+
+    if( $dataset->feature_qualities === false ) {
+      $this->returnError( 633, $this->version );
+      return;
+    }
+    if( is_array( $dataset->feature_qualities ) === false ) {
+      $this->returnError( 633, $this->version );
+      return;
+    }
+    if( count( $dataset->feature_qualities ) === 0 ) {
+      $this->returnError( 633, $this->version );
+      return;
+    }
+
+    $this->xmlContents( 'feature-qualities', $this->version, $dataset );
+  }
 
   private function data_qualities_upload() {
     // get correct description
@@ -616,29 +686,29 @@ class Api_data extends Api_model {
 
     $all_data_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
     $all_feature_qualities = $this->Quality->getColumnWhere('name', '`type` = "FeatureQuality"');
-	
+    
     // check and collect the qualities
     $newQualities = array();
     foreach ($xml->children('oml', true)->{'quality'} as $q) {
       $quality = xml2object($q, true);
-	  
-	  if (property_exists($quality, 'feature_index')) {
-		// check if valid feature quality		  
-		if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
-		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name . '. Legal Feature Qualities: ' . implode(', ', $all_feature_qualities));
-		  return;
-		}
-	  } else {
-		// check if valid data quality
-		if (is_array($all_data_qualities) == false || in_array($quality->name, $all_data_qualities) == false) {
-		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name . '. Legal Data Qualities: ' . implode(', ', $all_data_qualities));
-		  return;
-		}
-	  }
-	  
-	  $newQualities[] = $quality;
+      
+      if (property_exists($quality, 'feature_index')) {
+        // check if valid feature quality          
+        if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
+          $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name . '. Legal Feature Qualities: ' . implode(', ', $all_feature_qualities));
+          return;
+        }
+      } else {
+        // check if valid data quality
+        if (is_array($all_data_qualities) == false || in_array($quality->name, $all_data_qualities) == false) {
+          $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name . '. Legal Data Qualities: ' . implode(', ', $all_data_qualities));
+          return;
+        }
+      }
+      
+      $newQualities[] = $quality;
     }
-	
+    
     $success = true;
     $this->db->trans_start();
     foreach ($newQualities as $index => $quality) {
@@ -647,24 +717,21 @@ class Api_data extends Api_model {
           'data' => $dataset->did,
           'quality' => $quality->name,
           'interval_start' => $quality->interval_start,
-          'interval_end' => $quality->interval_end,
-          'value' => $quality->value
-        );
+          'interval_end' => $quality->interval_end);
+        if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality_interval->insert_ignore($data);
       } if (property_exists($quality, 'feature_index')) {
         $data = array(
           'data' => $dataset->did,
           'feature_index' => $quality->feature_index,
-          'quality' => $quality->name,
-          'value' => $quality->value
-        );
+          'quality' => $quality->name);
+        if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Feature_quality->insert_ignore($data);
-	  } else {
+      } else {
         $data = array(
           'data' => $dataset->did,
-          'quality' => $quality->name,
-          'value' => $quality->value
-        );
+          'quality' => $quality->name);
+        if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality->insert_ignore($data);
       }
     }

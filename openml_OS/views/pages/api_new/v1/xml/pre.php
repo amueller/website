@@ -322,6 +322,20 @@ $this->apiErrors[624] = 'Prediction file with this index already exists';
 $this->apiErrors[625] = 'File registration error';
 $this->apiErrors[626] = 'Runfile record error';
 
+// openml.data.feature.quality
+$this->apiErrors[631] = 'Please provide data_id';
+$this->apiErrors[632] = 'Unknown dataset';
+$this->apiErrors[633] = 'No qualities found';
+$this->apiErrors[634] = 'Dataset not processed yet';
+$this->apiErrors[635] = 'Dataset processed with error';
+
+// openml.data.quality.list
+$this->apiErrors[641] = 'No results';
+
+// openml.data.feature.quality.list
+$this->apiErrors[651] = 'No results';
+
+
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';
 
