@@ -717,24 +717,21 @@ class Api_data extends Api_model {
           'data' => $dataset->did,
           'quality' => $quality->name,
           'interval_start' => $quality->interval_start,
-          'interval_end' => $quality->interval_end,
-          'value' => $quality->value
-        );
+          'interval_end' => $quality->interval_end);
+		if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality_interval->insert_ignore($data);
       } if (property_exists($quality, 'feature_index')) {
         $data = array(
           'data' => $dataset->did,
           'feature_index' => $quality->feature_index,
-          'quality' => $quality->name,
-          'value' => $quality->value
-        );
+          'quality' => $quality->name);
+		if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Feature_quality->insert_ignore($data);
       } else {
         $data = array(
           'data' => $dataset->did,
-          'quality' => $quality->name,
-          'value' => $quality->value
-        );
+          'quality' => $quality->name);
+		if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality->insert_ignore($data);
       }
     }
