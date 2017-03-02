@@ -3,15 +3,8 @@
 
     <div class="tab-content">
 
-      <div class="tab-pane <?php if( isset($this->id) ) echo 'active'; ?>" id="typedetail">
-        <?php
-        if(false !== strpos($_SERVER['REQUEST_URI'],'/t/type')) {
-        subpage('tasktype');
-        }?>
-      </div> <!-- end task_type tab -->
-
       <?php
-    	if (!isset($this->record['task_id'])){ ?>
+    	if (!isset($this->task)){ ?>
             <div class="container-fluid topborder endless openmlsectioninfo">
               <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
 
@@ -22,18 +15,7 @@
               </div>
             </div>
           <?php
-        } elseif ($this->record['task_id']=="0"){ ?>
-            <div class="container-fluid topborder endless openmlsectioninfo">
-              <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
-
-                 <div class="tab-content">
-                  <h3><i class="fa fa-warning"></i> Temporarily hidden.</h3>
-                  <p>The results for this tasks are temporarily hidden. They will appear again soon.</p>
-                </div>
-              </div>
-            </div>
-          <?php
-          } else { ?>
+        } else { ?>
 
       <div class="tab-pane active" id="detail">
         <?php if( isset($this->task_id) ) { subpage('task_results'); } ?>

@@ -226,7 +226,7 @@ $(function() {
         var chart = jQuery(this).highcharts(); // target the chart itself
         if(chart) chart.reflow() // reflow that chart
     });
-    jQuery( ".reflow-table" ).each(function() { // target each element with the .contains-chart classt
+    jQuery( ".reflow-table" ).each(function() { // target each element with the .contains-chart class
         $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
     });
   });

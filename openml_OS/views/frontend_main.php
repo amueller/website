@@ -323,7 +323,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
           }
 
           !function(e,t,r){function n(){for(;d[0]&&"loaded"==d[0][f];)c=d.shift(),c[o]=!i.parentNode.insertBefore(c,i)}for(var s,a,c,d=[],i=e.scripts[0],o="onreadystatechange",f="readyState";s=r.shift();)a=e.createElement(t),"async"in i?(a.async=!1,e.head.appendChild(a)):i[f]?(d.push(a),a[o]=n):e.write("<"+t+' src="'+s+'" defer></'+t+">"),a.src=s}(document,"script",[
-              '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+              'https:///ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js',
               'js/libs/modernizr-2.5.3-respond-1.1.0.min.js',
               '//code.jquery.com/ui/1.10.4/jquery-ui.min.js',
               'js/libs/elasticsearch.jquery.min.js',

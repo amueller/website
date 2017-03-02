@@ -696,7 +696,7 @@ select{
 }
 
 .endless{
-  /*height: 100vh;*/
+  height: 100% !important;
 }
 
 .guidesection{

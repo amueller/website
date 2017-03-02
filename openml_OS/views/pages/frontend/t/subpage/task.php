@@ -20,11 +20,11 @@
       <?php
       } else { ?>
 
-  <h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>
+  <h1><i class="fa fa-trophy"></i> <?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?></h1>
 
   <div class="col-xs-12 panel">
     <h2 style="margin-top:0px">Challenge</h2>
-    <?php echo $this->typedescription; ?>
+    <?php echo $this->tasktype['description']; ?>
 
 		<h2>Given inputs</h2>
 		<div class='table-responsive'><table class='table table-striped'>
@@ -70,7 +70,7 @@
       <script type="text/javascript">
           var disqus_shortname = 'openml'; // forum name
   	var disqus_category_id = '3353607'; // Data category
-  	var disqus_title = '<?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?>'; // Data name
+  	var disqus_title = '<?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?>'; // Data name
   	var disqus_url = '<?php echo BASE_URL;?>t/<?php echo $this->task_id; ?>'; // Data url
 
           /* * * DON'T EDIT BELOW THIS LINE * * */

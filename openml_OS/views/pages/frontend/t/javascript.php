@@ -11,73 +11,7 @@ var current_task_type = "<?php echo $this->record['type_id']; ?>";
 var higherIsBetter = true;
 var oTableRuns = false;
 
-$(document).ready(function() {
-	$('.pop').popover();
-	$('.selectpicker').selectpicker();
-});
-
-
-
-$(document).ready(function() {
-    <?php echo simple_datatable('oTableGeneral','#datatable_general'); ?>
-    //Initialse DataTables, with no sorting on the 'details' column
-    oTableRuns = $('#datatable_main').dataTable( {
-		"bServerSide": true,
-		"sAjaxSource": "api_query/table_feed",
-		"sServerMethod": "POST",
-		"fnServerParams": function ( aoData ) {
-			if(oTableRunsShowAll) {
-				<?php echo array_to_parsed_string($this->dt_main_all, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
-			} else {
-				<?php echo array_to_parsed_string($this->dt_main, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
-			}
-			aoData.push( { 'value': 'AND function = "'+evaluation_measure+'" AND r.task_id = '+current_task, 'name' : 'base_sql_additional' } );
-		},
-        "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [ 0 ] },
-            { "bSearchable": false, "bVisible":    false, "aTargets": [ 1, 2 ] }
-        ],
-		"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
-		"oTableTools": {
-			"sSwfPath": "swf/copy_csv_xls_pdf.swf",
-			"aButtons": [
-				"copy","print","csv", "pdf",
-                {
-                    "sExtends":    "text",
-                    "sButtonText": "Show all/best results",
-					"fnClick": function toggleResults(nButton,oConfig,oFlash) {
-						oTableRunsShowAll = !oTableRunsShowAll;
-						oTableRuns.fnDraw(true);
-					}
-                }
-            ]
-		},
-		"aLengthMenu": [[10, 50, 100, 250], [10, 50, 100, 250]],
-		"iDisplayLength" : 50,
-		"bAutoWidth": false,
-		<?php echo column_widths($this->dt_main['column_widths']); ?>
-        "bPaginate": true
-    });
-
-    /* Add event listener for opening and closing details
-     * Note that the indicator for showing which row is open is not controlled by DataTables, rather it is done here
-     */
-    $('#datatable_main tbody td img').on('click', function () {
-        var nTr = $(this).parents('tr')[0];
-        if ( oTableRuns.fnIsOpen(nTr) )
-        {
-            // This row is already open - close it
-            this.src = "img/datatables/details_open.png";
-            oTableRuns.fnClose( nTr );
-        }
-        else
-        {
-            // Open this row
-            this.src = "img/datatables/details_close.png";
-            oTableRuns.fnOpen( nTr, fnFetchParams(oTableRuns, nTr, 2), 'details' );
-        }
-    } );
-} );
+/// CHANGE EVALUATION MEASURE
 
 function updateTableHeader(){
 	$("#value").html(evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' '));
@@ -86,6 +20,8 @@ function updateTableHeader(){
 	else
 		higherIsBetter = true;
 }
+
+/// TIMELINE
 
 function redrawtimechart(){
 var colors = ['rgba(166, 206, 227, .6)','rgba(51, 160, 44, .6)','rgba(251, 154, 153, .6)','rgba(253, 191, 111, .6)','rgba(202, 178, 214, .6)','rgba(255, 255, 153, .6)','rgba(177, 89, 40, .6)','rgba(31, 120, 180, .6)','rgba(178, 223, 138, .6)','rgba(227, 26, 28, .6)','rgba(255, 127, 0, .5)','rgba(106, 61, 154, .6)'];
@@ -252,6 +188,9 @@ client.search({
     console.trace(err.message);
 });
 }
+
+/// LEADERBOARD
+
 function leaderboard(data){
 	$('#leaderboard').dataTable( {
 		"processing": true,
@@ -273,7 +212,89 @@ function leaderboard(data){
 	} );
 }
 
-function redrawchart(){
+  /// RESULT QUERY
+
+function showData(){
+	client.search({
+	  index: 'openml',
+	  type: 'run',
+	  size: '5000',
+	  body: {
+			_source: [ "run_id", "run_flow.name", "run_flow.parameters", "run_flow.flow_id", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
+	    query: {
+	      term: {
+	        'run_task.task_id': current_task
+	      }
+	    },
+	    sort: [
+	    {
+	      "evaluations.value": {
+	        "order": "desc",
+	        "nested_path": "evaluations",
+	        "nested_filter": {
+	          "term": {
+	            "evaluations.evaluation_measure": evaluation_measure
+	          }
+	        }
+	      }
+	    }
+	  ]
+	  }
+	}).then(function (resp) {
+		data = resp.hits.hits;
+		redrawchart(data);
+		buildTable(buildTableData(data));
+	}, function (err) {
+	    console.trace(err.message);
+	});
+}
+
+function buildTableData(data){
+	tabledata = [];
+	for(key in data){
+		o = data[key]['_source'];
+		eval = o['evaluations'].filter(function(obj){return obj.evaluation_measure == evaluation_measure;})[0];
+		if(eval){
+			tabledata.push(['<a href="r/'+o['run_id']+'">'+o['run_id']+'</a>','<a href="f/'+o['run_flow']['flow_id']+'">'+o['run_flow']['name']+'</a>',eval['value'],o['run_flow']['parameters'].map(shortParam)]);
+		}
+	}
+	return tabledata;
+}
+
+function shortParam(a){
+	par = a.parameter.split('_').pop();
+	val = a.value;
+	if(val.length>10){
+		val = val.split('.').pop();
+	}
+	return par+':'+val;
+}
+
+  /// RESULT TABLE
+function buildTable(dataSet) {
+	    $('#tasktable').removeAttr('width').DataTable( {
+					dom: 'Bfrtip',
+					buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+	        data: dataSet,
+	        columns: [
+	            { title: "Run ID" },
+	            { title: "Flow", width: 100},
+	            { title: evaluation_measure },
+	            { title: "Hyperparameters" }
+	        ],
+					scrollY: "600px",
+					scrollCollapse: true,
+					paging: false,
+					scrollX: "100%",
+					destroy: true,
+					order: [[ 2, "desc" ]]
+	    } );
+			$('#table-spinner').css('display','none');
+	}
+
+	/// RESULT CHART
+
+function redrawchart(data){
 categoryMap = {};
 options = {
             chart: {
@@ -370,33 +391,6 @@ options = {
             }]
         };
 
-client.search({
-  index: 'openml',
-  type: 'run',
-  size: '5000',
-  body: {
-		_source: [ "run_id", "run_flow.name", "run_flow.flow_id", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
-    query: {
-      term: {
-        'run_task.task_id': current_task
-      }
-    },
-    sort: [
-    {
-      "evaluations.value": {
-        "order": "desc",
-        "nested_path": "evaluations",
-        "nested_filter": {
-          "term": {
-            "evaluations.evaluation_measure": evaluation_measure
-          }
-        }
-      }
-    }
-  ]
-  }
-}).then(function (resp) {
-  var data = resp.hits.hits;
 	var catcount = 0;
 	var map = {};
 	var d=[];
@@ -421,10 +415,6 @@ client.search({
 	options.chart.height = c.length*18+120;
 
 	coderesultchart = new Highcharts.Chart(options);
-
-}, function (err) {
-    console.trace(err.message);
-});
 }
 
 function getEval(arr, value) {
@@ -434,6 +424,8 @@ function getEval(arr, value) {
   return result ? (result[0] ? result[0]['value'] : null) : null; // or undefined
 
 }
+
+/// LEARNING CURVES
 
 function redrawCurves(){
 	var options = [];
@@ -513,26 +505,28 @@ function redrawCurves(){
 
 }
 
+/// RELOAD CHARTS ON REFRESH
 
 $(document).ready(function() {
-        <?php if($this->record['type_name'] == 'Learning Curve')
+  <?php if($this->record['type_name'] == 'Learning Curve')
 		echo 'redrawCurves();';
 	      else
-		echo 'redrawchart(); redrawtimechart();';
+		echo 'showData(); redrawtimechart();';
 	?>
+	$('.pop').popover();
+	$('.selectpicker').selectpicker();
 });
 
-<?php
-}
-?>
+
+/// GAMIFICATION AND ISSUE REPORTING
+
+//if ($this->ion_auth->user()->row()->id != $this->task['uploader_id'])
+
+<?php if ($this->ion_auth->logged_in()) { ?>
 
 var isliked;
 var reason_id = -1;
 var maxreason = -1;
-
-<?php if ($this->ion_auth->logged_in()) {
-    //if ($this->ion_auth->user()->row()->id != $this->task['uploader_id']) {?>
-
 getYourDownvote();
 setSubmitBehaviour();
 
@@ -628,7 +622,6 @@ function doDownvote(rid){
 
     });
 }
-<?php }?>
 
 function refreshNrLikes(){
     $.ajax({
@@ -772,11 +765,11 @@ function getDownvotes(){
     }).fail(function(resultdata){
         $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");
     });
-    <?php
-    if ($this->ion_auth->logged_in()) {
-        //if ($this->ion_auth->user()->row()->id != $this->task['uploader_id']) {?>
-    getYourDownvote();
-    <?php //}
+	}
 
-    } ?>
-}
+    <?php if ($this->ion_auth->logged_in()) {?>
+    getYourDownvote();
+    <?php } ?>
+
+<?php }?> //logged in
+<?php }?>

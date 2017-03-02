@@ -1,13 +1,4 @@
-<?php
-     foreach( $this->taskio as $r ):
-	if($r['category'] != 'input') continue;
-	if($r['type'] == 'Dataset'){
-		$dataset = $r['dataset'];
-		$dataset_id = $r['value'];
-	}
-     endforeach; ?>
-
-		<?php if (!isset($this->record['task_id'])){
+		<?php if (!isset($this->task)){
              echo "Sorry, this task is unknown.";
              die();
     } ?>
@@ -31,19 +22,19 @@
                         <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/v1/task/<?php echo $this->task_id;?>"><i class="fa fa-file-code-o fa-2x"></i></a><br>XML</li>
     </ul>
 
-    <h1><i class="fa fa-trophy"></i> <?php echo $this->record['type_name']; ?> on <?php echo $dataset; ?></h1>
+    <h1><i class="fa fa-trophy"></i> <?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?></h1>
     <div class="datainfo">
                 <i class="fa fa-trophy"></i> Task <?php echo $this->task_id; ?>
-                <i class="fa fa-flag"></i> <a href="tt/<?php echo $this->record['type_id'];?>"><?php echo $this->record['type_name']; ?></a>
-                <i class="fa fa-database"></i> <a href="d/<?php echo $dataset_id;?>"><?php echo $dataset; ?></a>
-                <i class="fa fa-star"></i> <?php echo $this->record['runcount']; ?> runs submitted
+                <i class="fa fa-flag"></i> <a href="tt/<?php echo $this->task['tasktype']['tt_id'];?>"><?php echo $this->task['tasktype']['name']; ?></a>
+                <i class="fa fa-database"></i> <a href="d/<?php echo $this->task['source_data']['data_id'];?>"><?php echo $this->task['source_data']['name']; ?></a>
+                <i class="fa fa-star"></i> <a href="#taskruns" data-toggle="tab"><?php echo $this->task['runs']; ?> runs submitted</a>
                 <br>
                 <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->task)): if($this->task['nr_of_likes']!=null): $nr_l = $this->task['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
                 <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->task)): if($this->task['nr_of_downloads']!=null): $nr_d = $this->task['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
+								<?php if(array_key_exists('total_downloads',$this->task)): if($this->task['total_downloads']!=null): $nr_d = $this->task['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
                 <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->task)): if($this->task['nr_of_issues']!=null): $i = $this->task['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
-                <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->task)): if($this->task['nr_of_downvotes']!=null): $d = $this->task['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
-
-                <?php if(array_key_exists('total_downloads',$this->task)): if($this->task['total_downloads']!=null): $nr_d = $this->task['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
+                <!--<i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->task)): if($this->task['nr_of_downvotes']!=null): $d = $this->task['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
+								-->
                 <?php if ($this->ion_auth->logged_in()) {
                         if ($this->ion_auth->user()->row()->gamification_visibility == 'show') {?>
                             <span title="Reach is: 2x likes received + downloads received on this task."><i class="fa fa-rss reach"></i><span id="reach"><?php if(array_key_exists('reach',$this->task)): if($this->task['reach']!=null): $r = $this->task['reach']; else: $r=0; endif; else: $r=0; endif; echo $r.' reach'; ?></span></span>
@@ -100,44 +91,33 @@
               }} ?>
     </div>
 
-		<?php if($this->record['type_name'] != 'Learning Curve'){ ?>
+		<?php if($this->task['tasktype']['name'] != 'Learning Curve'){ ?>
         <div class="pull-right">
 		        Show results for:
-				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawtimechart(); redrawchart();">
+				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; showData();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 				</select>
       </div>
-      <h2 style="margin-top:0px;"><?php echo $this->record['runcount']; ?> Runs</h2>
+      <h2 style="margin-top:0px;"><?php echo $this->task['runs']; ?> Runs</h2>
 
 
-      <?php if($this->record['type_id'] != 6){ ?>
+      <?php if($this->task['tasktype']['tt_id'] != 6){ ?>
 
       <div class="col-xs-12 panel">
-			     <div id="data_result_visualize" class="reflow-chart">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
+			     <div id="data_result_visualize" class="reflow-chart">Rendering chart <i class="fa fa-spinner fa-spin"></i></div>
       </div>
 
       <div class="col-xs-12 panel">
-			<div class="table-responsive reflow-table">
-				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
-					<?php echo generate_table(
-								array('img_open' => '',
-										'rid' => 'Run',
-										'sid' => 'setup id',
-										'name' => 'Flow',
-										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
-				</table>
-			</div>
-			<div class="modal fade" id="runModal" role="dialog" tabindex="-1" aria-labelledby="Run detail" aria-hidden="true">
-			  <div class="modal-dialog">
-			    <div class="modal-content">
-			    </div>
-			  </div>
-			</div>
+        <div class="table-responsive reflow-table">
+           <div id="table-spinner">Rendering table <i class="fa fa-spinner fa-spin"></i></div>
+           <table id="tasktable" class="display" width="100%"></table>
+        </div>
+      </div>
 
 		<?php }} else { ?>
-      <h2><?php echo $this->record['runcount']; ?> Runs</h2>
+      <h2><?php echo $this->task['runs']; ?> Runs</h2>
 
 		        Plot learning curves for score:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; redrawCurves();">
@@ -166,5 +146,3 @@
 				</table></div>
 
 		<?php } ?>
-
-	</div> <!-- end col-md-12 -->
