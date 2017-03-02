@@ -991,12 +991,15 @@ class ElasticSearch {
     }
 
     private function fetch_tasks($id = false) {
-        $targets = $this->fetch_targets($id);
         $index = array();
         $tasks = $this->db->query("SELECT t.task_id, tt.name, i.value AS did, d.name AS dname, ep.name AS epname FROM task_inputs i, task_inputs i2, estimation_procedure ep,
           task t, task_type tt, dataset d WHERE t.task_id = i.task_id AND t.task_id = i2.task_id AND i.input = 'source_data' AND i2.input = 'estimation_procedure' AND
           t.ttid = tt.ttid AND d.did = i.value AND ep.id = i2.value" . ($id ? ' and t.task_id=' . $id : ''));
-        if ($tasks)
+        if ($tasks){
+            if($id)
+              $targets = $this->fetch_targets($tasks[0]->did);
+            else
+              $targets = $this->fetch_targets();
             foreach ($tasks as $v) {
               $index[$v->task_id]['task_id'] = $v->task_id;
               $index[$v->task_id]['tasktype']['name'] = $v->name;
@@ -1005,6 +1008,7 @@ class ElasticSearch {
               $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
               $index[$v->task_id]['target_values'] = $targets[$v->did]['target_values'];
             }
+          }
         return $index;
     }
 

@@ -32,6 +32,10 @@
   padding-bottom: 10px;
 }
 
+.reflow-table{
+  padding: 1px;
+}
+
 canvas {
   display: inline-block;
   *display: inline;
