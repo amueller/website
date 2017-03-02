@@ -71,7 +71,7 @@ class Api_data extends Api_model {
       return;
     }
 	
-    if (count($segments) == 3 && $segments[1] == 'qualities' && $segments[0] == 'features' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
+    if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
       $this->feature_qualities($segments[1]);
       return;
     }
