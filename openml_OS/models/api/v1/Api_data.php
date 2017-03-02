@@ -675,29 +675,29 @@ class Api_data extends Api_model {
 
     $all_data_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
     $all_feature_qualities = $this->Quality->getColumnWhere('name', '`type` = "FeatureQuality"');
-	
+    
     // check and collect the qualities
     $newQualities = array();
     foreach ($xml->children('oml', true)->{'quality'} as $q) {
       $quality = xml2object($q, true);
-	  
-	  if (property_exists($quality, 'feature_index')) {
-		// check if valid feature quality		  
-		if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
-		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name . '. Legal Feature Qualities: ' . implode(', ', $all_feature_qualities));
-		  return;
-		}
-	  } else {
-		// check if valid data quality
-		if (is_array($all_data_qualities) == false || in_array($quality->name, $all_data_qualities) == false) {
-		  $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name . '. Legal Data Qualities: ' . implode(', ', $all_data_qualities));
-		  return;
-		}
-	  }
-	  
-	  $newQualities[] = $quality;
+      
+      if (property_exists($quality, 'feature_index')) {
+        // check if valid feature quality          
+        if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
+          $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name . '. Legal Feature Qualities: ' . implode(', ', $all_feature_qualities));
+          return;
+        }
+      } else {
+        // check if valid data quality
+        if (is_array($all_data_qualities) == false || in_array($quality->name, $all_data_qualities) == false) {
+          $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Data quality: ' . $quality->name . '. Legal Data Qualities: ' . implode(', ', $all_data_qualities));
+          return;
+        }
+      }
+      
+      $newQualities[] = $quality;
     }
-	
+    
     $success = true;
     $this->db->trans_start();
     foreach ($newQualities as $index => $quality) {
@@ -718,7 +718,7 @@ class Api_data extends Api_model {
           'value' => $quality->value
         );
         $this->Feature_quality->insert_ignore($data);
-	  } else {
+      } else {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name,
