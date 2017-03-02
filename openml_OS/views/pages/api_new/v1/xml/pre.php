@@ -329,6 +329,12 @@ $this->apiErrors[633] = 'No qualities found';
 $this->apiErrors[634] = 'Dataset not processed yet';
 $this->apiErrors[635] = 'Dataset processed with error';
 
+// openml.data.quality.list
+$this->apiErrors[641] = 'No results';
+
+// openml.data.feature.quality.list
+$this->apiErrors[651] = 'No results';
+
 
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';

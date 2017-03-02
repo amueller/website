@@ -507,7 +507,22 @@ class Api_data extends Api_model {
         $qualities[] = $r->name;
       }
     } else {
-      $this->returnError( 520, $this->version );
+      $this->returnError( 641, $this->version );
+      return;
+    }
+    $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
+  }
+  
+  
+    private function feature_qualities_list() {
+    $result = $this->Quality->allFeatureQualitiesUsed( );
+    $qualities = array();
+    if($result != false) {
+      foreach( $result as $r ) {
+        $qualities[] = $r->name;
+      }
+    } else {
+      $this->returnError( 651, $this->version );
       return;
     }
     $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
@@ -580,42 +595,42 @@ class Api_data extends Api_model {
   
   private function feature_qualities($data_id) {
     if( $data_id == false ) {
-      $this->returnError( 360, $this->version );
+      $this->returnError( 631, $this->version );
       return;
     }
     $dataset = $this->Dataset->getById( $data_id );
     if( $dataset === false ) {
-      $this->returnError( 361, $this->version );
+      $this->returnError( 632, $this->version );
       return;
     }
 
     if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
-      $this->returnError( 361, $this->version ); // Add special error code for this case?
+      $this->returnError( 632, $this->version ); // Add special error code for this case?
       return;
     }
 
     if( $dataset->processed == NULL) {
-      $this->returnError( 363, $this->version );
+      $this->returnError( 634, $this->version );
       return;
     }
 
     if( $dataset->error != "false") {
-      $this->returnError( 364, $this->version );
+      $this->returnError( 635, $this->version );
       return;
     }
     
     $dataset->feature_qualities = $this->Feature_quality->getWhere( 'data = "' . $dataset->did . '"' );
 
     if( $dataset->feature_qualities === false ) {
-      $this->returnError( 362, $this->version );
+      $this->returnError( 633, $this->version );
       return;
     }
     if( is_array( $dataset->feature_qualities ) === false ) {
-      $this->returnError( 362, $this->version );
+      $this->returnError( 633, $this->version );
       return;
     }
     if( count( $dataset->feature_qualities ) === 0 ) {
-      $this->returnError( 362, $this->version );
+      $this->returnError( 633, $this->version );
       return;
     }
 
