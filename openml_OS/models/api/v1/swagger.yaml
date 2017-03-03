@@ -3,7 +3,6 @@ info:
   title: OpenML API
   description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint http://www.openml.org/api/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
   version: 1.0.0
-host: www.openml.org
 schemes:
   - http
 basePath: /api/v1/json
@@ -123,7 +122,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.data.upload.xsd)
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.data.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/data.xml).
           required: true
           type: file
         - name: dataset
@@ -431,7 +430,7 @@ paths:
           description: No datasets available. There are no valid datasets in the system.
   /data/list/limit/{limit}/offset/{offset}:
     get:
-      summary: List all datasets within a range.
+      summary: List datasets within a range.
       description: |
         Returns an array with a limited number of datasets.
       parameters:
@@ -523,13 +522,183 @@ paths:
           description: No datasets available. There are no valid datasets in the system.
   /data/list/tag/{tag}:
     get:
-      summary: List all datasets with the given tag. Can also be combined with limit and offset.
+      summary: List datasets with given tag.
       description: |
-        Returns an array with all datasets in the system with the given tag.
+        Returns an array with all datasets in the system with the given tag. Can also be combined with limit and offset.
       parameters:
         - name: tag
           in: path
           description: The tag on which to filter the results
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of datasets with the given tag
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No datasets available. There are no datasets in the system with the given tag.
+  /data/list/status/{status}:
+    get:
+      summary: List datasets with given status
+      description: |
+        Returns an array with all datasets in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
+      parameters:
+        - name: status
+          in: path
+          description: The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - data
+      responses:
+        '200':
+          description: A list of datasets with the given status
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No datasets available. There are no datasets in the system with the given status.
+  /data/list/{filters}:
+    get:
+      summary: Get datasets by properties
+      description: |
+        Get tasks based on properties of the data - number_instances, number_features, number_classes or number_missing_values. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.
+      parameters:
+        - name: filters
+          in: path
+          description: Any combination of filters (data_id, data_name, number_instances, number_features, number_classes, number_missing_values) and corresponding values or ranges, e.g. 'number_instances/0..50/number_features/0..10'. With or without limits, or tags.
           required: true
           type: string
         - name: api_key
@@ -605,7 +774,7 @@ paths:
                 }
               }
         370:
-          description: No datasets available. There are no datasets in the system with the given tag.
+          description: No datasets available. There are no datasets in the system with the given constraints.
   /data/tag:
     post:
       summary: Tag a dataset
@@ -876,7 +1045,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.task.upload.xsd)
+          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.task.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/task.xml).
           required: true
           type: file
         - name: api_key
@@ -1026,7 +1195,7 @@ paths:
             $ref: '#/definitions/Error'
   /task/list/limit/{limit}/offset/{offset}:
     get:
-      summary: List all tasks within a range
+      summary: List tasks within a range
       description: |
         Returns an array with a limited number of tasks.
       parameters:
@@ -1145,11 +1314,96 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /task/list/status/{status}:
+    get:
+      summary: List tasks with given status
+      description: |
+        Returns an array with all tasks in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
+      parameters:
+        - name: status
+          in: path
+          description: The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A list of tasks with the given status
+          schema:
+            $ref: '#/definitions/DataList'
+          examples:
+            application/json: |-
+              {
+                "data": {
+                  "dataset": [
+                    {
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize"
+                          ,"value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+        370:
+          description: No tasks available. There are no tasks in the system with the given status.
   /task/list/type/{id}:
     get:
-      summary: List all tasks of given type. Can be combined with limits and tags.
+      summary: List tasks of given type.
       description: |
-        Returns an array with all tasks for the given task type id (1 = Supervised Classification)
+        Returns an array with all tasks for the given task type id (1 = Supervised Classification). Can be combined with limits and tags.
       parameters:
         - name: id
           in: path
@@ -1262,9 +1516,9 @@ paths:
           description: No results. There where no matches for the given task type ID.
   /task/list/tag/{tag}:
     get:
-      summary: List all tasks with the given tag. Can be combined with limits and task types.
+      summary: List tasks with given tag
       description: |
-        Returns an array with all tasks with the given tag
+        Returns an array with all tasks with the given tag. Can be combined with limits and other filters.
       parameters:
         - name: tag
           in: path
@@ -1372,6 +1626,230 @@ paths:
               }
         481:
           description: No results. There where no matches for the given task tag.
+  /task/list/data_tag/{tag}:
+    get:
+      summary: List tasks with the given data tag
+      description: |
+        Returns an array with all tasks where the underlying dataset has the given tag. Can be combined with limits and other filters.
+      parameters:
+        - name: tag
+          in: path
+          description: The tag on which to filter the results
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A list of tasks where the underlying dataset has the given tag
+          schema:
+            $ref: '#/definitions/TaskList'
+          examples:
+            application/json: |-
+              {
+                "task": {
+                  "task": [
+                    {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data",
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
+                      ]
+                    }
+                  ]
+                }
+              }
+        481:
+          description: No results. There where no matches for the given data tag.
+  /task/list/{filters}:
+    get:
+      summary: Get tasks by data properties
+      description: |
+        Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all tasks in the system that match the constraints.
+      parameters:
+        - name: filters
+          in: path
+          description: Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, tags, or types.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - task
+      responses:
+        '200':
+          description: A list of tasks with the given tag
+          schema:
+            $ref: '#/definitions/TaskList'
+          examples:
+            application/json: |-
+              {
+                "task": {
+                  "task": [
+                    {
+                      "task_id":"1",
+                      "task_type":"Supervised Classification",
+                      "did":"1",
+                      "name":"anneal",
+                      "status":"active",
+                      "format":"ARFF",
+                      "input":[
+                        {
+                          "name":"estimation_procedure",
+                          "value":"1"
+                        },
+                        {
+                          "name":"evaluation_measures",
+                          "value":"predictive_accuracy"
+                        },
+                        {
+                          "name":"source_data",
+                          "value":"1"
+                        },
+                        {
+                          "name":"target_feature",
+                          "value":"class"
+                        }
+                        ],
+                      "quality":[
+                        {
+                          "name":"MajorityClassSize",
+                          "value":"684"
+                        },
+                        {
+                          "name":"MaxNominalAttDistinctValues",
+                          "value":"10.0"
+                        },
+                        {
+                          "name":"MinorityClassSize",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumBinaryAtts",
+                          "value":"14.0"
+                        },
+                        {
+                          "name":"NumberOfClasses",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfFeatures",
+                          "value":"39"
+                        },
+                        {
+                          "name":"NumberOfInstances",
+                          "value":"898"
+                        },
+                        {
+                          "name":"NumberOfInstancesWithMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfMissingValues",
+                          "value":"0"
+                        },
+                        {
+                          "name":"NumberOfNumericFeatures",
+                          "value":"6"
+                        },
+                        {
+                          "name":"NumberOfSymbolicFeatures",
+                          "value":"32"
+                        }
+                        ],
+                      "tag":[
+                        "basic",
+                        "study_1",
+                        "study_7",
+                        "under100k",
+                        "under1m"
+                      ]
+                    }
+                  ]
+                }
+              }
+        481:
+          description: No results. There where no matches for the given constraints.
   /task/tag:
     post:
       summary: Tag a task
@@ -1747,7 +2225,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.implementation.upload.xsd)
+          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.implementation.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/flow.xml).
           required: true
           type: file
         - name: flow
@@ -1908,7 +2386,7 @@ paths:
           description: There where no results.
   /flow/list/limit/{limit}/offset/{offset}:
     get:
-      summary: List all flows within a range
+      summary: List flows within a range
       description: |
         Returns an array with the requested flows.
       parameters:
@@ -1973,7 +2451,7 @@ paths:
           description: There where no results.
   /flow/list/tag/{tag}:
     get:
-      summary: List all flows with the given tag. Can be combined with limits.
+      summary: List flows with given tag.
       description: |
         Returns an array with all flows in the system with the given tag.
       parameters:
@@ -2348,7 +2826,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the run
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.run.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/run.xml).
           required: true
           type: file
         - name: predictions
@@ -2469,6 +2947,7 @@ paths:
                       "setup_id": "12",
                       "flow_id": "67",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2477,6 +2956,7 @@ paths:
                       "setup_id": "6",
                       "flow_id": "61",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2485,6 +2965,7 @@ paths:
                       "setup_id": "3",
                       "flow_id": "58",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     }
                   ]
@@ -2532,6 +3013,7 @@ paths:
                       "setup_id": "12",
                       "flow_id": "67",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2540,6 +3022,7 @@ paths:
                       "setup_id": "6",
                       "flow_id": "61",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2548,6 +3031,7 @@ paths:
                       "setup_id": "3",
                       "flow_id": "58",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     }
                   ]
@@ -2595,6 +3079,7 @@ paths:
                       "setup_id": "12",
                       "flow_id": "67",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2603,6 +3088,7 @@ paths:
                       "setup_id": "6",
                       "flow_id": "61",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2611,6 +3097,7 @@ paths:
                       "setup_id": "3",
                       "flow_id": "58",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     }
                   ]
@@ -2658,6 +3145,7 @@ paths:
                       "setup_id": "829",
                       "flow_id": "362",
                       "uploader": "212",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2666,6 +3154,7 @@ paths:
                       "setup_id": "829",
                       "flow_id": "362",
                       "uploader": "348",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2674,6 +3163,7 @@ paths:
                       "setup_id": "829",
                       "flow_id": "362",
                       "uploader": "348",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                   ]
@@ -2721,6 +3211,7 @@ paths:
                       "setup_id":"1225",
                       "flow_id":"673",
                       "uploader":"1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message":[]
                     },
                     {
@@ -2729,6 +3220,7 @@ paths:
                       "setup_id":"1225",
                       "flow_id":"673",
                       "uploader":"1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message":[]
                     },
                     {
@@ -2737,6 +3229,7 @@ paths:
                       "setup_id":"1468",
                       "flow_id":"707",
                       "uploader":"1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message":[]
                     }
                   ]
@@ -2784,6 +3277,7 @@ paths:
                       "setup_id":"10",
                       "flow_id":"65",
                       "uploader":"1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message":[]
                     },
                     {
@@ -2792,6 +3286,7 @@ paths:
                       "setup_id":"10",
                       "flow_id":"65",
                       "uploader":"17",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message":[]
                     },
                     {
@@ -2800,6 +3295,7 @@ paths:
                       "setup_id":"79",
                       "flow_id":"65",
                       "uploader":"17",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message":[]
                     }
                   ]
@@ -2847,6 +3343,7 @@ paths:
                       "setup_id": "12",
                       "flow_id": "67",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2855,6 +3352,7 @@ paths:
                       "setup_id": "6",
                       "flow_id": "61",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     },
                     {
@@ -2863,6 +3361,7 @@ paths:
                       "setup_id": "3",
                       "flow_id": "58",
                       "uploader": "1",
+                      "upload_time":"2014-04-06 23:30:40",
                       "error_message": []
                     }
                   ]
@@ -3014,6 +3513,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3022,6 +3522,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3030,6 +3531,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
@@ -3084,6 +3586,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3092,6 +3595,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3100,6 +3604,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
@@ -3147,6 +3652,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3155,6 +3661,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3163,6 +3670,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
@@ -3210,6 +3718,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3218,6 +3727,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3226,6 +3736,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
@@ -3273,6 +3784,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3281,6 +3793,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3289,6 +3802,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
@@ -3336,6 +3850,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3344,6 +3859,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3352,6 +3868,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
@@ -3399,6 +3916,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"area_under_roc_curve",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.839359",
                       "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
                     },
@@ -3407,6 +3925,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"f_measure",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.600026",
                       "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
                     },
@@ -3415,6 +3934,7 @@ paths:
                       "task_id":"68",
                       "flow_id":"61",
                       "function":"predictive_accuracy",
+                      "upload_time":"2014-04-06 23:30:40",
                       "value":"0.614634",
                       "array_data":[]
                     }
