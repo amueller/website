@@ -144,7 +144,7 @@ if( $_POST || $this->input->get('check') ) {
     
     // TODO: implementations
     $sql_runs = 
-      'SELECT `r`.`task_id`,`r`.`setup`, `r`.`error_message`, `r`.`error` ' .
+      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`), GROUP_CONCAT(`r`.`error`) ' .
       'FROM `run` `r`, `task_inputs` `d`, `task` `t`, `algorithm_setup` `s` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
       'AND `d`.`input` = "source_data" ' .
