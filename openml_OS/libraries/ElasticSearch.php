@@ -611,7 +611,7 @@ class ElasticSearch {
         }else{
             $user['runs_on_flows'] = 0;
         }
-
+        // Activity: how many likes and downloads
         $ld_of_user = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOfuser($d->id);
         $likes_of_user = 0;
         $nr_of_likes_data = 0;
@@ -628,28 +628,28 @@ class ElasticSearch {
             foreach($ld_of_user as $ld){
                 if($ld->ldt=='l'){
                     if($ld->knowledge_type=='d'){
-                        $nr_of_likes_data+=$ld->count;
+                        $nr_of_likes_data+=$ld->sum;
                     }else if($ld->knowledge_type=='f'){
-                        $nr_of_likes_flow+=$ld->count;
+                        $nr_of_likes_flow+=$ld->sum;
                     }else if($ld->knowledge_type=='t'){
-                        $nr_of_likes_task+=$ld->count;
+                        $nr_of_likes_task+=$ld->sum;
                     }else if($ld->knowledge_type=='r'){
-                        $nr_of_likes_run+=$ld->count;
+                        $nr_of_likes_run+=$ld->sum;
                     }
-                    $likes_of_user+=$ld->count;
+                    $likes_of_user+=$ld->sum;
                 }else if($ld->ldt=='d'){
                     if($ld->knowledge_type=='d'){
-                        $nr_of_downloads_data+=$ld->count;
+                        $nr_of_downloads_data+=$ld->sum;
                     }else if($ld->knowledge_type=='f'){
-                        $nr_of_downloads_flow+=$ld->count;
+                        $nr_of_downloads_flow+=$ld->sum;
                     }else if($ld->knowledge_type=='t'){
-                        $nr_of_downloads_task+=$ld->count;
+                        $nr_of_downloads_task+=$ld->sum;
                     }else if($ld->knowledge_type=='r'){
-                        $nr_of_downloads_run+=$ld->count;
+                        $nr_of_downloads_run+=$ld->sum;
                     }
-                    $downloads_of_user+=$ld->count;
-                    $total_downloads+=$ld->sum;
+                    $downloads_of_user+=$ld->sum;
                 }
+                $total_downloads+=$ld->sum;
             }
         }
         $user['nr_of_likes'] = $likes_of_user;
@@ -667,6 +667,7 @@ class ElasticSearch {
             $user['activity'] = $this->CI->Gamification->getActivityFromParts($user['nr_of_uploads'],$user['nr_of_likes'],$user['nr_of_downloads']);
         }
 
+        // Reach: how many likes and downloads on uploads
         $ld_received = $this->CI->KnowledgePiece->getNumberOfLikesAndDownloadsOnUploadsOfUser($d->id);
         $likes_received = 0;
         $likes_received_data = 0;
@@ -682,28 +683,28 @@ class ElasticSearch {
             foreach($ld_received as $ld){
                 if($ld->ldt=='l'){
                     if($ld->kt=='d'){
-                        $likes_received_data+=$ld->count;
+                        $likes_received_data+=$ld->sum;
                     }else if($ld->kt=='f'){
-                        $likes_received_flow+=$ld->count;
+                        $likes_received_flow+=$ld->sum;
                     }else if($ld->kt=='t'){
-                        $likes_received_task+=$ld->count;
+                        $likes_received_task+=$ld->sum;
                     }else if($ld->kt=='r'){
-                        $likes_received_run+=$ld->count;
+                        $likes_received_run+=$ld->sum;
                     }
-                    $likes_received+=$ld->count;
+                    $likes_received+=$ld->sum;
                 }else if($ld->ldt=='d'){
                   if (property_exists($ld, 'kt')) { // TODO: THIS IS A BUG! How can it not have a knowlegde piece ? (issue #70 on github)
                     if($ld->kt=='d'){
-                        $downloads_received_data+=$ld->count;
+                        $downloads_received_data+=$ld->sum;
                     }else if($ld->kt=='f'){
-                        $downloads_received_flow+=$ld->count;
+                        $downloads_received_flow+=$ld->sum;
                     }else if($ld->kt=='t'){
-                        $downloads_received_task+=$ld->count;
+                        $downloads_received_task+=$ld->sum;
                     }else if($ld->kt=='r'){
-                        $downloads_received_run+=$ld->count;
+                        $downloads_received_run+=$ld->sum;
                     }
                   }
-                  $downloads_received+=$ld->count;
+                  $downloads_received+=$ld->sum;
                 }
             }
         }
