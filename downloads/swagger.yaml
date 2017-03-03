@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: OpenML API
-  description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint http://www.openml.org/api/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
+  description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint https://www.openml.org/api/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
   version: 1.0.0
 schemes:
   - http
@@ -122,7 +122,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.data.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/data.xml).
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.data.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/data).
           required: true
           type: file
         - name: dataset
@@ -1045,7 +1045,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.task.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/task.xml).
+          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.task.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/task).
           required: true
           type: file
         - name: api_key
@@ -2225,7 +2225,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.implementation.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/flow.xml).
+          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.implementation.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/flow).
           required: true
           type: file
         - name: flow
@@ -2826,7 +2826,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.run.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/run.xml).
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.run.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/run).
           required: true
           type: file
         - name: predictions
