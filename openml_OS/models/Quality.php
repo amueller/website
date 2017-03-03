@@ -23,9 +23,9 @@ class Quality extends Database_read {
     // this query selects only the feature qualities that are actually used at least once
     $sql = '
       SELECT `q`.`name`, count(*) AS `number` 
-      FROM `quality` `q`, `data_quality` `dq` 
+      FROM `quality` `q`, `feature_quality` `fq` 
       WHERE `q`.`type`= "FeatureQuality" 
-      AND `q`.`name` = `dq`.`quality` 
+      AND `q`.`name` = `fq`.`quality` 
       GROUP BY `q`.`name`';
     return $this->query( $sql );
     
