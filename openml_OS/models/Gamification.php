@@ -15,10 +15,10 @@ class Gamification extends CI_Model{
 
         $this->load->model('KnowledgePiece');
 
-        $this->scores['activity']['uploads'] = 3;
-        $this->scores['activity']['likes'] = 2;
-        $this->scores['activity']['downloads'] = 1;
-        $this->scores['reach']['likes'] = 2;
+        $this->scores['activity']['uploads'] = 1;
+        $this->scores['activity']['likes'] = 0.5;
+        $this->scores['activity']['downloads'] = 0.5;
+        $this->scores['reach']['likes'] = 1;
         $this->scores['reach']['downloads'] = 1;
         $this->scores['impact']['reuse'] = 1;
         $this->scores['impact']['reach'] = 0.5;

@@ -649,7 +649,6 @@ class ElasticSearch {
                     }
                     $downloads_of_user+=$ld->count;
                     $total_downloads+=$ld->sum;
-
                 }
             }
         }
