@@ -2661,13 +2661,13 @@ paths:
           description: Internal error removing the tag. Please contact OpenML Team.
   /setup/{id}:
     get:
-      summary: Get a hyperparameter setup (configuration) description
+      summary: Get a hyperparameter setup
       description: |
         Returns information about a setup. The information includes the list of hyperparameters, with name, value, and default value.
       parameters:
         - name: id
           in: path
-          description: ID of the setup. These IDs are stated in run descriptions.
+          description: ID of the hyperparameter setup (configuration). These IDs are stated in run descriptions.
           required: true
           type: number
           format: integer
