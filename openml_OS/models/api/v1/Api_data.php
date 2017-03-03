@@ -527,10 +527,10 @@ class Api_data extends Api_model {
   
     private function feature_qualities_list() {
     $result = $this->Quality->allFeatureQualitiesUsed( );
-    $qualities = array();
+    $feature_qualities = array();
     if($result != false) {
       foreach( $result as $r ) {
-        $qualities[] = $r->name;
+        $feature_qualities[] = $r->name;
       }
     } else {
       $this->returnError( 651, $this->version );
