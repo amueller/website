@@ -536,7 +536,7 @@ class Api_data extends Api_model {
       $this->returnError( 651, $this->version );
       return;
     }
-    $this->xmlContents( 'feature-qualities-list', $this->version, array( 'qualities' => $qualities ) );
+    $this->xmlContents( 'feature-qualities-list', $this->version, array( 'feature-qualities' => $qualities ) );
   }
 
 
