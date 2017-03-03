@@ -1,5 +1,5 @@
 <oml:feature_qualities xmlns:oml="http://openml.org/openml">
-  <?php foreach( $qualities as $quality ): ?>
+  <?php foreach( $feature_qualities as $quality ): ?>
   
   <oml:quality>
     <oml:name><?php echo $quality->quality; ?></oml:name>
