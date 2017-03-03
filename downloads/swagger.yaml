@@ -122,7 +122,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.data.upload.xsd)
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.data.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/data.xml).
           required: true
           type: file
         - name: dataset
@@ -1045,7 +1045,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.task.upload.xsd)
+          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.task.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/task.xml).
           required: true
           type: file
         - name: api_key
@@ -2225,7 +2225,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://github.com/openml/website/blob/master/openml_OS/views/pages/api_new/v1/xsd/openml.implementation.upload.xsd)
+          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.implementation.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/flow.xml).
           required: true
           type: file
         - name: flow
@@ -2826,7 +2826,7 @@ paths:
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the run
+          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.run.upload.xsd) and an [XML example](https://www.openml.org/api/v1/xml_example/run.xml).
           required: true
           type: file
         - name: predictions
