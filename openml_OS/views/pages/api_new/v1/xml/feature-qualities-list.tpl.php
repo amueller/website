@@ -2,4 +2,4 @@
   <?php foreach( $feature_qualities as $quality ): ?>
     <oml:quality><?php echo $quality; ?></oml:quality>
   <?php endforeach; ?>
-</oml:data_qualities_list>
+</oml:feature_qualities_list>

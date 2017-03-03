@@ -7,4 +7,4 @@
     <oml:feature_index><?php echo $quality->feature_index; ?></oml:feature_index>
   </oml:quality>
   <?php endforeach; ?>
-</oml:data_qualities>
+</oml:feature_qualities>
