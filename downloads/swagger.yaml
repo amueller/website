@@ -2659,6 +2659,67 @@ paths:
           description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
         479:
           description: Internal error removing the tag. Please contact OpenML Team.
+  /setup/{id}:
+    get:
+      summary: Get a hyperparameter setup (configuration) description
+      description: |
+        Returns information about a setup. The information includes the list of hyperparameters, with name, value, and default value.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the setup. These IDs are stated in run descriptions.
+          required: true
+          type: number
+          format: integer
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - setup
+      responses:
+        '200':
+          description: A setup description
+          schema:
+            $ref: '#/definitions/Setup'
+          examples:
+            application/json: |-
+              {
+                "setup_parameters":{
+                  "flow_id":"59",
+                  "parameter":[
+                    {
+                      "full_name":"weka.JRip(1)_F",
+                      "parameter_name":"F",
+                      "data_type":"option",
+                      "default_value":"3",
+                      "value":"3"
+                    },{
+                      "full_name":"weka.JRip(1)_N",
+                      "parameter_name":"N",
+                      "data_type":"option",
+                      "default_value":"2.0",
+                      "value":"2.0"
+                    },{
+                      "full_name":"weka.JRip(1)_O",
+                      "parameter_name":"O",
+                      "data_type":"option",
+                      "default_value":"2",
+                      "value":"2"
+                    },{
+                      "full_name":"weka.JRip(1)_S",
+                      "parameter_name":"S",
+                      "data_type":"option",
+                      "default_value":"1",
+                      "value":"1"
+                    }]
+                }
+              }
+        280:
+          description: Please provide setup ID. In order to view setup details, please provide the run ID 
+        281:
+          description: Setup not found. The setup ID was invalid, or setup does not exist (anymore).
   /run/{id}:
     get:
       summary: Get run description
@@ -4378,6 +4439,36 @@ definitions:
                   array_data:
                     type: string
                     description: For structured evaluation measures, an array of evaluation values (e.g. per-class predictions, evaluation matrices,...)
+  Setup:
+    type: object
+    properties:
+      setup_parameters:
+        type: object
+        properties:
+          flow_id:
+            type: string
+            description: ID of the flow, a positive integer
+          parameter_setting:
+            type: array
+            items:
+              type: object
+              description: Hyperparameter settings. Can be multiple.
+              properties:
+                full_name:
+                  type: string
+                  description: The full name of the hyperparameter
+                parameter_name:
+                  type: string
+                  description: The short name of the hyperparameter
+                data_type:
+                  type: string
+                  description: The data type of the hyperparameter value
+                default_value:
+                  type: string
+                  description: The default value of the parameter used  
+                value:
+                  type: string
+                  description: The value of the parameter used  
   Run:
     type: object
     properties:

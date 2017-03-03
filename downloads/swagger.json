@@ -1927,6 +1927,49 @@
                 }
             }
         },
+        "/setup/{id}": {
+            "get": {
+                "summary": "Get a hyperparameter setup (configuration) description",
+                "description": "Returns information about a setup. The information includes the list of hyperparameters, with name, value, and default value.\n",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the setup. These IDs are stated in run descriptions.",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "query",
+                        "description": "API key to authenticate the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "setup"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A setup description",
+                        "schema": {
+                            "$ref": "#/definitions/Setup"
+                        },
+                        "examples": {
+                            "application/json": "{\n  \"setup_parameters\":{\n    \"flow_id\":\"59\",\n    \"parameter\":[\n      {\n        \"full_name\":\"weka.JRip(1)_F\",\n        \"parameter_name\":\"F\",\n        \"data_type\":\"option\",\n        \"default_value\":\"3\",\n        \"value\":\"3\"\n      },{\n        \"full_name\":\"weka.JRip(1)_N\",\n        \"parameter_name\":\"N\",\n        \"data_type\":\"option\",\n        \"default_value\":\"2.0\",\n        \"value\":\"2.0\"\n      },{\n        \"full_name\":\"weka.JRip(1)_O\",\n        \"parameter_name\":\"O\",\n        \"data_type\":\"option\",\n        \"default_value\":\"2\",\n        \"value\":\"2\"\n      },{\n        \"full_name\":\"weka.JRip(1)_S\",\n        \"parameter_name\":\"S\",\n        \"data_type\":\"option\",\n        \"default_value\":\"1\",\n        \"value\":\"1\"\n      }]\n  }\n}"
+                        }
+                    },
+                    "280": {
+                        "description": "Please provide setup ID. In order to view setup details, please provide the run ID"
+                    },
+                    "281": {
+                        "description": "Setup not found. The setup ID was invalid, or setup does not exist (anymore)."
+                    }
+                }
+            }
+        },
         "/run/{id}": {
             "get": {
                 "summary": "Get run description",
@@ -4053,6 +4096,49 @@
                                     "array_data": {
                                         "type": "string",
                                         "description": "For structured evaluation measures, an array of evaluation values (e.g. per-class predictions, evaluation matrices,...)"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Setup": {
+            "type": "object",
+            "properties": {
+                "setup_parameters": {
+                    "type": "object",
+                    "properties": {
+                        "flow_id": {
+                            "type": "string",
+                            "description": "ID of the flow, a positive integer"
+                        },
+                        "parameter_setting": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "description": "Hyperparameter settings. Can be multiple.",
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "description": "The full name of the hyperparameter"
+                                    },
+                                    "parameter_name": {
+                                        "type": "string",
+                                        "description": "The short name of the hyperparameter"
+                                    },
+                                    "data_type": {
+                                        "type": "string",
+                                        "description": "The data type of the hyperparameter value"
+                                    },
+                                    "default_value": {
+                                        "type": "string",
+                                        "description": "The default value of the parameter used"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "description": "The value of the parameter used"
                                     }
                                 }
                             }
