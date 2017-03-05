@@ -7,6 +7,7 @@
     <oml:is_target><?php echo $feature->is_target; ?></oml:is_target>
     <oml:is_ignore><?php echo $feature->is_ignore; ?></oml:is_ignore>
     <oml:is_row_identifier><?php echo $feature->is_row_identifier; ?></oml:is_row_identifier>
+    <oml:number_of_missing_values><?php echo $feature->NumberOfMissingValues; ?></oml:number_of_missing_values>
   </oml:feature>
   <?php endforeach; ?>
 </oml:data_features>
