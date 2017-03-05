@@ -30,7 +30,7 @@
            <a data-toggle="collapse" data-parent="#accordeon"  data-target="#qtabs"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
            <ul class="sidenav nav collapse in" id="qtabs">
              <li class="active"><a href="#data_overview" data-toggle="tab">Overview</a></li>
-             <li><a href="query">Query runs</a></li>
+             <!--<li><a href="query">Query runs</a></li>-->
            </ul>
          </li>
          <li class="panel guidechapter">

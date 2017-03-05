@@ -5,7 +5,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) {
   die();
 }
 
-$this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/jquery.dataTables.min.js');
 
 $this->initialMsgClass = '';
 $this->initialMsg = '';

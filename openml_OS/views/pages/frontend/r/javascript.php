@@ -1061,7 +1061,7 @@ function doDownvote(rid){
         reason_id = parseInt(resultdata.getElementsByTagName('reason_id').item(0).textContent);
         getDownvotes();
     }).fail(function(resultdata){
-        
+
     });
 }
 <?php }}?>
@@ -1077,11 +1077,11 @@ function refreshNrLikes(){
             }else{
                 $('#likecount').html("0 likes");
             }
-        }).fail(function(resultdata){        
+        }).fail(function(resultdata){
             $('#likecount').html("0 likes");
      });
  }
- 
+
  function refreshNrDownloads(){
     $.ajax({
        method:'GET',
@@ -1097,7 +1097,7 @@ function refreshNrLikes(){
        }else{
            $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
        }
-    }).fail(function(resultdata){        
+    }).fail(function(resultdata){
        $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
     });
  }
@@ -1132,7 +1132,7 @@ function flipLikeHTML(){
     }
 }
 
-function setSubmitBehaviour(){ 
+function setSubmitBehaviour(){
     $("#issueform").submit(function(event){
        // cancels the form submission
        event.preventDefault();
@@ -1169,7 +1169,7 @@ function getDownvotes(){
                 $('#issues_content').append('<tr id="issuerow-'+id+'">');
                 $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('reason')[0].textContent+'</td>');
                 $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('count')[0].textContent+'</td>');
-                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');                
+                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');
                 $('#issuerow-'+id).append('<td><a id="downvotebutton-'+id+'" class="loginfirst btn btn-link" onclick="doDownvote('+id+')" title="Click to agree"> </a></td>');
                 $('#issues_content').append('</tr>');
             }
@@ -1206,7 +1206,7 @@ function getDownvotes(){
             $('#issues_content').append('<br>');
         }
     }).fail(function(resultdata){
-        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");        
+        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");
     });
     <?php
     if ($this->ion_auth->logged_in()) {
