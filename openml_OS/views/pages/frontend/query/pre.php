@@ -1,5 +1,5 @@
 <?php
-$this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js','js/libs/processing.js','js/libs/dat.gui.min.js','js/libs/codemirror.js','js/libs/mysql.js');
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/jquery.dataTables.min.js','js/libs/processing.js','js/libs/dat.gui.min.js','js/libs/codemirror.js','js/libs/mysql.js');
 $this->load_css = array('css/jquery.dataTables.min.css','css/dataTables.colvis.min.css','css/dataTables.colvis.jqueryui.css','css/dataTables.responsive.min.css','css/dataTables.scroller.min.css','css/dataTables.tableTools.min.css','css/codemirror.css','css/eclipse.css');
 
 $this->initialMsgClass = '';
