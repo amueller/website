@@ -1825,11 +1825,11 @@ class ElasticSearch {
                     $feat['stdev'] = $f->StandardDeviation;
                 } elseif ($f->data_type == "nominal") {
                     $distr = json_decode($f->ClassDistribution);
-		    if(is_array($distr))
-			$feat['distr'] = $this->array_map_recursive('strval',json_decode($f->ClassDistribution));
+            		    if(is_array($distr))
+            			     $feat['distr'] = $this->array_map_recursive('strval',$distr);
                     else
-			$feat['distr'] = [];
-		}
+            			     $feat['distr'] = [];
+            		}
                 $new_data['features'][] = $feat;
             }
         }
