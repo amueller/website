@@ -26,10 +26,6 @@ if (!empty($this->data['features'])){
 
 	foreach( $this->data['features'] as $r ) {
 		$newGraph = '';
-    echo 'console.log(\''.$r['name'].'\'); ';
-    if(array_key_exists('distr',$r)){
-      echo 'console.log(\''.count($r['distr']).'\'); ';
-    }
 
 		if($r['type'] == "numeric"){
 			$newGraph = '$(\'#feat'.$r['index'].'\').highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:{enabled: false},tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r['min'].','.($r['mean']-$r['stdev']).','.$r['mean'].','.($r['mean']+$r['stdev']).','.$r['max'].']]}]});';
@@ -45,7 +41,7 @@ if (!empty($this->data['features'])){
     				$newGraph .= ',';
     		}
       } else { # regression
-        $newGraph .= '{name:\'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+        $newGraph .= '{name:\'\',data:['.implode(",",array_column($distro[1], 0)).']}';
       }
   		if(count($this->featvalues)==0){
   			$newGraph .= '{name:\'count\',data:['.implode(",",array_column($distro[1], 0)).']}';
