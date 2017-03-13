@@ -1,7 +1,7 @@
           <div class="page-header">
             <h1>R API</h1>
           </div>
-	<p>The OpenML R package allows you to connect to the OpenML server from R scrips.
+	<p>The OpenML R package allows you to connect to the OpenML server from R scripts.
   This means that you can download and upload data sets and tasks, run R implementations, upload your results,
   and download all experiment results directly via R commands.</p>
 
