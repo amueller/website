@@ -1000,12 +1000,14 @@ class ElasticSearch {
             else
               $targets = $this->fetch_targets();
             foreach ($tasks as $v) {
-              $index[$v->task_id]['task_id'] = $v->task_id;
-              $index[$v->task_id]['tasktype']['name'] = $v->name;
-              $index[$v->task_id]['source_data']['data_id'] = $v->did;
-              $index[$v->task_id]['source_data']['name'] = $v->dname;
-              $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
-              $index[$v->task_id]['target_values'] = $targets[$v->did]['target_values'];
+              if(array_key_exists($v->did,$targets)){ //check whether the task is valid (uses an existing dataset)
+                $index[$v->task_id]['task_id'] = $v->task_id;
+                $index[$v->task_id]['tasktype']['name'] = $v->name;
+                $index[$v->task_id]['source_data']['data_id'] = $v->did;
+                $index[$v->task_id]['source_data']['name'] = $v->dname;
+                $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
+                $index[$v->task_id]['target_values'] = $targets[$v->did]['target_values'];
+              }
             }
           }
         return $index;
