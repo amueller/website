@@ -1256,7 +1256,7 @@ class ElasticSearch {
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
-        if(!array_key_exists($r->task_id,$tasks)){ // catch faulty runs
+        if(!array_key_exists($r->task_id,$tasks) or !array_key_exists($r->implementation_id,$this->flow_names)){ // catch faulty runs
             return array();
         }
         $new_data = array(
