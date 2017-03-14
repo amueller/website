@@ -1254,6 +1254,9 @@ class ElasticSearch {
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
+        if(!array_key_exists($r->task_id,$tasks)){ // catch faulty runs
+            return array();
+        }
         $new_data = array(
             'run_id' => $r->rid,
             'uploader' => array_key_exists($r->uploader, $this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
