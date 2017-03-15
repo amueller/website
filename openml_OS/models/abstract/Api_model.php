@@ -95,7 +95,7 @@ class Api_model extends CI_Model {
     );
   }
 
-  public function returnError($code, $version, $httpErrorCode = 450, $additionalInfo = null, $emailLog = false, $supress_output = false) {
+  public function returnError($code, $version, $httpErrorCode = 412, $additionalInfo = null, $emailLog = false, $supress_output = false) {
     $this->Log->api_error('error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code] );
