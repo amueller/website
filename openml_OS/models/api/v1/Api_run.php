@@ -736,15 +736,18 @@ class Api_run extends Api_model {
     // (i.e., is the user allowed to run the engine)
 
     $run_id = (string) $xml->children('oml', true)->{'run_id'};
-
+    $eval_engine_id = '' . $xml->children('oml', true)->{'evaluation_engine_id'};
 
     $runRecord = $this->Run->getById($run_id);
     if($runRecord == false) {
       $this->returnError(425, $this->version);
       return;
     }
+    
+    $evaluation_record = $this->Run_evaluated->getById(array($run_id, $eval_engine_id));
+    $evaluations_stored = $this->Evaluation->getWhere('source = "' . $run_id . '" AND evaluation_engine_id = "' . $eval_engine_id . '"'));
 
-    if($runRecord->processed != null) {
+    if($evaluation_record || $evaluations_stored) {
       $this->returnError(426, $this->version);
       return;
     }
@@ -760,7 +763,6 @@ class Api_run extends Api_model {
     // TODO: legacy, remove later
     $this->Run->update( $run_id, $data );
     // TODO: the new way to go.
-    $eval_engine_id = '' . $xml->children('oml', true)->{'evaluation_engine_id'};
     $data['evaluation_engine_id'] = $eval_engine_id;
     $this->Run_evaluated->insert($run_id, $data);
     
