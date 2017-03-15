@@ -83,12 +83,12 @@ class Data extends CI_Controller {
   }
 
   private function _error404() {
-    header("Status: 404 Not Found");
+    http_response_code(404);
     $this->load->view('404');
   }
 
   private function _error403() {
-    header("Status: 403 Forbidden");
+    http_response_code(403);
     $this->load->view('403');
   }
 
