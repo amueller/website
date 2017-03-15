@@ -4,8 +4,9 @@ $this->apiErrors[100] = 'Function not valid';
 $this->apiErrors[101] = 'Function not yet ported or implemented';
 $this->apiErrors[102] = 'No authentication';
 $this->apiErrors[103] = 'Authentication failed';
-$this->apiErrors[104] = 'This is a read-only account, not the right permissions to execute a write operation. ';
+$this->apiErrors[104] = 'This is a read-only account, it does not the right permissions to execute a write operation. ';
 $this->apiErrors[105] = 'An Elastic Search Exception occured. ';
+$this->apiErrors[106] = 'The intended action requires admin rights. ';
 
 
 // for function: openml.data.description

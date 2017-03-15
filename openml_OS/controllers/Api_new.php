@@ -51,6 +51,7 @@ class Api_new extends CI_Controller {
     $this->load->library('wiki');
 
     $this->groups_upload_rights = array(1,2); // must be part of this group to upload stuff
+    $this->groups_admin = array(1); // must be part of this group to upload important stuff
 
     // XML maintainance
     $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');

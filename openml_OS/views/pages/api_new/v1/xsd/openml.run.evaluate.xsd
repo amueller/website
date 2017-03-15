@@ -3,6 +3,7 @@
   <xs:complexType name="run_evaluation">
     <xs:sequence>
       <xs:element name="run_id" minOccurs="1" type="xs:integer"/> <!-- The integer id of the run.  -->
+      <xs:element name="evaluation_engine_id" type="xs:integer"/> <!-- The integer id of the evaluation engine (see table).  -->
       <xs:element name="error" minOccurs="0" type="oml:casual_string1024"/> <!-- If an error occured, the description -->
       <xs:element name="warning" minOccurs="0" type="oml:casual_string1024"/> <!-- If an warning was produced, the description -->
       <xs:element name="evaluation" minOccurs="0" maxOccurs="unbounded" type="oml:evaluation"/> <!-- all data that served as input for the run. Determined server side, will be ignored on uploading -->

@@ -442,7 +442,7 @@ class Api_data extends Api_model {
       return;
     }
 
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
       $this->returnError( 104, $this->version );
       return;
     }
@@ -649,6 +649,11 @@ class Api_data extends Api_model {
   }
 
   private function data_qualities_upload() {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // get correct description
     if (isset($_FILES['description']) == false || check_uploaded_file($_FILES['description']) == false) {
       $this->returnError(382, $this->version);
@@ -659,11 +664,6 @@ class Api_data extends Api_model {
     $description = $_FILES['description'];
     if (validateXml($description['tmp_name'], xsd('openml.data.qualities', $this->controller, $this->version), $xmlErrors) == false) {
       $this->returnError(383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
-      return;
-    }
-
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError(104, $this->version);
       return;
     }
 

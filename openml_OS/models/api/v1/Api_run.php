@@ -703,7 +703,11 @@ class Api_run extends Api_model {
   }
 
   private function run_evaluate() {
-
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // check uploaded file
     $description = isset( $_FILES['description']) ? $_FILES['description'] : false;
     $error_message = null;
@@ -715,61 +719,71 @@ class Api_run extends Api_model {
     $xsd = xsd('openml.run.evaluate', $this->controller, $this->version);
 
     // validate xml
-    if( validateXml( $description['tmp_name'], $xsd, $xmlErrors ) == false ) {
-      $this->returnError( 423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+    if(validateXml( $description['tmp_name'], $xsd, $xmlErrors) == false) {
+      $this->returnError(423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
 
     // fetch xml
-    $xml = simplexml_load_file( $description['tmp_name'] );
-    if( $xml === false ) {
-      $this->returnError( 424, $this->version );
+    $xml = simplexml_load_file($description['tmp_name']);
+    if($xml === false) {
+      $this->returnError(424, $this->version);
       return;
     }
+    
+    // TODO: check if user id and evaluation_engine_id are compatible 
+    // (i.e., is the user allowed to run the engine)
 
     $run_id = (string) $xml->children('oml', true)->{'run_id'};
 
 
-    $runRecord = $this->Run->getById( $run_id );
-    if( $runRecord == false ) {
-      $this->returnError( 425, $this->version );
+    $runRecord = $this->Run->getById($run_id);
+    if($runRecord == false) {
+      $this->returnError(425, $this->version);
       return;
     }
 
-    if( $runRecord->processed != null ) {
-      $this->returnError( 426, $this->version );
+    if($runRecord->processed != null) {
+      $this->returnError(426, $this->version);
       return;
     }
 
-    $data = array( 'processed' => now() );
-    if( isset( $xml->children('oml', true)->{'error'}) ) {
+    $data = array('processed' => now());
+    if (isset($xml->children('oml', true)->{'error'})) {
       $data['error'] = '' . $xml->children('oml', true)->{'error'};
     }
-    if( isset( $xml->children('oml', true)->{'warning'}) ) {
+    if (isset( $xml->children('oml', true)->{'warning'})) {
       $data['warning'] = '' . $xml->children('oml', true)->{'warning'};
     }
-
+    
+    // TODO: legacy, remove later
     $this->Run->update( $run_id, $data );
-
+    // TODO: the new way to go.
+    $eval_engine_id = '' . $xml->children('oml', true)->{'evaluation_engine_id'};
+    $data['evaluation_engine_id'] = $eval_engine_id;
+    $this->Run_evaluated->insert($run_id, $data);
+    
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'evaluation'} as $e) {
       $evaluation = xml2assoc($e, true);
 
       // adding rid
       $evaluation['source'] = $run_id;
+      // adding evaluation engine id
+      $evaluation['evaluation_engine_id'] = $run_id;
 
-      if( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) &&  array_key_exists( 'sample', $evaluation ) ) {
+      if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample
-        $this->Evaluation_sample->insert( $evaluation );
-      } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
+        $this->Evaluation_sample->insert($evaluation);
+      } elseif(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation)) {
         // evaluation_fold
-        $this->Evaluation_fold->insert( $evaluation );
+        $this->Evaluation_fold->insert($evaluation);
   //    } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
   //      // evaluation_interval
   //      $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
-        $this->Evaluation->insert( $evaluation );
+        $this->Evaluation->insert($evaluation);
       }
     }
     $this->db->trans_complete();
@@ -782,7 +796,7 @@ class Api_run extends Api_model {
       return;
     }
     
-    $this->xmlContents( 'run-evaluate', $this->version, array( 'run_id' => $run_id ) );
+    $this->xmlContents('run-evaluate', $this->version, array('run_id' => $run_id));
   }
 }
 ?>
