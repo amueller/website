@@ -103,7 +103,7 @@ class Api_model extends CI_Model {
     
     if (!$supress_output) {
       http_response_code($httpErrorCode);
-      $this->xmlContents('error-message', $version, $error, $httpHeaders);
+      $this->xmlContents('error-message', $version, $error);
     }
     
     if ($emailLog && defined('EMAIL_API_LOG')) { 
