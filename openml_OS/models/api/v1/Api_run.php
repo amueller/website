@@ -8,6 +8,7 @@ class Api_run extends Api_model {
 
     // load models
     $this->load->model('Run');
+    $this->load->model('Run_evaluated');
     $this->load->model('Dataset');
     $this->load->model('Run_tag');
     $this->load->model('Runfile');
