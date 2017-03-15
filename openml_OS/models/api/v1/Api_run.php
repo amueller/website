@@ -570,9 +570,9 @@ class Api_run extends Api_model {
       'start_time' => now(),
       'status' => ($error_message == false) ? 'OK' : 'error',
       'error_message' => ($error_message == false) ? null : $error_message,
-      'run_details' => ($run_details == false) ? null : $run_details,
-      'experiment' => '-1',
+      'run_details' => ($run_details == false) ? null : $run_details
     );
+    
     $runId = $this->Run->insert( $runData );
     if( $runId === false ) {
       $this->returnError( 210, $this->version );
