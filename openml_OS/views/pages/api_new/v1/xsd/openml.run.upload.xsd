@@ -52,7 +52,11 @@
   <xs:complexType name="evaluation">
     <xs:sequence>
       <xs:element name="did" minOccurs="0" type="xs:integer"/> <!-- A reference to the dataset table, by did. Ignored when uploading -->
-      <xs:element name="function" type="oml:system_string128"/> <!-- A reference to the math_function that was used -->
+      <xs:element name="name" type="oml:system_string128"/> <!-- A reference to the math_function that was used -->
+      <xs:element name="flow_id" minOccurs="0" type="xs:integer"/> <!-- A reference to the implementation table entry (implementing this specific math function) -->
+      <xs:element name="flow" minOccurs="0" type="oml:casual_string1024"/> <!-- A reference to the implementation table entry (implementing this specific math function) -->
+      <xs:element name="label" minOccurs="0" type="oml:casual_string1024"/> <!-- A reference to the implementation table entry (implementing this specific math function) -->
+      
       <xs:element name="value" minOccurs="0" type="xs:double"/> <!-- The result of the math_function. (Sidenote: If you sumbit values of math_functions that are also run on line, it will be used to test whether the outcome is similar.) -->
       <xs:element name="stdev" minOccurs="0" type="xs:double"/> <!-- In case the global performance is based upon multiple folds, a stdev can be given -->
       <xs:element name="array_data" minOccurs="0" type="oml:basic_latin128"/> <!-- In some cases, a function returns array data (i.e., precision, recall).  -->
