@@ -114,11 +114,8 @@ class Api_model extends CI_Model {
     }
   }
 
-  protected function xmlContents($xmlFile, $version, $source, $httpHeaders = array()) {
+  protected function xmlContents($xmlFile, $version, $source) {
     $view = 'pages/'.$this->controller.'/' . $version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
-    foreach( $httpHeaders as $header ) {
-      header( $header );
-    }
 
     if ($this->outputFormat == 'json') {
       $jsonTemplate = 'pages/'.$this->controller.'/' . $version . '/json/'.$xmlFile.'.tpl.php';
