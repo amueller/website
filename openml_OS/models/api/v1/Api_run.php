@@ -751,24 +751,9 @@ class Api_run extends Api_model {
 
     $this->Run->update( $run_id, $data );
 
-    $implementation_ids = $this->Implementation->getAssociativeArray( 'fullName', 'id', '`name` = `name`' );
-
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'evaluation'} as $e) {
       $evaluation = xml2assoc($e, true);
-
-      // naming convention
-      $evaluation['function'] = $evaluation['name'];
-      unset($evaluation['name']);
-
-      // more naming convention
-      if( array_key_exists( $evaluation['flow'], $implementation_ids ) ) {
-        $evaluation['implementation_id'] = $implementation_ids[$evaluation['flow']];
-        unset($evaluation['flow']);
-      } else {
-        $this->Log->mapping( __FILE__, __LINE__, 'Flow ' . $evaluation['flow'] . ' not found in database. ' );
-        continue;
-      }
 
       // adding rid
       $evaluation['source'] = $run_id;
