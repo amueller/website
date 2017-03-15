@@ -102,7 +102,7 @@ class Api_model extends CI_Model {
     $error['additional'] = htmlentities( $additionalInfo );
     
     if (!$supress_output) {
-      $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode . ' Api Error' );
+      http_response_code($httpErrorCode);
       $this->xmlContents('error-message', $version, $error, $httpHeaders);
     }
     
