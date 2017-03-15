@@ -317,9 +317,8 @@ class Api_flow extends Api_model {
     }
 
     $runs = $this->Implementation->query('SELECT rid FROM `algorithm_setup`, `run` WHERE `algorithm_setup`.`sid` = `run`.`setup` AND `algorithm_setup`.`implementation_id` = "'.$implementation->id.'" LIMIT 0,1;');
-    $evaluations = $this->Evaluation->getWhereSingle('implementation_id = "' . $implementation->id . '"');
 
-    if($runs || $evaluations || $this->Implementation->isComponent($implementation->id)) {
+    if($runs || $this->Implementation->isComponent($implementation->id)) {
       $this->returnError(324, $this->version);
       return;
     }
