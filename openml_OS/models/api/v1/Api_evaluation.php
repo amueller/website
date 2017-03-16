@@ -62,10 +62,14 @@ class Api_evaluation extends Api_model {
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
 
-    //pre-test
+    //pre-test, should be quick??
     $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag;
     $sql_test =
-      'SELECT distinct r.rid ' . 'FROM run r, algorithm_setup s ' . 'WHERE r.setup = s.sid ' . $where_runs . $where_limit ;
+      'SELECT distinct r.rid ' . 
+      'FROM run r, algorithm_setup s ' . 
+      'WHERE r.setup = s.sid ' . 
+      $where_runs . 
+      $where_limit ;
     $res_test = $this->Evaluation->query( $sql_test );
 
     if (count($res_test) > 10000) {
@@ -78,8 +82,15 @@ class Api_evaluation extends Api_model {
 
     $sql =
       'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, e.function, e.value, e.array_data, i.fullName, d.name ' .
-      'FROM evaluation e, run r, algorithm_setup s, implementation i, dataset d, task_inputs t ' .
-      'WHERE r.setup = s.sid AND e.source = r.rid AND s.implementation_id = i.id AND r.task_id = t.task_id AND t.input="source_data" AND t.value=d.did ' . $where_total .
+      'FROM evaluation e, algorithm_setup s, implementation i, dataset d, task_inputs t, run r, run_evaluated re ' .
+      'WHERE r.setup = s.sid ' .
+      'AND e.source = r.rid ' .
+      'AND e.source = re.run_id ' .
+      'AND r.rid = re.run_id ' .
+      'AND s.implementation_id = i.id ' .
+      'AND r.task_id = t.task_id ' .
+      'AND t.input = "source_data" ' .
+      'AND t.value = d.did ' . $where_total .
       'ORDER BY r.rid' . $where_limit;
     $res = $this->Evaluation->query( $sql );
 
