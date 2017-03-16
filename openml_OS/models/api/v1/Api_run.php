@@ -30,6 +30,9 @@ class Api_run extends Api_model {
     $this->load->helper('arff');
 
     $this->load->model('File');
+    
+    // Currently default
+    $this->weka_engine_id = 1;
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
@@ -172,12 +175,13 @@ class Api_run extends Api_model {
       $this->returnError( 220, $this->version );
       return;
     }
-    $run = $this->Run->getById( $run_id );
+    $run = $this->Run->getById($run_id);
     if( $run === false ) {
       $this->returnError( 221, $this->version );
       return;
     }
-
+    
+    $run->eval_data = $this->Run_evaluated->getById(array($run_id,$this->weka_engine_id)); # TODO: currently, by default we get weka evaluation results
     $run->inputData = $this->Run->getInputData( $run->rid );
     $run->outputData = $this->Run->getOutputData( $run->rid );
     $run->setup = $this->Algorithm_setup->getById( $run->setup );
@@ -215,6 +219,7 @@ class Api_run extends Api_model {
       $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ' . $additional_sql);
       $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
       $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      $result = $result && $this->Run_evaluated->deleteWhere('`run_id` = "' . $run->rid . '" ');
       // Not needed
       //$this->Dataset->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
     }
