@@ -454,11 +454,6 @@ class Api_run extends Api_model {
       return;
     }
 
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError(104, $this->version);
-      return;
-    }
-
     // fetch xml
     $xml = simplexml_load_file($description['tmp_name']);
     if($xml === false) {
@@ -676,6 +671,11 @@ class Api_run extends Api_model {
   }
 
   private function run_trace_upload() {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // check uploaded file
     $trace = isset($_FILES['trace']) ? $_FILES['trace'] : false;
     if(!check_uploaded_file($trace)) {

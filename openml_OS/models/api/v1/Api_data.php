@@ -285,11 +285,6 @@ class Api_data extends Api_model {
       return;
     }
 
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
-      return;
-    }
-
     //check and register the data files, return url
     $file_id = null;
     $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
@@ -435,6 +430,11 @@ class Api_data extends Api_model {
   }
 
   private function data_features_upload() {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
       $this->returnError( 432, $this->version );
@@ -445,11 +445,6 @@ class Api_data extends Api_model {
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.features', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
-      return;
-    }
-
-    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
-      $this->returnError( 104, $this->version );
       return;
     }
 
