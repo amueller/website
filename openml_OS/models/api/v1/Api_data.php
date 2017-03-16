@@ -187,9 +187,15 @@ class Api_data extends Api_model {
       $this->returnError( 112, $this->version );
       return;
     }
-
-    $file = $this->File->getById( $dataset->file_id );
-    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'id = ' . $dataset->did );
+    
+    // overwrite url field
+    if ($dataset->file_id != NULL) {
+      $dataset->url = BASE_URL . 'data/download/' . $dataset->file_id . '/' . $dataset->name . '.' . $dataset->format;
+    }
+    
+    // TODO: this probably fails when there is no file id present? make unit test
+    $file = $this->File->getById($dataset->file_id);
+    $tags = $this->Dataset_tag->getColumnWhere('tag', 'id = ' . $dataset->did);
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
     $dataset->md5_checksum = $file->md5_hash;
 
