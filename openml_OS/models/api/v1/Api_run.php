@@ -757,7 +757,7 @@ class Api_run extends Api_model {
       return;
     }
 
-    $data = array('processed' => now());
+    $data = array('evaluation_date' => now());
     if (isset($xml->children('oml', true)->{'error'})) {
       $data['error'] = '' . $xml->children('oml', true)->{'error'};
     }
@@ -766,8 +766,9 @@ class Api_run extends Api_model {
     }
     
     // TODO: the new way to go.
+    $data['run_id'] = $run_id;
     $data['evaluation_engine_id'] = $eval_engine_id;
-    $this->Run_evaluated->insert($run_id, $data);
+    $this->Run_evaluated->insert($data);
     
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'evaluation'} as $e) {
