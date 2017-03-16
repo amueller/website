@@ -31,10 +31,10 @@
        <xs:minLength value="1" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="array_data1024"> <!-- Subset on xs:string. useful to display array data -->
+  <xs:simpleType name="array_data4096"> <!-- Subset on xs:string. useful to display array data -->
     <xs:restriction base="xs:string">
       <xs:pattern value="([a-zA-Z0-9\., _\-\[\]])+"/>
-      <xs:maxLength value="1024" />
+      <xs:maxLength value="4096" />
        <xs:minLength value="1" />
     </xs:restriction>
   </xs:simpleType>
