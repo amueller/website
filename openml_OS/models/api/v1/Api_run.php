@@ -765,8 +765,6 @@ class Api_run extends Api_model {
       $data['warning'] = '' . $xml->children('oml', true)->{'warning'};
     }
     
-    // TODO: legacy, remove later
-    $this->Run->update( $run_id, $data );
     // TODO: the new way to go.
     $data['evaluation_engine_id'] = $eval_engine_id;
     $this->Run_evaluated->insert($run_id, $data);
