@@ -136,7 +136,8 @@ class Api_run extends Api_model {
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
-    $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
+    $where_server_error = " AND `e`.`error` IS NOT NULL ";
+
 
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
@@ -150,6 +151,7 @@ class Api_run extends Api_model {
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
       'LEFT JOIN dataset d ON t.value = d.did '.
       'LEFT JOIN run_tag ON r.rid = run_tag.id, algorithm_setup s, implementation i ' .
+      'LEFT JOIN run_evaluated e ON r.rid = e.run_id AND e.error IS NOT NULL ' . 
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
       $where_total .
       'GROUP BY r.rid ' .
