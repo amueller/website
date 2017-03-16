@@ -136,6 +136,7 @@ class Api_run extends Api_model {
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
+    // TODO: runs with errors are always removed? 
     $where_server_error = " AND `e`.`error` IS NOT NULL ";
 
 
@@ -150,8 +151,9 @@ class Api_run extends Api_model {
       'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details, GROUP_CONCAT(tag) AS tags ' .
       'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
       'LEFT JOIN dataset d ON t.value = d.did '.
-      'LEFT JOIN run_tag ON r.rid = run_tag.id, algorithm_setup s, implementation i ' .
-      'LEFT JOIN run_evaluated e ON r.rid = e.run_id AND e.error IS NOT NULL ' . 
+      'LEFT JOIN run_tag ON r.rid = run_tag.id ' .
+      'LEFT JOIN run_evaluated e ON r.rid = e.run_id AND e.error IS NOT NULL ' .
+      ', algorithm_setup s, implementation i' 
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
       $where_total .
       'GROUP BY r.rid ' .
