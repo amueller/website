@@ -473,15 +473,21 @@ class Api_run extends Api_model {
     $parameter_objects = array_key_exists('parameter_setting', $run_xml) ? $run_xml['parameter_setting'] : array();
     $output_data = array_key_exists('output_data', $run_xml) ? $run_xml['output_data'] : array();
     $tags = array_key_exists('tag', $run_xml) ? str_getcsv ($run_xml['tag']) : array();
+    
+    $supported_evaluation_measures = $this->Math_function->getColumnWhere('name', '`functionType` = "EvaluationFunction"');
 
     // the user can specify his own metrics. here we check whether these exists in the database.
     if($output_data != false && array_key_exists('evaluation', $output_data)) {
+      // php does not have a set data structure, use hashmap instead
+      $used_evaluation_measures = array(); 
       foreach($output_data->children('oml',true)->{'evaluation'} as $eval) {
-        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->flow.'" AND `implements` = "'.$eval->name.'"');
-        if($measure_id == false) {
-          $this->returnError(217, $this->version,$this->openmlGeneralErrorCode,'Measure: ' . $eval->name . '; flow: ' . $eval->flow);
-          return;
-        }
+        $used_evaluation_measures[''.$eval] = true;
+      }
+      $used_evaluation_measures = array_keys($used_evaluation_measures);
+      $unknown_measures = array_diff($used_evaluation_measures, $supported_evaluation_measures);
+      if (count($unknown_measures) > 0) {
+        $this->returnError(217, $this->version,$this->openmlGeneralErrorCode,'Measure(s): ' . implode(',', $unknown_measures));
+        return;
       }
     }
     $predictionsUrl   = false;
