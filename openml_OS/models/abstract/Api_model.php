@@ -8,7 +8,7 @@ class Api_model extends CI_Model {
     $this->load->helper('text');
     $this->legal_tag_entities = array('data','task','flow','setup','run');
     
-    $this->openmlGeneralErrorCode = 412;
+    $this->openmlGeneralErrorCode = $this->config->item('general_http_error_code');
   }
 
   function xmlEscape($string) {

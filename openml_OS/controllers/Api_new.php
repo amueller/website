@@ -87,6 +87,7 @@ class Api_new extends CI_Controller {
       }
     }
     
+    $this->openmlGeneralErrorCode = $this->config->item('general_http_error_code');
     $this->supportedMetrics = $this->Math_function->getColumnWhere('name', 'functionType = "EvaluationFunction"');
   }
 
