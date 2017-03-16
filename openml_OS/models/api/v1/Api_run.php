@@ -579,7 +579,6 @@ class Api_run extends Api_model {
       'setup' => $setupId,
       'task_id' => $task_id,
       'start_time' => now(),
-      'status' => ($error_message == false) ? 'OK' : 'error',
       'error_message' => ($error_message == false) ? null : $error_message,
       'run_details' => ($run_details == false) ? null : $run_details
     );
