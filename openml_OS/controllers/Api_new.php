@@ -124,7 +124,7 @@ class Api_new extends CI_Controller {
       } else {
         $this->Api_data->returnError(102, $this->version);
       }
-    } else if ($this->user_has_writing_rights == false && (in_array('upload', $segs) || in_array('update', $segs) || in_array('delete', $segs))) {
+    } else if ($this->user_has_writing_rights == false && $request_type != 'get') {
       $this->Api_data->returnError(104, $this->version, 'Automcatically blocked, api call contains forbidden word. ');
     } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd' && $type != 'xml_example') {
        $this->Api_data->returnError(100, $this->version);
