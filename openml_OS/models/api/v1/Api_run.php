@@ -481,7 +481,7 @@ class Api_run extends Api_model {
       // php does not have a set data structure, use hashmap instead
       $used_evaluation_measures = array(); 
       foreach($output_data->children('oml',true)->{'evaluation'} as $eval) {
-        $used_evaluation_measures[''.$eval] = true;
+        $used_evaluation_measures[''.$eval->name] = true;
       }
       $used_evaluation_measures = array_keys($used_evaluation_measures);
       $unknown_measures = array_diff($used_evaluation_measures, $supported_evaluation_measures);
