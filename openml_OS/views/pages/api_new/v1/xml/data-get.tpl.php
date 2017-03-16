@@ -10,7 +10,15 @@
 	<oml:upload_date><?php echo htmlspecialchars(dateXml($upload_date)); ?></oml:upload_date>
   <?php if ($language != null): ?><oml:language><?php echo htmlspecialchars($language); ?></oml:language><?php endif; ?>
   <?php if ($licence != null): ?><oml:licence><?php echo htmlspecialchars($licence); ?></oml:licence><?php endif; ?>
-  <oml:url><?php echo htmlspecialchars($url); ?></oml:url>
+  <oml:url><?php 
+    if ($file_id != NULL): 
+      $url = BASE_URL . 'data/download/' . $file_id . '/' . $name . '.' . $format;
+      echo htmlspecialchars($url);
+    else: 
+      // TODO: something to think about
+      echo htmlspecialchars($url);
+    endif; ?>
+  </oml:url>
   
   <?php if ($file_id != null): ?><oml:file_id><?php echo $file_id; ?></oml:file_id><?php endif; ?>
   <?php if ($default_target_attribute != null): ?><oml:default_target_attribute><?php echo htmlspecialchars($default_target_attribute); ?></oml:default_target_attribute><?php endif; ?>
