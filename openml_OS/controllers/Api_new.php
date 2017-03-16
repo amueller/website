@@ -81,7 +81,7 @@ class Api_new extends CI_Controller {
     // determine if user has writing rights
     $this->user_has_writing_rights = false;
     // fetch user groups
-    for ($this->groups_upload_rights as $group_id) {
+    foreach ($this->groups_upload_rights as $group_id) {
       if ($this->ion_auth->in_group($group_id, $this->user_id)) {
         $this->user_has_writing_rights = true;
       }
