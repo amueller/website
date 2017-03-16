@@ -110,7 +110,6 @@ class Implementation extends Database_write {
 		$implementation->creator = getcsv( $implementation->creator );
 		$implementation->contributor = getcsv( $implementation->contributor );
 		$implementation->parameterSetting = $this->Input->getWhere( 'implementation_id = "' . $implementation->id . '"' );
-		$implementation->bibliographicalReference = $this->Bibliographical_reference->getWhere( 'implementation_id = "' . $implementation->id . '"' );
 		$implementation->components = $this->getComponents( $implementation );
 		$implementation->tag = $this->Implementation_tag->getColumnWhere( 'tag', 'id = ' . $implementation->id );
     

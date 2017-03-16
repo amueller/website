@@ -32,55 +32,33 @@ $config['xml_fields_dataset'] = array(
   'plain'   => array()
 );
 
-$config['xml_fields_dataset_update'] = array(
-  'string'  => array(
-     0 => 'id',
-     1 => 'name',
-     2 => 'description',
-     3 => 'format',
-     4 => 'licence',
-     5 => 'url',
-     6 => 'default_target_attribute',
-     7 => 'row_id_attribute',
-     9 => 'version_label',
-    10 => 'visibility',
-    11 => 'paper_url',
-    12 => 'update_comment'),
-  'csv'     => array(
-     8 => 'ignore_attribute'
-),
-  'array'   => array(),
-  'plain'   => array()
-);
-
 $config['xml_fields_implementation'] = array(
   'string'  => array(
-	0 => 'name',
-	1 => 'custom_name',
-	2 => 'class_name',
-	3 => 'external_version',
-	4 => 'description',
-	7 => 'licence',
-	8 => 'language',
-	9 => 'fullDescription',
-	10 => 'installationNotes',
-	11 => 'dependencies'),
+	  0 => 'name',
+	  1 => 'custom_name',
+	  2 => 'class_name',
+	  3 => 'external_version',
+	  4 => 'description',
+	  7 => 'licence',
+	  8 => 'language',
+	  9 => 'fullDescription',
+	  10 => 'installationNotes',
+	  11 => 'dependencies'),
   'csv'     => array(
-	5 => 'creator',
-	6 => 'contributor',
-	13 => 'tag'),
+	  5 => 'creator',
+	  6 => 'contributor',
+	  14 => 'tag'),
   'array'   => array(
-	12 => 'bibliographical_reference',
-	13 => 'parameter',
-	14 => 'component'),
+	  12 => 'parameter',
+	  13 => 'component'),
   'plain'   => array()
 );
 
 $config['xml_fields_run'] = array(
-  'string'  => array( 'task_id', 'flow_id', 'setup_string', 'error_message', 'implementation_id' ), // TODO: remove implementation_id
-  'csv' => array( 'tag' ),
-  'array'   => array( 'parameter_setting' ),
-  'plain'   => array( 'output_data' )
+  'string'  => array('task_id', 'flow_id', 'setup_string', 'error_message'),
+  'csv'     => array('tag'),
+  'array'   => array('parameter_setting'),
+  'plain'   => array('output_data')
 );
 
 // qualities to show in, e.g., task list

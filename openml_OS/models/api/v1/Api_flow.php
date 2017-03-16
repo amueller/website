@@ -12,7 +12,6 @@ class Api_flow extends Api_model {
     $this->load->model('Implementation_component');
 
     $this->load->model('File');
-    $this->load->model('Bibliographical_reference');
     $this->load->model('Input');
 
   }
@@ -323,12 +322,11 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $result = $this->Implementation->delete( $implementation->id );
+    $result = $this->Implementation->delete($implementation->id);
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }
     $this->Input->deleteWhere('implementation_id =' . $implementation->id);
     $this->Implementation_component->deleteWhere('parent =' . $implementation->id);
-    $this->Bibliographical_reference->deleteWhere('implementation_id =' . $implementation->id);
     // TODO: also check component parts.
 
     if( $result == false ) {
