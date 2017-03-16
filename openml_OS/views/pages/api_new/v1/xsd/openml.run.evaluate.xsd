@@ -15,7 +15,7 @@
       <xs:element name="function" type="oml:system_string128"/> <!-- A reference to the math_function that was used -->
       <xs:element name="value" minOccurs="0" type="xs:double"/> <!-- The result of the math_function. (Sidenote: If you sumbit values of math_functions that are also run on line, it will be used to test whether the outcome is similar.) -->
       <xs:element name="stdev" minOccurs="0" type="xs:double"/> <!-- In case the global performance is based upon multiple folds, a stdev can be given -->
-      <xs:element name="array_data" minOccurs="0" type="oml:array_data1024"/> <!-- In some cases, a function returns array data (i.e., precision, recall).  -->
+      <xs:element name="array_data" minOccurs="0" type="oml:array_data4096"/> <!-- In some cases, a function returns array data (i.e., precision, recall).  -->
       <xs:element name="sample_size" minOccurs="0" type="xs:integer"/> <!-- In the case of a sample, the size of the sample.  -->
     </xs:sequence>
     <xs:attribute name="repeat" type="xs:integer" />
