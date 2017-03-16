@@ -333,8 +333,9 @@ class Api_run extends Api_model {
       return;
     }
     
+    $evaluation_engines = $this->Run_evaluated->getWhere(array($run_id, $this->weka_engine_id));
     // check if run is not processed yet
-    if ($run->processed != null) {
+    if ($evaluation_engines != false) {
       $this->returnError(617, $this->version);
       return;
     }
