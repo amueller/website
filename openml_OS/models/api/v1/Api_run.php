@@ -783,7 +783,7 @@ class Api_run extends Api_model {
       // adding rid
       $evaluation['source'] = $run_id;
       // adding evaluation engine id
-      $evaluation['evaluation_engine_id'] = $run_id;
+      $evaluation['evaluation_engine_id'] = $eval_engine_id;
 
       if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample
