@@ -153,7 +153,7 @@ class Api_run extends Api_model {
       'LEFT JOIN dataset d ON t.value = d.did '.
       'LEFT JOIN run_tag ON r.rid = run_tag.id ' .
       'LEFT JOIN run_evaluated e ON r.rid = e.run_id AND e.error IS NOT NULL ' .
-      ', algorithm_setup s, implementation i' 
+      ', algorithm_setup s, implementation i' .
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
       $where_total .
       'GROUP BY r.rid ' .
