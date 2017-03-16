@@ -48,7 +48,7 @@ class KnowledgePiece extends Database_write{
         $data_sql = "SELECT d.did as id, d.uploader, d.upload_date as time, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id;
         $flow_sql = "SELECT f.id, f.uploader, f.uploadDate as time, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id;
         $task_sql = "SELECT t.task_id as id, t.creator as uploader, t.creation_date as time, 't' as kt FROM task as t WHERE t.creator=".$u_id;
-        $run_sql = "SELECT r.rid as id, r.uploader, r.processed as time, 'r' as kt FROM run as r WHERE r.uploader=".$u_id;
+        $run_sql = "SELECT r.rid as id, r.uploader, r.start_time as time, 'r' as kt FROM run as r WHERE r.uploader=".$u_id;
         $upload_sql = "SELECT uploads.kt, count(uploads.id) as count, DATE(uploads.time) as date FROM (".$data_sql." UNION ".$flow_sql." UNION ".$task_sql." UNION ".$run_sql.") as uploads";
         if ($from != null && $to!=null) {
             $upload_sql .= ' WHERE uploads.time>="' . $from . '"';
