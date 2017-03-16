@@ -609,7 +609,7 @@ class Api_run extends Api_model {
         'upload_time' => now()
       );
 
-      $did = $this->Runfile->insert( $record );
+      $did = $this->Runfile->insert($record);
       if( $did == false ) {
         $this->returnError( 212, $this->version );
         return;

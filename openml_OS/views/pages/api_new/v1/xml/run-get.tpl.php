@@ -47,7 +47,6 @@
     <?php endif; if(array_key_exists('runfile',$source->outputData) ): ?>
       <?php foreach( $source->outputData['runfile'] as $r ): ?>
       <oml:file>
-        <oml:did><?php echo $r->did; ?></oml:did>
         <oml:file_id><?php echo $r->file_id; ?></oml:file_id>
         <oml:name><?php echo $r->field; ?></oml:name>
         <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl( $f ); ?></oml:url>
