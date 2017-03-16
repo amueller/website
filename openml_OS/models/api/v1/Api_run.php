@@ -773,7 +773,7 @@ class Api_run extends Api_model {
     // TODO: the new way to go.
     $data['run_id'] = $run_id;
     $data['evaluation_engine_id'] = $eval_engine_id;
-    $data['user_id'] = $user_id;
+    $data['user_id'] = $this->user_id;
     $this->Run_evaluated->insert($data);
     
     $this->db->trans_start();

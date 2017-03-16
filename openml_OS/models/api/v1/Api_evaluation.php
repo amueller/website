@@ -79,7 +79,8 @@ class Api_evaluation extends Api_model {
 
     //get evaluations
     $where_total = $where_runs . $where_function;
-
+    
+    // TODO: test this function
     $sql =
       'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, e.function, e.value, e.array_data, i.fullName, d.name ' .
       'FROM evaluation e, algorithm_setup s, implementation i, dataset d, task_inputs t, run r, run_evaluated re ' .
