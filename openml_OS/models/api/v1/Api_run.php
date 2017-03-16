@@ -137,7 +137,7 @@ class Api_run extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     // TODO: runs with errors are always removed? 
-    $where_server_error = " AND `e`.`error` IS NOT NULL ";
+    $where_server_error = " AND `e`.`error` IS NULL ";
 
 
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
