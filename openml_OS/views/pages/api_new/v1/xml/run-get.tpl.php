@@ -57,7 +57,6 @@
       <?php foreach( $source->outputData['evaluations'] as $e ): ?>
         <oml:evaluation>
           <oml:name><?php echo $e->{'function'}; ?></oml:name>
-          <oml:flow_id>-1</oml:flow_id> <!-- Deprecated field, will be removed during next upgrade. -->
           <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
           <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
         </oml:evaluation>
@@ -66,7 +65,6 @@
       <?php foreach( $source->outputData['evaluations_fold'] as $e ): ?>
         <oml:evaluation repeat="<?php echo $e->{'repeat'}; ?>" fold="<?php echo $e->{'fold'}; ?>">
           <oml:name><?php echo $e->{'function'}; ?></oml:name>
-          <oml:flow_id>-1</oml:flow_id> <!-- Deprecated field, will be removed during next upgrade. -->
           <?php if ($e->value != null): ?><oml:value><?php echo $e->value; ?></oml:value><?php endif; ?>
           <?php if ($e->array_data != null): ?><oml:array_data><?php echo $e->array_data; ?></oml:array_data><?php endif; ?>
         </oml:evaluation>
