@@ -111,10 +111,11 @@ class Api_flow extends Api_model {
       $implementations[$implementation->id] = $implementation;
     }
 
-    $dt = $this->Implementation_tag->query('SELECT id, tag FROM implementation_tag WHERE `id` IN (' . implode(',', array_keys( $implementations) ) . ') ORDER BY `id`');
-
-    foreach( $dt as $tag ) {
-      $implementations[$tag->id]->tags[] = $tag->tag;
+    $dt = $this->Implementation_tag->getWhere('`id` IN (' . implode(',', array_keys($implementations)) . ')');
+    if ($dt) {
+      foreach($dt as $tag) {
+        $implementations[$tag->id]->tags[] = $tag->tag;
+      }
     }
 
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
