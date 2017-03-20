@@ -164,7 +164,6 @@ if($this->listids and $this->coreterms != ''){
 }
 elseif($this->terms != 'match_all' and $this->coreterms != ''){
 	$query = '"query_string" : {
-	            "stored_fields" : ["name^5", "first_name^5", "last_name^5", "description^2","_all"],
 	            "query" : "'.$this->coreterms.'"
 	          }';
 }
