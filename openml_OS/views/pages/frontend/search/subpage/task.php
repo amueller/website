@@ -43,7 +43,7 @@
             unset($p['id']);
             $p['type'] = 'measure';
             $p['body']['query']['bool']['must'] = array(
-                array('match' => array('type' => 'estimation_procedure')),
+                array('match' => array('measure_type' => 'estimation_procedure')),
                 array('match' => array('task_type' => $this->filters['tasktype.tt_id'])),
             );
             $results = $this->searchclient->search($p);
