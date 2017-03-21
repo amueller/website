@@ -2,6 +2,9 @@
   $p = array();
   $p['index'] = 'openml';
   $p['type'] = 'task_type';
+
+  // TODO: Update ES to replace this DB call.
+  $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 ?>
 
 <li>
@@ -36,7 +39,15 @@
       if($v['name'] == 'source_data'){
         $v['name'] = 'source_data.name';
       }
-      if($v['name'] == 'estimation_procedure'){?>
+      if($v['name'] == 'evaluation_measures'){ ?>
+        <select class="form-control input-small selectpicker" name="evaluation_measures" id="evaluation_measures">
+            <option value="">Estimation measure</option>
+            <?php foreach($this->allmeasures as $m): ?>
+            <option value="<?php echo $m;?>" <?php if(array_key_exists('evaluation_measures',$this->filters) and $this->filters['evaluation_measures'] == $m){ echo 'selected';}?>><?php echo str_replace('_', ' ', $m);?></option>
+            <?php endforeach; ?>
+				</select>
+      <?php }
+      elseif($v['name'] == 'estimation_procedure'){?>
         <select class="form-control input-small selectpicker" name="tasktype" id="estimation_procedure.proc_id">
            <option value="">Estimation procedure</option>
           <?php
