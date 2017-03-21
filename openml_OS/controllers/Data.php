@@ -48,7 +48,7 @@ class Data extends CI_Controller {
         $this->_error404();
       } else {
         header('Content-type: ' . $file->mime_type);
-        header('Content-Length: ' . $file->filesize);
+        // header('Content-Length: ' . $file->filesize);
         readfile(DATA_PATH . $file->filepath);
       }
     } else {
@@ -100,7 +100,7 @@ class Data extends CI_Controller {
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
-    header('Content-Length: ' . $file->filesize);
+    // header('Content-Length: ' . $file->filesize);
   }
 }
 ?>
