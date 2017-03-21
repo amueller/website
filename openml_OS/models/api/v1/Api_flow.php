@@ -12,7 +12,6 @@ class Api_flow extends Api_model {
     $this->load->model('Implementation_component');
 
     $this->load->model('File');
-    $this->load->model('Bibliographical_reference');
     $this->load->model('Input');
 
   }
@@ -112,10 +111,11 @@ class Api_flow extends Api_model {
       $implementations[$implementation->id] = $implementation;
     }
 
-    $dt = $this->Implementation_tag->query('SELECT id, tag FROM implementation_tag WHERE `id` IN (' . implode(',', array_keys( $implementations) ) . ') ORDER BY `id`');
-
-    foreach( $dt as $tag ) {
-      $implementations[$tag->id]->tags[] = $tag->tag;
+    $dt = $this->Implementation_tag->getWhere('`id` IN (' . implode(',', array_keys($implementations)) . ')');
+    if ($dt) {
+      foreach($dt as $tag) {
+        $implementations[$tag->id]->tags[] = $tag->tag;
+      }
     }
 
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
@@ -243,12 +243,7 @@ class Api_flow extends Api_model {
       $this->returnError( 161, $this->version );
       return;
     }
-
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
-      return;
-    }
-
+    
     $name = ''.$xml->children('oml', true)->{'name'};
 
     $implementation = array(
@@ -317,19 +312,17 @@ class Api_flow extends Api_model {
     }
 
     $runs = $this->Implementation->query('SELECT rid FROM `algorithm_setup`, `run` WHERE `algorithm_setup`.`sid` = `run`.`setup` AND `algorithm_setup`.`implementation_id` = "'.$implementation->id.'" LIMIT 0,1;');
-    // $evaluations = $this->Evaluation->getWhereSingle('implementation_id = "' . $implementation->id . '"'); // The impl_id here points to the metric implementation, not the flow.
 
     if($runs || $this->Implementation->isComponent($implementation->id)) {
       $this->returnError(324, $this->version);
       return;
     }
 
-    $result = $this->Implementation->delete( $implementation->id );
+    $result = $this->Implementation->delete($implementation->id);
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }
     $this->Input->deleteWhere('implementation_id =' . $implementation->id);
     $this->Implementation_component->deleteWhere('parent =' . $implementation->id);
-    $this->Bibliographical_reference->deleteWhere('implementation_id =' . $implementation->id);
     // TODO: also check component parts.
 
     if( $result == false ) {

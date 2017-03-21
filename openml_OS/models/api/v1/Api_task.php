@@ -221,11 +221,6 @@ class Api_task extends Api_model {
       return;
     }
 
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
-      return;
-    }
-
     $xml = simplexml_load_file($descriptionFile);
 
     $task_type_id = intval($xml->children('oml', true)->{'task_type_id'});
