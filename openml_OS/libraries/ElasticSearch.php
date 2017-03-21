@@ -1000,12 +1000,14 @@ class ElasticSearch {
             else
               $targets = $this->fetch_targets();
             foreach ($tasks as $v) {
-              $index[$v->task_id]['task_id'] = $v->task_id;
-              $index[$v->task_id]['tasktype']['name'] = $v->name;
-              $index[$v->task_id]['source_data']['data_id'] = $v->did;
-              $index[$v->task_id]['source_data']['name'] = $v->dname;
-              $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
-              $index[$v->task_id]['target_values'] = $targets[$v->did]['target_values'];
+              if(array_key_exists($v->did,$targets)){ //check whether the task is valid (uses an existing dataset)
+                $index[$v->task_id]['task_id'] = $v->task_id;
+                $index[$v->task_id]['tasktype']['name'] = $v->name;
+                $index[$v->task_id]['source_data']['data_id'] = $v->did;
+                $index[$v->task_id]['source_data']['name'] = $v->dname;
+                $index[$v->task_id]['estimation_procedure']['name'] = $v->epname;
+                $index[$v->task_id]['target_values'] = $targets[$v->did]['target_values'];
+              }
             }
           }
         return $index;
@@ -1254,6 +1256,9 @@ class ElasticSearch {
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
+        if(!array_key_exists($r->task_id,$tasks) or !array_key_exists($r->implementation_id,$this->flow_names)){ // catch faulty runs
+            return array();
+        }
         $new_data = array(
             'run_id' => $r->rid,
             'uploader' => array_key_exists($r->uploader, $this->user_names) ? $this->user_names[$r->uploader] : 'Unknown',
@@ -1825,11 +1830,11 @@ class ElasticSearch {
                     $feat['stdev'] = $f->StandardDeviation;
                 } elseif ($f->data_type == "nominal") {
                     $distr = json_decode($f->ClassDistribution);
-		    if(is_array($distr))
-			$feat['distr'] = $this->array_map_recursive('strval',json_decode($f->ClassDistribution));
+            		    if(is_array($distr))
+            			     $feat['distr'] = $this->array_map_recursive('strval',$distr);
                     else
-			$feat['distr'] = [];
-		}
+            			     $feat['distr'] = [];
+            		}
                 $new_data['features'][] = $feat;
             }
         }

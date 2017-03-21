@@ -26,24 +26,27 @@ if (!empty($this->data['features'])){
 
 	foreach( $this->data['features'] as $r ) {
 		$newGraph = '';
-			if($r['type'] == "numeric"){
+
+		if($r['type'] == "numeric"){
 			$newGraph = '$(\'#feat'.$r['index'].'\').highcharts({chart:{type:\'boxplot\',inverted:true,backgroundColor:null},exporting:false,credits:false,title: null,legend:{enabled: false},tooltip:false,xAxis:{title:null,labels:{enabled:false},tickLength:0},yAxis:{title:null,labels:{style:{fontSize:\'8px\'}}},series: [{data: [['.$r['min'].','.($r['mean']-$r['stdev']).','.$r['mean'].','.($r['mean']+$r['stdev']).','.$r['max'].']]}]});';
 		} else if (count($r['distr'])>0) {
 			$distro = $r['distr'];
-      if(count($distro)>0){
-         $this->featvalues = $distro[0];
-			   $newGraph = '$(\'#feat'.$r['index'].'\').highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", str_replace("'", "", $distro[0])).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}},legend:{enabled: false},tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
+      $this->featvalues = $distro[0];
+	    $newGraph = '$(\'#feat'.$r['index'].'\').highcharts({chart:{type:\'column\',backgroundColor:null},exporting:false,credits:false,title:false,xAxis:{title:false,labels:{'.(count($distro[0])>10 ? 'enabled:false' : 'style:{fontSize:\'9px\'}').'},tickLength:0,categories:[\''.implode("','", str_replace("'", "", $distro[0])).'\']},yAxis:{min:0,title:false,gridLineWidth:0,minorGridLineWidth:0,labels:{enabled:false},stackLabels:{enabled:true,useHTML:true,style:{fontSize:\'9px\'}}},legend:{enabled: false},tooltip:{useHTML:true,shared:true},plotOptions:{column:{stacking:\'normal\'}},series:[';
 
-		for($i=0; $i<count($this->classvalues); $i++){
-			$newGraph .= '{name:\''.$this->classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
-			if($i!=count($this->classvalues)-1)
-				$newGraph .= ',';
-		}
-		if(count($this->featvalues)==0){
-			$newGraph .= '{name:\'count\',data:['.implode(",",array_column($distro[1], 0)).']}';
-		}
-		$newGraph .= ']});';
-    }
+      if(count($this->classvalues) > 0){ # classification
+    		for($i=0; $i<count($this->classvalues); $i++){
+    			$newGraph .= '{name:\''.$this->classvalues[$i].'\',data:['.implode(",",array_column($distro[1], $i)).']}';
+    			if($i!=count($this->classvalues)-1)
+    				$newGraph .= ',';
+    		}
+      } else { # regression
+        $newGraph .= '{name:\'\',data:['.implode(",",array_column($distro[1], 0)).']}';
+      }
+  		if(count($this->featvalues)==0){
+  			$newGraph .= '{name:\'count\',data:['.implode(",",array_column($distro[1], 0)).']}';
+  		}
+  		$newGraph .= ']});';
 		}
 		if($featCount<3 or $this->showallfeatures){
 			$fgraphs = $newGraph . PHP_EOL . $fgraphs;
@@ -177,12 +180,12 @@ var isliked;
 var reason_id = -1;
 var maxreason = -1;
 <?php if ($this->ion_auth->logged_in()) {
-      if ($this->ion_auth->user()->row()->id != $this->data['uploader_id']) { 
+      if ($this->ion_auth->user()->row()->id != $this->data['uploader_id']) {
 ?>
 
 getYourDownvote();
 setSubmitBehaviour();
- 
+
  function doLike(liked){
     isliked = liked;
     if(isliked){
@@ -271,7 +274,7 @@ function doDownvote(rid){
         reason_id = parseInt(resultdata.getElementsByTagName('reason_id').item(0).textContent);
         getDownvotes();
     }).fail(function(resultdata){
-        
+
     });
 }
 <?php }} ?>
@@ -287,11 +290,11 @@ function refreshNrLikes(){
             }else{
                 $('#likecount').html("0 likes");
             }
-        }).fail(function(resultdata){        
+        }).fail(function(resultdata){
             $('#likecount').html("0 likes");
      });
  }
- 
+
  function refreshNrDownloads(){
     $.ajax({
        method:'GET',
@@ -307,7 +310,7 @@ function refreshNrLikes(){
        }else{
            $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
        }
-    }).fail(function(resultdata){        
+    }).fail(function(resultdata){
        $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
     });
  }
@@ -342,7 +345,7 @@ function flipLikeHTML(){
     }
 }
 
-function setSubmitBehaviour(){ 
+function setSubmitBehaviour(){
     $("#issueform").submit(function(event){
        // cancels the form submission
        event.preventDefault();
@@ -379,7 +382,7 @@ function getDownvotes(){
                 $('#issues_content').append('<tr id="issuerow-'+id+'">');
                 $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('reason')[0].textContent+'</td>');
                 $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('count')[0].textContent+'</td>');
-                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');                
+                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');
                 $('#issuerow-'+id).append('<td><a id="downvotebutton-'+id+'" class="loginfirst btn btn-link" onclick="doDownvote('+id+')" title="Click to agree"> </a></td>');
                 $('#issues_content').append('</tr>');
             }
@@ -416,7 +419,7 @@ function getDownvotes(){
             $('#issues_content').append('<br>');
         }
     }).fail(function(resultdata){
-        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");        
+        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");
     });
     <?php
     if ($this->ion_auth->logged_in()) {

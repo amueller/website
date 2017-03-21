@@ -164,7 +164,6 @@ if($this->listids and $this->coreterms != ''){
 }
 elseif($this->terms != 'match_all' and $this->coreterms != ''){
 	$query = '"query_string" : {
-	            "stored_fields" : ["name^5", "first_name^5", "last_name^5", "description^2","_all"],
 	            "query" : "'.$this->coreterms.'"
 	          }';
 }
@@ -196,12 +195,10 @@ foreach($this->filters as $k => $v){
 		if(count($parts) == 2)
 			$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gte" : '.$parts[0].', "lte" : '.$parts[1].' } } }';
 		}
-	elseif($k == 'type' or $k == 'measure_type' )
+	elseif($k == 'type' or $k == 'measure_type' or $k == 'status' or $k == 'evaluation_measures')
     $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   elseif($k == 'tags.tag')
     $jsonfilters[] = '{ "nested": { "path": "tags", "query": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';
-  elseif($k == 'status')
-		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   else
 		$jsonfilters[] = '{ "term" : { "'.$k.'" : "'.str_replace('_',' ',$v).'"} }';
 }

@@ -1,6 +1,6 @@
 <?php
 
-$this->load_javascript = array('js/libs/highcharts.js',
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js',
 'https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js',
 'https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js',
 '//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js',

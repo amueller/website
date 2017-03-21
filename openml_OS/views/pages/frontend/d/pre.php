@@ -1,7 +1,7 @@
   <?php
 
   //$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
-  $this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+  $this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/jquery.dataTables.min.js');
   $this->load_css = array('css/gollum.css');
 
   //Redirect to search if bad url

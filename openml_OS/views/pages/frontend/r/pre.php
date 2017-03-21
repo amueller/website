@@ -5,7 +5,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/r/')) {
   die();
 }
 
-$this->load_javascript = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js');
+$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/jquery.dataTables.min.js');
 
 $this->initialMsgClass = '';
 $this->initialMsg = '';
@@ -194,11 +194,9 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/r/')) { // DETAIL
         if ($this->ion_auth->logged_in()) {
           $this->activeuserlike = $this->searchclient->search($this->l)['hits']['hits'];
         }
-   } catch (Exception $e) {}
 
-   $this->p['type'] = 'flow';
-   $this->p['id'] = $this->run['run_flow']['flow_id'];
-   try{
+     $this->p['type'] = 'flow';
+     $this->p['id'] = $this->run['run_flow']['flow_id'];
      $this->flow = $this->searchclient->get($this->p)['_source'];
      $this->flow_parameters = array();
      foreach( $this->flow['parameters'] as $p ){

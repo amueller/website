@@ -19,14 +19,14 @@
 <div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
 <div id="catchphrase">Exploring machine learning better, together</div><br>
-
+<!--
   <div class="col-md-6 col-md-offset-3 surveypopup">
     <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-heart"></i></a>
     <div class="shortintro" style="padding-top:10px;">
       The <a href="http://openml2017dev.openml.org">OpenML hackathon</a> is now LIVE. Join us on <a href="openml.slack.com">Slack</a> (<a href="mailto:openmachinelearning@gmail.com" target="_blank">request invite</a>).</a>
     </div>
   </div>
-
+-->
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
 
@@ -190,7 +190,7 @@
                         <li>Community mailing list</li>
                         <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank">openml@googlegroups.com <i class="fa fa-envelope fa-fw"></i></a></li>
 
-           		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a></li>
+           		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a>, <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/" target="_blank">Dutch Data Prize</a></li>
                         <li>Hosted for you by</li><li> <a href="https://www.tue.nl/en/university/departments/mathematics-and-computer-science/research/research-institutes/data-science-center-eindhoven-dsce/" target="_blank">TU Eindhoven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
                     </ul>
 

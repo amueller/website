@@ -288,13 +288,13 @@ class Api_flow extends Api_model {
     try {
       // update elastic search index.
       $this->elasticsearch->index('flow', $impl);
-    
+
       // update counters
       $this->elasticsearch->index('user', $this->user_id);
     } catch (Exception $e) {
       // TODO: should be logged
     }
-    
+
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
 
@@ -329,14 +329,14 @@ class Api_flow extends Api_model {
       $this->returnError( 325, $this->version  );
       return;
     }
-    
+
     try {
       $this->elasticsearch->delete('flow', $flow_id);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
-    
+
     $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
   }
 
@@ -347,7 +347,7 @@ class Api_flow extends Api_model {
     }
 
     $condition = 'SELECT rid FROM run r, algorithm_setup s WHERE s.sid = r.setup AND s.implementation_id = ' . $flow_id;
-    
+
     $queries = array(
       'evaluation' => 'DELETE FROM evaluation WHERE source IN ('.$condition.');',
       'evaluation_fold' => 'DELETE FROM evaluation_fold WHERE source IN ('.$condition.');',
@@ -356,7 +356,7 @@ class Api_flow extends Api_model {
       'run' => 'DELETE FROM run WHERE setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$flow_id.');',
       'algorithm_setup' => 'DELETE FROM algorithm_setup WHERE implementation_id = ' . $flow_id . ';'
     );
-    
+
     foreach ($queries as $table => $query) {
       $res = $this->Implementation->query($query);
       if ($res == false) {
@@ -367,7 +367,7 @@ class Api_flow extends Api_model {
 
     $this->flow_delete($flow_id);
   }
-  
+
   private function insertImplementationFromXML( $xml, $configuration, $implementation_base = array() ) {
     $implementation_objects = all_tags_from_xml( $xml, array_custom_filter($configuration, array('plain','array')) );
     $implementation = all_tags_from_xml( $xml, array_custom_filter($configuration, array('string','csv')), $implementation_base );
@@ -408,15 +408,15 @@ class Api_flow extends Api_model {
     if( $flow_id === false ) {
       return false;
     }
-    
+
     // add to elastic search index.
     try {
       $this->elasticsearch->index('flow', $flow_id);
     } catch (Exception $e) {
       // TODO should be logged
     }
-    
-    
+
+
     foreach( $tags as $tag ) {
       $error = -1;
       $res = $this->entity_tag_untag('implementation', $flow_id, $tag, false, 'flow', true);
