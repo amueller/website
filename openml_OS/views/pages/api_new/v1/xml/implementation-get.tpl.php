@@ -16,7 +16,6 @@ $mapping = array(
   'full_description' => 'fullDescription',
   'installation_notes' => 'installationNotes',
   'dependencies' => 'dependencies',
-  'bibliographical_reference' => 'bibliographicalReference',
   'parameters' => 'parameterSetting',
   'components' => 'components',
   'tag' => 'tag',

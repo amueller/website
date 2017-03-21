@@ -8,7 +8,7 @@ class Api_model extends CI_Model {
     $this->load->helper('text');
     $this->legal_tag_entities = array('data','task','flow','setup','run');
     
-    $this->openmlGeneralErrorCode = 450;
+    $this->openmlGeneralErrorCode = $this->config->item('general_http_error_code');
   }
 
   function xmlEscape($string) {
@@ -95,15 +95,15 @@ class Api_model extends CI_Model {
     );
   }
 
-  public function returnError($code, $version, $httpErrorCode = 450, $additionalInfo = null, $emailLog = false, $supress_output = false) {
+  public function returnError($code, $version, $httpErrorCode = 412, $additionalInfo = null, $emailLog = false, $supress_output = false) {
     $this->Log->api_error('error', $_SERVER['REMOTE_ADDR'], $code, $_SERVER['QUERY_STRING'], $this->load->apiErrors[$code] . (($additionalInfo == null)?'':$additionalInfo) );
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code] );
     $error['additional'] = htmlentities( $additionalInfo );
     
     if (!$supress_output) {
-      $httpHeaders = array( 'HTTP/1.0 ' . $httpErrorCode . ' Api Error' );
-      $this->xmlContents('error-message', $version, $error, $httpHeaders);
+      http_response_code($httpErrorCode);
+      $this->xmlContents('error-message', $version, $error);
     }
     
     if ($emailLog && defined('EMAIL_API_LOG')) { 
@@ -114,11 +114,8 @@ class Api_model extends CI_Model {
     }
   }
 
-  protected function xmlContents($xmlFile, $version, $source, $httpHeaders = array()) {
+  protected function xmlContents($xmlFile, $version, $source) {
     $view = 'pages/'.$this->controller.'/' . $version . '/' . $this->page.'/'.$xmlFile.'.tpl.php';
-    foreach( $httpHeaders as $header ) {
-      header( $header );
-    }
 
     if ($this->outputFormat == 'json') {
       $jsonTemplate = 'pages/'.$this->controller.'/' . $version . '/json/'.$xmlFile.'.tpl.php';

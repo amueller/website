@@ -51,6 +51,7 @@ class Api_new extends CI_Controller {
     $this->load->library('wiki');
 
     $this->groups_upload_rights = array(1,2); // must be part of this group to upload stuff
+    $this->groups_admin = array(1); // must be part of this group to do really important stuff
 
     // XML maintainance
     $this->xml_fields_dataset = $this->config->item('xml_fields_dataset');
@@ -77,6 +78,16 @@ class Api_new extends CI_Controller {
       $this->user_email = $this->ion_auth->user()->row()->email;
     }
     
+    // determine if user has writing rights
+    $this->user_has_writing_rights = false;
+    // fetch user groups
+    foreach ($this->groups_upload_rights as $group_id) {
+      if ($this->ion_auth->in_group($group_id, $this->user_id)) {
+        $this->user_has_writing_rights = true;
+      }
+    }
+    
+    $this->openmlGeneralErrorCode = $this->config->item('general_http_error_code');
     $this->supportedMetrics = $this->Math_function->getColumnWhere('name', 'functionType = "EvaluationFunction"');
   }
 
@@ -110,12 +121,14 @@ class Api_new extends CI_Controller {
 
     if ($this->authenticated == false) {
       if ($this->provided_hash) {
-        $this->Api_data->returnError( 103, $this->version );
+        $this->Api_data->returnError(103, $this->version);
       } else {
-        $this->Api_data->returnError( 102, $this->version );
+        $this->Api_data->returnError(102, $this->version);
       }
+    } else if ($this->user_has_writing_rights == false && $request_type != 'get') {
+      $this->Api_data->returnError(104, $this->version, $this->openmlGeneralErrorCode, 'API calls of the read-only user can only be of type GET. ');
     } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd' && $type != 'xml_example') {
-       $this->Api_data->returnError( 100, $this->version );
+       $this->Api_data->returnError(100, $this->version);
     } else if($type == 'xsd') {
       $this->xsd($segs[0], 'v1');
     } else if($type == 'xml_example') {

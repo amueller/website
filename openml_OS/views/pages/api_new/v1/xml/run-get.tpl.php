@@ -10,7 +10,7 @@
   <oml:flow_id><?php echo $source->setup->implementation_id; ?></oml:flow_id>
   <oml:flow_name><?php echo $source->flow_name; ?></oml:flow_name>
   <oml:setup_id><?php echo $source->setup->sid; ?></oml:setup_id>
-  <?php if($source->error != null):?> <oml:error><?php echo htmlspecialchars($source->error); ?></oml:error> <?php endif; ?>
+  <?php if($source->eval_data != false):?> <oml:error><?php echo htmlspecialchars($source->eval_data->error); ?></oml:error> <?php endif; ?>
   <?php if($source->error_message !== null):?> <oml:error_message><?php echo $source->error_message; ?></oml:error_message> <?php endif; ?>
   <?php if($source->run_details !== null):?> <oml:run_details><?php echo $source->run_details; ?></oml:run_details> <?php endif; ?>
   <oml:setup_string><?php echo htmlspecialchars($source->setup->setup_string); ?></oml:setup_string>
@@ -47,7 +47,7 @@
     <?php endif; if(array_key_exists('runfile',$source->outputData) ): ?>
       <?php foreach( $source->outputData['runfile'] as $r ): ?>
       <oml:file>
-        <oml:did><?php echo $r->did; ?></oml:did>
+        <oml:did>-1</oml:did> <!-- Deprecated field, will be removed during next upgrade. -->
         <oml:file_id><?php echo $r->file_id; ?></oml:file_id>
         <oml:name><?php echo $r->field; ?></oml:name>
         <oml:url><?php $f = $this->File->getById($r->file_id); echo fileRecordToUrl( $f ); ?></oml:url>

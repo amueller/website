@@ -8,6 +8,7 @@ class Api_run extends Api_model {
 
     // load models
     $this->load->model('Run');
+    $this->load->model('Run_evaluated');
     $this->load->model('Dataset');
     $this->load->model('Run_tag');
     $this->load->model('Runfile');
@@ -29,6 +30,9 @@ class Api_run extends Api_model {
     $this->load->helper('arff');
 
     $this->load->model('File');
+    
+    // Currently default
+    $this->weka_engine_id = 1;
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
@@ -132,7 +136,9 @@ class Api_run extends Api_model {
     $where_impl = $implementation_id == false ? '' : ' AND `i`.`id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
-    $where_server_error = " AND (`r`.`status` <> 'error' and `r`.`error` is null or `r`.`error` like 'Inconsistent%' or `r`.`error_message` is not null) ";
+    // TODO: runs with errors are always removed? 
+    $where_server_error = " AND `e`.`error` IS NULL ";
+
 
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
@@ -143,9 +149,11 @@ class Api_run extends Api_model {
 
     $sql =
       'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details, GROUP_CONCAT(tag) AS tags ' .
-      'FROM run r LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
+      'FROM algorithm_setup s, implementation i, run r '.
+      'LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
       'LEFT JOIN dataset d ON t.value = d.did '.
-      'LEFT JOIN run_tag ON r.rid = run_tag.id, algorithm_setup s, implementation i ' .
+      'LEFT JOIN run_tag ON r.rid = run_tag.id ' .
+      'LEFT JOIN run_evaluated e ON r.rid = e.run_id AND e.error IS NOT NULL ' .
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
       $where_total .
       'GROUP BY r.rid ' .
@@ -171,12 +179,13 @@ class Api_run extends Api_model {
       $this->returnError( 220, $this->version );
       return;
     }
-    $run = $this->Run->getById( $run_id );
+    $run = $this->Run->getById($run_id);
     if( $run === false ) {
       $this->returnError( 221, $this->version );
       return;
     }
-
+    
+    $run->eval_data = $this->Run_evaluated->getById(array($run_id,$this->weka_engine_id)); # TODO: currently, by default we get weka evaluation results
     $run->inputData = $this->Run->getInputData( $run->rid );
     $run->outputData = $this->Run->getOutputData( $run->rid );
     $run->setup = $this->Algorithm_setup->getById( $run->setup );
@@ -214,6 +223,7 @@ class Api_run extends Api_model {
       $result = $result && $this->Evaluation->deleteWhere('`source` = "' .  $run->rid. '" ' . $additional_sql);
       $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
       $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
+      $result = $result && $this->Run_evaluated->deleteWhere('`run_id` = "' . $run->rid . '" ');
       // Not needed
       //$this->Dataset->deleteWhere('`source` = "' . $run->rid . '" ' . $additional_sql);
     }
@@ -272,6 +282,7 @@ class Api_run extends Api_model {
     $result = $result && $this->Evaluation_fold->deleteWhere('`source` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation_sample->deleteWhere('`source` = "' . $run->rid . '" ');
     $result = $result && $this->Evaluation_interval->deleteWhere('`source` = "' . $run->rid . '" ');
+    $result = $result && $this->Run_evaluated->deleteWhere('`run_id` = "' . $run->rid . '" ');
 
     $update = array( 'error' => null, 'processed' => null );
     $this->Run->update( $run->rid, $update );
@@ -322,8 +333,9 @@ class Api_run extends Api_model {
       return;
     }
     
+    $evaluation_engines = $this->Run_evaluated->getWhere(array($run_id, $this->weka_engine_id));
     // check if run is not processed yet
-    if ($run->processed != null) {
+    if ($evaluation_engines != false) {
       $this->returnError(617, $this->version);
       return;
     }
@@ -442,11 +454,6 @@ class Api_run extends Api_model {
       return;
     }
 
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError(104, $this->version);
-      return;
-    }
-
     // fetch xml
     $xml = simplexml_load_file($description['tmp_name']);
     if($xml === false) {
@@ -466,15 +473,21 @@ class Api_run extends Api_model {
     $parameter_objects = array_key_exists('parameter_setting', $run_xml) ? $run_xml['parameter_setting'] : array();
     $output_data = array_key_exists('output_data', $run_xml) ? $run_xml['output_data'] : array();
     $tags = array_key_exists('tag', $run_xml) ? str_getcsv ($run_xml['tag']) : array();
+    
+    $supported_evaluation_measures = $this->Math_function->getColumnWhere('name', '`functionType` = "EvaluationFunction"');
 
     // the user can specify his own metrics. here we check whether these exists in the database.
     if($output_data != false && array_key_exists('evaluation', $output_data)) {
+      // php does not have a set data structure, use hashmap instead
+      $used_evaluation_measures = array(); 
       foreach($output_data->children('oml',true)->{'evaluation'} as $eval) {
-        $measure_id = $this->Implementation->getWhere('`fullName` = "'.$eval->flow.'" AND `implements` = "'.$eval->name.'"');
-        if($measure_id == false) {
-          $this->returnError(217, $this->version,$this->openmlGeneralErrorCode,'Measure: ' . $eval->name . '; flow: ' . $eval->flow);
-          return;
-        }
+        $used_evaluation_measures[''.$eval->name] = true;
+      }
+      $used_evaluation_measures = array_keys($used_evaluation_measures);
+      $unknown_measures = array_diff($used_evaluation_measures, $supported_evaluation_measures);
+      if (count($unknown_measures) > 0) {
+        $this->returnError(217, $this->version,$this->openmlGeneralErrorCode,'Measure(s): ' . implode(',', $unknown_measures));
+        return;
       }
     }
     $predictionsUrl   = false;
@@ -568,11 +581,10 @@ class Api_run extends Api_model {
       'setup' => $setupId,
       'task_id' => $task_id,
       'start_time' => now(),
-      'status' => ($error_message == false) ? 'OK' : 'error',
       'error_message' => ($error_message == false) ? null : $error_message,
-      'run_details' => ($run_details == false) ? null : $run_details,
-      'experiment' => '-1',
+      'run_details' => ($run_details == false) ? null : $run_details
     );
+    
     $runId = $this->Run->insert( $runData );
     if( $runId === false ) {
       $this->returnError( 210, $this->version );
@@ -603,7 +615,7 @@ class Api_run extends Api_model {
         'upload_time' => now()
       );
 
-      $did = $this->Runfile->insert( $record );
+      $did = $this->Runfile->insert($record);
       if( $did == false ) {
         $this->returnError( 212, $this->version );
         return;
@@ -665,6 +677,11 @@ class Api_run extends Api_model {
   }
 
   private function run_trace_upload() {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // check uploaded file
     $trace = isset($_FILES['trace']) ? $_FILES['trace'] : false;
     if(!check_uploaded_file($trace)) {
@@ -703,7 +720,11 @@ class Api_run extends Api_model {
   }
 
   private function run_evaluate() {
-
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // check uploaded file
     $description = isset( $_FILES['description']) ? $_FILES['description'] : false;
     $error_message = null;
@@ -715,76 +736,73 @@ class Api_run extends Api_model {
     $xsd = xsd('openml.run.evaluate', $this->controller, $this->version);
 
     // validate xml
-    if( validateXml( $description['tmp_name'], $xsd, $xmlErrors ) == false ) {
-      $this->returnError( 423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+    if(validateXml( $description['tmp_name'], $xsd, $xmlErrors) == false) {
+      $this->returnError(423, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
 
     // fetch xml
-    $xml = simplexml_load_file( $description['tmp_name'] );
-    if( $xml === false ) {
-      $this->returnError( 424, $this->version );
+    $xml = simplexml_load_file($description['tmp_name']);
+    if($xml === false) {
+      $this->returnError(424, $this->version);
       return;
     }
+    
+    // TODO: check if user id and evaluation_engine_id are compatible 
+    // (i.e., is the user allowed to run the engine)
 
     $run_id = (string) $xml->children('oml', true)->{'run_id'};
+    $eval_engine_id = '' . $xml->children('oml', true)->{'evaluation_engine_id'};
 
+    $runRecord = $this->Run->getById($run_id);
+    if($runRecord == false) {
+      $this->returnError(425, $this->version);
+      return;
+    }
+    
+    $evaluation_record = $this->Run_evaluated->getById(array($run_id, $eval_engine_id));
+    $evaluations_stored = $this->Evaluation->getWhere('source = "' . $run_id . '" AND evaluation_engine_id = "' . $eval_engine_id . '"');
 
-    $runRecord = $this->Run->getById( $run_id );
-    if( $runRecord == false ) {
-      $this->returnError( 425, $this->version );
+    if($evaluation_record || $evaluations_stored) {
+      $this->returnError(426, $this->version);
       return;
     }
 
-    if( $runRecord->processed != null ) {
-      $this->returnError( 426, $this->version );
-      return;
-    }
-
-    $data = array( 'processed' => now() );
-    if( isset( $xml->children('oml', true)->{'error'}) ) {
+    $data = array('evaluation_date' => now());
+    if (isset($xml->children('oml', true)->{'error'})) {
       $data['error'] = '' . $xml->children('oml', true)->{'error'};
     }
-    if( isset( $xml->children('oml', true)->{'warning'}) ) {
+    if (isset( $xml->children('oml', true)->{'warning'})) {
       $data['warning'] = '' . $xml->children('oml', true)->{'warning'};
     }
-
-    $this->Run->update( $run_id, $data );
-
-    $implementation_ids = $this->Implementation->getAssociativeArray( 'fullName', 'id', '`name` = `name`' );
-
+    
+    // TODO: the new way to go.
+    $data['run_id'] = $run_id;
+    $data['evaluation_engine_id'] = $eval_engine_id;
+    $data['user_id'] = $this->user_id;
+    $this->Run_evaluated->insert($data);
+    
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'evaluation'} as $e) {
       $evaluation = xml2assoc($e, true);
 
-      // naming convention
-      $evaluation['function'] = $evaluation['name'];
-      unset($evaluation['name']);
-
-      // more naming convention
-      if( array_key_exists( $evaluation['flow'], $implementation_ids ) ) {
-        $evaluation['implementation_id'] = $implementation_ids[$evaluation['flow']];
-        unset($evaluation['flow']);
-      } else {
-        $this->Log->mapping( __FILE__, __LINE__, 'Flow ' . $evaluation['flow'] . ' not found in database. ' );
-        continue;
-      }
-
       // adding rid
       $evaluation['source'] = $run_id;
+      // adding evaluation engine id
+      $evaluation['evaluation_engine_id'] = $eval_engine_id;
 
-      if( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) &&  array_key_exists( 'sample', $evaluation ) ) {
+      if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample
-        $this->Evaluation_sample->insert( $evaluation );
-      } elseif( array_key_exists( 'fold', $evaluation ) && array_key_exists( 'repeat', $evaluation ) ) {
+        $this->Evaluation_sample->insert($evaluation);
+      } elseif(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation)) {
         // evaluation_fold
-        $this->Evaluation_fold->insert( $evaluation );
+        $this->Evaluation_fold->insert($evaluation);
   //    } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
   //      // evaluation_interval
   //      $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
-        $this->Evaluation->insert( $evaluation );
+        $this->Evaluation->insert($evaluation);
       }
     }
     $this->db->trans_complete();
@@ -797,7 +815,7 @@ class Api_run extends Api_model {
       return;
     }
     
-    $this->xmlContents( 'run-evaluate', $this->version, array( 'run_id' => $run_id ) );
+    $this->xmlContents('run-evaluate', $this->version, array('run_id' => $run_id));
   }
 }
 ?>

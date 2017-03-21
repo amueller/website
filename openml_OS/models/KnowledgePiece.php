@@ -48,7 +48,7 @@ class KnowledgePiece extends Database_write{
         $data_sql = "SELECT d.did as id, d.uploader, d.upload_date as time, 'd' as kt FROM dataset as d WHERE d.uploader=".$u_id;
         $flow_sql = "SELECT f.id, f.uploader, f.uploadDate as time, 'f' as kt FROM implementation as f WHERE f.uploader=".$u_id;
         $task_sql = "SELECT t.task_id as id, t.creator as uploader, t.creation_date as time, 't' as kt FROM task as t WHERE t.creator=".$u_id;
-        $run_sql = "SELECT r.rid as id, r.uploader, r.processed as time, 'r' as kt FROM run as r WHERE r.uploader=".$u_id;
+        $run_sql = "SELECT r.rid as id, r.uploader, r.start_time as time, 'r' as kt FROM run as r WHERE r.uploader=".$u_id;
         $upload_sql = "SELECT uploads.kt, count(uploads.id) as count, DATE(uploads.time) as date FROM (".$data_sql." UNION ".$flow_sql." UNION ".$task_sql." UNION ".$run_sql.") as uploads";
         if ($from != null && $to!=null) {
             $upload_sql .= ' WHERE uploads.time>="' . $from . '"';
@@ -222,9 +222,9 @@ class KnowledgePiece extends Database_write{
         if($type=='d'){
             $sql = "SELECT 'd' as ot, count(task_inputs.task_id) as count, DATE(task.creation_date) as date FROM  `task`, `task_inputs`, `dataset` WHERE dataset.did=".$id." AND task_inputs.value=dataset.did AND task_inputs.input='source_data' AND task.task_id=task_inputs.task_id AND (task.creator IS NULL OR dataset.uploader<>task.creator)";
         }else if($type=='f'){
-            $sql = "SELECT 'f' as ot, count(run.rid) as count, DATE(run.processed) as date FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.id=".$id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
+            $sql = "SELECT 'f' as ot, count(run.rid) as count, DATE(run.start_time) as date FROM `implementation`, `run`, `algorithm_setup` WHERE implementation.id=".$id." AND algorithm_setup.implementation_id=implementation.id AND run.setup=algorithm_setup.sid AND implementation.uploader<>run.uploader";
         }else /*if($type=='t')*/{
-            $sql = "SELECT 't' as ot, count(run.rid) as count, DATE(run.processed) as date FROM `task`, `run` WHERE task.task_id=".$id." AND run.task_id=task.task_id  AND (task.creator IS NULL OR run.uploader<>task.creator)";
+            $sql = "SELECT 't' as ot, count(run.rid) as count, DATE(run.start_time) as date FROM `task`, `run` WHERE task.task_id=".$id." AND run.task_id=task.task_id  AND (task.creator IS NULL OR run.uploader<>task.creator)";
         }
         if($type=='d'){
             if ($from != null && $to!=null) {
@@ -243,14 +243,14 @@ class KnowledgePiece extends Database_write{
 
         }else{
             if ($from != null && $to!=null) {
-                $sql .= ' AND run.processed>="' . $from . '"';
-                $sql .= ' AND run.processed<"' . $to . '"';
+                $sql .= ' AND run.start_time>="' . $from . '"';
+                $sql .= ' AND run.start_time<"' . $to . '"';
                 $sql .=" GROUP BY ot, date ORDER BY date;";
             }else if ($to != null) {
-                $sql .= ' AND run.processed<"' . $to . '"';
+                $sql .= ' AND run.start_time<"' . $to . '"';
                 $sql .=" GROUP BY ot, date ORDER BY date;";
             }else if($from!=null){
-                $sql .= ' WHERE run.processed>="' . $from . '"';
+                $sql .= ' WHERE run.start_time>="' . $from . '"';
                 $sql .=" GROUP BY ot, date ORDER BY date;";
             }else{
                 $sql.=" GROUP BY ot;";

@@ -187,9 +187,15 @@ class Api_data extends Api_model {
       $this->returnError( 112, $this->version );
       return;
     }
-
-    $file = $this->File->getById( $dataset->file_id );
-    $tags = $this->Dataset_tag->getColumnWhere( 'tag', 'id = ' . $dataset->did );
+    
+    // overwrite url field
+    if ($dataset->file_id != NULL) {
+      $dataset->url = BASE_URL . 'data/download/' . $dataset->file_id . '/' . $dataset->name . '.' . $dataset->format;
+    }
+    
+    // TODO: this probably fails when there is no file id present? make unit test
+    $file = $this->File->getById($dataset->file_id);
+    $tags = $this->Dataset_tag->getColumnWhere('tag', 'id = ' . $dataset->did);
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
     $dataset->md5_checksum = $file->md5_hash;
 
@@ -276,11 +282,6 @@ class Api_data extends Api_model {
       $xml = simplexml_load_file( $description['tmp_name'] );
     } else {
       $this->returnError( 135, $this->version );
-      return;
-    }
-
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
       return;
     }
 
@@ -429,6 +430,11 @@ class Api_data extends Api_model {
   }
 
   private function data_features_upload() {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // get correct description
     if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
       $this->returnError( 432, $this->version );
@@ -439,11 +445,6 @@ class Api_data extends Api_model {
     $description = $_FILES['description'];
     if( validateXml( $description['tmp_name'], xsd('openml.data.features', $this->controller, $this->version), $xmlErrors ) == false ) {
       $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
-      return;
-    }
-
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError( 104, $this->version );
       return;
     }
 
@@ -649,6 +650,11 @@ class Api_data extends Api_model {
   }
 
   private function data_qualities_upload() {
+    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+      $this->returnError(106, $this->version);
+      return;
+    }
+    
     // get correct description
     if (isset($_FILES['description']) == false || check_uploaded_file($_FILES['description']) == false) {
       $this->returnError(382, $this->version);
@@ -659,11 +665,6 @@ class Api_data extends Api_model {
     $description = $_FILES['description'];
     if (validateXml($description['tmp_name'], xsd('openml.data.qualities', $this->controller, $this->version), $xmlErrors) == false) {
       $this->returnError(383, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
-      return;
-    }
-
-    if (!$this->ion_auth->in_group($this->groups_upload_rights, $this->user_id)) {
-      $this->returnError(104, $this->version);
       return;
     }
 
