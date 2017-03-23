@@ -760,6 +760,9 @@ class Api_run extends Api_model {
       return;
     }
     
+    
+    $math_functions = $this->Math_function->getAssociativeArray('name', 'id', 'functionType = "EvaluationFunction"');
+    
     $evaluation_record = $this->Run_evaluated->getById(array($run_id, $eval_engine_id));
     $evaluations_stored = $this->Evaluation->getWhere('source = "' . $run_id . '" AND evaluation_engine_id = "' . $eval_engine_id . '"');
 
@@ -781,8 +784,6 @@ class Api_run extends Api_model {
     $data['evaluation_engine_id'] = $eval_engine_id;
     $data['user_id'] = $this->user_id;
     $this->Run_evaluated->insert($data);
-    
-    $math_functions = $this->Math_function->getAssociativeArray('name', 'id', ' 1==1 ');
     
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'evaluation'} as $e) {
