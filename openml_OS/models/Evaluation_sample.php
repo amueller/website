@@ -1,5 +1,5 @@
 <?php
-class Evaluation_sample extends Database_write {
+class Evaluation_sample extends Evaluation {
 	
   function __construct() {
     parent::__construct();
