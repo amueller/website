@@ -82,11 +82,12 @@ class Api_evaluation extends Api_model {
     
     // TODO: test this function
     $sql =
-      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, e.function, e.value, e.array_data, i.fullName, d.name ' .
-      'FROM evaluation e, algorithm_setup s, implementation i, dataset d, task_inputs t, run r, run_evaluated re ' .
+      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.name ' .
+      'FROM evaluation e, algorithm_setup s, implementation i, dataset d, task_inputs t, run r, run_evaluated re, math_function f ' .
       'WHERE r.setup = s.sid ' .
       'AND e.source = r.rid ' .
       'AND e.source = re.run_id ' .
+      'AND e.function_id = f.id ' . 
       'AND r.rid = re.run_id ' .
       'AND s.implementation_id = i.id ' .
       'AND r.task_id = t.task_id ' .
