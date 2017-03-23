@@ -782,6 +782,8 @@ class Api_run extends Api_model {
     $data['user_id'] = $this->user_id;
     $this->Run_evaluated->insert($data);
     
+    $math_functions = $this->Math_function->getAssociativeArray('name', 'id', ' 1==1 ');
+    
     $this->db->trans_start();
     foreach($xml->children('oml', true)->{'evaluation'} as $e) {
       $evaluation = xml2assoc($e, true);
@@ -790,6 +792,15 @@ class Api_run extends Api_model {
       $evaluation['source'] = $run_id;
       // adding evaluation engine id
       $evaluation['evaluation_engine_id'] = $eval_engine_id;
+      
+      // TODO: this responsibility should be shifted to the evaluation engine
+      if (array_key_exists($evaluation['function'], $math_functions)) {
+        $evaluation['function_id'] = $math_functions[$evaluation['function']];
+      } else {
+        // there will be a DB error due to the absence of 'function_id'
+      }
+      // unset function field
+      unset($evaluation['function']);
 
       if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample
@@ -797,9 +808,6 @@ class Api_run extends Api_model {
       } elseif(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation)) {
         // evaluation_fold
         $this->Evaluation_fold->insert($evaluation);
-  //    } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
-  //      // evaluation_interval
-  //      $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
         $this->Evaluation->insert($evaluation);
