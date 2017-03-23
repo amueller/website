@@ -720,6 +720,7 @@ class Api_run extends Api_model {
   }
 
   private function run_evaluate() {
+    $timestamps = array(microtime(true)); // profiling 0
     if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
       $this->returnError(106, $this->version);
       return;
@@ -770,6 +771,7 @@ class Api_run extends Api_model {
       $this->returnError(426, $this->version);
       return;
     }
+    $timestamps[] = microtime(true); // profiling 1
 
     $data = array('evaluation_date' => now());
     if (isset($xml->children('oml', true)->{'error'})) {
@@ -815,6 +817,7 @@ class Api_run extends Api_model {
       }
     }
     $this->db->trans_complete();
+    $timestamps[] = microtime(true); // profiling 2
 
     // update elastic search index.
     try {
@@ -822,6 +825,16 @@ class Api_run extends Api_model {
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
+    }
+    
+    $timestamps[] = microtime(true); // profiling 3
+    if (DEBUG) {
+      $this->Log->profiling(__FUNCTION__, $timestamps,
+        array(
+          'basic checks of inputs and xml',
+          'database insertions',
+          'elastic search indexing')
+      );
     }
     
     $this->xmlContents('run-evaluate', $this->version, array('run_id' => $run_id));
