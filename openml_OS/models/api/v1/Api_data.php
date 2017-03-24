@@ -193,11 +193,16 @@ class Api_data extends Api_model {
       $dataset->url = BASE_URL . 'data/download/' . $dataset->file_id . '/' . $dataset->name . '.' . $dataset->format;
     }
     
-    // TODO: this probably fails when there is no file id present? make unit test
-    $file = $this->File->getById($dataset->file_id);
+    // TODO: do something better
+    if ($dataset->file_id != null) {
+      $file = $this->File->getById($dataset->file_id);
+      $dataset->md5_checksum = $file->md5_hash;
+    } else {
+      $dataset->md5_checksum = null;
+    }
+    
     $tags = $this->Dataset_tag->getColumnWhere('tag', 'id = ' . $dataset->did);
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
-    $dataset->md5_checksum = $file->md5_hash;
 
     foreach( $this->xml_fields_dataset['csv'] as $field ) {
       $dataset->{$field} = getcsv( $dataset->{$field} );

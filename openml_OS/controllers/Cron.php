@@ -5,6 +5,9 @@ class Cron extends CI_Controller {
     parent::__construct();
 
     $this->controller = strtolower(get_class ($this));
+    if(!$this->input->is_cli_request()) {
+      die('Cron Controller can only be accessed by CLI. ');
+    } 
 
     $this->load->model('Dataset');
     $this->load->model('Log');
@@ -34,8 +37,11 @@ class Cron extends CI_Controller {
     $this->load->Library('elasticSearch');
 
     $this->dir_suffix = 'dataset/cron/';
+    
+    $this->es_indices = array('downvote', 'study', 'data', 'task', 'download', 'user', 'like', 'measure', 'flow', 'task_type', 'run');
   }
-
+  
+  // indexes a single es item, unless $id = false
   public function index($type, $id = false){
       $time_start = microtime(true);
 
@@ -51,9 +57,11 @@ class Cron extends CI_Controller {
       $time = $time_end - $time_start;
       echo "\nIndexing done in $time seconds\n";
   }
-
+  
+  // indices a range of es items, starting by $id (or 0 if id == false)
   public function indexfrom($type, $id = false){
       if(!$id){
+        // TODO: I guess this function enables the exact same hevaiour as index($type, false) (JvR)
         echo "starting ".$type." indexer";
         $this->elasticsearch->index($type);
       } else {
@@ -66,16 +74,26 @@ class Cron extends CI_Controller {
       echo "tagging ".$type." ".$id;
       $this->elasticsearch->update_tags($type, $id);
   }
+  
+  // builds all es indexes
+  public function build_es_indices() {
+    foreach($this->es_indices as $index) {
+      $this->indexfrom($index, 1);
+    }
+  }
 
   function install_database() {
-    $models = directory_map(DATA_PATH . 'sql/', 1);
+    // note that this one does not come from DATA folder, as they are stored in github
+    $models = directory_map('data/sql/', 1);
 
-    foreach( $models as $m ) {
-      $modelname = ucfirst( substr( $m, 0, strpos( $m, '.' ) ) );
-      if( $this->load->is_model_loaded( $modelname ) == false ) { $this->load->model( $modelname ); }
-      if( $this->$modelname->get() === false ) {
-        $sql = file_get_contents( DATA_PATH . 'sql/' . $m );
-        $result = $this->Dataset->query( $sql );
+    foreach($models as $m) {
+      $modelname = ucfirst(substr($m, 0, strpos($m, '.')));
+      if($this->load->is_model_loaded($modelname) == false) { $this->load->model($modelname); }
+      if($this->$modelname->get() === false) {
+        $sql = file_get_contents('data/sql/' . $m);
+        echo 'inserting ' . $modelname . ', with ' . strlen($sql) . ' characters... ';
+        // slighly a hack, because not all models are supposed to write
+        $result = $this->Dataset->query($sql);
       }
     }
   }
