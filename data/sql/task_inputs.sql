@@ -1623,8 +1623,7 @@ INSERT INTO `task_inputs` (`task_id`, `input`, `value`) VALUES
 (541, 'source_data', '91'),
 (541, 'target_feature', 'target'),
 (542, 'estimation_procedure', '2'),
-(542, 'source_data', '91');
-INSERT INTO `task_inputs` (`task_id`, `input`, `value`) VALUES
+(542, 'source_data', '91'),
 (542, 'target_feature', 'target'),
 (543, 'estimation_procedure', '3'),
 (543, 'source_data', '91'),
