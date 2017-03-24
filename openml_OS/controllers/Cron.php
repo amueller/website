@@ -83,7 +83,8 @@ class Cron extends CI_Controller {
   }
 
   function install_database() {
-    $models = directory_map(DATA_PATH . 'sql/', 1);
+    // note that this one does not come from DATA folder, as they are stored in github
+    $models = directory_map('data/sql/', 1);
 
     foreach( $models as $m ) {
       $modelname = ucfirst( substr( $m, 0, strpos( $m, '.' ) ) );
