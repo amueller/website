@@ -89,7 +89,7 @@ if(false === strpos($_SERVER['REQUEST_URI'],'type') && false !== strpos($_SERVER
 
 // evaluations
 $this->current_measure = 'predictive_accuracy';
-if($this->task['evaluation_measures'])
+if(array_key_exists('evaluation_measures',$this->task))
 	$this->current_measure = $this->task['evaluation_measures'];
 
 // TODO: Update ES to replace these two DB calls
