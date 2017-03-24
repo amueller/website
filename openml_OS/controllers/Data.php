@@ -14,6 +14,8 @@ class Data extends CI_Controller {
 
     $this->load->helper('file_upload');
 
+    $this->load->Library('ion_auth');
+    
     // authentication
     $getPostHash = @$this->input->get_post('api_key');
     $this->provided_hash = $getPostHash != false;

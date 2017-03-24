@@ -37,6 +37,8 @@ class Frontend extends CI_Controller {
     $this->load->Library('elasticSearch');
     $this->load->Library('wiki');
     $this->load->Library('curlHandler');
+    $this->load->Library('ion_auth');
+    $this->load->Library('session');
 
     $this->controller = strtolower(get_class ($this));
     $this->query_string = $this->uri->uri_to_assoc(2);

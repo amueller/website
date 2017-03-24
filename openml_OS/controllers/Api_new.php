@@ -47,6 +47,7 @@ class Api_new extends CI_Controller {
       'misc'           => 'misc/'
     );
 
+    $this->load->Library('ion_auth');
     $this->load->library('elasticSearch');
     $this->load->library('wiki');
 

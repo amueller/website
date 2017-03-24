@@ -25,6 +25,8 @@ class Backend extends CI_Controller {
     $this->load->helper('tasksearch');
     $this->load->helper('directory');
 
+    $this->load->Library('ion_auth');
+    $this->load->Library('session');
     $this->load->Library('curlHandler');
     $this->load->Library('elasticSearch');
     $this->load->Library('wiki');
