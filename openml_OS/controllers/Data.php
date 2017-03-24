@@ -43,7 +43,7 @@ class Data extends CI_Controller {
     }
     
     // in the case of session hash authentication, destroy the session
-    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in() && session_name() != '') {
       $this->session->sess_destroy();
     }
   }
@@ -63,7 +63,7 @@ class Data extends CI_Controller {
     }
     
     // in the case of session hash authentication, destroy the session
-    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in() && session_name() != '') {
       $this->session->sess_destroy();
     }
   }
