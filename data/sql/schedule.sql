@@ -1,1 +1,0 @@
-INSERT INTO `schedule` (`sid`, `task_id`) VALUES ('', '');

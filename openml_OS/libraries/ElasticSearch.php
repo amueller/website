@@ -1046,7 +1046,7 @@ class ElasticSearch {
 
     private function fetch_evaluations($min, $max) {
         $index = array();
-        $folddata = $this->db->query('SELECT source, function, fold, `repeat`, value FROM evaluation_fold WHERE source >= ' . $min . ' and source < ' . $max);
+        $folddata = $this->db->query('SELECT e.source, m.name AS function, e.fold, e.`repeat`, e.value FROM evaluation_fold e, math_function m WHERE e.function_id = m.id AND source >= ' . $min . ' and source < ' . $max);
         $allfolds = array();
 
         if ($folddata) {
@@ -1095,7 +1095,7 @@ class ElasticSearch {
             $allfolds[$src] = $curr_src;
         }
 
-        $evals = $this->db->query('SELECT source, function, value, stdev, array_data FROM evaluation WHERE source >= ' . $min . ' and source < ' . $max);
+        $evals = $this->db->query('SELECT e.source, m.name AS `function`, e.value, e.stdev, e.array_data FROM evaluation e, math_function m WHERE e.function_id = m.id AND source >= ' . $min . ' and source < ' . $max);
         if ($evals) {
             foreach ($evals as $r) {
                 $neweval = array(

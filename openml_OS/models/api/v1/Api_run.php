@@ -720,6 +720,7 @@ class Api_run extends Api_model {
   }
 
   private function run_evaluate() {
+    $timestamps = array(microtime(true)); // profiling 0
     if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
       $this->returnError(106, $this->version);
       return;
@@ -760,6 +761,9 @@ class Api_run extends Api_model {
       return;
     }
     
+    
+    $math_functions = $this->Math_function->getAssociativeArray('name', 'id', 'functionType = "EvaluationFunction"');
+    
     $evaluation_record = $this->Run_evaluated->getById(array($run_id, $eval_engine_id));
     $evaluations_stored = $this->Evaluation->getWhere('source = "' . $run_id . '" AND evaluation_engine_id = "' . $eval_engine_id . '"');
 
@@ -767,6 +771,7 @@ class Api_run extends Api_model {
       $this->returnError(426, $this->version);
       return;
     }
+    $timestamps[] = microtime(true); // profiling 1
 
     $data = array('evaluation_date' => now());
     if (isset($xml->children('oml', true)->{'error'})) {
@@ -790,6 +795,15 @@ class Api_run extends Api_model {
       $evaluation['source'] = $run_id;
       // adding evaluation engine id
       $evaluation['evaluation_engine_id'] = $eval_engine_id;
+      
+      // TODO: this responsibility should be shifted to the evaluation engine
+      if (array_key_exists($evaluation['function'], $math_functions)) {
+        $evaluation['function_id'] = $math_functions[$evaluation['function']];
+      } else {
+        // there will be a DB error due to the absence of 'function_id'
+      }
+      // unset function field
+      unset($evaluation['function']);
 
       if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample
@@ -797,15 +811,13 @@ class Api_run extends Api_model {
       } elseif(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation)) {
         // evaluation_fold
         $this->Evaluation_fold->insert($evaluation);
-  //    } elseif( array_key_exists( 'interval_start', $evaluation ) && array_key_exists( 'interval_end', $evaluation ) ) {
-  //      // evaluation_interval
-  //      $this->Evaluation_interval->insert( $evaluation );
       } else {
         // global
         $this->Evaluation->insert($evaluation);
       }
     }
     $this->db->trans_complete();
+    $timestamps[] = microtime(true); // profiling 2
 
     // update elastic search index.
     try {
@@ -813,6 +825,16 @@ class Api_run extends Api_model {
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
+    }
+    
+    $timestamps[] = microtime(true); // profiling 3
+    if (DEBUG) {
+      $this->Log->profiling(__FUNCTION__, $timestamps,
+        array(
+          'basic checks of inputs and xml',
+          'database insertions',
+          'elastic search indexing')
+      );
     }
     
     $this->xmlContents('run-evaluate', $this->version, array('run_id' => $run_id));

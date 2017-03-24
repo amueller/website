@@ -34,8 +34,11 @@ class Cron extends CI_Controller {
     $this->load->Library('elasticSearch');
 
     $this->dir_suffix = 'dataset/cron/';
+    
+    $this->es_indices = array('downvote', 'study', 'data', 'task', 'download', 'user', 'like', 'measure', 'flow', 'task_type', 'run');
   }
-
+  
+  // indexes a single es item, unless $id = false
   public function index($type, $id = false){
       $time_start = microtime(true);
 
@@ -51,9 +54,11 @@ class Cron extends CI_Controller {
       $time = $time_end - $time_start;
       echo "\nIndexing done in $time seconds\n";
   }
-
+  
+  // indices a range of es items, starting by $id (or 0 if id == false)
   public function indexfrom($type, $id = false){
       if(!$id){
+        // TODO: I guess this function enables the exact same hevaiour as index($type, false) (JvR)
         echo "starting ".$type." indexer";
         $this->elasticsearch->index($type);
       } else {
@@ -65,6 +70,13 @@ class Cron extends CI_Controller {
   public function update_tag($type, $id){
       echo "tagging ".$type." ".$id;
       $this->elasticsearch->update_tags($type, $id);
+  }
+  
+  // builds all es indexes
+  public function build_es_indices() {
+    foreach($this->es_indices as $index) {
+      $this->indexfrom($index, 0);
+    }
   }
 
   function install_database() {
