@@ -88,7 +88,7 @@ class Api_new extends CI_Controller {
       if (in_array($group->id,  $this->groups_upload_rights)) {
         $this->user_has_writing_rights = true;
       }
-      if (in_array($group->id, $this->user_has_admin_rights)) {
+      if (in_array($group->id, $this->groups_admin)) {
         $this->user_has_admin_rights = true;
       }
     }
