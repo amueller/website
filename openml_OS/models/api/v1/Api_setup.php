@@ -206,7 +206,7 @@ class Api_setup extends Api_model {
   	$task_size = $this->input->post('task_size');
   	$differences = $this->input->post('differences');
   	
-  	if( $this->ion_auth->is_admin($this->user_id) == false ) {
+  	if($this->user_has_admin_rights == false) {
       $this->returnError( 104, $this->version );
       return;
     }

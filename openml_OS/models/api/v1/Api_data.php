@@ -183,7 +183,7 @@ class Api_data extends Api_model {
 
     if($dataset->visibility != 'public' &&
        $dataset->uploader != $this->user_id &&
-       !$this->ion_auth->is_admin($this->user_id)) {
+       !$this->user_has_admin_rights) {
       $this->returnError( 112, $this->version );
       return;
     }
@@ -219,7 +219,7 @@ class Api_data extends Api_model {
       return;
     }
 
-    if($dataset->uploader != $this->user_id and !$this->ion_auth->is_admin($this->user_id)) {
+    if($dataset->uploader != $this->user_id and !$this->user_has_admin_rights) {
       $this->returnError( 353, $this->version );
       return;
     }
@@ -435,7 +435,7 @@ class Api_data extends Api_model {
   }
 
   private function data_features_upload() {
-    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+    if (!$this->user_has_admin_rights) {
       $this->returnError(106, $this->version);
       return;
     }
@@ -655,7 +655,7 @@ class Api_data extends Api_model {
   }
 
   private function data_qualities_upload() {
-    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+    if (!$this->user_has_upload_rights) {
       $this->returnError(106, $this->version);
       return;
     }
