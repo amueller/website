@@ -140,6 +140,7 @@ class Api_new extends CI_Controller {
     
     // in the case of session hash authentication, destroy the session
     if ($this->provided_valid_hash && !$this->ion_auth->logged_in() && session_name() != '') {
+      session_start();
       $this->session->sess_destroy();
     }
   }
