@@ -5,6 +5,9 @@ class Cron extends CI_Controller {
     parent::__construct();
 
     $this->controller = strtolower(get_class ($this));
+    if(!$this->input->is_cli_request()) {
+      die('Cron Controller can only be accessed by CLI. ');
+    } 
 
     $this->load->model('Dataset');
     $this->load->model('Log');
@@ -75,7 +78,7 @@ class Cron extends CI_Controller {
   // builds all es indexes
   public function build_es_indices() {
     foreach($this->es_indices as $index) {
-      $this->indexfrom($index, 0);
+      $this->indexfrom($index, 1);
     }
   }
 
