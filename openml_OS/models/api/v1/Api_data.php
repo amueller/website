@@ -655,7 +655,7 @@ class Api_data extends Api_model {
   }
 
   private function data_qualities_upload() {
-    if (!$this->user_has_upload_rights) {
+    if (!$this->user_has_admin_rights) {
       $this->returnError(106, $this->version);
       return;
     }
