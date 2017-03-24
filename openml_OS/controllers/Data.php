@@ -41,6 +41,11 @@ class Data extends CI_Controller {
     } else {
       $this->_error403();
     }
+    
+    // in the case of session hash authentication, destroy the session
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+      $this->session->sess_destroy();
+    }
   }
 
   function view($id,$name = 'undefined') {
@@ -55,6 +60,11 @@ class Data extends CI_Controller {
       }
     } else {
       $this->_error403();
+    }
+    
+    // in the case of session hash authentication, destroy the session
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+      $this->session->sess_destroy();
     }
   }
 

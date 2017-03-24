@@ -46,6 +46,7 @@ class Api_new extends CI_Controller {
       'misc'           => 'misc/'
     );
 
+    $this->load->Library('session');
     $this->load->Library('ion_auth');
     $this->load->library('elasticSearch');
     $this->load->library('wiki');
@@ -135,6 +136,11 @@ class Api_new extends CI_Controller {
       $this->xml_example($segs[0], 'v1');
     } else {
       $this->{'Api_'.$type}->bootstrap($outputFormat, $segs, $request_type, $this->user_id);
+    }
+    
+    // in the case of session hash authentication, destroy the session
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+      $this->session->sess_destroy();
     }
   }
 
