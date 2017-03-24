@@ -91,6 +91,8 @@ class Cron extends CI_Controller {
       if( $this->load->is_model_loaded( $modelname ) == false ) { $this->load->model( $modelname ); }
       if( $this->$modelname->get() === false ) {
         $sql = file_get_contents( DATA_PATH . 'sql/' . $m );
+        echo 'inserting ' . $modelname . ', with ' . strlen($sql) . ' characters... ';
+        // slighly a hack, because not all models are supposed to write
         $result = $this->Dataset->query( $sql );
       }
     }
