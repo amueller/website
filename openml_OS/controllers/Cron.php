@@ -86,14 +86,14 @@ class Cron extends CI_Controller {
     // note that this one does not come from DATA folder, as they are stored in github
     $models = directory_map('data/sql/', 1);
 
-    foreach( $models as $m ) {
-      $modelname = ucfirst( substr( $m, 0, strpos( $m, '.' ) ) );
-      if( $this->load->is_model_loaded( $modelname ) == false ) { $this->load->model( $modelname ); }
-      if( $this->$modelname->get() === false ) {
-        $sql = file_get_contents( DATA_PATH . 'sql/' . $m );
+    foreach($models as $m) {
+      $modelname = ucfirst(substr($m, 0, strpos($m, '.')));
+      if($this->load->is_model_loaded($modelname) == false) { $this->load->model($modelname); }
+      if($this->$modelname->get() === false) {
+        $sql = file_get_contents('data/sql/' . $m);
         echo 'inserting ' . $modelname . ', with ' . strlen($sql) . ' characters... ';
         // slighly a hack, because not all models are supposed to write
-        $result = $this->Dataset->query( $sql );
+        $result = $this->Dataset->query($sql);
       }
     }
   }
