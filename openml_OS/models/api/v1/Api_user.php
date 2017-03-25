@@ -16,20 +16,20 @@ class Api_user extends Api_model {
   function bootstrap($format, $segments, $request_type, $user_id) {
     $this->outputFormat = $format;
     
-    $getpost = array('get','post');
+    /*$getpost = array('get','post');
 
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->user_delete($segments[0]);
       return;
-    }
+    }*/
 
     $this->returnError( 100, $this->version );
   }
 
 
-  private function user_delete() {
+  /*private function user_delete() {
 
-    if( $this->ion_auth->is_admin($this->user_id) == false ) {
+    if( $this->user_has_admin_rights == false ) {
       $this->returnError( 104, $this->version );
       return;
     }
@@ -72,7 +72,7 @@ class Api_user extends Api_model {
     }
     
     $this->_xmlContents( 'user-delete', array( 'user' => $user ) );
-  }
+  } */
 
 }
 ?>

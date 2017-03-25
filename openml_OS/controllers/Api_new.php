@@ -9,7 +9,6 @@ class Api_new extends CI_Controller {
     $this->controller = 'api_new';
     $this->page = 'xml';
     $this->active = 'learn';
-    $this->message = $this->session->flashdata('message'); // can be overridden
 
     //$this->load->model('api/v1/Api_test');
     $this->load->model('api/v1/Api_data');
@@ -47,6 +46,8 @@ class Api_new extends CI_Controller {
       'misc'           => 'misc/'
     );
 
+    $this->load->Library('session');
+    $this->load->Library('ion_auth');
     $this->load->library('elasticSearch');
     $this->load->library('wiki');
 
@@ -78,17 +79,28 @@ class Api_new extends CI_Controller {
       $this->user_email = $this->ion_auth->user()->row()->email;
     }
     
-    // determine if user has writing rights
+    // determine the writing and admin rights. 
+    $user_groups = $this->ion_auth->get_users_groups($this->user_id)->result();
     $this->user_has_writing_rights = false;
+    $this->user_has_admin_rights = false;
     // fetch user groups
-    foreach ($this->groups_upload_rights as $group_id) {
-      if ($this->ion_auth->in_group($group_id, $this->user_id)) {
+    foreach ($user_groups as $group) {
+      if (in_array($group->id,  $this->groups_upload_rights)) {
         $this->user_has_writing_rights = true;
+      }
+      if (in_array($group->id, $this->groups_admin)) {
+        $this->user_has_admin_rights = true;
       }
     }
     
     $this->openmlGeneralErrorCode = $this->config->item('general_http_error_code');
     $this->supportedMetrics = $this->Math_function->getColumnWhere('name', 'functionType = "EvaluationFunction"');
+    
+    // in the case of session hash authentication, destroy the session. 
+    // No ION AUTH usage after this point!!
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+      $this->session->sess_destroy();
+    }
   }
 
   public function index() {

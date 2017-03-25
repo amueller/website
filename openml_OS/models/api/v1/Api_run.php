@@ -208,7 +208,7 @@ class Api_run extends Api_model {
       return;
     }
 
-    if($run->uploader != $this->user_id && $this->ion_auth->is_admin($this->user_id) == false ) {
+    if($run->uploader != $this->user_id && $this->user_has_admin_rights == false) {
       $this->returnError( 393, $this->version );
       return;
     }
@@ -256,8 +256,8 @@ class Api_run extends Api_model {
       return;
     }
 
-    if($run->uploader != $this->user_id && $this->ion_auth->is_admin($this->user_id) == false ) {
-      $this->returnError( 413, $this->version );
+    if($run->uploader != $this->user_id && $this->user_has_admin_rights == false) {
+      $this->returnError(413, $this->version);
       return;
     }
 
@@ -677,7 +677,7 @@ class Api_run extends Api_model {
   }
 
   private function run_trace_upload() {
-    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+    if (!$this->user_has_admin_rights) {
       $this->returnError(106, $this->version);
       return;
     }
@@ -721,7 +721,7 @@ class Api_run extends Api_model {
 
   private function run_evaluate() {
     $timestamps = array(microtime(true)); // profiling 0
-    if (!$this->ion_auth->in_group($this->groups_admin, $this->user_id)) {
+    if (!$this->user_has_admin_rights) {
       $this->returnError(106, $this->version);
       return;
     }

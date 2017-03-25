@@ -14,6 +14,8 @@ class Data extends CI_Controller {
 
     $this->load->helper('file_upload');
 
+    $this->load->Library('ion_auth');
+    
     // authentication
     $getPostHash = @$this->input->get_post('api_key');
     $this->provided_hash = $getPostHash != false;
@@ -24,6 +26,11 @@ class Data extends CI_Controller {
       $this->user_id = $this->provided_valid_hash[0]->id;
     } elseif($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
+    }
+    
+    // in the case of session hash authentication, destroy the session (ION AUTH Can't be used anymore)
+    if ($this->provided_valid_hash && !$this->ion_auth->logged_in()) {
+      $this->session->sess_destroy();
     }
   }
 

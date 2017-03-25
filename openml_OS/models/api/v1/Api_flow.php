@@ -306,7 +306,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    if($implementation->uploader != $this->user_id && $this->ion_auth->is_admin($this->user_id) == false) {
+    if($implementation->uploader != $this->user_id && $this->user_has_admin_rights == false) {
       $this->returnError(323, $this->version);
       return;
     }
