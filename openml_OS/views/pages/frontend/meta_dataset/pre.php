@@ -122,6 +122,8 @@ if( $_POST || $this->input->get('check') ) {
     $this->runs_done = 0;
     $this->runs_total = 0;
     
+    // TODO: strange behaviour. Only selects when having a setup. Can not replace
+    // by a LEFT JOIN, as we always need a setup to perform the run
     $sql_setups = 
       'SELECT `s`.`sid`, `i`.`dependencies`, `i`.`name`, `s`.`setup_string` ' . 
       'FROM `algorithm_setup` `s`, `implementation` `i` '.
@@ -144,8 +146,9 @@ if( $_POST || $this->input->get('check') ) {
     
     // TODO: implementations
     $sql_runs = 
-      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`), GROUP_CONCAT(`r`.`error`) ' .
-      'FROM `run` `r`, `task_inputs` `d`, `task` `t`, `algorithm_setup` `s` ' .
+      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`) AS `error_message`, GROUP_CONCAT(`re`.`error`) AS `error` ' .
+      'FROM `task_inputs` `d`, `task` `t`, `algorithm_setup` `s`, `run` `r` '.
+      'LEFT JOIN `run_evaluated` `re` ON `r`.`rid` = `re`.`run_id` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
       'AND `d`.`input` = "source_data" ' .
       'AND `t`.`task_id` = `r`.`task_id` ' . 

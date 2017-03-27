@@ -46,6 +46,15 @@ class Api_setup extends Api_model {
       return;
     }
     
+    if (count($segments) >= 1 && count($segments) <= 2 && $segments[0] == 'count' && in_array($request_type, $getpost)) {
+      if (count($segments) == 2) {
+        $this->setup_count($segments[1]);
+      } else {
+        $this->setup_count();
+      }
+      return;
+    }
+    
     if (count($segments) == 3 && $segments[0] == 'differences' && 
         is_numeric($segments[1]) && is_numeric($segments[2]) && 
         $request_type == 'post' && $this->input->post('task_id') != false) { // TODO: fix $this->inpout->post('task_id') requirement
@@ -80,6 +89,18 @@ class Api_setup extends Api_model {
 
       $this->xmlContents( 'setup-parameters', $this->version, array( 'parameters' => $this->parameters, 'setup' => $setup ) );
     }
+  }
+  
+  
+  function setup_count($tags = null) {
+    $result = $this->Algorithm_setup->setup_runs($tags, $tags);
+    
+    if ($result == false) {
+      $this->returnError(661, $this->version);
+      return;
+    }
+    
+    $this->xmlContents('setup-count', $this->version, array('setups' => $result));
   }
   
   private function setup_exists() {
