@@ -124,8 +124,9 @@ if( $_POST || $this->input->get('check') ) {
     
     $sql_setups = 
       'SELECT `s`.`sid`, `i`.`dependencies`, `i`.`name`, `s`.`setup_string` ' . 
-      'FROM `algorithm_setup` `s`, `implementation` `i` '.
-      'WHERE `s`.`implementation_id` = `i`.`id` ' . 
+      'FROM `implementation` `i` ' . 
+      'LEFT JOIN `algorithm_setup` `s` ON `s`.`implementation_id` = `i`.`id` '.
+      'WHERE 1 ' . 
       (($setup_ids) ? ('AND `s`.`sid` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
       (($flow_ids) ? ('AND `i`.`id` IN (' . implode( ',', $flow_ids ) . ') ') : '' );
     $res_setups = $this->Algorithm_setup->query( $sql_setups );
