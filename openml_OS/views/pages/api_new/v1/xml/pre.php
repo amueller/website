@@ -336,6 +336,10 @@ $this->apiErrors[641] = 'No results';
 // openml.data.feature.quality.list
 $this->apiErrors[651] = 'No results';
 
+// openml.setups.setup_counts
+$this->apiErrors[661] = 'No results';
+
+
 
 // openml.votes.list
 $this->apiErrors[701] = 'List failed';
