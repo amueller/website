@@ -82,6 +82,18 @@ class Api_setup extends Api_model {
     }
   }
   
+  
+  function setup_counts() {
+    $result = $this->Algorithm_setup->setup_runs();
+    
+    if ($results == false) {
+      $this->returnError(661, $this->version);
+      return;
+    }
+    
+    $this->xmlContents('setup-count', $this->version, array('setups' => $result);
+  }
+  
   private function setup_exists() {
     $description = isset($_FILES['description']) ? $_FILES['description'] : false;
     $uploadError = '';
