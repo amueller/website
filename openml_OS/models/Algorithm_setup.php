@@ -9,7 +9,7 @@ class Algorithm_setup extends Database_write {
   
   private function setup_runs() {
     // select sid, count(*) as num_runs from algorithm_setup s LEFT JOIN run r ON s.sid = r.setup GROUP BY sid ORDER BY num_runs ASC 
-    $query = $this->db->select('sid, implementation_id, count(*) as num_runs')->from($this->table)->join->('run', 'run.setup = algorithm_setup.sid')->order_by('num_runs ASC');
+    $query = $this->db->select('sid, implementation_id, count(*) as num_runs')->from($this->table)->join('run', 'run.setup = algorithm_setup.sid', 'left')->order_by('num_runs ASC');
     $data = $this->db->get();
     return ($data && $data->num_rows() > 0) ? $data->result() : false;
   }
