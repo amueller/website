@@ -122,11 +122,12 @@ if( $_POST || $this->input->get('check') ) {
     $this->runs_done = 0;
     $this->runs_total = 0;
     
+    // TODO: strange behaviour. Only selects when having a setup. Can not replace
+    // by a LEFT JOIN, as we always need a setup to perform the run
     $sql_setups = 
       'SELECT `s`.`sid`, `i`.`dependencies`, `i`.`name`, `s`.`setup_string` ' . 
-      'FROM `implementation` `i` ' . 
-      'LEFT JOIN `algorithm_setup` `s` ON `s`.`implementation_id` = `i`.`id` '.
-      'WHERE 1 ' . 
+      'FROM `algorithm_setup` `s`, `implementation` `i` '.
+      'WHERE `s`.`implementation_id` = `i`.`id` ' . 
       (($setup_ids) ? ('AND `s`.`sid` IN (' . implode( ',', $setup_ids ) . ') ') : '' ) . 
       (($flow_ids) ? ('AND `i`.`id` IN (' . implode( ',', $flow_ids ) . ') ') : '' );
     $res_setups = $this->Algorithm_setup->query( $sql_setups );
