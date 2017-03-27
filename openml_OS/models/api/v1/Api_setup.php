@@ -46,8 +46,12 @@ class Api_setup extends Api_model {
       return;
     }
     
-    if (count($segments) == 1 && $segments[0] == 'count' && in_array($request_type, $getpost)) {
-      $this->setup_count();
+    if (count($segments) >= 1 && count($segments) <= 2 && $segments[0] == 'count' && in_array($request_type, $getpost)) {
+      if (count($segments) == 2) {
+        $this->setup_count($segments[1]);
+      } else {
+        $this->setup_count();
+      }
       return;
     }
     
@@ -88,8 +92,8 @@ class Api_setup extends Api_model {
   }
   
   
-  function setup_count() {
-    $result = $this->Algorithm_setup->setup_runs();
+  function setup_count($tags = null) {
+    $result = $this->Algorithm_setup->setup_runs($tags, $tags);
     
     if ($result == false) {
       $this->returnError(661, $this->version);
