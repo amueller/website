@@ -7,9 +7,20 @@ class Algorithm_setup extends Database_write {
     $this->id_column = 'sid';
   }
   
-  function setup_runs() {
-    // select sid, implementation_id, count(*) as num_runs from algorithm_setup s LEFT JOIN run r ON s.sid = r.setup GROUP BY sid ORDER BY num_runs ASC 
-    $query = $this->db->select('sid, implementation_id, count(*) as num_runs')->from($this->table)->join('run', 'run.setup = algorithm_setup.sid', 'left')->group_by('sid')->order_by('num_runs ASC');
+  function setup_runs($task_tag = null, $flow_tag = null) {
+    // select sid, implementation_id, count(*) as num_runs from algorithm_setup s LEFT JOIN run r ON s.sid = r.setup GROUP BY sid ORDER BY num_runs ASC
+    $tag_columns = '';
+    $tag_where = '1';
+    
+    if ($task_tag != null) {
+      $tag_columns .= 'task_tag tt, ';
+      $tag_where .= ' AND r.task_id = tt.id AND tt.tag = "' . $task_tag . '"';
+    }
+    if ($flow_tag != null) {
+      $tag_columns .= 'flow_tag ft, ';
+      $tag_where .= ' AND s.implementation_id = ft.id AND ft.tag = "' . $task_tag . '"';
+    }
+    $query = $this->db->select('sid, implementation_id, count(*) as num_runs')->from($tag_columns . $this->table)->join('run', 'run.setup = algorithm_setup.sid', 'left')->where($tag_where)->group_by('sid')->order_by('num_runs ASC');
     $data = $this->db->get();
     return ($data && $data->num_rows() > 0) ? $data->result() : false;
   }
