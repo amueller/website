@@ -91,7 +91,7 @@ class Api_setup extends Api_model {
   function setup_count() {
     $result = $this->Algorithm_setup->setup_runs();
     
-    if ($results == false) {
+    if ($result == false) {
       $this->returnError(661, $this->version);
       return;
     }
