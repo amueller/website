@@ -10,7 +10,7 @@ class Algorithm_setup extends Database_write {
   function setup_runs($task_tag = null, $flow_tag = null) {
     // select sid, implementation_id, count(*) as num_runs from algorithm_setup s LEFT JOIN run r ON s.sid = r.setup GROUP BY sid ORDER BY num_runs ASC
     $tag_columns = '';
-    $tag_where = '1';
+    $tag_where = '1==1';
     
     if ($task_tag != null) {
       $tag_columns .= 'task_tag tt, ';
