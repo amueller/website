@@ -144,10 +144,11 @@ if( $_POST || $this->input->get('check') ) {
     
     // TODO: implementations
     $sql_runs = 
-      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`), GROUP_CONCAT(`r`.`error`) ' .
-      'FROM `run` `r`, `task_inputs` `d`, `task` `t`, `algorithm_setup` `s` ' .
+      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`), GROUP_CONCAT(`re`.`error`) ' .
+      'FROM `run` `r`, `task_inputs` `d`, `task` `t`, `algorithm_setup` `s`, `run_evaluated` `re` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
       'AND `d`.`input` = "source_data" ' .
+      'AND `r`.`rid` = `re`.`run_id` ' .
       'AND `t`.`task_id` = `r`.`task_id` ' . 
       'AND `r`.`setup` = `s`.`sid` ' .
       (($dataset_ids) ? ('AND `d`.`value` IN (' . implode( ',', $dataset_ids ) . ') ') : '' ) . 
