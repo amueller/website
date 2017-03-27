@@ -144,7 +144,7 @@ if( $_POST || $this->input->get('check') ) {
     
     // TODO: implementations
     $sql_runs = 
-      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`), GROUP_CONCAT(`re`.`error`) ' .
+      'SELECT `r`.`task_id`,`r`.`setup`, GROUP_CONCAT(`r`.`error_message`) AS `error_message`, GROUP_CONCAT(`re`.`error`) AS `error` ' .
       'FROM `task_inputs` `d`, `task` `t`, `algorithm_setup` `s`, `run` `r` '.
       'LEFT JOIN `run_evaluated` `re` ON `r`.`rid` = `re`.`run_id` ' .
       'WHERE `r`.`task_id` = `d`.`task_id` ' . 
