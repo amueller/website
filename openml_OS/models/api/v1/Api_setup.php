@@ -96,7 +96,7 @@ class Api_setup extends Api_model {
       return;
     }
     
-    $this->xmlContents('setup-count', $this->version, array('setups' => $result);
+    $this->xmlContents('setup-count', $this->version, array('setups' => $result));
   }
   
   private function setup_exists() {
