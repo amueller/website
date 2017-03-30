@@ -17,7 +17,7 @@
 		<?php if($this->task['source_data']['name'] != 'Learning Curve'){ ?>
         <div class="pull-right">
 		        Show evaluations for score:
-				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; redrawtimechart();">
+				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; updateTableHeader(); redrawtimechart();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
