@@ -30,7 +30,7 @@
 
       <h3>Leaderboard</h3>
 
-      <div class='table-responsive panel reflow-table'><table id="leaderboard" class='table table-striped'>
+      <div class='table-responsive panel reflow-table'><table id="leaderboard" class='table table-striped' style="margin:0">
         <thead>
           <tr>
             <th>Rank</th>
