@@ -19,6 +19,7 @@ function updateTableHeader(){
 		higherIsBetter = false;
 	else
 		higherIsBetter = true;
+	console.log(higherIsBetter);
 }
 
 /// TIMELINE
@@ -229,7 +230,7 @@ function showData(){
 	    sort: [
 	    {
 	      "evaluations.value": {
-	        "order": "desc",
+	        "order": (higherIsBetter ? "asc" : "desc"),
 	        "nested_path": "evaluations",
 	        "nested_filter": {
 	          "term": {
@@ -511,7 +512,7 @@ $(document).ready(function() {
   <?php if($this->record['type_name'] == 'Learning Curve')
 		echo 'redrawCurves();';
 	      else
-		echo 'showData(); redrawtimechart();';
+		echo 'updateTableHeader(); showData(); redrawtimechart();';
 	?>
 	$('.pop').popover();
 	$('.selectpicker').selectpicker();

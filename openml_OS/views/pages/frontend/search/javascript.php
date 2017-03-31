@@ -12,7 +12,7 @@ function updateQuery(type)
   var constr = '';
   if(type == 'source_data.name')
     constr = $("#"+type.replace('.name','\\.name')).val().replace(/\s/g,"_");
-  else if(type == 'run_task.tasktype.tt_id')
+  else if(type == 'run_task.tasktype._tt_id')
     constr = $("#run_task\\.tasktype\\.tt_id").val();
   else
     constr = $("#"+type.replace('.','\\.')).val().replace(/\s/g,"_");
@@ -38,7 +38,7 @@ function updateQuery(type)
 }
 
 function submitSearch() {
-  var omlq = $('#openmlsearch').val().replace('>','gt;').replace('<','lt;');  
+  var omlq = $('#openmlsearch').val().replace('>','gt;').replace('<','lt;');
   $('#openmlsearch').val(encodeURI(omlq));
   $('#searchform').submit();
 }

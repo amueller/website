@@ -1,6 +1,6 @@
 
 <ul class="hotlinks">
-    
+
 <?php if ($this->ion_auth->logged_in()) {
     if ($this->ion_auth->user()->row()->id != $this->flow['uploader_id']) {?>
         <li>
@@ -24,7 +24,7 @@
     <?php } elseif(isset($this->flow_binary_url)) { ?>
     <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
     <?php } ?>
-    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>    
+    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
 <?php }
 }else{ ?>
     <?php if(isset($this->flow_source_url)) { ?>
@@ -56,7 +56,7 @@
        <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->flow)): if($this->flow['nr_of_likes']!=null): $nr_l = $this->flow['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
        <i class="fa fa-cloud-download"></i><span id="downloadcount"><?php if(array_key_exists('nr_of_downloads',$this->flow)): if($this->flow['nr_of_downloads']!=null): $nr_d = $this->flow['nr_of_downloads']; else: $nr_d = 0; endif; else: $nr_d = 0; endif; echo 'downloaded by '.$nr_d.' people'; ?>
        <i class="fa fa-warning task" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"></i><span id="nr_of_issues" data-toggle="collapse" data-target="#issues" title="Click to show/hide" style="cursor: pointer; cursor: hand;"><?php if(array_key_exists('nr_of_issues',$this->flow)): if($this->flow['nr_of_issues']!=null): $i = $this->flow['nr_of_issues']; else: $i=0; endif; else: $i=0; endif; echo $i.' issues'; ?></span>
-       <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->flow)): if($this->flow['nr_of_downvotes']!=null): $d = $this->flow['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>    
+       <i class="fa fa-thumbs-down"></i><span id="downvotes"><?php if(array_key_exists('nr_of_downvotes',$this->flow)): if($this->flow['nr_of_downvotes']!=null): $d = $this->flow['nr_of_downvotes']; else: $d=0; endif; else: $d=0; endif; echo $d.' downvotes'; ?></span>
        <?php if(array_key_exists('total_downloads',$this->flow)): if($this->flow['total_downloads']!=null): $nr_d = $this->flow['total_downloads']; endif; endif; echo ', '.$nr_d.' total downloads'; ?></span>
        <?php
        if ($this->ion_auth->logged_in()) {
@@ -75,7 +75,7 @@
                 <th>By</th>
                 <th></th>
             </tr>
-            <?php 
+            <?php
                 foreach($this->downvotes as $downvote){
                     $id = $downvote['_source']['reason_id'];
                     echo '<tr>'
@@ -83,7 +83,7 @@
                     . '<td>'.$downvote['_source']['count'].'</td>'
                     . '<td><a href="u/'.$downvote['_source']['user_id'].'">User '.$downvote['_source']['user_id'].'</a></td>'
                     //. '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"> <i id="downvoteicon-'.$id.'" class="fa fa-thumbs-o-down"/></a></td>'
-                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"></a></td>'        
+                    . '<td><a id="downvotebutton-'.$id.'" class="loginfirst btn btn-link" onclick="doDownvote('.$id.')" title="Click to agree"></a></td>'
                     . '</tr>';
                 }
             ?>
@@ -190,52 +190,44 @@
 		 ?>
 		 </div>
 
-		<h3><div id="runcount"></div> Runs</h3>
+		<h3><div id="runcount">0</div> Runs</h3>
 	    <?php
 	      $taskparams['index'] = 'openml';
 	      $taskparams['type']  = 'task_type';
 	      $taskparams['body']['query']['match_all'] = (object)[];
-	      $alltasks = $this->searchclient->search($taskparams)['hits']['hits'];
+	      $this->alltasks = $this->searchclient->search($taskparams)['hits']['hits'];
 	    ?>
       <div style="float:right">
       Parameter:
-          <select class="selectpicker" data-width="auto" onchange="selected_parameter = this.value; oTableRuns.fnDraw(true); redrawchart();">
+          <select class="selectpicker" data-width="auto" onchange="selected_parameter = this.value; showData();">
             <option value="none " selected>none </option>
             <?php foreach($this->flow['parameters'] as $r): ?>
             <option value="<?php echo $r['full_name'];?>"><?php echo str_replace('_', ' ', $r['name'] );?></option>
             <?php endforeach; ?>
           </select>
       </div>
-		<select class="selectpicker" data-width="auto" onchange="current_task = this.value; oTableRuns.fnDraw(true); redrawchart();">
-	    <?php foreach($alltasks as $h){?>
-                <option value="<?php echo $h['_id']; ?>" <?php echo ($h['_id'] == $this->current_task) ? 'selected' : '';?>><?php echo $h['_source']['name']; ?></option>
+		<select class="selectpicker" id="typeselect" data-width="auto" onchange="current_task = this.value; showData();">
+	    <?php foreach($this->alltasks as $h){?>
+                <option value="<?php echo $h['_source']['name']; ?>" <?php echo ($h['_source']['name'] == $this->current_task) ? 'selected' : '';?>><?php echo $h['_source']['name']; ?></option>
 	    <?php } ?>
 		</select>
-    <select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; oTableRuns.fnDraw(true); updateTableHeader(); redrawchart();">
+    <select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; updateTableHeader(); showData();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>
 					<?php endforeach; ?>
 		</select>
 
-			<div id="code_result_visualize" class="panel-simple" style="width: 100%">Plotting chart <i class="fa fa-spinner fa-spin"></i></div>
-
-			<div class="panel">   <div class="table-responsive">
-				<table id="datatable_main" class="table table-bordered table-condensed table-responsive">
-					<?php echo generate_table(
-								array('img_open' => '',
-										'rid' => 'run id',
-										'sid' => 'setup id',
-										'name' => 'Name',
-										'value' => str_replace('_',' ',$this->current_measure), ) ); ?>
-				</table></div>
-			</div>
-
-<div class="modal fade" id="runModal" role="dialog" tabindex="-1" aria-labelledby="Run detail" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="col-xs-12 panel">
+         <div id="code_result_visualize" class="panel-simple" style="width: 100%">Rendering chart <i class="fa fa-spinner fa-spin"></i></div>
     </div>
-  </div>
-</div>
+
+    <div class="col-xs-12 panel">
+      <div class="table-responsive reflow-table">
+         <div id="table-spinner">Rendering table <i class="fa fa-spinner fa-spin"></i></div>
+         <table id="flowtable" class="display" width="100%" style='margin:0'></table>
+      </div>
+    </div>
+
 		</div> <!-- end tab-runs -->
 
 <h3>Discussions</h3>
