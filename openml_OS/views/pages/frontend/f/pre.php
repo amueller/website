@@ -6,8 +6,20 @@ if(false === strpos($_SERVER['REQUEST_URI'],'/f/')) {
 }
 
 //$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
-$this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/gollum.js','js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/jquery.dataTables.min.js','js/libs/rainbowvis.js');
-$this->load_css = array('css/gollum.css','css/jquery.dataTables.min.css','css/dataTables.colvis.min.css','css/dataTables.colvis.jqueryui.css','css/dataTables.responsive.min.css','css/dataTables.scroller.min.css','css/dataTables.tableTools.min.css');
+$this->load_javascript = array('js/libs/mousetrap.min.js','js/libs/gollum.js','js/libs/rainbowvis.js',
+'js/libs/highcharts.js','js/libs/highcharts-more.js',
+'https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js',
+'https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js',
+'//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js',
+'//cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/pdfmake.min.js',
+'//cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/vfs_fonts.js',
+'//cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js',
+'//cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js');
+$this->load_css = array('https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css',
+'https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css',
+'css/gollum.css','css/dataTables.colvis.min.css','css/dataTables.colvis.jqueryui.css','css/dataTables.responsive.min.css','css/dataTables.scroller.min.css','css/dataTables.tableTools.min.css');
+
+
 
 /// SEARCH
 $this->filtertype = 'flow';
@@ -41,8 +53,7 @@ $this->record = false;
 $this->displayName = false;
 $this->allmeasures = $this->Math_function->getColumnWhere('name','functionType = "EvaluationFunction"');
 $this->current_measure = 'predictive_accuracy';
-$this->current_task = 1;
-
+$this->current_task = "Supervised Classification";
 
 if(false !== strpos($_SERVER['REQUEST_URI'],'/f/')) {
 	$this->info = explode('/', $_SERVER['REQUEST_URI']);

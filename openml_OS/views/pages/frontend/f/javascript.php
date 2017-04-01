@@ -1,7 +1,7 @@
 /// SHARING
 
 $(document).ready(function() {
-    // bind form using ajaxForm
+  // bind form using ajaxForm
 	$('#implementationForm').ajaxForm( {
 		beforeSerialize: prepareImplementationDescriptionXML,
 		success: implementationFormSubmitted,
@@ -175,82 +175,114 @@ var evaluation_measure = "<?php echo $this->current_measure; ?>";
 var current_task = "<?php echo $this->current_task; ?>";
 var oTableRuns = false;
 
-$(document).ready(function() {
-    <?php echo simple_datatable('oTableGeneral','#datatable_general'); ?>
-    //Initialse DataTables, with no sorting on the 'details' column
-    oTableRuns = $('#datatable_main').dataTable( {
-		"bServerSide": true,
-		"sAjaxSource": "api_query/table_feed",
-		"sServerMethod": "POST",
-		"fnServerParams": function ( aoData ) {
-			if(oTableRunsShowAll) {
-				<?php echo array_to_parsed_string($this->dt_main_all, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
-			} else {
-				<?php echo array_to_parsed_string($this->dt_main, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
-			}
-			aoData.push( { 'value': 'AND function = "'+evaluation_measure+'"', 'name' : 'base_sql_additional' } );
-		},
-        "aoColumnDefs": [
-            { "bSearchable": false, "bVisible":    false, "aTargets": [ 1, 2 ] }
+/// RESULT TABLE
+function buildTable(dataSet) {
+    $('#flowtable').removeAttr('width').DataTable( {
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+        data: dataSet,
+        columns: [
+            { title: "Run ID" },
+            { title: "Dataset", width: 100},
+            { title: evaluation_measure },
+            { title: "Hyperparameters" }
         ],
-		"sDom": "<'row'<'col-md-6'f><'col-md-6'T>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
-		"oTableTools": {
-			"sSwfPath": "swf/copy_csv_xls_pdf.swf",
-			"aButtons": [
-				"copy","print","csv", "pdf",
-                {
-                    "sExtends":    "text",
-                    "sButtonText": "Show all/best results",
-					"fnClick": function toggleResults(nButton,oConfig,oFlash) {
-						oTableRunsShowAll = !oTableRunsShowAll;
-						oTableRuns.fnDraw(true);
-					}
-                }
-            ]
-		},
-		"aLengthMenu": [[10, 50, 100, 250], [10, 50, 100, 250]],
-		"iDisplayLength" : 50,
-		"bAutoWidth": false,
-		<?php echo column_widths($this->dt_main['column_widths']); ?>
-        "bPaginate": true
-    });
-	var oTableQualities = $('#datatable_implementationqualities').dataTable( {
-		"bServerSide": true,
-		"sAjaxSource": "api_query/table_feed",
-		"sServerMethod": "POST",
-		"bPaginate": false,
-		"fnServerParams": function ( aoData ) {
-		  <?php echo array_to_parsed_string($this->dt_qualities, "aoData.push( { 'value': '[VALUE]', 'name' : '[KEY]' } );\n" ); ?>
-		},
-		"iDisplayLength" : 50,
-		"bAutoWidth": false,
-		<?php echo column_widths($this->dt_qualities['column_widths']); ?>
-    });
-    /* Add event listener for opening and closing details
-     * Note that the indicator for showing which row is open is not controlled by DataTables, rather it is done here
-     */
-    $('#datatable_main tbody td img').on('click', function () {
-        var nTr = $(this).parents('tr')[0];
-        if ( oTableRuns.fnIsOpen(nTr) )
-        {
-            // This row is already open - close it
-            this.src = "img/datatables/details_open.png";
-            oTableRuns.fnClose( nTr );
-        }
-        else
-        {
-            // Open this row
-            this.src = "img/datatables/details_close.png";
-            oTableRuns.fnOpen( nTr, fnFetchParams(oTableRuns, nTr, 2), 'details' );
-        }
+        scrollY: "600px",
+        scrollCollapse: false,
+        paging: false,
+        scrollX: "100%",
+        destroy: true,
+        order: [[ 2, "desc" ]],
     } );
-} );
+    $('#table-spinner').css('display','none');
+}
+
+
+  /// RESULT QUERY
+
+function showData(){
+  client.search({
+    index: 'openml',
+    type: 'run',
+    size: '10000',
+    body: {
+  		_source: [ "run_id", "run_task.source_data.name", "run_task.source_data.data_id", "run_flow.parameters.parameter", "run_flow.parameters.value", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
+      query: {
+        bool: {
+        	must: [
+                    {
+                        term: {
+                            "run_flow.flow_id": <?php echo $this->id; ?>
+                        }
+                    },
+                    {
+                        match: {
+                            "run_task.tasktype.name": current_task
+                        }
+                    }
+                ]
+  	}
+      },
+      sort: [
+      {
+        "evaluations.value": {
+          "order": "desc",
+          "nested_path": "evaluations",
+          "nested_filter": {
+            "term": {
+              "evaluations.evaluation_measure": evaluation_measure
+            }
+          }
+        }
+      }
+    ]
+    }
+  }).then(function (resp) {
+    var data = resp.hits.hits;
+    if(data == null){
+      $('#runcount').html('0');
+      $('#code_result_visualize').html("No data to show.");
+    } else {
+      $('#runcount').html(data.length);
+      redrawchart(data);
+      buildTable(buildTableData(data));
+    }
+  }, function (err) {
+	    console.log(err.message);
+	}).fail(function(){ $('#code_result_visualize').html("No data to show."); console.log('failure', arguments); });
+}
+
+function buildTableData(data){
+	tabledata = [];
+	for(key in data){
+		o = data[key]['_source'];
+		eval = o['evaluations'].filter(function(obj){return obj.evaluation_measure == evaluation_measure;})[0];
+		if(eval){
+			tabledata.push(['<a href="r/'+o['run_id']+'">'+o['run_id']+'</a>','<a href="d/'+o['run_task']['source_data']['data_id']+'">'+o['run_task']['source_data']['name']+'</a>',eval['value'],o['run_flow']['parameters'].map(shortParam)]);
+		}
+	}
+	return tabledata;
+}
+
+function shortParam(a){
+	par = a.parameter.split('_').pop();
+	val = a.value;
+	if(val.length>10){
+		val = val.split('.').pop();
+	}
+	return par+':'+val;
+}
 
 function updateTableHeader(){
 	$("#value").html(evaluation_measure.charAt(0).toUpperCase()+evaluation_measure.slice(1).replace(/_/g,' '));
 }
 
-function redrawchart(){
+$(document).ready(function() {
+  updateTableHeader();
+  showData();
+});
+
+function redrawchart(data){
 categoryMap = {};
 options = {
             chart: {
@@ -338,113 +370,66 @@ options = {
             }]
         };
 
-client.search({
-  index: 'openml',
-  type: 'run',
-  size: '10000',
-  body: {
-		_source: [ "run_id", "run_task.source_data.name", "run_task.source_data.data_id", "run_flow.parameters.parameter", "run_flow.parameters.value", "uploader", "evaluations.evaluation_measure", "evaluations.value" ],
-    query: { 
-      bool: {
-      	must: [
-                  {
-                      term: {
-                          "run_flow.flow_id": <?php echo $this->id; ?>
-                      }
-                  },
-                  {
-                      term: {
-                          "run_task.tasktype.tt_id": current_task
-                      }
-                  }
-              ]
-	}
-    },
-    sort: [
-    {
-      "evaluations.value": {
-        "order": "desc",
-        "nested_path": "evaluations",
-        "nested_filter": {
-          "term": {
-            "evaluations.evaluation_measure": evaluation_measure
-          }
-        }
-      }
-    }
-  ]
-  }
-}).then(function (resp) {
-  var data = resp.hits.hits;
-  if(!data[0]){
-    $('#runcount').html('0');
-    $('#code_result_visualize').html("No data to show.");
-  } else {
-    $('#runcount').html(data.length);
-	var catcount = 0;
-	var map = {};
-	options.series[0].data = [];
-	options.yAxis.categories = [];
-	var parvaluenumeric = true;
-	var parvalues = [];
-	var heatmap = new Rainbow();
+    var catcount = 0;
+  	var map = {};
+  	options.series[0].data = [];
+  	options.yAxis.categories = [];
+  	var parvaluenumeric = true;
+  	var parvalues = [];
+  	var heatmap = new Rainbow();
 
-	if (typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
-		if (isNaN(data[0]['_source']['run_flow']['parameters'][0]['value'])){
-			parvaluenumeric = false;
-		}
-		for(var i=0;i<data.length;i++){
+  	if (typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
+  		if (isNaN(data[0]['_source']['run_flow']['parameters'][0]['value'])){
+  			parvaluenumeric = false;
+  		}
+  		for(var i=0;i<data.length;i++){
+        var run = data[i]['_source'];
+        var parval = getPar(run['run_flow']['parameters'],selected_parameter);
+  			if (parvalues.indexOf(parval)<0){
+  				parvalues.push(parval);
+  			}
+  		}
+   		if (parvaluenumeric){
+  			if (parvalues.length > 2){
+  				var min = Math.min.apply( Math, parvalues );
+  				var max = Math.max.apply( Math, parvalues );
+  				if(min<max){
+  					heatmap.setNumberRange(min,max);
+  				}
+  			} else {
+  				parvalues.sort(function(a,b){return parseInt(a)-parseInt(b)});
+  				heatmap.setNumberRange(0, parvalues.length);
+  			}
+  			heatmap.setSpectrum('blue','green','yellow','orange','red');
+  		} else {
+  			heatmap.setNumberRange(0, parvalues.length);
+  		}
+
+  	}
+  	for(var i=0;i<data.length;i++){
       var run = data[i]['_source'];
-      var parval = getPar(run['run_flow']['parameters'],selected_parameter);
-			if (parvalues.indexOf(parval)<0){
-				parvalues.push(parval);
-			}
-		}
- 		if (parvaluenumeric){
-			if (parvalues.length > 2){
-				var min = Math.min.apply( Math, parvalues );
-				var max = Math.max.apply( Math, parvalues );
-				if(min<max){
-					heatmap.setNumberRange(min,max);
-				}
-			} else {
-				parvalues.sort(function(a,b){return parseInt(a)-parseInt(b)});
-				heatmap.setNumberRange(0, parvalues.length);
-			}
-			heatmap.setSpectrum('blue','green','yellow','orange','red');
-		} else {
-			heatmap.setNumberRange(0, parvalues.length);
-		}
-
-	}
-	for(var i=0;i<data.length;i++){
-    var run = data[i]['_source'];
-    var dataset = run['run_task']['source_data'];
-		if (!(dataset['name'] in map)){
-			map[dataset['name']] = catcount++;
-			options.yAxis.categories.push(dataset['name']);
-			categoryMap[dataset['name']]= dataset['data_id'];
-		}
-		if (typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
-			var col = "#000000";
-      var parval = getPar(run['run_flow']['parameters'],selected_parameter);
-			if (parvaluenumeric && parvalues.length > 2){
-				col = heatmap.colourAt(parval);
-			} else {
-				col = heatmap.colourAt(parvalues.indexOf(parval));
-			}
-			options.series[0].data.push({x: parseFloat(getEval(run['evaluations'],evaluation_measure)), y: map[dataset['name']], z: parval, r: run['run_id'], fillColor: 'rgba('+parseInt(col.substring(0,2),16)+','+parseInt(col.substring(2,4),16)+','+parseInt(col.substring(4,6),16)+',0.5)'});
-		} else {
-			options.series[0].data.push({x: parseFloat(getEval(run['evaluations'],evaluation_measure)), y: map[dataset['name']], r: run['run_id']});
-		}
-	}
-	options.chart.height = options.yAxis.categories.length*18+120;
-	coderesultchart = new Highcharts.Chart(options);
-
-
-}}).fail(function(){ $('#code_result_visualize').html("No data to show."); console.log('failure', arguments); });
-
-
+      var dataset = run['run_task']['source_data'];
+  		if (!(dataset['name'] in map)){
+  			map[dataset['name']] = catcount++;
+  			options.yAxis.categories.push(dataset['name']);
+  			categoryMap[dataset['name']]= dataset['data_id'];
+  		}
+  		if (typeof selected_parameter !== 'undefined' && selected_parameter != 'none'){
+  			var col = "#000000";
+        var parval = getPar(run['run_flow']['parameters'],selected_parameter);
+  			if (parvaluenumeric && parvalues.length > 2){
+  				col = heatmap.colourAt(parval);
+  			} else {
+  				col = heatmap.colourAt(parvalues.indexOf(parval));
+  			}
+  			options.series[0].data.push({x: parseFloat(getEval(run['evaluations'],evaluation_measure)), y: map[dataset['name']], z: parval, r: run['run_id'], fillColor: 'rgba('+parseInt(col.substring(0,2),16)+','+parseInt(col.substring(2,4),16)+','+parseInt(col.substring(4,6),16)+',0.5)'});
+  		} else {
+  			options.series[0].data.push({x: parseFloat(getEval(run['evaluations'],evaluation_measure)), y: map[dataset['name']], r: run['run_id']});
+  		}
+  	}
+  	options.chart.height = options.yAxis.categories.length*18+120;
+  	coderesultchart = new Highcharts.Chart(options);
+    $(".dataTables_scrollHeadInner").css({"width":"100%"});
 }
 
 function getEval(arr, value) {
@@ -457,48 +442,9 @@ function getPar(arr, value) {
   return result ? (result[0] ? result[0]['value'] : null) : null; // or undefined
 }
 
-$(document).ready(function() {
-setTimeout(function(){
-   redrawchart();
-    },1000);
-});
-
 $(document).on('click', '.openRunModal', function(){updateRunModal($(this).data('id'))});
 
-function updateRunModal(rid) {
-	var runq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=select r.uploader, r.task_id, r.start_time, c.inputData, c.learner, c.runType, c.nrFolds, c.nrIterations from run r, cvrun c where r.rid="+rid+" and r.rid=c.rid", "UTF-8");
-	$.getJSON(runq,function(jsonData){
-	        var data = jsonData.data;
-		$("#runinfo").empty();
-		$("#runinfo").append("<h3>Run details</h3>Run id: " + rid);
-		$("#runinfo").append("<br>Author: " + data[0][0]);
-		$("#runinfo").append("<br>Date: " + data[0][2]);
-		taskid = data[0][1];
-		dataid = data[0][3];
-		flowid = data[0][4];
-		$("#runinfo").append("<h3>Task</h3>Task id: " + taskid);
-		$("#runinfo").append("<br>Type: " + data[0][5]);
-		$("#runinfo").append("<br>Procedure: " + data[0][7] + " x " + data[0][6] + " cross-validation");
-
-		var dataq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=select name, version from dataset where did="+dataid, "UTF-8");
-		$.getJSON(dataq,function(jsonData){
-			var data = jsonData.data;
-			$("#runinfo").append("<br>Input data: <a href='d/" + dataid + "'>"+ data[0][0] + "</a>");
-
-			var flowq =  encodeURI("<?php echo BASE_URL; ?>"+"api_query/?q=SELECT i.fullname, iss.input, iss.value, i.id FROM implementation i, algorithm_setup s LEFT JOIN input_setting iss on s.sid=iss.setup WHERE s.implementation_id=i.id and s.sid="+flowid, "UTF-8");
-			$.getJSON(flowq,function(jsonData){
-				var data = jsonData.data;
-				$("#runinfo").append("<h3>Flow</h3>Flow: <a href='f/" + data[0][3] + "'>"+ data[0][0] + "</a>");
-				if(data[0][1].length > 0){
-					$("#runinfo").append("<br>Parameter settings:<br>");
-				}
-				for(var i=0;i<data.length;i++){
-					$("#runinfo").append(data[i][1]+": "+ data[i][2]+"<br>");
-				}
-			});
-		});
-	});
-}
+/// GAMIFICATION
 
 var isliked;
 var reason_id = -1;
@@ -560,7 +506,7 @@ function doDownvote(rid){
         reason_id = parseInt(resultdata.getElementsByTagName('reason_id').item(0).textContent);
         getDownvotes();
     }).fail(function(resultdata){
-        
+
     });
 }
 
@@ -612,11 +558,11 @@ function refreshNrLikes(){
             }else{
                 $('#likecount').html("0 likes");
             }
-        }).fail(function(resultdata){        
+        }).fail(function(resultdata){
             $('#likecount').html("0 likes");
      });
  }
- 
+
  function refreshNrDownloads(){
     $.ajax({
        method:'GET',
@@ -632,7 +578,7 @@ function refreshNrLikes(){
        }else{
            $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
        }
-    }).fail(function(resultdata){        
+    }).fail(function(resultdata){
        $('#downloadcount').html("downloaded by 0 people, 0 total downloads");
     });
  }
@@ -667,7 +613,7 @@ function flipLikeHTML(){
     }
 }
 
-function setSubmitBehaviour(){ 
+function setSubmitBehaviour(){
     $("#issueform").submit(function(event){
        // cancels the form submission
        event.preventDefault();
@@ -704,7 +650,7 @@ function getDownvotes(){
                 $('#issues_content').append('<tr id="issuerow-'+id+'">');
                 $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('reason')[0].textContent+'</td>');
                 $('#issuerow-'+id).append('<td>'+dvotes[i].getElementsByTagName('count')[0].textContent+'</td>');
-                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');                
+                $('#issuerow-'+id).append('<td><a href="u/'+dvotes[i].getElementsByTagName('user_id')[0].textContent+'">User '+dvotes[i].getElementsByTagName('user_id')[0].textContent+'</a></td>');
                 $('#issuerow-'+id).append('<td><a id="downvotebutton-'+id+'" class="loginfirst btn btn-link" onclick="doDownvote('+id+')" title="Click to agree"> </a></td>');
                 $('#issues_content').append('</tr>');
             }
@@ -741,7 +687,7 @@ function getDownvotes(){
             $('#issues_content').append('<br>');
         }
     }).fail(function(resultdata){
-        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");        
+        $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");
     });
     <?php
     if ($this->ion_auth->logged_in()) {

@@ -1,8 +1,7 @@
 <div class="row">
 
 <h2 id="team-core">Our Team</h2>
-<p>OpenML is a community effort, and as such many people have contributed to it over the years.<br />
-Want to join? Leave a message on the <a href="mailto:openml@googlegroups.com">community mailing list</a>.</p>
+<p>OpenML is a community effort, and <a href="https://github.com/openml/OpenML/wiki/How-to-contribute">everybody is welcome to contribute</a>. Below are some of the core contributors, but also check out <a href="https://github.com/openml/">our GitHub page</a>".<br />
 
 <?php
  if( $this->team != false ) {
