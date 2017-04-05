@@ -16,7 +16,7 @@ class Data_quality extends Database_write {
   }
 
   function getQualitiesOrderedByPriority($id){
-    $data = $this->db->select('`name`, `value`')->from('`data_quality`, `quality`')->where('`data_quality`.`quality`','`quality`.`name`')->where('`data`',$id)->order_by('`priority`','ASC')->get();
+    $data = $this->db->select('`name`, `value`')->from('`data_quality`, `quality`')->where('`data_quality`.`quality` = `quality`.`name`')->where('`data`',$id)->order_by('`priority`','ASC')->get();
     return ($data && $data->num_rows() > 0) ? $data->result() : false;
   }
 
