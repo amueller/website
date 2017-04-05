@@ -230,7 +230,7 @@ function showData(){
 	    sort: [
 	    {
 	      "evaluations.value": {
-	        "order": (higherIsBetter ? "asc" : "desc"),
+	        "order": (higherIsBetter ? "desc" : "asc"),
 	        "nested_path": "evaluations",
 	        "nested_filter": {
 	          "term": {
@@ -413,7 +413,7 @@ options = {
 
 	options.yAxis.categories = c;
 	options.series[0].data = d;
-	options.chart.height = c.length*18+120;
+	options.chart.height = c.length*25+120;
 
 	coderesultchart = new Highcharts.Chart(options);
 }
