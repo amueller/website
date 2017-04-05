@@ -1792,7 +1792,7 @@ class ElasticSearch {
         );
 
         $new_data['qualities'] = array();
-        $qualities = $this->CI->Data_quality->getQualitiesOrderedByPriority();
+        $qualities = $this->CI->Data_quality->getQualitiesOrderedByPriority($d->did);
         if ($qualities != false)
             $new_data['qualities'] = array_map(array($this, 'checkNumeric'), $qualities);
 
