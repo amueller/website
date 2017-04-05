@@ -1794,7 +1794,9 @@ class ElasticSearch {
         $new_data['qualities'] = array();
         $qualities = $this->CI->Data_quality->getQualitiesOrderedByPriority($d->did);
         if ($qualities != false)
-            $new_data['qualities'] = array_map(array($this, 'checkNumeric'), $qualities);
+          foreach($qualities as $q){
+            $new_data['qualities'][$q->name] = $this->checkNumeric($q->value);
+          }
 
         $new_data['tags'] = array();
         $tags = $this->CI->Dataset_tag->getAssociativeArray('tag', 'uploader', 'id = ' . $d->did);
