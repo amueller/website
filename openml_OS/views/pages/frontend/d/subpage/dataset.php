@@ -182,29 +182,27 @@
   $qtable = ""; ?>
     <div class="properties <?php if($this->hidedescription) echo 'hideProperties'; ?>">
     <?php if($this->data['qualities']){
-      foreach( $this->dataproperties as $dp ) {
-        if(array_key_exists($dp['name'], $this->data['qualities'])){
+      foreach($this->data['qualities'] as $k => $v ) {
         ?>
       <div class="searchresult panel">
       <div class="itemhead">
-      <a href="a/data-qualities/<?php echo str_replace("_", "-", $dp['name']); ?>" class="iconpurple">
-      <i class="fa fa-fw fa-bar-chart"></i> <?php echo $dp['name']; ?></a>
+      <a href="a/data-qualities/<?php echo str_replace("_", "-", $k); ?>" class="iconpurple">
+      <i class="fa fa-fw fa-bar-chart"></i> <?php echo $k; ?></a>
       </div>
       <div class="dataproperty"><?php
-        $qval = $this->data['qualities'][$dp['name']];
-        if(is_numeric($qval)){
-          echo round($qval,2);
-        } elseif($qval=='true'){
+        if(is_numeric($v)){
+          echo round($v,2);
+        } elseif($v=='true'){
           echo "<i class='fa fa-check fa-lg'></i>";
-        } elseif($qval=='false'){
+        } elseif($v=='false'){
           echo "<i class='fa fa-times fa-lg'></i>";
         } else{
-          echo $qval;
+          echo $v;
         } ?>
       </div>
-      <div class="datadescription"><?php echo $dp['description'];?></div>
+      <div class="datadescription"><?php print_r($this->dataproperties[$k]['description']);?></div>
       </div>
-      <?php }}} ?> </div>
+      <?php }} ?> </div>
       <?php } else {
         echo '<p>Data properties are not analyzed yet. Refresh the page in a few minutes.</p>';
         } ?>
