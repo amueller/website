@@ -82,7 +82,7 @@
         $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
     } catch (Exception $e) {}
 
-    //get properties
+    //get properties - needed for the descriptions
     $this->p4 = array();
     $this->p4['index'] = 'openml';
     $this->p4['type'] = 'measure';
@@ -92,7 +92,10 @@
     $this->p4['body']['sort'] = array('priority');
     try {
       $responses = $this->searchclient->search($this->p4);
-      $this->dataproperties = array_column($responses['hits']['hits'],'_source');
+      $this->dataproperties = array();
+      foreach(array_column($responses['hits']['hits'],'_source') as $dq){
+        $this->dataproperties[$dq['name']] = $dq;
+      }
     } catch (Exception $e) {}
 
     //get measures
