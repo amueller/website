@@ -1,6 +1,6 @@
 <?php
 class Data_quality extends Database_write {
-  
+
   function __construct() {
     parent::__construct();
     $this->table = 'data_quality';
@@ -14,7 +14,11 @@ class Data_quality extends Database_write {
       return $this->getWhere( 'data = ' . $did );
     }
   }
-  
+
+  function getQualitiesOrderedByPriority(){
+	   return $this->db->select('quality, value')->from('data_quality, quality')->where('data_quality.quality=quality.name')->orderby('priority')->get();
+  }
+
   function getFeature( $did, $quality, $label = false ) {
     if( is_numeric( $did ) === false ) {
       return false;
