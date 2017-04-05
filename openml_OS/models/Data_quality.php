@@ -16,7 +16,7 @@ class Data_quality extends Database_write {
   }
 
   function getQualitiesOrderedByPriority(){
-	   return $this->db->select('quality, value')->from('data_quality, quality')->where('data_quality.quality=quality.name')->orderby('priority')->get();
+	   return $this->db->select('quality, value')->from('data_quality, quality')->where('data_quality.quality=quality.name')->order_by('priority')->get();
   }
 
   function getFeature( $did, $quality, $label = false ) {
