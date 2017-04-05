@@ -1604,7 +1604,9 @@ class ElasticSearch {
             return "No measure found with id " . $id;
 
         $responses = $this->client->bulk($params);
-        return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . (($procs ? sizeof($procs) : 0) + ($funcs ? sizeof($funcs) : 0) + ($dataqs ? sizeof($dataqs) : 0) + ($flowqs ? sizeof($flowqs) : 0)) . ' measures (' . ($procs ? sizeof($procs) : 0) . ' procedures, ' . ($funcs ? sizeof($funcs) : 0) . ' functions, ' . ($dataqs ? sizeof($dataqs) : 0) . ' data qualities, ' . ($flowqs ? sizeof($flowqs) : 0) . ' flow qualities).';
+        return '
+
+         indexed ' . sizeof($responses['items']) . ' out of ' . (($procs ? sizeof($procs) : 0) + ($funcs ? sizeof($funcs) : 0) + ($dataqs ? sizeof($dataqs) : 0) + ($flowqs ? sizeof($flowqs) : 0)) . ' measures (' . ($procs ? sizeof($procs) : 0) . ' procedures, ' . ($funcs ? sizeof($funcs) : 0) . ' functions, ' . ($dataqs ? sizeof($dataqs) : 0) . ' data qualities, ' . ($flowqs ? sizeof($flowqs) : 0) . ' flow qualities).';
     }
 
     private function build_procedure($d) {
@@ -1755,7 +1757,7 @@ class ElasticSearch {
             $did += $incr;
         }
 
-        return 'Successfully indexed ' . $submitted . ' out of ' . $datacount . ' runs.';
+        return 'Successfully indexed ' . $submitted . ' out of ' . $datacount . ' datasets.';
     }
 
     private function build_data($d, $altmetrics=True) {
