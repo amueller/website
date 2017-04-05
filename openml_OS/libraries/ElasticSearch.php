@@ -1792,7 +1792,7 @@ class ElasticSearch {
         );
 
         $new_data['qualities'] = array();
-        $qualities = $this->CI->Data_quality->getAssociativeArray('quality', 'value', 'data = ' . $d->did . ' and value<>"NaN"');
+        $qualities = $this->CI->Data_quality->getAssociativeArray('quality', 'value', 'data = ' . $d->did . ' and value<>"NaN"', 'priority');
         if ($qualities != false)
             $new_data['qualities'] = array_map(array($this, 'checkNumeric'), $qualities);
 
