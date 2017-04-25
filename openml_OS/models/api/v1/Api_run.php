@@ -101,7 +101,7 @@ class Api_run extends Api_model {
 
 
   private function run_list($segs) {
-    $legal_filters = array('task', 'setup', 'flow', 'uploader', 'run', 'tag', 'limit', 'offset');
+    $legal_filters = array('task', 'setup', 'flow', 'uploader', 'run', 'tag', 'limit', 'offset', 'show_errors');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
@@ -119,6 +119,7 @@ class Api_run extends Api_model {
     $tag = element('tag',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
+    $show_errors = element('show_errors',$query_string);
 
     if ($task_id == false && $setup_id == false && $implementation_id == false && $uploader_id == false && $run_id == false && $tag == false && $limit == false) {
       $this->returnError( 510, $this->version );
@@ -137,7 +138,10 @@ class Api_run extends Api_model {
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     // TODO: runs with errors are always removed? 
-    $where_server_error = " AND `e`.`error` IS NULL ";
+    $where_server_error = ' AND `e`.`error` IS NULL ';
+    if (strtolower($show_errors) == 'true') {
+      $where_server_error = '';
+    }
 
 
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
