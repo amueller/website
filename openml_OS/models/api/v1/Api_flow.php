@@ -78,27 +78,45 @@ class Api_flow extends Api_model {
 
 
   private function flow_list($segs) {
+    $legal_filters = array('uploader', 'tag', 'limit', 'offset');
     $query_string = array();
-    for ($i = 0; $i < count($segs); $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
-
-    $tag = element('tag',$query_string);
-    $limit = element('limit',$query_string);
-    $offset = element('offset',$query_string);
-
-    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset))) {
-      $this->returnError(511, $this->version );
-      return;
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(501, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }
     }
-
-    $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag="' . $tag . '") ';
+    
+    $uploader_id = element('uploader', $query_string);
+    $tag = element('tag', $query_string);
+    $limit = element('limit', $query_string);
+    $offset = element('offset', $query_string);
+    
     $where_total = $where_tag;
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
+    $where_uploader = $uploader_id == false ? '' : 
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
-
-    $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total . $where_limit;
+    
+    $query = $this->db->from('implementation')->or_group_start()->where('`visibility`', '"public"')->where('uploader', $this->user_id)->group_end();
+    if ($uploader_id) {
+      $query->where('uploader', $this->user_id);
+    }
+    if ($tag) {
+      # TODO: update!
+      $query->where('`id` IN (select id from implementation_tag where tag="' . $tag . '")');
+    }
+    if ($limit) {
+      $query->limit($limit);
+    }
+    if ($offset) {
+      $query->offset($offset);
+    }
+    
+    $sql = $query->get_compiled_select();
+    # TODO: can remove next statement and replace by original active record
     $implementations_res = $this->Implementation->query($sql);
     if( $implementations_res == false ) {
       $this->returnError( 500, $this->version );
@@ -121,8 +139,8 @@ class Api_flow extends Api_model {
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }
 
-
-  private function flow_owned() {
+  // deprecated, will be removed soon
+  /*private function flow_owned() {
 
     $implementations = $this->Implementation->getColumnWhere( 'id', '`uploader` = "'.$this->user_id.'"' );
     if( $implementations == false ) {
@@ -130,7 +148,7 @@ class Api_flow extends Api_model {
       return;
     }
     $this->xmlContents( 'implementation-owned', $this->version, array( 'implementations' => $implementations ) );
-  }
+  }*/
 
 
   private function flow_exists($name, $external_version) {
