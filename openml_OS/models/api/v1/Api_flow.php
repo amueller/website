@@ -93,7 +93,7 @@ class Api_flow extends Api_model {
     $limit = element('limit', $query_string);
     $offset = element('offset', $query_string);
     
-    $query = $this->db->from('implementation')->group_start()->where('`visibility`', '"public"')->or_where('uploader', $this->user_id)->group_end();
+    $query = $this->db->from('implementation')->group_start()->where('`visibility`', 'public')->or_where('uploader', $this->user_id)->group_end();
     if ($uploader_id) {
       $query->where('uploader', $this->user_id);
     }
