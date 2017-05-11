@@ -95,7 +95,7 @@ class Api_flow extends Api_model {
     
     $query = $this->db->from('implementation')->group_start()->where('`visibility`', 'public')->or_where('uploader', $this->user_id)->group_end();
     if ($uploader_id) {
-      $query->where('uploader', $this->user_id);
+      $query->where('uploader', $uploader_id);
     }
     if ($tag) {
       # TODO: update!
