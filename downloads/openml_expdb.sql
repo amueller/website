@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `openml_expdb`
 --
+CREATE DATABASE IF NOT EXISTS `openml_expdb` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `openml_expdb
 
 -- --------------------------------------------------------
 
