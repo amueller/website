@@ -568,13 +568,13 @@ class Api_run extends Api_model {
     // fetch task
     $taskRecord = $this->Task->getById($task_id);
     if($taskRecord === false) {
-      $this->returnError( 204, $this->version );
+      $this->returnError(204, $this->version);
       return;
     }
 
     $task = $this->Task_inputs->getTaskValuesAssoc($task_id);
     if (array_key_exists('source_data', $task) == false) {
-      $this->returnError( 219, $this->version );
+      $this->returnError(219, $this->version);
       return;
     }
 
@@ -600,7 +600,7 @@ class Api_run extends Api_model {
     $result->run_id = $runId; // for output
 
     // attach uploaded files as output to run
-    foreach( $_FILES as $key => $value ) {
+    foreach($_FILES as $key => $value) {
       $file_type = ($key == 'predictions') ? 'predictions' : 'run_uploaded_file';
       $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
       if(!$file_id) {
@@ -608,7 +608,7 @@ class Api_run extends Api_model {
         return;
       }
       $file_record = $this->File->getById($file_id);
-      $filename = getAvailableName( DATA_PATH . $this->data_folders['run'], $value['name'] );
+      $filename = getAvailableName(DATA_PATH . $this->data_folders['run'], $value['name']);
 
       $record = array(
         'source' => $run->rid,
