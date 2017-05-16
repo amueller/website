@@ -89,7 +89,7 @@ class Cron extends CI_Controller {
     
     // moves elements of $manipulated_order to the start of the models array
     foreach (array_reverse($manipulated_order) as $name) {
-      if (in_array($name, $models) {
+      if (in_array($name, $models)) {
         array_unshift($models, $name);
       }
     }
