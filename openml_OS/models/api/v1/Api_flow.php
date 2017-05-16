@@ -328,7 +328,13 @@ class Api_flow extends Api_model {
       $this->returnError(324, $this->version);
       return;
     }
-
+    
+    $remove_setups = $this->Algorithm_setup->deleteWhere('implementation_id = ' . $flow_id);
+    if (!$remove_setups) {
+      $this->returnError(326, $this->version);
+      return;
+    }
+    
     $result = $this->Implementation->delete($implementation->id);
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }

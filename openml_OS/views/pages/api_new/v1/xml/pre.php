@@ -126,6 +126,7 @@ $this->apiErrors[322] = 'flow does not exists';
 $this->apiErrors[323] = 'flow is not owned by you';
 $this->apiErrors[324] = 'flow is in use by other content. Can not be deleted';
 $this->apiErrors[325] = 'Deleting flow failed.';
+$this->apiErrors[326] = 'Deleting flow failed, because associated setups could not be deleted.';
 
 // for function: openml.flow.exists
 $this->apiErrors[330] = 'Mandatory fields not present.';
