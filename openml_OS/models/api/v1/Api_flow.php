@@ -7,9 +7,13 @@ class Api_flow extends Api_model {
     parent::__construct();
 
     // load models
+    $this->load->model('Algorithm_setup');
+    
     $this->load->model('Implementation');
     $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
+    $this->load->model('Input_setting');
+
 
     $this->load->model('File');
     $this->load->model('Input');
@@ -311,9 +315,9 @@ class Api_flow extends Api_model {
 
   private function flow_delete($flow_id) {
 
-    $implementation = $this->Implementation->getById( $flow_id );
-    if( $implementation == false ) {
-      $this->returnError( 322, $this->version );
+    $implementation = $this->Implementation->getById($flow_id);
+    if($implementation == false) {
+      $this->returnError(322, $this->version);
       return;
     }
 
@@ -329,9 +333,14 @@ class Api_flow extends Api_model {
       return;
     }
     
-    $remove_setups = $this->Algorithm_setup->deleteWhere('implementation_id = ' . $flow_id);
-    if (!$remove_setups) {
+    $remove_input_setting = $this->Input_setting->deleteWhere('setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$implementation->id.')');
+    if (!$remove_input_setting) {
       $this->returnError(326, $this->version);
+      return;
+    }
+    $remove_setups = $this->Algorithm_setup->deleteWhere('implementation_id = ' . $implementation->id);
+    if (!$remove_setups) {
+      $this->returnError(327, $this->version);
       return;
     }
     
@@ -339,11 +348,11 @@ class Api_flow extends Api_model {
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }
     $this->Input->deleteWhere('implementation_id =' . $implementation->id);
-    $this->Implementation_component->deleteWhere('parent =' . $implementation->id);
+    $this->Implementation_component->deleteWhere('parent = ' . $implementation->id);
     // TODO: also check component parts.
 
-    if( $result == false ) {
-      $this->returnError( 325, $this->version  );
+    if($result == false) {
+      $this->returnError(325, $this->version);
       return;
     }
 
@@ -354,7 +363,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
+    $this->xmlContents('implementation-delete', $this->version, array('implementation' => $implementation));
   }
 
   private function flow_forcedelete($flow_id) {
