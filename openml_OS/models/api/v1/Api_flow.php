@@ -465,7 +465,7 @@ class Api_flow extends Api_model {
             $succes = $this->insertImplementationFromXML(
               $component,
               $configuration,
-              array( 'uploadDate' => now(), 'uploader' => $implementation['uploader'] ) );
+              array('uploadDate' => $implementation['uploadDate'], 'uploader' => $implementation['uploader']));
 
             if($succes == false) { return false; }
             $this->Implementation->addComponent( $flow_id, $succes, trim($entry->identifier) );
