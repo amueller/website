@@ -26,10 +26,7 @@ class Algorithm_setup extends Database_write {
   }
   
   //inputs: complete implementation record, mapping parameter_id->value, flag (typically true), setup string
-  function getSetupId( $implementation, $parameters, $create, $setup_string = null ) {
-    $paramString = '';
-    $valueString = '';
-    
+  function getSetupId($implementation, $parameters, $create, $setup_string = null) {
     // the OLD way of finding a parameter setup. 
     /*ksort( $parameters );
     
@@ -65,55 +62,56 @@ class Algorithm_setup extends Database_write {
     
     $result = $this->db->query( $sql )->result();
     
-    if( count( $result ) > 0 ) {
+    if(count($result) > 0) {
       return $result[0]->sid;
-    } elseif( $create === false ) {
+    } elseif($create === false) {
       return false;
     } else {
       // CREATE THE NEW SETUP
-      $components = array_merge( array($implementation->id), $this->Implementation->getComponentIds( $implementation->id ) );
-      $legal_parameters = $this->Input->getAssociativeArray('id','defaultValue','implementation_id IN ("'.implode( '","', $components).'")');
-      $isDefault = false; 
+      $components = array_merge(array($implementation->id), $this->Implementation->getComponentIds($implementation->id));
+      $legal_parameters = $this->Input->getAssociativeArray('id', 'defaultValue', 'implementation_id IN ("'.implode( '","', $components).'")');
       
-      if( is_array( $legal_parameters ) === false ) {
+      if (is_array($legal_parameters) === false) {
         // no legal parameters found, make it an array anyway
         $legal_parameters = array();
       }
       
-      foreach( $parameters as $key => $value ) {
-        if( array_key_exists( $key, $legal_parameters ) == false ) {
+      foreach ($parameters as $key => $value) {
+        if (array_key_exists($key, $legal_parameters) == false) {
           // an illegal parameter was set. 
           return false;
         }
       }
       
-      foreach( $legal_parameters as $key => $value ) {
-        if( $value == null ) unset($legal_parameters[$key]);
+      // for checking the default.
+      $isDefault = false; 
+      foreach ($legal_parameters as $key => $value) {
+        if ($value == null) { unset($legal_parameters[$key]); }
       }
       
-      if(count(array_diff_assoc($legal_parameters, $parameters)) === 0 && 
+      if (count(array_diff_assoc($legal_parameters, $parameters)) === 0 && 
          count(array_diff_assoc($parameters, $legal_parameters)) === 0) {
         $isDefault = true;
       }
       
-      $setupData = array( 
-        'sid' => $this->Algorithm_setup->getHighestIndex( array( 'algorithm_setup' ), 'sid' ),
-  //      'parent' => '0',
-  //      'algorithm' => $implementation->implements,
+      $setupData = array(
         'implementation_id' => $implementation->id,
         'setup_string' => $setup_string,
         'isDefault' => $isDefault ? 'true' : 'false',
-      ); 
+      );
       
-      $setupId = $this->Algorithm_setup->insert( $setupData );
-      if(!$setupId) return false; // not going to happen :)
+      $setupId = $this->Algorithm_setup->insert($setupData);
+      if (!$setupId) { return false; } // not going to happen :)
       
       // and register the parameters
-      foreach( $parameters as $key => $value ) {
-        $insert = array( 'setup' => $setupId, 'input_id' => $key, 'value' => $value );
-        $this->Input_setting->insert( $insert );
-        if(!$insert) return false;
-      }      return $setupId;
+      foreach ($parameters as $key => $value) {
+        $insert = array('setup' => $setupId, 'input_id' => $key, 'value' => $value);
+        $this->Input_setting->insert($insert);
+        if (!$insert) {
+          return false;
+        }
+      }
+      return $setupId;
     }
   }
 }

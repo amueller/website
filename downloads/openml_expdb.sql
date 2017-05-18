@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 24, 2017 at 04:40 PM
--- Server version: 5.7.17-0ubuntu0.16.04.1
+-- Generation Time: May 17, 2017 at 11:10 AM
+-- Server version: 5.7.18-0ubuntu0.16.04.1
 -- PHP Version: 7.0.15-0ubuntu0.16.04.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -200,7 +200,7 @@ CREATE TABLE `dataset` (
 --
 
 CREATE TABLE `dataset_tag` (
-  `id` int(10) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `tag` varchar(255) NOT NULL,
   `uploader` int(10) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -583,7 +583,7 @@ CREATE TABLE `run_evaluated` (
 --
 
 CREATE TABLE `run_tag` (
-  `id` int(10) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `tag` varchar(255) NOT NULL,
   `uploader` int(10) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -642,7 +642,7 @@ CREATE TABLE `setup_differences` (
 --
 
 CREATE TABLE `setup_tag` (
-  `id` int(10) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `tag` varchar(255) NOT NULL,
   `uploader` int(10) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -655,7 +655,7 @@ CREATE TABLE `setup_tag` (
 --
 
 CREATE TABLE `study` (
-  `id` bigint(20) NOT NULL,
+  `id` int(10) NOT NULL,
   `name` text COLLATE utf8_bin NOT NULL,
   `description` text COLLATE utf8_bin NOT NULL,
   `visibility` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT 'public',
@@ -670,7 +670,7 @@ CREATE TABLE `study` (
 --
 
 CREATE TABLE `study_tag` (
-  `study_id` int(8) NOT NULL,
+  `study_id` int(10) NOT NULL,
   `tag` varchar(255) NOT NULL,
   `window_start` datetime DEFAULT NULL,
   `window_end` datetime DEFAULT NULL,
@@ -964,7 +964,8 @@ ALTER TABLE `input_data`
 --
 ALTER TABLE `input_setting`
   ADD PRIMARY KEY (`setup`,`input_id`),
-  ADD KEY `value` (`value`(255));
+  ADD KEY `value` (`value`(255)),
+  ADD KEY `fk_input_setting_input_id` (`input_id`);
 
 --
 -- Indexes for table `likes`
@@ -1184,7 +1185,7 @@ ALTER TABLE `run`
 -- AUTO_INCREMENT for table `study`
 --
 ALTER TABLE `study`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `task`
 --
@@ -1198,6 +1199,18 @@ ALTER TABLE `task_type`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `algorithm_setup`
+--
+ALTER TABLE `algorithm_setup`
+  ADD CONSTRAINT `fk_implementation_id` FOREIGN KEY (`implementation_id`) REFERENCES `implementation` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `dataset_tag`
+--
+ALTER TABLE `dataset_tag`
+  ADD CONSTRAINT `fk_dataset_tag` FOREIGN KEY (`id`) REFERENCES `dataset` (`did`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `evaluation`
@@ -1227,6 +1240,31 @@ ALTER TABLE `evaluation_sample`
   ADD CONSTRAINT `evaluation_sample_ibfk_4` FOREIGN KEY (`source`,`evaluation_engine_id`) REFERENCES `run_evaluated` (`run_id`, `evaluation_engine_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `implementation_tag`
+--
+ALTER TABLE `implementation_tag`
+  ADD CONSTRAINT `fk_implementation_tag` FOREIGN KEY (`id`) REFERENCES `implementation` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `input`
+--
+ALTER TABLE `input`
+  ADD CONSTRAINT `fk_input_implementation_id` FOREIGN KEY (`implementation_id`) REFERENCES `implementation` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `input_setting`
+--
+ALTER TABLE `input_setting`
+  ADD CONSTRAINT `fk_input_algorithm_setup_id` FOREIGN KEY (`setup`) REFERENCES `algorithm_setup` (`sid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_input_setting_input_id` FOREIGN KEY (`input_id`) REFERENCES `input` (`id`);
+
+--
+-- Constraints for table `run`
+--
+ALTER TABLE `run`
+  ADD CONSTRAINT `fk_setup_setup_id` FOREIGN KEY (`setup`) REFERENCES `algorithm_setup` (`sid`);
+
+--
 -- Constraints for table `run_evaluated`
 --
 ALTER TABLE `run_evaluated`
@@ -1234,10 +1272,34 @@ ALTER TABLE `run_evaluated`
   ADD CONSTRAINT `run_evaluated_ibfk_2` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`);
 
 --
+-- Constraints for table `run_tag`
+--
+ALTER TABLE `run_tag`
+  ADD CONSTRAINT `fk_run_tag` FOREIGN KEY (`id`) REFERENCES `run` (`rid`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `runfile`
 --
 ALTER TABLE `runfile`
   ADD CONSTRAINT `runfile_ibfk_1` FOREIGN KEY (`source`) REFERENCES `run` (`rid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `setup_tag`
+--
+ALTER TABLE `setup_tag`
+  ADD CONSTRAINT `fk_setup_id` FOREIGN KEY (`id`) REFERENCES `algorithm_setup` (`sid`);
+
+--
+-- Constraints for table `study_tag`
+--
+ALTER TABLE `study_tag`
+  ADD CONSTRAINT `fk_study_tag` FOREIGN KEY (`study_id`) REFERENCES `study` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `task_tag`
+--
+ALTER TABLE `task_tag`
+  ADD CONSTRAINT `fk_task_tag` FOREIGN KEY (`id`) REFERENCES `task` (`task_id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

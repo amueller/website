@@ -49,6 +49,11 @@ define( 'DATA_PATH', PATH . 'data/' );
 define( 'TMP_PATH', '/tmp/' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Paths for server-side scripts
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+define( 'LIB_PATH', '/var/lib/' );
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Configuration details for the experiment database
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DB_NAME: The name of the database
@@ -137,7 +142,7 @@ define( 'CMD_PREFIX', '');
 define( 'EMAIL_FROM', 'noreply@openml.org' );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * EMAIL_API_LOG: The email address to which critical API errors 
+ * EMAIL_API_LOG: The email address to which critical API errors
  * get reported
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 define( 'EMAIL_API_LOG', 'api@openml.org' );

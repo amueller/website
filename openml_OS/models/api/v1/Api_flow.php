@@ -7,9 +7,13 @@ class Api_flow extends Api_model {
     parent::__construct();
 
     // load models
+    $this->load->model('Algorithm_setup');
+    
     $this->load->model('Implementation');
     $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
+    $this->load->model('Input_setting');
+
 
     $this->load->model('File');
     $this->load->model('Input');
@@ -78,27 +82,38 @@ class Api_flow extends Api_model {
 
 
   private function flow_list($segs) {
+    $legal_filters = array('uploader', 'tag', 'limit', 'offset');
     $query_string = array();
-    for ($i = 0; $i < count($segs); $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
-
-    $tag = element('tag',$query_string);
-    $limit = element('limit',$query_string);
-    $offset = element('offset',$query_string);
-
-    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset))) {
-      $this->returnError(511, $this->version );
-      return;
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(501, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }
     }
-
-    $where_tag = $tag == false ? '' : ' AND `id` IN (select id from implementation_tag where tag="' . $tag . '") ';
-    $where_total = $where_tag;
-    $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
-    if($limit != false && $offset != false){
-      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    
+    $uploader_id = element('uploader', $query_string);
+    $tag = element('tag', $query_string);
+    $limit = element('limit', $query_string);
+    $offset = element('offset', $query_string);
+    
+    $query = $this->db->from('implementation')->group_start()->where('`visibility`', 'public')->or_where('uploader', $this->user_id)->group_end();
+    if ($uploader_id) {
+      $query->where('uploader', $uploader_id);
     }
-
-    $sql = 'select * from implementation where (visibility = "public" or uploader='.$this->user_id.')'. $where_total . $where_limit;
+    if ($tag) {
+      # TODO: update!
+      $query->where('`id` IN (select id from implementation_tag where tag="' . $tag . '")');
+    }
+    if ($limit) {
+      $query->limit($limit);
+    }
+    if ($offset) {
+      $query->offset($offset);
+    }
+    
+    $sql = $query->get_compiled_select();
+    # TODO: can remove next statement and replace by original active record
     $implementations_res = $this->Implementation->query($sql);
     if( $implementations_res == false ) {
       $this->returnError( 500, $this->version );
@@ -121,8 +136,8 @@ class Api_flow extends Api_model {
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }
 
-
-  private function flow_owned() {
+  // deprecated, will be removed soon
+  /*private function flow_owned() {
 
     $implementations = $this->Implementation->getColumnWhere( 'id', '`uploader` = "'.$this->user_id.'"' );
     if( $implementations == false ) {
@@ -130,7 +145,7 @@ class Api_flow extends Api_model {
       return;
     }
     $this->xmlContents( 'implementation-owned', $this->version, array( 'implementations' => $implementations ) );
-  }
+  }*/
 
 
   private function flow_exists($name, $external_version) {
@@ -300,9 +315,9 @@ class Api_flow extends Api_model {
 
   private function flow_delete($flow_id) {
 
-    $implementation = $this->Implementation->getById( $flow_id );
-    if( $implementation == false ) {
-      $this->returnError( 322, $this->version );
+    $implementation = $this->Implementation->getById($flow_id);
+    if($implementation == false) {
+      $this->returnError(322, $this->version);
       return;
     }
 
@@ -317,16 +332,27 @@ class Api_flow extends Api_model {
       $this->returnError(324, $this->version);
       return;
     }
-
+    
+    $remove_input_setting = $this->Input_setting->deleteWhere('setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$implementation->id.')');
+    if (!$remove_input_setting) {
+      $this->returnError(326, $this->version);
+      return;
+    }
+    $remove_setups = $this->Algorithm_setup->deleteWhere('implementation_id = ' . $implementation->id);
+    if (!$remove_setups) {
+      $this->returnError(327, $this->version);
+      return;
+    }
+    
     $result = $this->Implementation->delete($implementation->id);
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }
     $this->Input->deleteWhere('implementation_id =' . $implementation->id);
-    $this->Implementation_component->deleteWhere('parent =' . $implementation->id);
+    $this->Implementation_component->deleteWhere('parent = ' . $implementation->id);
     // TODO: also check component parts.
 
-    if( $result == false ) {
-      $this->returnError( 325, $this->version  );
+    if($result == false) {
+      $this->returnError(325, $this->version);
       return;
     }
 
@@ -337,7 +363,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $this->xmlContents( 'implementation-delete', $this->version , array( 'implementation' => $implementation ) );
+    $this->xmlContents('implementation-delete', $this->version, array('implementation' => $implementation));
   }
 
   private function flow_forcedelete($flow_id) {
@@ -439,7 +465,7 @@ class Api_flow extends Api_model {
             $succes = $this->insertImplementationFromXML(
               $component,
               $configuration,
-              array( 'uploadDate' => now(), 'uploader' => $implementation['uploader'] ) );
+              array('uploadDate' => $implementation['uploadDate'], 'uploader' => $implementation['uploader']));
 
             if($succes == false) { return false; }
             $this->Implementation->addComponent( $flow_id, $succes, trim($entry->identifier) );

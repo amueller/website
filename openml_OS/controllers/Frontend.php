@@ -76,7 +76,7 @@ class Frontend extends CI_Controller {
     $this->active = $exploded_page[0]; // can be overridden.
     $this->message = $this->session->flashdata('message'); // can be overridden
 
-    if(false === strpos($_SERVER['REQUEST_URI'],'/json')){
+    if(false === strpos($_SERVER['REQUEST_URI'],'/json') && false === strpos($_SERVER['REQUEST_URI'],'/rdf')){
       if(!loadpage($indicator,TRUE,'pre')) {
         $this->error404();
         return;
@@ -87,6 +87,8 @@ class Frontend extends CI_Controller {
 	    $this->load->view('html_main');
     } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/json')){
 	    $this->load->view('json_main');
+    } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/rdf')){
+	    $this->load->view('rdf_main');
     } elseif(false !== strpos($_SERVER['REQUEST_URI'],'/output')){
 	    $this->load->view('output_main');
     } else {

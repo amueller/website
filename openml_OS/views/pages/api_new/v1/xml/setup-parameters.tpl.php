@@ -1,5 +1,6 @@
 <oml:setup_parameters xmlns:oml="http://openml.org/openml">
   <oml:flow_id><?php echo $setup->implementation_id; ?></oml:flow_id>
+<?php if($parameters): /* in case of parameterless flows? */ ?>
 <?php foreach($parameters as $p): ?>
 	<oml:parameter>
 		<oml:id><?php echo htmlspecialchars($p->id); ?></oml:id>
@@ -11,4 +12,5 @@
 		<oml:value><?php echo htmlspecialchars($p->value); ?></oml:value>
 	</oml:parameter>
 <?php endforeach; ?>
+<?php endif; ?>
 </oml:setup_parameters>

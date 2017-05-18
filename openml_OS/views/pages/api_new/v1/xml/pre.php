@@ -126,6 +126,8 @@ $this->apiErrors[322] = 'flow does not exists';
 $this->apiErrors[323] = 'flow is not owned by you';
 $this->apiErrors[324] = 'flow is in use by other content. Can not be deleted';
 $this->apiErrors[325] = 'Deleting flow failed.';
+$this->apiErrors[326] = 'Deleting flow failed, because associated input setting fields could not be deleted.';
+$this->apiErrors[326] = 'Deleting flow failed, because associated setups could not be deleted.';
 
 // for function: openml.flow.exists
 $this->apiErrors[330] = 'Mandatory fields not present.';
@@ -247,6 +249,7 @@ $this->apiErrors[492] = 'File register error';
 
 // openml.flows
 $this->apiErrors[500] = 'No results';
+$this->apiErrors[501] = 'Illegal filter operation';
 
 // openml.runs.list
 $this->apiErrors[510] = 'Please provide at least task, flow or setup, uploader or run, to filter results. ';
