@@ -13,12 +13,21 @@
                             echo '<a id="likebutton" class="loginfirst btn btn-link" onclick="doLike(false)" title="Click to like"> <i id="likeicon" class="fa fa-heart-o fa-2x"></i></a>';
                         } ?>
                 </li>
+                <?php } ?>
                 <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
-            <?php }else{ ?>
-                <li><a class="loginfirst btn btn-link" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-                <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
-            <?php }
+                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json">
+                                  <span class="fa-stack fa-stack-icon fa-2x">
+                                      <i class="fa fa-file-o fa-stack-1x"></i>
+                                      <strong class="fa-stack-1x file-text">JSON</strong>
+                                  </span>
+                                </a></li>
+                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/rdf">
+                                  <span class="fa-stack fa-stack-icon fa-2x">
+                                      <i class="fa fa-file-o fa-stack-1x"></i>
+                                      <strong class="fa-stack-1x file-text">RDF</strong>
+                                  </span>
+                                </a></li>
+            <?php
         }else{ ?>
             <li><a class="loginfirst btn btn-link" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
             <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>

@@ -12,6 +12,17 @@
   font-size: 100%;
 }
 
+.fa-stack-icon{
+  width: 1em !important;
+  height: 1em !important;
+  line-height: 0.7em !important;
+}
+
+.file-text{
+  font-size: 30% !important;
+  margin-top: .7em;
+}
+
 .surveypopup{
   margin-top:30px;
   margin-bottom:-30px !important;
