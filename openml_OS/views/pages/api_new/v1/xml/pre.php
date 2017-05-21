@@ -277,6 +277,9 @@ $this->apiErrors[541] = 'Input not safe';
 $this->apiErrors[542] = 'No results';
 $this->apiErrors[543] = 'Too many results';
 
+// openml.evaluations.request
+$this->apiErrors[545] = 'No unevaluated runs according to the criteria';
+
 // openml.flow.forcedelete
 $this->apiErrors[550] = 'Admin rights are required.';
 $this->apiErrors[551] = 'Delete query failed.';

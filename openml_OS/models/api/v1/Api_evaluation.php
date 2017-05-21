@@ -20,8 +20,42 @@ class Api_evaluation extends Api_model {
       $this->evaluation_list($segments);
       return;
     }
+    
+    $order_values = array('random', 'reverse', 'normal');
+    if (count($segments) >= 3 && $segments[0] == 'request' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
+      if (count($segments) == 3) {
+        $this->evaluation_list($segments[1], $segments[2], false);
+        return;
+      } elseif (count($segments) == 4 && is_numeric($segments[4])) {
+        $this->evaluation_list($segments[1], $segments[2], $segments[3]);
+        return;
+      }
+    }
 
-    $this->returnError( 100, $this->version );
+    $this->returnError(100, $this->version);
+  }
+  
+  private function evaluation_request($evaluation_engine_id, $order, $ttid) {
+    $this->db->from('`task` `t`')->join('`run` `r`', '`t`.`task_id` = `r`.`task_id`', 'inner')
+    $this->db->join('`run_evaluated` `e`', '`r`.`rid` = `e`.`run_id` AND `e`.`evaluation_engine_id` = 1', 'left');
+    $this->db->where('`e`.`run_id` IS NULL')->limit('1');
+    if ($ttid != false) {
+      $this->db->where('`t`.`ttid` = ' . $ttid);
+    }
+    if ($order == 'random') {
+      $this->db->order_by('RAND()');
+    } elseif ($order == 'reverse') {
+      $this->db->order_by('r.start_time DESC');
+    } else {
+      $this->db->order_by('r.start_time ASC');
+    }
+    
+    $res = $this->db->select('r.*')->get();
+    if (count($res) == 0) {
+      $this->returnError(543, $this->version);
+      return;
+    }
+    $this->xmlContents('evaluations-request', $this->version, array('res' => $res));
   }
 
 
@@ -101,7 +135,7 @@ class Api_evaluation extends Api_model {
       return;
     }
 
-    $this->xmlContents( 'evaluations', $this->version, array( 'evaluations' => $res ) );
+    $this->xmlContents('evaluations', $this->version, array('evaluations' => $res));
   }
 }
 ?>
