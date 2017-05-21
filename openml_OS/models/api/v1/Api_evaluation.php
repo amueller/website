@@ -36,22 +36,8 @@ class Api_evaluation extends Api_model {
   }
   
   private function evaluation_request($evaluation_engine_id, $order, $ttid) {
-    $this->db->from('`task` `t`')->join('`run` `r`', '`t`.`task_id` = `r`.`task_id`', 'inner');
-    $this->db->join('`run_evaluated` `e`', '`r`.`rid` = `e`.`run_id` AND `e`.`evaluation_engine_id` = 1', 'left');
-    $this->db->where('`e`.`run_id` IS NULL')->limit('1');
-    if ($ttid != false) {
-      $this->db->where('`t`.`ttid` = ' . $ttid);
-    }
-    if ($order == 'random') {
-      $this->db->order_by('RAND()');
-    } elseif ($order == 'reverse') {
-      $this->db->order_by('r.start_time DESC');
-    } else {
-      $this->db->order_by('r.start_time ASC');
-    }
-    
-    $res = $this->db->select('r.*')->get();
-    if (count($res) == 0) {
+    $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid);
+    if ($res == false) {
       $this->returnError(543, $this->version);
       return;
     }
