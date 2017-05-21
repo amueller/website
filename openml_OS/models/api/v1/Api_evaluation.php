@@ -26,7 +26,7 @@ class Api_evaluation extends Api_model {
       if (count($segments) == 3) {
         $this->evaluation_request($segments[1], $segments[2], false);
         return;
-      } elseif (count($segments) == 4 && is_numeric($segments[4])) {
+      } elseif (count($segments) == 4 && is_numeric($segments[3])) {
         $this->evaluation_request($segments[1], $segments[2], $segments[3]);
         return;
       }
@@ -38,7 +38,7 @@ class Api_evaluation extends Api_model {
   private function evaluation_request($evaluation_engine_id, $order, $ttid) {
     $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid);
     if ($res == false) {
-      $this->returnError(543, $this->version);
+      $this->returnError(545, $this->version);
       return;
     }
     $this->xmlContents('evaluations-request', $this->version, array('res' => $res));
