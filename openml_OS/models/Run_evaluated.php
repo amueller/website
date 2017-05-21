@@ -11,7 +11,7 @@ class Run_evaluated extends Database_write {
     $this->db->join('`run_evaluated` `e`', '`r`.`rid` = `e`.`run_id` AND `e`.`evaluation_engine_id` = 1', 'left');
     $this->db->where('`e`.`run_id` IS NULL')->limit('1');
     if ($ttid != false) {
-      $this->db->where('`t`.`ttid` = ' . $ttid);
+      $this->db->where('`t`.`ttid` = "' . $ttid . '"');
     }
     if ($order == 'random') {
       $this->db->order_by('RAND()');
