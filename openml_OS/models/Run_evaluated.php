@@ -8,7 +8,7 @@ class Run_evaluated extends Database_write {
   
   function getUnevaluatedRun($evaluation_engine_id, $order, $ttid) {
     $this->db->from('`task` `t`')->join('`run` `r`', '`t`.`task_id` = `r`.`task_id`', 'inner');
-    $this->db->join('`run_evaluated` `e`', '`r`.`rid` = `e`.`run_id` AND `e`.`evaluation_engine_id` = 1', 'left');
+    $this->db->join('`run_evaluated` `e`', '`r`.`rid` = `e`.`run_id` AND `e`.`evaluation_engine_id` = ' . $evaluation_engine_id, 'left');
     $this->db->where('`e`.`run_id` IS NULL')->limit('1');
     if ($ttid != false) {
       $this->db->where('`t`.`ttid` = "' . $ttid . '"');
