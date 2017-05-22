@@ -20,8 +20,28 @@ class Api_evaluation extends Api_model {
       $this->evaluation_list($segments);
       return;
     }
+    
+    $order_values = array('random', 'reverse', 'normal');
+    if (count($segments) >= 3 && $segments[0] == 'request' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
+      if (count($segments) == 3) {
+        $this->evaluation_request($segments[1], $segments[2], false);
+        return;
+      } elseif (count($segments) == 4 && is_numeric($segments[3])) {
+        $this->evaluation_request($segments[1], $segments[2], $segments[3]);
+        return;
+      }
+    }
 
-    $this->returnError( 100, $this->version );
+    $this->returnError(100, $this->version);
+  }
+  
+  private function evaluation_request($evaluation_engine_id, $order, $ttid) {
+    $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid);
+    if ($res == false) {
+      $this->returnError(545, $this->version);
+      return;
+    }
+    $this->xmlContents('evaluations-request', $this->version, array('res' => $res));
   }
 
 
@@ -101,7 +121,7 @@ class Api_evaluation extends Api_model {
       return;
     }
 
-    $this->xmlContents( 'evaluations', $this->version, array( 'evaluations' => $res ) );
+    $this->xmlContents('evaluations', $this->version, array('evaluations' => $res));
   }
 }
 ?>
