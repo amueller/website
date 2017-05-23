@@ -869,7 +869,8 @@ class ElasticSearch {
                 'tt_id' => $d->ttid,
                 'name' => $d->name
             ),
-            'date' => $d->creation_date
+            'date' => $d->creation_date,
+            'uploader_id' => $d->creator
         );
 
         $description = array();
