@@ -23,7 +23,7 @@ class Api_task extends Api_model {
 
     if (count($segments) >= 1 && $segments[0] == 'list') {
       array_shift($segments);
-      $this->task_list($segments);
+      $this->task_list($segments, $user_id);
       return;
     }
 
@@ -56,7 +56,7 @@ class Api_task extends Api_model {
   }
 
 
-  private function task_list($segs) {
+  private function task_list($segs, $user_id) {
     $legal_filters = array('type', 'tag', 'data_tag', 'status', 'limit', 'offset', 'data_id', 'data_name', 'number_instances', 'number_features', 'number_classes', 'number_missing_values');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
@@ -97,25 +97,25 @@ class Api_task extends Api_model {
 
     $where_total = $where_type . $where_tag . $where_data_tag . $where_status . $where_did . $where_data_name . $where_insts . $where_feats . $where_class . $where_miss;
     $where_task_total = $where_type . $where_tag;
-    
+
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
-    
-    // three level query. in case scalability once forces us to drop some info. 
+
+    // three level query. in case scalability once forces us to drop some info.
     $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `source`.`value` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`input` SEPARATOR \'","\'),\'"\') AS `task_inputs` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`value` SEPARATOR \'","\'),\'"\') AS `input_values` ' .
             'FROM `task` `t` , `task_type` `tt` , `task_inputs` `ti` , `task_inputs` `source` , `dataset` `d` ' .
             'WHERE `ti`.`task_id` = `t`.`task_id` AND `source`.`input` = "source_data" ' .
-            'AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` ' .
-            'AND `tt`.`ttid` = `t`.`ttid` AND `ti`.`input` IN ("' . implode('","', $this->config->item('basic_taskinputs')).'") ' . 
+            'AND `source`.`task_id` = `t`.`task_id` AND `source`.`value` = `d`.`did` AND (`d`.`visibility` = "public" OR `d`.`uploader` = ' . $user_id . ')' .
+            'AND `tt`.`ttid` = `t`.`ttid` AND `ti`.`input` IN ("' . implode('","', $this->config->item('basic_taskinputs')).'") ' .
             $where_total . ' ' .
             'GROUP BY t.task_id ' . $where_limit;
     $tags = 'SELECT `core`.*, CONCAT(\'"\', GROUP_CONCAT(`task_tag`.`tag` SEPARATOR \'","\'),\'"\') AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
     $full = 'SELECT tags.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $tags . ') tags ON dq.data = tags.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY tags.task_id;';
-    
+
     $tasks_res = $this->Task->query($full);
-    
+
     if(is_array($tasks_res) == false || count($tasks_res) == 0) {
       $this->returnError(482, $this->version);
       return;
@@ -188,14 +188,14 @@ class Api_task extends Api_model {
       $this->returnError( 455, $this->version );
       return;
     }
-    
+
     try {
       $this->elasticsearch->delete('task', $task_id);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
-    
+
     $this->xmlContents( 'task-delete', $this->version, array( 'task' => $task ) );
   }
 
@@ -226,48 +226,48 @@ class Api_task extends Api_model {
     $task_type_id = intval($xml->children('oml', true)->{'task_type_id'});
     $inputs = array();
     $tags = array();
-    
+
     // for legal input check
     $legal_inputs = $this->Task_type_inout->getAssociativeArray('name', 'requirement', 'ttid = ' . $task_type_id . ' AND io = "input"');
     // for required input check
     $required_inputs = $this->Task_type_inout->getAssociativeArray('name', 'requirement', 'ttid = ' . $task_type_id . ' AND io = "input" AND requirement = "required"');
-    
+
     foreach($xml->children('oml', true) as $input) {
-      // iterate over all fields, to extract tags and inputs. 
+      // iterate over all fields, to extract tags and inputs.
       if ($input->getName() == 'input') {
         $name = $input->attributes() . '';
-        
+
         // check if input is no duplicate
         if (array_key_exists($name, $inputs)) {
           $this->returnError(536, $this->version, $this->openmlGeneralErrorCode, 'problematic input: ' . $name);
           return;
         }
-        
+
         // check if input is legal
         if (array_key_exists($name, $legal_inputs) == false) {
           $this->returnError(535, $this->version, $this->openmlGeneralErrorCode, 'problematic input: ' . $name);
           return;
         }
-        
-        // TODO: custom check. if key is source data, check if dataset exists. 
-        // TODO: custom check. if key is estimation procedure, check if EP exists (and collides with task_type_id). 
-        // TODO: custom check. if key is target value, check if it exists. 
-        
+
+        // TODO: custom check. if key is source data, check if dataset exists.
+        // TODO: custom check. if key is estimation procedure, check if EP exists (and collides with task_type_id).
+        // TODO: custom check. if key is target value, check if it exists.
+
         $inputs[$name] = $input . '';
         // maybe a required input is satisfied
         unset($required_inputs[$name]);
-        
+
       } elseif ($input->getName() == 'tag') {
         $tags[] = $input . '';
       }
     }
-    
+
     // required inputs should be empty by now
     if (count($required_inputs) > 0) {
       $this->returnError(537, $this->version, $this->openmlGeneralErrorCode, 'problematic input(s): ' . implode(', ', array_keys($required_inputs)));
       return;
     }
-    
+
     $search = $this->Task->search($task_type_id, $inputs);
     if ($search) {
       $task_ids = array();
@@ -303,18 +303,18 @@ class Api_task extends Api_model {
       );
       $this->Task_inputs->insert($task_input);
     }
-    
+
     foreach($tags as $tag) {
       $this->entity_tag_untag('task', $id, $tag, false, 'task', true);
       // if tagging went wrong, an error is displayed. (TODO: something else?)
       if (!$success) return;
     }
-    
+
     // update elastic search index.
     try {
       $this->elasticsearch->index('task', $id);
     } catch (Exception $e) {
-      // TODO: should be logged. 
+      // TODO: should be logged.
     }
 
     $this->xmlContents( 'task-upload', $this->version, array( 'id' => $id ) );
