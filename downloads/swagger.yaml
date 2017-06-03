@@ -1,19 +1,24 @@
 swagger: '2.0'
 info:
   title: OpenML API
-  description: REST API for sharing, organizing and reusing machine learning datasets, code, and experiments. Follows a predictive URL scheme from endpoint https://www.openml.org/api/v1/json (or /xml). You need to add your `api_key` to every call (see your account settings), or simply log in.
+  description: >-
+    REST API for sharing, organizing and reusing machine learning datasets,
+    code, and experiments. Follows a predictive URL scheme from endpoint
+    https://www.openml.org/api/v1/json (or /xml). You need to add your `api_key`
+    to every call (see your account settings), or simply log in.
   version: 1.0.0
 schemes:
-  - http
+  - https
 basePath: /api/v1/json
 produces:
   - application/json
 paths:
-  /data/{id}:
+  '/data/{id}':
     get:
       summary: Get dataset description
-      description: |
-        Returns information about a dataset. The information includes the name, information about the creator, URL to download it and more.
+      description: >
+        Returns information about a dataset. The information includes the name,
+        information about the creator, URL to download it and more.
       parameters:
         - name: id
           in: path
@@ -29,6 +34,14 @@ paths:
       tags:
         - data
       responses:
+        '110':
+          description: Please provide data_id.
+        '111':
+          description: >-
+            Unknown dataset. Data set description with data_id was not found in
+            the database.
+        '112':
+          description: No access granted. This dataset is not shared with you.
         '200':
           description: A dataset description
           schema:
@@ -44,7 +57,7 @@ paths:
                   "format": "ARFF",
                   "upload_date": "2014-04-06 23:19:20",
                   "licence": "Public",
-                  "url": "http://www.openml.org/data/download/1/dataset_1_anneal.arff",
+                  "url": "https://www.openml.org/data/download/1/dataset_1_anneal.arff",
                   "file_id": "1",
                   "default_target_attribute": "class",
                   "version_label": "2",
@@ -53,21 +66,16 @@ paths:
                     "uci"
                   ],
                   "visibility": "public",
-                  "original_data_url": "http://www.openml.org/d/2",
+                  "original_data_url": "https://www.openml.org/d/2",
                   "status": "active",
                   "md5_checksum": "d01f6ccd68c88b749b20bbe897de3713"
                 }
               }
-        110:
-          description: Please provide data_id.
-        111:
-          description: Unknown dataset. Data set description with data_id was not found in the database.
-        112:
-          description: No access granted. This dataset is not shared with you.
     delete:
       summary: Delete dataset
-      description: |
-        Deletes a dataset. Upon success, it returns the ID of the deleted dataset.
+      description: >
+        Deletes a dataset. Upon success, it returns the ID of the deleted
+        dataset.
       parameters:
         - name: id
           in: path
@@ -93,7 +101,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the deleted dataset, a positive integer
+                    description: 'ID of the deleted dataset, a positive integer'
           examples:
             application/json: |-
               {
@@ -101,33 +109,51 @@ paths:
                   "id": "4328"
                 }
               }
-        350:
-          description: Please provide API key. In order to remove your content, please authenticate.
-        351:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators.
-        352:
-          description: Dataset does not exists. The data ID could not be linked to an existing dataset. 
-        353:
-          description: Dataset is not owned by you. The dataset is owned by another user. Hence you cannot delete it. 
-        354:
-          description: Dataset is in use by other content. Can not be deleted. The data is used in tasks or runs. Delete other content before deleting this dataset.  
-        355:
-          description: Deleting dataset failed. Deleting the dataset failed. Please contact support team.
+        '350':
+          description: >-
+            Please provide API key. In order to remove your content, please
+            authenticate.
+        '351':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact api administrators.
+        '352':
+          description: >-
+            Dataset does not exists. The data ID could not be linked to an
+            existing dataset.
+        '353':
+          description: >-
+            Dataset is not owned by you. The dataset is owned by another user.
+            Hence you cannot delete it.
+        '354':
+          description: >-
+            Dataset is in use by other content. Can not be deleted. The data is
+            used in tasks or runs. Delete other content before deleting this
+            dataset.
+        '355':
+          description: >-
+            Deleting dataset failed. Deleting the dataset failed. Please contact
+            support team.
   /data:
     post:
       summary: Upload dataset
-      consumes: [multipart/form-data]
+      consumes:
+        - multipart/form-data
       description: |
         Uploads a dataset. Upon success, it returns the data id.
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.data.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/data).
+          description: >-
+            An XML file describing the dataset. Only name, description, and data
+            format are required. Also see the [XSD
+            schema](https://www.openml.org/api/v1/xsd/openml.data.upload) and an
+            [XML example](https://www.openml.org/api/v1/xml_example/data).
           required: true
           type: file
         - name: dataset
           in: formData
-          description: The actual dataset, being an ARFF file.
+          description: 'The actual dataset, being an ARFF file.'
           required: true
           type: file
         - name: api_key
@@ -138,6 +164,70 @@ paths:
       tags:
         - data
       responses:
+        '130':
+          description: >-
+            Problem with file uploading. There was a problem with the file
+            upload
+        '131':
+          description: >-
+            Problem validating uploaded description file. The XML description
+            format does not meet the standards
+        '132':
+          description: >-
+            Failed to move the files. Internal server error, please contact API
+            administrators
+        '133':
+          description: >-
+            Failed to make checksum of datafile. Internal server error, please
+            contact API administrators
+        '134':
+          description: >-
+            Failed to insert record in database. Internal server error, please
+            contact API administrators
+        '135':
+          description: Please provide description xml.
+        '136':
+          description: >-
+            File failed format verification. The uploaded file is not valid
+            according to the selected file format. Please check the file format
+            specification and try again.
+        '137':
+          description: >-
+            Please provide API key. In order to share content, please log in or
+            provide your API key.
+        '138':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact API administrators
+        '139':
+          description: >-
+            Combination name / version already exists. Leave version out for
+            auto increment
+        '140':
+          description: >-
+            Both dataset file and dataset url provided. The system is confused
+            since both a dataset file (post) and a dataset url (xml) are
+            provided. Please remove one.
+        '141':
+          description: >-
+            Neither dataset file or dataset url are provided. Please provide
+            either a dataset file as POST variable, or a dataset url in the
+            description XML
+        '142':
+          description: >-
+            Error in processing arff file. Can be a syntax error, or the
+            specified target feature does not exists. For now, we only check on
+            arff files. If a dataset is claimed to be in such a format, and it
+            can not be parsed, this error is returned.
+        '143':
+          description: >-
+            Suggested target feature not legal. It is possible to suggest a
+            default target feature (for predictive tasks). However, it should be
+            provided in the data.
+        '144':
+          description: >-
+            Unable to update dataset. The dataset with id could not be found in
+            the database. If you upload a new dataset, unset the id.
         '200':
           description: Id of the uploaded dataset
           schema:
@@ -148,7 +238,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the uploaded dataset, a positive integer
+                    description: 'ID of the uploaded dataset, a positive integer'
           examples:
             application/json: |-
               {
@@ -156,37 +246,7 @@ paths:
                   "id": "4328"
                 }
               }
-        130:
-          description: Problem with file uploading. There was a problem with the file upload 
-        131:
-          description: Problem validating uploaded description file. The XML description format does not meet the standards 
-        132:
-          description: Failed to move the files. Internal server error, please contact API administrators 
-        133:
-          description: Failed to make checksum of datafile. Internal server error, please contact API administrators 
-        134:
-          description: Failed to insert record in database. Internal server error, please contact API administrators 
-        135:
-          description: Please provide description xml. 
-        136:
-          description: File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.
-        137:
-          description: Please provide API key. In order to share content, please log in or provide your API key.
-        138:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact API administrators 
-        139:
-          description: Combination name / version already exists. Leave version out for auto increment 
-        140:
-          description: Both dataset file and dataset url provided. The system is confused since both a dataset file (post) and a dataset url (xml) are provided. Please remove one.
-        141:
-          description: Neither dataset file or dataset url are provided. Please provide either a dataset file as POST variable, or a dataset url in the description XML 
-        142:
-          description: Error in processing arff file. Can be a syntax error, or the specified target feature does not exists. For now, we only check on arff files. If a dataset is claimed to be in such a format, and it can not be parsed, this error is returned.  
-        143:
-          description: Suggested target feature not legal. It is possible to suggest a default target feature (for predictive tasks). However, it should be provided in the data.  
-        144:
-          description: Unable to update dataset. The dataset with id could not be found in the database. If you upload a new dataset, unset the id.
-  /data/features/{id}:
+  '/data/features/{id}':
     get:
       summary: Get data features
       description: |
@@ -258,17 +318,26 @@ paths:
                   ]
                 }
               }
-        270:
+        '270':
           description: Please provide dataset ID.
-        271:
-          description: Unknown dataset. Data set with the given data ID was not found (or is not shared with you).
-        272:
-          description: No features found. The dataset did not contain any features, or we could not extract them.
-        273:
-          description: Dataset not processed yet. The dataset was not processed yet, features are not yet available. Please wait for a few minutes.  
-        274:
-          description: Dataset processed with error. The feature extractor has run into an error while processing the dataset. Please check whether it is a valid supported file. If so, please contact the API admins.
-  /data/qualities/{id}:
+        '271':
+          description: >-
+            Unknown dataset. Data set with the given data ID was not found (or
+            is not shared with you).
+        '272':
+          description: >-
+            No features found. The dataset did not contain any features, or we
+            could not extract them.
+        '273':
+          description: >-
+            Dataset not processed yet. The dataset was not processed yet,
+            features are not yet available. Please wait for a few minutes.
+        '274':
+          description: >-
+            Dataset processed with error. The feature extractor has run into an
+            error while processing the dataset. Please check whether it is a
+            valid supported file. If so, please contact the API admins.
+  '/data/qualities/{id}':
     get:
       summary: Get data qualities
       description: |
@@ -336,18 +405,29 @@ paths:
                   ]
                 }
               }
-        360:
+        '360':
           description: Please provide data set ID
-        361:
-          description: Unknown dataset. The data set with the given ID was not found in the database, or is not shared with you.
-        362:
-          description: No qualities found. The registered dataset did not contain any calculated qualities.
-        363:
-          description: Dataset not processed yet. The dataset was not processed yet, no qualities are available. Please wait for a few minutes.
-        364:
-          description: Dataset processed with error. The quality calculator has run into an error while processing the dataset. Please check whether it is a valid supported file. If so, contact the support team.
-        365:
-          description: Interval start or end illegal. There was a problem with the interval start or end.
+        '361':
+          description: >-
+            Unknown dataset. The data set with the given ID was not found in the
+            database, or is not shared with you.
+        '362':
+          description: >-
+            No qualities found. The registered dataset did not contain any
+            calculated qualities.
+        '363':
+          description: >-
+            Dataset not processed yet. The dataset was not processed yet, no
+            qualities are available. Please wait for a few minutes.
+        '364':
+          description: >-
+            Dataset processed with error. The quality calculator has run into an
+            error while processing the dataset. Please check whether it is a
+            valid supported file. If so, contact the support team.
+        '365':
+          description: >-
+            Interval start or end illegal. There was a problem with the interval
+            start or end.
   /data/list:
     get:
       summary: List all datasets
@@ -426,9 +506,9 @@ paths:
                   ]
                 }
               }
-        370:
+        '370':
           description: No datasets available. There are no valid datasets in the system.
-  /data/list/limit/{limit}/offset/{offset}:
+  '/data/list/limit/{limit}/offset/{offset}':
     get:
       summary: List datasets within a range.
       description: |
@@ -436,13 +516,19 @@ paths:
       parameters:
         - name: limit
           in: path
-          description: Optional, although required in this interface. The maximum number of datasets to return.  Without specifying an offset, it returns the first 'limit' datasets.
+          description: >-
+            Optional, although required in this interface. The maximum number of
+            datasets to return.  Without specifying an offset, it returns the
+            first 'limit' datasets.
           required: true
           type: number
           format: integer
         - name: offset
           in: path
-          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, datasets 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          description: >-
+            Optional (although required in this interface). The offset to start
+            from. With /limit/5/offset/10, datasets 11..15 will be returned
+            (these are indices, not IDs). Is ignored when no limit is given.
           required: true
           type: number
           format: integer
@@ -518,13 +604,14 @@ paths:
                   ]
                 }
               }
-        370:
+        '370':
           description: No datasets available. There are no valid datasets in the system.
-  /data/list/tag/{tag}:
+  '/data/list/tag/{tag}':
     get:
       summary: List datasets with given tag.
-      description: |
-        Returns an array with all datasets in the system with the given tag. Can also be combined with limit and offset.
+      description: >
+        Returns an array with all datasets in the system with the given tag. Can
+        also be combined with limit and offset.
       parameters:
         - name: tag
           in: path
@@ -603,17 +690,22 @@ paths:
                   ]
                 }
               }
-        370:
-          description: No datasets available. There are no datasets in the system with the given tag.
-  /data/list/status/{status}:
+        '370':
+          description: >-
+            No datasets available. There are no datasets in the system with the
+            given tag.
+  '/data/list/status/{status}':
     get:
       summary: List datasets with given status
-      description: |
-        Returns an array with all datasets in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
+      description: >
+        Returns an array with all datasets in the system with the given status,
+        either 'active', 'deactivated', or 'in_preparation'.
       parameters:
         - name: status
           in: path
-          description: The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.
+          description: >-
+            The status on which to filter the results, either 'active',
+            'deactivated', or 'in_preparation'.
           required: true
           type: string
         - name: api_key
@@ -688,17 +780,28 @@ paths:
                   ]
                 }
               }
-        370:
-          description: No datasets available. There are no datasets in the system with the given status.
-  /data/list/{filters}:
+        '370':
+          description: >-
+            No datasets available. There are no datasets in the system with the
+            given status.
+  '/data/list/{filters}':
     get:
       summary: Get datasets by properties
-      description: |
-        Get tasks based on properties of the data - number_instances, number_features, number_classes or number_missing_values. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with limits or tags. Returns an array with all datasets in the system that match the constraints.
+      description: >
+        Get tasks based on properties of the data - number_instances,
+        number_features, number_classes or number_missing_values. Properties can
+        be combined, and ranges can be used in the form '0..10'. Can also be
+        combined with limits or tags. Returns an array with all datasets in the
+        system that match the constraints.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (data_id, data_name, number_instances, number_features, number_classes, number_missing_values) and corresponding values or ranges, e.g. 'number_instances/0..50/number_features/0..10'. With or without limits, or tags.
+          description: >-
+            Any combination of filters (data_id, data_name, number_instances,
+            number_features, number_classes, number_missing_values) and
+            corresponding values or ranges, e.g.
+            'number_instances/0..50/number_features/0..10'. With or without
+            limits, or tags.
           required: true
           type: string
         - name: api_key
@@ -773,13 +876,16 @@ paths:
                   ]
                 }
               }
-        370:
-          description: No datasets available. There are no datasets in the system with the given constraints.
+        '370':
+          description: >-
+            No datasets available. There are no datasets in the system with the
+            given constraints.
   /data/tag:
     post:
       summary: Tag a dataset
       description: Tags a dataset.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: data_id
           in: formData
@@ -818,21 +924,28 @@ paths:
                   "id": "2"
                 }
               }
-        470:
-          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag). 
-        471:
-          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
-        472:
-          description: Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag.
-        473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.  
-        474:
+        '470':
+          description: >-
+            In order to add a tag, please upload the entity id (either data_id,
+            flow_id, run_id) and tag (the name of the tag).
+        '471':
+          description: >-
+            Entity not found. The provided entity_id {data_id, flow_id, run_id}
+            does not correspond to an existing entity.
+        '472':
+          description: >-
+            Entity already tagged by this tag. The entity {dataset, flow, run}
+            already had this tag.
+        '473':
+          description: Something went wrong inserting the tag. Please contact OpenML Team.
+        '474':
           description: Internal error tagging the entity. Please contact OpenML Team.
   /data/untag:
     post:
       summary: Untag a dataset
       description: Untags a dataset.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: data_id
           in: formData
@@ -870,21 +983,32 @@ paths:
                   "id": "2"
                 }
               }
-        475:
-          description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
-        476:
-          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
-        477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}. 
-        478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
-        479:
+        '475':
+          description: >-
+            Please give entity_id {data_id, flow_id, run_id} and tag. In order
+            to remove a tag, please upload the entity id (either data_id,
+            flow_id, run_id) and tag (the name of the tag).
+        '476':
+          description: >-
+            Entity {dataset, flow, run} not found. The provided entity_id
+            {data_id, flow_id, run_id} does not correspond to an existing
+            entity.
+        '477':
+          description: >-
+            Tag not found. The provided tag is not associated with the entity
+            {dataset, flow, run}.
+        '478':
+          description: >-
+            Tag is not owned by you. The entity {dataset, flow, run} was tagged
+            by another user. Hence you cannot delete it.
+        '479':
           description: Internal error removing the tag. Please contact OpenML Team.
-  /task/{id}:
+  '/task/{id}':
     get:
       summary: Get task description
-      description: |
-        Returns information about a task. The information includes the task type, input data, train/test sets, and more.
+      description: >
+        Returns information about a task. The information includes the task
+        type, input data, train/test sets, and more.
       parameters:
         - name: id
           in: path
@@ -900,6 +1024,12 @@ paths:
       tags:
         - task
       responses:
+        '150':
+          description: Please provide task_id.
+        '151':
+          description: >-
+            Unknown task. The task with the given id was not found in the
+            database
         '200':
           description: A task description
           schema:
@@ -922,7 +1052,7 @@ paths:
                       "name":"estimation_procedure",
                       "estimation_procedure":{
                         "type":"crossvalidation",
-                        "data_splits_url":"http://www.openml.org/api_splits/get/1/Task_1_splits.arff",
+                        "data_splits_url":"https://www.openml.org/api_splits/get/1/Task_1_splits.arff",
                         "parameter":[
                           {
                             "name":"number_repeats",
@@ -985,10 +1115,6 @@ paths:
                   "tag":["basic","study_1","under100k","under1m"]
                 }
               }
-        150:
-          description: Please provide task_id.
-        151:
-          description: Unknown task. The task with the given id was not found in the database 
     delete:
       summary: Delete task
       description: |
@@ -1018,7 +1144,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the deleted task, a positive integer
+                    description: 'ID of the deleted task, a positive integer'
           examples:
             application/json: |-
               {
@@ -1026,26 +1152,37 @@ paths:
                   "id": "4328"
                 }
               }
-        450:
-          description: Please provide API key. In order to remove your content, please authenticate.
-        451:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators.
-        452:
-          description: Task does not exists. The task ID could not be linked to an existing task.
-        454:
+        '450':
+          description: >-
+            Please provide API key. In order to remove your content, please
+            authenticate.
+        '451':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact api administrators.
+        '452':
+          description: >-
+            Task does not exists. The task ID could not be linked to an existing
+            task.
+        '454':
           description: Task is executed in some runs. Delete these first.
-        455:
+        '455':
           description: Deleting the task failed. Please contact support team.
   /task:
     post:
       summary: Upload task
-      consumes: [multipart/form-data]
+      consumes:
+        - multipart/form-data
       description: |
         Uploads a task. Upon success, it returns the task id.
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the task. Only name, description, and task format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.task.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/task).
+          description: >-
+            An XML file describing the task. Only name, description, and task
+            format are required. Also see the [XSD
+            schema](https://www.openml.org/api/v1/xsd/openml.task.upload) and an
+            [XML example](https://www.openml.org/api/v1/xml_example/task).
           required: true
           type: file
         - name: api_key
@@ -1066,7 +1203,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the uploaded task, a positive integer
+                    description: 'ID of the uploaded task, a positive integer'
           examples:
             application/json: |-
               {
@@ -1074,16 +1211,18 @@ paths:
                   "id": "4328"
                 }
               }
-        530:
-          description: Description file not present. Please upload the task description.  
-        531:
+        '530':
+          description: Description file not present. Please upload the task description.
+        '531':
           description: Internal error. Please contact api support team
-        532:
-          description: Problem validating uploaded description file. The XML description format does not meet the standards 
-        533:
-          description: Task already exists.  
-        534:
-          description: Error creating the task.  
+        '532':
+          description: >-
+            Problem validating uploaded description file. The XML description
+            format does not meet the standards
+        '533':
+          description: Task already exists.
+        '534':
+          description: Error creating the task.
   /task/list:
     get:
       summary: List all tasks
@@ -1193,7 +1332,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /task/list/limit/{limit}/offset/{offset}:
+  '/task/list/limit/{limit}/offset/{offset}':
     get:
       summary: List tasks within a range
       description: |
@@ -1201,13 +1340,19 @@ paths:
       parameters:
         - name: limit
           in: path
-          description: Optional, although required in this interface. The maximum number of tasks to return. Without specifying an offset, it returns the first 'limit' tasks.
+          description: >-
+            Optional, although required in this interface. The maximum number of
+            tasks to return. Without specifying an offset, it returns the first
+            'limit' tasks.
           required: true
           type: number
           format: integer
         - name: offset
           in: path
-          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, tasks 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          description: >-
+            Optional (although required in this interface). The offset to start
+            from. With /limit/5/offset/10, tasks 11..15 will be returned (these
+            are indices, not IDs). Is ignored when no limit is given.
           required: true
           type: number
           format: integer
@@ -1314,15 +1459,18 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /task/list/status/{status}:
+  '/task/list/status/{status}':
     get:
       summary: List tasks with given status
-      description: |
-        Returns an array with all tasks in the system with the given status, either 'active', 'deactivated', or 'in_preparation'.
+      description: >
+        Returns an array with all tasks in the system with the given status,
+        either 'active', 'deactivated', or 'in_preparation'.
       parameters:
         - name: status
           in: path
-          description: The status on which to filter the results, either 'active', 'deactivated', or 'in_preparation'.
+          description: >-
+            The status on which to filter the results, either 'active',
+            'deactivated', or 'in_preparation'.
           required: true
           type: string
         - name: api_key
@@ -1397,13 +1545,16 @@ paths:
                   ]
                 }
               }
-        370:
-          description: No tasks available. There are no tasks in the system with the given status.
-  /task/list/type/{id}:
+        '370':
+          description: >-
+            No tasks available. There are no tasks in the system with the given
+            status.
+  '/task/list/type/{id}':
     get:
       summary: List tasks of given type.
-      description: |
-        Returns an array with all tasks for the given task type id (1 = Supervised Classification). Can be combined with limits and tags.
+      description: >
+        Returns an array with all tasks for the given task type id (1 =
+        Supervised Classification). Can be combined with limits and tags.
       parameters:
         - name: id
           in: path
@@ -1510,15 +1661,16 @@ paths:
                   ]
                 }
               }
-        480:
+        '480':
           description: Please provide task type ID.
-        481:
+        '481':
           description: No results. There where no matches for the given task type ID.
-  /task/list/tag/{tag}:
+  '/task/list/tag/{tag}':
     get:
       summary: List tasks with given tag
-      description: |
-        Returns an array with all tasks with the given tag. Can be combined with limits and other filters.
+      description: >
+        Returns an array with all tasks with the given tag. Can be combined with
+        limits and other filters.
       parameters:
         - name: tag
           in: path
@@ -1624,13 +1776,14 @@ paths:
                   ]
                 }
               }
-        481:
+        '481':
           description: No results. There where no matches for the given task tag.
-  /task/list/data_tag/{tag}:
+  '/task/list/data_tag/{tag}':
     get:
       summary: List tasks with the given data tag
-      description: |
-        Returns an array with all tasks where the underlying dataset has the given tag. Can be combined with limits and other filters.
+      description: >
+        Returns an array with all tasks where the underlying dataset has the
+        given tag. Can be combined with limits and other filters.
       parameters:
         - name: tag
           in: path
@@ -1736,17 +1889,27 @@ paths:
                   ]
                 }
               }
-        481:
+        '481':
           description: No results. There where no matches for the given data tag.
-  /task/list/{filters}:
+  '/task/list/{filters}':
     get:
       summary: Get tasks by data properties
-      description: |
-        Get tasks based on properties of the underlying dataset - data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses or NumberOfMissingValues. Properties can be combined, and ranges can be used in the form '0..10'. Can also be combined with imits, tags, or types. Returns an array with all tasks in the system that match the constraints.
+      description: >
+        Get tasks based on properties of the underlying dataset - data_id,
+        NumberOfInstances, NumberOfFeatures, NumberOfClasses or
+        NumberOfMissingValues. Properties can be combined, and ranges can be
+        used in the form '0..10'. Can also be combined with imits, tags, or
+        types. Returns an array with all tasks in the system that match the
+        constraints.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (data_id, NumberOfInstances, NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and corresponding values or ranges, e.g. 'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without limits, tags, or types.
+          description: >-
+            Any combination of filters (data_id, NumberOfInstances,
+            NumberOfFeatures, NumberOfClasses, NumberOfMissingValues) and
+            corresponding values or ranges, e.g.
+            'NumberOfInstances/0..50/NumberOfFeatures/0..10'. With or without
+            limits, tags, or types.
           required: true
           type: string
         - name: api_key
@@ -1848,13 +2011,14 @@ paths:
                   ]
                 }
               }
-        481:
+        '481':
           description: No results. There where no matches for the given constraints.
   /task/tag:
     post:
       summary: Tag a task
       description: Tags a task.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: task_id
           in: formData
@@ -1893,21 +2057,28 @@ paths:
                   "id": "2"
                 }
               }
-        470:
-          description: In order to add a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag). 
-        471:
-          description: Entity not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity. 
-        472:
-          description: Entity already tagged by this tag. The entity {dataset, task, flow, run} already had this tag.
-        473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.  
-        474:
+        '470':
+          description: >-
+            In order to add a tag, please upload the entity id (either data_id,
+            task_id, flow_id, run_id) and tag (the name of the tag).
+        '471':
+          description: >-
+            Entity not found. The provided entity_id {data_id, task_id, flow_id,
+            run_id} does not correspond to an existing entity.
+        '472':
+          description: >-
+            Entity already tagged by this tag. The entity {dataset, task, flow,
+            run} already had this tag.
+        '473':
+          description: Something went wrong inserting the tag. Please contact OpenML Team.
+        '474':
           description: Internal error tagging the entity. Please contact OpenML Team.
   /task/untag:
     post:
       summary: Untag a task
       description: Untags a task.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: task_id
           in: formData
@@ -1945,21 +2116,32 @@ paths:
                   "id": "2"
                 }
               }
-        475:
-          description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, task_id, flow_id, run_id) and tag (the name of the tag).
-        476:
-          description: Entity {dataset, task, flow, run} not found. The provided entity_id {data_id, task_id, flow_id, run_id} does not correspond to an existing entity. 
-        477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, task, flow, run}. 
-        478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
-        479:
+        '475':
+          description: >-
+            Please give entity_id {data_id, flow_id, run_id} and tag. In order
+            to remove a tag, please upload the entity id (either data_id,
+            task_id, flow_id, run_id) and tag (the name of the tag).
+        '476':
+          description: >-
+            Entity {dataset, task, flow, run} not found. The provided entity_id
+            {data_id, task_id, flow_id, run_id} does not correspond to an
+            existing entity.
+        '477':
+          description: >-
+            Tag not found. The provided tag is not associated with the entity
+            {dataset, task, flow, run}.
+        '478':
+          description: >-
+            Tag is not owned by you. The entity {dataset, flow, run} was tagged
+            by another user. Hence you cannot delete it.
+        '479':
           description: Internal error removing the tag. Please contact OpenML Team.
-  /tasktype/{id}:
+  '/tasktype/{id}':
     get:
       summary: Get task type description
-      description: |
-        Returns information about a task type. The information includes a description, the given inputs and the expected outputs.
+      description: >
+        Returns information about a task type. The information includes a
+        description, the given inputs and the expected outputs.
       parameters:
         - name: id
           in: path
@@ -2064,10 +2246,12 @@ paths:
                   }
                 }
               }
-        240:
+        '240':
           description: Please provide task type ID.
-        241:
-          description: Unknown task type. The task type with the given id was not found in the database 
+        '241':
+          description: >-
+            Unknown task type. The task type with the given id was not found in
+            the database
   /tasktype/list:
     get:
       summary: List all task types
@@ -2110,11 +2294,13 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /flow/{id}:
+  '/flow/{id}':
     get:
       summary: Get flow description
-      description: |
-        Returns information about a flow. The information includes the name, information about the creator, dependencies, parameters, run instructions and more.
+      description: >
+        Returns information about a flow. The information includes the name,
+        information about the creator, dependencies, parameters, run
+        instructions and more.
       parameters:
         - name: id
           in: path
@@ -2130,6 +2316,12 @@ paths:
       tags:
         - flow
       responses:
+        '180':
+          description: Please provide flow id.
+        '181':
+          description: >-
+            Unknown flow. The flow with the given ID was not found in the
+            database.
         '200':
           description: A flow description
           schema:
@@ -2163,10 +2355,6 @@ paths:
                   ]
                 }
               }
-        180:
-          description: Please provide flow id.
-        181:
-          description: Unknown flow. The flow with the given ID was not found in the database.
     delete:
       summary: Delete a flow
       description: |
@@ -2196,7 +2384,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the deleted flow, a positive integer
+                    description: 'ID of the deleted flow, a positive integer'
           examples:
             application/json: |-
               {
@@ -2204,33 +2392,52 @@ paths:
                   "id": "4328"
                 }
               }
-        320:
-          description: Please provide API key. In order to remove your content, please authenticate.
-        321:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators .
-        322:
-          description: Flow does not exists. The flow ID could not be linked to an existing flow. 
-        323:
-          description: Flow is not owned by you. The flow is owned by another user. Hence you cannot delete it. 
-        324:
-          description: Flow is in use by other content. Can not be deleted. The flow is used in runs, evaluations or as a component of another flow. Delete other content before deleting thisflow.  
-        325:
-          description: Deleting flow failed. Deleting the flow failed. Please contact support team.
+        '320':
+          description: >-
+            Please provide API key. In order to remove your content, please
+            authenticate.
+        '321':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact api administrators .
+        '322':
+          description: >-
+            Flow does not exists. The flow ID could not be linked to an existing
+            flow.
+        '323':
+          description: >-
+            Flow is not owned by you. The flow is owned by another user. Hence
+            you cannot delete it.
+        '324':
+          description: >-
+            Flow is in use by other content. Can not be deleted. The flow is
+            used in runs, evaluations or as a component of another flow. Delete
+            other content before deleting thisflow.
+        '325':
+          description: >-
+            Deleting flow failed. Deleting the flow failed. Please contact
+            support team.
   /flow:
     post:
       summary: Upload a flow
-      consumes: [multipart/form-flow]
+      consumes:
+        - multipart/form-data
       description: |
         Uploads a flow. Upon success, it returns the flow id.
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the flow. Only name and description are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.implementation.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/flow).
+          description: >-
+            An XML file describing the flow. Only name and description are
+            required. Also see the [XSD
+            schema](https://www.openml.org/api/v1/xsd/openml.implementation.upload)
+            and an [XML
+            example](https://www.openml.org/api/v1/xml_example/flow).
           required: true
           type: file
         - name: flow
           in: formData
-          description: The actual flow, being a source (or binary) file.
+          description: 'The actual flow, being a source (or binary) file.'
           required: false
           type: file
         - name: api_key
@@ -2241,6 +2448,46 @@ paths:
       tags:
         - flow
       responses:
+        '160':
+          description: Error in file uploading. There was a problem with the file upload.
+        '161':
+          description: Please provide description xml.
+        '163':
+          description: >-
+            Problem validating uploaded description file. The XML description
+            format does not meet the standards.
+        '164':
+          description: >-
+            Flow already stored in database. Please change name or version
+            number
+        '165':
+          description: >-
+            Failed to insert flow. There can be many causes for this error. If
+            you included the implements field, it should be an existing entry in
+            the algorithm or math_function table. Otherwise it could be an
+            internal server error. Please contact API support team.
+        '166':
+          description: >-
+            Failed to add flow to database. Internal server error, please
+            contact API administrators
+        '167':
+          description: Illegal files uploaded. An non required file was uploaded.
+        '168':
+          description: >-
+            The provided md5 hash equals not the server generated md5 hash of
+            the file.
+        '169':
+          description: >-
+            Please provide API key. In order to share content, please
+            authenticate and provide API key.
+        '170':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact API administrators
+        '171':
+          description: Flow already exists. This flow is already in the database
+        '172':
+          description: XSD not found. Please contact API support team
         '200':
           description: Id of the uploaded flow
           schema:
@@ -2251,7 +2498,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the uploaded flow, a positive integer
+                    description: 'ID of the uploaded flow, a positive integer'
           examples:
             application/json: |-
               {
@@ -2259,31 +2506,7 @@ paths:
                   "id": "2520"
                 }
               }
-        160:
-          description: Error in file uploading. There was a problem with the file upload.
-        161:
-          description: Please provide description xml.
-        163:
-          description: Problem validating uploaded description file. The XML description format does not meet the standards.
-        164:
-          description: Flow already stored in database. Please change name or version number 
-        165:
-          description: Failed to insert flow. There can be many causes for this error. If you included the implements field, it should be an existing entry in the algorithm or math_function table. Otherwise it could be an internal server error. Please contact API support team.
-        166:
-          description: Failed to add flow to database. Internal server error, please contact API administrators 
-        167:
-          description: Illegal files uploaded. An non required file was uploaded. 
-        168:
-          description: The provided md5 hash equals not the server generated md5 hash of the file.
-        169:
-          description: Please provide API key. In order to share content, please authenticate and provide API key.
-        170:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact API administrators 
-        171:
-          description: Flow already exists. This flow is already in the database 
-        172:
-          description: XSD not found. Please contact API support team 
-  /flow/exists/{name}/{version}:
+  '/flow/exists/{name}/{version}':
     get:
       summary: Check whether flow exists
       description: |
@@ -2320,7 +2543,9 @@ paths:
                     description: true or false
                   id:
                     type: string
-                    description: The id of the flow with the given name and (external) version
+                    description: >-
+                      The id of the flow with the given name and (external)
+                      version
           examples:
             application/json: |-
               {
@@ -2329,8 +2554,10 @@ paths:
                   "id": "65"
                 }
               }
-        330:
-          description: Mandatory fields not present. Please provide name and external_version.
+        '330':
+          description: >-
+            Mandatory fields not present. Please provide name and
+            external_version.
   /flow/list:
     get:
       summary: List all flows
@@ -2382,9 +2609,9 @@ paths:
                     ]
                   }
                 }
-        500:
+        '500':
           description: There where no results.
-  /flow/list/limit/{limit}/offset/{offset}:
+  '/flow/list/limit/{limit}/offset/{offset}':
     get:
       summary: List flows within a range
       description: |
@@ -2392,13 +2619,19 @@ paths:
       parameters:
         - name: limit
           in: path
-          description: Optional, although required in this interface. The maximum number of flows to return.  Without specifying an offset, it returns the first 'limit' flows.
+          description: >-
+            Optional, although required in this interface. The maximum number of
+            flows to return.  Without specifying an offset, it returns the first
+            'limit' flows.
           required: true
           type: number
           format: integer
         - name: offset
           in: path
-          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, flows 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          description: >-
+            Optional (although required in this interface). The offset to start
+            from. With /limit/5/offset/10, flows 11..15 will be returned (these
+            are indices, not IDs). Is ignored when no limit is given.
           required: true
           type: number
           format: integer
@@ -2447,9 +2680,9 @@ paths:
                     ]
                   }
                 }
-        500:
+        '500':
           description: There where no results.
-  /flow/list/tag/{tag}:
+  '/flow/list/tag/{tag}':
     get:
       summary: List flows with given tag.
       description: |
@@ -2505,7 +2738,7 @@ paths:
                     ]
                   }
                 }
-        500:
+        '500':
           description: There where no results.
   /flow/owned:
     get:
@@ -2548,17 +2781,20 @@ paths:
                   ]
                 }
               }
-        310:
+        '310':
           description: Please provide API key to authenticate.
-        311:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators.
-        312:
+        '311':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact api administrators.
+        '312':
           description: No flows owned by you.
   /flow/tag:
     post:
       summary: Tag a flow
       description: Tags a flow.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: flow_id
           in: formData
@@ -2597,21 +2833,28 @@ paths:
                   "id": "2"
                 }
               }
-        470:
-          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag). 
-        471:
-          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
-        472:
-          description: Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag.
-        473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.  
-        474:
+        '470':
+          description: >-
+            In order to add a tag, please upload the entity id (either data_id,
+            flow_id, run_id) and tag (the name of the tag).
+        '471':
+          description: >-
+            Entity not found. The provided entity_id {data_id, flow_id, run_id}
+            does not correspond to an existing entity.
+        '472':
+          description: >-
+            Entity already tagged by this tag. The entity {dataset, flow, run}
+            already had this tag.
+        '473':
+          description: Something went wrong inserting the tag. Please contact OpenML Team.
+        '474':
           description: Internal error tagging the entity. Please contact OpenML Team.
   /flow/untag:
     post:
       summary: Untag a flow
       description: Untags a flow.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: flow_id
           in: formData
@@ -2649,25 +2892,38 @@ paths:
                   "id": "2"
                 }
               }
-        475:
-          description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
-        476:
-          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
-        477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}. 
-        478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
-        479:
+        '475':
+          description: >-
+            Please give entity_id {data_id, flow_id, run_id} and tag. In order
+            to remove a tag, please upload the entity id (either data_id,
+            flow_id, run_id) and tag (the name of the tag).
+        '476':
+          description: >-
+            Entity {dataset, flow, run} not found. The provided entity_id
+            {data_id, flow_id, run_id} does not correspond to an existing
+            entity.
+        '477':
+          description: >-
+            Tag not found. The provided tag is not associated with the entity
+            {dataset, flow, run}.
+        '478':
+          description: >-
+            Tag is not owned by you. The entity {dataset, flow, run} was tagged
+            by another user. Hence you cannot delete it.
+        '479':
           description: Internal error removing the tag. Please contact OpenML Team.
-  /setup/{id}:
+  '/setup/{id}':
     get:
       summary: Get a hyperparameter setup
-      description: |
-        Returns information about a setup. The information includes the list of hyperparameters, with name, value, and default value.
+      description: >
+        Returns information about a setup. The information includes the list of
+        hyperparameters, with name, value, and default value.
       parameters:
         - name: id
           in: path
-          description: ID of the hyperparameter setup (configuration). These IDs are stated in run descriptions.
+          description: >-
+            ID of the hyperparameter setup (configuration). These IDs are stated
+            in run descriptions.
           required: true
           type: number
           format: integer
@@ -2716,15 +2972,21 @@ paths:
                     }]
                 }
               }
-        280:
-          description: Please provide setup ID. In order to view setup details, please provide the run ID 
-        281:
-          description: Setup not found. The setup ID was invalid, or setup does not exist (anymore).
-  /run/{id}:
+        '280':
+          description: >-
+            Please provide setup ID. In order to view setup details, please
+            provide the run ID
+        '281':
+          description: >-
+            Setup not found. The setup ID was invalid, or setup does not exist
+            (anymore).
+  '/run/{id}':
     get:
       summary: Get run description
-      description: |
-        Returns information about a run. The information includes the name, information about the creator, dependencies, parameters, run instructions and more.
+      description: >
+        Returns information about a run. The information includes the name,
+        information about the creator, dependencies, parameters, run
+        instructions and more.
       parameters:
         - name: id
           in: path
@@ -2781,7 +3043,7 @@ paths:
                         {
                           "did":"28",
                           "name":"optdigits",
-                          "url":"http:\/\/www.openml.org\/data\/download\/28\/dataset_28_optdigits.arff"
+                          "url":"https:\/\/www.openml.org\/data\/download\/28\/dataset_28_optdigits.arff"
                         }
                     },
                   "output_data":
@@ -2791,13 +3053,13 @@ paths:
                           "did":"48838",
                           "file_id":"261",
                           "name":"description",
-                          "url":"http:\/\/www.openml.org\/data\/download\/261\/weka_generated_run935374685998857626.xml"
+                          "url":"https:\/\/www.openml.org\/data\/download\/261\/weka_generated_run935374685998857626.xml"
                         },
                         {
                           "did":"48839",
                           "file_id":"262",
                           "name":"predictions",
-                          "url":"http:\/\/www.openml.org\/data\/download\/262\/weka_generated_predictions576954524972002741.arff"
+                          "url":"https:\/\/www.openml.org\/data\/download\/262\/weka_generated_predictions576954524972002741.arff"
                         }
                       ],
                       "evaluation": [
@@ -2827,10 +3089,12 @@ paths:
                     }
                 }
               }
-        220:
-          description: Please provide run ID. In order to view run details, please provide the run ID 
-        221:
-          description: Run not found. The run ID was invalid, run does not exist (anymore).
+        '220':
+          description: >-
+            Please provide run ID. In order to view run details, please provide
+            the run ID
+        '221':
+          description: 'Run not found. The run ID was invalid, run does not exist (anymore).'
     delete:
       summary: Delete run
       description: |
@@ -2860,7 +3124,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the deleted run, a positive integer
+                    description: 'ID of the deleted run, a positive integer'
           examples:
             application/json: |-
               {
@@ -2868,26 +3132,41 @@ paths:
                   "id": "2520"
                 }
               }
-        390:
-          description: Please provide API key. In order to remove your content, please authenticate.
-        391:
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators 
-        392:
-          description: Run does not exists. The run ID could not be linked to an existing run. 
-        393:
-          description: Run is not owned by you. The run was owned by another user. Hence you cannot delete it. 
-        394:
-          description: Deleting run failed. Deleting the run failed. Please contact support team.
+        '390':
+          description: >-
+            Please provide API key. In order to remove your content, please
+            authenticate.
+        '391':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact api administrators
+        '392':
+          description: >-
+            Run does not exists. The run ID could not be linked to an existing
+            run.
+        '393':
+          description: >-
+            Run is not owned by you. The run was owned by another user. Hence
+            you cannot delete it.
+        '394':
+          description: >-
+            Deleting run failed. Deleting the run failed. Please contact support
+            team.
   /run:
     post:
       summary: Upload run
-      consumes: [multipart/form-run]
+      consumes:
+        - multipart/form-data
       description: |
         Uploads a run. Upon success, it returns the run id.
       parameters:
         - name: description
           in: formData
-          description: An XML file describing the dataset. Only name, description, and data format are required. Also see the [XSD schema](https://www.openml.org/api/v1/xsd/openml.run.upload) and an [XML example](https://www.openml.org/api/v1/xml_example/run).
+          description: >-
+            An XML file describing the dataset. Only name, description, and data
+            format are required. Also see the [XSD
+            schema](https://www.openml.org/api/v1/xsd/openml.run.upload) and an
+            [XML example](https://www.openml.org/api/v1/xml_example/run).
           required: true
           type: file
         - name: predictions
@@ -2923,7 +3202,7 @@ paths:
                 properties:
                   id:
                     type: string
-                    description: ID of the uploaded run, a positive integer
+                    description: 'ID of the uploaded run, a positive integer'
           examples:
             application/json: |-
               {
@@ -2931,43 +3210,67 @@ paths:
                   "id": "2520"
                 }
               }
-        "201":
-          description: Authentication failed. The API key was not valid. Please try to login again, or contact api administrators.
-        "202":
+        '201':
+          description: >-
+            Authentication failed. The API key was not valid. Please try to
+            login again, or contact api administrators.
+        '202':
           description: Please provide run XML.
-        "203":
-          description: Could not validate run xml by XSD. Please double check that the xml is valid.
-        "204":
-          description: Unknown task. The task with the given ID was not found in the database.
-        "205":
-          description: Unknown flow. The flow with the given ID was not found in the database.
-        "206":
-          description: Invalid number of files. The number of uploaded files did not match the number of files expected for the task type 
-        "207":
+        '203':
+          description: >-
+            Could not validate run xml by XSD. Please double check that the xml
+            is valid.
+        '204':
+          description: >-
+            Unknown task. The task with the given ID was not found in the
+            database.
+        '205':
+          description: >-
+            Unknown flow. The flow with the given ID was not found in the
+            database.
+        '206':
+          description: >-
+            Invalid number of files. The number of uploaded files did not match
+            the number of files expected for the task type
+        '207':
           description: File upload failed. One of the files uploaded has a problem.
-        "208":
+        '208':
           description: Error inserting setup record. Please contact api administrators
-        "210":
+        '210':
           description: Unable to store run. Please contact api administrators.
-        "211":
-          description: Dataset not in database. One of the datasets of the task was not included in database, please contact api administrators.
-        "212":
+        '211':
+          description: >-
+            Dataset not in database. One of the datasets of the task was not
+            included in database, please contact api administrators.
+        '212':
           description: Unable to store file. Please contact api administrators.
-        "213":
-          description: Parameter in run xml unknown. One of the parameters provided in the run xml is not registered as parameter for the flow nor its components.
-        "214":
+        '213':
+          description: >-
+            Parameter in run xml unknown. One of the parameters provided in the
+            run xml is not registered as parameter for the flow nor its
+            components.
+        '214':
           description: Unable to store input setting. Please contact API support team.
-        "215":
+        '215':
           description: Unable to evaluate predictions. Please contact API support team.
-        "216":
-          description: Error thrown by Java Application. Additional information field is provided.
-        "217":
-          description: Error processing output data. Unknown or inconsistent evaluation measure. One of the provided evaluation measures could not be matched with a record in the math_function or flow table.
-        "218":
-          description: Wrong flow associated with run. The flow implements a math_function, which is unable to generate predictions. Please select another flow.
-        "219":
-          description: Error reading the XML document. The XML description file could not be verified.
-  /run/list/limit/{limit}/offset/{offset}:
+        '216':
+          description: >-
+            Error thrown by Java Application. Additional information field is
+            provided.
+        '217':
+          description: >-
+            Error processing output data. Unknown or inconsistent evaluation
+            measure. One of the provided evaluation measures could not be
+            matched with a record in the math_function or flow table.
+        '218':
+          description: >-
+            Wrong flow associated with run. The flow implements a math_function,
+            which is unable to generate predictions. Please select another flow.
+        '219':
+          description: >-
+            Error reading the XML document. The XML description file could not
+            be verified.
+  '/run/list/limit/{limit}/offset/{offset}':
     get:
       summary: Get runs by limit/offset
       description: |
@@ -2975,13 +3278,18 @@ paths:
       parameters:
         - name: limit
           in: path
-          description: The maximum number of runs to return.  Without specifying an offset, it returns the first 'limit' runs.
+          description: >-
+            The maximum number of runs to return.  Without specifying an offset,
+            it returns the first 'limit' runs.
           required: true
           type: number
           format: integer
         - name: offset
           in: path
-          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, runs 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          description: >-
+            Optional (although required in this interface). The offset to start
+            from. With /limit/5/offset/10, runs 11..15 will be returned (these
+            are indices, not IDs). Is ignored when no limit is given.
           required: true
           type: number
           format: integer
@@ -2999,48 +3307,48 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "100",
-                      "task_id": "28",
-                      "setup_id": "12",
-                      "flow_id": "67",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "101",
-                      "task_id": "48",
-                      "setup_id": "6",
-                      "flow_id": "61",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "102",
-                      "task_id": "41",
-                      "setup_id": "3",
-                      "flow_id": "58",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    }
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
-  /run/list/run/{ids}:
+              runs:
+                run:
+                  - run_id: '100'
+                    task_id: '28'
+                    setup_id: '12'
+                    flow_id: '67'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '101'
+                    task_id: '48'
+                    setup_id: '6'
+                    flow_id: '61'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '102'
+                    task_id: '41'
+                    setup_id: '3'
+                    flow_id: '58'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses. The number of runs
+            is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
+  '/run/list/run/{ids}':
     get:
       summary: Get runs by id(s)
       description: |
@@ -3048,7 +3356,7 @@ paths:
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of run IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of run IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3065,48 +3373,48 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "100",
-                      "task_id": "28",
-                      "setup_id": "12",
-                      "flow_id": "67",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "101",
-                      "task_id": "48",
-                      "setup_id": "6",
-                      "flow_id": "61",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "102",
-                      "task_id": "41",
-                      "setup_id": "3",
-                      "flow_id": "58",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    }
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
-  /run/list/tag/{tag}:
+              runs:
+                run:
+                  - run_id: '100'
+                    task_id: '28'
+                    setup_id: '12'
+                    flow_id: '67'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '101'
+                    task_id: '48'
+                    setup_id: '6'
+                    flow_id: '61'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '102'
+                    task_id: '41'
+                    setup_id: '3'
+                    flow_id: '58'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses. The number of runs
+            is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
+  '/run/list/tag/{tag}':
     get:
       summary: Get runs by tag
       description: |
@@ -3131,48 +3439,48 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "100",
-                      "task_id": "28",
-                      "setup_id": "12",
-                      "flow_id": "67",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "101",
-                      "task_id": "48",
-                      "setup_id": "6",
-                      "flow_id": "61",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "102",
-                      "task_id": "41",
-                      "setup_id": "3",
-                      "flow_id": "58",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    }
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id, tag) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
-  /run/list/task/{ids}:
+              runs:
+                run:
+                  - run_id: '100'
+                    task_id: '28'
+                    setup_id: '12'
+                    flow_id: '67'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '101'
+                    task_id: '48'
+                    setup_id: '6'
+                    flow_id: '61'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '102'
+                    task_id: '41'
+                    setup_id: '3'
+                    flow_id: '58'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, tag, flow or setup, uploader or run,
+            to filter results, or limit the number of responses. The number of
+            runs is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id, tag) did not meet the contrains (comma
+            separated list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
+  '/run/list/task/{ids}':
     get:
       summary: Get runs by task(s)
       description: |
@@ -3180,7 +3488,7 @@ paths:
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of task IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of task IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3197,48 +3505,48 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "142564",
-                      "task_id": "1",
-                      "setup_id": "829",
-                      "flow_id": "362",
-                      "uploader": "212",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "249273",
-                      "task_id": "1",
-                      "setup_id": "829",
-                      "flow_id": "362",
-                      "uploader": "348",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "249280",
-                      "task_id": "1",
-                      "setup_id": "829",
-                      "flow_id": "362",
-                      "uploader": "348",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
-  /run/list/uploader/{ids}:
+              runs:
+                run:
+                  - run_id: '142564'
+                    task_id: '1'
+                    setup_id: '829'
+                    flow_id: '362'
+                    uploader: '212'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '249273'
+                    task_id: '1'
+                    setup_id: '829'
+                    flow_id: '362'
+                    uploader: '348'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '249280'
+                    task_id: '1'
+                    setup_id: '829'
+                    flow_id: '362'
+                    uploader: '348'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses. The number of runs
+            is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
+  '/run/list/uploader/{ids}':
     get:
       summary: Get runs by uploader(s)
       description: |
@@ -3246,7 +3554,7 @@ paths:
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of user IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3263,48 +3571,48 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id":"45015",
-                      "task_id":"1",
-                      "setup_id":"1225",
-                      "flow_id":"673",
-                      "uploader":"1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"45016",
-                      "task_id":"1",
-                      "setup_id":"1225",
-                      "flow_id":"673",
-                      "uploader":"1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"54729",
-                      "task_id":"1",
-                      "setup_id":"1468",
-                      "flow_id":"707",
-                      "uploader":"1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message":[]
-                    }
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
-  /run/list/flow/{ids}:
+              runs:
+                run:
+                  - run_id: '45015'
+                    task_id: '1'
+                    setup_id: '1225'
+                    flow_id: '673'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '45016'
+                    task_id: '1'
+                    setup_id: '1225'
+                    flow_id: '673'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '54729'
+                    task_id: '1'
+                    setup_id: '1468'
+                    flow_id: '707'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses. The number of runs
+            is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
+  '/run/list/flow/{ids}':
     get:
       summary: Get runs by flow(s)
       description: |
@@ -3312,7 +3620,7 @@ paths:
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of user IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3329,56 +3637,60 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id":"413",
-                      "task_id":"1",
-                      "setup_id":"10",
-                      "flow_id":"65",
-                      "uploader":"1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"6253",
-                      "task_id":"1",
-                      "setup_id":"10",
-                      "flow_id":"65",
-                      "uploader":"17",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message":[]
-                    },
-                    {
-                      "run_id":"10451",
-                      "task_id":"1",
-                      "setup_id":"79",
-                      "flow_id":"65",
-                      "uploader":"17",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message":[]
-                    }
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
-  /run/list/{filters}:
+              runs:
+                run:
+                  - run_id: '413'
+                    task_id: '1'
+                    setup_id: '10'
+                    flow_id: '65'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '6253'
+                    task_id: '1'
+                    setup_id: '10'
+                    flow_id: '65'
+                    uploader: '17'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '10451'
+                    task_id: '1'
+                    setup_id: '79'
+                    flow_id: '65'
+                    uploader: '17'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses. The number of runs
+            is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
+  '/run/list/{filters}':
     get:
-      summary: Get runs by limit, id, task, uploader and/or flow
-      description: |
-        Returns an array with all runs matching any or all of the given filters. You can combine any of the above filters any way you want.
+      summary: 'Get runs by limit, id, task, uploader and/or flow'
+      description: >
+        Returns an array with all runs matching any or all of the given filters.
+        You can combine any of the above filters any way you want.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'. With or without limit.
+          description: >-
+            Any combination of filters (run,task,uploader and/or flow) and
+            corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or
+            'task/1,2,3/flow/1,2'. With or without limit.
           required: true
           type: string
         - name: api_key
@@ -3395,52 +3707,53 @@ paths:
             $ref: '#/definitions/RunList'
           examples:
             application/json:
-              {
-                "runs": {
-                  "run": [
-                    {
-                      "run_id": "100",
-                      "task_id": "28",
-                      "setup_id": "12",
-                      "flow_id": "67",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "101",
-                      "task_id": "48",
-                      "setup_id": "6",
-                      "flow_id": "61",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    },
-                    {
-                      "run_id": "102",
-                      "task_id": "41",
-                      "setup_id": "3",
-                      "flow_id": "58",
-                      "uploader": "1",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "error_message": []
-                    }
-                  ]
-                }
-              }
-        510:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses. The number of runs is huge. Please limit the result space.  
-        511:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        512:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        513:
-          description: Too many results. Given the constraints, there were still too many results. Please add more filters.
+              runs:
+                run:
+                  - run_id: '100'
+                    task_id: '28'
+                    setup_id: '12'
+                    flow_id: '67'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '101'
+                    task_id: '48'
+                    setup_id: '6'
+                    flow_id: '61'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+                  - run_id: '102'
+                    task_id: '41'
+                    setup_id: '3'
+                    flow_id: '58'
+                    uploader: '1'
+                    upload_time: '2014-04-06 23:30:40'
+                    error_message: []
+        '510':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses. The number of runs
+            is huge. Please limit the result space.
+        '511':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '512':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '513':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add more filters.
   /run/tag:
     post:
       summary: Tag a run
       description: Tags a run.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: run_id
           in: formData
@@ -3479,21 +3792,28 @@ paths:
                   "id": "2"
                 }
               }
-        470:
-          description: In order to add a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag). 
-        471:
-          description: Entity not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
-        472:
-          description: Entity already tagged by this tag. The entity {dataset, flow, run} already had this tag.
-        473:
-          description: Something went wrong inserting the tag. Please contact OpenML Team.  
-        474:
+        '470':
+          description: >-
+            In order to add a tag, please upload the entity id (either data_id,
+            flow_id, run_id) and tag (the name of the tag).
+        '471':
+          description: >-
+            Entity not found. The provided entity_id {data_id, flow_id, run_id}
+            does not correspond to an existing entity.
+        '472':
+          description: >-
+            Entity already tagged by this tag. The entity {dataset, flow, run}
+            already had this tag.
+        '473':
+          description: Something went wrong inserting the tag. Please contact OpenML Team.
+        '474':
           description: Internal error tagging the entity. Please contact OpenML Team.
   /run/untag:
     post:
       summary: Untag a run
       description: Untags a run.
-      consumes: [application/x-www-form-urlencoded]
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: run_id
           in: formData
@@ -3531,17 +3851,27 @@ paths:
                   "id": "2"
                 }
               }
-        475:
-          description: Please give entity_id {data_id, flow_id, run_id} and tag. In order to remove a tag, please upload the entity id (either data_id, flow_id, run_id) and tag (the name of the tag).
-        476:
-          description: Entity {dataset, flow, run} not found. The provided entity_id {data_id, flow_id, run_id} does not correspond to an existing entity. 
-        477:
-          description: Tag not found. The provided tag is not associated with the entity {dataset, flow, run}. 
-        478:
-          description: Tag is not owned by you. The entity {dataset, flow, run} was tagged by another user. Hence you cannot delete it. 
-        479:
+        '475':
+          description: >-
+            Please give entity_id {data_id, flow_id, run_id} and tag. In order
+            to remove a tag, please upload the entity id (either data_id,
+            flow_id, run_id) and tag (the name of the tag).
+        '476':
+          description: >-
+            Entity {dataset, flow, run} not found. The provided entity_id
+            {data_id, flow_id, run_id} does not correspond to an existing
+            entity.
+        '477':
+          description: >-
+            Tag not found. The provided tag is not associated with the entity
+            {dataset, flow, run}.
+        '478':
+          description: >-
+            Tag is not owned by you. The entity {dataset, flow, run} was tagged
+            by another user. Hence you cannot delete it.
+        '479':
           description: Internal error removing the tag. Please contact OpenML Team.
-  /evaluation/list/run/{ids}:
+  '/evaluation/list/run/{ids}':
     get:
       summary: Get evaluations by run id(s)
       description: |
@@ -3549,7 +3879,7 @@ paths:
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of run IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of run IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3566,48 +3896,47 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results.
-        541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
-  /evaluation/list/limit/{limit}/offset/{offset}:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results.
+        '541':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/limit/{limit}/offset/{offset}':
     get:
       summary: Get evaluations by limit/offset
       description: |
@@ -3615,13 +3944,18 @@ paths:
       parameters:
         - name: limit
           in: path
-          description: The maximum number of datasets to return. Without specifying an offset, it returns the first 'limit' evaluations.
+          description: >-
+            The maximum number of datasets to return. Without specifying an
+            offset, it returns the first 'limit' evaluations.
           required: true
           type: number
           format: integer
         - name: offset
           in: path
-          description: Optional (although required in this interface). The offset to start from. With /limit/5/offset/10, evaluations 11..15 will be returned (these are indices, not IDs). Is ignored when no limit is given.
+          description: >-
+            Optional (although required in this interface). The offset to start
+            from. With /limit/5/offset/10, evaluations 11..15 will be returned
+            (these are indices, not IDs). Is ignored when no limit is given.
           required: true
           type: number
           format: integer
@@ -3639,48 +3973,47 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses.
-        541:
-          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
-  /evaluation/list/tag/{tag}:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, tag, flow or setup, uploader or run,
+            to filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (tag, task_id, setup_id,
+            flow_id, run_id, uploader_id) did not meet the contrains (comma
+            separated list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/tag/{tag}':
     get:
       summary: Get evaluations by tag
       description: |
@@ -3705,56 +4038,56 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, tag, flow or setup, uploader or run, to filter results, or limit the number of responses.
-        541:
-          description: Input not safe. The input parameters (tag, task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
-  /evaluation/list/task/{ids}:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, tag, flow or setup, uploader or run,
+            to filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (tag, task_id, setup_id,
+            flow_id, run_id, uploader_id) did not meet the contrains (comma
+            separated list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/task/{ids}':
     get:
       summary: Get evaluations by task(s)
-      description: |
-        Returns an array with all evaluations belonging to one of the given task(s).
+      description: >
+        Returns an array with all evaluations belonging to one of the given
+        task(s).
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of task IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of task IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3771,56 +4104,56 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
-        541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
-  /evaluation/list/uploader/{ids}:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/uploader/{ids}':
     get:
       summary: Get evaluations by uploader(s)
-      description: |
-        Returns an array with all evaluations uploaded by one of the given user(s).
+      description: >
+        Returns an array with all evaluations uploaded by one of the given
+        user(s).
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of user IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3837,48 +4170,47 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
-        541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
-  /evaluation/list/flow/{ids}:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/flow/{ids}':
     get:
       summary: Get evaluations by flow(s)
       description: |
@@ -3886,7 +4218,7 @@ paths:
       parameters:
         - name: ids
           in: path
-          description: Comma-separated list of user IDs, e.g. '1,2,3'.
+          description: 'Comma-separated list of user IDs, e.g. ''1,2,3''.'
           required: true
           type: string
         - name: api_key
@@ -3903,56 +4235,61 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
-        541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
-  /evaluation/list/{filters}:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/{filters}':
     get:
-      summary: Get evaluations by run, task, uploader and or flow (with or without limit)
-      description: |
-        Returns an array with all evaluations matching any or all of the given filters. You can combine any of the four above filters any way you want.
+      summary: >-
+        Get evaluations by run, task, uploader and or flow (with or without
+        limit)
+      description: >
+        Returns an array with all evaluations matching any or all of the given
+        filters. You can combine any of the four above filters any way you want.
       parameters:
         - name: filters
           in: path
-          description: Any combination of filters (limit,run,task,uploader and/or flow) and corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or 'task/1,2,3/flow/1,2'.
+          description: >-
+            Any combination of filters (limit,run,task,uploader and/or flow) and
+            corresponding comma-separated IDs, e.g. 'run/1,2,3/uploader/1' or
+            'task/1,2,3/flow/1,2'.
           required: true
           type: string
         - name: api_key
@@ -3969,47 +4306,46 @@ paths:
             $ref: '#/definitions/EvaluationList'
           examples:
             application/json:
-              {
-                "evaluations": {
-                  "evaluation": [
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"area_under_roc_curve",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.839359",
-                      "array_data":"[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"f_measure",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.600026",
-                      "array_data":"[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]"
-                    },
-                    {
-                      "run_id":"1",
-                      "task_id":"68",
-                      "flow_id":"61",
-                      "function":"predictive_accuracy",
-                      "upload_time":"2014-04-06 23:30:40",
-                      "value":"0.614634",
-                      "array_data":[]
-                    }
-                  ]
-                }
-              }
-        540:
-          description: Please provide at least task, flow or setup, uploader or run, to filter results, or limit the number of responses.
-        541:
-          description: Input not safe. The input parameters (task_id, setup_id, flow_id, run_id, uploader_id) did not meet the contrains (comma separated list of integers).  
-        542:
-          description: There where no results. Check whether there are runs under the given constraint.  
-        543:
-          description: Too many results. Given the constraints, there were still too many results. Please add filters to narrow down the list.
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: f_measure
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: predictive_accuracy
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.614634'
+                    array_data: []
+        '540':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the contrains (comma separated
+            list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
 definitions:
   Flow:
     type: object
@@ -4019,7 +4355,7 @@ definitions:
         properties:
           id:
             type: string
-            description: ID of the flow, a positive integer
+            description: 'ID of the flow, a positive integer'
           uploader:
             type: string
             description: The uploader of the flow
@@ -4028,27 +4364,35 @@ definitions:
             description: The name of the flow
           version:
             type: string
-            description: The version of the flow, set by OpenML. A positive integer
+            description: 'The version of the flow, set by OpenML. A positive integer'
           version_label:
             type: string
-            description: The version of the flow, as defined by the uploader, for reference. Can be any format as long as it is unique.
+            description: >-
+              The version of the flow, as defined by the uploader, for
+              reference. Can be any format as long as it is unique.
           description:
             type: string
-            description: Wiki description of the flow, in (Git flavoured) markdown format
+            description: 'Wiki description of the flow, in (Git flavoured) markdown format'
           upload_date:
             type: string
-            description: The datetime that the flow was uploaded, format yyyy-MM-dd HH:mm:ss
+            description: >-
+              The datetime that the flow was uploaded, format yyyy-MM-dd
+              HH:mm:ss
           language:
             type: string
             description: The programming language the flow is written in.
           dependencies:
             type: string
-            description: The libraries that this flow depends on, and their version numbers.
+            description: >-
+              The libraries that this flow depends on, and their version
+              numbers.
           tag:
             type: array
             items:
               type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
+            description: >-
+              Tags added by OpenML users. Includes study tags in the form
+              `study_1`
           parameter:
             type: array
             items:
@@ -4103,18 +4447,18 @@ definitions:
         properties:
           task_id:
             type: string
-            description: ID of the task, a positive integer
+            description: 'ID of the task, a positive integer'
           task_type:
             type: string
-            description: The type of the task, e.g. Supervised Classification
+            description: 'The type of the task, e.g. Supervised Classification'
           input:
             type: array
             items:
               type: object
               properties:
-                name: 
+                name:
                   type: string
-                  description: The name of the input, e.g. source_data
+                  description: 'The name of the input, e.g. source_data'
                 data_set:
                   type: object
                   properties:
@@ -4129,7 +4473,7 @@ definitions:
                   properties:
                     type:
                       type: string
-                      description: The type of procedure, e.g. crossvalidation
+                      description: 'The type of procedure, e.g. crossvalidation'
                     data_splits_url:
                       type: string
                       description: The url where the data splits can be downloaded
@@ -4144,18 +4488,20 @@ definitions:
                           value:
                             type: string
                             description: The value of the parameter
-                cost_matrix: 
+                cost_matrix:
                   type: array
                   items:
                     type: array
                     items:
                       type: integer
                       format: int64
-                  description: The cost matrix, indicating the costs for each type of misclassification
-                evaluation_measures: 
+                  description: >-
+                    The cost matrix, indicating the costs for each type of
+                    misclassification
+                evaluation_measures:
                   type: object
                   properties:
-                    evaluation_measure: 
+                    evaluation_measure:
                       type: string
                       description: The evaluation measure to optimize in this task
           output:
@@ -4163,15 +4509,15 @@ definitions:
             items:
               type: object
               properties:
-                name: 
+                name:
                   type: string
-                  description: The name of the output, e.g. predictions
+                  description: 'The name of the output, e.g. predictions'
                 predictions:
                   type: object
                   properties:
                     format:
                       type: string
-                      description: The fromat of the predictions, e.g. ARFF
+                      description: 'The fromat of the predictions, e.g. ARFF'
                     feature:
                       type: array
                       items:
@@ -4179,15 +4525,17 @@ definitions:
                         properties:
                           name:
                             type: string
-                            description: The name of the prediction feature, e.g. row_id
+                            description: 'The name of the prediction feature, e.g. row_id'
                           type:
                             type: string
-                            description: The type of the prediction feature, e.g. integer        
+                            description: 'The type of the prediction feature, e.g. integer'
           tag:
             type: array
             items:
               type: string
-              description: Tags added by OpenML users. Includes study tags in the form `study_1`
+              description: >-
+                Tags added by OpenML users. Includes study tags in the form
+                `study_1`
   TaskList:
     type: object
     properties:
@@ -4213,7 +4561,9 @@ definitions:
                   description: The name of the source dataset
                 status:
                   type: string
-                  description: The status of the source dataset, active, in_preparation, or deactivated
+                  description: >-
+                    The status of the source dataset, active, in_preparation, or
+                    deactivated
                 format:
                   type: string
                   description: The format of the source dataset
@@ -4238,12 +4588,14 @@ definitions:
                         description: The name of the quality
                       value:
                         type: string
-                        description: The value of the quality 
+                        description: The value of the quality
                 tag:
                   type: array
                   items:
                     type: string
-                    description: Tags added by OpenML users. Includes study tags in the form `study_1`
+                    description: >-
+                      Tags added by OpenML users. Includes study tags in the
+                      form `study_1`
   DataList:
     type: object
     properties:
@@ -4263,10 +4615,12 @@ definitions:
                   description: The dataset name
                 status:
                   type: string
-                  description: The dataset status, either in_preparation, active, or deactivated
+                  description: >-
+                    The dataset status, either in_preparation, active, or
+                    deactivated
                 format:
                   type: string
-                  description: The data format of the dataset, e.g. ARFF
+                  description: 'The data format of the dataset, e.g. ARFF'
                 quality:
                   type: array
                   items:
@@ -4320,7 +4674,9 @@ definitions:
                   description: Whether this feature is seen as a target feature
                 is_ignore:
                   type: string
-                  description: Whether this feature should be ignored in modelling (e.g. every value is unique)
+                  description: >-
+                    Whether this feature should be ignored in modelling (e.g.
+                    every value is unique)
                 is_row_identifier:
                   type: string
                   description: Whether this feature is a row identifier
@@ -4329,29 +4685,38 @@ definitions:
     properties:
       data_set_description:
         type: object
-        required: [ "name", "description", "format" ]
+        required:
+          - name
+          - description
+          - format
         properties:
           id:
             type: string
-            description: ID of the dataset, a positive integer
+            description: 'ID of the dataset, a positive integer'
           name:
             type: string
             description: The name of the dataset
           version:
             type: string
-            description: The version of the dataset, set by OpenML. A positive integer
+            description: 'The version of the dataset, set by OpenML. A positive integer'
           description:
             type: string
-            description: Wiki description of the dataset, in (Git flavoured) markdown format
+            description: >-
+              Wiki description of the dataset, in (Git flavoured) markdown
+              format
           format:
             type: string
-            description: Data format, for instance ARFF
+            description: 'Data format, for instance ARFF'
           upload_date:
             type: string
-            description: The datetime that the dataset was uploaded, format yyyy-MM-dd HH:mm:ss
+            description: >-
+              The datetime that the dataset was uploaded, format yyyy-MM-dd
+              HH:mm:ss
           licence:
             type: string
-            description: The licence granted for using the dataset, for instance Public or CC-BY
+            description: >-
+              The licence granted for using the dataset, for instance Public or
+              CC-BY
           url:
             type: string
             description: The URL where the data can be downloaded
@@ -4360,15 +4725,21 @@ definitions:
             description: The ID of the dataset file stored on the OpenML server
           default_target_attribute:
             type: string
-            description: For tabular data, the name of the column that is typically used as the target attribute for that data set
+            description: >-
+              For tabular data, the name of the column that is typically used as
+              the target attribute for that data set
           version_label:
             type: string
-            description: The version of the dataset, as defined by the uploader, for reference. Can be any format as long as it is unique.
+            description: >-
+              The version of the dataset, as defined by the uploader, for
+              reference. Can be any format as long as it is unique.
           tag:
             type: array
             items:
               type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
+            description: >-
+              Tags added by OpenML users. Includes study tags in the form
+              `study_1`
           visibility:
             type: string
             description: Who can see the dataset. For instance `public`.
@@ -4377,7 +4748,7 @@ definitions:
             description: The URL where the original data is hosted.
           status:
             type: string
-            description: active, in_preparation, or deactivated
+            description: 'active, in_preparation, or deactivated'
           md5_checksum:
             type: string
             description: Checksum to verify downloads of the dataset
@@ -4411,34 +4782,36 @@ definitions:
                   type: string
                   description: Error message generated by the run (if any)
   EvaluationList:
-      type: object
-      properties:
-        evaluations:
-          type: object
-          properties:
-            evaluation:
-              type: array
-              items:
-                type: object
-                properties:
-                  run_id:
-                    type: string
-                    description: The run ID
-                  task_id:
-                    type: string
-                    description: The ID of the tasks solved by this run
-                  flow_id:
-                    type: string
-                    description: The ID of the flow used by this run
-                  function:
-                    type: string
-                    description: The name of the evaluation function
-                  value:
-                    type: string
-                    description: The outcome of the evaluation
-                  array_data:
-                    type: string
-                    description: For structured evaluation measures, an array of evaluation values (e.g. per-class predictions, evaluation matrices,...)
+    type: object
+    properties:
+      evaluations:
+        type: object
+        properties:
+          evaluation:
+            type: array
+            items:
+              type: object
+              properties:
+                run_id:
+                  type: string
+                  description: The run ID
+                task_id:
+                  type: string
+                  description: The ID of the tasks solved by this run
+                flow_id:
+                  type: string
+                  description: The ID of the flow used by this run
+                function:
+                  type: string
+                  description: The name of the evaluation function
+                value:
+                  type: string
+                  description: The outcome of the evaluation
+                array_data:
+                  type: string
+                  description: >-
+                    For structured evaluation measures, an array of evaluation
+                    values (e.g. per-class predictions, evaluation matrices,...)
   Setup:
     type: object
     properties:
@@ -4447,7 +4820,7 @@ definitions:
         properties:
           flow_id:
             type: string
-            description: ID of the flow, a positive integer
+            description: 'ID of the flow, a positive integer'
           parameter_setting:
             type: array
             items:
@@ -4465,10 +4838,10 @@ definitions:
                   description: The data type of the hyperparameter value
                 default_value:
                   type: string
-                  description: The default value of the parameter used  
+                  description: The default value of the parameter used
                 value:
                   type: string
-                  description: The value of the parameter used  
+                  description: The value of the parameter used
   Run:
     type: object
     properties:
@@ -4477,7 +4850,7 @@ definitions:
         properties:
           id:
             type: string
-            description: ID of the run, a positive integer
+            description: 'ID of the run, a positive integer'
           uploader:
             type: string
             description: The uploader of the run
@@ -4489,10 +4862,12 @@ definitions:
             description: The id of the task solved by this run
           task_type:
             type: string
-            description: The type of task solved by this run (e.g., classification)
+            description: 'The type of task solved by this run (e.g., classification)'
           task_evaluation_measure:
             type: string
-            description: The evaluation measure that is supposed to be optimized in the task, if any
+            description: >-
+              The evaluation measure that is supposed to be optimized in the
+              task, if any
           flow_id:
             type: string
             description: The id of the flow used in this run
@@ -4501,12 +4876,16 @@ definitions:
             description: The name of the flow used in this run
           setup_string:
             type: string
-            description: Configuration of the flow as a string, to be interpreted by the flow, its library, or command line interface.
+            description: >-
+              Configuration of the flow as a string, to be interpreted by the
+              flow, its library, or command line interface.
           tag:
             type: array
             items:
               type: string
-            description: Tags added by OpenML users. Includes study tags in the form `study_1`
+            description: >-
+              Tags added by OpenML users. Includes study tags in the form
+              `study_1`
           parameter_setting:
             type: array
             items:
@@ -4543,44 +4922,57 @@ definitions:
                 type: array
                 items:
                   type: object
-                  description: Files uploaded by the user, e.g. run description, predictions. Can be multiple.
+                  description: >-
+                    Files uploaded by the user, e.g. run description,
+                    predictions. Can be multiple.
                   properties:
                     did:
                       type: string
                       description: The id of the uploaded file
                     file_id:
                       type: string
-                      description: The reference id of the uploaded file, for downloading afterward
+                      description: >-
+                        The reference id of the uploaded file, for downloading
+                        afterward
                     name:
                       type: string
-                      description: The name of the uploaded file (e.g., description, predictions, model,...)
+                      description: >-
+                        The name of the uploaded file (e.g., description,
+                        predictions, model,...)
               evaluation:
                 type: array
                 items:
                   type: object
-                  description: Evaluations uploaded by the user, e.g. runtimes, or computed by the server (after run upload). Can be multiple.
+                  description: >-
+                    Evaluations uploaded by the user, e.g. runtimes, or computed
+                    by the server (after run upload). Can be multiple.
                   properties:
                     name:
                       type: string
                       description: The name of the evaluation measure
                     flow_id:
                       type: string
-                      description: The id of the code used to compute this evaluation method
+                      description: >-
+                        The id of the code used to compute this evaluation
+                        method
                     value:
                       type: string
                       description: The result of the evaluation
                     array_data:
                       type: string
-                      description: For composite evaluation measures (e.g. per-class measures, confusion matrix), a string (JSON) representation of the   evaluation.
+                      description: >-
+                        For composite evaluation measures (e.g. per-class
+                        measures, confusion matrix), a string (JSON)
+                        representation of the   evaluation.
   TaskType:
     type: object
     properties:
       id:
         type: string
-        description: ID of the task type, a positive integer
+        description: 'ID of the task type, a positive integer'
       name:
         type: string
-        description: The name of the task type, e.g. Supervised Classification
+        description: 'The name of the task type, e.g. Supervised Classification'
       description:
         type: string
         description: A description of the task type
@@ -4597,9 +4989,9 @@ definitions:
         items:
           type: object
           properties:
-            name: 
+            name:
               type: string
-              description: The name of the input, e.g. source_data
+              description: 'The name of the input, e.g. source_data'
             data_set:
               type: object
               properties:
@@ -4614,7 +5006,7 @@ definitions:
               properties:
                 type:
                   type: string
-                  description: The type of procedure, e.g. crossvalidation
+                  description: 'The type of procedure, e.g. crossvalidation'
                 data_splits_url:
                   type: string
                   description: The url where the data splits can be downloaded
@@ -4629,18 +5021,20 @@ definitions:
                       value:
                         type: string
                         description: The value of the parameter
-            cost_matrix: 
+            cost_matrix:
               type: array
               items:
                 type: array
                 items:
                   type: integer
                   format: int64
-                description: The cost matrix, indicating the costs for each type of misclassification
-            evaluation_measures: 
+                description: >-
+                  The cost matrix, indicating the costs for each type of
+                  misclassification
+            evaluation_measures:
               type: object
               properties:
-                evaluation_measure: 
+                evaluation_measure:
                   type: string
                   description: The evaluation measure to optimize in this task
       output:
@@ -4648,15 +5042,15 @@ definitions:
         items:
           type: object
           properties:
-            name: 
+            name:
               type: string
-              description: The name of the output, e.g. predictions
+              description: 'The name of the output, e.g. predictions'
             predictions:
               type: object
               properties:
                 format:
                   type: string
-                  description: The format of the predictions, e.g. ARFF
+                  description: 'The format of the predictions, e.g. ARFF'
                 feature:
                   type: array
                   items:
@@ -4664,10 +5058,10 @@ definitions:
                     properties:
                       name:
                         type: string
-                        description: The name of the prediction feature, e.g. row_id
+                        description: 'The name of the prediction feature, e.g. row_id'
                       type:
                         type: string
-                        description: The type of the prediction feature, e.g. integer  
+                        description: 'The type of the prediction feature, e.g. integer'
   TaskTypeList:
     type: object
     properties:
