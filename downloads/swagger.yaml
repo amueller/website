@@ -3338,7 +3338,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '512':
           description: >-
@@ -3404,7 +3404,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '512':
           description: >-
@@ -3470,7 +3470,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id, tag) did not meet the contrains (comma
+            run_id, uploader_id, tag) did not meet the constraints (comma
             separated list of integers).
         '512':
           description: >-
@@ -3536,7 +3536,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '512':
           description: >-
@@ -3602,7 +3602,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '512':
           description: >-
@@ -3668,7 +3668,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '512':
           description: >-
@@ -3738,7 +3738,7 @@ paths:
         '511':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '512':
           description: >-
@@ -3926,7 +3926,7 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '542':
           description: >-
@@ -4003,7 +4003,7 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (tag, task_id, setup_id,
-            flow_id, run_id, uploader_id) did not meet the contrains (comma
+            flow_id, run_id, uploader_id) did not meet the constraints (comma
             separated list of integers).
         '542':
           description: >-
@@ -4068,7 +4068,7 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (tag, task_id, setup_id,
-            flow_id, run_id, uploader_id) did not meet the contrains (comma
+            flow_id, run_id, uploader_id) did not meet the constraints (comma
             separated list of integers).
         '542':
           description: >-
@@ -4134,7 +4134,7 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '542':
           description: >-
@@ -4200,7 +4200,7 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '542':
           description: >-
@@ -4265,7 +4265,76 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
+            list of integers).
+        '542':
+          description: >-
+            There where no results. Check whether there are runs under the given
+            constraint.
+        '543':
+          description: >-
+            Too many results. Given the constraints, there were still too many
+            results. Please add filters to narrow down the list.
+  '/evaluation/list/function/{name}':
+    get:
+      summary: Get evaluations for a specific evaluation method
+      description: >
+        Returns an array with all evaluations using the given function. Can be
+        combined with all other filters.
+      parameters:
+        - name: name
+          in: path
+          description: >-
+            Name of the evaluation measure, e.g. area_under_auc or
+            predictive_accuracy. See the OpenML website for the complete list of
+            measures.
+          required: true
+          type: string
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - evaluation
+      responses:
+        '200':
+          description: A list of evaluations descriptions
+          schema:
+            $ref: '#/definitions/EvaluationList'
+          examples:
+            application/json:
+              evaluations:
+                evaluation:
+                  - run_id: '1'
+                    task_id: '68'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-06 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+                  - run_id: '2'
+                    task_id: '69'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-07 23:30:40'
+                    value: '0.600026'
+                    array_data: '[0,0,0.711934,0.735714,0.601363,0.435678,0.430913]'
+                  - run_id: '3'
+                    task_id: '70'
+                    flow_id: '61'
+                    function: area_under_roc_curve
+                    upload_time: '2014-04-08 23:30:40'
+                    value: '0.839359'
+                    array_data: '[0,0.99113,0.898048,0.874862,0.791282,0.807343,0.820674]'
+        '540':
+          description: >-
+            Please provide at least task, flow or setup, uploader or run, to
+            filter results, or limit the number of responses.
+        '541':
+          description: >-
+            Input not safe. The input parameters (task_id, setup_id, flow_id,
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '542':
           description: >-
@@ -4278,8 +4347,8 @@ paths:
   '/evaluation/list/{filters}':
     get:
       summary: >-
-        Get evaluations by run, task, uploader and or flow (with or without
-        limit)
+        Get evaluations by run, task, uploader, function, and or flow (with or
+        without limit)
       description: >
         Returns an array with all evaluations matching any or all of the given
         filters. You can combine any of the four above filters any way you want.
@@ -4336,7 +4405,7 @@ paths:
         '541':
           description: >-
             Input not safe. The input parameters (task_id, setup_id, flow_id,
-            run_id, uploader_id) did not meet the contrains (comma separated
+            run_id, uploader_id) did not meet the constraints (comma separated
             list of integers).
         '542':
           description: >-
