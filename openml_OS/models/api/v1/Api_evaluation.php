@@ -20,7 +20,7 @@ class Api_evaluation extends Api_model {
       $this->evaluation_list($segments);
       return;
     }
-    
+
     $order_values = array('random', 'reverse', 'normal');
     if (count($segments) >= 3 && $segments[0] == 'request' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
       if (count($segments) == 3) {
@@ -34,7 +34,7 @@ class Api_evaluation extends Api_model {
 
     $this->returnError(100, $this->version);
   }
-  
+
   private function evaluation_request($evaluation_engine_id, $order, $ttid) {
     $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid);
     if ($res == false) {
@@ -75,7 +75,7 @@ class Api_evaluation extends Api_model {
     $where_uploader = $uploader_id == false ? '' : ' AND `r`.`uploader` IN (' . $uploader_id . ') ';
     $where_impl = $implementation_id == false ? '' : ' AND `s`.`implementation_id` IN (' . $implementation_id . ') ';
     $where_run = $run_id == false ? '' : ' AND `r`.`rid` IN (' . $run_id . ') ';
-    $where_function = $function_name == false ? '' : ' AND `e`.`function` = "' . $function_name . '" ';
+    $where_function = $function_name == false ? '' : ' AND `f`.`name` = "' . $function_name . '" ';
     $where_tag = $tag == false ? '' : ' AND `r`.`rid` IN (select id from run_tag where tag="' . $tag . '") ';
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
@@ -85,10 +85,10 @@ class Api_evaluation extends Api_model {
     //pre-test, should be quick??
     $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag;
     $sql_test =
-      'SELECT distinct r.rid ' . 
-      'FROM run r, algorithm_setup s ' . 
-      'WHERE r.setup = s.sid ' . 
-      $where_runs . 
+      'SELECT distinct r.rid ' .
+      'FROM run r, algorithm_setup s ' .
+      'WHERE r.setup = s.sid ' .
+      $where_runs .
       $where_limit ;
     $res_test = $this->Evaluation->query( $sql_test );
 
@@ -99,7 +99,7 @@ class Api_evaluation extends Api_model {
 
     //get evaluations
     $where_total = $where_runs . $where_function;
-    
+
     // TODO: test this function
     $sql =
       'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.name ' .
@@ -107,13 +107,14 @@ class Api_evaluation extends Api_model {
       'WHERE r.setup = s.sid ' .
       'AND e.source = r.rid ' .
       'AND e.source = re.run_id ' .
-      'AND e.function_id = f.id ' . 
+      'AND e.function_id = f.id ' .
       'AND r.rid = re.run_id ' .
       'AND s.implementation_id = i.id ' .
       'AND r.task_id = t.task_id ' .
       'AND t.input = "source_data" ' .
       'AND t.value = d.did ' . $where_total .
       'ORDER BY r.rid' . $where_limit;
+
     $res = $this->Evaluation->query( $sql );
 
     if ($res == false) {
