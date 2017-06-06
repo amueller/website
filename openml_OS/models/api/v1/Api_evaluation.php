@@ -88,8 +88,8 @@ class Api_evaluation extends Api_model {
     if($limit == false || (!$offset && $limit > 10000) || ($offset && $limit-$offset > 10000)) { // skip pre-test if less than 10000 are requested by definition
       $sql_test =
         'SELECT distinct r.rid ' .
-        'FROM run r, algorithm_setup s' .
-        'WHERE r.setup = s.sid' .
+        'FROM run r, algorithm_setup s ' .
+        'WHERE r.setup = s.sid ' .
         $where_runs .
         $where_limit ;
       $res_test = $this->Evaluation->query( $sql_test );
