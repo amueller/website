@@ -82,33 +82,33 @@ class Api_evaluation extends Api_model {
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
 
-    //pre-test, should be quick??
-    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag;
-    $sql_test =
-      'SELECT distinct r.rid ' .
-      'FROM run r, algorithm_setup s ' .
-      'WHERE r.setup = s.sid ' .
-      $where_runs .
-      $where_limit ;
-    $res_test = $this->Evaluation->query( $sql_test );
+    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_function;
 
-    if (count($res_test) > 10000) {
-      $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res_test) . ' runs; max size: 10000. Please use limit and offset. ');
-      return;
+    //pre-test, should be quick??
+    if($limit == false || (!$offset && $limit > 10000) || ($offset && $limit-$offset > 10000)) { // skip pre-test if less than 10000 are requested by definition
+      $sql_test =
+        'SELECT distinct r.rid ' .
+        'FROM run r, algorithm_setup s ' .
+        'WHERE r.setup = s.sid ' .
+        $where_total .
+        $where_limit ;
+      $res_test = $this->Evaluation->query( $sql_test );
+
+      if (count($res_test) > 10000) {
+        $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res_test) . ' runs; max size: 10000. Please use limit and offset. ');
+        return;
+      }
     }
 
-    //get evaluations
-    $where_total = $where_runs . $where_function;
-
-    // TODO: test this function
+    // Note: the ORDER BY makes this query super slow because all data needs to be loaded. The query optimizer does not use the index correctly to avoid this.
+    // It seems to be related to the inclusion of the math_function table (it causes MySQL to use filesort).
+    // Solution is to force the index used in the run and evaluation table (or not use ORDER BY at all).
     $sql =
       'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.name ' .
-      'FROM evaluation e, algorithm_setup s, implementation i, dataset d, task_inputs t, run r, run_evaluated re, math_function f ' .
+      'FROM run r force index(PRIMARY), evaluation e force index(PRIMARY), algorithm_setup s, implementation i, dataset d, task_inputs t, math_function f ' .
       'WHERE r.setup = s.sid ' .
       'AND e.source = r.rid ' .
-      'AND e.source = re.run_id ' .
       'AND e.function_id = f.id ' .
-      'AND r.rid = re.run_id ' .
       'AND s.implementation_id = i.id ' .
       'AND r.task_id = t.task_id ' .
       'AND t.input = "source_data" ' .
