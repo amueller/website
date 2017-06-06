@@ -82,15 +82,15 @@ class Api_evaluation extends Api_model {
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
 
-    $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_function;
+    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_function;
 
     //pre-test, should be quick??
     if($limit == false || (!$offset && $limit > 10000) || ($offset && $limit-$offset > 10000)) { // skip pre-test if less than 10000 are requested by definition
       $sql_test =
         'SELECT distinct r.rid ' .
-        'FROM run r, algorithm_setup s ' .
-        'WHERE r.setup = s.sid ' .
-        $where_total .
+        'FROM run r, algorithm_setup s' .
+        'WHERE r.setup = s.sid' .
+        $where_runs .
         $where_limit ;
       $res_test = $this->Evaluation->query( $sql_test );
 
@@ -99,6 +99,9 @@ class Api_evaluation extends Api_model {
         return;
       }
     }
+
+    $where_total = $where_runs . $where_function;
+
 
     // Note: the ORDER BY makes this query super slow because all data needs to be loaded. The query optimizer does not use the index correctly to avoid this.
     // It seems to be related to the inclusion of the math_function table (it causes MySQL to use filesort).
