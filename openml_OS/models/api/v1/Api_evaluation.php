@@ -82,7 +82,7 @@ class Api_evaluation extends Api_model {
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
 
-    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_function;
+    $where_runs = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag;
 
     //pre-test, should be quick??
     if($limit == false || (!$offset && $limit > 10000) || ($offset && $limit-$offset > 10000)) { // skip pre-test if less than 10000 are requested by definition
