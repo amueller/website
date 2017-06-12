@@ -9,7 +9,7 @@
    "status":"<?php echo $data->status; ?>",
    "format":"<?php echo $data->format; ?>",
    <?php if ($data->file_id != null): /* optional field! */?>
-   "file_id":"<?php echo $data->ffile_id; ?>",
+   "file_id":"<?php echo $data->file_id; ?>",
    <?php endif; ?>
    "quality":[
     <?php $firstq = TRUE;
