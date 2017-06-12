@@ -97,7 +97,13 @@ class Data extends CI_Controller {
     }
     
     $this->_header_download($file);
-    fpassthru($handle);
+    for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
+      if (trim($line[0]) == '%') {
+        continue;
+      } else {
+        echo $line;
+      }
+    }
   }
 
   private function _check_rights($file) {
