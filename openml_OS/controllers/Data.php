@@ -92,12 +92,12 @@ class Data extends CI_Controller {
     
     if ($position < 0) { # apparently we didn't find '@data' 
       # TODO: more meaningfull error
-      $this->error404();
+      $this->_error404();
       return;
     }
     
     $this->_header_download($file);
-    fpassthrough($handle);
+    fpassthru($handle);
   }
 
   private function _check_rights($file) {
