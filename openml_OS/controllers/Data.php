@@ -80,7 +80,7 @@ class Data extends CI_Controller {
       return;
     } 
     
-    $handle = fopen(DATA_PATH . $file->filepath);
+    $handle = fopen(DATA_PATH . $file->filepath, 'r');
     $position = -1;
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
       // process the line read.
