@@ -90,7 +90,7 @@ class Data extends CI_Controller {
       }
     }
     
-    if ($ftell < 0) { # apparently we didn't find '@data' 
+    if ($position < 0) { # apparently we didn't find '@data' 
       # TODO: more meaningfull error
       $this->error404();
       return;
