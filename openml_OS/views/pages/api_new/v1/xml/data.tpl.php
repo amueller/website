@@ -6,7 +6,7 @@
     <oml:version><?php echo $data->version; ?></oml:version>
     <oml:status><?php echo $data->status; ?></oml:status>
     <oml:format><?php echo $data->format; ?></oml:format>
-    <?php if $data->file_id != null: /* note that this is an optional field! */?>
+    <?php if ($data->file_id != null): /* note that this is an optional field! */?>
     <oml:file_id><?php echo $data->file_id; ?></oml:file_id> 
     <?php endif; ?>
     <?php foreach( $data->qualities as $quality => $value ): ?>
