@@ -69,7 +69,9 @@
     $this->p2['body']['sort'] = 'version';
     try{
       $this->versions = array_column($this->searchclient->search($this->p2)['hits']['hits'],'_source');
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+      echo 'ES Message: ' .$e->getMessage();
+    }
 
     //get tasks
     $this->p3 = array();
@@ -81,7 +83,7 @@
     try{
         $this->tasks = array_column($this->searchclient->search($this->p3)['hits']['hits'],'_source');
     } catch (Exception $e) {
-      echo 'Message: ' .$e->getMessage();
+      echo 'ES Message: ' .$e->getMessage();
     }
 
     //get properties - needed for the descriptions
@@ -99,7 +101,7 @@
         $this->dataproperties[$dq['name']] = $dq;
       }
     } catch (Exception $e) {
-      echo 'Message: ' .$e->getMessage();
+      echo 'ES Message: ' .$e->getMessage();
     }
 
     //get measures
