@@ -359,6 +359,8 @@ class ElasticSearch {
         $indexParams['type'] = $type;
         if(! $this->$client->indices()->getMapping($indexParams))
           echo $this->initialize_index($type);
+        elseif (! $this->init_indexer)
+          initialize();
 
 	      $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
@@ -417,7 +419,7 @@ class ElasticSearch {
         $params['body'][$t] = $this->mappings[$t];
         $this->client->indices()->putMapping($params);
 
-        return 'Successfully initialized index for ' . $t;
+        return '[Initialized mapping for ' . $t. '] ';
     }
 
     public function index_downvote($id, $start_id = 0, $altmetrics=True){
