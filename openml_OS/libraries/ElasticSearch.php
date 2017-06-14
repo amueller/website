@@ -512,6 +512,9 @@ class ElasticSearch {
         if ($id and ! $downloads)
             return 'Error: download ' . $id . ' is unknown';
 
+        elseif (! $downloads)
+            return 'Nothing to index';
+
         foreach ($downloads as $d) {
             $params['body'][] = array(
                 'index' => array(
