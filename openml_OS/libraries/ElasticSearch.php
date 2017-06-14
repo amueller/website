@@ -421,6 +421,8 @@ class ElasticSearch {
 
         if ($id and ! $downvotes)
             return 'Error: downvote ' . $id . ' is unknown';
+        elseif (! $downvotes)
+            return 'Nothing to index';
         foreach ($downvotes as $d) {
             $params['body'][] = array(
                 'index' => array(
@@ -755,7 +757,8 @@ class ElasticSearch {
 
         if ($id and ! $studies)
             return 'Error: study ' . $id . ' is unknown';
-
+        elseif (! $studies)
+            return 'Nothing to index';
         foreach ($studies as $s) {
             $params['body'][] = array(
                 'index' => array(
@@ -1348,7 +1351,8 @@ class ElasticSearch {
 
         if ($id and ! $types)
             return 'Error: task type ' . $id . ' is unknown';
-
+        elseif (! $types)
+            return 'Nothing to index';
         foreach ($types as $d) {
             $params['body'][] = array(
                 'index' => array(
@@ -1402,7 +1406,8 @@ class ElasticSearch {
 
         if ($id and ! $flows)
             return 'Error: flow ' . $id . ' is unknown';
-
+        elseif (! $flows)
+            return 'Nothing to index';
         foreach ($flows as $d) {
             $params['body'][] = array(
                 'index' => array(
