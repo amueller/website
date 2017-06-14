@@ -447,8 +447,8 @@ class ElasticSearch {
         if ($id and ! $likes)
             return 'Error: like ' . $id . ' is unknown';
 
-        if (! $likes)
-            return 'Error: no likes found';
+        elseif (! $likes)
+            return 'Nothing to index';
 
         foreach ($likes as $l) {
             $params['body'][] = array(
@@ -1231,7 +1231,7 @@ class ElasticSearch {
             $evals = null;
             $params['body'] = array();
 
-            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, error, error_message, run_details FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
+            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, re.error, error_message, run_details FROM run r,run_evaluated re, algorithm_setup s where r.rid=re.run_id and s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
             if($runs){
               $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
               $evals = $this->fetch_evaluations($rid, $rid + $incr);
@@ -1610,7 +1610,7 @@ class ElasticSearch {
             return "No measure found with id " . $id;
 
         $responses = $this->client->bulk($params);
-        return 'indexed ' . sizeof($responses['items']) . ' out of ' . (($procs ? sizeof($procs) : 0) + ($funcs ? sizeof($funcs) : 0) + ($dataqs ? sizeof($dataqs) : 0) + ($flowqs ? sizeof($flowqs) : 0)) . ' measures (' . ($procs ? sizeof($procs) : 0) . ' procedures, ' . ($funcs ? sizeof($funcs) : 0) . ' functions, ' . ($dataqs ? sizeof($dataqs) : 0) . ' data qualities, ' . ($flowqs ? sizeof($flowqs) : 0) . ' flow qualities).';
+        return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . (($procs ? sizeof($procs) : 0) + ($funcs ? sizeof($funcs) : 0) + ($dataqs ? sizeof($dataqs) : 0) + ($flowqs ? sizeof($flowqs) : 0)) . ' measures (' . ($procs ? sizeof($procs) : 0) . ' procedures, ' . ($funcs ? sizeof($funcs) : 0) . ' functions, ' . ($dataqs ? sizeof($dataqs) : 0) . ' data qualities, ' . ($flowqs ? sizeof($flowqs) : 0) . ' flow qualities).';
     }
 
     private function build_procedure($d) {
