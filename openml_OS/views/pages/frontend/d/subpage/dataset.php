@@ -148,7 +148,7 @@
   </div>
 
 
-  <h3><?php echo 0+$this->data['qualities']['NumberOfFeatures']; ?> features</h3>
+  <h3><?php echo (array_key_exists('NumberOfFeatures', $this->data['qualities']['NumberOfFeatures']) ? $this->data['qualities']['NumberOfFeatures'] : '0'); ?> features</h3>
 <?php
   if (!empty($this->data['features'])){ ?>
       <div class="cardtable">
