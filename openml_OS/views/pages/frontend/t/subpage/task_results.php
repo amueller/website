@@ -16,7 +16,7 @@
                             ?>
                         </li>
 				                <?php } ?>
-				                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->data['url']; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+				                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->sourcedata_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
 				                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json">
 				                                  <span class="fa-stack fa-stack-icon fa-2x">
 				                                      <i class="fa fa-file-o fa-stack-1x"></i>
