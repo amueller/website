@@ -47,10 +47,10 @@ class Cron extends CI_Controller {
 
       if(!$id){
         echo "\r\n Starting ".$type." indexer... ";
-        $this->elasticsearch->index($type);
+        echo $this->elasticsearch->index($type);
       } else {
         echo "\r\n Starting ".$type." indexer for id ".$id." ";
-        $this->elasticsearch->index($type, $id);
+        echo $this->elasticsearch->index($type, $id);
       }
 
       $time_end = microtime(true);
@@ -63,7 +63,7 @@ class Cron extends CI_Controller {
       if(!$id){
         // TODO: I guess this function enables the exact same hevaiour as index($type, false) (JvR)
         echo "\r\n Starting ".$type." indexer... ";
-        $this->elasticsearch->index($type);
+        echo $this->elasticsearch->index($type);
       } else {
         echo "\r\n Starting ".$type." indexer from id ".$id."... ";
         echo $this->elasticsearch->index_from($type, $id);

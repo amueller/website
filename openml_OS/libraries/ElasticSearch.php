@@ -32,7 +32,7 @@ class ElasticSearch {
     }
 
     public function initialize(){
-	$this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
+        $this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
         $this->flow_names = $this->CI->Implementation->getAssociativeArray('id', 'fullName', 'name IS NOT NULL');
         $this->procedure_names = $this->CI->Estimation_procedure->getAssociativeArray('id', 'name', 'name IS NOT NULL');
         $this->user_names = array();
@@ -354,8 +354,12 @@ class ElasticSearch {
     }
 
     public function index($type, $id = false, $altmetrics=True) {
-        if(!$this->init_indexer)
-	         $this->initialize();
+        //bootstrap
+        $indexParams['index'] = 'openml';
+        $indexParams['type'] = $type;
+        if(! $client->indices()->exists($indexParams))
+          echo $this->initialize_index($type);
+
 	      $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
@@ -369,8 +373,12 @@ class ElasticSearch {
     }
 
     public function index_from($type, $id = false, $altmetrics=True) {
-        if(!$this->init_indexer)
-             $this->initialize();
+        //bootstrap
+        $indexParams['index'] = 'openml';
+        $indexParams['type'] = $type;
+        if(! $client->indices()->exists($indexParams))
+          echo $this->initialize_index($type);
+
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
@@ -409,7 +417,7 @@ class ElasticSearch {
         $params['body'][$t] = $this->mappings[$t];
         $this->client->indices()->putMapping($params);
 
-        return 'Successfully reinitialized index for ' . $t;
+        return 'Successfully initialized index for ' . $t;
     }
 
     public function index_downvote($id, $start_id = 0, $altmetrics=True){
