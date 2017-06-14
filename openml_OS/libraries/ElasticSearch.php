@@ -360,7 +360,7 @@ class ElasticSearch {
         if(! $this->$client->indices()->getMapping($indexParams))
           echo $this->initialize_index($type);
         elseif (! $this->init_indexer)
-          initialize();
+          $this->initialize();
 
 	      $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
@@ -381,7 +381,7 @@ class ElasticSearch {
         if(! $this->client->indices()->getMapping($indexParams))
           echo $this->initialize_index($type);
         elseif (! $this->init_indexer)
-          initialize();
+          $this->initialize();
 
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
