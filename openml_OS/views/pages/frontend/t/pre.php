@@ -108,10 +108,11 @@ $io = $this->Implementation->query('SELECT io.name, io.type, io.description, tt.
 			  'requirement' => $i->requirement
 			);
 		if($i->type == 'Dataset' && is_numeric($i->value)){
-			$dataset = $this->Implementation->query('SELECT name, version FROM dataset where did=' . $i->value);
+			$dataset = $this->Implementation->query('SELECT name, version, url FROM dataset where did=' . $i->value);
 			$inout['dataset'] = $dataset[0]->name . " (" . $dataset[0]->version . ")";
 			$this->sourcedata_id = $i->value;
 			$this->sourcedata_name = $inout['dataset'];
+			$this->sourcedata_url = $dataset[0]->url;
 		}
 		elseif($i->type == 'Estimation Procedure'){
 			$ep = $this->Implementation->query('SELECT name FROM estimation_procedure where id=' . $i->value);

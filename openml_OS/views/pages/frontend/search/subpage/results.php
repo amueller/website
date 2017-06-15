@@ -47,6 +47,7 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
 	<?php } ?>
 
 <div class="dropdown pull-right">
+ <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task", "task_type", "run", "user"))){ ?>
   <a data-toggle="dropdown" class="btn btn-default" href="#">Sort: <b><?php echo $this->curr_sort; ?></b> <i class="fa fa-caret-down"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task_type"))){ ?>
@@ -102,6 +103,9 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'impact', 'order' => 'asc')); ?>">Lowest Impact</a></li>
     <?php } ?>
   </ul>
+ <?php } else { ?>
+	 <a data-toggle="collapse" data-parent="#topaccordeon" data-target="#mainlist" class="btn btn-default">For search options, select a result type first</a>
+ <?php } ?>
 </div>
 
 <div class="searchstats"><?php echo $this->results['hits']['total'];?> results</div>

@@ -12,16 +12,16 @@
                 ?>
             </li>
             <?php } ?>
-            <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo BASE_URL; ?>api/v1/run/<?php echo $this->run_id;?>">
-                              <span class="fa-stack fa-stack-icon fa-2x">
-                                  <i class="fa fa-file-o fa-stack-1x"></i>
-                                  <strong class="fa-stack-1x file-text">XML</strong>
-                              </span>
-                            </a></li>
             <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json">
                               <span class="fa-stack fa-stack-icon fa-2x">
                                   <i class="fa fa-file-o fa-stack-1x"></i>
                                   <strong class="fa-stack-1x file-text">JSON</strong>
+                              </span>
+                            </a></li>
+            <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/v1/run/<?php echo $this->id; ?>">
+                              <span class="fa-stack fa-stack-icon fa-2x">
+                                  <i class="fa fa-file-o fa-stack-1x"></i>
+                                  <strong class="fa-stack-1x file-text">XML</strong>
                               </span>
                             </a></li>
             <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/rdf">

@@ -48,9 +48,9 @@ class Data extends CI_Controller {
     }
   }
 
-  function view($id,$name = 'undefined') {
+  function view($id, $name = 'undefined') {
     $file = $this->File->getById($id);
-    if( $this->_check_rights( $file ) ) {
+    if ($this->_check_rights($file)) {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
         $this->_error404();
       } else {
@@ -62,29 +62,72 @@ class Data extends CI_Controller {
       $this->_error403();
     }
   }
+  
+  function get_csv($id, $name) {
+    # TODO: caching mechanism to 
+    $file = $this->File->getById($id);
+    
+    # check file rights
+    if (!$this->_check_rights($file)) {
+      $this->_error403();
+      return;
+    }
+    
+    # file does not exist, or is no valid arff
+    if (!$file || strtolower($file->extension) != 'arff') {
+      # TODO: think of more meaningfull error
+      $this->_error404();
+      return;
+    } 
+    
+    $handle = fopen(DATA_PATH . $file->filepath, 'r');
+    $position = -1;
+    for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
+      // process the line read.
+      if (trim(strtolower($line)) == '@data') {
+        $position = ftell($handle);
+        break;
+      }
+    }
+    
+    if ($position < 0) { # apparently we didn't find '@data' 
+      # TODO: more meaningfull error
+      $this->_error404();
+      return;
+    }
+    
+    $this->_header_download($file);
+    for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
+      if (trim($line[0]) == '%') {
+        continue;
+      } else {
+        echo $line;
+      }
+    }
+  }
 
-  private function _check_rights( $file ) {
-    if( $file->access_policy == 'public' ) {
+  private function _check_rights($file) {
+    if($file->access_policy == 'public') {
       return true;
     }
 
-    if( $this->ion_auth->is_admin( $this->user_id ) ) {
+    if($this->ion_auth->is_admin($this->user_id)) {
       return true;
     }
 
-    elseif( $file->access_policy == 'private' ) {
-      if( $this->user_id == $file->creator ) {
+    elseif($file->access_policy == 'private') {
+      if($this->user_id == $file->creator) {
         return true;
       } else {
         $this->_error403();
       }
     }
 
-    elseif( $file->access_policy == 'deleted' ) {
+    elseif($file->access_policy == 'deleted') {
       $this->_error404();
     }
 
-    elseif( $file->access_policy == 'none' ) {
+    elseif($file->access_policy == 'none') {
       $this->_error403();
     }
   }

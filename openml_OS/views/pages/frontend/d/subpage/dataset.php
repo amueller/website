@@ -21,6 +21,12 @@
                                       <strong class="fa-stack-1x file-text">JSON</strong>
                                   </span>
                                 </a></li>
+                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/v1/data/<?php echo $this->id; ?>">
+                                  <span class="fa-stack fa-stack-icon fa-2x">
+                                      <i class="fa fa-file-o fa-stack-1x"></i>
+                                      <strong class="fa-stack-1x file-text">XML</strong>
+                                  </span>
+                                </a></li>
                 <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/rdf">
                                   <span class="fa-stack fa-stack-icon fa-2x">
                                       <i class="fa fa-file-o fa-stack-1x"></i>
@@ -148,7 +154,7 @@
   </div>
 
 
-  <h3><?php echo 0+$this->data['qualities']['NumberOfFeatures']; ?> features</h3>
+  <h3><?php echo (array_key_exists('NumberOfFeatures', $this->data['qualities']) ? $this->data['qualities']['NumberOfFeatures'] : '0'); ?> features</h3>
 <?php
   if (!empty($this->data['features'])){ ?>
       <div class="cardtable">
