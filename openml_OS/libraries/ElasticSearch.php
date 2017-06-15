@@ -357,7 +357,7 @@ class ElasticSearch {
         //bootstrap
         $indexParams['index'] = 'openml';
         $indexParams['type'] = $type;
-        if(! $this->$client->indices()->getMapping($indexParams))
+        if(! $this->client->indices()->getMapping($indexParams))
           echo $this->initialize_index($type);
         elseif (! $this->init_indexer)
           $this->initialize();
