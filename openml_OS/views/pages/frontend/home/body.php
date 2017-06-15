@@ -72,6 +72,15 @@
   <div class="list-group"  style="font-size:11pt">
       <div class="list-group-item">
           <div class="row-picture">
+              <img class="circle" src="img/COSEAL_small.png" alt="icon">
+          </div>
+          <div class="row-content">
+              <h4 class="list-group-item-heading">Algorithm Selection Competition</h4>
+              <p class="list-group-item-text">Use your favorite OpenML tool to participate in the (external) <a href="http://www.coseal.net/open-algorithm-selection-challenge-2017-oasc/">Open Algorithm Selection Competition 2017</a>. Deadline is <b>August 27, 2017</b>.</p>
+          </div>
+      </div>
+      <div class="list-group-item">
+          <div class="row-picture">
               <img class="circle" src="img/colorballs2.jpg" alt="icon">
           </div>
           <div class="row-content">

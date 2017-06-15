@@ -32,7 +32,7 @@ class ElasticSearch {
     }
 
     public function initialize(){
-	$this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
+        $this->data_names = $this->CI->Dataset->getAssociativeArray('did', 'name', 'name IS NOT NULL');
         $this->flow_names = $this->CI->Implementation->getAssociativeArray('id', 'fullName', 'name IS NOT NULL');
         $this->procedure_names = $this->CI->Estimation_procedure->getAssociativeArray('id', 'name', 'name IS NOT NULL');
         $this->user_names = array();
@@ -354,8 +354,14 @@ class ElasticSearch {
     }
 
     public function index($type, $id = false, $altmetrics=True) {
-        if(!$this->init_indexer)
-	         $this->initialize();
+        //bootstrap
+        $indexParams['index'] = 'openml';
+        $indexParams['type'] = $type;
+        if(! $this->$client->indices()->getMapping($indexParams))
+          echo $this->initialize_index($type);
+        elseif (! $this->init_indexer)
+          $this->initialize();
+
 	      $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
@@ -369,8 +375,14 @@ class ElasticSearch {
     }
 
     public function index_from($type, $id = false, $altmetrics=True) {
-        if(!$this->init_indexer)
-             $this->initialize();
+        //bootstrap
+        $indexParams['index'] = 'openml';
+        $indexParams['type'] = $type;
+        if(! $this->client->indices()->getMapping($indexParams))
+          echo $this->initialize_index($type);
+        elseif (! $this->init_indexer)
+          $this->initialize();
+
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
@@ -409,7 +421,7 @@ class ElasticSearch {
         $params['body'][$t] = $this->mappings[$t];
         $this->client->indices()->putMapping($params);
 
-        return 'Successfully reinitialized index for ' . $t;
+        return '[Initialized mapping for ' . $t. '] ';
     }
 
     public function index_downvote($id, $start_id = 0, $altmetrics=True){
@@ -421,6 +433,8 @@ class ElasticSearch {
 
         if ($id and ! $downvotes)
             return 'Error: downvote ' . $id . ' is unknown';
+        elseif (! $downvotes)
+            return 'Nothing to index';
         foreach ($downvotes as $d) {
             $params['body'][] = array(
                 'index' => array(
@@ -445,8 +459,8 @@ class ElasticSearch {
         if ($id and ! $likes)
             return 'Error: like ' . $id . ' is unknown';
 
-        if (! $likes)
-            return 'Error: no likes found';
+        elseif (! $likes)
+            return 'Nothing to index';
 
         foreach ($likes as $l) {
             $params['body'][] = array(
@@ -497,6 +511,9 @@ class ElasticSearch {
 
         if ($id and ! $downloads)
             return 'Error: download ' . $id . ' is unknown';
+
+        elseif (! $downloads)
+            return 'Nothing to index';
 
         foreach ($downloads as $d) {
             $params['body'][] = array(
@@ -755,7 +772,8 @@ class ElasticSearch {
 
         if ($id and ! $studies)
             return 'Error: study ' . $id . ' is unknown';
-
+        elseif (! $studies)
+            return 'Nothing to index';
         foreach ($studies as $s) {
             $params['body'][] = array(
                 'index' => array(
@@ -830,7 +848,7 @@ class ElasticSearch {
         while ($task_id <= $taskmax) {
             $tasks = null;
             $params['body'] = array();
-            $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id>=' . $task_id . ' and task_id<' . ($task_id + $incr) . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
+            $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date, t.creator FROM task t, task_type tt where t.ttid=tt.ttid and task_id>=' . $task_id . ' and task_id<' . ($task_id + $incr) . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
             if ($tasks) {
                 foreach ($tasks as $t) {
                     $params['body'][] = array(
@@ -852,7 +870,7 @@ class ElasticSearch {
 
     private function build_single_task($id) {
         $time = microtime(true);
-        $task = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date FROM task t, task_type tt where t.ttid=tt.ttid and task_id=' . $id . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
+        $task = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date, t.creator FROM task t, task_type tt where t.ttid=tt.ttid and task_id=' . $id . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
         $t = $this->build_task($task[0]);
         echo "Build task: ".(microtime(true) - $time)."\r\n";
         $time = microtime(true);
@@ -1228,7 +1246,7 @@ class ElasticSearch {
             $evals = null;
             $params['body'] = array();
 
-            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, error, error_message, run_details FROM run r, algorithm_setup s where s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
+            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, re.error, error_message, run_details FROM run r,run_evaluated re, algorithm_setup s where r.rid=re.run_id and s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
             if($runs){
               $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
               $evals = $this->fetch_evaluations($rid, $rid + $incr);
@@ -1348,7 +1366,8 @@ class ElasticSearch {
 
         if ($id and ! $types)
             return 'Error: task type ' . $id . ' is unknown';
-
+        elseif (! $types)
+            return 'Nothing to index';
         foreach ($types as $d) {
             $params['body'][] = array(
                 'index' => array(
@@ -1402,7 +1421,8 @@ class ElasticSearch {
 
         if ($id and ! $flows)
             return 'Error: flow ' . $id . ' is unknown';
-
+        elseif (! $flows)
+            return 'Nothing to index';
         foreach ($flows as $d) {
             $params['body'][] = array(
                 'index' => array(
@@ -1605,7 +1625,7 @@ class ElasticSearch {
             return "No measure found with id " . $id;
 
         $responses = $this->client->bulk($params);
-        return 'indexed ' . sizeof($responses['items']) . ' out of ' . (($procs ? sizeof($procs) : 0) + ($funcs ? sizeof($funcs) : 0) + ($dataqs ? sizeof($dataqs) : 0) + ($flowqs ? sizeof($flowqs) : 0)) . ' measures (' . ($procs ? sizeof($procs) : 0) . ' procedures, ' . ($funcs ? sizeof($funcs) : 0) . ' functions, ' . ($dataqs ? sizeof($dataqs) : 0) . ' data qualities, ' . ($flowqs ? sizeof($flowqs) : 0) . ' flow qualities).';
+        return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . (($procs ? sizeof($procs) : 0) + ($funcs ? sizeof($funcs) : 0) + ($dataqs ? sizeof($dataqs) : 0) + ($flowqs ? sizeof($flowqs) : 0)) . ' measures (' . ($procs ? sizeof($procs) : 0) . ' procedures, ' . ($funcs ? sizeof($funcs) : 0) . ' functions, ' . ($dataqs ? sizeof($dataqs) : 0) . ' data qualities, ' . ($flowqs ? sizeof($flowqs) : 0) . ' flow qualities).';
     }
 
     private function build_procedure($d) {

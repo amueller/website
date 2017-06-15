@@ -7,7 +7,7 @@ class Cron extends CI_Controller {
     $this->controller = strtolower(get_class ($this));
     if(!$this->input->is_cli_request()) {
       die('Cron Controller can only be accessed by CLI. ');
-    } 
+    }
 
     $this->load->model('Dataset');
     $this->load->model('Log');
@@ -37,35 +37,35 @@ class Cron extends CI_Controller {
     $this->load->Library('elasticSearch');
 
     $this->dir_suffix = 'dataset/cron/';
-    
+
     $this->es_indices = array('downvote', 'study', 'data', 'task', 'download', 'user', 'like', 'measure', 'flow', 'task_type', 'run');
   }
-  
+
   // indexes a single es item, unless $id = false
   public function index($type, $id = false){
       $time_start = microtime(true);
 
       if(!$id){
-        echo "starting ".$type." indexer";
-        $this->elasticsearch->index($type);
+        echo "\r\n Starting ".$type." indexer... ";
+        echo $this->elasticsearch->index($type);
       } else {
-        echo "starting ".$type." indexer for id ".$id;
-        $this->elasticsearch->index($type, $id);
+        echo "\r\n Starting ".$type." indexer for id ".$id." ";
+        echo $this->elasticsearch->index($type, $id);
       }
 
       $time_end = microtime(true);
       $time = $time_end - $time_start;
       echo "\nIndexing done in $time seconds\n";
   }
-  
+
   // indices a range of es items, starting by $id (or 0 if id == false)
   public function indexfrom($type, $id = false){
       if(!$id){
         // TODO: I guess this function enables the exact same hevaiour as index($type, false) (JvR)
-        echo "starting ".$type." indexer";
-        $this->elasticsearch->index($type);
+        echo "\r\n Starting ".$type." indexer... ";
+        echo $this->elasticsearch->index($type);
       } else {
-        echo "starting ".$type." indexer from id ".$id;
+        echo "\r\n Starting ".$type." indexer from id ".$id."... ";
         echo $this->elasticsearch->index_from($type, $id);
       }
   }
@@ -74,7 +74,7 @@ class Cron extends CI_Controller {
       echo "tagging ".$type." ".$id;
       $this->elasticsearch->update_tags($type, $id);
   }
-  
+
   // builds all es indexes
   public function build_es_indices() {
     foreach($this->es_indices as $index) {
@@ -86,7 +86,7 @@ class Cron extends CI_Controller {
     // note that this one does not come from DATA folder, as they are stored in github
     $models = directory_map('data/sql/', 1);
     $manipulated_order = array('implementation.sql', 'algorithm_setup.sql', 'dataset.sql');
-    
+
     // moves elements of $manipulated_order to the start of the models array
     foreach (array_reverse($manipulated_order) as $name) {
       if (in_array($name, $models)) {
@@ -94,7 +94,7 @@ class Cron extends CI_Controller {
       }
     }
     array_unique($models);
-    
+
     foreach($models as $m) {
       $modelname = ucfirst(substr($m, 0, strpos($m, '.')));
       if($this->load->is_model_loaded($modelname) == false) { $this->load->model($modelname); }
