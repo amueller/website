@@ -53,7 +53,7 @@
 
   <h2 id="download">Quickstart</h2>
   <a href="http://openml.github.io/openml-python/">Check out the documentation</a> to get started.
-  Or try the <a href="https://github.com/openml/openml-python/blob/master/examples/PyOpenML.ipynb">Jupyter Notebook</a>.
+  Or try the <a href="https://github.com/openml/openml-python/blob/master/examples/OpenML_Tutorial.ipynb">Jupyter Notebook</a>.
 
 	<h2 id="issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/openml-python/issues"> OpenML Python issue tracker</a>.
