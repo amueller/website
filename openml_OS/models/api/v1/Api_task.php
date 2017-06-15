@@ -113,7 +113,7 @@ class Api_task extends Api_model {
             'GROUP BY t.task_id ' . $where_limit;
     $tags = 'SELECT `core`.*, CONCAT(\'"\', GROUP_CONCAT(`task_tag`.`tag` SEPARATOR \'","\'),\'"\') AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
     $full = 'SELECT tags.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $tags . ') tags ON dq.data = tags.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY tags.task_id;';
-    echo $full;
+    
     $tasks_res = $this->Task->query($full);
 
     if(is_array($tasks_res) == false || count($tasks_res) == 0) {
