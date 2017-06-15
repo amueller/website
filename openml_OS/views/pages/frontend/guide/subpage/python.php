@@ -29,7 +29,7 @@
     task = tasks.get_task(10)
     clf = ensemble.RandomForestClassifier()
     run = runs.run_task(task, clf)
-    
+
     run = runs.run_task(task, clf)
     run.publish()
 
@@ -54,7 +54,7 @@
 
   <h2 id="download">Quickstart</h2>
   <a href="http://openml.github.io/openml-python/">Check out the documentation</a> to get started.
-  There is also a <a href="https://github.com/openml/openml-python/blob/develop/examples/OpenMLRun.ipynb">Jupyter Notebook</a> with examples.
+  Or try the <a href="https://github.com/openml/openml-python/blob/develop/examples/PyOpenML.ipynb">Jupyter Notebook</a>.
 
 	<h2 id="issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/openml-python/issues"> OpenML Python issue tracker</a>.
