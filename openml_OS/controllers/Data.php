@@ -46,7 +46,7 @@ class Data extends CI_Controller {
       return;
     }
       
-    if ($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
+    if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
       $this->_error404();
       return;
     }
