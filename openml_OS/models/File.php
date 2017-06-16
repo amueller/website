@@ -45,8 +45,14 @@ class File extends Community {
     }
     $headers = $this->parse_headers($headers_request);
     
-    $filesize  = $headers['Content-Length'];
-    $mime_type = $headers['Content-Type'];
+    $filesize = null;
+    $mime_type = null;
+    if (array_key_exists('Content-Length', $headers)) { 
+      $filesize = $headers['Content-Length'];
+    }
+    if (array_key_exists('Content-Type', $headers)) { 
+      $mime_type = $headers['Content-Type'];
+    }
     $md5_hash  = md5_file($url);
     
     $file_record = array(
@@ -109,10 +115,10 @@ class File extends Community {
   private function parse_headers($headers) {
     $result = array();
     foreach($headers as $header) {
-      $colon = strpos(':', $header);
+      $colon = strpos($header, ':');
       if ($colon != false) {
-        $key = substr($header, 0, $colon);
-        $value = trim(substr($header, $pos+1));
+        $key = trim(substr($header, 0, $colon));
+        $value = trim(substr($header, $colon+1));
         $result[$key] = $value;
       }
     }
