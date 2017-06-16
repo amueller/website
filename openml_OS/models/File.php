@@ -43,7 +43,7 @@ class File extends Community {
     if ($headers_request == false) {
       return false;
     }
-    $headers = parse_headers($headers_request);
+    $headers = $this->parse_headers($headers_request);
     
     $filesize  = $headers['Content-Length'];
     $mime_type = $headers['Content-Type'];
@@ -111,8 +111,8 @@ class File extends Community {
     foreach($headers as $header) {
       $colon = strpos(':', $header);
       if ($colon != false) {
-        $key = substr($header, 0, $colon-1);
-        $value = substr($header, $pos+1);
+        $key = substr($header, 0, $colon);
+        $value = trim(substr($header, $pos+1));
         $result[$key] = $value;
       }
     }
