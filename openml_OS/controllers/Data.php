@@ -36,40 +36,53 @@ class Data extends CI_Controller {
 
   function download($id,$name = 'undefined') {
     $file = $this->File->getById($id);
-    if( $this->_check_rights( $file ) ) {
-      if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
-        $this->_error404();
-      } else {
-        // in case of externally linked file, handle alternativelly
-        if ($file->{'type'} == 'url') {
-          header('Location: ' . $file->filepath);
-        } else {
-          $this->_header_download($file);
-          readfile_chunked(DATA_PATH . $file->filepath);
-        }
-      }
-    } else {
+    if (!$file) {
+      $this->_error404();
+      return;
+    }
+    
+    if (!$this->_check_rights($file)) {
       $this->_error403();
+      return;
+    }
+      
+    if ($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
+      $this->_error404();
+      return;
+    }
+    
+    // in case of externally linked file, handle alternativelly
+    if ($file->{'type'} == 'url') {
+      header('Location: ' . $file->filepath);
+    } else {
+      $this->_header_download($file);
+      readfile_chunked(DATA_PATH . $file->filepath);
     }
   }
 
   function view($id, $name = 'undefined') {
     $file = $this->File->getById($id);
-    if ($this->_check_rights($file)) {
-      if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
-        $this->_error404();
-      } else {
-        // in case of externally linked file, handle alternativelly
-        if ($file->{'type'} == 'url') {
-          header('Location: ' . $file->filepath);
-        } else {
-          header('Content-type: ' . $file->mime_type);
-          header('Content-Length: ' . $file->filesize);
-          readfile(DATA_PATH . $file->filepath);
-        }
-      }
-    } else {
+    if ($file === false) {
+      $this->_error404();
+    }
+    
+    if (!$this->_check_rights($file)) {
       $this->_error403();
+      return;
+    }
+  
+    if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
+      $this->_error404();
+      return;
+    }
+    
+    // in case of externally linked file, handle alternativelly
+    if ($file->{'type'} == 'url') {
+      header('Location: ' . $file->filepath);
+    } else {
+      header('Content-type: ' . $file->mime_type);
+      header('Content-Length: ' . $file->filesize);
+      readfile(DATA_PATH . $file->filepath);
     }
   }
   
