@@ -291,7 +291,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    if (strtolower($xml->format) != 'arff') {
+    if (strtolower($xml->children('oml', 'true')->format) != 'arff') {
       $this->returnError(133, $this->version);
       return;
     }
