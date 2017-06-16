@@ -262,9 +262,8 @@ class Api_data extends Api_model {
   private function data_upload() {
     // get correct description
     $xsdFile = xsd('openml.data.upload', $this->controller, $this->version);
-    $xmlErrors = '';
 
-    if( $this->input->post('description') ) {
+    /*if($this->input->post('description')) {
       // get description from string upload
       $description = $this->input->post('description', false);
       if(validateXml($description, $xsdFile, $xmlErrors, false ) == false) {
@@ -272,69 +271,94 @@ class Api_data extends Api_model {
         return;
       }
       $xml = simplexml_load_string( $description );
-    } elseif(isset($_FILES['description'])) {
+    } else*/
+    if (isset($_FILES['description'])) {
       $uploadError = '';
-      if (check_uploaded_file($_FILES['description'],false,$uploadError) == false) {
-        $this->returnError(135, $this->version,$this->openmlGeneralErrorCode,$uploadError);
+      $xmlErrors = '';
+      if (check_uploaded_file($_FILES['description'], false, $uploadError) == false) {
+        $this->returnError(135, $this->version, $this->openmlGeneralErrorCode, $uploadError);
       }
       // get description from file upload
       $description = $_FILES['description'];
 
-      if(validateXml($description['tmp_name'], $xsdFile, $xmlErrors) == false) {
+      if (validateXml($description['tmp_name'], $xsdFile, $xmlErrors) == false) {
         $this->returnError(131, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
         return;
       }
-      $xml = simplexml_load_file( $description['tmp_name'] );
+      $xml = simplexml_load_file($description['tmp_name']);
     } else {
-      $this->returnError( 135, $this->version );
+      $this->returnError(135, $this->version);
       return;
     }
+    
+    if (strtolower($xml->format) != 'arff') {
+      $this->returnError(133, $this->version);
+      return;
+    }
+    
+    // determine level of access control
+    $access_control = 'public';
+    $access_control_option = $xml->children('oml', true)->{'visibility'};
+    if ($access_control_option != false) {
+      $access_control = $access_control_option;
+    }
+    
+    // obtain some other fields
+    $name = '' . $xml->children('oml', true)->{'name'};
+    $version = $this->Dataset->incrementVersionNumber($name);
 
     //check and register the data files, return url
     $file_id = null;
-    $datasetUrlProvided = property_exists( $xml->children('oml', true), 'url' );
-    $datasetFileProvided = isset( $_FILES['dataset'] );
-    if( $datasetUrlProvided && $datasetFileProvided ) {
-      $this->returnError( 140, $this->version );
+    $datasetUrlProvided = property_exists($xml->children('oml', true), 'url');
+    $datasetFileProvided = isset($_FILES['dataset']);
+    if ($datasetUrlProvided && $datasetFileProvided) {
+      $this->returnError(140, $this->version);
+      
       return;
-    } elseif( $datasetFileProvided ) {
+    } elseif($datasetFileProvided) {
       $message = '';
-      if( ! check_uploaded_file( $_FILES['dataset'], false, $message ) ) {
-        $this->returnError( 130, $this->version, $this->openmlGeneralErrorCode, 'File dataset: ' . $message );
+      if (!check_uploaded_file($_FILES['dataset'], false, $message)) {
+        $this->returnError(130, $this->version, $this->openmlGeneralErrorCode, 'File dataset: ' . $message);
         return;
       }
-      $access_control = 'public';
-      $access_control_option = $xml->children('oml', true)->{'visibility'};
-      if($access_control_option != false) {
-        $access_control = $access_control_option;
+      
+      $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
+      if ($uploadedFileCheck !== true) {
+        $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset file: ' . $uploadedFileCheck);
+        return;
       }
-
-      if (getextension($_FILES['dataset']['name']) == 'arff') {
-        $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
-        if ($uploadedFileCheck !== true) {
-          $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset file: ' . $uploadedFileCheck);
-          return;
-        }
-      }
-
+      
       $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
-      if($file_id === false) {
-        $this->returnError( 132, $this->version );
+      if ($file_id === false) {
+        $this->returnError(132, $this->version);
         return;
       }
 
       $file_record = $this->File->getById($file_id);
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
-    } elseif( $datasetUrlProvided ) {
+    } elseif ($datasetUrlProvided) {
       $destinationUrl = '' . $xml->children('oml', true)->url;
+      
+      $uploadedFileCheck = ARFFcheck($destinationUrl, 1000);
+      if ($uploadedFileCheck !== true) {
+        $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset url: ' . $uploadedFileCheck);
+        return;
+      }
+      
+      $file_id = $this->File->register_url($destinationUrl, $name . '.arff', 'arff', $this->user_id, $access_control);
+      if ($file_id === false) {
+        $this->returnError(132, $this->version);
+        return;
+      }
+      
+      $file_record = $this->File->getById($file_id);
+      $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } else {
-      $this->returnError( 141, $this->version );
+      $this->returnError(141, $this->version);
       return;
     }
 
     // ***** NEW DATASET *****
-    $name = '' . $xml->children('oml', true)->{'name'};
-    $version = $this->Dataset->incrementVersionNumber( $name );
 
     $dataset = array(
       'name' => $name,
@@ -349,27 +373,27 @@ class Api_data extends Api_model {
     // extract all other necessary info from the XML description
     $dataset = all_tags_from_xml(
       $xml->children('oml', true),
-      $this->xml_fields_dataset, $dataset );
+      $this->xml_fields_dataset, $dataset);
 
     // handle tags
     $tags = array();
-    if( array_key_exists( 'tag', $dataset ) ) {
-      $tags = str_getcsv( $dataset['tag'] );
-      unset( $dataset['tag'] );
+    if (array_key_exists('tag', $dataset)) {
+      $tags = str_getcsv($dataset['tag']);
+      unset($dataset['tag']);
     }
 
     /* * * *
      * THE ACTUAL INSERTION
      * * * */
-      $id = $this->Dataset->insert( $dataset );
-      if( ! $id ) {
-        $this->returnError( 134, $this->version );
+      $id = $this->Dataset->insert($dataset);
+      if (!$id) {
+        $this->returnError(134, $this->version);
         return;
       }
       // insert tags.
-      foreach( $tags as $tag ) {
+      foreach ($tags as $tag) {
         $error = -1;
-        tag_item( 'dataset', $id, $tag, $this->user_id, $error );
+        tag_item('dataset', $id, $tag, $this->user_id, $error);
       }
     
     try {
@@ -386,7 +410,7 @@ class Api_data extends Api_model {
     $this->wiki->export_to_wiki($id);
 
     // create
-    $this->xmlContents( 'data-upload', $this->version, array( 'id' => $id ) );
+    $this->xmlContents('data-upload', $this->version, array('id' => $id));
   }
 
 
@@ -531,7 +555,7 @@ class Api_data extends Api_model {
   }
   
   
-    private function feature_qualities_list() {
+  private function feature_qualities_list() {
     $result = $this->Quality->allFeatureQualitiesUsed( );
     $feature_qualities = array();
     if($result != false) {

@@ -601,7 +601,12 @@ class Api_run extends Api_model {
 
     // attach uploaded files as output to run
     foreach($_FILES as $key => $value) {
-      $file_type = ($key == 'predictions') ? 'predictions' : 'run_uploaded_file';
+      $file_type = 'run_uploaded_file';
+      if ($key == 'predictions') {
+        $file_type = 'predictions';
+      } elseif ($key == 'trace') {
+        $file_type = 'run_trace';
+      }
       $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
       if(!$file_id) {
         $this->returnError( 212, $this->version );

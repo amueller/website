@@ -38,6 +38,33 @@ class File extends Community {
     return $file_id;
   }
   
+  function register_url($url, $filename_original, $file_type, $creator_id, $access_policy = 'public') {
+    $headers_request = get_headers($url);
+    if ($headers_request == false) {
+      return false;
+    }
+    $headers = parse_headers($headers_request);
+    
+    $filesize  = $headers['Content-Length'];
+    $mime_type = $headers['Content-Type'];
+    $md5_hash  = md5_file($url);
+    
+    $file_record = array(
+      'creator' => $creator_id,
+      'creation_date' => now(),
+      'filepath' => $url,
+      'filesize' => $filesize,
+      'filename_original' => $filename_original,
+      'extension' => $file_type,
+      'mime_type' => $mime_type,
+      'md5_hash' => $md5_hash,
+      'type' => 'url',
+      'access_policy' => $access_policy
+    );
+    return $this->insert($file_record);
+    
+  }
+  
   function register_created_file($folder, $file, $creator_id, $type, $mime_type, $access_policy = 'public') {
     $full_path = DATA_PATH . $folder . $file;
     $md5_hash = md5_file($full_path);
@@ -59,15 +86,15 @@ class File extends Community {
     return $this->insert($file_record);
   }
   
-  function delete_file( $id ) {
-    $file = $this->getById( $id );
-    if( $file == false ) return false;
+  function delete_file($id) {
+    $file = $this->getById($id);
+    if ($file == false) return false;
     
     $filepath = DATA_PATH . $file->filepath;
-    if( file_exists( $filepath ) ) {
-      $success = unlink( $filepath );
-      if( $success ) {
-        $this->db->delete( $this->table, array( $this->id_column => $id ) );
+    if (file_exists($filepath)) {
+      $success = unlink($filepath);
+      if ($success) {
+        $this->db->delete($this->table, array($this->id_column => $id));
         return true;
       } else {
         // TODO: log in DB
@@ -77,6 +104,19 @@ class File extends Community {
       // TODO: log in db
       return false;
     }
+  }
+  
+  private function parse_headers($headers) {
+    $result = array();
+    foreach($headers as $header) {
+      $colon = strpos(':', $header);
+      if ($colon != false) {
+        $key = substr($header, 0, $colon-1);
+        $value = substr($header, $pos+1);
+        $result[$key] = $value;
+      }
+    }
+    return $result;
   }
 }
 ?>

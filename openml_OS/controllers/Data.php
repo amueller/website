@@ -40,8 +40,13 @@ class Data extends CI_Controller {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
         $this->_error404();
       } else {
-        $this->_header_download($file);
-        readfile_chunked(DATA_PATH . $file->filepath);
+        // in case of externally linked file, handle alternativelly
+        if ($file->{'type'} == 'url') {
+          header('Location: ' . $file->filepath);
+        } else {
+          $this->_header_download($file);
+          readfile_chunked(DATA_PATH . $file->filepath);
+        }
       }
     } else {
       $this->_error403();
@@ -54,9 +59,14 @@ class Data extends CI_Controller {
       if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
         $this->_error404();
       } else {
-        header('Content-type: ' . $file->mime_type);
-        // header('Content-Length: ' . $file->filesize);
-        readfile(DATA_PATH . $file->filepath);
+        // in case of externally linked file, handle alternativelly
+        if ($file->{'type'} == 'url') {
+          header('Location: ' . $file->filepath);
+        } else {
+          header('Content-type: ' . $file->mime_type);
+          header('Content-Length: ' . $file->filesize);
+          readfile(DATA_PATH . $file->filepath);
+        }
       }
     } else {
       $this->_error403();
@@ -80,7 +90,13 @@ class Data extends CI_Controller {
       return;
     } 
     
-    $handle = fopen(DATA_PATH . $file->filepath, 'r');
+    // in case of externally linked file, handle alternativelly
+    $location = DATA_PATH . $file->filepath;
+    if ($file->type == 'url') {
+      $location = $file->filepath;
+    }
+    
+    $handle = fopen($location, 'r');
     $position = -1;
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
       // process the line read.
