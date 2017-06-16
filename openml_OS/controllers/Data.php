@@ -86,7 +86,7 @@ class Data extends CI_Controller {
     }
   }
   
-  function get_csv($id, $name) {
+  function get_csv($id, $name='undefined') {
     # TODO: caching mechanism to 
     $file = $this->File->getById($id);
     
