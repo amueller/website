@@ -155,18 +155,21 @@ class Api_data extends Api_model {
     }
 
     $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") ORDER BY `data`');
-
-    foreach( $dq as $quality ) {
-      $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
+    
+    if ($dq != false) {
+      foreach( $dq as $quality ) {
+        $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
+      }
     }
 
     $dt = $this->Dataset_tag->query('SELECT id, tag FROM dataset_tag WHERE `id` IN (' . implode(',', array_keys( $datasets) ) . ') ORDER BY `id`');
-    if($dt){
-    foreach( $dt as $tag ) {
-      $datasets[$tag->id]->tags[] = $tag->tag;
-    }}
+    if ($dt) {
+      foreach ($dt as $tag) {
+        $datasets[$tag->id]->tags[] = $tag->tag;
+      }
+    }
 
-    $this->xmlContents( 'data', $this->version, array( 'datasets' => $datasets ) );
+    $this->xmlContents('data', $this->version, array('datasets' => $datasets));
   }
 
   private function data($data_id) {
