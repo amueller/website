@@ -395,7 +395,7 @@ class Api_data extends Api_model {
       }
       // insert tags.
       foreach ($tags as $tag) {
-        $success = $this->entity_tag_untag('data', $id, $tag, false, 'data', true);
+        $success = $this->entity_tag_untag('dataset', $id, $tag, false, 'data', true);
         // if tagging went wrong, an error is displayed. (TODO: something else?)
         if (!$success) return;
       }
