@@ -198,13 +198,13 @@ class Api_data extends Api_model {
       $dataset->url = BASE_URL . 'data/download/' . $dataset->file_id . '/' . $dataset->name . '.' . $dataset->format;
     }
     
-    // TODO: do something better
-    if ($dataset->file_id != null) {
-      $file = $this->File->getById($dataset->file_id);
-      $dataset->md5_checksum = $file->md5_hash;
-    } else {
-      $dataset->md5_checksum = null;
+    $file = $this->File->getById($dataset->file_id);
+    if (!$file) {
+      $this->returnError(113, $this->version);
+      return;
     }
+    
+    $dataset->md5_checksum = $file->md5_hash;
     
     $tags = $this->Dataset_tag->getColumnWhere('tag', 'id = ' . $dataset->did);
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();

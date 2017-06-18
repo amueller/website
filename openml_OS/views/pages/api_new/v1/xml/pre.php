@@ -13,6 +13,7 @@ $this->apiErrors[106] = 'The intended action requires admin rights. ';
 $this->apiErrors[110] = 'Please provide data_id';
 $this->apiErrors[111] = 'Unknown dataset';
 $this->apiErrors[112] = 'No access granted';
+$this->apiErrors[113] = 'Could not find data file record';
 
 // for function: openml.data.upload
 $this->apiErrors[130] = 'Problem with file uploading';
