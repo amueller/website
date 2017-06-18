@@ -388,18 +388,13 @@ class Api_data extends Api_model {
     /* * * *
      * THE ACTUAL INSERTION
      * * * */
-      $id = $this->Dataset->insert($dataset);
-      if (!$id) {
-        $this->returnError(134, $this->version);
-        return;
-      }
-      // insert tags.
-      foreach ($tags as $tag) {
-        $success = $this->entity_tag_untag('dataset', $id, $tag, false, 'data', true);
-        // if tagging went wrong, an error is displayed. (TODO: something else?)
-        if (!$success) return;
-      }
+    $id = $this->Dataset->insert($dataset);
+    if (!$id) {
+      $this->returnError(134, $this->version);
+      return;
+    }
     
+    // try making the ES stuff
     try {
       // update elastic search index.
       $this->elasticsearch->index('data', $id);
@@ -408,6 +403,13 @@ class Api_data extends Api_model {
       $this->elasticsearch->index('user', $this->user_id);
     } catch (Exception $e) {
       // TODO: should log
+    }
+  
+    // insert tags.
+    foreach ($tags as $tag) {
+      $success = $this->entity_tag_untag('dataset', $id, $tag, false, 'data', true);
+      // if tagging went wrong, an error is displayed. (TODO: something else?)
+      if (!$success) return;
     }
     
     // create initial wiki page
