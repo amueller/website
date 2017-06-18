@@ -18,6 +18,8 @@ class Api_data extends Api_model {
     $this->load->model('Study_tag');
 
     $this->load->helper('file_upload');
+    
+    $this->legal_formats = array('arff', 'sparse_arff');
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
@@ -294,7 +296,8 @@ class Api_data extends Api_model {
       return;
     }
     
-    if (strtolower($xml->children('oml', 'true')->format) != 'arff') {
+    $format = strtolower($xml->children('oml', 'true')->format);
+    if (!in_array($format, $this->legal_formats)) {
       $this->returnError(133, $this->version);
       return;
     }
