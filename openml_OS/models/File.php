@@ -49,6 +49,9 @@ class File extends Community {
     $mime_type = null;
     if (array_key_exists('Content-Length', $headers)) { 
       $filesize = $headers['Content-Length'];
+    } else {
+      // alternative way of obtaining filesize
+      $filesize = filesize($url);
     }
     if (array_key_exists('Content-Type', $headers)) { 
       $mime_type = $headers['Content-Type'];
