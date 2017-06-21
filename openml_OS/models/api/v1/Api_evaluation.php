@@ -113,7 +113,7 @@ class Api_evaluation extends Api_model {
     // It seems to be related to the inclusion of the math_function table (it causes MySQL to use filesort).
     // Solution is to force the index used in the run and evaluation table (or not use ORDER BY at all).
     $sql =
-      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.name ' .
+      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.did, d.name ' .
       'FROM run r force index(PRIMARY), evaluation e force index(PRIMARY), algorithm_setup s, implementation i, dataset d, task_inputs t, math_function f ' .
       'WHERE r.setup = s.sid ' .
       'AND e.source = r.rid ' .
