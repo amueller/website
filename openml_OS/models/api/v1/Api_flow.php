@@ -17,7 +17,9 @@ class Api_flow extends Api_model {
 
     $this->load->model('File');
     $this->load->model('Input');
-
+    
+    $this->load->model('Database_singleton');
+    $this->db = $this->Database_singleton->getReadConnection();
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {

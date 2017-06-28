@@ -14,6 +14,9 @@ class Api_setup extends Api_model {
     $this->load->model('Schedule');
     $this->load->model('Setup_differences');
     $this->load->model('Setup_tag');
+    
+    $this->load->model('Database_singleton');
+    $this->db = $this->Database_singleton->getReadConnection();
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
@@ -93,7 +96,7 @@ class Api_setup extends Api_model {
     } else {
       $this->db->select('*')->from('input_setting');
       $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
-      $this-db->where('setup = "'.$setup->sid.'"'); 
+      $this->db->where('setup = "'.$setup->sid.'"'); 
       $this->parameters = $this->db->get();
       
       $this->xmlContents('setup-parameters', $this->version, array('parameters' => $this->parameters, 'setup' => $setup));
@@ -142,7 +145,7 @@ class Api_setup extends Api_model {
       }
       $per_setup[$setup_id][] = $parameter;
     }
-    $this->xmlContents('setup-list', $this->version, array('setups' => $per_setup);
+    $this->xmlContents('setup-list', $this->version, array('setups' => $per_setup));
   }
   
   function setup_count($tags = null) {
