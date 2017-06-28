@@ -122,7 +122,7 @@ class Api_setup extends Api_model {
     // TODO query fails for classifiers without parameters. OK for now. 
     $this->db->select('input.*, input_setting.*, algorithm_setup.implementation_id AS flow_id')->from('input_setting');
     $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
-    $this->db->join('algorithm_setup', 'algorithm_setup.setup = input_setting.setup', 'inner');
+    $this->db->join('algorithm_setup', 'algorithm_setup.sid = input_setting.setup', 'inner');
     $this->db->join('setup_tag', 'input_setting.setup = setup_tag.id', 'left');
     // filters
     if (array_key_exists('flow', $query_string)) {
