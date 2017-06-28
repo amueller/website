@@ -141,7 +141,7 @@ class Api_setup extends Api_model {
     
     $per_setup = array();
     foreach ($parameters as $parameter) {
-      $setup_id = $parameter['setup'];
+      $setup_id = $parameter->setup;
       if (!array_key_exists($setup_id, $per_setup)) {
         $per_setup[$setup_id] = array();
       }
