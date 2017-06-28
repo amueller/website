@@ -126,12 +126,14 @@ class Api_flow extends Api_model {
       $implementations[$implementation->id] = $implementation;
     }
 
+    /* // TODO: gives problems. don't show this in listing function
     $dt = $this->Implementation_tag->getWhere('`id` IN (' . implode(',', array_keys($implementations)) . ')');
     if ($dt) {
       foreach($dt as $tag) {
         $implementations[$tag->id]->tags[] = $tag->tag;
       }
     }
+    */
 
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }
