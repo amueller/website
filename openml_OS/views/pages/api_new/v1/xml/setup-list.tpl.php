@@ -1,6 +1,6 @@
 <oml:setups xmlns:oml="http://openml.org/openml">
 <?php foreach($setups as $parameters): ?>
-  <olm:setup>
+  <oml:setup>
     <oml:setup_id><?php echo $parameters[0]->setup; ?></oml:setup_id>
     <oml:flow_id><?php echo $parameters[0]->flow_id; /*important! this is different from $p->implementation_id; */?></oml:flow_id>
     <?php foreach($parameters as $p): ?>
@@ -14,6 +14,6 @@
 		    <oml:value><?php echo htmlspecialchars($p->value); ?></oml:value>
 	    </oml:parameter>
     <?php endforeach; ?>
-  </olm:setup>
+  </oml:setup>
 <?php endforeach; ?>
 </oml:setups>
