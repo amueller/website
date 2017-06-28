@@ -26,6 +26,12 @@ class Api_setup extends Api_model {
       return;
     }
     
+    if (count($segments) >= 1 && $segments[0] == 'list') {
+      array_shift($segments);
+      $this->setup_list($segments);
+      return;
+    }
+    
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->setup_delete($segments[0]);
       return;
@@ -75,22 +81,69 @@ class Api_setup extends Api_model {
   }
   
   private function setup($setup_id) {
-    if( $setup_id == false ) {
-      $this->returnError( 280, $this->version );
+    if($setup_id == false) {
+      $this->returnError(280, $this->version);
       return;
     }
-    $setup = $this->Algorithm_setup->getById( $setup_id );
+    $setup = $this->Algorithm_setup->getById($setup_id);
     
     if ($setup == false) {
-      $this->returnError( 281, $this->version );
+      $this->returnError(281, $this->version);
       return;
     } else {
-      $this->parameters = $this->Input_setting->query('SELECT * FROM `input_setting` `s` , `input` `i` WHERE `s`.`input_id` = `i`.`id` AND setup = "'.$setup->sid.'"');
-
-      $this->xmlContents( 'setup-parameters', $this->version, array( 'parameters' => $this->parameters, 'setup' => $setup ) );
+      $this->db->select('*')->from('input_setting');
+      $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
+      $this-db->where('setup = "'.$setup->sid.'"'); 
+      $this->parameters = $this->db->get();
+      
+      $this->xmlContents('setup-parameters', $this->version, array('parameters' => $this->parameters, 'setup' => $setup));
     }
   }
   
+  function setup_list($segs) {
+    if (count($segs) == 0) {
+      $this->returnError(670, $this->version);
+      return;
+    }
+    
+    $legal_filters = array('flow', 'tag');
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2) {
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(671, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }
+    }
+    // TODO query fails for classifiers without parameters. OK for now. 
+    $this->db->select('input.*, input_setting.*, algorithm_setup.implementation_id AS flow_id')->from('input_setting');
+    $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
+    $this->db->join('algorithm_setup', 'algorithm_setup.setup = input_setting.setup', 'inner');
+    $this->db->join('setup_tag', 'input_setting.setup = setup_tag.id', 'left');
+    // filters
+    if (array_key_exists('flow', $query_string)) {
+      $this->db->where('implementation_id = ' . $query_string['flow']);
+    }
+    if (array_key_exists('tag', $query_string)) {
+      $this->db->where('tag = ' . $query_string['tag']);
+    }
+    
+    $parameters = $this->db->get();
+    if (count($parameters) == 0) {
+      $this->returnError(672, $this->version);
+      return;
+    }
+    
+    $per_setup = array();
+    foreach ($parameters as $parameter) {
+      $setup_id = $parameter['setup'];
+      if (!array_key_exists($setup_id, $per_setup)) {
+        $per_setup[$setup_id] = array();
+      }
+      $per_setup[$setup_id][] = $parameter;
+    }
+    $this->xmlContents('setup-list', $this->version, array('setups' => $per_setup);
+  }
   
   function setup_count($tags = null) {
     $result = $this->Algorithm_setup->setup_runs($tags, $tags);

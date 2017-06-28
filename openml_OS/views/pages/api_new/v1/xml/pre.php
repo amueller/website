@@ -347,6 +347,12 @@ $this->apiErrors[651] = 'No results';
 // openml.setups.setup_counts
 $this->apiErrors[661] = 'No results';
 
+// opennml.setups.list
+$this->apiErrors[670] = 'Please specify at least one filter. ';
+$this->apiErrors[671] = 'Illegal filter. ';
+$this->apiErrors[672] = 'No results. ';
+
+
 
 
 // openml.votes.list
