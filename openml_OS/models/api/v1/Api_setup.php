@@ -110,7 +110,7 @@ class Api_setup extends Api_model {
       return;
     }
     
-    $legal_filters = array('flow', 'tag');
+    $legal_filters = array('flow', 'tag', 'limit', 'offset');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
@@ -130,6 +130,12 @@ class Api_setup extends Api_model {
     }
     if (array_key_exists('tag', $query_string)) {
       $this->db->where('tag = ' . $query_string['tag']);
+    }
+    if ($limit) {
+      $query->limit($limit);
+    }
+    if ($offset) {
+      $query->offset($offset);
     }
     $query = $this->db->get();
     $parameters = $query->result();
