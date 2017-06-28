@@ -97,7 +97,8 @@ class Api_setup extends Api_model {
       $this->db->select('*')->from('input_setting');
       $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
       $this->db->where('setup = "'.$setup->sid.'"'); 
-      $this->parameters = $this->db->get();
+      $query = $this->db->get();
+      $this->parameters = $query->result();
       
       $this->xmlContents('setup-parameters', $this->version, array('parameters' => $this->parameters, 'setup' => $setup));
     }
@@ -130,8 +131,9 @@ class Api_setup extends Api_model {
     if (array_key_exists('tag', $query_string)) {
       $this->db->where('tag = ' . $query_string['tag']);
     }
+    $query = $this->db->get();
+    $parameters = $query->result();
     
-    $parameters = $this->db->get();
     if (count($parameters) == 0) {
       $this->returnError(672, $this->version);
       return;
