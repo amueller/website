@@ -126,7 +126,7 @@ class Api_setup extends Api_model {
     $this->db->join('setup_tag', 'input_setting.setup = setup_tag.id', 'left');
     // filters
     if (array_key_exists('flow', $query_string)) {
-      $this->db->where('implementation_id = ' . $query_string['flow']);
+      $this->db->where('algorithm_setup.implementation_id = ' . $query_string['flow']);
     }
     if (array_key_exists('tag', $query_string)) {
       $this->db->where('tag = ' . $query_string['tag']);
