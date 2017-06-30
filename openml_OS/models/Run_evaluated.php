@@ -17,7 +17,7 @@ class Run_evaluated extends Database_write {
     if ($order == 'random') {
       $this->db->order_by('RAND()');
     } elseif ($order == 'reverse') {
-      $this->db->order_by('r.start_time DESC');
+      $this->db->order_by('r.rid DESC');
     }
 
     $data = $this->db->select('r.*')->get();
