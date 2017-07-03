@@ -201,6 +201,7 @@
 
            		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a>, <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/" target="_blank">Dutch Data Prize</a></li>
                         <li>Hosted for you by</li><li> <a href="https://www.tue.nl/en/university/departments/mathematics-and-computer-science/research/research-institutes/data-science-center-eindhoven-dsce/" target="_blank">TU Eindhoven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
+                        <li style="margin-top:20px;"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
                     </ul>
 
 		  </div>

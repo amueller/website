@@ -299,7 +299,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             <div id="submenucontainer"></div>
 
             <ul class="sidenav nav">
-            <li class="menu-cite <?php echo ($section == 'Citing' ?  'topactive' : '');?>"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> Please cite us!</a></li>
+            <li class="menu-cite <?php echo ($section == 'Citing' ?  'topactive' : '');?>"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
             <li class="menu-contact">
              <a>Ask us a question...</a>
              <ul class="openml-contact-menu">
