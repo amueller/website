@@ -1,7 +1,7 @@
 <div class="container-fluid topborder endless guidecontainer openmlsectioninfo">
   <div class="col-xs-12 col-md-10 col-md-offset-1 guidesection" id="mainpanel">
 
-    <h2 id="terms-cite">Licencing</h2>
+    <h2 id="terms-cite">Open Machine Learning, Open licences</h2>
     <p>We believe that machine learning should be as open and accessible as possible, and the <a href="guide#!team">OpenML team</a> and the <a href="https://github.com/orgs/openml/people">active community of contributors</a> have invested countless hours of time and resources in OpenML to make this dream come true.</p>
     <p>You are free to use OpenML and all empirical data and metadata under the <a href="http://creativecommons.org/licenses/by/4.0/">CC-BY licence</a>, requesting appropriate credit if you do.</p>
     <p>The code of the OpenML platform and libraries is <a href="https://opensource.org/licenses/BSD-3-Clause">BSD licenced</a>. Please check <a href="https://github.com/openml">the corresponding GitHub repo's</a>.</p>
