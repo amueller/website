@@ -180,12 +180,12 @@ class Api_run extends Api_model {
 
   private function run($run_id) {
     if( $run_id == false ) {
-      $this->returnError( 220, $this->version );
+      $this->returnError( 235, $this->version );
       return;
     }
     $run = $this->Run->getById($run_id);
     if( $run === false ) {
-      $this->returnError( 221, $this->version );
+      $this->returnError( 236, $this->version );
       return;
     }
     
@@ -609,7 +609,7 @@ class Api_run extends Api_model {
       }
       $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
       if(!$file_id) {
-        $this->returnError( 212, $this->version );
+        $this->returnError(220, $this->version);
         return;
       }
       $file_record = $this->File->getById($file_id);
@@ -626,15 +626,15 @@ class Api_run extends Api_model {
 
       $did = $this->Runfile->insert($record);
       if( $did == false ) {
-        $this->returnError( 212, $this->version );
+        $this->returnError(212, $this->version);
         return;
       }
-      $this->Run->outputData( $run->rid, $did, 'runfile', $key );
+      $this->Run->outputData($run->rid, $did, 'runfile', $key);
     }
 
     // attach input data
-    $inputData = $this->Run->inputData( $runId, $task['source_data'], 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
-    if( $inputData === false ) {
+    $inputData = $this->Run->inputData($runId, $task['source_data'], 'dataset'); // Based on the query, it has been garantueed that the dataset id exists.
+    if($inputData === false) {
       $errorCode = 211;
       return false;
     }

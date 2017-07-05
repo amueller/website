@@ -71,7 +71,7 @@ $this->apiErrors[208] = 'Error inserting setup record';
 $this->apiErrors[209] = 'Error parsing uploaded file. ';
 $this->apiErrors[210] = 'Unable to store run';
 $this->apiErrors[211] = 'Dataset not in databse';
-$this->apiErrors[212] = 'Unable to store file';
+$this->apiErrors[212] = 'Unable to store uploaded file to file system';
 $this->apiErrors[213] = 'Parameter in run xml unknown';
 $this->apiErrors[214] = 'Unable to store input setting';
 $this->apiErrors[215] = 'Unable to evaluate predictions';
@@ -79,12 +79,15 @@ $this->apiErrors[216] = 'Error thrown by Java Application';
 $this->apiErrors[217] = 'Error processing output data: unknown or inconsistent evaluation measure';
 $this->apiErrors[218] = 'Wrong flow associated with run: this implements a math_function';
 $this->apiErrors[219] = 'Task does not contain field: source_data';
-
-// for function: openml.run.get
-$this->apiErrors[220] = 'Please provide run_id';
-$this->apiErrors[221] = 'Run not found';
+$this->apiErrors[220] = 'Unable to store uploaded file in database';
 
 // range from 225 - 239: api run
+
+// for function: openml.run.get
+$this->apiErrors[235] = 'Please provide run_id';
+$this->apiErrors[236] = 'Run not found';
+
+
 
 // for function: openml.tasks.type.search
 $this->apiErrors[240] = 'Please provide task_type_id';
