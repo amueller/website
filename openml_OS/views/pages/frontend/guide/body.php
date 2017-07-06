@@ -13,7 +13,7 @@
   </div>
   <div class="tab-pane" id="team">
   <?php subpage('team'); ?>
-  </div>    
+  </div>
   <div class="tab-pane" id="gamification">
   <?php subpage('gamification'); ?>
   </div>
@@ -79,7 +79,6 @@
         <li><a href="#json" data-toggle="tab">Other tools</a></li>
        </ul>
       </li>
-      <li style="margin:15px;"><a href="#cite" data-toggle="tab"><i class="fa fa-fw fa-heart"></i> Citing OpenML</a></li>
     </ul>
     </div> <!-- end submenu -->
 

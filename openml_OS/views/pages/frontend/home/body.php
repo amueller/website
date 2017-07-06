@@ -72,6 +72,24 @@
   <div class="list-group"  style="font-size:11pt">
       <div class="list-group-item">
           <div class="row-picture">
+              <img class="circle" src="http://www.netherlands-tourism.com/wp-content/uploads/2014/12/Molen-De-Put-Leiden.jpg" alt="icon">
+          </div>
+          <div class="row-content">
+              <h4 class="list-group-item-heading">OpenML 2017 Fall Workshop</h4>
+              <p class="list-group-item-text">The <a href="https://www.lorentzcenter.nl/lc/web/2017/902/info.php3?wsid=902&venue=Oort">OpenML 2017 Workshop</a> will be 9-14 October in Leiden, the Netherlands. Save the date!</p>
+          </div>
+      </div>
+      <div class="list-group-item">
+          <div class="row-picture">
+              <img class="circle" src="https://pbs.twimg.com/profile_images/796000597245882368/axXl_01s.jpg" alt="icon">
+          </div>
+          <div class="row-content">
+              <h4 class="list-group-item-heading">Using R?</h4>
+              <p class="list-group-item-text">Dive into the <a href="http://openml.github.io/articles/slides/useR2017_tutorial/">useR!2017 OpenML Tutorial</a>.</p>
+          </div>
+      </div>
+      <div class="list-group-item">
+          <div class="row-picture">
               <img class="circle" src="img/COSEAL_small.png" alt="icon">
           </div>
           <div class="row-content">
@@ -84,7 +102,7 @@
               <img class="circle" src="img/colorballs2.jpg" alt="icon">
           </div>
           <div class="row-content">
-              <h4 class="list-group-item-heading">News</h4>
+              <h4 class="list-group-item-heading">Research Data Award</h4>
               <p class="list-group-item-text">OpenML won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize!</a></p>
           </div>
       </div>
@@ -201,6 +219,7 @@
 
            		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a>, <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/" target="_blank">Dutch Data Prize</a></li>
                         <li>Hosted for you by</li><li> <a href="https://www.tue.nl/en/university/departments/mathematics-and-computer-science/research/research-institutes/data-science-center-eindhoven-dsce/" target="_blank">TU Eindhoven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
+                        <li style="margin-top:20px;"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
                     </ul>
 
 		  </div>

@@ -1,6 +1,6 @@
 <?php
-  $fs = array('run_id' => 'Run ID','run_task.task_id' => 'Task ID','run_flow.flow_id' => 'Flow ID','uploader' => 'Uploader');
-  $desc = array('run_id' => 'The ID of the run','run_task.task_id' => 'The ID of the task','run_flow.flow_id' => 'The ID of the flow used','uploader' => 'The person who uploaded the run');
+  $fs = array('run_id' => 'Run ID','run_task.task_id' => 'Task ID','run_flow.flow_id' => 'Flow ID','uploader' => 'Uploader','tags.tag' => 'Tag');
+  $desc = array('run_id' => 'The ID of the run','run_task.task_id' => 'The ID of the task','run_flow.flow_id' => 'The ID of the flow used','uploader' => 'The person who uploaded the run', 'tags.tag' => 'A tag that has been added to this run');
   foreach($fs as $f => $v){
 ?>
   <li>
