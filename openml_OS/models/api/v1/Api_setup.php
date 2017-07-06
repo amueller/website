@@ -138,11 +138,12 @@ class Api_setup extends Api_model {
       $this->db->where('tag = ' . $query_string['tag']);
     }
     if ($limit) {
-      $query->limit($limit);
+      $this->db->limit($limit);
     }
     if ($offset) {
-      $query->offset($offset);
+      $this->db->offset($offset);
     }
+
     $query = $this->db->get();
     $parameters = $query->result();
 
