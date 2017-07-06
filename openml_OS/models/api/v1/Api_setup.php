@@ -110,7 +110,7 @@ class Api_setup extends Api_model {
       return;
     }
 
-    $legal_filters = array('flow', 'tag', 'limit', 'offset');
+    $legal_filters = array('setup', 'flow', 'tag', 'limit', 'offset');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
@@ -124,6 +124,7 @@ class Api_setup extends Api_model {
     $tag = element('tag',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
+    $setup_id = element('setup',$query_string);
 
     // TODO query fails for classifiers without parameters. OK for now.
     $this->db->select('input.*, input_setting.*, algorithm_setup.implementation_id AS flow_id')->from('input_setting');
@@ -136,6 +137,9 @@ class Api_setup extends Api_model {
     }
     if (array_key_exists('tag', $query_string)) {
       $this->db->where('tag = "' . $query_string['tag'] . '"');
+    }
+    if (array_key_exists('setup', $query_string)) {
+      $this->db->where('algorithm_setup.sid IN (' . $query_string['setup'] . ')');
     }
     if ($limit) {
       $this->db->limit($limit);
