@@ -135,7 +135,7 @@ class Api_setup extends Api_model {
       $this->db->where('algorithm_setup.implementation_id = ' . $query_string['flow']);
     }
     if (array_key_exists('tag', $query_string)) {
-      $this->db->where('tag = ' . $query_string['tag']);
+      $this->db->where('tag = "' . $query_string['tag'] . '"');
     }
     if ($limit) {
       $this->db->limit($limit);
