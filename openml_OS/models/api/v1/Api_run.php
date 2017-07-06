@@ -397,7 +397,7 @@ class Api_run extends Api_model {
     
     
     // register file
-    $to_folder = $this->data_folders['run'] . $run->hash;
+    $to_folder = $this->data_folders['run'] . $run_id . '/';
     $file_id = $this->File->register_uploaded_file($_FILES['predictions'], $to_folder, $this->user_id, 'predictions');
     if(!$file_id) {
       $this->returnError(625, $this->version);
