@@ -42,7 +42,7 @@ class Api_new extends CI_Controller {
     $this->data_folders = array(
       'dataset'        => 'dataset/api/',
       'implementation' => 'implementation/',
-      'run'            => 'run/',
+      'run'            => 'run2/',
       'misc'           => 'misc/'
     );
 

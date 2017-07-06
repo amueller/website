@@ -395,8 +395,10 @@ class Api_run extends Api_model {
       return;
     }
     
+    
     // register file
-    $file_id = $this->File->register_uploaded_file($_FILES['predictions'], $this->data_folders['run'], $this->user_id, 'predictions');
+    $to_folder = $this->data_folders['run'] . $run->hash;
+    $file_id = $this->File->register_uploaded_file($_FILES['predictions'], $to_folder, $this->user_id, 'predictions');
     if(!$file_id) {
       $this->returnError(625, $this->version);
       return;
@@ -589,13 +591,13 @@ class Api_run extends Api_model {
       'run_details' => ($run_details == false) ? null : $run_details
     );
     
-    $runId = $this->Run->insert( $runData );
-    if( $runId === false ) {
-      $this->returnError( 210, $this->version );
+    $runId = $this->Run->insert($runData);
+    if($runId === false) {
+      $this->returnError(210, $this->version);
       return;
     }
     // and fetch the run record
-    $run = $this->Run->getById( $runId );
+    $run = $this->Run->getById($runId);
     $result = new stdClass();
     $result->run_id = $runId; // for output
 
@@ -607,13 +609,15 @@ class Api_run extends Api_model {
       } elseif ($key == 'trace') {
         $file_type = 'run_trace';
       }
-      $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
+      
+      // it is important to put the runs in various directories
+      $to_folder = $this->data_folders['run'] . $runId . '/';
+      $file_id = $this->File->register_uploaded_file($value, $to_folder, $this->user_id, $file_type);
       if(!$file_id) {
         $this->returnError(220, $this->version);
         return;
       }
       $file_record = $this->File->getById($file_id);
-      $filename = getAvailableName(DATA_PATH . $this->data_folders['run'], $value['name']);
 
       $record = array(
         'source' => $run->rid,
