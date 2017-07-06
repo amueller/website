@@ -36,34 +36,57 @@ class Data extends CI_Controller {
 
   function download($id,$name = 'undefined') {
     $file = $this->File->getById($id);
-    if( $this->_check_rights( $file ) ) {
-      if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
-        $this->_error404();
-      } else {
-        $this->_header_download($file);
-        readfile_chunked(DATA_PATH . $file->filepath);
-      }
-    } else {
+    if (!$file) {
+      $this->_error404();
+      return;
+    }
+    
+    if (!$this->_check_rights($file)) {
       $this->_error403();
+      return;
+    }
+      
+    if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
+      $this->_error404();
+      return;
+    }
+    
+    // in case of externally linked file, handle alternativelly
+    if ($file->{'type'} == 'url') {
+      header('Location: ' . $file->filepath);
+    } else {
+      $this->_header_download($file);
+      readfile_chunked(DATA_PATH . $file->filepath);
     }
   }
 
   function view($id, $name = 'undefined') {
     $file = $this->File->getById($id);
-    if ($this->_check_rights($file)) {
-      if($file === false || file_exists(DATA_PATH . $file->filepath) === false) {
-        $this->_error404();
-      } else {
-        header('Content-type: ' . $file->mime_type);
-        // header('Content-Length: ' . $file->filesize);
-        readfile(DATA_PATH . $file->filepath);
-      }
-    } else {
+    if ($file === false) {
+      $this->_error404();
+    }
+    
+    if (!$this->_check_rights($file)) {
       $this->_error403();
+      return;
+    }
+  
+    if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
+      $this->_error404();
+      return;
+    }
+    
+    // in case of externally linked file, handle alternativelly
+    if ($file->{'type'} == 'url') {
+      header('Location: ' . $file->filepath);
+    } else {
+      header('Content-type: ' . $file->mime_type);
+      header('Content-Length: ' . $file->filesize);
+      readfile(DATA_PATH . $file->filepath);
     }
   }
   
-  function get_csv($id, $name) {
+  function get_csv($id, $name='undefined') {
     # TODO: caching mechanism to 
     $file = $this->File->getById($id);
     
@@ -80,7 +103,13 @@ class Data extends CI_Controller {
       return;
     } 
     
-    $handle = fopen(DATA_PATH . $file->filepath, 'r');
+    // in case of externally linked file, handle alternativelly
+    $location = DATA_PATH . $file->filepath;
+    if ($file->type == 'url') {
+      $location = $file->filepath;
+    }
+    
+    $handle = fopen($location, 'r');
     $position = -1;
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
       // process the line read.
@@ -145,6 +174,7 @@ class Data extends CI_Controller {
   private function _header_download($file) {
     header('Content-Description: File Transfer');
     header('Content-Type: ' . ($file->extension == 'arff' ? 'text/plain' : $file->mime_type));
+    header('Content-Length: ' . $file->filesize);
     header('Content-Disposition: attachment; filename='.basename($file->filename_original));
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');

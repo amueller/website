@@ -38,12 +38,6 @@
   <div class="tab-pane" id="python">
   <?php subpage('python'); ?>
   </div>
-  <div class="tab-pane" id="net">
-  <?php subpage('net'); ?>
-  </div>
-  <div class="tab-pane" id="rest_tutorial">
-  <?php subpage('rest_tutorial'); ?>
-  </div>
   <?php subpage('rest_services'); ?>
   <div class="tab-pane" id="json">
   <?php subpage('json'); ?>
@@ -74,7 +68,6 @@
         <li><a href="#java" data-toggle="tab">Java</a></li>
         <li><a href="#r" data-toggle="tab">R</a></li>
         <li><a href="#python" data-toggle="tab">Python</a></li>
-        <li><a href="#net" data-toggle="tab">.NET</a></li>
        </ul>
       </li>
       <li class="panel guidechapter">

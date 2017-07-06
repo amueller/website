@@ -22,15 +22,14 @@
   <p>This example runs an scikit-learn algorithm on an <a href="t/10">OpenML task</a>.</p>
   <div class="codehighlight"><pre><code class="python">
     from sklearn import ensemble
-    from openml import tasks,runs
+    from openml import tasks,flows,runs
     import xmltodict
 
     # Download task, run learner, publish results
     task = tasks.get_task(10)
     clf = ensemble.RandomForestClassifier()
-    run = runs.run_task(task, clf)
-
-    run = runs.run_task(task, clf)
+    flow = flows.sklearn_to_flow(clf)
+    run = runs.run_flow_on_task(task, flow)
     run.publish()
 
     print("Uploaded run with id %s. Check it at www.openml.org/r/%s" %(run.run_id,run.run_id))
@@ -54,7 +53,7 @@
 
   <h2 id="download">Quickstart</h2>
   <a href="http://openml.github.io/openml-python/">Check out the documentation</a> to get started.
-  Or try the <a href="https://github.com/openml/openml-python/blob/develop/examples/PyOpenML.ipynb">Jupyter Notebook</a>.
+  Or try the <a href="https://github.com/openml/openml-python/blob/master/examples/OpenML_Tutorial.ipynb">Jupyter Notebook</a>.
 
 	<h2 id="issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/openml-python/issues"> OpenML Python issue tracker</a>.

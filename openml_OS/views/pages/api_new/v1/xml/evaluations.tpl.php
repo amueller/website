@@ -6,6 +6,7 @@
     <oml:setup_id><?php echo $e->sid; ?></oml:setup_id>
     <oml:flow_id><?php echo $e->implementation_id; ?></oml:flow_id>
     <oml:flow_name><?php echo $e->fullName; ?></oml:flow_name>
+    <oml:data_id><?php echo $e->did; ?></oml:data_id>
     <oml:data_name><?php echo $e->name; ?></oml:data_name>
     <oml:function><?php echo $e->{'function'}; ?></oml:function>
     <oml:upload_time><?php echo $e->start_time; ?></oml:upload_time>
