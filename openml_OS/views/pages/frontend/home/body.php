@@ -102,8 +102,8 @@
               <img class="circle" src="img/colorballs2.jpg" alt="icon">
           </div>
           <div class="row-content">
-              <h4 class="list-group-item-heading">Research Data Award</h4>
-              <p class="list-group-item-text">OpenML won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize!</a></p>
+              <h4 class="list-group-item-heading">Research Awards</h4>
+              <p class="list-group-item-text">We are very happy to have won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize</a>, as well as a <a href="https://www.microsoft.com/en-us/research/academic-program/microsoft-azure-for-research/">Microsoft Azure Research Award</a>! We are very grateful for the support.</p>
           </div>
       </div>
       <div class="list-group-item">
@@ -217,7 +217,7 @@
                         <li>Community mailing list</li>
                         <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank">openml@googlegroups.com <i class="fa fa-envelope fa-fw"></i></a></li>
 
-           		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a>, <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/" target="_blank">Dutch Data Prize</a></li>
+           		          <li>Created with support from </li><li> <a href="http://www.nwo.nl/en" target="_blank">NWO</a>, <a href="http://www.pascal-network.org/" target="_blank">PASCAL Network</a>, <a href="https://www.microsoft.com/en-us/research/academic-program/microsoft-azure-for-research/">Microsoft Azure</a>, <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/" target="_blank">Dutch Data Prize</a></li>
                         <li>Hosted for you by</li><li> <a href="https://www.tue.nl/en/university/departments/mathematics-and-computer-science/research/research-institutes/data-science-center-eindhoven-dsce/" target="_blank">TU Eindhoven</a>, <a href="http://datamining.liacs.nl" target="_blank">Leiden University</a></li>
                         <li style="margin-top:20px;"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
                     </ul>
