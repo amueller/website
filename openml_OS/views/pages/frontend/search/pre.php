@@ -113,7 +113,9 @@ if(!isset($this->sort))
 
 //default sort on number or runs, otherwise date
 if(!$this->terms and !$this->sort)
-	if($this->filtertype == 'data' or $this->filtertype == 'task' or $this->filtertype == 'flow')
+	if($this->filtertype == 'data')
+      $this->sort =  'likes';
+  elseif ($this->filtertype == 'task' or $this->filtertype == 'flow')
    		$this->sort =  'runs';
 	else
    		$this->sort =  'date';
