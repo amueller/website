@@ -49,9 +49,15 @@ class Database_read extends CI_Model {
     return ( $data !== false ) ? end( $data ) : false;
   }
   
-  function getColumn( $column, $orderby = null) {
+  function getColumn( $column, $orderby = null, $limit = null, $offset = null) {
     if( $orderby != null ) {
       $this->db->order_by( $orderby );
+    }
+    if ($limit) {
+      $this->db->limit($limit);
+    }
+    if ($offset) {
+      $this->db->offset($offset);
     }
     $data = $this->db->select( $column )->get( $this->table );
     $res = array();
@@ -63,13 +69,7 @@ class Database_read extends CI_Model {
   
   function getColumnWhere($column, $where, $orderby = null, $limit = null, $offset = null) {
     $this->db->where($where);
-    if ($limit) {
-      $this->db->limit($limit);
-    }
-    if ($offset) {
-      $this->db->offset($offset);
-    }
-    return $this->getColumn($column, $orderby);
+    return $this->getColumn($column, $orderby, $limit, $offset);
   }
   
   function getColumnFunction( $function, $orderby = null ) {
