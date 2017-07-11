@@ -182,8 +182,6 @@ if($this->filtertype == 'data' and false === strpos($this->terms,'status')){
 }
 
 
-//print_r($this->filters);
-
 //search filters
 foreach($this->filters as $k => $v){
 	if(strpos($v,'>') !== false and is_numeric(str_replace('>','',$v)))
