@@ -54,7 +54,7 @@ class Database_read extends CI_Model {
   }
   
   function getColumn($column, $orderby = null, $limit = null, $offset = null) {
-    $data = $this->db->get($orderby, $limit, $offset);
+    $data = $this->get($orderby, $limit, $offset);
     $res = array();
     foreach ($data->result() as $row) {
       $res[] = $row->{$column};
