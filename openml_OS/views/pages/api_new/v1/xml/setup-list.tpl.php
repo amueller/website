@@ -1,8 +1,8 @@
 <oml:setups xmlns:oml="http://openml.org/openml">
-<?php foreach($setups as $parameters): ?>
+<?php foreach($setups as $setup_id => $parameters): ?>
   <oml:setup>
-    <oml:setup_id><?php echo $parameters[0]->setup; ?></oml:setup_id>
-    <oml:flow_id><?php echo $parameters[0]->flow_id; /*important! this is different from $p->implementation_id; */?></oml:flow_id>
+    <oml:setup_id><?php echo $setup_id; ?></oml:setup_id> <?php // TODO: fix if ?>
+    <oml:flow_id><?php if (count($parameters)) { echo $parameters[0]->flow_id} ; /*important! this is different from $p->implementation_id; */?></oml:flow_id>
     <?php foreach($parameters as $p): ?>
 	    <oml:parameter>
 		    <oml:id><?php echo htmlspecialchars($p->id); ?></oml:id>
