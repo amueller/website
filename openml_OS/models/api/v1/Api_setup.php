@@ -146,6 +146,11 @@ class Api_setup extends Api_model {
       $where = null;
     }
     $setup_flows = $this->Algorithm_setup->getAssociativeArrayJoinedTag('sid', 'implementation_id', $where, 'sid', null, $limit, $offset);
+    if ($setup_flows == false) {
+      $this->returnError(674, $this->version);
+      return;
+    }
+    
     $setups = array_keys($setup_flows);
     
     $maxAllowed = 1000;
