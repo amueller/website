@@ -11,7 +11,11 @@ class Algorithm_setup extends Database_write {
     // use where parameter to specify tag 
     $this->db->join('setup_tag', 'algorithm_setup.sid = setup_tag.id', 'left');
     $this->db->group_by($setup_id);
-    return $this->getColumnWhere($column, $where, $orderby, $limit, $offset);
+    if ($where == null) {
+      return $this->getColumn($column, $where, $orderby, $limit, $offset);
+    } else {
+      return $this->getColumnWhere($column, $where, $orderby, $limit, $offset);
+    }
   }
   
   function setup_runs($task_tag = null, $flow_tag = null) {
