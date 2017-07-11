@@ -138,7 +138,7 @@ class Api_setup extends Api_model {
       $where[] = 'tag = "' . $tag . '"';
     }
     if ($setups) {
-      $where[] = 'sid IN ("' . $tag . '")';
+      $where[] = 'sid IN ("' . $setups . '")';
     }
     if (count($where)) {
       $where = implode(' AND ', $where);
