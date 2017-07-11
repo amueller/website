@@ -23,20 +23,32 @@ class Api_evaluation extends Api_model {
 
     $order_values = array('random', 'reverse', 'normal');
     if (count($segments) >= 3 && $segments[0] == 'request' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
-      if (count($segments) == 3) {
-        $this->evaluation_request($segments[1], $segments[2], false);
-        return;
-      } elseif (count($segments) == 4 && is_numeric($segments[3])) {
-        $this->evaluation_request($segments[1], $segments[2], $segments[3]);
-        return;
-      }
+      array_shift($segments); // removes 'request'
+      $eval_id = array_shift($segments);
+      $order = array_shift($segments);
+      
+      $this->evaluation_request($eval_id, $order, $segments);
+      return;
     }
 
     $this->returnError(100, $this->version);
   }
 
-  private function evaluation_request($evaluation_engine_id, $order, $ttid) {
-    $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid);
+  private function evaluation_request($evaluation_engine_id, $order, $segs) {
+    $legal_filters = array('ttid', 'tag', 'uploader');
+    $query_string = array();
+    for ($i = 0; $i < count($segs); $i += 2) {
+      $query_string[$segs[$i]] = urldecode($segs[$i+1]);
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(546, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }
+    }
+    $ttid = element('ttid', $query_string, false);
+    $tag = element('tag',$query_string, false);
+    $uploader = element('uploader',$query_string, false);
+    
+    $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid, $tag, $uploader);
     if ($res == false) {
       $this->returnError(545, $this->version);
       return;

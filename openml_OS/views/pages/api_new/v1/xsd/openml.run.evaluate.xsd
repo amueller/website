@@ -15,7 +15,7 @@
       <xs:element name="function" type="oml:system_string128"/> <!-- A reference to the math_function that was used -->
       <xs:element name="value" minOccurs="0" type="xs:double"/> <!-- The result of the math_function. (Sidenote: If you sumbit values of math_functions that are also run on line, it will be used to test whether the outcome is similar.) -->
       <xs:element name="stdev" minOccurs="0" type="xs:double"/> <!-- In case the global performance is based upon multiple folds, a stdev can be given -->
-      <xs:element name="array_data" minOccurs="0" type="oml:array_data4096"/> <!-- In some cases, a function returns array data (i.e., precision, recall).  -->
+      <xs:element name="array_data" minOccurs="0" type="oml:basic_latin4096"/> <!-- In some cases, a function returns array data (i.e., precision, recall).  -->
       <xs:element name="sample_size" minOccurs="0" type="xs:integer"/> <!-- In the case of a sample, the size of the sample.  -->
     </xs:sequence>
     <xs:attribute name="repeat" type="xs:integer" />
@@ -31,11 +31,11 @@
        <xs:minLength value="1" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="array_data4096"> <!-- Subset on xs:string. useful to display array data -->
+  <xs:simpleType name="basic_latin4096">
     <xs:restriction base="xs:string">
-      <xs:pattern value="([a-zA-Z0-9\., _\-\[\]])+"/>
+      <xs:pattern value="\p{IsBasicLatin}*"/>
       <xs:maxLength value="4096" />
-       <xs:minLength value="1" />
+      <xs:minLength value="1" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="basic_latin1024">
@@ -44,5 +44,5 @@
       <xs:maxLength value="1024" />
       <xs:minLength value="1" />
     </xs:restriction>
-</xs:simpleType>
+  </xs:simpleType>
 </xs:schema>
