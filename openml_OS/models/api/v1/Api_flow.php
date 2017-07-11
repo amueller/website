@@ -8,7 +8,7 @@ class Api_flow extends Api_model {
 
     // load models
     $this->load->model('Algorithm_setup');
-    
+
     $this->load->model('Implementation');
     $this->load->model('Implementation_tag');
     $this->load->model('Implementation_component');
@@ -17,7 +17,7 @@ class Api_flow extends Api_model {
 
     $this->load->model('File');
     $this->load->model('Input');
-    
+
     $this->load->model('Database_singleton');
     $this->db = $this->Database_singleton->getReadConnection();
   }
@@ -88,19 +88,21 @@ class Api_flow extends Api_model {
         return;
       }
     }
-    
+
     $uploader_id = element('uploader', $query_string);
     $tag = element('tag', $query_string);
     $limit = element('limit', $query_string);
     $offset = element('offset', $query_string);
-    
-    $query = $this->db->from('implementation')->group_start()->where('`visibility`', 'public')->or_where('uploader', $this->user_id)->group_end();
+
+    $query = $this->db->select('implementation.*, GROUP_CONCAT(tag) as tags');
+    $query->from('implementation')->join('implementation_tag', 'implementation.id = implementation_tag.id');
+    $query->group_start()->where('`visibility`', 'public')->or_where('implementation.uploader', $this->user_id)->group_end();
     if ($uploader_id) {
-      $query->where('uploader', $uploader_id);
+      $query->where('implementation.uploader', $uploader_id);
     }
     if ($tag) {
       # TODO: update!
-      $query->where('`id` IN (select id from implementation_tag where tag="' . $tag . '")');
+      $query->where('implementation.id IN (select it.id from implementation_tag it where it.tag="' . $tag . '")');
     }
     if ($limit) {
       $query->limit($limit);
@@ -108,8 +110,9 @@ class Api_flow extends Api_model {
     if ($offset) {
       $query->offset($offset);
     }
-    
+    $query->group_by('implementation.id');
     $sql = $query->get_compiled_select();
+
     # TODO: can remove next statement and replace by original active record
     $implementations_res = $this->Implementation->query($sql);
     if( $implementations_res == false ) {
@@ -121,16 +124,8 @@ class Api_flow extends Api_model {
     $implementations = array();
     foreach( $implementations_res as $implementation ) {
       $implementations[$implementation->id] = $implementation;
+      $implementations[$implementation->id]->tags = explode(',', $implementation->tags);
     }
-
-    /* // TODO: gives problems. don't show this in listing function
-    $dt = $this->Implementation_tag->getWhere('`id` IN (' . implode(',', array_keys($implementations)) . ')');
-    if ($dt) {
-      foreach($dt as $tag) {
-        $implementations[$tag->id]->tags[] = $tag->tag;
-      }
-    }
-    */
 
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }
@@ -257,7 +252,7 @@ class Api_flow extends Api_model {
       $this->returnError( 161, $this->version );
       return;
     }
-    
+
     $name = ''.$xml->children('oml', true)->{'name'};
 
     $implementation = array(
@@ -331,7 +326,7 @@ class Api_flow extends Api_model {
       $this->returnError(324, $this->version);
       return;
     }
-    
+
     $remove_input_setting = $this->Input_setting->deleteWhere('setup IN (SELECT sid FROM algorithm_setup WHERE implementation_id = '.$implementation->id.')');
     if (!$remove_input_setting) {
       $this->returnError(326, $this->version);
@@ -342,7 +337,7 @@ class Api_flow extends Api_model {
       $this->returnError(327, $this->version);
       return;
     }
-    
+
     $result = $this->Implementation->delete($implementation->id);
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }

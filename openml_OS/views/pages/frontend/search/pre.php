@@ -181,7 +181,6 @@ if($this->filtertype == 'data' and false === strpos($this->terms,'status')){
   $jsonfilters[] = '{ "term" : { "status" : "active" } }';
 }
 
-
 //print_r($this->filters);
 
 //search filters
@@ -195,7 +194,10 @@ foreach($this->filters as $k => $v){
 		if(count($parts) == 2)
 			$jsonfilters[] = '{ "range" : { "'.$k.'" : { "gte" : '.$parts[0].', "lte" : '.$parts[1].' } } }';
 		}
-	elseif($k == 'type' or $k == 'measure_type' or $k == 'status' or $k == 'evaluation_measures')
+  elseif($k == 'status'){
+    if($v != 'all')
+      $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';}
+	elseif($k == 'type' or $k == 'measure_type' or $k == 'evaluation_measures')
     $jsonfilters[] = '{ "term" : { "'.$k.'" : "'.$v.'"} }';
   elseif($k == 'tags.tag')
     $jsonfilters[] = '{ "nested": { "path": "tags", "query": { "term": { "tags.tag": "'.strtolower($v).'" } } } }';

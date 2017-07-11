@@ -12,70 +12,72 @@ class Database_read extends CI_Model {
     $this->db = $this->Database_singleton->getReadConnection();
   }
 
-  function get( $orderby = null ) {
-    if( $orderby != null ) {
-      $this->db->order_by( $orderby );
+  function get($orderby = null, $limit = null, $offset = null) {
+    if ($orderby != null) {
+      $this->db->order_by($orderby);
     }
-    $data = $this->db->get( $this->table );
-    return ( $data->num_rows() > 0 ) ? $data->result() : false;
+    if ($limit) {
+      $this->db->limit($limit);
+    }
+    if ($offset) {
+      $this->db->offset($offset);
+    }
+    $data = $this->db->get($this->table);
+    return ($data->num_rows() > 0) ? $data->result() : false;
   }
   
-  function query( $sql ) {
-    $this->Log->sql( $sql);
-    $data = $this->db->query( $sql );
-    if($data === true || $data === false) { return $data; } 
+  function query($sql) {
+    $this->Log->sql($sql);
+    $data = $this->db->query($sql);
+    if ($data === true || $data === false) { return $data; } 
     // although the expression above doesn't seem to make sense, 
     // it actually does. Since we used the === operator, we have 
     // covered all boolean responses. Now let's cover the other 
     // possibilities.
-    return ( $data->num_rows() > 0 ) ? $data->result() : false;
+    return ($data->num_rows() > 0) ? $data->result() : false;
   }
   
-  function getWhere( $where, $orderby = null ) {
-    if( $orderby != null ) {
-      $this->db->order_by( $orderby ); }
-    $data = $this->db->where( $where )->get( $this->table );
-    return ( $data && $data->num_rows() > 0 ) ? $data->result() : false;
+  function getWhere($where, $orderby = null, $limit = null, $offset = null) {
+    $this->db->where($where);
+    return $this->get($orderby, $limit, $offset);
   }
   
-  function getById( $id, $orderby = null ) {
-    $data = $this->getWhere( $this->_where_clause_on_id( $id ) , $orderby );
-    return ( $data !== false ) ? $data[0] : false;
+  function getById($id, $orderby = null) {
+    $data = $this->getWhere($this->_where_clause_on_id($id) , $orderby);
+    return ($data !== false) ? $data[0] : false;
   }
   
-  function getWhereSingle( $where, $orderby = null ) {
+  function getWhereSingle($where, $orderby = null) {
     $this->db->limit(1,0);
-    $data = $this->getWhere( $where, $orderby );
-    return ( $data !== false ) ? end( $data ) : false;
+    $data = $this->getWhere($where, $orderby);
+    return ($data !== false) ? end($data) : false;
   }
   
-  function getColumn( $column, $orderby = null) {
-    if( $orderby != null ) {
-      $this->db->order_by( $orderby );
-    }
-    $data = $this->db->select( $column )->get( $this->table );
+  function getColumn($column, $orderby = null, $limit = null, $offset = null) {
+    $data = $this->get($orderby, $limit, $offset);
+    if ($data == false) return false;
     $res = array();
-    foreach( $data->result() as $row ) {
+    foreach ($data as $row) {
       $res[] = $row->{$column};
     }
-    return count( $res ) > 0 ? $res : false;
+    return $res;
   }
   
-  function getColumnWhere( $column, $where, $orderby = null ) {
-    $this->db->where( $where );
-    return $this->getColumn( $column, $orderby );
+  function getColumnWhere($column, $where, $orderby = null, $limit = null, $offset = null) {
+    $this->db->where($where);
+    return $this->getColumn($column, $orderby, $limit, $offset);
   }
   
-  function getColumnFunction( $function, $orderby = null ) {
-    if( $orderby != null ) {
+  function getColumnFunction($function, $orderby = null) {
+    if ($orderby != null) {
       $this->db->order_by( $orderby );
     }
-    $data = $this->db->select( $function . ' AS `name`', false )->get( $this->table );
+    $data = $this->db->select( $function . ' AS `name`', false )->get($this->table);
     $res = array();
-    foreach( $data->result() as $row ) {
+    foreach($data->result() as $row) {
       $res[] = $row->{'name'};
     }
-    return count( $res ) > 0 ? $res : false;
+    return count($res) > 0 ? $res : false;
   }
   
   function getColumnFromSql($column, $sql) {
@@ -88,21 +90,26 @@ class Database_read extends CI_Model {
     return $res;
   }
   
-  function getColumnFunctionWhere( $function, $where, $orderby = null ) {
-    $this->db->where( $where );
-    return $this->getColumnFunction( $function, $orderby );
+  function getColumnFunctionWhere($function, $where, $orderby = null) {
+    $this->db->where($where);
+    return $this->getColumnFunction($function, $orderby);
   }
   
-  function getAssociativeArray( $key, $value, $where, $group_by = null, $orderby = null ) {
-    $this->db->select( $key . ' AS `key`, ' . $value . ' AS `value`', false );
-    if( $group_by ) {
-      $this->db->group_by( $group_by );
+  function getAssociativeArray($key, $value, $where, $group_by = null, $orderby = null, $limit = null, $offset = null) {
+    $this->db->select($key . ' AS `key`, ' . $value . ' AS `value`', false);
+    if($group_by) {
+      $this->db->group_by($group_by);
     }
-    $data = $this->getWhere( $where, $orderby );
+    if ($where) {
+      $data = $this->getWhere($where, $orderby, $limit, $offset);
+    } else {
+      $data = $this->get($orderby, $limit, $offset);
+    }
+    
     if($data === false) { return false; }
     
     $res = array();
-    foreach( $data as $item ) {
+    foreach($data as $item) {
       $res[$item->{'key'}] = $item->{'value'};
     }
     return $res;
