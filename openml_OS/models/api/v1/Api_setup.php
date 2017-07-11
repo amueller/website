@@ -135,7 +135,7 @@ class Api_setup extends Api_model {
       // filters (unfortunatelly, they have to be at two places)
       $where = array();
       if ($implementation_id) {
-        $where[] = 'algorithm_setup.implementation_id = ' . $implementation_id);
+        $where[] = 'algorithm_setup.implementation_id = ' . $implementation_id;
       }
       if ($tag) {
         $where[] = 'tag = "' . $tag . '"';
