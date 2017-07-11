@@ -12,7 +12,7 @@ class Algorithm_setup extends Database_write {
     $this->db->join('setup_tag', 'algorithm_setup.sid = setup_tag.id', 'left');
     $this->db->group_by('sid');
     if ($where == null) {
-      return $this->getColumn($column, $where, $orderby, $limit, $offset);
+      return $this->getColumn($column, $orderby, $limit, $offset);
     } else {
       return $this->getColumnWhere($column, $where, $orderby, $limit, $offset);
     }

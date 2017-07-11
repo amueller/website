@@ -159,7 +159,7 @@ class Api_setup extends Api_model {
     $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
     $this->db->join('algorithm_setup', 'algorithm_setup.sid = input_setting.setup', 'inner');
     $this->db->join('setup_tag', 'input_setting.setup = setup_tag.id', 'left');
-    $this->db->where_in('algorithm_setup', $setups);
+    $this->db->where_in('algorithm_setup.sid', $setups);
     // filters (unfortunatelly, they have to be at two places)
     if ($implementation_id) {
       $this->db->where('algorithm_setup.implementation_id = ' . $implementation_id);
