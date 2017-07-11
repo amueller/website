@@ -10,7 +10,7 @@ class Algorithm_setup extends Database_write {
   function getColumnWhereJoinedTag($column, $where, $orderby = null, $limit = null, $offset = null) {
     // use where parameter to specify tag 
     $this->db->join('setup_tag', 'algorithm_setup.sid = setup_tag.id', 'left');
-    $this->group_by($setup_id);
+    $this->db->group_by($setup_id);
     return $this->getColumnWhere($column, $where, $orderby, $limit, $offset);
   }
   
