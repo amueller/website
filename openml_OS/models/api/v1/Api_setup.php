@@ -124,13 +124,14 @@ class Api_setup extends Api_model {
     $tag = element('tag',$query_string, null);
     $limit = element('limit',$query_string, null);
     $offset = element('offset',$query_string, null);
-    $setups = element('setups',$query_string, null);
+    // $setups = element('setups',$query_string, null); // TODO: adapt setups criterium to two query standard
     
-    if ($setups) {
-      $setups = explode(',', $setups);
-    } else {
+    // if ($setups) {
+    //  $setups = explode(',', $setups);
+    //  
+    //} else {
       // JvR: Two queries, because I really don't know how to do it otherwise. 
-      // The good thing is that we won't use TODO: improve code to remove 2 queries!
+      // TODO: improve code to remove 2 queries!
       
       // filters (unfortunatelly, they have to be at two places)
       $where = array();
@@ -145,8 +146,9 @@ class Api_setup extends Api_model {
       } else {
         $where = null;
       }
-      $setups = $this->Algorithm_setup->getColumnWhereJoinedTag('sid', $where, null, $limit, $offset);
-    }
+      $setup_flows = $this->Algorithm_setup->getAssociativeArrayJoinedTag('sid', 'implementation_id', $where, 'sid', null, $limit, $offset);
+      $setups = array_keys($setup_flows);
+    // }
     
     $maxAllowed = 1000;
     if (count($setups) > $maxAllowed) {
@@ -180,7 +182,7 @@ class Api_setup extends Api_model {
     foreach ($parameters as $parameter) {
       $per_setup[$parameter->setup][] = $parameter;
     }
-    $this->xmlContents('setup-list', $this->version, array('setups' => $per_setup));
+    $this->xmlContents('setup-list', $this->version, array('setups' => $per_setup, 'setup_flows' => $setup_flows));
   }
 
   function setup_count($tags = null) {
