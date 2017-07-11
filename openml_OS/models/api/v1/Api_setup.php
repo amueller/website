@@ -140,8 +140,11 @@ class Api_setup extends Api_model {
       if ($tag) {
         $where[] = 'tag = "' . $tag . '"';
       }
-      $where = implode(' AND ', $where);
-      
+      if (count($where)) {
+        $where = implode(' AND ', $where);
+      } else {
+        $where = null;
+      }
       $setups = $this->Algorithm_setup->getColumnWhereJoinedTag('sid', $where, null, $limit, $offset);
     }
     
