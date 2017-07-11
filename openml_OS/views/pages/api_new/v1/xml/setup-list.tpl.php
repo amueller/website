@@ -2,7 +2,7 @@
 <?php foreach($setups as $setup_id => $parameters): ?>
   <oml:setup>
     <oml:setup_id><?php echo $setup_id; ?></oml:setup_id> <?php // TODO: fix if ?>
-    <oml:flow_id><?php $setup_flows[$setup_id]; /*important! this is different from $p->implementation_id; */?></oml:flow_id>
+    <oml:flow_id><?php echo $setup_flows[$setup_id]; /*important! this is different from $p->implementation_id; */?></oml:flow_id>
     <?php foreach($parameters as $p): ?>
 	    <oml:parameter>
 		    <oml:id><?php echo htmlspecialchars($p->id); ?></oml:id>
