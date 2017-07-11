@@ -23,13 +23,12 @@ class Api_evaluation extends Api_model {
 
     $order_values = array('random', 'reverse', 'normal');
     if (count($segments) >= 3 && $segments[0] == 'request' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
-        array_shift($segments); // removes 'request'
-        $eval_id = array_shift($segments);
-        $order = array_shift($segments);
-        
-        $this->evaluation_request($eval_id, $order, $segments);
-        return;
-      }
+      array_shift($segments); // removes 'request'
+      $eval_id = array_shift($segments);
+      $order = array_shift($segments);
+      
+      $this->evaluation_request($eval_id, $order, $segments);
+      return;
     }
 
     $this->returnError(100, $this->version);
