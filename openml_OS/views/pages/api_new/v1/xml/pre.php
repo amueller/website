@@ -284,6 +284,7 @@ $this->apiErrors[544] = 'Illegal filter specified';
 
 // openml.evaluations.request
 $this->apiErrors[545] = 'No unevaluated runs according to the criteria';
+$this->apiErrors[546] = 'Illegal filter';
 
 // openml.flow.forcedelete
 $this->apiErrors[550] = 'Admin rights are required.';
