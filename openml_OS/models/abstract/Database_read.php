@@ -97,12 +97,12 @@ class Database_read extends CI_Model {
   function getAssociativeArray($key, $value, $where, $group_by = null, $orderby = null, $limit = null, $offset = null) {
     $this->db->select($key . ' AS `key`, ' . $value . ' AS `value`', false);
     if($group_by) {
-      $this->db->group_by( $group_by );
+      $this->db->group_by($group_by);
     }
     if ($where) {
       $data = $this->getWhere($where, $orderby, $limit, $offset);
     } else {
-      $data = $this->get($where, $orderby, $limit, $offset);
+      $data = $this->get($orderby, $limit, $offset);
     }
     
     if($data === false) { return false; }
