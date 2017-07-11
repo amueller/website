@@ -131,7 +131,18 @@ class Api_setup extends Api_model {
     } else {
       // JvR: Two queries, because I really don't know how to do it otherwise. 
       // The good thing is that we won't use TODO: improve code to remove 2 queries!
-      $setups = $this->Algorithm_setup->getColumnWhereJoinedTag('setup_id', 'tag = "' . $query_string['tag'] . '"', null, $limit, $offset);
+      
+      // filters (unfortunatelly, they have to be at two places)
+      $where = array();
+      if ($implementation_id) {
+        $where[] = 'algorithm_setup.implementation_id = ' . $implementation_id);
+      }
+      if ($tag) {
+        $where[] = 'tag = "' . $tag . '"';
+      }
+      $where = implode(' AND ', $where);
+      
+      $setups = $this->Algorithm_setup->getColumnWhereJoinedTag('sid', $where, null, $limit, $offset);
     }
     
     $maxAllowed = 1000;
@@ -146,7 +157,7 @@ class Api_setup extends Api_model {
     $this->db->join('algorithm_setup', 'algorithm_setup.sid = input_setting.setup', 'inner');
     $this->db->join('setup_tag', 'input_setting.setup = setup_tag.id', 'left');
     $this->db->where_in('algorithm_setup', $setups);
-    // filters
+    // filters (unfortunatelly, they have to be at two places)
     if ($implementation_id) {
       $this->db->where('algorithm_setup.implementation_id = ' . $implementation_id);
     }
