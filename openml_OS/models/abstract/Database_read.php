@@ -55,11 +55,12 @@ class Database_read extends CI_Model {
   
   function getColumn($column, $orderby = null, $limit = null, $offset = null) {
     $data = $this->get($orderby, $limit, $offset);
+    if (count($data) == 0) return false;
     $res = array();
     foreach ($data as $row) {
       $res[] = $row->{$column};
     }
-    return count( $res ) > 0 ? $res : false;
+    return $res;
   }
   
   function getColumnWhere($column, $where, $orderby = null, $limit = null, $offset = null) {
