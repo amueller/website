@@ -110,7 +110,7 @@ class Api_setup extends Api_model {
       return;
     }
 
-    $legal_filters = array('flow', 'limit', 'offset');
+    $legal_filters = array('flow', 'setup', 'limit', 'offset');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
@@ -124,31 +124,29 @@ class Api_setup extends Api_model {
     $tag = element('tag',$query_string, null);
     $limit = element('limit',$query_string, null);
     $offset = element('offset',$query_string, null);
-    // $setups = element('setups',$query_string, null); // TODO: adapt setups criterium to two query standard
+    $setups = element('setup',$query_string, null); 
     
-    // if ($setups) {
-    //  $setups = explode(',', $setups);
-    //  
-    //} else {
-      // JvR: Two queries, because I really don't know how to do it otherwise. 
-      // TODO: improve code to remove 2 queries!
-      
-      // filters (unfortunatelly, they have to be at two places)
-      $where = array();
-      if ($implementation_id) {
-        $where[] = 'algorithm_setup.implementation_id = ' . $implementation_id;
-      }
-      if ($tag) {
-        $where[] = 'tag = "' . $tag . '"';
-      }
-      if (count($where)) {
-        $where = implode(' AND ', $where);
-      } else {
-        $where = null;
-      }
-      $setup_flows = $this->Algorithm_setup->getAssociativeArrayJoinedTag('sid', 'implementation_id', $where, 'sid', null, $limit, $offset);
-      $setups = array_keys($setup_flows);
-    // }
+    // JvR: Two queries, because I really don't know how to do it otherwise. 
+    // TODO: improve code to remove 2 queries!
+    
+    // filters (unfortunatelly, they have to be at two places)
+    $where = array();
+    if ($implementation_id) {
+      $where[] = 'algorithm_setup.implementation_id = ' . $implementation_id;
+    }
+    if ($tag) {
+      $where[] = 'tag = "' . $tag . '"';
+    }
+    if ($setups) {
+      $where[] = 'sid IN ("' . $tag . '")';
+    }
+    if (count($where)) {
+      $where = implode(' AND ', $where);
+    } else {
+      $where = null;
+    }
+    $setup_flows = $this->Algorithm_setup->getAssociativeArrayJoinedTag('sid', 'implementation_id', $where, 'sid', null, $limit, $offset);
+    $setups = array_keys($setup_flows);
     
     $maxAllowed = 1000;
     if (count($setups) > $maxAllowed) {
@@ -168,6 +166,9 @@ class Api_setup extends Api_model {
     }
     if ($tag) {
       $this->db->where('tag = "' . $tag . '"');
+    }
+    if ($setups) {
+      $this->db->where_in('sid', explode(',', $setups)); 
     }
 
     $query = $this->db->get();
