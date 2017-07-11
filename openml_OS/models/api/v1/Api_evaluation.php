@@ -44,7 +44,7 @@ class Api_evaluation extends Api_model {
         return;
       }
     }
-    $ttid = element('task', $query_string, false);
+    $ttid = element('ttid', $query_string, false);
     $tag = element('tag',$query_string, false);
     $uploader = element('uploader',$query_string, false);
     

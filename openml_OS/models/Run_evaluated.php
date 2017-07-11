@@ -27,7 +27,7 @@ class Run_evaluated extends Database_write {
     // When random results are needed, to avoid that multiple evaluators evaluate the same run,
     // get 2000 unordered results and randomly select one (or more) of them.
     // This is much faster than randomizing the results in the query.
-    $randomcount = 2000;
+    $randomcount = 200;
     if ($order == 'random') {
       $this->db->where('`e`.`run_id` IS NULL')->limit($randomcount);
     } else {
