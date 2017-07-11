@@ -133,6 +133,11 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             $href = $ch;
             $materialcolor = "green";
           }
+      elseif(substr( $ch, 0, 4 ) === "cite"){
+            $section = 'Citing';
+            $href = $ch;
+            $materialcolor = "red";
+          }
       elseif($ch=='discuss' || $ch=='discuss_new'){
             $section = 'Discuss';
             $href = $ch;
@@ -292,8 +297,10 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             <?php } ?> -->
             <div class="submenubar">
             <div id="submenucontainer"></div>
+
             <ul class="sidenav nav">
-            <li class="guidechapter-contact">
+            <li class="menu-cite <?php echo ($section == 'Citing' ?  'topactive' : '');?>"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
+            <li class="menu-contact">
              <a>Ask us a question...</a>
              <ul class="openml-contact-menu">
                <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-envelope-o fa-fw fa-lg"></i></a></li>

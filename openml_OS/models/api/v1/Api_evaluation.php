@@ -46,10 +46,16 @@ class Api_evaluation extends Api_model {
 
 
   private function evaluation_list($segs) {
+    $legal_filters = array('task', 'setup', 'flow', 'uploader', 'run', 'tag', 'limit', 'offset', 'function');
     $query_string = array();
-    for ($i = 0; $i < count($segs); $i += 2)
+    for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
-
+      if (in_array($segs[$i], $legal_filters) == false) {
+        $this->returnError(544, $this->version, $this->openmlGeneralErrorCode, 'Legal filter operators: ' . implode(',', $legal_filters) .'. Found illegal filter: ' . $segs[$i]);
+        return;
+      }
+    }
+    
     $task_id = element('task', $query_string);
     $setup_id = element('setup',$query_string);
     $implementation_id = element('flow',$query_string);
@@ -107,7 +113,7 @@ class Api_evaluation extends Api_model {
     // It seems to be related to the inclusion of the math_function table (it causes MySQL to use filesort).
     // Solution is to force the index used in the run and evaluation table (or not use ORDER BY at all).
     $sql =
-      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.name ' .
+      'SELECT r.rid, r.task_id, r.start_time, s.implementation_id, s.sid, f.name AS `function`, e.value, e.array_data, i.fullName, d.did, d.name ' .
       'FROM run r force index(PRIMARY), evaluation e force index(PRIMARY), algorithm_setup s, implementation i, dataset d, task_inputs t, math_function f ' .
       'WHERE r.setup = s.sid ' .
       'AND e.source = r.rid ' .
@@ -116,7 +122,8 @@ class Api_evaluation extends Api_model {
       'AND r.task_id = t.task_id ' .
       'AND t.input = "source_data" ' .
       'AND t.value = d.did ' . $where_total .
-      'ORDER BY r.rid' . $where_limit;
+    //'ORDER BY r.rid' . 
+      $where_limit;
 
     $res = $this->Evaluation->query( $sql );
 

@@ -13,7 +13,7 @@
   </div>
   <div class="tab-pane" id="team">
   <?php subpage('team'); ?>
-  </div>    
+  </div>
   <div class="tab-pane" id="gamification">
   <?php subpage('gamification'); ?>
   </div>
@@ -37,12 +37,6 @@
   </div>
   <div class="tab-pane" id="python">
   <?php subpage('python'); ?>
-  </div>
-  <div class="tab-pane" id="net">
-  <?php subpage('net'); ?>
-  </div>
-  <div class="tab-pane" id="rest_tutorial">
-  <?php subpage('rest_tutorial'); ?>
   </div>
   <?php subpage('rest_services'); ?>
   <div class="tab-pane" id="json">
@@ -74,7 +68,6 @@
         <li><a href="#java" data-toggle="tab">Java</a></li>
         <li><a href="#r" data-toggle="tab">R</a></li>
         <li><a href="#python" data-toggle="tab">Python</a></li>
-        <li><a href="#net" data-toggle="tab">.NET</a></li>
        </ul>
       </li>
       <li class="panel guidechapter">
@@ -86,7 +79,6 @@
         <li><a href="#json" data-toggle="tab">Other tools</a></li>
        </ul>
       </li>
-      <li style="margin:15px;"><a href="#cite" data-toggle="tab"><i class="fa fa-fw fa-heart"></i> Citing OpenML</a></li>
     </ul>
     </div> <!-- end submenu -->
 

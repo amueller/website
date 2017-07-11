@@ -14,6 +14,10 @@
    placeholder="Task ID">
 </li>
 <li>
+    <input type="text" class="form-control floating-label" id="tags.tag" name="tags.tag" data-hint="A tag that has been added to this task"
+     value="<?php if(array_key_exists('tags.tag',$this->filters)){ echo $this->filters['tags.tag'];}?>" placeholder="Tag">
+</li>
+<li>
     <select class="form-control input-small selectpicker" name="tasktype" id="tasktype.tt_id">
        <option value="">Task type</option>
 	    <?php

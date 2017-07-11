@@ -17,7 +17,9 @@ class Api_flow extends Api_model {
 
     $this->load->model('File');
     $this->load->model('Input');
-
+    
+    $this->load->model('Database_singleton');
+    $this->db = $this->Database_singleton->getReadConnection();
   }
 
   function bootstrap($format, $segments, $request_type, $user_id) {
@@ -28,11 +30,6 @@ class Api_flow extends Api_model {
     if (count($segments) >= 1 && $segments[0] == 'list') {
       array_shift($segments);
       $this->flow_list($segments);
-      return;
-    }
-
-    if (count($segments) == 1 && $segments[0] == 'owned') {
-      $this->flow_owned($user_id);
       return;
     }
 
@@ -126,12 +123,14 @@ class Api_flow extends Api_model {
       $implementations[$implementation->id] = $implementation;
     }
 
+    /* // TODO: gives problems. don't show this in listing function
     $dt = $this->Implementation_tag->getWhere('`id` IN (' . implode(',', array_keys($implementations)) . ')');
     if ($dt) {
       foreach($dt as $tag) {
         $implementations[$tag->id]->tags[] = $tag->tag;
       }
     }
+    */
 
     $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
   }

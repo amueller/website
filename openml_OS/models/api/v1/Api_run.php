@@ -180,12 +180,12 @@ class Api_run extends Api_model {
 
   private function run($run_id) {
     if( $run_id == false ) {
-      $this->returnError( 220, $this->version );
+      $this->returnError( 235, $this->version );
       return;
     }
     $run = $this->Run->getById($run_id);
     if( $run === false ) {
-      $this->returnError( 221, $this->version );
+      $this->returnError( 236, $this->version );
       return;
     }
     
@@ -395,8 +395,10 @@ class Api_run extends Api_model {
       return;
     }
     
+    
     // register file
-    $file_id = $this->File->register_uploaded_file($_FILES['predictions'], $this->data_folders['run'], $this->user_id, 'predictions');
+    $to_folder = $this->data_folders['run'] . $run_id . '/';
+    $file_id = $this->File->register_uploaded_file($_FILES['predictions'], $to_folder, $this->user_id, 'predictions');
     if(!$file_id) {
       $this->returnError(625, $this->version);
       return;
@@ -589,26 +591,33 @@ class Api_run extends Api_model {
       'run_details' => ($run_details == false) ? null : $run_details
     );
     
-    $runId = $this->Run->insert( $runData );
-    if( $runId === false ) {
-      $this->returnError( 210, $this->version );
+    $runId = $this->Run->insert($runData);
+    if($runId === false) {
+      $this->returnError(210, $this->version);
       return;
     }
     // and fetch the run record
-    $run = $this->Run->getById( $runId );
+    $run = $this->Run->getById($runId);
     $result = new stdClass();
     $result->run_id = $runId; // for output
 
     // attach uploaded files as output to run
     foreach($_FILES as $key => $value) {
-      $file_type = ($key == 'predictions') ? 'predictions' : 'run_uploaded_file';
-      $file_id = $this->File->register_uploaded_file($value, $this->data_folders['run'], $this->user_id, $file_type);
+      $file_type = 'run_uploaded_file';
+      if ($key == 'predictions') {
+        $file_type = 'predictions';
+      } elseif ($key == 'trace') {
+        $file_type = 'run_trace';
+      }
+      
+      // it is important to put the runs in various directories
+      $to_folder = $this->data_folders['run'] . $runId . '/';
+      $file_id = $this->File->register_uploaded_file($value, $to_folder, $this->user_id, $file_type);
       if(!$file_id) {
-        $this->returnError( 212, $this->version );
+        $this->returnError(220, $this->version);
         return;
       }
       $file_record = $this->File->getById($file_id);
-      $filename = getAvailableName(DATA_PATH . $this->data_folders['run'], $value['name']);
 
       $record = array(
         'source' => $run->rid,
@@ -621,15 +630,15 @@ class Api_run extends Api_model {
 
       $did = $this->Runfile->insert($record);
       if( $did == false ) {
-        $this->returnError( 212, $this->version );
+        $this->returnError(212, $this->version);
         return;
       }
-      $this->Run->outputData( $run->rid, $did, 'runfile', $key );
+      $this->Run->outputData($run->rid, $did, 'runfile', $key);
     }
 
     // attach input data
-    $inputData = $this->Run->inputData( $runId, $task['source_data'], 'dataset' ); // Based on the query, it has been garantueed that the dataset id exists.
-    if( $inputData === false ) {
+    $inputData = $this->Run->inputData($runId, $task['source_data'], 'dataset'); // Based on the query, it has been garantueed that the dataset id exists.
+    if($inputData === false) {
       $errorCode = 211;
       return false;
     }

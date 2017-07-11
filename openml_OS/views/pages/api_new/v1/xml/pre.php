@@ -13,12 +13,13 @@ $this->apiErrors[106] = 'The intended action requires admin rights. ';
 $this->apiErrors[110] = 'Please provide data_id';
 $this->apiErrors[111] = 'Unknown dataset';
 $this->apiErrors[112] = 'No access granted';
+$this->apiErrors[113] = 'Could not find data file record';
 
 // for function: openml.data.upload
 $this->apiErrors[130] = 'Problem with file uploading';
 $this->apiErrors[131] = 'Problem validating uploaded description file';
 $this->apiErrors[132] = 'Failed to move the files';
-$this->apiErrors[133] = 'Failed to make checksum of datafile';
+$this->apiErrors[133] = 'Currently, only arff datasets are supported for upload. ';
 $this->apiErrors[134] = 'Failed to insert record in database';
 $this->apiErrors[135] = 'Please provide description xml';
 $this->apiErrors[136] = 'File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.';
@@ -70,7 +71,7 @@ $this->apiErrors[208] = 'Error inserting setup record';
 $this->apiErrors[209] = 'Error parsing uploaded file. ';
 $this->apiErrors[210] = 'Unable to store run';
 $this->apiErrors[211] = 'Dataset not in databse';
-$this->apiErrors[212] = 'Unable to store file';
+$this->apiErrors[212] = 'Unable to store uploaded file to file system';
 $this->apiErrors[213] = 'Parameter in run xml unknown';
 $this->apiErrors[214] = 'Unable to store input setting';
 $this->apiErrors[215] = 'Unable to evaluate predictions';
@@ -78,12 +79,15 @@ $this->apiErrors[216] = 'Error thrown by Java Application';
 $this->apiErrors[217] = 'Error processing output data: unknown or inconsistent evaluation measure';
 $this->apiErrors[218] = 'Wrong flow associated with run: this implements a math_function';
 $this->apiErrors[219] = 'Task does not contain field: source_data';
-
-// for function: openml.run.get
-$this->apiErrors[220] = 'Please provide run_id';
-$this->apiErrors[221] = 'Run not found';
+$this->apiErrors[220] = 'Unable to store uploaded file in database';
 
 // range from 225 - 239: api run
+
+// for function: openml.run.get
+$this->apiErrors[235] = 'Please provide run_id';
+$this->apiErrors[236] = 'Run not found';
+
+
 
 // for function: openml.tasks.type.search
 $this->apiErrors[240] = 'Please provide task_type_id';
@@ -276,6 +280,7 @@ $this->apiErrors[540] = 'Please provide at least task, flow or setup, uploader o
 $this->apiErrors[541] = 'Input not safe';
 $this->apiErrors[542] = 'No results';
 $this->apiErrors[543] = 'Too many results';
+$this->apiErrors[544] = 'Illegal filter specified';
 
 // openml.evaluations.request
 $this->apiErrors[545] = 'No unevaluated runs according to the criteria';
@@ -344,6 +349,12 @@ $this->apiErrors[651] = 'No results';
 
 // openml.setups.setup_counts
 $this->apiErrors[661] = 'No results';
+
+// opennml.setups.list
+$this->apiErrors[670] = 'Please specify at least one filter. ';
+$this->apiErrors[671] = 'Illegal filter. ';
+$this->apiErrors[672] = 'No results. ';
+
 
 
 

@@ -12,25 +12,24 @@
 
   <h2 id="r-demo">Demo</h2>
   <p>You can try it out yourself in a Jupyter Notebook running in the everware cloud. You'll need an OpenML account as well as a <a href="www.github.com">GitHub</a> account for this service to work properly. It may take a few minutes to spin up.</p>
-  <p><a target="_blank" class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example_python&OPENMLKEY=<?php echo $this->api_key;?>">Launch demo</a></p>
+  <p><a target="_blank" class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example_python&OPENMLKEY=<?php echo (isset($this->api_key) ? $this->api_key : '');?>">Launch demo</a></p>
 
   <h2 id="r-demo">Course</h2>
   <p>We are currently building a machine learning course with many more examples. All materials are available as Jupyter Notebooks running in the everware cloud. You'll need an OpenML account as well as a <a href="www.github.com">GitHub</a> account for this service to work properly. It may take a few minutes to spin up.</p>
-  <p><a target="_blank" class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/machine_learning_introduction&OPENMLKEY=<?php echo $this->api_key;?>">Launch course</a></p>
+  <p><a target="_blank" class="loginfirst btn btn-success" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/machine_learning_introduction&OPENMLKEY=<?php echo (isset($this->api_key) ? $this->api_key : '');?>">Launch course</a></p>
 
   <h2 id="r-download">Example</h2>
   <p>This example runs an scikit-learn algorithm on an <a href="t/10">OpenML task</a>.</p>
   <div class="codehighlight"><pre><code class="python">
     from sklearn import ensemble
-    from openml import tasks,runs
+    from openml import tasks,flows,runs
     import xmltodict
 
     # Download task, run learner, publish results
     task = tasks.get_task(10)
     clf = ensemble.RandomForestClassifier()
-    run = runs.run_task(task, clf)
-    
-    run = runs.run_task(task, clf)
+    flow = flows.sklearn_to_flow(clf)
+    run = runs.run_flow_on_task(task, flow)
     run.publish()
 
     print("Uploaded run with id %s. Check it at www.openml.org/r/%s" %(run.run_id,run.run_id))
@@ -54,7 +53,7 @@
 
   <h2 id="download">Quickstart</h2>
   <a href="http://openml.github.io/openml-python/">Check out the documentation</a> to get started.
-  There is also a <a href="https://github.com/openml/openml-python/blob/develop/examples/OpenMLRun.ipynb">Jupyter Notebook</a> with examples.
+  Or try the <a href="https://github.com/openml/openml-python/blob/master/examples/OpenML_Tutorial.ipynb">Jupyter Notebook</a>.
 
 	<h2 id="issues">Issues</h2>
 	Having questions? Did you run into an issue? Let us know via the <a href="https://github.com/openml/openml-python/issues"> OpenML Python issue tracker</a>.
