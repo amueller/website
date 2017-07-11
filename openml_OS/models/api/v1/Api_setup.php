@@ -174,7 +174,7 @@ class Api_setup extends Api_model {
     $per_setup = array();
     // initialize the array
     foreach ($setups as $setup) {
-      $per_setup[$setup_id] = array();
+      $per_setup[$setup] = array();
     }
     // now fill with parameters
     foreach ($parameters as $parameter) {
