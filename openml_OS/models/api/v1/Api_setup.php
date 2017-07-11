@@ -110,7 +110,7 @@ class Api_setup extends Api_model {
       return;
     }
 
-    $legal_filters = array('setup', 'flow', 'tag', 'limit', 'offset');
+    $legal_filters = array('flow', 'limit', 'offset');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
@@ -120,49 +120,51 @@ class Api_setup extends Api_model {
       }
     }
 
-    $implementation_id = element('flow',$query_string);
-    $tag = element('tag',$query_string);
-    $limit = element('limit',$query_string);
-    $offset = element('offset',$query_string);
-    $setup_id = element('setup',$query_string);
+    $implementation_id = element('flow',$query_string, null);
+    $tag = element('tag',$query_string, null);
+    $limit = element('limit',$query_string, null);
+    $offset = element('offset',$query_string, null);
+    $setups = element('setups',$query_string, null);
+    
+    if ($setups) {
+      $setups = explode(',', $setups);
+    } else {
+      // JvR: Two queries, because I really don't know how to do it otherwise. 
+      // The good thing is that we won't use TODO: improve code to remove 2 queries!
+      $setups = $this->Algorithm_setup->getColumnWhereJoinedTag('setup_id', 'tag = "' . $query_string['tag'] . '"', null, $limit, $offset);
+    }
+    
+    $maxAllowed = 1000;
+    if (count($setups) > $maxAllowed) {
+      $this->returnError(673, $this->version, $this->openmlGeneralErrorCode, 'Allowed: ' . $maxAllowed . ', found:' . count($setups));
+      return;
+    }
 
-    // TODO query fails for classifiers without parameters. OK for now.
+    // query fails for classifiers without parameters. is fixed further on.
     $this->db->select('input.*, input_setting.*, algorithm_setup.implementation_id AS flow_id')->from('input_setting');
     $this->db->join('input', 'input_setting.input_id = input.id', 'inner');
     $this->db->join('algorithm_setup', 'algorithm_setup.sid = input_setting.setup', 'inner');
     $this->db->join('setup_tag', 'input_setting.setup = setup_tag.id', 'left');
+    $this->db->where_in('algorithm_setup', $setups);
     // filters
-    if (array_key_exists('flow', $query_string)) {
-      $this->db->where('algorithm_setup.implementation_id = ' . $query_string['flow']);
+    if ($implementation_id) {
+      $this->db->where('algorithm_setup.implementation_id = ' . $implementation_id);
     }
-    if (array_key_exists('tag', $query_string)) {
-      $this->db->where('tag = "' . $query_string['tag'] . '"');
-    }
-    if (array_key_exists('setup', $query_string)) {
-      $this->db->where('algorithm_setup.sid IN (' . $query_string['setup'] . ')');
-    }
-    if ($limit) {
-      $this->db->limit($limit);
-    }
-    if ($offset) {
-      $this->db->offset($offset);
+    if ($tag) {
+      $this->db->where('tag = "' . $tag . '"');
     }
 
     $query = $this->db->get();
     $parameters = $query->result();
 
-    if (count($parameters) == 0) {
-      $this->returnError(672, $this->version);
-      return;
-    }
-
     $per_setup = array();
+    // initialize the array
+    foreach ($setups as $setup) {
+      $per_setup[$setup_id] = array();
+    }
+    // now fill with parameters
     foreach ($parameters as $parameter) {
-      $setup_id = $parameter->setup;
-      if (!array_key_exists($setup_id, $per_setup)) {
-        $per_setup[$setup_id] = array();
-      }
-      $per_setup[$setup_id][] = $parameter;
+      $per_setup[$parameter->setup][] = $parameter;
     }
     $this->xmlContents('setup-list', $this->version, array('setups' => $per_setup));
   }
