@@ -181,6 +181,7 @@ if($this->filtertype == 'data' and false === strpos($this->terms,'status')){
   $jsonfilters[] = '{ "term" : { "status" : "active" } }';
 }
 
+//print_r($this->filters);
 
 //search filters
 foreach($this->filters as $k => $v){
