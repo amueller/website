@@ -49,7 +49,7 @@ class Api_evaluation extends Api_model {
     $uploader = element('uploader',$query_string, false);
     $task = element('task',$query_string, false);
     if ($task != false) {
-      $task = implode(', ', $task);
+      $task = implode(',', $task);
     }
     
     $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid, $task, $tag, $uploader);
