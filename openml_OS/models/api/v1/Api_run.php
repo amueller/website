@@ -811,7 +811,7 @@ class Api_run extends Api_model {
       
       // TODO: this responsibility should be shifted to the evaluation engine
       if (array_key_exists($evaluation['function'], $math_functions)) {
-        $evaluation['function_id'] = $math_functions[$evaluation['function']];
+        $evaluation['function_id'] = $math_functions[$evaluation['name']];
       } else {
         // there will be a DB error due to the absence of 'function_id'
       }
