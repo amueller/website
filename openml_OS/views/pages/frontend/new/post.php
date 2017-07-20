@@ -218,7 +218,7 @@ if($this->subpage == 'task') {
   $name = $this->input->post( 'study_title' );
   $alias = $this->input->post( 'study_alias' );
   $description = $this->input->post( 'description' );
-  $sid = $this->Study->create( $name, $description, $user_id );
+  $sid = $this->Study->create( $name, $alias, $description, $user_id );
   if($sid) {
     redirect('s/'.$sid);
   }
