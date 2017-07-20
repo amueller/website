@@ -26,7 +26,12 @@ class Api_study extends Api_model {
     }
 
     if (count($segments) == 2 && is_numeric($segments[0])) {
-      $this->study_get($segments[0], $segments[1]);
+      $this->study_by_id($segments[0], $segments[1]);
+      return;
+    }
+
+    if (count($segments) == 2) {
+      $this->study_by_alias($segments[0], $segments[1]);
       return;
     }
     
@@ -45,17 +50,32 @@ class Api_study extends Api_model {
     $this->xmlContents('study-list', $this->version, array('studies' => $studies));
   }
   
-  private function study_get($study_id,$knowledge_type) {
-    $valid_knowlegde_types = array('runs', 'flows', 'setups', 'data', 'tasks', NULL);
-    if (!in_array($knowledge_type, $valid_knowlegde_types)) {
-      $this->returnError(600, $this->version);
-      return;
-    } 
-    
+  private function study_by_id($study_id,$knowledge_type) {
     $study = $this->Study->getById($study_id);
     
     if ($study == false) {
       $this->returnError(601, $this->version);
+      return;
+    }
+    
+    $this->_study_get($study,$knowledge_type);
+  }
+  
+  private function study_by_alias($study_alias,$knowledge_type) {
+    $study = $this->Study->getSingleWhere('alias = "' . $study_alias . '"');
+    
+    if ($study == false) {
+      $this->returnError(601, $this->version);
+      return;
+    }
+    
+    $this->_study_get($study,$knowledge_type);
+  }
+  
+  private function _study_get($study,$knowledge_type) {
+    $valid_knowlegde_types = array('runs', 'flows', 'setups', 'data', 'tasks', NULL);
+    if (!in_array($knowledge_type, $valid_knowlegde_types)) {
+      $this->returnError(600, $this->version);
       return;
     }
     
