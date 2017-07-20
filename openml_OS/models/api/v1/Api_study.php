@@ -25,14 +25,19 @@ class Api_study extends Api_model {
       return;
     }
 
-    if (count($segments) == 2 && is_numeric($segments[0])) {
-      $this->study_by_id($segments[0], $segments[1]);
-      return;
-    }
-
-    if (count($segments) == 2) {
-      $this->study_by_alias($segments[0], $segments[1]);
-      return;
+    if (count($segments) == 1 || count($segments) == 2) {
+      $type = null;
+      if (count($segments) == 2) {
+        $type = $segments[1];
+      }
+      
+      if (is_numeric($segments[0])) {
+        $this->study_by_id($segments[0], $type);
+        return;
+      } else {
+        $this->study_by_alias($segments[0], $type);
+        return;
+      }
     }
     
     $this->returnError( 100, $this->version );
