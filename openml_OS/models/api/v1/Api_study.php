@@ -62,7 +62,7 @@ class Api_study extends Api_model {
   }
   
   private function study_by_alias($study_alias,$knowledge_type) {
-    $study = $this->Study->getSingleWhere('alias = "' . $study_alias . '"');
+    $study = $this->Study->getWhereSingle('alias = "' . $study_alias . '"');
     
     if ($study == false) {
       $this->returnError(601, $this->version);
