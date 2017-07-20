@@ -816,7 +816,7 @@ class Api_run extends Api_model {
         // there will be a DB error due to the absence of 'function_id'
       }
       // unset function field
-      unset($evaluation['function']);
+      unset($evaluation['name']);
 
       if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample
