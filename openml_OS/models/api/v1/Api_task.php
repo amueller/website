@@ -126,11 +126,6 @@ class Api_task extends Api_model {
 
 
   private function task($task_id) {
-    if($task_id == false) {
-      $this->returnError(150, $this->version);
-      return;
-    }
-
     $task = $this->Task->getById($task_id);
     if($task === false) {
       $this->returnError(151, $this->version);
@@ -139,7 +134,7 @@ class Api_task extends Api_model {
 
     $task_type = $this->Task_type->getById($task->ttid);
     if ($task_type === false) {
-      $this->returnError(151, $this->version);
+      $this->returnError(152, $this->version);
       return;
     }
 
@@ -159,7 +154,22 @@ class Api_task extends Api_model {
 
     $this->xmlContents('task-get', $this->version, array('task' => $task, 'task_type' => $task_type, 'name' => $name, 'parsed_io' => $parsed_io, 'tags' => $tags));
   }
-
+  
+  private function task_inputs($task_id) {
+    $task = $this->Task->getById($task_id);
+    if($task === false) {
+      $this->returnError(156, $this->version);
+      return;
+    }
+    
+    $inputs = $this->Task_inputs->getAssociativeArray('input', 'value', 'task_id = ' . $task_id);
+    if ($inputs === false) {
+      $this->returnError(157, $this->version);
+      return;
+    }
+    
+    $this->xmlContents('task-inputs', $this->version, array('task' => $task, 'inputs' => $inputs));
+  }
 
   private function task_delete($task_id) {
 
