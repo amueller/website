@@ -358,6 +358,9 @@ $this->apiErrors[672] = 'No results. ';
 $this->apiErrors[673] = 'Result set too big. Please use one of the filters or the limit option. ';
 $this->apiErrors[674] = 'No results, please check the filter. ';
 
+// openml.data.unprocessed
+$this->apiErrors[681] = 'No unprocessed datasets. ';
+
 
 
 // openml.votes.list
