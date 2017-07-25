@@ -820,7 +820,7 @@ class Api_data extends Api_model {
       $this->db->order_by('d.did DESC');
     }
     
-    $data = $this->db->select('r.*')->get();
+    $data = $this->db->get();
     if ($data && $data->num_rows() > 0){
       if ($order == 'random'){
         $result = array($result[array_rand($data->result())]);
