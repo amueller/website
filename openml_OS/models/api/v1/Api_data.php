@@ -47,7 +47,7 @@ class Api_data extends Api_model {
     }
     
     if (count($segments) >= 4 && $segments[0] == 'qualities' && $segments[1] == 'unprocessed' && is_numeric($segments[2]) && in_array($segments[3], $order_values)) {
-      $feature == (count($segments > 4) && $segments[4] == 'feature');
+      $feature == (count($segments) > 4 && $segments[4] == 'feature');
       $this->data_unprocessed($segments[2], $segments[3], $feature);
       return;
     }
