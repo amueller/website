@@ -6,14 +6,7 @@ class Data extends CI_Controller {
 
     $this->controller = strtolower(get_class ($this));
     $this->nr_segments = count($this->uri->segments);
-
-    $this->load->Model('Dataset');
-    $this->load->Model('File');
-    $this->load->Model('Implementation');
-    $this->load->Model('Author');
-
-    $this->load->helper('file_upload');
-
+    
     $this->load->Library('ion_auth');
     
     // authentication
@@ -33,154 +26,36 @@ class Data extends CI_Controller {
       $this->session->sess_destroy();
     }
   }
-
-  function download($id,$name = 'undefined') {
-    $file = $this->File->getById($id);
-    if (!$file) {
-      $this->_error404();
-      return;
-    }
-    
-    if (!$this->_check_rights($file)) {
-      $this->_error403();
-      return;
-    }
-      
-    if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
-      $this->_error404();
-      return;
-    }
-    
-    // in case of externally linked file, handle alternativelly
-    if ($file->{'type'} == 'url') {
-      header('Location: ' . $file->filepath);
-    } else {
-      $this->_header_download($file);
-      readfile_chunked(DATA_PATH . $file->filepath);
-    }
+  
+  public function v1($type) {
+    $this->load->Model('data/v1/Data_server');
+    $this->bootstrap('1');
   }
+  
+  private function bootstrap($version) {
+    $segs = $this->uri->segment_array();
 
+    $controller = array_shift($segs);
+    $this->version = array_shift($segs);
+    $function = array_shift($segs);
+    
+    call_user_func_array($this->Data_server->$function, $segs);
+  }
+  
+  /* LEGACY START */
+  function download($id, $name = 'undefined') {
+    $this->load->Model('data/v1/Data_server');
+    $this->Data_server->download($id, $name)
+  }
+  
   function view($id, $name = 'undefined') {
-    $file = $this->File->getById($id);
-    if ($file === false) {
-      $this->_error404();
-    }
-    
-    if (!$this->_check_rights($file)) {
-      $this->_error403();
-      return;
-    }
-  
-    if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
-      $this->_error404();
-      return;
-    }
-    
-    // in case of externally linked file, handle alternativelly
-    if ($file->{'type'} == 'url') {
-      header('Location: ' . $file->filepath);
-    } else {
-      header('Content-type: ' . $file->mime_type);
-      header('Content-Length: ' . $file->filesize);
-      readfile(DATA_PATH . $file->filepath);
-    }
+    $this->load->Model('data/v1/Data_server');
+    $this->Data_server->download($id, $name)
   }
   
-  function get_csv($id, $name='undefined') {
-    # TODO: caching mechanism to 
-    $file = $this->File->getById($id);
-    
-    # check file rights
-    if (!$this->_check_rights($file)) {
-      $this->_error403();
-      return;
-    }
-    
-    # file does not exist, or is no valid arff
-    if (!$file || strtolower($file->extension) != 'arff') {
-      # TODO: think of more meaningfull error
-      $this->_error404();
-      return;
-    } 
-    
-    // in case of externally linked file, handle alternativelly
-    $location = DATA_PATH . $file->filepath;
-    if ($file->type == 'url') {
-      $location = $file->filepath;
-    }
-    
-    $handle = fopen($location, 'r');
-    $position = -1;
-    for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
-      // process the line read.
-      if (trim(strtolower($line)) == '@data') {
-        $position = ftell($handle);
-        break;
-      }
-    }
-    
-    if ($position < 0) { # apparently we didn't find '@data' 
-      # TODO: more meaningfull error
-      $this->_error404();
-      return;
-    }
-    
-    $this->_header_download($file);
-    for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
-      if (trim($line[0]) == '%') {
-        continue;
-      } else {
-        echo $line;
-      }
-    }
-  }
-
-  private function _check_rights($file) {
-    if($file->access_policy == 'public') {
-      return true;
-    }
-
-    if($this->ion_auth->is_admin($this->user_id)) {
-      return true;
-    }
-
-    elseif($file->access_policy == 'private') {
-      if($this->user_id == $file->creator) {
-        return true;
-      } else {
-        $this->_error403();
-      }
-    }
-
-    elseif($file->access_policy == 'deleted') {
-      $this->_error404();
-    }
-
-    elseif($file->access_policy == 'none') {
-      $this->_error403();
-    }
-  }
-
-  private function _error404() {
-    http_response_code(404);
-    $this->load->view('404');
-  }
-
-  private function _error403() {
-    http_response_code(403);
-    $this->load->view('403');
-  }
-
-  private function _header_download($file) {
-    header('Content-Description: File Transfer');
-    header('Content-Type: ' . ($file->extension == 'arff' ? 'text/plain' : $file->mime_type));
-    header('Content-Length: ' . $file->filesize);
-    header('Content-Disposition: attachment; filename='.basename($file->filename_original));
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    // header('Content-Length: ' . $file->filesize);
+  function get_csv($id, $name = 'undefined') {
+    $this->load->Model('data/v1/Data_server');
+    $this->Data_server->download($id, $name)
   }
 }
 ?>
