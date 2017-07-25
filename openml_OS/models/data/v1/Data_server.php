@@ -114,7 +114,7 @@ class Data_server extends CI_Model {
       $this->_error404();
       return;
     }
-    echo '"' . implode('","', $features) . '"';
+    echo '"' . implode('","', $features) . '"\n';
     
     $this->_header_download($file);
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
