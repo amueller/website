@@ -40,6 +40,11 @@ class Api_data extends Api_model {
       return;
     }
 
+    if (count($segments) == 1 && $segments[0] == 'unprocessed') {
+      $this->data_unprocessed();
+      return;
+    }
+
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->data_delete($segments[0]);
       return;
