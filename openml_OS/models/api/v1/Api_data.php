@@ -39,9 +39,10 @@ class Api_data extends Api_model {
       $this->data($segments[0]);
       return;
     }
-
-    if (count($segments) == 2 && $segments[0] == 'unprocessed' && is_numeric($segments[1])) {
-      $this->data_unprocessed($segments[1]);
+    
+    $order_values = array('random', 'reverse', 'normal');
+    if (count($segments) == 3 && $segments[0] == 'unprocessed' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
+      $this->data_unprocessed($segments[1], $segments[2]);
       return;
     }
 
@@ -801,20 +802,39 @@ class Api_data extends Api_model {
     }
   }
   
-  private function data_unprocessed($evaluation_engine_id) {
+  private function data_unprocessed($evaluation_engine_id, $order) {
     
     $this->db->select('d.*')->from('dataset d');
     $this->db->join('data_processed p', 'd.did = p.did AND evaluation_engine_id = ' . $evaluation_engine_id, 'left');
-    $this->db->where('p.did IS NULL')->limit('1');
+    $this->db->where('p.did IS NULL');
     
-    $data = $this->db->get()->result();
+    $randomcount = 200;
+    if ($order == 'random') {
+      $this->db->limit($randomcount);
+    } else {
+      $this->db->limit('1');
+    }
     
-    if (!count($data)) {
+    // Reverse order if needed (slower query)
+    if ($order == 'reverse') {
+      $this->db->order_by('d.did DESC');
+    }
+    
+    $data = $this->db->select('r.*')->get();
+    if ($data && $data->num_rows() > 0){
+      if ($order == 'random'){
+        $result = array($result[array_rand($data->result())]);
+      } else {
+        $result = $data->result();
+      }
+    }
+    
+    if (!count($result)) {
       $this->returnError(681, $this->version);
       return;
     }
     
-    $this->xmlContents('data-unprocessed', $this->version, array('res' => $data));
+    $this->xmlContents('data-unprocessed', $this->version, array('res' => $result));
   }
   
 }
