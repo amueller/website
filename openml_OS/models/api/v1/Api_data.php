@@ -40,8 +40,8 @@ class Api_data extends Api_model {
       return;
     }
 
-    if (count($segments) == 1 && $segments[0] == 'unprocessed') {
-      $this->data_unprocessed();
+    if (count($segments) == 2 && $segments[0] == 'unprocessed' && is_numeric($segments[1])) {
+      $this->data_unprocessed($segments[1]);
       return;
     }
 
