@@ -40,7 +40,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $order_values = array('random', 'reverse', 'normal');
+    $order_values = array('random', 'normal');
     if (count($segments) == 3 && $segments[0] == 'unprocessed' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
       $this->data_unprocessed($segments[1], $segments[2]);
       return;
@@ -868,8 +868,7 @@ class Api_data extends Api_model {
              ' WHERE qualityCount.data IS NULL ' .
              ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
              ' AND p.error IS NULL ' .
-             ' ORDER BY ' . $tagSort . ' d.did LIMIT 0, 100;';
-      echo $sql;
+             ' ORDER BY ' . $tagSort . ' d.did ';
     } else {
       $sql = 'SELECT DISTINCT d.* FROM data_processed p, dataset d LEFT JOIN (' .
                ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
@@ -881,9 +880,21 @@ class Api_data extends Api_model {
              ' WHERE qualityCount.data IS NULL ' . 
              ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
              ' AND p.error IS NULL ' . 
-             ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0,100;';
-       echo $sql;
+             ' ORDER BY ' . $tagSort . ' dataset.did ';
     }
+    if ($order == 'random') {
+      $sql .= ' LIMIT 100; '
+    } else {
+      $sql .= ' LIMIT 1;';
+    }
+    $result = $this->Dataset->sql($sql);
+    if ($result === false) {
+      $this->returnError(687, $this->version);
+      return;
+    }
+    $result = array($result[array_rand($result)]);
+    
+    $this->xmlContents('data-unprocessed', $this->version, array('res' => $result));
   }
 }
 ?>
