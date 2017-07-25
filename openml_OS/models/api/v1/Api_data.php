@@ -814,7 +814,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $this->xmlContents('data-unprocessed', $this->version, array('res' => $res));
+    $this->xmlContents('data-unprocessed', $this->version, array('res' => $data));
   }
   
 }
