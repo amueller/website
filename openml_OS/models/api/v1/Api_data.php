@@ -871,7 +871,7 @@ class Api_data extends Api_model {
                ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '")' .
                ' GROUP BY q.data HAVING numQualities = ' . 'max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `result2`' .
                ' ON dataset.did = result2.data WHERE result2.data IS NULL AND dataset.error = "false"' .
-               ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0,100;'
+               ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0,100;';
        echo $sql;
     }
   }
