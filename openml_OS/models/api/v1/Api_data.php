@@ -859,7 +859,7 @@ class Api_data extends Api_model {
     }
     
     if (!$feature_attributes) {
-      $sql = 'SELECT DISTINCT dataset.did FROM dataset_processed p, dataset d LEFT JOIN (' . 
+      $sql = 'SELECT DISTINCT d.* FROM data_processed p, dataset d LEFT JOIN (' . 
                ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
                ' FROM data_quality q ' . $tagJoin .
                ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '") AND q.evaluation_engine_id = ' . $evaluation_engine_id .
