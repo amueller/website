@@ -883,7 +883,7 @@ class Api_data extends Api_model {
              ' ORDER BY ' . $tagSort . ' dataset.did ';
     }
     if ($order == 'random') {
-      $sql .= ' LIMIT 100; '
+      $sql .= ' LIMIT 100; ';
     } else {
       $sql .= ' LIMIT 1;';
     }
