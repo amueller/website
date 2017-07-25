@@ -35,8 +35,12 @@ $this->apiErrors[145] = 'Error parsing dataset ARFF file';
 
 
 // for function: openml.tasks.search
-$this->apiErrors[150] = 'Please provide task_id';
 $this->apiErrors[151] = 'Unknown task';
+$this->apiErrors[152] = 'Unknown task type';
+
+// for function: openml.tasks.inputs
+$this->apiErrors[156] = 'Unknown task';
+$this->apiErrors[157] = 'Task does not have any inputs';
 
 // for function: openml.flow.upload
 $this->apiErrors[160] = 'Error in file uploading';
