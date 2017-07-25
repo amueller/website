@@ -365,6 +365,8 @@ $this->apiErrors[674] = 'No results, please check the filter. ';
 // openml.data.unprocessed
 $this->apiErrors[681] = 'No unprocessed datasets. ';
 
+// openml.data.unprocessed
+$this->apiErrors[686] = 'Please specify the features the evaluation engine wants to calculate. ';
 
 
 // openml.votes.list
