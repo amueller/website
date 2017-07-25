@@ -880,7 +880,7 @@ class Api_data extends Api_model {
              ' WHERE qualityCount.data IS NULL ' . 
              ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
              ' AND p.error IS NULL ' . 
-             ' ORDER BY ' . $tagSort . ' dataset.did ';
+             ' ORDER BY ' . $tagSort . ' d.did ';
     }
     if ($order == 'random') {
       $sql .= ' LIMIT 100; ';
