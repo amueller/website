@@ -45,6 +45,12 @@ class Api_data extends Api_model {
       $this->data_unprocessed($segments[1], $segments[2]);
       return;
     }
+    
+    if (count($segments) >= 4 && $segments[0] == 'qualities' && $segments[1] == 'unprocessed' && is_numeric($segments[2]) && in_array($segments[3], $order_values)) {
+      $feature == (count($segments > 4) && $segments[4] == 'feature');
+      $this->data_unprocessed($segments[2], $segments[3], $feature);
+      return;
+    }
 
     if (count($segments) == 1 && is_numeric($segments[0]) && $request_type == 'delete') {
       $this->data_delete($segments[0]);
@@ -620,7 +626,7 @@ class Api_data extends Api_model {
     $interval_size  = false; // $this->input->get( 'interval_size' );
 
     $evaluation_table_constraints = '';
-    if( $interval_start !== false || $interval_end !== false || $interval_size !== false ) {
+    if($interval_start !== false || $interval_end !== false || $interval_size !== false) {
       $evaluation_table = 'evaluation_interval';
       $interval_constraints = '';
       if( $interval_start !== false && is_numeric( $interval_start ) ) {
@@ -828,9 +834,7 @@ class Api_data extends Api_model {
       } else {
         $result = $data->result();
       }
-    }
-    
-    if (!count($result)) {
+    } else {
       $this->returnError(681, $this->version);
       return;
     }
@@ -838,5 +842,38 @@ class Api_data extends Api_model {
     $this->xmlContents('data-unprocessed', $this->version, array('res' => $result));
   }
   
+  private function data_qualitiesrequest($evaluation_engine_id, $order, $feature_attributes = false, $priorityTag = null) {
+    $requiredMetafeatures = $this->input->get_post('features'); // TODO: remove get
+    
+    $tagJoin = "";
+    $tagSelect = "";
+    $tagSort = "";
+    if ($priorityTag != null) {
+      $tagSelect = ", t.tag ";
+      $tagSort = "t.tag DESC, "; // to avoid NULL values first
+      $tagJoin = "LEFT JOIN dataset_tag t ON q.data = t.id AND t.tag = '" . $priorityTag . "' ";
+    }
+    
+    if (!$feature_attributes) {
+      $sql = 'SELECT DISTINCT dataset.did FROM dataset LEFT JOIN (' . 
+               ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
+               ' FROM data_quality q ' . $tagJoin .
+               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '")' .
+               ' GROUP BY q.data HAVING numQualities = ' . count($requiredMetafeatures) . ') as `qualityCount` ' .
+             ' ON dataset.did = qualityCount.data WHERE qualityCount.data IS NULL AND dataset.error = "false"' .
+             ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0, 100;';
+      echo $sql;
+    } else {
+      $sql = 'SELECT DISTINCT dataset.did FROM dataset LEFT JOIN (' .
+               ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
+               ' FROM feature_quality q ' . $tagJoin .
+               ' JOIN (SELECT data_feature.did, COUNT(*) as `number_of_attributes` FROM data_feature GROUP BY data_feature.did) as `attCounts` ON attCounts.did = q.data' .
+               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '")' .
+               ' GROUP BY q.data HAVING numQualities = ' . 'max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `result2`' .
+               ' ON dataset.did = result2.data WHERE result2.data IS NULL AND dataset.error = "false"' .
+               ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0,100;'
+       echo $sql;
+    }
+  }
 }
 ?>
