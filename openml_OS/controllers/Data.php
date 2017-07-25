@@ -45,17 +45,17 @@ class Data extends CI_Controller {
   /* LEGACY START */
   function download($id, $name = 'undefined') {
     $this->load->Model('data/v1/Data_server');
-    $this->Data_server->download($id, $name)
+    $this->Data_server->download($id, $name);
   }
   
   function view($id, $name = 'undefined') {
     $this->load->Model('data/v1/Data_server');
-    $this->Data_server->download($id, $name)
+    $this->Data_server->download($id, $name);
   }
   
   function get_csv($id, $name = 'undefined') {
     $this->load->Model('data/v1/Data_server');
-    $this->Data_server->download($id, $name)
+    $this->Data_server->download($id, $name);
   }
 }
 ?>
