@@ -867,7 +867,7 @@ class Api_data extends Api_model {
              ' ON d.did = qualityCount.data '.
              ' WHERE qualityCount.data IS NULL ' .
              ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
-             ' AND p.error IS NULL AND p.did IS NOT NULL '
+             ' AND p.error IS NULL AND p.did IS NOT NULL ' .
              ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0, 100;';
       echo $sql;
     } else {
