@@ -40,7 +40,7 @@ class Data extends CI_Controller {
     $this->version = array_shift($segs);
     $function = array_shift($segs);
     
-    call_user_func_array($this->Data_server->$function, $segs);
+    call_user_func_array(array($this->Data_server, $function), $segs);
   }
   
   /* LEGACY START */
