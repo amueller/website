@@ -801,7 +801,7 @@ class Api_data extends Api_model {
     }
   }
   
-  private function unprocessed($evaluation_engine_id) {
+  private function data_unprocessed($evaluation_engine_id) {
     
     $this->db->select('d.*')->from('dataset d');
     $this->db->join('data_processed p', 'd.did = p.did AND evaluation_engine_id = ' . $evaluation_engine_id, 'left');
