@@ -887,7 +887,7 @@ class Api_data extends Api_model {
     } else {
       $sql .= ' LIMIT 1;';
     }
-    $result = $this->Dataset->sql($sql);
+    $result = $this->Dataset->query($sql);
     if ($result === false) {
       $this->returnError(687, $this->version);
       return;
