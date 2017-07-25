@@ -823,7 +823,8 @@ class Api_data extends Api_model {
     $data = $this->db->get();
     if ($data && $data->num_rows() > 0){
       if ($order == 'random'){
-        $result = array($result[array_rand($data->result())]);
+        $result = $data->result();
+        $result = array($result[array_rand($result)]);
       } else {
         $result = $data->result();
       }
