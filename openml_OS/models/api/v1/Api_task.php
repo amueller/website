@@ -32,8 +32,8 @@ class Api_task extends Api_model {
       return;
     }
 
-    if (count($segments) == 2 && is_numeric($segments[0]) && $segments[1] == 'inputs') {
-      $this->task_inputs($segments[0]);
+    if (count($segments) == 2 && is_numeric($segments[1]) && $segments[0] == 'inputs') {
+      $this->task_inputs($segments[1]);
       return;
     }
 
