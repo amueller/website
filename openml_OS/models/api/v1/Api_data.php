@@ -843,7 +843,7 @@ class Api_data extends Api_model {
   }
   
   private function dataqualities_unprocessed($evaluation_engine_id, $order, $feature_attributes = false, $priorityTag = null) {
-    $requiredMetafeatures = explode(',', $this->input->get_post('features')); // TODO: remove get
+    $requiredMetafeatures = explode(',', $this->input->get_post('qualities')); // TODO: remove get
     if (count($requiredMetafeatures) < 2) {
       $this->returnError(686, $this->version);
       return;
