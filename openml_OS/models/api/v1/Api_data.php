@@ -859,12 +859,15 @@ class Api_data extends Api_model {
     }
     
     if (!$feature_attributes) {
-      $sql = 'SELECT DISTINCT dataset.did FROM dataset LEFT JOIN (' . 
+      $sql = 'SELECT DISTINCT dataset.did FROM dataset_processed p, dataset d LEFT JOIN (' . 
                ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
                ' FROM data_quality q ' . $tagJoin .
-               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '")' .
+               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '") AND q.evaluation_engine_id = ' . $evaluation_engine_id .
                ' GROUP BY q.data HAVING numQualities = ' . count($requiredMetafeatures) . ') as `qualityCount` ' .
-             ' ON dataset.did = qualityCount.data WHERE qualityCount.data IS NULL AND dataset.error = "false"' .
+             ' ON d.did = qualityCount.data '.
+             ' WHERE qualityCount.data IS NULL ' .
+             ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
+             ' AND p.error IS NULL AND p.did IS NOT NULL '
              ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0, 100;';
       echo $sql;
     } else {
