@@ -32,6 +32,11 @@ class Api_task extends Api_model {
       return;
     }
 
+    if (count($segments) == 2 && is_numeric($segments[0]) && $segments[1] == 'inputs') {
+      $this->task_inputs($segments[0]);
+      return;
+    }
+
     if (count($segments) == 0 && $request_type == 'post') {
       $this->task_upload();
       return;
