@@ -9,7 +9,6 @@ class Data_server extends CI_Model {
     $this->load->Model('Data_feature');
     $this->load->Model('File');
     $this->load->Model('Implementation');
-    $this->load->Model('Author');
 
     $this->load->helper('file_upload');
 

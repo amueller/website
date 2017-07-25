@@ -8,6 +8,7 @@ class Data extends CI_Controller {
     $this->nr_segments = count($this->uri->segments);
     
     $this->load->Library('ion_auth');
+    $this->load->Model('Author');
     
     // authentication
     $getPostHash = @$this->input->get_post('api_key');
