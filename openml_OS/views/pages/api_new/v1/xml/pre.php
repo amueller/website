@@ -167,7 +167,7 @@ $this->apiErrors[372] = 'No results';
 
 // for function: openml.qualities.upload
 $this->apiErrors[380] = 'Please provide API key';
-$this->apiErrors[381] = 'Authentication failed';
+$this->apiErrors[381] = 'Something wrong with XML, please check did and evaluation_engine_id';
 $this->apiErrors[382] = 'Please provide description xml';
 $this->apiErrors[383] = 'Problem validating uploaded description file';
 $this->apiErrors[384] = 'Could not find dataset';
@@ -214,6 +214,7 @@ $this->apiErrors[432] = 'Please provide description xml';
 $this->apiErrors[433] = 'Problem validating uploaded description file';
 $this->apiErrors[434] = 'Could not find dataset';
 $this->apiErrors[435] = 'Feature upload failed';
+$this->apiErrors[436] = 'Something wrong with XML, check did and evaluation engine id';
 
 // for function: openml.estimationprocedure.get
 $this->apiErrors[440] = 'Please provide estimationprocedure_id';

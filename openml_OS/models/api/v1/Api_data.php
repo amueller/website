@@ -504,6 +504,12 @@ class Api_data extends Api_model {
 
     $xml = simplexml_load_file( $description['tmp_name'] );
     $did = ''. $xml->children('oml', true)->{'did'};
+    $eval_id = ''.$xml->children('oml', true)->{'evaluation_engine_id'};
+    
+    if (!is_numeric($did) || !is_numeric($eval_id) || $did <= 0 || $eval_id <= 0) {
+      $this->returnError( 436, $this->version );
+      return;
+    }
 
     $dataset = $this->Dataset->getById( $did );
     if( $dataset == false ) {
@@ -511,14 +517,21 @@ class Api_data extends Api_model {
       return;
     }
     // prepare array for updating data object
-    $data = array( 'processed' => now() );
-    if( $xml->children('oml', true)->{'error'} ) {
-      $data['error'] = "true";
+    $data = array('did' => $did,
+                  'evaluation_engine_id' => $eval_id,
+                  'user_id' => $this->user_id,
+                  'processing_date' => now());
+    if($xml->children('oml', true)->{'error'}) {
       $data['error_message'] = htmlentities($xml->children('oml', true)->{'error'});
     }
 
     $this->db->trans_start();
-    $success = true;
+    
+    $success = $this->Data_processed->insert($data);
+    if (!$success) {
+      $this->returnError(435, $this->version);
+      return;
+    }
     //$current_index = -1;
 
     //copy special features into data_features
@@ -532,6 +545,7 @@ class Api_data extends Api_model {
     foreach( $xml->children('oml', true)->{'feature'} as $q ) {
       $feature = xml2object( $q, true );
       $feature->did = $did;
+      $feature->evaluation_engine_id = $eval_id;
 
       // add special features
       if(in_array($feature->name,$targets))
@@ -555,12 +569,10 @@ class Api_data extends Api_model {
     }
     $this->db->trans_complete();
 
-    $this->Dataset->update( $did, $data );
-
-    if( $success ) {
-      $this->xmlContents( 'data-features-upload', $this->version, array( 'did' => $dataset->did ) );
+    if($success) {
+      $this->xmlContents('data-features-upload', $this->version, array('did' => $dataset->did));
     } else {
-      $this->returnError( 435, $this->version );
+      $this->returnError(435, $this->version);
       return;
     }
   }
@@ -724,6 +736,12 @@ class Api_data extends Api_model {
 
     $xml = simplexml_load_file($description['tmp_name']);
     $did = ''. $xml->children('oml', true)->{'did'};
+    $eval_id = ''.$xml->children('oml', true)->{'evaluation_engine_id'};
+    
+    if (!is_numeric($did) || !is_numeric($eval_id) || $did <= 0 || $eval_id <= 0) {
+      $this->returnError( 381, $this->version );
+      return;
+    }
 
     $dataset = $this->Dataset->getById($did);
     if ($dataset == false) {
@@ -771,6 +789,7 @@ class Api_data extends Api_model {
         $data = array(
           'data' => $dataset->did,
           'quality' => $quality->name,
+          'evaluation_engine_id' => $eval_id,
           'interval_start' => $quality->interval_start,
           'interval_end' => $quality->interval_end);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
@@ -779,13 +798,15 @@ class Api_data extends Api_model {
         $data = array(
           'data' => $dataset->did,
           'feature_index' => $quality->feature_index,
-          'quality' => $quality->name);
+          'quality' => $quality->name,
+          'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Feature_quality->insert_ignore($data);
       } else {
         $data = array(
           'data' => $dataset->did,
-          'quality' => $quality->name);
+          'quality' => $quality->name,
+          'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality->insert_ignore($data);
       }
