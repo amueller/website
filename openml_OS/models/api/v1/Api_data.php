@@ -867,18 +867,21 @@ class Api_data extends Api_model {
              ' ON d.did = qualityCount.data '.
              ' WHERE qualityCount.data IS NULL ' .
              ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
-             ' AND p.error IS NULL AND p.did IS NOT NULL ' .
-             ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0, 100;';
+             ' AND p.error IS NULL ' .
+             ' ORDER BY ' . $tagSort . ' d.did LIMIT 0, 100;';
       echo $sql;
     } else {
-      $sql = 'SELECT DISTINCT dataset.did FROM dataset LEFT JOIN (' .
+      $sql = 'SELECT DISTINCT d.* FROM data_processed p, dataset d LEFT JOIN (' .
                ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
                ' FROM feature_quality q ' . $tagJoin .
                ' JOIN (SELECT data_feature.did, COUNT(*) as `number_of_attributes` FROM data_feature GROUP BY data_feature.did) as `attCounts` ON attCounts.did = q.data' .
-               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '")' .
-               ' GROUP BY q.data HAVING numQualities = ' . 'max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `result2`' .
-               ' ON dataset.did = result2.data WHERE result2.data IS NULL AND dataset.error = "false"' .
-               ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0,100;';
+               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '") AND q.evaluation_engine_id = ' . $evaluation_engine_id . 
+               ' GROUP BY q.data HAVING numQualities = max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `qualityCount`' .
+             ' ON d.did = qualityCount.data ' . 
+             ' WHERE qualityCount.data IS NULL ' . 
+             ' AND d.did = p.did AND p.evaluation_engine_id = ' . $evaluation_engine_id . 
+             ' AND p.error IS NULL ' . 
+             ' ORDER BY ' . $tagSort . ' dataset.did LIMIT 0,100;';
        echo $sql;
     }
   }
