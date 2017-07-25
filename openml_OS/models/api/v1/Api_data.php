@@ -7,6 +7,7 @@ class Api_data extends Api_model {
     parent::__construct();
 
     // load models
+    $this->load->model('Data_processed');
     $this->load->model('Dataset');
     $this->load->model('Dataset_tag');
     $this->load->model('Data_feature');
@@ -424,47 +425,49 @@ class Api_data extends Api_model {
 
 
   private function data_features($data_id) {
-    if( $data_id == false ) {
-      $this->returnError( 270, $this->version );
+    if($data_id == false) {
+      $this->returnError(270, $this->version);
       return;
     }
-    $dataset = $this->Dataset->getById( $data_id );
+    $dataset = $this->Dataset->getById($data_id);
     if( $dataset === false ) {
-      $this->returnError( 271, $this->version );
+      $this->returnError(271, $this->version);
       return;
     }
 
-    if($dataset->visibility != 'public' and $dataset->uploader != $this->user_id ) {
-      $this->returnError( 271, $this->version ); // Add special error code for this case?
+    if($dataset->visibility != 'public' && $dataset->uploader != $this->user_id) {
+      $this->returnError(271, $this->version); // Add special error code for this case?
+      return;
+    }
+    
+    $data_processed = $this->Data_processed->getById(array($data_id, 1));
+    
+    if($data_processed == false) {
+      $this->returnError(273, $this->version);
       return;
     }
 
-    if( $dataset->processed == NULL) {
-      $this->returnError( 273, $this->version );
+    if($data_processed->error != "false") {
+      $this->returnError(274, $this->version);
       return;
     }
 
-    if( $dataset->error != "false") {
-      $this->returnError( 274, $this->version );
+    $dataset->features = $this->Data_feature->getWhere('did = "' . $dataset->did . '"');
+
+    if($dataset->features === false) {
+      $this->returnError(272, $this->version);
+      return;
+    }
+    if(is_array($dataset->features) === false) {
+      $this->returnError(272, $this->version);
+      return;
+    }
+    if(count($dataset->features) === 0) {
+      $this->returnError(272, $this->version);
       return;
     }
 
-    $dataset->features = $this->Data_feature->getWhere( 'did = "' . $dataset->did . '"' );
-
-    if( $dataset->features === false ) {
-      $this->returnError( 272, $this->version );
-      return;
-    }
-    if( is_array( $dataset->features ) === false ) {
-      $this->returnError( 272, $this->version );
-      return;
-    }
-    if( count( $dataset->features ) === 0 ) {
-      $this->returnError( 272, $this->version );
-      return;
-    }
-
-    $this->xmlContents( 'data-features', $this->version, $dataset );
+    $this->xmlContents('data-features', $this->version, $dataset);
   }
 
   private function data_features_upload() {
