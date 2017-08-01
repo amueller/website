@@ -875,7 +875,7 @@ class Api_data extends Api_model {
     }
     
     $type = $feature_attributes ? 'FeatureQuality' : 'DataQuality';
-    $legal_qualities = $this->Quality->getColumnWhere('type = "' . $type . '"');
+    $legal_qualities = $this->Quality->getColumnWhere('name', 'type = "' . $type . '"');
     $illegal_qualities = array_diff($legal_qualities, $requiredMetafeatures);
     
     if (len($illegal_qualities)) {
