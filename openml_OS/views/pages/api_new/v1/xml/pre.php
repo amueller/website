@@ -364,6 +364,7 @@ $this->apiErrors[681] = 'No unprocessed datasets. ';
 // openml.data.unprocessed
 $this->apiErrors[686] = 'Please specify the features the evaluation engine wants to calculate (at least 2). ';
 $this->apiErrors[687] = 'No unprocessed datasets according to the given set of meta-features. ';
+$this->apiErrors[688] = 'Requesting unknown qualities. ';
 
 
 // openml.votes.list

@@ -874,6 +874,15 @@ class Api_data extends Api_model {
       return;
     }
     
+    $type = $feature_attributes ? 'FeatureQuality' : 'DataQuality';
+    $legal_qualities = $this->Quality->getColumnWhere('type = "' . $type . '"');
+    $illegal_qualities = array_diff($legal_qualities, $requiredMetafeatures);
+    
+    if (len($illegal_qualities)) {
+      $this->returnError(688, $this->version, $this->openmlGeneralErrorCode, 'Illegal qualities: "' . implode('","', $illegal_qualities) . '"');
+      return;
+    }
+    
     $tagJoin = "";
     $tagSelect = "";
     $tagSort = "";
