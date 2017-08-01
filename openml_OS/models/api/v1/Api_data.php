@@ -528,7 +528,7 @@ class Api_data extends Api_model {
                   'user_id' => $this->user_id,
                   'processing_date' => now());
     if($xml->children('oml', true)->{'error'}) {
-      $data['error_message'] = htmlentities($xml->children('oml', true)->{'error'});
+      $data['error'] = htmlentities($xml->children('oml', true)->{'error'});
     }
 
     $this->db->trans_start();
