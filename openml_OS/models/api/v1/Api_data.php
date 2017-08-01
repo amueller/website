@@ -752,7 +752,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $data_processed = $this->Data_processed->getById(array('did' => $did, 'evaluation_engine_id' => $eval_id));
+    $data_processed = $this->Data_processed->getById(array(0 => $did, 1 => $eval_id));
     if ($data_processed == false) {
       $this->returnError(384, $this->version);
       return;
