@@ -876,7 +876,7 @@ class Api_data extends Api_model {
     
     $type = $feature_attributes ? 'FeatureQuality' : 'DataQuality';
     $legal_qualities = $this->Quality->getColumnWhere('name', 'type = "' . $type . '"');
-    $illegal_qualities = array_diff($legal_qualities, $requiredMetafeatures);
+    $illegal_qualities = array_diff($requiredMetafeatures, $legal_qualities);
     
     if (count($illegal_qualities)) {
       $this->returnError(688, $this->version, $this->openmlGeneralErrorCode, 'Illegal qualities: "' . implode('","', $illegal_qualities) . '"');
