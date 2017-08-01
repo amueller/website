@@ -490,19 +490,19 @@ class Api_data extends Api_model {
     }
     
     // get correct description
-    if( isset($_FILES['description']) == false || check_uploaded_file( $_FILES['description'] ) == false ) {
+    if (isset($_FILES['description']) == false || check_uploaded_file($_FILES['description']) == false) {
       $this->returnError( 432, $this->version );
       return;
     }
 
     // get description from string upload
     $description = $_FILES['description'];
-    if( validateXml( $description['tmp_name'], xsd('openml.data.features', $this->controller, $this->version), $xmlErrors ) == false ) {
-      $this->returnError( 433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors );
+    if (validateXml($description['tmp_name'], xsd('openml.data.features', $this->controller, $this->version), $xmlErrors) == false) {
+      $this->returnError(433, $this->version, $this->openmlGeneralErrorCode, $xmlErrors);
       return;
     }
 
-    $xml = simplexml_load_file( $description['tmp_name'] );
+    $xml = simplexml_load_file($description['tmp_name']);
     $did = ''. $xml->children('oml', true)->{'did'};
     $eval_id = ''.$xml->children('oml', true)->{'evaluation_engine_id'};
     
@@ -511,11 +511,17 @@ class Api_data extends Api_model {
       return;
     }
 
-    $dataset = $this->Dataset->getById( $did );
-    if( $dataset == false ) {
-      $this->returnError( 434, $this->version );
+    $dataset = $this->Dataset->getById($did);
+    if ($dataset == false) {
+      $this->returnError(434, $this->version);
       return;
     }
+    
+    if ($this->Data_processed->getWhere('did = ' $did ' AND evaluation_engine_id = ' $eval_id)) {
+      $this->returnError(431, $this->version);
+      return;
+    }
+    
     // prepare array for updating data object
     $data = array('did' => $did,
                   'evaluation_engine_id' => $eval_id,
@@ -542,23 +548,26 @@ class Api_data extends Api_model {
       $ignores = array();
     }
 
-    foreach( $xml->children('oml', true)->{'feature'} as $q ) {
+    foreach($xml->children('oml', true)->{'feature'} as $q) {
       $feature = xml2object( $q, true );
       $feature->did = $did;
       $feature->evaluation_engine_id = $eval_id;
 
       // add special features
-      if(in_array($feature->name,$targets))
+      if(in_array($feature->name,$targets)) {
         $feature->is_target = 'true';
-      else //this is needed because the Java feature extractor still chooses a target when there isn't any
+      } else {//this is needed because the Java feature extractor still chooses a target when there isn't any
         $feature->is_target = 'false';
-      if(in_array($feature->name,$rowids))
+      }
+      if(in_array($feature->name,$rowids)) {
         $feature->is_row_identifier = 'true';
-      if(in_array($feature->name,$ignores))
+      }
+      if(in_array($feature->name,$ignores)) {
         $feature->is_ignore = 'true';
+      }
 
       //actual insert
-      $this->Data_feature->insert_ignore( $feature );
+      $this->Data_feature->insert($feature);
 
       // NOTE: this is commented out because not all datasets have targets, or they can have multiple ones. Targets should also be set more carefully.
       // if no specified attribute is the target, select the last one:
@@ -569,7 +578,7 @@ class Api_data extends Api_model {
     }
     $this->db->trans_complete();
 
-    if($success) {
+    if ($success) {
       $this->xmlContents('data-features-upload', $this->version, array('did' => $dataset->did));
     } else {
       $this->returnError(435, $this->version);

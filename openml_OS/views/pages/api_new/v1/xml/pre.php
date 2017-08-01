@@ -208,8 +208,7 @@ $this->apiErrors[425] = 'Run does not exists';
 $this->apiErrors[426] = 'Run already processed';
 
 // for function: openml.data.features.upload
-$this->apiErrors[430] = 'Please provide API key';
-$this->apiErrors[431] = 'Authentication failed';
+$this->apiErrors[431] = 'Dataset already processed';
 $this->apiErrors[432] = 'Please provide description xml';
 $this->apiErrors[433] = 'Problem validating uploaded description file';
 $this->apiErrors[434] = 'Could not find dataset';
