@@ -616,7 +616,7 @@ class Api_data extends Api_model {
   }
 
 
-  private function data_qualities($data_id) {
+  private function data_qualities($data_id, $evaluation_engine_id = 1) {
     if( $data_id == false ) {
       $this->returnError( 360, $this->version );
       return;
@@ -631,14 +631,16 @@ class Api_data extends Api_model {
       $this->returnError( 361, $this->version ); // Add special error code for this case?
       return;
     }
+    
+    $data_processed = $this->Data_processed->getById(array(0 => $data_id, 1 => $evaluation_engine_id));
 
-    if( $dataset->processed == NULL) {
-      $this->returnError( 363, $this->version );
+    if (!$data_processed) {
+      $this->returnError(363, $this->version);
       return;
     }
 
-    if( $dataset->error != "false") {
-      $this->returnError( 364, $this->version );
+    if($data_processed->error) {
+      $this->returnError(364, $this->version, $this->openmlGeneralErrorCode, $data_processed->error);
       return;
     }
 
