@@ -752,12 +752,12 @@ class Api_data extends Api_model {
       return;
     }
     
-    $dataset_processed = $this->Dataset_processed->getById(array('did' => $did, 'evaluation_engine_id' => $eval_id));
-    if ($dataset_processed == false) {
+    $data_processed = $this->Data_processed->getById(array('did' => $did, 'evaluation_engine_id' => $eval_id));
+    if ($data_processed == false) {
       $this->returnError(384, $this->version);
       return;
     }
-    $did = $dataset_processed->did;
+    $did = $data_processed->did;
 
     $all_data_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
     $all_feature_qualities = $this->Quality->getColumnWhere('name', '`type` = "FeatureQuality"');
