@@ -751,20 +751,13 @@ class Api_data extends Api_model {
       $this->returnError( 381, $this->version );
       return;
     }
-
-    $dataset = $this->Dataset->getById($did);
-    if ($dataset == false) {
+    
+    $dataset_processed = $this->Dataset_processed->getById(array('did' => $did, 'evaluation_engine_id' => $eval_id));
+    if ($dataset_processed == false) {
       $this->returnError(384, $this->version);
       return;
     }
-
-    // prepare array for updating data object
-    $data = array('processed' => now());
-    if ($xml->children('oml', true)->{'error'}) {
-      $data['error'] = "true";
-    }
-    $this->Dataset->update($did, $data);
-
+    $did = $dataset_processed->did;
 
     $all_data_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
     $all_feature_qualities = $this->Quality->getColumnWhere('name', '`type` = "FeatureQuality"');
@@ -796,7 +789,7 @@ class Api_data extends Api_model {
     foreach ($newQualities as $index => $quality) {
       if (property_exists($quality, 'interval_start')) {
         $data = array(
-          'data' => $dataset->did,
+          'data' => $did,
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id,
           'interval_start' => $quality->interval_start,
@@ -805,7 +798,7 @@ class Api_data extends Api_model {
         $this->Data_quality_interval->insert_ignore($data);
       } if (property_exists($quality, 'feature_index')) {
         $data = array(
-          'data' => $dataset->did,
+          'data' => $did,
           'feature_index' => $quality->feature_index,
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id);
@@ -813,7 +806,7 @@ class Api_data extends Api_model {
         $this->Feature_quality->insert_ignore($data);
       } else {
         $data = array(
-          'data' => $dataset->did,
+          'data' => $did,
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
@@ -824,14 +817,14 @@ class Api_data extends Api_model {
 
     // add to elastic search index.
     try {
-      $this->elasticsearch->index('data', $dataset->did);
+      $this->elasticsearch->index('data', $did);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
     
     if ($success) {
-      $this->xmlContents('data-qualities-upload', $this->version, array('did' => $dataset->did));
+      $this->xmlContents('data-qualities-upload', $this->version, array('did' => $did));
     } else {
       $this->returnError(389, $this->version);
       return;

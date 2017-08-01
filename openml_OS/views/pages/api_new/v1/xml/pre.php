@@ -166,11 +166,10 @@ $this->apiErrors[371] = 'Input not safe';
 $this->apiErrors[372] = 'No results';
 
 // for function: openml.qualities.upload
-$this->apiErrors[380] = 'Please provide API key';
 $this->apiErrors[381] = 'Something wrong with XML, please check did and evaluation_engine_id';
 $this->apiErrors[382] = 'Please provide description xml';
 $this->apiErrors[383] = 'Problem validating uploaded description file';
-$this->apiErrors[384] = 'Could not find dataset';
+$this->apiErrors[384] = 'Dataset not processed yet. ';
 $this->apiErrors[385] = 'Quality calculated twice.';
 $this->apiErrors[386] = 'Quality inconsistent';
 $this->apiErrors[387] = 'Quality does not exists';
@@ -178,7 +177,6 @@ $this->apiErrors[388] = 'No new qualities';
 $this->apiErrors[389] = 'Quality upload failed';
 
 // for function: openml.run.delete
-$this->apiErrors[390] = 'Please provide API key';
 $this->apiErrors[391] = 'Authentication failed';
 $this->apiErrors[392] = 'Run does not exists';
 $this->apiErrors[393] = 'Run is not owned by you';
@@ -192,14 +190,12 @@ $this->apiErrors[404] = 'Setup is in use by other content (runs, schedules, etc)
 $this->apiErrors[405] = 'Deleting setup failed.';
 
 // for function: openml.run.reset
-$this->apiErrors[410] = 'Please provide API key';
 $this->apiErrors[411] = 'Authentication failed';
 $this->apiErrors[412] = 'Run does not exists';
 $this->apiErrors[413] = 'Run is not owned by you';
 $this->apiErrors[414] = 'Resetting run failed.';
 
 // for function: openml.run.evaluate
-$this->apiErrors[420] = 'Please provide API key';
 $this->apiErrors[421] = 'Authentication failed';
 $this->apiErrors[422] = 'Upload problem description XML';
 $this->apiErrors[423] = 'Problem validating uploaded description file';
