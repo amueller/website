@@ -879,7 +879,7 @@ class Api_data extends Api_model {
     $illegal_qualities = array_diff($requiredMetafeatures, $legal_qualities);
     
     if (count($illegal_qualities)) {
-      $this->returnError(688, $this->version, $this->openmlGeneralErrorCode, 'Illegal qualities: "' . implode('","', $illegal_qualities) . '"');
+      $this->returnError(688, $this->version, $this->openmlGeneralErrorCode, 'Illegal qualities: ' . implode(',', $illegal_qualities) . '');
       return;
     }
     
