@@ -517,7 +517,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    if ($this->Data_processed->getWhere('did = ' $did ' AND evaluation_engine_id = ' $eval_id)) {
+    if ($this->Data_processed->getWhere('did = ' . $did . ' AND evaluation_engine_id = ' . $eval_id)) {
       $this->returnError(431, $this->version);
       return;
     }
