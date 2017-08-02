@@ -166,11 +166,10 @@ $this->apiErrors[371] = 'Input not safe';
 $this->apiErrors[372] = 'No results';
 
 // for function: openml.qualities.upload
-$this->apiErrors[380] = 'Please provide API key';
-$this->apiErrors[381] = 'Authentication failed';
+$this->apiErrors[381] = 'Something wrong with XML, please check did and evaluation_engine_id';
 $this->apiErrors[382] = 'Please provide description xml';
 $this->apiErrors[383] = 'Problem validating uploaded description file';
-$this->apiErrors[384] = 'Could not find dataset';
+$this->apiErrors[384] = 'Dataset not processed yet. ';
 $this->apiErrors[385] = 'Quality calculated twice.';
 $this->apiErrors[386] = 'Quality inconsistent';
 $this->apiErrors[387] = 'Quality does not exists';
@@ -178,7 +177,6 @@ $this->apiErrors[388] = 'No new qualities';
 $this->apiErrors[389] = 'Quality upload failed';
 
 // for function: openml.run.delete
-$this->apiErrors[390] = 'Please provide API key';
 $this->apiErrors[391] = 'Authentication failed';
 $this->apiErrors[392] = 'Run does not exists';
 $this->apiErrors[393] = 'Run is not owned by you';
@@ -192,14 +190,12 @@ $this->apiErrors[404] = 'Setup is in use by other content (runs, schedules, etc)
 $this->apiErrors[405] = 'Deleting setup failed.';
 
 // for function: openml.run.reset
-$this->apiErrors[410] = 'Please provide API key';
 $this->apiErrors[411] = 'Authentication failed';
 $this->apiErrors[412] = 'Run does not exists';
 $this->apiErrors[413] = 'Run is not owned by you';
 $this->apiErrors[414] = 'Resetting run failed.';
 
 // for function: openml.run.evaluate
-$this->apiErrors[420] = 'Please provide API key';
 $this->apiErrors[421] = 'Authentication failed';
 $this->apiErrors[422] = 'Upload problem description XML';
 $this->apiErrors[423] = 'Problem validating uploaded description file';
@@ -208,12 +204,12 @@ $this->apiErrors[425] = 'Run does not exists';
 $this->apiErrors[426] = 'Run already processed';
 
 // for function: openml.data.features.upload
-$this->apiErrors[430] = 'Please provide API key';
-$this->apiErrors[431] = 'Authentication failed';
+$this->apiErrors[431] = 'Dataset already processed';
 $this->apiErrors[432] = 'Please provide description xml';
 $this->apiErrors[433] = 'Problem validating uploaded description file';
 $this->apiErrors[434] = 'Could not find dataset';
 $this->apiErrors[435] = 'Feature upload failed';
+$this->apiErrors[436] = 'Something wrong with XML, check did and evaluation engine id';
 
 // for function: openml.estimationprocedure.get
 $this->apiErrors[440] = 'Please provide estimationprocedure_id';
@@ -362,6 +358,13 @@ $this->apiErrors[672] = 'No results. ';
 $this->apiErrors[673] = 'Result set too big. Please use one of the filters or the limit option. ';
 $this->apiErrors[674] = 'No results, please check the filter. ';
 
+// openml.data.unprocessed
+$this->apiErrors[681] = 'No unprocessed datasets. ';
+
+// openml.data.unprocessed
+$this->apiErrors[686] = 'Please specify the features the evaluation engine wants to calculate (at least 2). ';
+$this->apiErrors[687] = 'No unprocessed datasets according to the given set of meta-features. ';
+$this->apiErrors[688] = 'Requesting unknown qualities. ';
 
 
 // openml.votes.list

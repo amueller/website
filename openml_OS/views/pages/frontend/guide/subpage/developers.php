@@ -22,10 +22,10 @@
         <p>The <a href="https://github.com/openml/OpenML/wiki"> GitHub Wiki</a> contains more information on how to set up your environment to work on OpenML locally, on the structure of the backend and frontend, and working documents.</p>
 
         <h3 id="dev-database">Database snapshots</h3>
-        <p>Everything uploaded to OpenML is available to the community. The nightly snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. In SQL format (gzipped).</p>
+        <p>Everything uploaded to OpenML is available to the community. The nightly snapshot of the public database contains all experiment runs, evaluations and links to datasets, implementations and result files. In SQL format (gzipped). You can also download the <a href="https://www.openml.org/img/expdbschema2.png">Database schema</a>.</p>
         <a href="downloads/ExpDB_SNAPSHOT.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Nightly database SNAPSHOT</a><br><br>
 
-	<p>If you want to work on the website locally, you'll also need the schema for the 'private' database with non-public information.</p>
+	      <p>If you want to work on the website locally, you'll also need the schema for the 'private' database with non-public information.</p>
         <a href="downloads/openml.sql.gz" class="btn btn-primary"><i class="fa fa-cloud-download fa-lg"></i> Private database schema</a>
 
         <h3 id="dev-wiki">Legacy Resources</h3>
