@@ -455,27 +455,27 @@ class Api_data extends Api_model {
     
     $data_processed = $this->Data_processed->getById(array($data_id, 1));
     
-    if($data_processed == false) {
+    if ($data_processed == false) {
       $this->returnError(273, $this->version);
       return;
     }
 
-    if($data_processed->error != "false") {
+    if ($data_processed->error) {
       $this->returnError(274, $this->version);
       return;
     }
 
     $dataset->features = $this->Data_feature->getWhere('did = "' . $dataset->did . '"');
 
-    if($dataset->features === false) {
+    if ($dataset->features === false) {
       $this->returnError(272, $this->version);
       return;
     }
-    if(is_array($dataset->features) === false) {
+    if (is_array($dataset->features) === false) {
       $this->returnError(272, $this->version);
       return;
     }
-    if(count($dataset->features) === 0) {
+    if (count($dataset->features) === 0) {
       $this->returnError(272, $this->version);
       return;
     }
