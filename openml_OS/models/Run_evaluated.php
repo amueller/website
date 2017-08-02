@@ -6,7 +6,7 @@ class Run_evaluated extends Database_write {
     $this->id_column = array('run_id', 'evaluation_engine_id');
   }
 
-  function getUnevaluatedRun($evaluation_engine_id, $order, $ttid = false, $tag = false, $uploader = false) {
+  function getUnevaluatedRun($evaluation_engine_id, $order, $ttid = false, $task_ids = false, $tag = false, $uploader = false) {
     $this->db->from('`run` `r`');
     
     if ($ttid != false) {
@@ -21,6 +21,10 @@ class Run_evaluated extends Database_write {
     
     if ($uploader != false) {
       $this->db->where('`r`.`uploader` = "'.$uploader.'"');
+    }
+    
+    if ($task_ids != false) {
+      $this->db->where_in('`r`.`task_id`', $task_ids);
     }
     
     $this->db->join('`run_evaluated` `e`', '`r`.`rid` = `e`.`run_id` AND `e`.`evaluation_engine_id` = ' . $evaluation_engine_id, 'left');

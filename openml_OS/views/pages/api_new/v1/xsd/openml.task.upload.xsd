@@ -1,6 +1,6 @@
 <xs:schema targetNamespace="http://openml.org/openml" xmlns:oml="http://openml.org/openml" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-  <xs:element name="task_new" type="oml:task_new"/>
-  <xs:complexType name="task_new">
+  <xs:element name="task_inputs" type="oml:task_inputs"/>
+  <xs:complexType name="task_inputs">
 	  <xs:sequence>
 		  <xs:element name="task_id" minOccurs="0" type="xs:integer" /> <!-- Ignored by server when uploading/creating a task -->
 		  <xs:element name="task_type_id" type="xs:integer" />
