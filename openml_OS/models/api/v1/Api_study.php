@@ -20,14 +20,19 @@ class Api_study extends Api_model {
       return;
     }
 
-    if (count($segments) == 1 && is_numeric($segments[0])) {
-      $this->study_get($segments[0], null);
-      return;
-    }
-
-    if (count($segments) == 2 && is_numeric($segments[0])) {
-      $this->study_get($segments[0], $segments[1]);
-      return;
+    if (count($segments) == 1 || count($segments) == 2) {
+      $type = null;
+      if (count($segments) == 2) {
+        $type = $segments[1];
+      }
+      
+      if (is_numeric($segments[0])) {
+        $this->study_by_id($segments[0], $type);
+        return;
+      } else {
+        $this->study_by_alias($segments[0], $type);
+        return;
+      }
     }
     
     $this->returnError( 100, $this->version );
@@ -45,17 +50,32 @@ class Api_study extends Api_model {
     $this->xmlContents('study-list', $this->version, array('studies' => $studies));
   }
   
-  private function study_get($study_id,$knowledge_type) {
-    $valid_knowlegde_types = array('runs', 'flows', 'setups', 'data', 'tasks', NULL);
-    if (!in_array($knowledge_type, $valid_knowlegde_types)) {
-      $this->returnError(600, $this->version);
-      return;
-    } 
-    
+  private function study_by_id($study_id,$knowledge_type) {
     $study = $this->Study->getById($study_id);
     
     if ($study == false) {
       $this->returnError(601, $this->version);
+      return;
+    }
+    
+    $this->_study_get($study,$knowledge_type);
+  }
+  
+  private function study_by_alias($study_alias,$knowledge_type) {
+    $study = $this->Study->getWhereSingle('alias = "' . $study_alias . '"');
+    
+    if ($study == false) {
+      $this->returnError(601, $this->version);
+      return;
+    }
+    
+    $this->_study_get($study,$knowledge_type);
+  }
+  
+  private function _study_get($study,$knowledge_type) {
+    $valid_knowlegde_types = array('runs', 'flows', 'setups', 'data', 'tasks', NULL);
+    if (!in_array($knowledge_type, $valid_knowlegde_types)) {
+      $this->returnError(600, $this->version);
       return;
     }
     

@@ -810,13 +810,13 @@ class Api_run extends Api_model {
       $evaluation['evaluation_engine_id'] = $eval_engine_id;
       
       // TODO: this responsibility should be shifted to the evaluation engine
-      if (array_key_exists($evaluation['function'], $math_functions)) {
-        $evaluation['function_id'] = $math_functions[$evaluation['function']];
+      if (array_key_exists($evaluation['name'], $math_functions)) {
+        $evaluation['function_id'] = $math_functions[$evaluation['name']];
       } else {
         // there will be a DB error due to the absence of 'function_id'
       }
       // unset function field
-      unset($evaluation['function']);
+      unset($evaluation['name']);
 
       if(array_key_exists('fold', $evaluation) && array_key_exists('repeat', $evaluation) &&  array_key_exists('sample', $evaluation)) {
         // evaluation_sample

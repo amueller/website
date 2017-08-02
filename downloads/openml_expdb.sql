@@ -654,14 +654,18 @@ CREATE TABLE `setup_tag` (
 -- Table structure for table `study`
 --
 
-CREATE TABLE `study` (
-  `id` int(10) NOT NULL,
+
+CREATE TABLE IF NOT EXISTS `study` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `alias` varchar(64) COLLATE utf8_bin NOT NULL,
   `name` text COLLATE utf8_bin NOT NULL,
   `description` text COLLATE utf8_bin NOT NULL,
   `visibility` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT 'public',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `creator` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `creator` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

@@ -9,10 +9,11 @@ class Study extends Database_write {
     $this->load->model('Study_tag');
   }
 
-  function create($name, $description, $creator) {
+  function create($name, $alias, $description, $creator) {
     // insert
     $schedule_data = array(
       'name' => $name, 
+      'alias' => $alias, 
       'description' => $description, 
       'creator' => $creator);
     $study_id = $this->insert($schedule_data);
