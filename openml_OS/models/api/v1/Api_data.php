@@ -798,7 +798,7 @@ class Api_data extends Api_model {
           'interval_end' => $quality->interval_end);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
         $this->Data_quality_interval->insert_ignore($data);
-      } if (property_exists($quality, 'feature_index')) {
+      } elseif (property_exists($quality, 'feature_index')) {
         $data = array(
           'data' => $did,
           'feature_index' => $quality->feature_index,
