@@ -31,6 +31,8 @@ class Api_run extends Api_model {
 
     $this->load->model('File');
     
+    $this->db = $this->Database_singleton->getReadConnection();
+    
     // Currently default
     $this->weka_engine_id = 1;
   }
@@ -591,6 +593,7 @@ class Api_run extends Api_model {
       'run_details' => ($run_details == false) ? null : $run_details
     );
     
+    $this->db->trans_start();
     $runId = $this->Run->insert($runData);
     if($runId === false) {
       $this->returnError(210, $this->version);
@@ -642,6 +645,7 @@ class Api_run extends Api_model {
       $errorCode = 211;
       return false;
     }
+    $this->db->trans_complete();
 
 
     $timestamps[] = microtime(true); // profiling 3
