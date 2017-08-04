@@ -223,7 +223,7 @@ class Api_model extends CI_Model {
       }
     }
     
-    try {
+    /*try {
       //update index
       if ($special_name != 'setup') { // setups can not be indexed
         $this->elasticsearch->update_tags($special_name, $id);
@@ -238,7 +238,7 @@ class Api_model extends CI_Model {
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
       return false;
-    }
+    }*/
     
     if (!$supress_output) {
       $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);

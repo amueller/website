@@ -243,12 +243,12 @@ class Api_run extends Api_model {
       return;
     }
     
-    try {
+    /*try {
       $this->elasticsearch->delete('run', $run_id);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
-    }
+    } */
     
     $this->xmlContents( 'run-delete', $this->version, array( 'run' => $run ) );
   }
@@ -647,7 +647,7 @@ class Api_run extends Api_model {
     }
     $this->db->trans_complete();
 
-
+/*
     $timestamps[] = microtime(true); // profiling 3
     // add to elastic search index.
     
@@ -655,16 +655,17 @@ class Api_run extends Api_model {
       $this->elasticsearch->index('run', $run->rid);
     } catch (Exception $e) {
       // TODO: should log
-    }
+    }*/
     
-    $timestamps[] = microtime(true); // profiling 4
+    $timestamps[] = microtime(true); // profiling 3
     if (DEBUG) {
       $this->Log->profiling(__FUNCTION__, $timestamps,
         array(
           'uploaded file handling',
           'setup searching / creation',
           'database insertions',
-          'elastic search')
+        //  'elastic search'
+        )
       );
     }
 
@@ -837,20 +838,21 @@ class Api_run extends Api_model {
     $timestamps[] = microtime(true); // profiling 2
 
     // update elastic search index.
-    try {
+    /*try {
       $this->elasticsearch->index('run', $run_id);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
     
-    $timestamps[] = microtime(true); // profiling 3
+    $timestamps[] = microtime(true); // profiling 3*/
     if (DEBUG) {
       $this->Log->profiling(__FUNCTION__, $timestamps,
         array(
           'basic checks of inputs and xml',
           'database insertions',
-          'elastic search indexing')
+        //  'elastic search indexing'
+        )
       );
     }
     
