@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 17, 2017 at 11:10 AM
--- Server version: 5.7.18-0ubuntu0.16.04.1
--- PHP Version: 7.0.15-0ubuntu0.16.04.4
+-- Generation Time: Aug 02, 2017 at 07:09 PM
+-- Server version: 5.7.19-0ubuntu0.16.04.1-log
+-- PHP Version: 7.0.18-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -100,8 +100,9 @@ CREATE TABLE `bibliographical_reference` (
 --
 
 CREATE TABLE `data_feature` (
-  `did` int(10) NOT NULL,
-  `index` int(10) NOT NULL DEFAULT '0',
+  `did` int(10) UNSIGNED NOT NULL,
+  `index` int(10) UNSIGNED NOT NULL,
+  `evaluation_engine_id` int(16) NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `data_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `nominal_values` text COLLATE utf8_unicode_ci,
@@ -125,14 +126,28 @@ CREATE TABLE `data_feature` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `data_processed`
+--
+
+CREATE TABLE `data_processed` (
+  `did` int(10) UNSIGNED NOT NULL,
+  `evaluation_engine_id` int(16) NOT NULL,
+  `user_id` int(16) NOT NULL,
+  `processing_date` datetime NOT NULL,
+  `error` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `warning` text CHARACTER SET utf8 COLLATE utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `data_quality`
 --
 
 CREATE TABLE `data_quality` (
   `data` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `quality` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `implementation_id` int(16) NOT NULL,
-  `label` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `evaluation_engine_id` int(16) NOT NULL,
   `value` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -146,7 +161,7 @@ CREATE TABLE `data_quality` (
 CREATE TABLE `data_quality_interval` (
   `data` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `quality` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `implementation_id` int(16) NOT NULL,
+  `evaluation_engine_id` int(16) NOT NULL,
   `interval_start` int(16) NOT NULL,
   `interval_end` int(16) NOT NULL,
   `value` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
@@ -349,6 +364,7 @@ CREATE TABLE `feature_quality` (
   `data` int(10) UNSIGNED NOT NULL,
   `quality` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `feature_index` int(10) UNSIGNED NOT NULL,
+  `evaluation_engine_id` int(16) NOT NULL,
   `value` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -654,18 +670,15 @@ CREATE TABLE `setup_tag` (
 -- Table structure for table `study`
 --
 
-
-CREATE TABLE IF NOT EXISTS `study` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `alias` varchar(64) COLLATE utf8_bin NOT NULL,
+CREATE TABLE `study` (
+  `id` int(10) NOT NULL,
+  `alias` varchar(32) COLLATE utf8_bin NOT NULL,
   `name` text COLLATE utf8_bin NOT NULL,
   `description` text COLLATE utf8_bin NOT NULL,
   `visibility` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT 'public',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `creator` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `alias` (`alias`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  `creator` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -826,19 +839,34 @@ ALTER TABLE `bibliographical_reference`
 -- Indexes for table `data_feature`
 --
 ALTER TABLE `data_feature`
-  ADD PRIMARY KEY (`did`,`index`);
+  ADD PRIMARY KEY (`did`,`index`),
+  ADD KEY `evaluation_engine_id` (`evaluation_engine_id`),
+  ADD KEY `did` (`did`,`evaluation_engine_id`);
+
+--
+-- Indexes for table `data_processed`
+--
+ALTER TABLE `data_processed`
+  ADD PRIMARY KEY (`did`,`evaluation_engine_id`),
+  ADD KEY `evaluation_engine_id` (`evaluation_engine_id`);
 
 --
 -- Indexes for table `data_quality`
 --
 ALTER TABLE `data_quality`
-  ADD PRIMARY KEY (`data`,`quality`,`label`);
+  ADD PRIMARY KEY (`data`,`quality`,`evaluation_engine_id`),
+  ADD KEY `evaluation_engine_id` (`evaluation_engine_id`),
+  ADD KEY `quality` (`quality`),
+  ADD KEY `data` (`data`,`evaluation_engine_id`);
 
 --
 -- Indexes for table `data_quality_interval`
 --
 ALTER TABLE `data_quality_interval`
-  ADD PRIMARY KEY (`data`,`quality`,`interval_start`,`interval_end`);
+  ADD PRIMARY KEY (`data`,`quality`,`evaluation_engine_id`,`interval_start`,`interval_end`),
+  ADD KEY `evaluation_engine_id` (`evaluation_engine_id`),
+  ADD KEY `quality` (`quality`),
+  ADD KEY `data` (`data`,`evaluation_engine_id`);
 
 --
 -- Indexes for table `dataset`
@@ -925,7 +953,11 @@ ALTER TABLE `evaluation_sample`
 -- Indexes for table `feature_quality`
 --
 ALTER TABLE `feature_quality`
-  ADD PRIMARY KEY (`data`,`quality`,`feature_index`);
+  ADD PRIMARY KEY (`data`,`quality`,`feature_index`,`evaluation_engine_id`),
+  ADD KEY `quality` (`quality`),
+  ADD KEY `evaluation_engine_id` (`evaluation_engine_id`),
+  ADD KEY `data` (`data`,`evaluation_engine_id`),
+  ADD KEY `data_2` (`data`,`feature_index`);
 
 --
 -- Indexes for table `implementation`
@@ -1060,7 +1092,8 @@ ALTER TABLE `setup_tag`
 --
 ALTER TABLE `study`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`,`creator`);
+  ADD UNIQUE KEY `id` (`id`,`creator`),
+  ADD UNIQUE KEY `alias` (`alias`);
 
 --
 -- Indexes for table `study_tag`
@@ -1211,6 +1244,39 @@ ALTER TABLE `algorithm_setup`
   ADD CONSTRAINT `fk_implementation_id` FOREIGN KEY (`implementation_id`) REFERENCES `implementation` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `data_feature`
+--
+ALTER TABLE `data_feature`
+  ADD CONSTRAINT `data_feature_ibfk_1` FOREIGN KEY (`did`) REFERENCES `dataset` (`did`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_feature_ibfk_2` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_feature_ibfk_3` FOREIGN KEY (`did`,`evaluation_engine_id`) REFERENCES `data_processed` (`did`, `evaluation_engine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `data_processed`
+--
+ALTER TABLE `data_processed`
+  ADD CONSTRAINT `data_processed_ibfk_1` FOREIGN KEY (`did`) REFERENCES `dataset` (`did`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_processed_ibfk_2` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `data_quality`
+--
+ALTER TABLE `data_quality`
+  ADD CONSTRAINT `data_quality_ibfk_1` FOREIGN KEY (`data`) REFERENCES `dataset` (`did`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_quality_ibfk_2` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_quality_ibfk_3` FOREIGN KEY (`quality`) REFERENCES `quality` (`name`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_quality_ibfk_4` FOREIGN KEY (`data`,`evaluation_engine_id`) REFERENCES `data_processed` (`did`, `evaluation_engine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `data_quality_interval`
+--
+ALTER TABLE `data_quality_interval`
+  ADD CONSTRAINT `data_quality_interval_ibfk_1` FOREIGN KEY (`data`) REFERENCES `dataset` (`did`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_quality_interval_ibfk_2` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_quality_interval_ibfk_3` FOREIGN KEY (`quality`) REFERENCES `quality` (`name`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_quality_interval_ibfk_4` FOREIGN KEY (`data`,`evaluation_engine_id`) REFERENCES `data_processed` (`did`, `evaluation_engine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `dataset_tag`
 --
 ALTER TABLE `dataset_tag`
@@ -1242,6 +1308,16 @@ ALTER TABLE `evaluation_sample`
   ADD CONSTRAINT `evaluation_sample_ibfk_2` FOREIGN KEY (`function_id`) REFERENCES `math_function` (`id`),
   ADD CONSTRAINT `evaluation_sample_ibfk_3` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`),
   ADD CONSTRAINT `evaluation_sample_ibfk_4` FOREIGN KEY (`source`,`evaluation_engine_id`) REFERENCES `run_evaluated` (`run_id`, `evaluation_engine_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `feature_quality`
+--
+ALTER TABLE `feature_quality`
+  ADD CONSTRAINT `feature_quality_ibfk_1` FOREIGN KEY (`data`) REFERENCES `dataset` (`did`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `feature_quality_ibfk_2` FOREIGN KEY (`quality`) REFERENCES `quality` (`name`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `feature_quality_ibfk_3` FOREIGN KEY (`evaluation_engine_id`) REFERENCES `evaluation_engine` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `feature_quality_ibfk_4` FOREIGN KEY (`data`,`evaluation_engine_id`) REFERENCES `data_processed` (`did`, `evaluation_engine_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `feature_quality_ibfk_5` FOREIGN KEY (`data`,`feature_index`) REFERENCES `data_feature` (`did`, `index`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `implementation_tag`
