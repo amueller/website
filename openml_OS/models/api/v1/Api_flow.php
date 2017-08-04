@@ -294,7 +294,7 @@ class Api_flow extends Api_model {
     }
     $implementation = $this->Implementation->getById( $impl );
 
-    try {
+    /*try {
       // update elastic search index.
       $this->elasticsearch->index('flow', $impl);
 
@@ -302,7 +302,7 @@ class Api_flow extends Api_model {
       $this->elasticsearch->index('user', $this->user_id);
     } catch (Exception $e) {
       // TODO: should be logged
-    }
+    } */
 
     $this->xmlContents( 'implementation-upload', $this->version, $implementation );
   }
@@ -350,12 +350,12 @@ class Api_flow extends Api_model {
       return;
     }
 
-    try {
+    /*try {
       $this->elasticsearch->delete('flow', $flow_id);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
-    }
+    } */
 
     $this->xmlContents('implementation-delete', $this->version, array('implementation' => $implementation));
   }
@@ -430,11 +430,11 @@ class Api_flow extends Api_model {
     }
 
     // add to elastic search index.
-    try {
+    /*try {
       $this->elasticsearch->index('flow', $flow_id);
     } catch (Exception $e) {
       // TODO should be logged
-    }
+    } */
 
 
     foreach( $tags as $tag ) {
