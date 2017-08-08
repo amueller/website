@@ -153,15 +153,14 @@ class Cron extends CI_Controller {
 
       $tmp_path = '/tmp/' . rand_string( 20 ) . '.csv';
 
-      if($meta_dataset->type == 'qualities') {
+      if ($meta_dataset->type == 'qualities') {
         $quality_keys_string = '';
-        if( $quality_keys ) {
+        if ($quality_keys) {
           $quality_keys_string = implode(', ', $quality_keys) . ',';
           $quality_keys_key_string = '"' . implode('", "', array_keys($quality_keys)) . '",';
         }
+        $header = '"data_id", "task_id", "name", "quality", ' . $quality_keys_key_string . ' "value" ' . "\n";
         $sql =
-          'SELECT "data_id", "task_id", "name", "quality", ' . $quality_keys_key_string . ' "value" ' .
-          'UNION ALL ' .
           'SELECT d.did, t.task_id, d.name, q.quality, ' . $quality_keys_string . 'q.value ' .
           'FROM dataset d, '.$quality_colum.' q, task t, task_inputs i ' .
           'WHERE t.task_id = i.task_id ' .
@@ -176,13 +175,11 @@ class Cron extends CI_Controller {
           'LINES TERMINATED BY "\n" ' .
           ';';
       } elseif ($meta_dataset->type == 'evaluations') {
+        $header = '"run_id", "setup_id", "task_id", "' . implode('", "', $evaluation_keys) . '", "value", "task_name", "flow_name"' . "\n";
         $sql =
-          'SELECT MAX("run_id") AS run_id, "setup_id", "task_id", "' . implode('", "', $evaluation_keys) . '" ' .
-          ', MAX("value") AS value, MAX("task_name") AS task_name, MAX("flow_name") AS flow_name ' .
-          'UNION ALL ' .
-          'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, ' .
-          implode(', ', $evaluation_keys) . ', e.value ' .
-          ', CONCAT("Task_", t.task_id, "_", d.name), i.fullName ' .
+          'SELECT MAX(r.rid) AS run_id, s.sid AS setup_id, t.task_id AS task_id, ' .
+          implode(', ', $evaluation_keys) . ', MAX(e.value) ' .
+          ', CONCAT("Task_", t.task_id, "_", MAX(d.name)) AS task_name, MAX(i.fullName) as flow_name ' .
 //          ',s.setup_string ' .
 //          ',CONCAT(i.fullName, " on ", d.name) as textual ' .
           'FROM run r, task t, task_inputs v, dataset d, algorithm_setup s, implementation i, ' . $evaluation_column . ' e, math_function m ' .
@@ -201,6 +198,7 @@ class Cron extends CI_Controller {
           'LINES TERMINATED BY "\n" ' .
           ';';
       } elseif ($meta_dataset->type == 'inputs') {
+        $header = null;
         $sql =
           'SELECT is.setup, i.fullname AS flowname, ip.name, is.value ' .
           'FROM `input_setting` `is` , input `ip`, algorithm_setup s, implementation i ' .
@@ -231,9 +229,18 @@ class Cron extends CI_Controller {
       $filename = getAvailableName(DATA_PATH . $this->dir_suffix, 'meta_dataset.csv');
       $filepath = DATA_PATH . $this->dir_suffix . $filename;
       $success = rename($tmp_path, $filepath);
-
-      if($success == false) {
+      
+      if(!$success) {
         $this->_error_meta_dataset($meta_dataset->id, 'Failed to move csv to data directory. Filename: ' . $filename, $meta_dataset->user_id);
+        return;
+      }
+      
+      if ($header != null) {
+        $res = prepend_to_file($header, $filepath);
+      }
+      
+      if (!$res) {
+        $this->_error_meta_dataset($meta_dataset->id, 'Failed to prepend header. ', $meta_dataset->user_id);
         return;
       }
 
@@ -251,13 +258,13 @@ class Cron extends CI_Controller {
     }
   }
 
-  private function _error_meta_dataset( $id, $msg, $user_id ) {
+  private function _error_meta_dataset($id, $msg, $user_id) {
     echo $msg . "\n";
-    $this->Meta_dataset->update( $id, array( 'error_message' => $msg ) );
+    $this->Meta_dataset->update($id, array('error_message' => $msg));
 
-    $user = $this->ion_auth->user( $user_id )->row();
-    $this->email->to( $user->email );
-    $this->email->bcc( $this->config->item( 'email_debug' ) );
+    $user = $this->ion_auth->user($user_id)->row();
+    $this->email->to($user->email);
+    $this->email->bcc($this->config->item('email_debug'));
     $this->email->subject('OpenML Meta Dataset');
     $this->email->message("This is an automatically generated email. \n\nUnfortunatelly, the creation of the Meta Dataset was unsuccessfull. \n\nThe full error message is available to the system administrators. In case of any questions, please don't hesitate to contact the OpenML Team. ");
     $this->email->send();
