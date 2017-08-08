@@ -213,14 +213,14 @@ class Cron extends CI_Controller {
           'LINES TERMINATED BY "\n" ' .
           ';';
       } else {
-        $this->_error_meta_dataset( $meta_dataset->id, 'Meta dataset type not recognized: ' . $meta_dataset->type, $meta_dataset->user_id );
+        $this->_error_meta_dataset($meta_dataset->id, 'Meta dataset type not recognized: ' . $meta_dataset->type, $meta_dataset->user_id);
         return;
       }
 
       $this->Dataset->query($sql);
       $success = file_exists($tmp_path);
 
-      if($success == false) {
+      if (!$success) {
         $error = 'MySQL Error #' . $this->Dataset->mysqlErrorNo() . ': ' . $this->Dataset->mysqlErrorMessage();
         $this->_error_meta_dataset($meta_dataset->id, $error, $meta_dataset->user_id);
         return;
@@ -230,7 +230,7 @@ class Cron extends CI_Controller {
       $filepath = DATA_PATH . $this->dir_suffix . $filename;
       $success = rename($tmp_path, $filepath);
       
-      if(!$success) {
+      if (!$success) {
         $this->_error_meta_dataset($meta_dataset->id, 'Failed to move csv to data directory. Filename: ' . $filename, $meta_dataset->user_id);
         return;
       }
