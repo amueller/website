@@ -177,8 +177,8 @@ class Cron extends CI_Controller {
           ';';
       } elseif ($meta_dataset->type == 'evaluations') {
         $sql =
-          'SELECT "run_id", "setup_id", "task_id", "' . implode('", "', $evaluation_keys) . '" ' .
-          ', "value", "task_name", "flow_name" ' .
+          'SELECT MAX("run_id") AS run_id, "setup_id", "task_id", "' . implode('", "', $evaluation_keys) . '" ' .
+          ', MAX("value") AS value, MAX("task_name") AS task_name, MAX("flow_name") AS flow_name ' .
           'UNION ALL ' .
           'SELECT r.rid AS run_id, s.sid AS setup_id, t.task_id AS task_id, ' .
           implode(', ', $evaluation_keys) . ', e.value ' .
