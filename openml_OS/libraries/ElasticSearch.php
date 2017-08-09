@@ -418,6 +418,7 @@ class ElasticSearch {
              $this->initialize();
         $params['index'] = 'openml';
         $params['type'] = $t;
+	$params['update_all_types'] = TRUE;
         $params['body'][$t] = $this->mappings[$t];
         $this->client->indices()->putMapping($params);
 
