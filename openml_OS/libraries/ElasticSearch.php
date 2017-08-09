@@ -293,6 +293,12 @@ class ElasticSearch {
                 'analyzer' => 'snowball'
             ),
             'properties' => array(
+		'name' => array(
+                    'type' => 'string',
+                    'analyzer' => 'snowball'),
+                'visibility' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'),
                 'date' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'
