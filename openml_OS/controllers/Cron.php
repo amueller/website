@@ -157,9 +157,10 @@ class Cron extends CI_Controller {
         $quality_keys_string = '';
         if ($quality_keys) {
           $quality_keys_string = implode(', ', $quality_keys) . ',';
-          $quality_keys_key_string = '"' . implode('", "', array_keys($quality_keys)) . '",';
+          $quality_keys_key_string = '"' . implode('","', array_keys($quality_keys)) . '",';
         }
-        $header = '"data_id", "task_id", "name", "quality", ' . $quality_keys_key_string . ' "value" ' . "\n";
+        // very important to not have any tailing spaces after a comma
+        $header = '"data_id","task_id","name","quality",' . $quality_keys_key_string . '"value" ' . "\n";
         $sql =
           'SELECT d.did, t.task_id, d.name, q.quality, ' . $quality_keys_string . 'q.value ' .
           'FROM dataset d, '.$quality_colum.' q, task t, task_inputs i ' .
@@ -175,7 +176,8 @@ class Cron extends CI_Controller {
           'LINES TERMINATED BY "\n" ' . 
           ';';
       } elseif ($meta_dataset->type == 'evaluations') {
-        $header = '"run_id", "setup_id", "task_id", "' . implode('", "', $evaluation_keys) . '", "value", "task_name", "flow_name"' . "\n";
+        // very important to not have any tailing spaces after a comma
+        $header = '"run_id","setup_id","task_id","' . implode('","', $evaluation_keys) . '","value","task_name","flow_name"' . "\n";
         $sql =
           'SELECT MAX(r.rid) AS run_id, s.sid AS setup_id, t.task_id AS task_id, ' .
           implode(', ', $evaluation_keys) . ', MAX(e.value) ' .
@@ -216,7 +218,8 @@ class Cron extends CI_Controller {
         $this->_error_meta_dataset($meta_dataset->id, 'Meta dataset type not recognized: ' . $meta_dataset->type, $meta_dataset->user_id);
         return;
       }
-
+      
+      // this query requires FILE privileges (which is by default disabled)
       $this->Dataset->query($sql);
       $success = file_exists($tmp_path);
 
