@@ -297,6 +297,10 @@ class ElasticSearch {
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'
                 ),
+		'description' => array(
+                    'type' => 'string',
+                    'analyzer' => 'snowball'
+                ),
                 'study_id' => array('type' => 'long'),
                 'uploader' => array(
                     'type' => 'string',
