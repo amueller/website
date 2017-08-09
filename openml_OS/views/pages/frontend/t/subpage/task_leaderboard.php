@@ -7,16 +7,9 @@
 	}
      endforeach; ?>
 
-		<?php if (!isset($this->task)){
-             echo "Sorry, this task is unknown.";
-             die();
-    } ?>
-
-		<h1><i class="fa fa-trophy"></i> <?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?></h1>
-
 		<?php if($this->task['source_data']['name'] != 'Learning Curve'){ ?>
         <div class="pull-right">
-		        Show evaluations for score:
+		        Metric:
 				<select class="selectpicker" data-width="auto" onchange="evaluation_measure = this.value; updateTableHeader(); redrawtimechart();">
 					<?php foreach($this->allmeasures as $m): ?>
 					<option value="<?php echo $m;?>" <?php echo ($m == $this->current_measure) ? 'selected' : '';?>><?php echo str_replace('_', ' ', $m);?></option>

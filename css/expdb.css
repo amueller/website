@@ -8,6 +8,48 @@
   z-index: 1031;
 }
 
+.navbar-material-yellow .openmlsoc{
+  color: rgba(0,0,0,.84);
+}
+
+.emptypanel{
+  padding-left: 0px;
+  padding-right: 0px;
+  background-color: #f2f2f2;
+  float: left;
+  width: 100%;
+}
+
+.darkpanel{
+  color: rgb(255,255,255) !important;
+  background-color: #24292e;
+  padding-top:10px;
+}
+
+.darkpanel .list-group-item-heading{
+  color: rgba(255,255,255,0.6) !important;
+  font-size: 24px !important;
+  font-weight: 400;
+  border: none;
+  text-align: left;
+}
+
+.darkpanel .list-group-item-text{
+  color: rgb(255,255,255) !important;
+  font-weight: 400;
+  padding-top: 10px;
+  text-align: left;
+}
+
+.darkpanel .list-group-item-text a{
+  color: rgba(255,255,255,0.6) !important;
+}
+
+
+#colorchange span{
+  padding-right:10px;
+}
+
 .label{
   font-size: 100%;
 }
@@ -53,6 +95,7 @@ canvas {
   *zoom: 1;
   border: none;
   padding:2px;
+  margin-top: -20px;
   outline: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
 }
@@ -74,10 +117,10 @@ left:0;
 
 #logo{
   font-family: 'Roboto', sans-serif;
-  font-weight: 200;
-  color: #333;
+  font-weight: 300;
+  color: #253039;
   font-size: 50px;
-  padding-top: 23px;
+  padding-top: 13px;
   padding-bottom: 30px;
   display: inline-block;
   padding-left: 10px;
@@ -88,7 +131,7 @@ left:0;
 #catchphrase{
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  color: #333;
+  color: #253039;
   font-size: 2.5rem;
   padding-top: 10px;
   padding-bottom: 15px;
@@ -136,9 +179,15 @@ width:100% !important;
 	width: 100%;
 }
 
-.marketing {
-  background-color: #fff;
-  padding-top: 80px;
+
+.navbar-material-yellow, .btn-material-yellow{
+  background-color: #f2f2f2 !important;
+  color: #253039;
+  box-shadow: none !important;
+}
+
+.navbar-material-yellow input::-webkit-input-placeholder {
+  color: #253039 !important;
 }
 
 .action-button.white {
@@ -232,6 +281,19 @@ width: 80pt;
   color: #666;
 }
 
+#addtagbox .panel{
+  padding-bottom:20px;
+}
+
+.tags {
+  list-style: none;
+  padding-left: 0px;
+}
+
+.tags ul {
+  list-style: none;
+}
+
 /* First level of nav */
 .sidenav {
   border-radius: 5px;
@@ -295,7 +357,7 @@ select{
 
 .hint{
   z-index: 1000;
-  background-color: #f6f6f6;
+  /* background-color: #f6f6f6; */
 }
 
 ::-webkit-input-placeholder {  color: red; }
@@ -382,6 +444,7 @@ select{
   width:265px !important;
   float: left;
   overflow: visible;
+  margin-top: -50px;
 }
 
 .submenu{
@@ -390,19 +453,18 @@ select{
 }
 
 .searchbar{
-  display:none;
-  background: #f6f6f6;
+  position: fixed;
+  background: #ffffff;
   padding-bottom: 30px;
   padding-left: 0px;
   padding-right: 0px;
-  position: fixed;
   box-shadow: 4px 0px 8px 0px rgba(0,0,0,.20);
-  font-size: 13px !important;
+  font-size: 14px !important;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   width:265px !important;
-  z-index: 1020;
+  z-index: 100;
   height: 100%;
   /*min-height: 100vh;*/
 }
@@ -499,7 +561,8 @@ select{
 
 .topchapter a .counter{
   float:right;
-  margin-left:5px
+  margin-left:5px;
+  margin-right: 10px;
 }
 
 .studychapter a .counter{
@@ -684,25 +747,43 @@ select{
 }
 
 .openmlsectioninfo{
-  background: #f8f8f8;
+  margin-left:265px;
+  background: #f2f2f2;
   font-family: "RobotoDraft","Roboto",sans-serif;
   font-size: 14px;
-  padding-top: 20px;
-  padding-bottom:50px;
+  padding-top: 10px;
   min-height: 100%;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: none;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+}
+
+.openmlcover{
+  background: #f2f2f2;
+  font-family: "RobotoDraft","Roboto",sans-serif;
+  font-size: 14px;
+  padding-top: 10px;
+  min-height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+}
+
+.tabbed-submenu{
+  overflow: auto;
+  margin-top:-40px;
+  margin-bottom:-30px;
 }
 
 .rightpanel{
-  margin-left:265px;
-  width: -moz-calc(100% - 265px);
+  padding-top:20px;
+/*  width: -moz-calc(100% - 265px);
   width: -webkit-calc(100% - 265px);
-  width: calc(100% - 265px);
+  width: calc(100% - 265px);*/
 }
 
 .topborder{
-  background: #f8f8f8;
+  background: #f2f2f2;
 /*    overflow: hidden;*/
     position: relative;
     backface-visibility: hidden;
@@ -714,9 +795,16 @@ select{
   height: 100% !important;
 }
 
+
+#sectiontitle{
+  visibility: hidden;
+  height: 0px;
+}
+
 .guidesection{
   background: #ffffff;
 }
+
 
 .guidecontainer{
   background-color: #ffffff;
@@ -726,7 +814,6 @@ select{
 
 .guidechapter{
   padding-top: 5px;
-  background-color: #f6f6f6;
   border-bottom: 1px solid #d6d6d6;
   border-radius: 0px;
   box-shadow: none;
@@ -736,7 +823,7 @@ select{
 
 .mainchapter{
   padding-top: 8px !important;
-  background-color: #f6f6f6;
+  padding-right: 0px !important;
   border-bottom: 1px solid #d6d6d6;
   border-radius: 0px;
   box-shadow: none;
@@ -750,13 +837,25 @@ select{
   margin-right: 3px;
 }
 
+.sidebar-overlay{
+ background-color: #fff;
+ height: 60px;
+ width: 265px;
+ padding-left: 15px;
+ padding-top: 5px;
+ visibility: hidden;
+ border-bottom: 1px solid #d6d6d6;
+}
+
+.sidebar-overlay a{
+  color: #000;
+}
+
 .sidenav panel{
   background-color: #f6f6f6;
 }
 
 .topchapter{
-  margin-top: 15px;
-  background-color: #f6f6f6;
   border-radius: 0px;
   box-shadow: none;
   padding-bottom: -3px;
@@ -765,14 +864,12 @@ select{
 .menu-cite{
   margin-top: 15px;
   margin-bottom: 5px;
-  background-color: #f6f6f6;
   box-shadow: none;
   padding-left: 15px;
 }
 .menu-contact{
   margin-top: 10px;
   margin-bottom: 30px;
-  background-color: #f6f6f6;
   box-shadow: none;
   padding-left: 15px;
   padding-bottom: 60px;
@@ -1173,13 +1270,11 @@ opacity:0.6;
 }
 
 #social-bar {
-  position: absolute;
-  right: 0px;
-  top: 55px;
   z-index:1000;
-  width: 55px;
-  float:right;
   padding: 7px;
+  padding-bottom:20px;
+  float:right;
+  position: relative;
 }
 
 #social-bar .fa {
@@ -1259,11 +1354,10 @@ opacity:0.6;
 
 .sharrre{
   display: inline-block;
-  margin-bottom: 15px;
 }
 .sharrre .count {
   line-height: 20px;
-  color:#485451;
+  color:#fff;
   display:none;
   font-size:12px;
   float: center;
@@ -1322,24 +1416,30 @@ a:hover .count {
 
 .openml-contact-menu{
   position: relative;
-  float: left;
   padding: 0px;
+  clear:both;
+  width:100%;
+  overflow: auto
 }
 
 .openml-contact-menu ul{
   float: left;
-  display: inline-block;
+  display: block;
 }
 
 .openml-contact-menu li{
   float: left;
-  display: inline-block;
+  display: block;
   padding: 5px;
+}
+
+.contact-header{
+  padding-top:30px;
 }
 
 .openml-contact-menu a{
   text-decoration: none;
-  font-size: 13px;
+  font-size: 20px;
   color: #444;
 }
 
@@ -1395,6 +1495,7 @@ ul.openml-contact {
 
 .openml-footer li{
   padding: 3px;
+  color: #FFFFFF;
 }
 
 .openml-footer a{
@@ -2090,8 +2191,8 @@ html, body {
 }
 
 .topselectors{
+  margin-top:25px;
   margin-bottom:25px;
-  clear: both;
 }
 
 .itemhead{
@@ -2844,18 +2945,16 @@ svg:not(:root){
 }
 }
 
-@media screen and (max-width: 992px) {
-.marketing{
-  float:left;
-}
-}
-
 @media screen and (max-width: 768px) {
+
+.searchbar{
+  display: none;
+}
 
 .openmlsectioninfo{
   padding-left: 0px;
   padding-right: 0px;
-  background-color: #ececec;
+  background-color: #f2f2f2;
 }
 
 .itemhead{
@@ -2891,10 +2990,8 @@ svg:not(:root){
 
 .openmlsoc {
   margin-left: 0px;
-  padding-left: 5px;
   padding-right: 15px;
   padding-top: 15px;
-  float: right;
   color: #ffffff;
   text-decoration: none;
   border: none;
@@ -2913,10 +3010,10 @@ svg:not(:root){
 }
 
 .openmlsocicon {
-  padding-top: 20px;
-  padding-left: 10px;
+  padding-top: 15px;
   padding-right: 10px;
   font-size: 10px;
+  display: inline-block;
 }
 
 .openmlsocicon:hover {
@@ -3279,7 +3376,13 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 
 .newssection{
   text-align: left;
-  margin-top: -40px;
+  padding-top:20px;
+  padding-bottom:20px;
+  height:180px;
+}
+
+.newssection .carousel{
+  height: 170px;
 }
 
 .list-group .list-group-separator-full {
@@ -3328,8 +3431,11 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 -------------------------------------------------- */
 .marketing {
   text-align: center;
-  color: #5a5a5a;
+  margin-bottom: 2px !important;
+  padding-top: 65px !important;
+  float: left;
 }
+
 .marketing .row {
   margin-bottom: 9px;
 }

@@ -1,39 +1,14 @@
-<!-- <div class="alert alert-error" style="text-align:center;margin-bottom:0px">
-  We're still under construction, check back soon!
-</div> -->
-<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="openmlcover">
 <canvas id="c" width="400" height="400"></canvas>
-<div class="col-md-12">
-          <a data-toggle="collapse" data-target="#social-bar" class="openmlsoc openmlsocicon" style="padding-right: 10px; padding-top:25px; color:#666;"><i class="fa fa-share-alt fa-2x"></i></a>
-
-        <div class="collapse" id="social-bar">
-            <div id="twitter" data-url="openml.org" data-text="#OpenML: Exploring machine learning better, together." data-title="twitter"></div>
-            <div id="googleplus" data-url="openml.org" data-text="OpenML:  Exploring machine learning better, together." data-title="google-plus"></div>
-            <div id="facebook" data-url="openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="facebook"></div>
-            <!--<div id="linkedin" data-url="openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="linkedin"></div>-->
-        </div>
-</div>
 <div class="marketing">
 <div class="col-md-12">
-
-<div id="logo">OpenML<div id="beta">beta</div></div>
+  <div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
-<div id="catchphrase">Exploring machine learning better, together</div><br>
-<!--
-  <div class="col-md-6 col-md-offset-3 surveypopup">
-    <a href="http://openml2016.openml.org" class="btn btn-warning btn-fab btn-raised"><i class="fa fa-heart"></i></a>
-    <div class="shortintro" style="padding-top:10px;">
-      The <a href="http://openml2017dev.openml.org">OpenML hackathon</a> is now LIVE. Join us on <a href="openml.slack.com">Slack</a> (<a href="mailto:openmachinelearning@gmail.com" target="_blank">request invite</a>).</a>
-    </div>
-  </div>
--->
+<div id="catchphrase">Exploring machine learning better, together</div>
+
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
 
-  <!--<div class="buttons">
-    <a href="guide" class="action-button white">Learn more</a>
-    <a href="register" class="action-button white">Sign up</a>
-  </div>-->
 
 <div class="stats">
  <div class="statrow">
@@ -46,6 +21,104 @@
     <div class="col-sm-3 dotcontainer"><a href="search?type=run" class="numberCircle"><div class="arc circlered"></div><span class="number" id="run_count"></span><span class="circlelabel">runs</span></a><br><div class="shortintro">Upload and explore all <a href="search?type=run" class="bold">results</a> online.</div></div>
 
  </div>
+</div>
+</div>
+</div>
+</div> <!-- end marketing -->
+<div class="emptypanel darkpanel">
+
+  <div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="10000">
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner list-group" role="listbox">
+        <div class="item active">
+          <div class="list-group-item">
+              <div class="row-picture">
+                  <img class="circle" src="img/colordots.png" alt="icon">
+              </div>
+              <div class="row-content">
+                  <h4 class="list-group-item-heading"><div id="colorchange"><span>H</span><span>A</span><span>C</span><span>K</span><span>A</span><span>T</span><span>H</span><span>O</span><span>N</span></div></h4>
+                  <p class="list-group-item-text">Bring your own data, bring your own algorithms, or build cool new features.</p>
+                  <p class="list-group-item-text">Next location: <a href="https://www.lorentzcenter.nl/lc/web/2017/902/info.php3?wsid=902&venue=Oort">9-14 October in Leiden, the Netherlands</a></p>
+              </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="list-group-item">
+              <div class="row-picture">
+                  <img class="circle" src="img/COSEAL_small.png" alt="icon">
+              </div>
+              <div class="row-content">
+                  <h4 class="list-group-item-heading">Algorithm Selection Competition</h4>
+                  <p class="list-group-item-text">Use your favorite OpenML tool to participate in the (external) <a href="http://www.coseal.net/open-algorithm-selection-challenge-2017-oasc/">Open Algorithm Selection Competition 2017</a>. Deadline is <b>August 27, 2017</b>.</p>
+              </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="list-group-item">
+              <div class="row-picture">
+                  <img class="circle" src="img/osr.png" alt="icon">
+              </div>
+              <div class="row-content">
+                  <h4 class="list-group-item-heading">OpenML on Open Science Radio</h4>
+                  <p class="list-group-item-text"><a href="http://www.openscienceradio.de/2016/10/28/osr059-openml-en/">Check out the podcast.</a></p>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+      </ol>
+    </div>
+
+    <div class="list-group"  style="font-size:11pt">
+        <!--
+        <div class="list-group-item">
+            <div class="row-picture">
+                <img class="circle" src="https://pbs.twimg.com/profile_images/796000597245882368/axXl_01s.jpg" alt="icon">
+            </div>
+            <div class="row-content">
+                <h4 class="list-group-item-heading">Using R?</h4>
+                <p class="list-group-item-text">Dive into the <a href="http://openml.github.io/articles/slides/useR2017_tutorial/">useR!2017 OpenML Tutorial</a>.</p>
+            </div>
+        </div>
+
+        <div class="list-group-item">
+            <div class="row-picture">
+                <img class="circle" src="img/colorballs2.jpg" alt="icon">
+            </div>
+            <div class="row-content">
+                <h4 class="list-group-item-heading">Research Awards</h4>
+                <p class="list-group-item-text">We are very happy to have won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize</a>, as well as a <a href="https://www.microsoft.com/en-us/research/academic-program/microsoft-azure-for-research/">Microsoft Azure Research Award</a>! We are very grateful for the support.</p>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="row-picture">
+                <img class="circle" src="img/osr.png" alt="icon">
+            </div>
+            <div class="row-content">
+                <h4 class="list-group-item-heading">OpenML on Open Science Radio</h4>
+                <p class="list-group-item-text"><a href="http://www.openscienceradio.de/2016/10/28/osr059-openml-en/">Check out the podcast.</a></p>
+            </div>
+        </div>-->
+    </div>
+
+  </div>
+</div>
+<div class="panel marketing">
+
+  <h1>Democratize Machine Learning<h2>
+  <div id="catchphrase">
+  OpenML is an open machine learning platform empowering you to easily share and reuse datasets, code and models, find out what works, and build better models alongside thousands of other data scientists (and bots!). Be more productive, log or share your work throughout the world, using any machine learning tool you like.
+  </div>
+</div>
+
+<div class="emptypanel">
+<h1>Integrations</h1>
 
  <div class="shortintro" style="padding-top:40px;">Download and share data, flows and runs through:</div>
   <div class="statrow">
@@ -60,64 +133,8 @@
      <div class="col-sm-2"><a href="guide#!plugin_moa"><img class="toolcircle2" src="img/moa.jpeg" alt="icon"></a></div>
      <div class="col-sm-2"><a href="guide#!plugin_rm"><img class="toolcircle2" src="img/rapidminer.png" alt="icon"></a></div>
   </div>
-</div>
+</h1>
 
-</div>
-
-</div>
-
-
-<div id="news" class="newssection col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-
-  <div class="list-group"  style="font-size:11pt">
-      <div class="list-group-item">
-          <div class="row-picture">
-              <img class="circle" src="http://www.netherlands-tourism.com/wp-content/uploads/2014/12/Molen-De-Put-Leiden.jpg" alt="icon">
-          </div>
-          <div class="row-content">
-              <h4 class="list-group-item-heading">OpenML 2017 Fall Workshop</h4>
-              <p class="list-group-item-text">The <a href="https://www.lorentzcenter.nl/lc/web/2017/902/info.php3?wsid=902&venue=Oort">OpenML 2017 Workshop</a> will be 9-14 October in Leiden, the Netherlands. Save the date!</p>
-          </div>
-      </div>
-      <div class="list-group-item">
-          <div class="row-picture">
-              <img class="circle" src="https://pbs.twimg.com/profile_images/796000597245882368/axXl_01s.jpg" alt="icon">
-          </div>
-          <div class="row-content">
-              <h4 class="list-group-item-heading">Using R?</h4>
-              <p class="list-group-item-text">Dive into the <a href="http://openml.github.io/articles/slides/useR2017_tutorial/">useR!2017 OpenML Tutorial</a>.</p>
-          </div>
-      </div>
-      <div class="list-group-item">
-          <div class="row-picture">
-              <img class="circle" src="img/COSEAL_small.png" alt="icon">
-          </div>
-          <div class="row-content">
-              <h4 class="list-group-item-heading">Algorithm Selection Competition</h4>
-              <p class="list-group-item-text">Use your favorite OpenML tool to participate in the (external) <a href="http://www.coseal.net/open-algorithm-selection-challenge-2017-oasc/">Open Algorithm Selection Competition 2017</a>. Deadline is <b>August 27, 2017</b>.</p>
-          </div>
-      </div>
-      <div class="list-group-item">
-          <div class="row-picture">
-              <img class="circle" src="img/colorballs2.jpg" alt="icon">
-          </div>
-          <div class="row-content">
-              <h4 class="list-group-item-heading">Research Awards</h4>
-              <p class="list-group-item-text">We are very happy to have won the <a href="http://www.researchdata.nl/en/news-and-agenda/news/news-item/artikel/boschdoc-ahcoda-db-and-openml-winners-of-the-data-prize-2016/">Dutch Data Prize</a>, as well as a <a href="https://www.microsoft.com/en-us/research/academic-program/microsoft-azure-for-research/">Microsoft Azure Research Award</a>! We are very grateful for the support.</p>
-          </div>
-      </div>
-      <div class="list-group-item">
-          <div class="row-picture">
-              <img class="circle" src="img/osr.png" alt="icon">
-          </div>
-          <div class="row-content">
-              <h4 class="list-group-item-heading">OpenML on Open Science Radio</h4>
-              <p class="list-group-item-text"><a href="http://www.openscienceradio.de/2016/10/28/osr059-openml-en/">Check out the podcast.</a></p>
-          </div>
-      </div>
-  </div>
-
-</div>
 
  <div id="green" class="introsection greensection">
 
@@ -201,16 +218,22 @@
 
 		<div class="container-fluid">
 		<div class="row">
-
 		  <div class="col-xs-12 col-sm-6 pull-right-lg contactfooter">
-                    <ul class="openml-contact-footer">
+        <ul class="openml-footer" class="pull-right">
+        <div id="social-bar">
+            <div id="twitter" data-url="openml.org" data-text="#OpenML: Exploring machine learning better, together." data-title="twitter"></div>
+            <div id="googleplus" data-url="openml.org" data-text="OpenML:  Exploring machine learning better, together." data-title="google-plus"></div>
+            <div id="facebook" data-url="openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="facebook"></div>
+            <!--<div id="linkedin" data-url="openml.org" data-text="OpenML: Exploring machine learning better, together." data-title="linkedin"></div>-->
+        </div>
+                  <!--  <ul class="openml-contact-footer">
                         <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-edit fa-2x"></i><br />email</a></li>
                         <li><a href="https://twitter.com/intent/tweet?screen_name=open_ml&text=%23openml.org" data-related="open_ml"><i class="fa fa-twitter fa-2x"></i><br />tweet</a></li>
 			<li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-2x"></i><br />comment</a></li>
                         <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-2x"></i><br />comment</a></li>
                         <li><a href="discuss"><i class="fa fa-comments-o fa-2x"></i><br />discuss</a></li>
 			<li><a href="https://github.com/openml/OpenML/issues?state=open" target="_blank"><i class="fa fa-github fa-2x"></i><br />issues</a></li>
-                    </ul>
+    </ul>-->
         <br>
 
                     <ul class="openml-footer" class="pull-right">
@@ -243,4 +266,5 @@
 
 
   </div>
+</div>
   <!-- <div style="margin-bottom:-60px;"></div>  make footer visible on main page -->

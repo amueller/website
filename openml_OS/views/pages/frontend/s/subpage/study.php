@@ -3,20 +3,7 @@
 	  } else {
     ?>
 
-    <h1 class="pull-left"><a href="d"><i class="fa fa-flask"></i></a>
-	     <?php echo $this->study['name']; ?>
-    </h1>
-
-    <div class="datainfo">
-       <i class="fa fa-cloud-upload"></i> Created <?php echo dateNeat( $this->study['date']); ?> by <a href="u/<?php echo $this->study['uploader_id'] ?>"><?php echo $this->study['uploader'] ?></a>
-       <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->study['visibility']); ?>
-       <i class="fa fa-database"></i> Datasets: <?php echo $this->study['datasets_included']; ?>
-       <i class="fa fa-trophy"></i> Tasks: <?php echo $this->study['tasks_included']; ?>
-       <i class="fa fa-gears"></i> Flows: <?php echo $this->study['flows_included']; ?>
-       <i class="fa fa-star"></i> Runs: <?php echo $this->study['runs_included']; ?>
-    </div>
-
-  <div class="panel" onclick="showmore()">
+  <div class="panel" onclick="showmore()" style="margin-top: 60px;>
     <div class="cardactions">
       <div class="wiki-buttons">
         <div class="pull-right" id="wiki-waiting">

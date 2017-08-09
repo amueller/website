@@ -1,5 +1,14 @@
 <?php
 
+function shortenString($string){
+  if (strlen($string) >= 60) {
+    return substr($string, 0, 30). " ... " . substr($string, -30);
+}
+else {
+    return $string;
+}
+}
+
 //$this->load_javascript = array('js/libs/highcharts.js','js/libs/highcharts-more.js','js/libs/modules/exporting.js','js/libs/jquery.dataTables.min.js','js/libs/dataTables.tableTools.min.js','js/libs/dataTables.scroller.min.js','js/libs/dataTables.responsive.min.js','js/libs/dataTables.colVis.min.js');
 $myjs = array('js/libs/highcharts.js','js/libs/jquery.dataTables.min.js','js/libs/sweetalert.min.js');
 if(!isset($this->load_javascript))
