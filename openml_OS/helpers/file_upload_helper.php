@@ -69,9 +69,9 @@ function subdirectory($needle,$haystack) {
 function prepend_to_file($to_prepend, $file_path) {
   $cache_new = $to_prepend;
   
-  $handle = fopen($file, "r+");
+  $handle = fopen($file_path, "r+");
   $len = strlen($cache_new);
-  $final_len = filesize($file) + $len;
+  $final_len = filesize($file_path) + $len;
   $cache_old = fread($handle, $len);
   rewind($handle);
   
