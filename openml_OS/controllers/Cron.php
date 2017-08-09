@@ -172,7 +172,7 @@ class Cron extends CI_Controller {
           'INTO OUTFILE "'. $tmp_path .'" ' .
           'FIELDS TERMINATED BY "," ' .
           'ENCLOSED BY "\"" ' .
-          'LINES TERMINATED BY "\n" ' .
+          'LINES TERMINATED BY "\n" ' . 
           ';';
       } elseif ($meta_dataset->type == 'evaluations') {
         $header = '"run_id", "setup_id", "task_id", "' . implode('", "', $evaluation_keys) . '", "value", "task_name", "flow_name"' . "\n";
@@ -225,22 +225,21 @@ class Cron extends CI_Controller {
         $this->_error_meta_dataset($meta_dataset->id, $error, $meta_dataset->user_id);
         return;
       }
-
+      
+      if ($header != null) {
+        $res = prepend_to_file($header, $tmp_path);
+        if (!$res) {
+          $this->_error_meta_dataset($meta_dataset->id, 'Failed to prepend header. ', $meta_dataset->user_id);
+          return;
+        }
+      }
+      
       $filename = getAvailableName(DATA_PATH . $this->dir_suffix, 'meta_dataset.csv');
       $filepath = DATA_PATH . $this->dir_suffix . $filename;
       $success = rename($tmp_path, $filepath);
       
       if (!$success) {
         $this->_error_meta_dataset($meta_dataset->id, 'Failed to move csv to data directory. Filename: ' . $filename, $meta_dataset->user_id);
-        return;
-      }
-      
-      if ($header != null) {
-        $res = prepend_to_file($header, $filepath);
-      }
-      
-      if (!$res) {
-        $this->_error_meta_dataset($meta_dataset->id, 'Failed to prepend header. ', $meta_dataset->user_id);
         return;
       }
 
