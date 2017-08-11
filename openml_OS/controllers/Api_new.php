@@ -141,6 +141,8 @@ class Api_new extends CI_Controller {
       } else {
         $this->Api_data->returnError(102, $this->version);
       }
+    } else if ($this->authenticated == false && $this->provided_hash) {
+        $this->Api_data->returnError(103, $this->version);
     } else if ($this->user_has_writing_rights == false && $request_type != 'get') {
       $this->Api_data->returnError(104, $this->version, $this->openmlGeneralErrorCode, 'API calls of the read-only user can only be of type GET. ');
     } else if (file_exists(APPPATH.'models/api/' . $this->version . '/Api_' . $type . '.php') == false && $type != 'xsd' && $type != 'xml_example') {
