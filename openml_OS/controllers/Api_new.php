@@ -67,16 +67,20 @@ class Api_new extends CI_Controller {
     // (http://php.net/manual/en/language.operators.errorcontrol.phps)
     $getPostHash = @$this->input->get_post('api_key');
     $this->provided_hash = $getPostHash != false;
-    $this->provided_valid_hash = $this->Author->getWhere( 'session_hash = "' . $getPostHash . '"' ); // TODO: and add date?
+    $this->provided_valid_hash = $this->Author->getWhere('session_hash = "' . $getPostHash . '"'); // TODO: and add date?
     $this->authenticated = $this->provided_valid_hash || $this->ion_auth->logged_in();
     $this->user_id = false;
     $this->user_email = false;
-    if($this->provided_hash && $this->provided_valid_hash) {
+    if ($this->provided_hash && $this->provided_valid_hash) {
       $this->user_id = $this->provided_valid_hash[0]->id;
       $this->user_email = $this->ion_auth->user($this->user_id)->row()->email;
-    } elseif($this->ion_auth->logged_in()) {
+    } elseif ($this->ion_auth->logged_in()) {
       $this->user_id = $this->ion_auth->user()->row()->id;
       $this->user_email = $this->ion_auth->user()->row()->email;
+    } else {
+      // not always neccessary 
+      $this->user_id = -1;
+      $this->user_email = null;
     }
     
     // determine the writing and admin rights. 
@@ -131,7 +135,7 @@ class Api_new extends CI_Controller {
 
     $request_type = strtolower($_SERVER['REQUEST_METHOD']);
 
-    if ($this->authenticated == false) {
+    if ($this->authenticated == false && $request_type != 'get') {
       if ($this->provided_hash) {
         $this->Api_data->returnError(103, $this->version);
       } else {
