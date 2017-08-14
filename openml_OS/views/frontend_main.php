@@ -210,13 +210,13 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
   			</div>
 
         <div class="nav pull-right openmlsocicons">
-          <a href="guide" class="openmlsoc openmlsocicon"><i class="fa fa-leanpub fa-2x"></i></a>
+          <a href="guide/bootcamp" class="openmlsoc openmlsocicon"><i class="fa fa-leanpub fa-2x"></i></a>
         </div>
         <script>var logged_in = true;</script>
 			<?php } else { ?>
         <script>var logged_in = false;</script>
 			<div class="nav pull-right openmlsocicons">
-                  <a href="guide" class="btn btn-material-<?php echo $materialcolor;?>">Guide</a>
+                  <a href="guide/bootcamp" class="btn btn-material-<?php echo $materialcolor;?>">Guide</a>
                   <a class="btn btn-material-<?php echo $materialcolor;?>" data-toggle="modal" data-target="#login-dialog">Sign in</a>
       </div>
 			<?php } ?>
