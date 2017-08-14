@@ -28,16 +28,12 @@
 		<h3>How to submit runs</h3>
     <b>Using your favorite machine learning environment</b><br>
 		<p>Download this task directly in your environment and automatically upload your results</p>
-    <a href="guide/#!plugin_weka" class="btn btn-primary btn-raised">WEKA</a>
-    <a href="guide/#!plugin_moa" class="btn btn-primary btn-raised">MOA</a>
-    <a href="guide/#!plugin_rm" class="btn btn-primary btn-raised">RapidMiner</a>
+    <a href="guide/integrations" class="btn btn-primary btn-raised">OpenML integrations</a>
 
     <br><br>
     <b>From your own software</b><br>
     <p>Use one of our APIs to download data from OpenML and upload your results</p>
-    <a href="guide/#!java" class="btn btn-primary btn-raised">Java</a>
-    <a href="guide/#!r" class="btn btn-primary btn-raised">R</a>
-    <a href="guide/#!python" class="btn btn-primary btn-raised">Python</a>
+    <a href="guide/api" class="btn btn-primary btn-raised">OpenML APIs</a>
 
   </div>
 
