@@ -293,13 +293,19 @@ class ElasticSearch {
                 'analyzer' => 'snowball'
             ),
             'properties' => array(
-                'description' => array(
+            		'name' => array(
                     'type' => 'string',
-                    'analyzer' => 'snowball'
-                ),
+                    'analyzer' => 'snowball'),
+                'visibility' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'),
                 'date' => array(
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'
+                ),
+		            'description' => array(
+                    'type' => 'string',
+                    'analyzer' => 'snowball'
                 ),
                 'study_id' => array('type' => 'long'),
                 'uploader' => array(
