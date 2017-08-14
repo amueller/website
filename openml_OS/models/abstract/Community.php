@@ -7,8 +7,10 @@ class Community extends CI_Model {
   
   function __construct() {
     parent::__construct();
+    $this->load->model('Database_singleton');
     $this->load->model('Log');
     $this->deleted_activated = 'deleted = "n" AND activated = "y" ';
+    $this->db = $this->Database_singleton->getOpenmlConnection();
   }
   
   function query( $sql ) {

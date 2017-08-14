@@ -66,6 +66,24 @@ function subdirectory($needle,$haystack) {
   else return substr($result,1);
 }
 
+function prepend_to_file($to_prepend, $file_path) {
+  $cache_new = $to_prepend;
+  
+  $handle = fopen($file_path, "r+");
+  $len = strlen($cache_new);
+  $final_len = filesize($file_path) + $len;
+  $cache_old = fread($handle, $len);
+  rewind($handle);
+  
+  for ($i = 1; ftell($handle) < $final_len; ++$i) {
+    fwrite($handle, $cache_new);
+    $cache_new = $cache_old;
+    $cache_old = fread($handle, $len);
+    fseek($handle, $i * $len);
+  }
+  return true;
+}
+
 function resize_image_squared( $image_path, $target_width ) {
   scale_image( $image_path, $target_width, $target_width ); // target_width suffices. squared image.  
   list($width,$height) = getimagesize( $image_path );

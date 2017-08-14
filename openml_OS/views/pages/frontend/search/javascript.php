@@ -77,6 +77,8 @@ function removeFilters()
       for (var b in buckets.reverse()){
         $('#'+buckets[b].key+'counter').html(buckets[b].doc_count);
       }
+      if($("#openmlsearch").val().length==0)
+        $('#task_typecounter').html('8');
     }, function (error) {
       console.trace(error.message);
     });

@@ -88,6 +88,7 @@ $frontend_pages = array(
           'share',
 	        'guide',
           'cite',
+          'contact',
           'preview',
           'query',
           'project' );

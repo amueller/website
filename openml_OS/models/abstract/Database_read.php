@@ -150,11 +150,11 @@ class Database_read extends CI_Model {
   }
   
   function mysqlErrorNo() {
-    return $this->db->_error_number();
+    return $this->db->error()['code'];
   }
   
   function mysqlErrorMessage() {
-    return $this->db->_error_message();
+    return $this->db->error()['message'];
   }
   
   function incrementVersionNumber( $name ) {

@@ -2,7 +2,7 @@
 // for function: openml.global
 $this->apiErrors[100] = 'Function not valid';
 $this->apiErrors[101] = 'Function not yet ported or implemented';
-$this->apiErrors[102] = 'No authentication';
+$this->apiErrors[102] = 'No authentication (Please provide API key for all requests other than HTTP GET)';
 $this->apiErrors[103] = 'Authentication failed';
 $this->apiErrors[104] = 'This is a read-only account, it does not have permission for write operations. ';
 $this->apiErrors[105] = 'An Elastic Search Exception occured. ';
