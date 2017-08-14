@@ -4,11 +4,9 @@
 <div class="col-md-12">
   <div id="logo">OpenML<div id="beta">beta</div></div>
 </div>
-<div id="catchphrase">Exploring machine learning better, together</div>
-
+<div id="catchphrase">Machine learning, better, together</div>
 <div class="col-md-12">
 <div class="col-lg-10 col-lg-offset-1">
-
 
 <div class="stats">
  <div class="statrow">
@@ -109,107 +107,113 @@
 
   </div>
 </div>
-<div class="panel marketing">
+<div class="panel whitebox">
 
-  <h1>Democratize Machine Learning<h2>
-  <div id="catchphrase">
-  OpenML is an open machine learning platform empowering you to easily share and reuse datasets, code and models, find out what works, and build better models alongside thousands of other data scientists (and bots!). Be more productive, log or share your work throughout the world, using any machine learning tool you like.
-  </div>
+  <h1 class="callout">Machine learning should be as simple as possible<br>(but not simpler)</h1>
+  <div class="callouttext">We aim to make machine learning expertise easily accessible to everyone in research, education and industry.
+ Easily share and reuse datasets, code and models in a transparent way, learn what works, and do machine learning alongside thousands of other data scientists (and bots!).</div>
+  <!--Be more productive, log or share your work throughout the world, using any machine learning tool you like.-->
+  <br><br>
+  <a href="register" class="btn btn-lg btn-raised btn-info">Sign me up!</a>
+
 </div>
 
 <div class="emptypanel">
-<h1>Integrations</h1>
-
- <div class="shortintro" style="padding-top:40px;">Download and share data, flows and runs through:</div>
-  <div class="statrow">
-     <div class="col-sm-2 col-sm-offset-1"><a href="guide#!python"><img class="toolcircle" src="img/python.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!r"><img class="toolcircle" src="img/R.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!java"><img class="toolcircle" src="img/java.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="api_docs"><img class="toolcircle" src="img/rest.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!net"><img class="toolcircle" src="img/dotnet.png" alt="icon"></a></div>
-     <div class="col-sm-2 col-sm-offset-1"><a href="guide#!python"><img class="toolcircle" src="img/sklearn.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!r"><img class="toolcircle" src="img/mlr.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!plugin_weka"><img class="toolcircle" src="img/weka.png" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!plugin_moa"><img class="toolcircle2" src="img/moa.jpeg" alt="icon"></a></div>
-     <div class="col-sm-2"><a href="guide#!plugin_rm"><img class="toolcircle2" src="img/rapidminer.png" alt="icon"></a></div>
-  </div>
-</h1>
-
-
- <div id="green" class="introsection greensection">
-
-      <h1><i class="fa fa-rocket fa-lg"></i><br>For the curious</h1>
-<p>What if you could explore machine learning research as easily as exploring Wikipedia?</p>
-<p>What if you could share new data, code and experiments as easily as sending a tweet?</p>
-<!-- <p>What if all algorithms and experiments are organized online?</p> -->
-
-<div class="container-fluid corrected">
-<div class="row">
-  <div class="col-md-4"><h1><i class="fa fa-globe"></i></h1><h2>Networked science</h2>
-  <p>OpenML enables truly collaborative machine learning. Scientists can post important data, inviting anyone to help analyze it. OpenML structures and organizes all results online to show the state of the art and push progress.</p>
-  </div>
-  <div class="col-md-4"><h1><i class="fa fa-cloud-upload"></i></h1><h2>Sharing. No PhD required</h2>
-  <p>OpenML is being integrated in most popular machine learning environments, so you can automatically upload all your data, code, and experiments. And if you develop new tools, there's an API for that, plus people to help you.</p>
-  </div>
-  <div class="col-md-4"><h1><i class="fa fa-search"></i></h1><h2>Easy access</h2>
-  <p>OpenML allows you to search, compare, visualize, analyze and download all combined results online. Explore the state of the art, improve it, build on it, ask questions and start discussions.
-  </p>
-  </div>
-</div>
-<!-- Sharing like twitter, search like gmail, discuss like facebook -->
-</div>
- </div>
-
- <div id="blue" class="introsection bluesection">
-      <h1><i class="fa fa-flask fa-lg"></i><br>For Science</h1>
-<p>What if you could collaborate on hard problems with hundreds of scientists at once?</p>
-<p>What if you could easily access the latest data to answer questions or verify findings?</p>
-
-<div class="container-fluid corrected">
-<div class="row">
-  <div class="col-md-4"><h1><i class="fa fa-sun-o"></i></h1><h2>Transparency</h2>
-  <p>Science follows certain methods. On OpenML, these are expressed as <i>tasks</i> detailing what results must be uploaded, and requiring the information necessary to ensure that uploaded results are interpretable and verifiable.</p>
-  </div>
-
-  <div class="col-md-4"><h1><i class="fa fa-comments-o"></i></h1><h2>Collective intelligence</h2> <!--data driven intelligence -->
-  <p>Tasks are solved collaboratively. Anyone can propose new tasks, and anyone can upload new results, augment the data, contribute new ideas, ask questions, or discuss issues and results online.</p>
- </div>
-
-  <div class="col-md-4"><h1><i class="fa fa-book"></i></h1><h2>Beyond journals</h2>
-  <p>OpenML enriches research output by making it freely accessible, organized, continuously updated, immensely detailed, and reproducible. It stimulates online discussion and diminishes publication bias.</p>
-  </div>
-
-</div>
+    <div class="col-sm-8 col-md-6 coverflow">
+      <h2>Open science machine learning</h2>
+      <div class="covertext">
+        Identifying the most appropriate learning techniques and using them optimally can be challenging for the best of us.
+        OpenML is a place where you can share interesting datasets with the people who love to analyse data, and build the best
+        solutions together, saving you valuable time, increasing your visibility, and speeding up discovery. OpenML links
+        data to algorithms and people, so you can build on the state of the art and learn to teach machines to learn better.
+      </div>
+      <div class="covertext">
+        <a class="coverlink" href="guide">Learn more</a>
+      </div>
+    </div>
+    <div class="col-sm-8 col-md-6 coverflow">
+      <img src="img/intro-brain.png" alt="" width="360">
+    </div>
 </div>
 
 
- </div>
+<div class="panel whitebox">
+    <div class="col-sm-8 col-md-6 coverflow">
+      <img src="img/intro-data.png" alt="" width="360">
+    </div>
+    <div class="col-sm-8 col-md-6 coverflow">
+      <h2>It starts with data</h2>
+      <div class="covertext">
+        Upload your datasets, or link them from existing repositories. OpenML automatically versions and analyses each dataset and annotates them with rich meta-data to streamline analysis.
+        Easily search thousands of datasets and import them directly into your code or toolboxes.
+      </div>
+      <div class="covertext">
+        <a class="coverlink" href="guide">Learn more</a>
+      </div>
+    </div>
+</div>
 
+<div class="emptypanel">
 
- <div id="red" class="introsection redsection"><a name="red"></a>
-      <h1><i class="fa fa-heart fa-lg"></i><br>For Scientists</h1>
-<p>What if you could spend more time doing actual research?</p>
-<p>What if you could get more credit for your work by making it more visible?</p>
-
-<div class="container-fluid corrected">
-<div class="row">
-  <div class="col-md-4"><h1><i class="fa fa-clock-o"></i></h1><h2>More time</h2>
-  <p>OpenML takes care of the routinizable work required for yielding insight. It helps you run large amounts of experiments using many datasets and techniques, organizes them online and relates them to the state-of-the-art.</p>
+  <div class="col-sm-8 col-md-6 coverflow">
+    <h2>Collaborative science - easy benchmarking</h2>
+    <div class="covertext">
+      Create <i>tasks</i> that tell people what needs to be done with the data (e.g. classification).
+      OpenML creates machine-readable protocols to train and evaluate models, so you can focus on the science.
+      Try many techniques on the same task and compare directly to the state of the art, or evaluate one technique on hundreds of tasks at once.
+    </div>
+    <div class="covertext">
+      <a class="coverlink" href="guide">Learn more</a>
+    </div>
   </div>
 
-  <div class="col-md-4"><h1><i class="fa fa-lightbulb-o"></i></h1><h2>More knowledge</h2>
-  <p>OpenML organizes, links and annotates your results so that you can focus on discovery: interpreting the data, linking it to other data, formulating new hypotheses and designing new experiments to test them.</p>
-  </div>
-
-  <div class="col-md-4"><h1><i class="fa fa-trophy"></i></h1><h2>More credit</h2> <!-- creative commons -->
-  <p>OpenML helps you share your results for optimal impact. Share with the world or with friends, freely or with attribution (citation). Follow how often your contributions are reused or liked and climb up the leaderboards.</p>
+  <div class="col-sm-8 col-md-6 coverflow">
+    <img src="img/intro-task.png" alt="" width="360">
   </div>
 
 </div>
+
+<div class="panel whitebox">
+    <div class="col-sm-8 col-md-6 coverflow">
+      <img src="img/intro-code.png" alt="" width="360">
+    </div>
+    <div class="col-sm-8 col-md-6 coverflow">
+      <h2>Code Integrations</h2>
+      <div class="covertext">
+        OpenML integrates seamlessly into existing data science environments, so you can readily
+        use it. With a few lines of code or a few clicks, you can import datasets, build algorithms locally,
+        upload models, and (at any time) download your and other people's workflows, models and evaluations for reuse and further analysis.
+      </div>
+      <div class="covertext">
+        OpenML is directly integrated into the most popular machine learning tools, but you can also build your own integrations
+        with the Python, R, Java, and C++ APIs, or program against the REST API.
+      </div>
+      <div class="covertext">
+        <a class="coverlink" href="guide">Learn more</a>
+      </div>
+    </div>
 </div>
 
+<div class="emptypanel" style="margin-bottom:0px;">
+
+  <div class="col-sm-8 col-md-6 coverflow">
+    <h2>Reproducible, reusable, transparent research</h2>
+    <div class="covertext">
+      The OpenML integrations make sure that all uploaded results are linked to the exact (versions) of datasets, workflows, software, and the people involved.
+      We generate predictions locally using exact procedures, and evaluate them server-side so that results are directly comparable and reusable in further work.
+      Wherever possible, we extract clear descriptions of machine learning workflows and models.
+    </div>
+    <div class="covertext">
+      <a class="coverlink" href="guide">Learn more</a>
+    </div>
+  </div>
+
+  <div class="col-sm-8 col-md-6 coverflow">
+    <img src="img/intro-run.png" alt="" width="360">
+  </div>
 
 </div>
+
 
 </div> <!-- end  marketing -->
 

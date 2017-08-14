@@ -15,15 +15,22 @@
 .emptypanel{
   padding-left: 0px;
   padding-right: 0px;
+  padding-top: 80px;
+  padding-bottom: 80px;
   background-color: #f2f2f2;
-  float: left;
   width: 100%;
+  float: left;
+}
+
+.emptypanel h2{
+  font-size: 22px;
 }
 
 .darkpanel{
   color: rgb(255,255,255) !important;
   background-color: #24292e;
   padding-top:10px;
+  padding-bottom: 20px !important;
 }
 
 .darkpanel .list-group-item-heading{
@@ -95,7 +102,6 @@ canvas {
   *zoom: 1;
   border: none;
   padding:2px;
-  margin-top: -20px;
   outline: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
 }
@@ -762,7 +768,7 @@ select{
   background: #f2f2f2;
   font-family: "RobotoDraft","Roboto",sans-serif;
   font-size: 14px;
-  padding-top: 10px;
+  padding-top: 30px;
   min-height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -772,7 +778,7 @@ select{
 .tabbed-submenu{
   overflow: auto;
   margin-top:-40px;
-  margin-bottom:-30px;
+  margin-bottom:0px;
 }
 
 .rightpanel{
@@ -890,9 +896,61 @@ select{
   text-align: center;
 }
 
-.openmlsectioninfo h1,h2,h3{
+.callout h1,h2,h3{
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  line-height: 48px;
+}
+
+.callout{
+  font-size: 40px !important;
   font-family: 'Roboto', sans-serif;
   font-weight: 300 !important;
+  color: #000 !important;
+  margin-bottom: 20px;
+}
+
+.whitebox{
+  padding-top:80px !important;
+  padding-bottom:80px !important;
+  min-height: 400px;
+  float:left;
+  text-align: center;
+  margin: 0 auto 30px;
+  width:100%;
+}
+.whitebox h2{
+  font-size: 22px;
+}
+
+.covertext{
+  font-size: 16px;
+  padding-bottom:20px;
+}
+
+.coverflow {
+  text-align:left;
+}
+.coverflow > img{
+  margin: auto;
+  display:block;
+}
+
+.coverlink{
+  color: rgb(3, 102, 214);
+}
+
+.callouttext{
+  font-size: 20px !important;;
+  font-weight: 300;
+  font-family: 'Roboto', sans-serif;
+  color: rgb(88, 96, 105);
+}
+
+.openmlsectioninfo h1,h2,h3{
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
   margin-bottom: 10px;
   margin-top: 10px;
   line-height: 48px;
@@ -1933,7 +1991,7 @@ hr.hardSmall {
 
 html, body {
    font-family: 'Roboto', sans-serif;
-   font-weight: 400;
+   font-weight: 300;
    width: auto !important;  /* Firefox will set width as auto */
    min-width: 480px; /* suppose you want minimun width of 1000px */
    margin-bottom: 0px !important;
@@ -2006,6 +2064,18 @@ html, body {
   clear: both;
 }
 
+ul.apilist{
+margin-left:0px;
+padding-left:0px;
+
+}
+
+ul.apilist > li {
+  list-style: none;
+  clear: both;
+  padding-top:20px;
+  padding-bottom:0px;
+}
 
 .nav-search > li {
   float: left;
@@ -2951,11 +3021,23 @@ svg:not(:root){
   display: none;
 }
 
-.openmlsectioninfo{
+.openmlsectioninfo, .openmlcover{
   padding-left: 0px;
   padding-right: 0px;
   background-color: #f2f2f2;
 }
+
+.coverflow {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.marketing{
+  float:none !important;
+  padding-top: 110px !important;
+}
+
 
 .itemhead{
   width: 160px;
@@ -3432,8 +3514,8 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 .marketing {
   text-align: center;
   margin-bottom: 2px !important;
-  padding-top: 65px !important;
-  float: left;
+  padding-top: 65px;
+  float:left;
 }
 
 .marketing .row {
@@ -3501,6 +3583,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 .pull-right-lg{
   float: left !important;
 }
+
 }
 @media screen and (min-width: 768px) {
   .pull-left-lg{

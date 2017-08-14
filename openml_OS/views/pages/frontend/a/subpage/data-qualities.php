@@ -11,10 +11,10 @@
 		<div class="table-responsive"><table class="table table-striped">
 		<tbody>
 		<?php	if(!isset($this->results)) {echo "No values found.";} else { foreach( $this->results as $r ):
-        if(array_key_exists($this->measure['name'],$r['fields'])){?>
+        if(array_key_exists($this->measure['name'],$r['_source']['qualities'])){?>
 			<tr>
-        <td><a href="d/<?php echo $r['_id'];?>"><?php echo $r['fields']['name'][0] . ' ('. $r['fields']['version'][0] . ')'; ?></a></td>
-        <td><?php echo $r['fields'][$this->measure['name']][0];?></td>
+        <td><a href="d/<?php echo $r['_id'];?>"><?php echo $r['_source']['name'] . ' ('. $r['_source']['version'] . ')'; ?></a></td>
+        <td><?php echo $r['_source']['qualities'][$this->measure['name']];?></td>
       </tr>
 		<?php } endforeach; ?>
 		</tbody>

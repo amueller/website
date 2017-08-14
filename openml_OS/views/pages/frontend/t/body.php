@@ -13,8 +13,7 @@
         } else { ?>
 
           <ul class="hotlinks">
-                      <?php if ($this->ion_auth->logged_in()) {
-                          if ($this->ion_auth->user()->row()->id != $this->task['uploader_id']) {?>
+                      <?php if ($this->ion_auth->logged_in()) {?>
                               <li>
                                   <?php
                                   if ($this->activeuserlike) {
@@ -24,7 +23,6 @@
                                   }
                                   ?>
                               </li>
-      				                <?php } ?>
       				                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->sourcedata_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
       				                <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json">
       				                                  <span class="fa-stack fa-stack-icon fa-2x">
@@ -139,10 +137,10 @@
           </div>
           <div class="tabbed-submenu">
       		<ul class="nav nav-pills pull-right">
-      			<li role="presentation" class="active"><a class="btn btn-default" data-toggle="tab" href="#detail"><i class="fa fa-fw fa-bar-chart"></i> Evaluations</a></li>
-      			<li role="presentation"><a class="btn btn-default" data-toggle="tab" href="#people"><i class="fa fa-fw fa-users"></i> People</a></li>
-      			<li role="presentation"><a class="btn btn-default" data-toggle="tab" href="#taskruns"><i class="fa fa-fw fa-list"></i> Runs</a></li>
-      			<li role="presentation"><a class="btn btn-default" data-toggle="tab" href="#submit"><i class="fa fa-fw fa-plus"></i> Add results</a></li>
+      			<li><a onclick="highlight()" id="detail-btn" class="btn btn-default btn-raised btn-info" data-toggle="tab" href="#detail"><i class="fa fa-fw fa-bar-chart"></i> Evaluations</a></li>
+      			<li><a onclick="highlight()" id="people-btn" class="btn btn-default btn-raised" data-toggle="tab" href="#people"><i class="fa fa-fw fa-users"></i> People</a></li>
+      			<li><a onclick="highlight()" id="runs-btn" class="btn btn-default btn-raised" data-toggle="tab" href="#taskruns"><i class="fa fa-fw fa-list"></i> Runs</a></li>
+      			<li><a onclick="highlight()" id="add-btn" class="btn btn-default btn-raised" data-toggle="tab" href="#submit"><i class="fa fa-fw fa-plus"></i> Add results</a></li>
       		</ul>
           </div>
 

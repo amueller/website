@@ -11,6 +11,7 @@ window.onresize = function(event) {
         res[r[i].key] = r[i].doc_count;
         $('#'+r[i].key+'counter').html(r[i].doc_count);
       }
+      $('#task_typecounter').html('8');
       $('#data_count').html((res['data'] ? res['data'] : '0'));
       $('#task_count').html((res['task'] ? res['task'] : '0'));
       $('#flow_count').html((res['flow'] ? res['flow'] : '0'));
@@ -19,17 +20,5 @@ window.onresize = function(event) {
   }
   update();
   //Run the update function once every 5 seconds
-  setInterval(update, 5000);
+  setInterval(update, 500000);
 })();
-
-$(function() {
-  // fetch counts for menu bar
-  client.search(<?php echo json_encode($this->alltypes); ?>).then(function (body) {
-    var buckets = body.aggregations.type.buckets;
-    for (var b in buckets.reverse()){
-      $('#'+buckets[b].key+'counter').html(buckets[b].doc_count);
-    }
-  }, function (error) {
-    console.trace(error.message);
-  });
-});

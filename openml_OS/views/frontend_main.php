@@ -298,11 +298,12 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                 <li class="panel guidechapter">
                   <a data-toggle="collapse" data-parent="#accordeon" data-target="#guidelist"> <b>Learn</b></a>
                   <ul class="sidenav nav collapse <?php if($this->section == 'Guide' or $this->section == 'OpenML') echo 'in';?>" id="guidelist">
-                    <li><a href="#intro" class="icongreen"><i class="fa fa-fw fa-lg fa-rocket"></i> Bootcamp</a></li>
-                    <li><a href="#intro" class="iconyellow"><i class="fa fa-fw fa-lg fa-code"></i> OpenML APIs</a></li>
-                    <li><a href="#intro" class="iconblue"><i class="fa fa-fw fa-lg fa-puzzle-piece"></i> Integrations</a></li>
-                    <li><a href="#intro" class="iconred"><i class="fa fa-fw fa-lg fa-users"></i> Developers</a></li>
-                    <li><a href="#intro" class="icongreen"><i class="fa fa-fw fa-lg fa-question-circle"></i> Help</a></li>
+                    <li><a href="guide/bootcamp" class="icongreen"><i class="fa fa-fw fa-lg fa-rocket"></i> Bootcamp</a></li>
+                    <li><a href="guide/api" class="iconyellow"><i class="fa fa-fw fa-lg fa-code"></i> OpenML APIs</a></li>
+                    <li><a href="guide/integrations" class="iconblue"><i class="fa fa-fw fa-lg fa-puzzle-piece"></i> Integrations</a></li>
+                    <li><a href="guide/benchmark" class="iconred"><i class="fa fa-fw fa-lg fa-signal"></i> Benchmarking</a></li>
+                    <li><a href="guide/developers" class="iconpurple"><i class="fa fa-fw fa-lg fa-users"></i> Developers</a></li>
+                    <!--<li><a href="#intro" class="iconorange"><i class="fa fa-fw fa-lg fa-question-circle"></i> Help</a></li>-->
                     <li><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
                   </ul>
                 </li>

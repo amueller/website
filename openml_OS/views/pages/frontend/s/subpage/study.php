@@ -3,7 +3,7 @@
 	  } else {
     ?>
 
-  <div class="panel" onclick="showmore()" style="margin-top: 60px;>
+  <div class="panel" onclick="showmore()" style="margin-top: 60px;">
     <div class="cardactions">
       <div class="wiki-buttons">
         <div class="pull-right" id="wiki-waiting">
