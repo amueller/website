@@ -45,7 +45,6 @@ function scrollMenuTop(){
   $('#mainmenu').animate({ scrollTop: 0 }, { duration: 500, queue: false });
 }
 
-
 $(function(){
 
 //scrollbars
@@ -120,37 +119,57 @@ $(function() {
   $("#submenucontainer").append($(".submenu"));
   $(".submenu").css('float', 'none');
 
-  // shows/hides menu when menu icon is clicked
-  $("#menubutton").click(function () {
+  var colors = ['#F44336','#E91E63','#9C27B0','#673AB7','#2196F3','#4CAF50','#CDDC39','#FFEB3B','#FF9800'];
+  $('#colorchange').children('span').each(function (i){
+    $(this).hover(function () {
+      $(this).css("color",colors[Math.floor(Math.random() * colors.length)]);
+    });
+  });
+  $('#colorchange').children('span').each(function (i){
+    $(this).css("color",colors[i]);
+  });
 
-    var visible = $('#mainmenu').is(":visible" );
+
+
+  // shows/hides menu when menu icon is clicked
+  $(".menubutton").click(function () {
+
+    if($('#mainmenu').is(":visible" )){
+      //$('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
+      $('#mainpanel').addClass('col-md-10');
+      $('#mainpanel').addClass('col-md-offset-1');
+      $('.openmlsectioninfo').css("margin-left","0");
+    } else {
+      if(window.innerWidth>992){
+        $('#mainpanel').removeClass('col-md-10');
+        $('#mainpanel').removeClass('col-md-offset-1');
+        $('.openmlsectioninfo').css("margin-left","265px");
+      }
+      if($('#sectiontitle').html() == 'OpenML'){
+          $('.searchbar').css("z-index","1050");
+          $('.sidebar-overlay').css("visibility", "visible");}
+      else{
+          $('.searchbar').css("z-index","100");
+          $('.sidebar-overlay').css("visibility", "hidden");}
+    }
+
     var options = { direction: 'left' };
     $('#mainmenu').toggle('slide', options, 500);
 
-    if(visible){
-      //$('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
-      $('#mainpanel').removeClass('rightpanel');
-    } else {
-      if(window.innerWidth>992){$('#mainpanel').addClass('rightpanel');}
-      if(!$("#submenucontainer").is(':empty') && $('.navbar-brand').html() != 'Search'){
-        //$('#mainmenu').animate({
-        //  scrollTop: ($("#submenucontainer").offset().top - 80)
-        //}, { duration: 500, queue: false });
-      }
-    }
   });
 
   // automatically show/hide the menu depending on the page width
-  if($('#wrap').width()>992 && $('#section-brand').html() != 'OpenML'){
+  if($('#sectiontitle').html() == 'OpenML'){
+    $('#mainmenu').css("display","none");
+  } else if($('#wrap').width()>992){
     $('#mainmenu').css("display","block");
-    //$('#mainmenu').scrollTop($("#submenucontainer").offset().top - 80);
-    $('#mainpanel').addClass('rightpanel');
   } else {
     $('a[data-toggle="tab"]').click(function () {
       var options = { direction: 'left' };
       $('#mainmenu').toggle('slide', options, 500);
     });
   }
+
 
   // highlighting for subsections in submenu
   $(".collapse").on('shown.bs.collapse', function () {

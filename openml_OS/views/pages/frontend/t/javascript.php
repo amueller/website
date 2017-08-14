@@ -3,11 +3,33 @@
 if(false !== strpos($_SERVER['REQUEST_URI'],'/t/') and false === strpos($_SERVER['REQUEST_URI'],'/t/type')) {
 ?>
 
+function highlight(){
+	setTimeout(function(){ highlightnow(); }, 500);
+}
+function highlightnow(){
+	$("#detail-btn").removeClass("btn-info");
+	$("#people-btn").removeClass("btn-info");
+	$("#runs-btn").removeClass("btn-info");
+	$("#add-btn").removeClass("btn-info");
+	if($( "#detail" ).hasClass( "active" )){
+		$("#detail-btn").addClass("btn-info");}
+	if($( "#taskruns" ).hasClass( "active" )){
+		$("#runs-btn").addClass("btn-info");}
+	if($( "#people" ).hasClass( "active" )){
+		$("#people-btn").addClass("btn-info");}
+	if($( "#submit" ).hasClass( "active" )){
+		$("#add-btn").addClass("btn-info");}
+}
+
+$(function(){
+highlight();
+});
+
 var oTableRunsShowAll = false;
 var evaluation_measure = "<?php echo $this->current_measure; ?>";
 var latestOnly = true;
 var current_task = "<?php echo $this->task_id; ?>";
-var current_task_type = "<?php echo $this->record['type_id']; ?>";
+var current_task_type = "<?php echo $this->task['tasktype']['tt_id']; ?>";
 var higherIsBetter = true;
 var oTableRuns = false;
 
@@ -173,7 +195,7 @@ client.search({
 		options2.series[i].data = d[i];
 		options2.series[i].color = colors[i%9];
 		options2.series[i].fillOpacity = 0.25;
-		<?php if($this->record['type_id']!=6){ ?>
+		<?php if($this->task['tasktype']['tt_id']!=6){ ?>
 		options2.series[i].point = {
                     events: {
                         //click: function(){$('#runModal').modal({remote: 'r/' + this.r + '/html'}); $('#runModal').modal('show');}
@@ -509,7 +531,7 @@ function redrawCurves(){
 /// RELOAD CHARTS ON REFRESH
 
 $(document).ready(function() {
-  <?php if($this->record['type_name'] == 'Learning Curve')
+  <?php if($this->task['tasktype']['name'] == 'Learning Curve')
 		echo 'redrawCurves();';
 	      else
 		echo 'updateTableHeader(); showData(); redrawtimechart();';
@@ -574,7 +596,7 @@ function getYourDownvote(){
         method:'GET',
         url: '<?php echo BASE_URL; ?>api_new/v1/xml/votes/down/<?php echo $this->ion_auth->user()->row()->id; ?>/t/<?php echo $this->id; ?>'
     }).done(function(resultdata){
-        reason_id = resultdata.getElementsByTagName('value')[0].textContent;
+        reason_id = resultdata.getElementsByTagName('oml:value')[0].textContent;
         if(reason_id!=-1){
             if(!$('#downvoteicon-'+reason_id).length){
                 $('#downvotebutton-'+reason_id).append('<i id="downvoteicon" class="fa fa-thumbs-down"/>');
@@ -767,7 +789,6 @@ function getDownvotes(){
         $('#issues_content').html("<tr><th>Issue</th><th>#Downvotes for this reason</th><th>By</th><th>Click to agree</th></tr>");
     });
 	}
-
     <?php if ($this->ion_auth->logged_in()) {?>
     getYourDownvote();
     <?php } ?>
