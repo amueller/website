@@ -56,7 +56,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
     <body>
   <?php
       $section = "OpenML";
-      $materialcolor = "blue";
+      $materialcolor = "yellow";
       $href = "";
       $url = explode('/', $_SERVER['REQUEST_URI']);
       $ch = $url[1];
@@ -138,10 +138,10 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             $href = $ch;
             $materialcolor = "red";
           }
-      elseif($ch=='discuss' || $ch=='discuss_new'){
-            $section = 'Discuss';
+      elseif(substr( $ch, 0, 7 ) === "contact"){
+            $section = 'Contact';
             $href = $ch;
-            $materialcolor = "purple";
+            $materialcolor = "green";
           }
       elseif($ch=='backend'){
             $section = 'Backend';
@@ -168,14 +168,15 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
     	'type' => 'file',
     );
   ?>
+        <div id="sectiontitle"><?php echo $section;?></div>
         <div class="navbar navbar-static-top navbar-fixed-top navbar-material-<?php echo $materialcolor;?>" id="openmlheader" style="margin-bottom: 0px;">
             <div class="navbar-inner">
               <div class="col-xs-5 col-sm-3 col-md-3">
               <div class="nav pull-left">
-                <a class="navbar-brand" id="menubutton"><i class="fa fa-bars fa-lg"></i></a>
+                <a class="navbar-brand menubutton"><i class="fa fa-bars fa-lg"></i></a>
               </div>
-              <a class="navbar-brand" id="section-brand" href="<?php echo $href; ?>"><?php echo $section;?></a>
-            </div>
+              <a class="navbar-brand" id="section-brand" href="<?php echo $href; ?>">OpenML</a>
+              </div>
             <a class="openmlsoc openmlsocicon col-xs-2 hidden-sm hidden-md hidden-lg pull-left searchicon" onclick="showsearch()"><i class="fa fa-search fa-2x"></i></a>
 
        <div class="menuicons">
@@ -267,11 +268,17 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
 
 
           <div class="searchbarcontainer">
-          <div class="searchbar" id="mainmenu">
+          <div class="searchbar" id="mainmenu" <?php if($section == "OpenML"){echo 'style="display:none"';}?>>
+            <div class="sidebar-overlay">
+            <div class="nav pull-left">
+              <a class="navbar-brand menubutton"><i class="fa fa-bars fa-lg"></i></a>
+            </div>
+            <a class="navbar-brand" id="section-brand" href="<?php echo $href; ?>">OpenML</a>
+            </div>
             <ul class="sidenav nav topchapter" id="topaccordeon">
               <li class="panel mainchapter">
-                <a data-toggle="collapse" data-parent="#topaccordeon"  data-target="#mainlist"><img src="img/dotsicon.png" class="menuicon"> <b>OpenML</b></a>
-                <ul class="sidenav nav collapse <?php if($section == 'OpenML') echo 'in';?>" id="mainlist">
+                <a data-toggle="collapse" data-parent="#topaccordeon" data-target="#mainlist"> <b>Explore</b></a>
+                <ul class="sidenav nav collapse <?php if($section == 'OpenML' or TRUE) echo 'in';?>" id="mainlist">
                   <!--
                   <?php if (!$this->ion_auth->logged_in()){ ?>
                       <li <?php echo ($section == '' ?  'class="topactive"' : '');?>><a href="register" class="icongrayish"><i class="fa fa-fw fa-lg fa-child"></i> Join OpenML</a></li>
@@ -286,34 +293,24 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
                       <li <?php echo ($section == 'Task type' ?  'class="topactive"' : '');?>><a href="search?type=task_type<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconorange"><i class="fa fa-fw fa-lg fa-flag-o"></i> Task Types<span id="task_typecounter" class="counter"></span></a></li>
                       <li <?php echo ($section == 'Measure' ?  'class="topactive"' : '');?>><a href="search?type=measure<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconbluegray"><i class="fa fa-fw fa-lg fa-bar-chart-o"></i> Measures<span id="measurecounter" class="counter"></span></a></li>
                       <li <?php echo ($section == 'People' ?  'class="topactive"' : '');?>><a href="search?type=user<?php if(array_key_exists("q",$_GET)) echo '&q='.$_GET["q"];?>" class="iconblueacc"><i class="fa fa-fw fa-lg fa-users"></i> People<span id="usercounter" class="counter"></span></a></li>
-                      <li <?php echo ($section == 'Guide' ?  'class="topactive"' : '');?>><a href="guide" class="icongreenacc"><i class="fa fa-fw fa-lg fa-leanpub"></i> Guide</a></li>
-                      <li <?php echo ($section == 'Discussions' ?  'class="topactive"' : '');?>><a href="discuss" class="iconpurple"><i class="fa fa-fw fa-lg fa-comments"></i> Discuss</a></li>
-                      <li <?php echo ($section == 'Blog' ?  'class="topactive"' : '');?>><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
                 </ul>
               </li>
-            </ul>
-            <!-- <?php if($ch != "home"){ ?>
-            <div class="menuaction"><a onclick="scrollMenuTop()"><i class="fa fa-lg fa-angle-up"></i><i class="fa fa-lg fa-fw fa-navicon"></i></a></div>
-            <?php } ?> -->
-            <div class="submenubar">
-            <div id="submenucontainer"></div>
-
-            <ul class="sidenav nav">
-            <li class="menu-cite <?php echo ($section == 'Citing' ?  'topactive' : '');?>"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
-            <li class="menu-contact">
-             <a>Ask us a question...</a>
-             <ul class="openml-contact-menu">
-               <li><a href="mailto:openmachinelearning@gmail.com" target="_blank"><i class="fa fa-envelope-o fa-fw fa-lg"></i></a></li>
-               <li><a href="https://groups.google.com/forum/#!forum/openml" target="_blank"><i class="fa fa-users fa-fw fa-lg"></i></a></li>
-               <li><a href="https://plus.google.com/communities/105075769838900568763" target="_blank"><i class="fa fa-google-plus fa-fw fa-lg"></i></a></li>
-               <li><a href="https://www.facebook.com/openml" target="_blank"><i class="fa fa-facebook fa-fw fa-lg"></i></a></li>
-               <li><a href="https://twitter.com/intent/tweet?screen_name=open_ml&text=%23openml.org" data-related="open_ml"><i class="fa fa-twitter fa-fw fa-lg"></i></a></li>
-               <li><a href="https://github.com/openml/OpenML/issues?q=is%3Aopen"><i class="fa fa-github fa-fw fa-lg"></i></a></li>
-             </ul>
-            </li>
+                <li class="panel guidechapter">
+                  <a data-toggle="collapse" data-parent="#accordeon" data-target="#guidelist"> <b>Learn</b></a>
+                  <ul class="sidenav nav collapse <?php if($this->section == 'Guide' or $this->section == 'OpenML') echo 'in';?>" id="guidelist">
+                    <li><a href="guide/bootcamp" class="icongreen"><i class="fa fa-fw fa-lg fa-rocket"></i> Bootcamp</a></li>
+                    <li><a href="guide/api" class="iconyellow"><i class="fa fa-fw fa-lg fa-code"></i> OpenML APIs</a></li>
+                    <li><a href="guide/integrations" class="iconblue"><i class="fa fa-fw fa-lg fa-puzzle-piece"></i> Integrations</a></li>
+                    <li><a href="guide/benchmark" class="iconred"><i class="fa fa-fw fa-lg fa-signal"></i> Benchmarking</a></li>
+                    <li><a href="guide/developers" class="iconpurple"><i class="fa fa-fw fa-lg fa-users"></i> Developers</a></li>
+                    <!--<li><a href="#intro" class="iconorange"><i class="fa fa-fw fa-lg fa-question-circle"></i> Help</a></li>-->
+                    <li><a href="https://medium.com/open-machine-learning" class="iconredacc"><i class="fa fa-fw fa-lg fa-heartbeat"></i> Blog</a></li>
+                  </ul>
+                </li>
+                <li class="menu-cite <?php echo ($section == 'Citing' ?  'topactive' : '');?>"><a href="cite" class="iconred"><i class="fa fa-fw fa-lg fa-heart"></i> <b>Please cite us</b></a></li>
+                <li class="menu-cite <?php echo ($section == 'Contact' ?  'topactive' : '');?>"><a href="contact" class="icongreen"><i class="fa fa-fw fa-lg fa-bullhorn"></i> <b>Contact</b></a></li>
             </ul>
           </div>
-        </div>
         </div>
 
         <?php echo body(); ?>

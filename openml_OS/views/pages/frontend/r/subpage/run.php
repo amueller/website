@@ -60,6 +60,26 @@
        echo '<br><span class="text-warning"><i class="fa fa-warning task"></i> Evaluation Engine Exception: ' . $this->run['error'] . '</span>';
      }
    ?>
+   <form method="post" action="" enctype="multipart/form-data">
+     <input type="hidden" name="deletetag" id="deletetag"/>
+     <ul class="tags" id="taglist">
+       <li class="tags">
+         <i class="fa fa-fw fa-tags"></i>
+         <?php if(array_key_exists('tags', $this->run)){
+               foreach( $this->run['tags'] as $t) { ?>
+             <span class="label label-material-<?php echo $this->materialcolor; ?> tag"><?php echo $t['tag']; if($t['uploader']==$this->user_id){ ?> <button class="deltag" type="submit" onclick="$('#deletetag').val('<?php echo $t['tag'];?>');" name="<?php echo $t['tag'];?>"><i class="fa fa-times"></i></button><?php } ?></span>
+         <?php }} ?>
+         <a class="" role="button" data-toggle="collapse" href="#addtagbox" aria-expanded="false" aria-controls="addtagbox">
+           <i class="fa fa-fw fa-plus"></i>Add tag</a>
+       </li>
+     </ul>
+   <div class="collapse" id="addtagbox">
+     <div class="panel">
+         <input type="text" class="form-control floating-label loginfirst" id="newtags" name="newtags" data-hint="Add a single new tag. Use underscores for spaces. Press enter when done."
+          placeholder="Add tag">
+     </div>
+   </div>
+   </form>
 </div>
 
 
@@ -113,7 +133,7 @@
   <h3 style="padding-top:0px;margin-top:-10px;">Flow</h3>
   <div class="cardtable">
     <div class='table-responsive'><table class='table'>
-    <tr class="cardrow"><td><a href="f/<?php echo $this->run['run_flow']['flow_id']; ?>"><?php echo $this->run['run_flow']['name']; ?></a></td><td><?php echo $this->flow['description']; ?></td></tr>
+    <tr class="cardrow"><td><a href="f/<?php echo $this->run['run_flow']['flow_id']; ?>"><?php echo wordwrap($this->run['run_flow']['name'], 75, "\n", true); ?></a></td><td><?php echo $this->flow['description']; ?></td></tr>
     <?php foreach( $this->run['run_flow']['parameters'] as $p ): ?>
     <tr class="cardrow"><td><a class="pop" data-html="true" data-toggle="popover" data-placement="right" data-content="<?php if(array_key_exists($p['parameter'],$this->flow_parameters)) echo $this->flow_parameters[$p['parameter']]['description']; ?>"><?php echo $p['parameter']; ?></td><td><?php echo $p['value']; ?></td></tr>
     <?php endforeach; ?>

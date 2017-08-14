@@ -48,6 +48,7 @@
             </div>
         </div>
   <?php if ($this->is_owner || $this->ion_auth->is_admin()) { ?>
-      <a href="#edit" data-toggle="tab" class="btn btn-primary pull-right">Edit Profile</a><br />
+      <a href="#edit" data-toggle="tab" class="btn btn-primary pull-right">Edit Profile</a>
+      <a href="#api" data-toggle="tab" class="btn btn-primary pull-right">API Authentication</a><br />
   <?php } ?>
 </div>

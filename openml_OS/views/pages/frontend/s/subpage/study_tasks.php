@@ -1,5 +1,4 @@
-    <a href="search?q=tags.tag%3Astudy_<?php echo $this->id; ?>&type=task" class="btn btn-primary pull-right">Search these tasks in more detail</a>
-    <h1><i class="fa fa-trophy"></i> <?php echo $this->study['name'];?></h1>
+    <a href="search?q=tags.tag%3Astudy_<?php echo $this->id; ?>&type=task" class="btn btn-primary">Search these tasks in more detail</a>
 
     <div class="searchframefull">
     <?php

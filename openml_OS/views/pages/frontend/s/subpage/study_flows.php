@@ -1,5 +1,4 @@
-    <a href="search?q=tags.tag%3Astudy_<?php echo $this->id; ?>&type=flow" class="btn btn-primary pull-right">Search these flows in more detail</a>
-		<h1><i class="fa fa-cogs"></i> <?php echo $this->study['name'];?></h1>
+    <a href="search?q=tags.tag%3Astudy_<?php echo $this->id; ?>&type=flow" class="btn btn-primary">Search these flows in more detail</a>
 
     <div class="searchframefull">
     <?php

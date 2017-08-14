@@ -24,7 +24,7 @@
             <?php echo form_input($this->image);?>
           </div>
           <div class="form-group"><?php echo form_submit('submit', 'Update', array(
-            'class' => 'btn btn-default btn-material-green'));?></div>
+            'class' => 'btn btn-default btn-material-green'));?> <a class="btn btn-default" href="u/<?php echo $this->user_id;?>">Cancel</a></div>
         </fieldset>
         <?php echo form_close();?>
    </div>
