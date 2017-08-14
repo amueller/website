@@ -128,7 +128,7 @@
         data to algorithms and people, so you can build on the state of the art and learn to teach machines to learn better.
       </div>
       <div class="covertext">
-        <a class="coverlink" href="guide">Learn more</a>
+        <a class="coverlink" href="guide/bootcamp">Learn more</a>
       </div>
     </div>
     <div class="col-sm-8 col-md-6 coverflow">
@@ -148,7 +148,7 @@
         Easily search thousands of datasets and import them directly into your code or toolboxes.
       </div>
       <div class="covertext">
-        <a class="coverlink" href="guide">Learn more</a>
+        <a class="coverlink" href="guide/bootcamp">Learn more</a>
       </div>
     </div>
 </div>
@@ -163,7 +163,7 @@
       Try many techniques on the same task and compare directly to the state of the art, or evaluate one technique on hundreds of tasks at once.
     </div>
     <div class="covertext">
-      <a class="coverlink" href="guide">Learn more</a>
+      <a class="coverlink" href="guide/bootcamp">Learn more</a>
     </div>
   </div>
 
@@ -189,7 +189,7 @@
         with the Python, R, Java, and C++ APIs, or program against the REST API.
       </div>
       <div class="covertext">
-        <a class="coverlink" href="guide">Learn more</a>
+        <a class="coverlink" href="guide/api">Learn more</a>
       </div>
     </div>
 </div>
@@ -204,7 +204,7 @@
       Wherever possible, we extract clear descriptions of machine learning workflows and models.
     </div>
     <div class="covertext">
-      <a class="coverlink" href="guide">Learn more</a>
+      <a class="coverlink" href="guide/bootcamp">Learn more</a>
     </div>
   </div>
 
