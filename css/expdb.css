@@ -744,6 +744,11 @@ select{
   color: #666;
 }
 
+
+.newmenu li > a:hover{
+  color: #000 !important;
+}
+
 .newmenu li i{
   padding-right: 5px;
 }
@@ -1995,6 +2000,7 @@ html, body {
    width: auto !important;  /* Firefox will set width as auto */
    min-width: 480px; /* suppose you want minimun width of 1000px */
    margin-bottom: 0px !important;
+   background: #f2f2f2;
 }
 
       a:hover {
@@ -3099,7 +3105,7 @@ svg:not(:root){
 }
 
 .openmlsocicon:hover {
-  color: #ffffff;
+  color: #666;
 
 }
 
@@ -3433,6 +3439,9 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
   margin-right: 20px !important;
 }
 
+#mainpanel{
+  margin-top: 10px;
+}
 
 .mainvalue{
   font-size: 150%;
@@ -3603,7 +3612,8 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 
 body.stop-scrolling {
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 .sweet-overlay {
   background-color: black;

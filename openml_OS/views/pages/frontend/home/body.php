@@ -17,7 +17,6 @@
     <div class="col-sm-3 dotcontainer"><a href="search?type=flow" class="numberCircle"><div class="arc circleblue"></div><span class="number" id="flow_count"></span><span class="circlelabel">flows</span></a><br><div class="shortintro">Find or add data analysis <a href="search?type=flow" class="bold">flows</a></div></div>
 
     <div class="col-sm-3 dotcontainer"><a href="search?type=run" class="numberCircle"><div class="arc circlered"></div><span class="number" id="run_count"></span><span class="circlelabel">runs</span></a><br><div class="shortintro">Upload and explore all <a href="search?type=run" class="bold">results</a> online.</div></div>
-
  </div>
 </div>
 </div>
