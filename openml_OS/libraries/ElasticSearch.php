@@ -798,6 +798,7 @@ class ElasticSearch {
         $study = array(
             'study_id' => $d->id,
             'name' => $d->name,
+            'alias' => $d->alias,
             'description' => $d->description,
             'date' => $d->created,
             'uploader_id' => $d->creator,
