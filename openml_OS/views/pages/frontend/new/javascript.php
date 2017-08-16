@@ -264,6 +264,16 @@ function formSubmitted(responseText,statusText,xhr,formElement,type,errorCodes) 
          $(this).parent().addClass('has-error');
       }
   });
+  $('#study_alias').bind('input', function() {
+      var cname = $(this).val();
+      if(cname.length > 0){
+         $(this).parent().removeClass('has-error');
+         $(this).parent().addClass('has-success');
+      } else {
+         $(this).parent().removeClass('has-success');
+         $(this).parent().addClass('has-error');
+      }
+  });
 
 // New flow
 var $input = $("#addparameter").children();

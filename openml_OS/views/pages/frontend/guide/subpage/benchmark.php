@@ -14,7 +14,7 @@ This makes benchmarking results more comparable, more complete, and allows more 
 </p>
 
 <h2>OpenML100</h2>
-As a first such suite, we propose the OpenML100, <a href="https://www.openml.org/search?q=OpenML100&type=data">a machine learning benchmark suite of 100 classification datasets</a> carefully
+As a first such suite, we propose the OpenML100, <a href="https://www.openml.org/search?q=tags.tag%3AOpenML100&type=data&table=1&size=100">a machine learning benchmark suite of 100 classification datasets</a> carefully
 curated from the thousands of datasets available. We selected classification datasets for this benchmarking suite to satisfy the following requirements:
 <ul><li>the number of observations are between 500 and 100000 to focus on medium-sized datasets, that are not too small for proper training and not too big for practical experimentation,
 </li><li>the number of features does not exceed 5000 features to keep the runtime of algorithms low

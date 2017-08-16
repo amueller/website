@@ -1,6 +1,9 @@
 <?php if (isset($this->record['name'])){ ?>
 
-	  <h1><a href="t"><i class="fa fa-flag"></i></a> <?php echo $this->record['name'] ?></h1>
+	<a href="search?q=+tasktype.tt_id%3A<?php echo $this->id;?>&type=task" class="btn btn-raised btn-success pull-right">All <?php echo $this->record['name'] ?> tasks</a>
+
+	<h1><a href="t"><i class="fa fa-flag"></i></a> <?php echo $this->record['name'] ?></h1>
+
 
   <div class="panel">
     <?php echo $this->record['description']; ?>
@@ -48,5 +51,7 @@
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
     </script>
+
+
 
     <?php } else { ?>Sorry, this task type is unknown.<?php } ?>

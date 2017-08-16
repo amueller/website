@@ -156,7 +156,6 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
       elseif($ch=='register' or $ch=='profile' or $ch=='frontend' or $ch=='login' or $ch=='password_forgot'){
             $section = 'OpenML';
             $href = $ch;
-            $materialcolor = "blue";
           }
 
     $this->section = $section;
@@ -268,7 +267,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
 
 
           <div class="searchbarcontainer">
-          <div class="searchbar" id="mainmenu" <?php if($section == "OpenML"){echo 'style="display:none"';}?>>
+          <div class="searchbar" id="mainmenu" <?php if($section == "OpenML" or $ch == "new"){echo 'style="display:none"';}?>>
             <div class="sidebar-overlay">
             <div class="nav pull-left">
               <a class="navbar-brand menubutton"><i class="fa fa-bars fa-lg"></i></a>
@@ -278,7 +277,7 @@ if (session_status() === PHP_SESSION_NONE){session_start();}
             <ul class="sidenav nav topchapter" id="topaccordeon">
               <li class="panel mainchapter">
                 <a data-toggle="collapse" data-parent="#topaccordeon" data-target="#mainlist"> <b>Explore</b></a>
-                <ul class="sidenav nav collapse <?php if($section == 'OpenML' or TRUE) echo 'in';?>" id="mainlist">
+                <ul class="sidenav nav collapse in" id="mainlist">
                   <!--
                   <?php if (!$this->ion_auth->logged_in()){ ?>
                       <li <?php echo ($section == '' ?  'class="topactive"' : '');?>><a href="register" class="icongrayish"><i class="fa fa-fw fa-lg fa-child"></i> Join OpenML</a></li>

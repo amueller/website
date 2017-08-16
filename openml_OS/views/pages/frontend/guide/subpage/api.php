@@ -33,7 +33,7 @@
 
     </li><li>
   <div class="col-sm-2"><a href="https://github.com/openml/openml-dotnet"><img class="toolcircle" src="img/c++.png" alt="icon"></a></div>
-  <p>The C++ library is under developement, but already contains most of the functions available.<br>
+  <p>The C++ library is under development, but already contains most of the functions available.<br>
   <a href="https://github.com/openml/openml-dotnet" class="btn btn-raised btn-info">GitHub repo</a>
 
 </li></ul>
