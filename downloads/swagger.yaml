@@ -1198,7 +1198,7 @@ paths:
           schema:
             type: object
             properties:
-              upload_task_set:
+              upload_task:
                 type: object
                 properties:
                   id:
@@ -1207,7 +1207,7 @@ paths:
           examples:
             application/json: |-
               {
-                "upload_task_set": {
+                "upload_task": {
                   "id": "4328"
                 }
               }

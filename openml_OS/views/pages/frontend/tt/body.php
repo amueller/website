@@ -12,17 +12,5 @@
 
     </div> <!-- end tabs content -->
 
-<div class="submenu">
-  <ul class="sidenav nav" id="accordeon">
-    <li class="panel guidechapter">
-      <a data-toggle="collapse" data-parent="#accordeon"  data-target="#pagelist"><i class="fa fa-info-circle fa-fw fa-lg"></i> <b>Details</b></a>
-      <ul class="sidenav nav collapse in" id="pagelist">
-        <li class="active"><a href="#typedetail" data-toggle="tab">Overview</a></li>
-        <li><a href="search?q=+tasktype.tt_id%3A<?php echo $this->id;?>&type=task">Tasks</a></li>
-      </ul>
-    </li>
-  </ul>
-</div>
-
 </div> <!-- end tabs content -->
 </div> <!-- end container -->
