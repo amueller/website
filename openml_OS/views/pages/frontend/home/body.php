@@ -188,7 +188,8 @@
         with the Python, R, Java, and C++ APIs, or program against the REST API.
       </div>
       <div class="covertext">
-        <a class="coverlink" href="guide/api">Learn more</a>
+        <a class="coverlink" href="guide/api">OpenML APIs ></a><br>
+        <a class="coverlink" href="guide/integrations">OpenML integrations ></a>
       </div>
     </div>
 </div>

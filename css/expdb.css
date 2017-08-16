@@ -13,8 +13,6 @@
 }
 
 .emptypanel{
-  padding-left: 0px;
-  padding-right: 0px;
   padding-top: 80px;
   padding-bottom: 80px;
   background-color: #f2f2f2;
@@ -3019,9 +3017,16 @@ svg:not(:root){
   padding: 3px;
   text-align: right;
 }
+
+.emptypanel{
+  padding-left: 20px;
+  padding-right: 20px;
+}
 }
 
 @media screen and (max-width: 768px) {
+
+
 
 .searchbar{
   display: none;
