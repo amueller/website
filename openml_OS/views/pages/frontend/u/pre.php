@@ -134,7 +134,7 @@ $this->image = array(
 );
 
 $this->optin_gamification = array(
-    'data-hint'=> 'Whether you want to see and participate in the gamification of OpenML, or not.',
+    'data-hint'=> 'Whether you want to see altmetric/gamification statistics in OpenML, or not.',
     'name' => 'gamification_visibility',
     'id' => 'gamification_setting_in',
     'type' => 'radio',
@@ -143,7 +143,7 @@ $this->optin_gamification = array(
 );
 
 $this->optout_gamification = array(
-    'data-hint'=> 'Whether you want to see and participate in the gamification of OpenML, or not.',
+    'data-hint'=> 'Whether you want to see altmetric/gamification statistics in OpenML, or not.',
     'name' => 'gamification_visibility',
     'id' => 'gamification_setting_out',
     'type' => 'radio',

@@ -1,4 +1,4 @@
-<h2 id="team-core">Altmetrics and Gamification</h2>
+<h2 id="team-core">Altmetrics</h2>
 
 <p>To encourage open science, OpenML now includes a score system to track and reward scientific activity, reach and impact, and in the future will include further gamification features such as badges. Because the system is still experimental and very much in development, the details are subject to change. Below, the score system is described in more detailed followed by our rationale for this system for those interested. If anything is unclear or you have any feedback of the system do not hesitate to let us know.</p>
 
@@ -43,4 +43,4 @@ The badges a user has acquired can be found on their user profile below the scor
 <p>You can also sort search results by the number of downvotes, or issues on <a href='/search'>the search page</a>.</p>
 
 <h3>Opting out</h3>
-<p>If you really do not like the gamification you can opt-out by changing the setting on your profile. This hides your scores and badges from other users and hides their scores and badges from you. You will still be able to see the number of likes, downloads and downvotes on knowledge pieces, and your likes, downloads and downvotes will still be counted.</p> 
+<p>If you really do not like the altmetrics you can opt-out by changing the setting on your profile. This hides your scores and badges from other users and hides their scores and badges from you. You will still be able to see the number of likes, downloads and downvotes on knowledge pieces, and your likes, downloads and downvotes will still be counted.</p>
