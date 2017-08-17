@@ -17,7 +17,7 @@
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
 <p>You can upload data sets through the <a href="new/data" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted elsewhere can be referenced by URL.</p>
 
-<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+type%3Adata_quality&type=measure">data characteristics</a> useful to find and compare datasets.</p>
+<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data characteristics</a> useful to find and compare datasets.</p>
 <div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
 <p>Every data set gets a dedicated page with all known information (check out <a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user discussions, and the <i>tasks</i> in which it is used.</p>
