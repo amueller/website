@@ -77,10 +77,19 @@
                 <span id="impact" title="Impact is: number or reuses of this dataset in tasks + 0.5*reach of these tasks + 0.5*impact of these tasks"><i class="fa fa-bolt impact"></i><?php if(array_key_exists('impact',$this->data)): if($this->data['impact']!=null): $i = $this->data['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
             <?php }?>
         <?php }?>
-        <?php if(array_key_exists('error_message',$this->data) and $this->data['error_message']){?><br><i class="fa fa-warning task"></i><span class="text-warning">
-          <?php if(startsWith('error_message','keyword')){echo 'Dataset does not seem to be valid ARFF: ';} echo $this->data['error_message'] . '</span>'; } ?>
+        <?php if(array_key_exists('error_message',$this->data) and $this->data['error_message']){?>
+          <br><a style="color:#ff5722;" role="button" data-toggle="collapse" href="#dataerror" aria-expanded="false" aria-controls="dataerror">
+                <i class="fa fa-warning task"></i>Errors occured while analyzing this dataset.</a><br>
 
-        <br>
+          <div class="collapse" id="dataerror">
+            <div class="panel text-warning">
+              <?php if(startsWith('error_message','keyword')){
+                echo 'Dataset does not seem to be valid ARFF: ';}
+                echo $this->data['error_message']; ?>
+            </div>
+          </div>
+        <?php } ?>
+
       <form method="post" action="" enctype="multipart/form-data">
         <input type="hidden" name="deletetag" id="deletetag"/>
         <ul class="tags" id="taglist">

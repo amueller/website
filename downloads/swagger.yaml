@@ -4415,6 +4415,52 @@ paths:
           description: >-
             Too many results. Given the constraints, there were still too many
             results. Please add filters to narrow down the list.
+  /evaluationprocedure/list:
+    get:
+      summary: List all evaluation procedures
+      description: |
+        Returns an array with all evaluation procedures in the system.
+      parameters:
+        - name: api_key
+          in: query
+          description: API key to authenticate the user
+          required: true
+          type: string
+      tags:
+        - evaluationprocedure
+      responses:
+        '200':
+          description: A list of evaluation procedures
+          schema:
+            $ref: '#/definitions/EvaluationProcedureList'
+          examples:
+            application/json: |-
+              {
+                "estimationprocedures": {
+                  "estimationprocedure": [
+                    {
+                       "id":"1",
+                       "ttid":"1",
+                       "name":"10-fold Crossvalidation",
+                       "type":"crossvalidation",
+                       "repeats":"1",
+                       "folds":"10",
+                       "stratified_sampling":"true"
+                    },
+                    {
+                      "id":"2",
+                      "ttid":"1",
+                      "name":"5 times 2-fold Crossvalidation",
+                      "type":"crossvalidation",
+                      "repeats":"5",
+                      "folds":"2",
+                      "stratified_sampling":"true"
+                    }
+                  ]
+                }
+              }
+        '500':
+          description: No evaluation procedures available.
 definitions:
   Flow:
     type: object
@@ -4665,6 +4711,38 @@ definitions:
                     description: >-
                       Tags added by OpenML users. Includes study tags in the
                       form `study_1`
+  EvaluationProcedureList:
+    type: object
+    properties:
+      estimationprocedures:
+        type: object
+        properties:
+          estimationprocedure:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The evaluation procedure ID
+                ttid:
+                  type: string
+                  description: The task type ID
+                name:
+                  type: string
+                  description: The evaluation procedure name, e.g. '10 fold Crossvalidation'
+                type:
+                  type: string
+                  description: The evaluation procedure type, e.g. 'crossvalidation'
+                repeats:
+                  type: string
+                  description: The number of repeats, e.g. '10'
+                folds:
+                  type: string
+                  description: The number of cross-validation folds, e.g. '10'
+                stratified_sampling:
+                  type: string
+                  description: Whether or not the sampling is stratified, 'true' or 'false'
   DataList:
     type: object
     properties:

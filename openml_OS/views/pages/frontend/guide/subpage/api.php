@@ -6,7 +6,7 @@
   <ul class="apilist"><li>
   <div class="col-sm-2"><a target="_blank" href="api_docs"><img class="toolcircle" src="img/rest.png" alt="icon"></a></div>
   <p>The REST API allows you to talk directly to the OpenML server from any programming environment.<br>
-  <a target="_blank" href="guide/rest_tutorial" class="btn btn-raised btn-info">REST tutorial</a>
+  <a target="_blank" href="guide/rest" class="btn btn-raised btn-info">REST tutorial</a>
   <a target="_blank" href="api_docs" class="btn btn-raised btn-info">REST Documentation</a></p>
 
   </li><li>
@@ -29,11 +29,13 @@
     </li><li>
   <div class="col-sm-2"><a href="docs"><img class="toolcircle" src="img/java.png" alt="icon"></a></div>
   <p>If you are building machine learning systems in Java, there is also an API for that.<br>
+  <a href="https://github.com/openml/OpenML/wiki/Java-API" class="btn btn-raised btn-info">Tutorial</a>
   <a href="https://www.openml.org/docs" class="btn btn-raised btn-info">Java Docs</a></p>
 
     </li><li>
   <div class="col-sm-2"><a href="https://github.com/openml/openml-dotnet"><img class="toolcircle" src="img/c++.png" alt="icon"></a></div>
   <p>The C++ library is under development, but already contains most of the functions available.<br>
+  <a href="https://github.com/openml/OpenML/wiki/.Net-API" class="btn btn-raised btn-info">Tutorial</a>
   <a href="https://github.com/openml/openml-dotnet" class="btn btn-raised btn-info">GitHub repo</a>
 
 </li></ul>

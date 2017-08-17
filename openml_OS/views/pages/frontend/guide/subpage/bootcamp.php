@@ -17,7 +17,7 @@
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
 <p>You can upload data sets through the <a href="new/data" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted elsewhere can be referenced by URL.</p>
 
-<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+type%3Adata_quality&type=measure">data characteristics</a> useful to find and compare datasets.</p>
+<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data characteristics</a> useful to find and compare datasets.</p>
 <div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
 <p>Every data set gets a dedicated page with all known information (check out <a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user discussions, and the <i>tasks</i> in which it is used.</p>
@@ -70,7 +70,8 @@
 <p>You can create circles of trusted researchers in which data can be shared that is not yet ready for publication.</p>
 
 <h3 class="text-muted"><i class="fa fa-graduation-cap fa-fw"></i> Altmetrics (under construction)</h3>
-<p>OpenML keeps track of the impact of your work: how often is it downloaded, liked, or reused in other studies.</p>
+<p>To encourage open science, OpenML now includes altmetrics to track and reward scientific activity, reach and impact, and in the future will include further gamification features such as badges.</p>
+<p><a href="guide/altmetrics">Learn more about altmetrics</a></p>
 
 <h3 class="text-muted"><i class="fa fa-bolt fa-fw"></i> Jobs (under construction)</h3>
 <p>OpenML can help you run large experiments. A job is a small container defining a specific flow, with specific parameters settings, to run on a specific tasks. You can generate batches of these jobs online, and you can run a helper tool on your machines/clouds/clusters that downloads these jobs (including all data), executes them, and uploads the results.</p>

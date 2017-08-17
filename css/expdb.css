@@ -2,6 +2,10 @@
     display: none;
 }*/
 
+.swagger-section .operations h4{
+  color: #333 !important;
+}
+
 .alertbox{
   padding-top: 20px;
   margin-bottom: -70px;
