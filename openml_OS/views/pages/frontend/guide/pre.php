@@ -7,10 +7,9 @@
   }
 
   $this->info = explode('/', $_SERVER['REQUEST_URI']);
-	$this->activepage = '';
+	$this->activepage = 'bootcamp';
 	$this->baseurl = $_SERVER['REQUEST_URI'];
 	if(array_search('guide',$this->info)+1 < count($this->info))
 		$this->activepage = $this->info[array_search('guide',$this->info)+1];
-	$this->activity_subpages = array('bootcamp','api','integrations','benchmark','developers','terms','rest');
-
+	$this->activity_subpages = array('bootcamp','api','integrations','benchmark','developers','terms','rest','altmetrics');
 ?>
