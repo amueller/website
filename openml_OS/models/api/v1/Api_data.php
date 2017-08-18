@@ -367,7 +367,7 @@ class Api_data extends Api_model {
       
       $file_id = $this->File->register_url($destinationUrl, $name . '.arff', 'arff', $this->user_id, $access_control);
       if ($file_id === false) {
-        $this->returnError(132, $this->version);
+        $this->returnError(136, $this->version);
         return;
       }
       
