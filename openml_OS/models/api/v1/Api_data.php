@@ -282,7 +282,7 @@ class Api_data extends Api_model {
     // get correct description
     $xsdFile = xsd('openml.data.upload', $this->controller, $this->version);
 
-    /*if($this->input->post('description')) {
+    if($this->input->post('description')) {
       // get description from string upload
       $description = $this->input->post('description', false);
       if(validateXml($description, $xsdFile, $xmlErrors, false ) == false) {
@@ -290,8 +290,7 @@ class Api_data extends Api_model {
         return;
       }
       $xml = simplexml_load_string( $description );
-    } else*/
-    if (isset($_FILES['description'])) {
+    } elseif (isset($_FILES['description'])) {
       $uploadError = '';
       $xmlErrors = '';
       if (check_uploaded_file($_FILES['description'], false, $uploadError) == false) {
@@ -305,7 +304,7 @@ class Api_data extends Api_model {
         return;
       }
       $xml = simplexml_load_file($description['tmp_name']);
-    } else {
+    } else { 
       $this->returnError(135, $this->version);
       return;
     }
@@ -367,7 +366,7 @@ class Api_data extends Api_model {
       
       $file_id = $this->File->register_url($destinationUrl, $name . '.arff', 'arff', $this->user_id, $access_control);
       if ($file_id === false) {
-        $this->returnError(132, $this->version);
+        $this->returnError(136, $this->version);
         return;
       }
       
