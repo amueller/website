@@ -29,7 +29,7 @@
 		    <textarea class="form-control" name="description" id="description" rows="5" placeholder="Short description (can still be edited online). Use #tags to label it. Describe where the data originates from, and whether it was processed in any way." value=""><?php echo $this->input->post('description'); ?></textarea>
 		  </div>
 		  <div class="form-group">
-	      <label class="control-label" for="format">Data format</label>
+	      <label class="control-label" for="format">Data format</label> (<a href="https://github.com/openml/OpenML/wiki/Data-Formats">see specifications</a>)
 				<select class="form-control" id="format" name="format">
 			  	<option <?php if($this->input->post('format') == 'ARFF') echo "selected"; ?> value="ARFF">ARFF</option>
 			  	<option <?php if($this->input->post('format') == 'Sparse_ARFF') echo "selected"; ?> value="Sparse_ARFF">Sparse_ARFF</option>
@@ -134,5 +134,5 @@
            </div>
 	</form>
 
-        <p><i>By submitting, you allow OpenML to index the data and link it to uploaded results. All rights remain with the original author(s) of the data.</i></p>
+        <p><i>By submitting, you allow OpenML to index the data and link it to uploaded results. All rights remain with the original author(s) of the data. You confirm that you have read and agreed to the <a href="https://www.openml.org/guide/terms">OpenML Honor Code and Terms of Use</a>.</i></p>
 </div> <!-- end container -->

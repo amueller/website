@@ -16,7 +16,7 @@
 
          <h2 id="terms-use">Terms of Use</h2>
 <p>You agree that you are responsible for your own use of OpenML.org and all content submitted by you, in accordance with the Honor Code and all applicable local, state, national and international laws.</p>
-<p>By submitting or distributing content from OpenML.org, you affirm that you have the necessary rights, licenses, consents and/or permissions to reproduce and publish this content. You, and not the developers of OpenML.org, are solely responsible for your submissions.</p>
+<p>By submitting or distributing content from OpenML.org, you affirm that you have the necessary rights, licenses, consents and/or permissions to reproduce and publish this content. You cannot upload sensitive or confidential data. You, and not the developers of OpenML.org, are solely responsible for your submissions.</p>
 <p>By submitting content to OpenML.org, you grant OpenML.org the right to host, transfer, display and use this content, in accordance with your sharing settings and any licences granted by you. You also grant to each user a non-exclusive license to access and use this content for their own research purposes, in accordance with any licences granted by you.</p>
 <p>You may maintain one user account and not let anyone else use your username and/or password. You may not impersonate other persons.</p>
 <p>You will not intend to damage, disable, or impair any OpenML server or interfere with any other party's use and enjoyment of the service. You may not attempt to gain unauthorized access to the Site, other accounts, computer systems or networks connected to any OpenML server. You may not obtain or attempt to obtain any materials or information not intentionally made available through OpenML.</p>
