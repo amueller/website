@@ -76,6 +76,26 @@
                 <span id="impact" title="Impact is: number or reuses of this flow in runs + 0.5*reach of these runs"><i class="fa fa-bolt impact"></i><?php if(array_key_exists('impact',$this->flow)): if($this->flow['impact']!=null): $i = $this->flow['impact']; else: $i=0; endif; else: $i=0; endif; echo $i.' impact'; ?></span>
             <?php }?>
        <?php }?>
+       <form method="post" action="" enctype="multipart/form-data">
+         <input type="hidden" name="deletetag" id="deletetag"/>
+         <ul class="tags" id="taglist">
+           <li class="tags">
+             <i class="fa fa-fw fa-tags"></i>
+             <?php if(array_key_exists('tags', $this->flow)){
+                   foreach( $this->flow['tags'] as $t) { ?>
+                 <span class="label label-material-<?php echo $this->materialcolor; ?> tag"><?php echo $t['tag']; if($t['uploader']==$this->user_id){ ?> <button class="deltag" type="submit" onclick="$('#deletetag').val('<?php echo $t['tag'];?>');" name="<?php echo $t['tag'];?>"><i class="fa fa-times"></i></button><?php } ?></span>
+             <?php }} ?>
+             <a class="" role="button" data-toggle="collapse" href="#addtagbox" aria-expanded="false" aria-controls="addtagbox">
+               <i class="fa fa-fw fa-plus"></i>Add tag</a>
+           </li>
+         </ul>
+       <div class="collapse" id="addtagbox">
+         <div class="panel">
+             <input type="text" class="form-control floating-label loginfirst" id="newtags" name="newtags" data-hint="Add a single new tag. Use underscores for spaces. Press enter when done."
+              placeholder="Add tag">
+         </div>
+       </div>
+       </form>
 </div>
 
     <div class="col-xs-12 panel collapse" id="issues">
@@ -202,6 +222,7 @@
 		 </div>
 
 		<h3><div id="runcount">0</div> Runs</h3>
+    <a class="btn btn-default pull-right" href="search?q=+run_flow.flow_id%3A<?php echo $this->id; ?>&type=run"><i class="fa fa-fw fa-list"></i> List all runs</a>
 	    <?php
 	      $taskparams['index'] = 'openml';
 	      $taskparams['type']  = 'task_type';

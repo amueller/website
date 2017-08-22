@@ -21,8 +21,8 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/a/evaluation-measures') or
 	 false !== strpos($_SERVER['REQUEST_URI'],'/a/estimation-procedures') or
 	 false !== strpos($_SERVER['REQUEST_URI'],'/a/data-qualities') or
 	 false !== strpos($_SERVER['REQUEST_URI'],'/a/flow-qualities')) {
-
-	$this->id = end(explode('/', $_SERVER['REQUEST_URI']));
+  $var = explode('/', $_SERVER['REQUEST_URI']);
+	$this->id = end($var);
 
 	// Get data from ES
 	$this->p = array();
@@ -36,21 +36,21 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/a/evaluation-measures') or
 	if(false !== strpos($_SERVER['REQUEST_URI'],'/a/data-qualities')){
 		$this->p['type'] = 'data';
 		unset($this->p['id']);
-		$this->p['size'] = '10000';
-		$this->p['fields'] = array("name", "version", $this->id);
-		$this->p['sort'] = $this->id;
+		$this->p['size'] = '100';
+		$this->p['_source'] = array("name", "version", "qualities");
+		//$this->p['sort'] = $this->id;
 
 		try{
 			$this->results = $this->searchclient->search($this->p)['hits']['hits'];
-		} catch (Exception $e) {}
+		} catch (Exception $e) {print($e);}
 	}
 
 	if(false !== strpos($_SERVER['REQUEST_URI'],'/a/flow-qualities')){
 		$this->p['type'] = 'flow';
 		unset($this->p['id']);
-		$this->p['size'] = '10000';
-		$this->p['fields'] = array("name", "version", $this->id);
-		$this->p['sort'] = $this->id;
+		$this->p['size'] = '100';
+		$this->p['_source'] = array("name", "version", $this->id);
+		//$this->p['sort'] = $this->id;
 
 		try{
 			$this->results = $this->searchclient->search($this->p)['hits']['hits'];
@@ -75,6 +75,5 @@ if(false !== strpos($_SERVER['REQUEST_URI'],'/a/quality-value')) {
     return strcmp($a->value, $b->value);
   });
 }
-
 
 ?>

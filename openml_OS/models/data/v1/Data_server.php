@@ -107,8 +107,10 @@ class Data_server extends CI_Model {
       return;
     }
     
+    $dataset = $this->Dataset->getWhereSingle('file_id = ' . $id);
+    
     // obtain header
-    $features = $this->Data_feature->getColumnWhere('name', 'did = "' . $id . '"', 'index ASC');
+    $features = $this->Data_feature->getColumnWhere('name', 'did = "' . $dataset->did . '"', 'index ASC');
     if ($features < 2) {
       # TODO: more meaningfull error
       $this->_error404();

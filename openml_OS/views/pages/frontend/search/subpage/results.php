@@ -26,6 +26,10 @@ function truncate($string,$length=200,$append="&hellip;") {
 ?>
 <?php if(!$this->dataonly) {?>
 <div class="topselectors">
+<?php if($this->filtertype and in_array($this->filtertype, array("data", "task", "study"))){ ?>
+	<a type="button" class="btn btn-success loginfirst" style="float:right; margin-left:10px;" href="new/<?php echo $this->filtertype;?>">
+		<i class="fa fa-plus"></i> Add new</a>
+<?php } ?>
 <?php if($this->filtertype and in_array($this->filtertype, array("data"))){ ?>
 	<a type="button" class="btn btn-default" style="float:right; margin-left:10px;" href="
 <?php
@@ -47,7 +51,7 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
 	<?php } ?>
 
 <div class="dropdown pull-right">
- <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task", "task_type", "run", "user"))){ ?>
+ <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task", "task_type", "run", "user", "measure", "study"))){ ?>
   <a data-toggle="dropdown" class="btn btn-default" href="#">Sort: <b><?php echo $this->curr_sort; ?></b> <i class="fa fa-caret-down"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     <?php if($this->filtertype and in_array($this->filtertype, array("task", "data", "flow", "task_type"))){ ?>
@@ -92,7 +96,7 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'desc')); ?>">Most downloads done</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'nr_of_downloads', 'order' => 'asc')); ?>">Fewest downloads done</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'activity', 'order' => 'desc')); ?>">Highest Activity</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'activity', 'order' => 'asc')); ?>">Highest Activity</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'activity', 'order' => 'asc')); ?>">Lowest Activity</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'likes_received', 'order' => 'desc')); ?>">Most likes received</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'likes_received', 'order' => 'asc')); ?>">Fewest likes received</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo str_replace("index.php/","",$_SERVER['PHP_SELF']) . "?" . addToGET(array( 'sort' => 'downloads_received', 'order' => 'desc')); ?>">Most downloads received</a></li>
@@ -108,9 +112,36 @@ echo 'search?'.$att; ?>"><i class="fa <?php echo ($this->listids ? 'fa-align-jus
  <?php } ?>
 </div>
 
+<div class="dropdown pull-right" role="tab" id="filterHead">
+		<a data-toggle="collapse" class="btn btn-default" href="#filterBox" aria-expanded="true" aria-controls="filterBox"><i class="fa fa-align-justify fa-filter"></i> Filters</a>
+</div>
+
 <div class="searchstats"><?php echo $this->results['hits']['total'];?> results</div>
 </div>
 <?php } ?>
+<div id="filterBox" class="panel panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+	<div class="panel-body">
+		<h5>Filter results by:</h5>
+		<ul class="sidenav nav collapse in" id="filterlist">
+			<?php if($this->filtertype) subpage($this->filtertype);
+						else subpage("everything");?>
+		</ul>
+		<?php
+			if($this->filtertype and $this->filtertype!='user' and $this->filtertype!='task_type') {?>
+		<div class="row">
+  	<div class="col-md-6">
+			<button class="btn btn-default btn-material-<?php echo $this->materialcolor;?>" id="research">Search</button>
+		</div>
+		<div class="col-md-6">
+			<ul class="sidenav nav">
+			<li><a style="cursor:default;"><i class="fa fa-lg fa-fw fa-info-circle"></i>You can use 1..10, >10, <10</a>
+					<a id="removefilters"><i class="fa fa-lg fa-fw fa-trash-o"></i>Remove all filters</a></li>
+			</ul>
+		</div>
+		</div>
+		<?php } ?>
+	</div>
+</div>
 <?php
 if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
       <?php
@@ -164,7 +195,7 @@ if( $this->results != false and $this->results['hits']['total'] > 0){ ?>
 				<div class="itemheadfull">
 				<i class="<?php echo $this->icons[$type];?>" style="color:<?php echo $this->colors[$type];?>"></i>
 				<a href="r/<?php echo  $r['_id'] ?>"><?php echo $rs['uploader'] ?> <span><i class="fa fa-fw fa-clock-o"></i> <?php echo get_timeago(strtotime(str_replace('.000Z','',$rs['date'])));?></span><br>
-					<span>ran flow</span> <?php echo $rs['run_flow']['name'] ?> <span>on task</span> <?php echo $rs['run_task']['tasktype']['name'];?> on data set <?php echo $rs['run_task']['source_data']['name']; ?></a>
+					<span>ran flow</span> <?php echo shortenString($rs['run_flow']['name']); ?> <span>on task</span> <?php echo $rs['run_task']['tasktype']['name'];?> on data set <?php echo $rs['run_task']['source_data']['name']; ?></a>
 				</div>
 				<div class="runStats statLine">
 				<?php

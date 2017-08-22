@@ -1,27 +1,3 @@
-<?php
-     foreach( $this->taskio as $r ):
-	if($r['category'] != 'input') continue;
-	if($r['type'] == 'Dataset'){
-		$dataset = $r['dataset'];
-		$dataset_id = $r['value'];
-	}
-     endforeach;
-
-	if (!isset($this->task)){ ?>
-        <div class="container-fluid topborder endless openmlsectioninfo">
-          <div class="col-xs-12 col-md-10 col-md-offset-1" id="mainpanel">
-
-             <div class="tab-content">
-              <h3><i class="fa fa-warning"></i> This is not the task you are looking for</h3>
-              <p>Sorry, this task does not seem to exist (anymore).</p>
-            </div>
-          </div>
-        </div>
-      <?php
-      } else { ?>
-
-  <h1><i class="fa fa-trophy"></i> <?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?></h1>
-
   <div class="col-xs-12 panel">
     <h2 style="margin-top:0px">Challenge</h2>
     <?php echo $this->tasktype['description']; ?>
@@ -52,16 +28,12 @@
 		<h3>How to submit runs</h3>
     <b>Using your favorite machine learning environment</b><br>
 		<p>Download this task directly in your environment and automatically upload your results</p>
-    <a href="guide/#!plugin_weka" class="btn btn-primary btn-raised">WEKA</a>
-    <a href="guide/#!plugin_moa" class="btn btn-primary btn-raised">MOA</a>
-    <a href="guide/#!plugin_rm" class="btn btn-primary btn-raised">RapidMiner</a>
+    <a href="guide/integrations" class="btn btn-primary btn-raised">OpenML integrations</a>
 
     <br><br>
     <b>From your own software</b><br>
     <p>Use one of our APIs to download data from OpenML and upload your results</p>
-    <a href="guide/#!java" class="btn btn-primary btn-raised">Java</a>
-    <a href="guide/#!r" class="btn btn-primary btn-raised">R</a>
-    <a href="guide/#!python" class="btn btn-primary btn-raised">Python</a>
+    <a href="guide/api" class="btn btn-primary btn-raised">OpenML APIs</a>
 
   </div>
 
@@ -80,4 +52,3 @@
               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
           })();
       </script>
-<?php } ?>

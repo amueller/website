@@ -2,7 +2,7 @@
 // for function: openml.global
 $this->apiErrors[100] = 'Function not valid';
 $this->apiErrors[101] = 'Function not yet ported or implemented';
-$this->apiErrors[102] = 'No authentication';
+$this->apiErrors[102] = 'No authentication (Please provide API key for all requests other than HTTP GET)';
 $this->apiErrors[103] = 'Authentication failed';
 $this->apiErrors[104] = 'This is a read-only account, it does not have permission for write operations. ';
 $this->apiErrors[105] = 'An Elastic Search Exception occured. ';
@@ -22,7 +22,7 @@ $this->apiErrors[132] = 'Failed to move the files';
 $this->apiErrors[133] = 'Currently, only arff datasets are supported for upload. ';
 $this->apiErrors[134] = 'Failed to insert record in database';
 $this->apiErrors[135] = 'Please provide description xml';
-$this->apiErrors[136] = 'File failed format verification. The uploaded file is not valid according to the selected file format. Please check the file format specification and try again.';
+$this->apiErrors[136] = 'Failed to register URL (server did not provide neccessary headers)';
 $this->apiErrors[137] = 'Please provide API key';
 $this->apiErrors[138] = 'Authentication failed';
 $this->apiErrors[139] = 'Combination name / version already exists';

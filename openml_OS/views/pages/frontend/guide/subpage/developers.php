@@ -2,21 +2,19 @@
         <div class="page-header">
           <h2 id="dev-start">OpenML <i class="fa fa-heart"></i> Open Source</h2>
         </div>
-	OpenML is an open source project, <a href="https://github.com/organizations/openml">hosted on GitHub</a>. We welcome everybody to help improve OpenML, and make it more useful for everyone. Fork us on GitHub.
+	OpenML is an open source project, <a href="https://github.com/organizations/openml">hosted on GitHub</a>. We welcome everybody to help improve OpenML, and make it more useful for everyone.
+  If you want to integrate your own machine learning tools with OpenML, <a href="guide/api">check out the available APIs</a>.
+<p>
+        <i class="fa fa-heart" style="color:red;"></i> We always <a href='https://github.com/openml/OpenML/wiki/How-to-contribute'>love to welcome new contributers</a>, and will gladly help you in any way possible.
+</p>
 
         <h2 id="dev-repos">GitHub repo's</h2>
+        <p>You can find relevant code in the corresponding GitHub repositories. Please also post issues in the relevant issue tracker.</p>
         <a href="https://github.com/openml/OpenML"><i class="fa fa-github fa-lg"></i> OpenML Core</a> - Everything done by the OpenML server. This includes dataset feature calculations and server-side model evaluations.<br><br>
         <a href="https://github.com/openml/website"><i class="fa fa-github fa-lg"></i> Website</a> - The website and REST API<br><br>
-        <a href="https://github.com/openml/metafeatures"><i class="fa fa-github fa-lg"></i> Meta-feature</a> - New repo for meta-feature calculation tool.<br><br>
         <a href="https://github.com/openml/java"><i class="fa fa-github fa-lg"></i> Java API</a> - The Java API and Java-based plugins<br><br>
         <a href="https://github.com/openml/r"><i class="fa fa-github fa-lg"></i> R API</a> - The OpenML R package<br><br>
         <a href="https://github.com/openml/python"><i class="fa fa-github fa-lg"></i> Python API</a> - The Python API
-
-        <h3 id="dev-issues">Issues and feature requests</h3>
-        <p>You can post issues (e.g. bugs) and feature requests on the relevant issue tracker:</p>
-	<a href="https://github.com/openml/OpenML/issues"><i class="fa fa-github fa-lg"></i> OpenML tracker</a> - All general issues and feature requests. This is all organized on <a href="https://waffle.io/openml/openml">Waffle</a>.<br><br>
-	<a href="https://github.com/openml/website/issues"><i class="fa fa-github fa-lg"></i> Website tracker</a> - Smaller issues related to the website.<br><br>
-	<a href="https://github.com/openml/r/issues"><i class="fa fa-github fa-lg"></i> R tracker</a> - Issues related to the openml R package.<br><br>
 
         <h3 id="dev-wiki">GitHub wiki</h3>
         <p>The <a href="https://github.com/openml/OpenML/wiki"> GitHub Wiki</a> contains more information on how to set up your environment to work on OpenML locally, on the structure of the backend and frontend, and working documents.</p>
