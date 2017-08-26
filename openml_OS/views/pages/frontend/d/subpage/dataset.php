@@ -97,7 +97,7 @@
             <i class="fa fa-fw fa-tags"></i>
             <?php if(array_key_exists('tags', $this->data)){
                   foreach( $this->data['tags'] as $t) { ?>
-                <span class="label label-material-<?php echo $this->materialcolor; ?> tag"><?php echo $t['tag']; if($t['uploader']==$this->user_id){ ?> <button class="deltag" type="submit" onclick="$('#deletetag').val('<?php echo $t['tag'];?>');" name="<?php echo $t['tag'];?>"><i class="fa fa-times"></i></button><?php } ?></span>
+                <span class="label label-material-<?php echo $this->materialcolor; ?> tag"><?php echo $t['tag']; if($t['uploader']==$this->user_id or $this->ion_auth->is_admin()){ ?> <button class="deltag" type="submit" onclick="$('#deletetag').val('<?php echo $t['tag'];?>');" name="<?php echo $t['tag'];?>"><i class="fa fa-times"></i></button><?php } ?></span>
             <?php }} ?>
             <a class="" role="button" data-toggle="collapse" href="#addtagbox" aria-expanded="false" aria-controls="addtagbox">
               <i class="fa fa-fw fa-plus"></i>Add tag</a>

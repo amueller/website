@@ -105,7 +105,8 @@ Ps.initialize(container);
           swal("Error " + code_field, message_field, "error");
     });
   }
-
+  // wiki. Hide the annoying uploading file spinner.
+  $('#gollum-editor-edit-header').prev('div').css('display','none');
 
 });
 
