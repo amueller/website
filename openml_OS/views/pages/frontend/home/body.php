@@ -35,8 +35,8 @@
               </div>
               <div class="row-content">
                   <h4 class="list-group-item-heading"><div id="colorchange"><span>H</span><span>A</span><span>C</span><span>K</span><span>A</span><span>T</span><span>H</span><span>O</span><span>N</span></div></h4>
-                  <p class="list-group-item-text">Bring your own data, bring your own algorithms, or build cool new features.</p>
-                  <p class="list-group-item-text">Next location: <a href="https://www.lorentzcenter.nl/lc/web/2017/902/info.php3?wsid=902&venue=Oort">9-14 October in Leiden, the Netherlands</a></p>
+                  <p class="list-group-item-text">Bring your own data, bring your own algorithms, or build cool new features. <a href="https://goo.gl/forms/esfICYiQ3ve7rnT42" style="color:orange !important"> Sign up now (places are limited)!</a></p>
+                  <p class="list-group-item-text">Next location: <a href="http://hackathon.openml.org">9-14 October in Leiden, the Netherlands</a></p>
               </div>
           </div>
         </div>
@@ -106,22 +106,32 @@
 
   </div>
 </div>
+</div>
+
 <div class="panel whitebox">
 
-  <h1 class="callout">Machine learning should be as simple as possible<br>(but not simpler)</h1>
-  <div class="callouttext">We aim to make machine learning expertise easily accessible to everyone in research, education and industry.
- Easily share and reuse datasets, code and models in a transparent way, learn what works, and do machine learning alongside thousands of other data scientists (and bots!).</div>
-  <!--Be more productive, log or share your work throughout the world, using any machine learning tool you like.-->
-  <br><br>
-  <a href="register" class="btn btn-lg btn-raised btn-info">Sign me up!</a>
+  <h1 class="callout">Democratizing Machine Learning</h1>
+  <div class="covertext">As machine learning is enhancing our ability to understand nature and build a better future,
+    it is crucial that we make it transparent and easily accessible to everyone in research, education and industry.
+    The Open Machine Learning project is an inclusive movement to build an open, organized, online ecosystem for machine learning.
+    We build <a class="coverlink" href="https://www.openml.org/guide/api">open source tools</a> to discover (and share)
+    <a class="coverlink" href="https://www.openml.org/search?type=data">open data from any domain</a>,
+    easily draw them into your <a class="coverlink" href="https://www.openml.org/guide/integrations">favourite machine learning environments</a>,
+    quickly build models alongside (and together with) thousands of other data scientists, analyse your results against the state
+    of the art, and even get automatic advice on how to build better models. Stand on the shoulders of giants and make the world a better place.
 
+  <br><br>
+</div>
+
+  <a href="register" class="btn btn-lg btn-raised btn-info">Sign me up!</a><br>
+  <p style="font-size:10pt">Signing up is free and brings you lots of powerful features.<br>All public data is always openly available.</p>
 </div>
 
 <div class="emptypanel">
     <div class="col-sm-8 col-md-6 coverflow">
-      <h2>Open science machine learning</h2>
+      <h2>Open science <i class="fa fa-heart" style="color:red"></i> Machine learning</h2>
       <div class="covertext">
-        Identifying the most appropriate learning techniques and using them optimally can be challenging for the best of us.
+        Identifying the most appropriate machine learning techniques and using them optimally can be challenging for the best of us.
         OpenML is a place where you can share interesting datasets with the people who love to analyse data, and build the best
         solutions together, saving you valuable time, increasing your visibility, and speeding up discovery. OpenML links
         data to algorithms and people, so you can build on the state of the art and learn to teach machines to learn better.
@@ -144,7 +154,7 @@
       <h2>It starts with data</h2>
       <div class="covertext">
         Upload your datasets, or link them from existing repositories. OpenML automatically versions and analyses each dataset and annotates them with rich meta-data to streamline analysis.
-        Easily search thousands of datasets and import them directly into your code or toolboxes.
+        Easily search thousands of datasets and import them directly into your code or toolboxes, or quickly find similar datasets together with the best machine learning approaches.
       </div>
       <div class="covertext">
         <a class="coverlink" href="guide/bootcamp">Learn more</a>

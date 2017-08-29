@@ -16,6 +16,10 @@
   color: rgba(0,0,0,.84);
 }
 
+.whitebox{
+  position:relative;
+}
+
 .emptypanel{
   padding-top: 80px;
   padding-bottom: 80px;
