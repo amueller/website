@@ -4415,11 +4415,11 @@ paths:
           description: >-
             Too many results. Given the constraints, there were still too many
             results. Please add filters to narrow down the list.
-  /evaluationprocedure/list:
+  /estimationprocedure/list:
     get:
-      summary: List all evaluation procedures
+      summary: List all estimation procedures
       description: |
-        Returns an array with all evaluation procedures in the system.
+        Returns an array with all model performance estimation procedures in the system.
       parameters:
         - name: api_key
           in: query
@@ -4427,12 +4427,12 @@ paths:
           required: true
           type: string
       tags:
-        - evaluationprocedure
+        - estimationprocedure
       responses:
         '200':
-          description: A list of evaluation procedures
+          description: A list of estimation procedures
           schema:
-            $ref: '#/definitions/EvaluationProcedureList'
+            $ref: '#/definitions/EstimationProcedureList'
           examples:
             application/json: |-
               {
@@ -4460,7 +4460,7 @@ paths:
                 }
               }
         '500':
-          description: No evaluation procedures available.
+          description: No model performance estimation procedures available.
 definitions:
   Flow:
     type: object
@@ -4711,7 +4711,7 @@ definitions:
                     description: >-
                       Tags added by OpenML users. Includes study tags in the
                       form `study_1`
-  EvaluationProcedureList:
+  EstimationProcedureList:
     type: object
     properties:
       estimationprocedures:
@@ -4724,16 +4724,16 @@ definitions:
               properties:
                 id:
                   type: string
-                  description: The evaluation procedure ID
+                  description: The estimation procedure ID
                 ttid:
                   type: string
                   description: The task type ID
                 name:
                   type: string
-                  description: The evaluation procedure name, e.g. '10 fold Crossvalidation'
+                  description: The estimation procedure name, e.g. '10 fold Crossvalidation'
                 type:
                   type: string
-                  description: The evaluation procedure type, e.g. 'crossvalidation'
+                  description: The estimation procedure type, e.g. 'crossvalidation'
                 repeats:
                   type: string
                   description: The number of repeats, e.g. '10'
