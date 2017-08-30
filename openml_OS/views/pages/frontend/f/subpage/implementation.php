@@ -12,39 +12,30 @@
                 }
                 ?>
         </li>
-        <?php } ?>
+        <?php }} ?>
         <?php if(isset($this->flow_source_url)) { ?>
-        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+        <li><a class="btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
         <?php } elseif(isset($this->flow_binary_url)) { ?>
-        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
+        <li><a class="btn btn-link" onclick="doDownload()" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
         <?php } ?>
-        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json">
+        <li><a class="btn btn-link" onclick="doDownload()" href="api/v1/json/flow/<?php echo $this->id; ?>">
                           <span class="fa-stack fa-stack-icon fa-2x">
                               <i class="fa fa-file-o fa-stack-1x"></i>
                               <strong class="fa-stack-1x file-text">JSON</strong>
                           </span>
                         </a></li>
-        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="api/v1/flow/<?php echo $this->id; ?>">
+        <li><a class="btn btn-link" onclick="doDownload()" href="api/v1/flow/<?php echo $this->id; ?>">
                           <span class="fa-stack fa-stack-icon fa-2x">
                               <i class="fa fa-file-o fa-stack-1x"></i>
                               <strong class="fa-stack-1x file-text">XML</strong>
                           </span>
                         </a></li>
-        <li><a class="loginfirst btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/rdf">
+        <li><a class="btn btn-link" onclick="doDownload()" href="<?php echo $_SERVER['REQUEST_URI']; ?>/rdf">
                           <span class="fa-stack fa-stack-icon fa-2x">
                               <i class="fa fa-file-o fa-stack-1x"></i>
                               <strong class="fa-stack-1x file-text">RDF</strong>
                           </span>
                         </a></li>
-    <?php
-}else{ ?>
-    <?php if(isset($this->flow_source_url)) { ?>
-    <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_source_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-    <?php } elseif(isset($this->flow_binary_url)) { ?>
-    <li><a class="loginfirst btn btn-link" href="<?php echo $this->flow_binary_url; ?>"><i class="fa fa-cloud-download fa-2x"></i></a></li>
-    <?php } ?>
-    <li><a class="loginfirst btn btn-link" href="<?php echo $_SERVER['REQUEST_URI']; ?>/json"><i class="fa fa-code fa-2x"></i></a></li>
-<?php } ?>
 
 <li>   <div class="version" style="margin-bottom: -17px;">
   <select class="selectpicker" data-width="auto" onchange="location = this.options[this.selectedIndex].value;">

@@ -16,6 +16,10 @@
   color: rgba(0,0,0,.84);
 }
 
+.whitebox{
+  position:relative;
+}
+
 .emptypanel{
   padding-top: 80px;
   padding-bottom: 80px;
@@ -3040,6 +3044,7 @@ svg:not(:root){
   padding-left: 0px;
   padding-right: 0px;
   background-color: #f2f2f2;
+  margin-left: 0px;
 }
 
 .coverflow {
