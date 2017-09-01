@@ -23,7 +23,7 @@
   <xs:complexType name="parameter_setting">
     <xs:sequence>
       <xs:element name="name" type="oml:casual_string1024"/> <!-- The name of the parameter that is set -->
-      <xs:element name="value" type="xs:string"/> <!-- The value used for this parameter -->
+      <xs:element name="value" type="oml:basic_latin1024"/> <!-- The value used for this parameter -->
       <xs:element name="component" minOccurs="0" maxOccurs="1" type="oml:casual_string1024"/> <!-- If the parameter belongs to a subcomponent of an implementation, the implementation name of that component. This name must match a component of the implementation that is stated above (in 'implementation_id'). -->
     </xs:sequence>
   </xs:complexType>
@@ -80,7 +80,7 @@
     <xs:restriction base="xs:string">
       <xs:pattern value="([a-zA-Z0-9_\-\.,\(\):])+"/>
       <xs:maxLength value="128" />
-       <xs:minLength value="1" />
+      <xs:minLength value="1" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="casual_string1024"> <!-- Subset on xs:string. Slightly restricted form of string, but not neccessarilly URL-friendly -->
@@ -90,11 +90,18 @@
        <xs:minLength value="1" />
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="basic_latin1024">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\p{IsBasicLatin}*"/>
+      <xs:maxLength value="1024" />
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="basic_latin128">
     <xs:restriction base="xs:string">
       <xs:pattern value="\p{IsBasicLatin}*"/>
       <xs:maxLength value="128" />
       <xs:minLength value="1" />
     </xs:restriction>
-</xs:simpleType>
+  </xs:simpleType>
 </xs:schema>
