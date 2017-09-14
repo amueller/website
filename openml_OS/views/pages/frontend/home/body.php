@@ -154,7 +154,7 @@
     <div class="col-sm-8 col-md-6 coverflow">
       <h2>It starts with data</h2>
       <div class="covertext">
-        Upload your datasets, or link them from existing repositories. OpenML automatically versions and analyses each dataset and annotates them with rich meta-data to streamline analysis.
+        Upload your datasets, or link them from existing repositories. OpenML automatically versions and analyses each dataset and annotates it with rich meta-data to streamline analysis.
         Easily search thousands of datasets and import them directly into your code or toolboxes, or quickly find similar datasets together with the best machine learning approaches.
       </div>
       <div class="covertext">
@@ -166,11 +166,13 @@
 <div class="emptypanel">
 
   <div class="col-sm-8 col-md-6 coverflow">
-    <h2>Collaborative science - easy benchmarking</h2>
+    <h2>... and <b>why</b> you want to analyze it</h2>
     <div class="covertext">
-      Create <i>tasks</i> that tell people what needs to be done with the data (e.g. classification).
-      OpenML creates machine-readable protocols to train and evaluate models, so you can focus on the science.
-      Try many techniques on the same task and compare directly to the state of the art, or evaluate one technique on hundreds of tasks at once.
+      Tell people which learning problem you want to solve (e.g., classify observations) by
+      creating <i>tasks</i> describing your goals. This allows meaningful collaboration,
+      easy benchmarking or different methods, and direct comparison to the state of the art.
+      OpenML tasks are machine-readable, allowing tools to automatically get the data and train and evaluate models, so that you can focus on the science.
+
     </div>
     <div class="covertext">
       <a class="coverlink" href="guide/bootcamp">Learn more</a>
