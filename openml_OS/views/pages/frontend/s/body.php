@@ -13,7 +13,7 @@ if($this->study['visibility'] == 'private' and (!$this->ion_auth->logged_in() or
   //  $this->hidedescription = true;
 }
 ?>
-
+<div id="subtitle"><?php echo $this->study['name']; ?></div>
 <div class="container-fluid topborder endless openmlsectioninfo">
   <div class="col-xs-12" id="mainpanel">
 

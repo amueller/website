@@ -43,7 +43,7 @@
       				                                  </span>
       				                                </a></li>
           </ul>
-
+          <div id="subtitle"><?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?></div>
           <h1><i class="fa fa-trophy"></i> <?php echo $this->task['tasktype']['name']; ?> on <?php echo $this->task['source_data']['name']; ?></h1>
           <div class="datainfo">
                       <i class="fa fa-trophy"></i> Task <?php echo $this->task_id; ?>

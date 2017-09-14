@@ -3,6 +3,8 @@
 $(document).ready(function() {
 	$('.pop').popover();
 	$('.selectpicker').selectpicker();
+	let subtitle = document.getElementById('subtitle');
+	if (subtitle != null) { document.title = document.title + ' ' + subtitle.innerHTML;}
 });
 
 
