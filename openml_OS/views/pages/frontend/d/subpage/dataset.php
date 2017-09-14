@@ -2,7 +2,6 @@
 		o('no-access');
 	  } else {
     ?>
-
     <ul class="hotlinks">
         <?php if ($this->ion_auth->logged_in()) {
             if ($this->ion_auth->user()->row()->id != $this->data['uploader_id']) {?>

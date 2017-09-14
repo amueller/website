@@ -2,6 +2,10 @@
     display: none;
 }*/
 
+#subtitle{
+  display: none;
+}
+
 .swagger-section .operations h4{
   color: #333 !important;
 }

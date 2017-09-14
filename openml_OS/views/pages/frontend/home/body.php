@@ -1,3 +1,4 @@
+<div id="subtitle">Home</div>
 <div class="openmlcover">
 <canvas id="c" width="400" height="400"></canvas>
 <div class="marketing">
