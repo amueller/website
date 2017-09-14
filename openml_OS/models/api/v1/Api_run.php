@@ -147,22 +147,24 @@ class Api_run extends Api_model {
 
 
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
-    if($limit != false && $offset != false){
-      $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
+    if ($limit != false && $offset != false) {
+      $where_limit =  ' LIMIT ' . $offset . ', ' . $limit;
     }
 
     $where_total = $where_task . $where_setup . $where_uploader . $where_impl . $where_run . $where_tag . $where_server_error;
 
     $sql =
-      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name, r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details, GROUP_CONCAT(tag) AS tags ' .
+      'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name,'.
+             'r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details ' .
+             //', GROUP_CONCAT(tag) AS tags ' .
       'FROM algorithm_setup s, implementation i, run r '.
       'LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
       'LEFT JOIN dataset d ON t.value = d.did '.
       'LEFT JOIN run_tag ON r.rid = run_tag.id ' .
-      'LEFT JOIN run_evaluated e ON r.rid = e.run_id AND e.error IS NOT NULL ' .
+      'LEFT JOIN run_evaluated e ON r.rid = e.run_id ' .
       'WHERE r.setup = s.sid AND i.id = s.implementation_id ' .
       $where_total .
-      'GROUP BY r.rid ' .
+      // 'GROUP BY r.rid ' .
       $where_limit;
     $res = $this->Run->query($sql);
 
@@ -176,7 +178,7 @@ class Api_run extends Api_model {
       return;
     }
 
-    $this->xmlContents( 'runs', $this->version, array( 'runs' => $res ) );
+    $this->xmlContents('runs', $this->version, array('runs' => $res));
   }
 
 
