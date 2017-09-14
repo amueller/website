@@ -155,7 +155,7 @@ class Api_run extends Api_model {
 
     $sql =
       'SELECT r.rid, r.uploader, r.task_id, r.start_time, d.did AS dataset_id, d.name AS dataset_name,'.
-             'r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details '
+             'r.setup, i.id AS flow_id, i.name AS flow_name, r.error_message, r.run_details ' .
              //', GROUP_CONCAT(tag) AS tags ' .
       'FROM algorithm_setup s, implementation i, run r '.
       'LEFT JOIN task_inputs t ON r.task_id = t.task_id AND t.input = "source_data" '.
