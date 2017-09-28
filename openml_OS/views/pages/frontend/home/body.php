@@ -120,8 +120,8 @@
     easily draw them into your <a class="coverlink" href="https://www.openml.org/guide/integrations">favourite machine learning environments</a>,
     quickly build models alongside (and together with) thousands of other data scientists, analyse your results against the state
     of the art, and even get automatic advice on how to build better models. Stand on the shoulders of giants and make the world a better place.
-
   <br><br>
+  <a href="https://www.youtube.com/embed/1N3qATxXrpE" target="_blank"><i class="fa fa-video-camera"></i> Watch the 1-minute introduction.</a>
 </div>
 
   <a href="register" class="btn btn-lg btn-raised btn-info">Sign me up!</a><br>
@@ -130,7 +130,7 @@
 
 <div class="emptypanel">
     <div class="col-sm-8 col-md-6 coverflow">
-      <h2>Open science <i class="fa fa-heart" style="color:red"></i> Machine learning</h2>
+      <h2>Machine learning <i class="fa fa-heart" style="color:red"></i> Open science</h2>
       <div class="covertext">
         Identifying the most appropriate machine learning techniques and using them optimally can be challenging for the best of us.
         OpenML is a place where you can share interesting datasets with the people who love to analyse data, and build the best

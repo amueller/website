@@ -1,7 +1,7 @@
           <div class="page-header">
             <h1>OpenML API's</h1>
           </div>
-	<p>OpenML offers a range of APIs to download and upload OpenML dataset, tasks, run algorithms on them, and share the results.</p>
+	<p>OpenML offers a range of APIs to download and upload OpenML datasets, tasks, run algorithms on them, and share the results.</p>
   <br>
   <ul class="apilist"><li>
   <div class="col-sm-2"><a target="_blank" href="api_docs"><img class="toolcircle" src="img/rest.png" alt="icon"></a></div>
@@ -14,7 +14,7 @@
   <p>Download datasets into Python scripts, build models using Python machine learning libraries (e.g., <i>scikit-learn</i>), and share the results online, all in a few lines of code.<br>
   <a target="_blank" href="https://openml.github.io/openml-python" class="btn btn-raised btn-info">Documentation</a>
   <a target="_blank" href="https://github.com/openml/openml-python/blob/master/examples/OpenML_Tutorial.ipynb" class="btn btn-raised btn-info">Jupyter Notebook</a>
-  <a target="_blank" class="btn btn-raised btn-info" href="https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example_python&OPENMLKEY=<?php echo (isset($this->api_key) ? $this->api_key : '');?>">Online demo</a>
+  <a target="_blank" class="btn btn-raised btn-info" href="https://everware.ysda.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example_python&OPENMLKEY=<?php echo (isset($this->api_key) ? $this->api_key : '');?>">Online demo</a>
 </p>
 
 
