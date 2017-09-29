@@ -119,14 +119,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    // make associative
-    $implementations = array();
-    foreach($implementations_res as $implementation) {
-      $implementations[$implementation->id] = $implementation;
-      $implementations[$implementation->id]->tags = explode(',', $implementation->tags);
-    }
-
-    $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
+    $this->xmlContents('implementations', $this->version, array('implementations' => $implementations));
   }
 
   // deprecated, will be removed soon

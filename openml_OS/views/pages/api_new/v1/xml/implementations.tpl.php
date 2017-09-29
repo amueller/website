@@ -1,5 +1,5 @@
 <oml:flows xmlns:oml="http://openml.org/openml">
-	<?php foreach( $implementations as $i ): ?>
+	<?php foreach($implementations as $i): ?>
   <oml:flow>
     <oml:id><?php echo $i->id; ?></oml:id>
     <oml:full_name><?php echo $i->fullName; ?></oml:full_name>
