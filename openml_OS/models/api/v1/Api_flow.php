@@ -326,7 +326,7 @@ class Api_flow extends Api_model {
     $parent_ids = $this->Implementation_component->getColumnWhere('parent', 'child = "'.$implementation->id.'"');
     if ($this->Implementation->isComponent($implementation->id)) {
       
-      $this->returnError(328, $this->version, $this->openmlGeneralErrorCode, '{' . implode(', ', $ids) . '}');
+      $this->returnError(328, $this->version, $this->openmlGeneralErrorCode, '{' . implode(', ', $parent_ids) . '}');
       return;
     }
 
