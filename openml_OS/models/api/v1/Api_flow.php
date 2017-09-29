@@ -94,7 +94,7 @@ class Api_flow extends Api_model {
     $limit = element('limit', $query_string);
     $offset = element('offset', $query_string);
 
-    $query = $this->db->select('`i`.`*`');
+    $query = $this->db->select('`i`.*');
     $query->from('implementation i');
     if ($tag) {
       $query->join('implementation_tag t', 'i.id = t.id');
