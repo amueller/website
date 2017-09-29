@@ -24,14 +24,17 @@ class Run extends Database_write {
       return $this->Run->query($sql);
   }
 
-  function getRunsByFlowId($fid, $from=null, $to=null){
+  function getRunsByFlowId($fid, $from=null, $to=null, $limit=null){
       $sql = 'SELECT r.'.$this->id_column.' as id FROM `'.$this->table.'` r, `algorithm_setup` WHERE algorithm_setup.implementation_id='.$fid.' AND r.setup=algorithm_setup.sid';
       
-      if($from!=null){
+      if ($from != null) {
         $sql .= ' AND r.processed>="'.$from.'"';
       }
-      if($to!=null){
+      if ($to != null) {
         $sql .= ' AND r.processed<"'.$to.'"';
+      }
+      if ($limit != null) {
+        $sql .= ' LIMIT ' . $limit;
       }
       
       return $this->Run->query($sql);
