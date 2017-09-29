@@ -108,7 +108,7 @@ class Api_task extends Api_model {
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
     }
 
-    // three level query. in case scalability once forces us to drop some info.
+    // JvR: This query is bound to break in the near future, due to scalability
     $core = 'SELECT `t`.`task_id` , `t`.`ttid` , `tt`.`name` , `d`.`did` AS `did` , `d`.`status` , `d`.`format` , `d`.`name` AS `dataset_name` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`input` SEPARATOR \'","\'),\'"\') AS `task_inputs` , CONCAT(\'"\', GROUP_CONCAT(`ti`.`value` SEPARATOR \'","\'),\'"\') AS `input_values` ' .
             'FROM `task` `t` , `task_type` `tt` , `task_inputs` `ti` , `task_inputs` `source` , `dataset` `d` ' .
             'WHERE `ti`.`task_id` = `t`.`task_id` AND `source`.`input` = "source_data" ' .
@@ -116,8 +116,7 @@ class Api_task extends Api_model {
             'AND `tt`.`ttid` = `t`.`ttid` AND `ti`.`input` IN ("' . implode('","', $this->config->item('basic_taskinputs')).'") ' .
             $where_total . ' ' .
             'GROUP BY t.task_id ' . $where_limit;
-    $tags = 'SELECT `core`.*, CONCAT(\'"\', GROUP_CONCAT(`task_tag`.`tag` SEPARATOR \'","\'),\'"\') AS `tags` FROM `task_tag` RIGHT JOIN (' . $core . ') `core` ON `core`.`task_id` = `task_tag`.`id` GROUP BY `core`.`task_id`';
-    $full = 'SELECT tags.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $tags . ') tags ON dq.data = tags.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY tags.task_id;';
+    $full = 'SELECT core.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $core . ') core ON dq.data = core.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY core.task_id;';
     
     $tasks_res = $this->Task->query($full);
 
