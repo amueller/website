@@ -119,7 +119,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $this->xmlContents('implementations', $this->version, array('implementations' => $implementations));
+    $this->xmlContents('implementations', $this->version, array('implementations' => $implementations_res));
   }
 
   // deprecated, will be removed soon
