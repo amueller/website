@@ -1,5 +1,5 @@
 <oml:data xmlns:oml="http://openml.org/openml">
-  <?php foreach( $datasets as $data ): ?>
+  <?php foreach ($datasets as $data): ?>
   <oml:dataset>
     <oml:did><?php echo $data->did; ?></oml:did>
     <oml:name><?php echo $data->name; ?></oml:name>
@@ -9,12 +9,9 @@
     <?php if ($data->file_id != null): /* note that this is an optional field! */?>
     <oml:file_id><?php echo $data->file_id; ?></oml:file_id> 
     <?php endif; ?>
-    <?php foreach( $data->qualities as $quality => $value ): ?>
+    <?php foreach ($data->qualities as $quality => $value): ?>
     <oml:quality name="<?php echo $quality; ?>"><?php echo $value; ?></oml:quality>
     <?php endforeach; ?>
-    <?php if( property_exists( $data, 'tags' ) ): foreach( $data->tags as $tag ): ?>
-      <oml:tag><?php echo $tag; ?></oml:tag>
-    <?php endforeach; endif; ?>
   </oml:dataset>
   <?php endforeach; ?>
 </oml:data>

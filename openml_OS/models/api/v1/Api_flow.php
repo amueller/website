@@ -94,15 +94,15 @@ class Api_flow extends Api_model {
     $limit = element('limit', $query_string);
     $offset = element('offset', $query_string);
 
-    $query = $this->db->select('implementation.*, GROUP_CONCAT(tag) as tags');
-    $query->from('implementation')->join('implementation_tag', 'implementation.id = implementation_tag.id');
-    $query->group_start()->where('`visibility`', 'public')->or_where('implementation.uploader', $this->user_id)->group_end();
-    if ($uploader_id) {
-      $query->where('implementation.uploader', $uploader_id);
-    }
+    $query = $this->db->select('`i`.*');
+    $query->from('implementation i');
     if ($tag) {
-      # TODO: update!
-      $query->where('implementation.id IN (select it.id from implementation_tag it where it.tag="' . $tag . '")');
+      $query->join('implementation_tag t', 'i.id = t.id');
+      $query->where('t.tag', $tag);
+    }
+    $query->group_start()->where('`visibility`', 'public')->or_where('i.uploader', $this->user_id)->group_end();
+    if ($uploader_id) {
+      $query->where('i.uploader', $uploader_id);
     }
     if ($limit) {
       $query->limit($limit);
@@ -110,7 +110,6 @@ class Api_flow extends Api_model {
     if ($offset) {
       $query->offset($offset);
     }
-    $query->group_by('implementation.id');
     $sql = $query->get_compiled_select();
 
     # TODO: can remove next statement and replace by original active record
@@ -120,14 +119,7 @@ class Api_flow extends Api_model {
       return;
     }
 
-    // make associative
-    $implementations = array();
-    foreach( $implementations_res as $implementation ) {
-      $implementations[$implementation->id] = $implementation;
-      $implementations[$implementation->id]->tags = explode(',', $implementation->tags);
-    }
-
-    $this->xmlContents( 'implementations', $this->version, array( 'implementations' => $implementations ) );
+    $this->xmlContents('implementations', $this->version, array('implementations' => $implementations_res));
   }
 
   // deprecated, will be removed soon
@@ -320,10 +312,21 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $runs = $this->Implementation->query('SELECT rid FROM `algorithm_setup`, `run` WHERE `algorithm_setup`.`sid` = `run`.`setup` AND `algorithm_setup`.`implementation_id` = "'.$implementation->id.'" LIMIT 0,1;');
+    $runs = $this->Run->getRunsByFlowId($implementation->id, null, null, 100);
 
-    if($runs || $this->Implementation->isComponent($implementation->id)) {
-      $this->returnError(324, $this->version);
+    if ($runs) {
+      $ids = array();
+      foreach ($runs as $r) {
+        $ids[] = $r->id;
+      }
+      $this->returnError(324, $this->version, $this->openmlGeneralErrorCode, '{'. implode(', ', $ids) .'} ()');
+      return;
+    }
+    
+    $parent_ids = $this->Implementation_component->getColumnWhere('parent', 'child = "'.$implementation->id.'"');
+    if ($this->Implementation->isComponent($implementation->id)) {
+      
+      $this->returnError(328, $this->version, $this->openmlGeneralErrorCode, '{' . implode(', ', $parent_ids) . '}');
       return;
     }
 
