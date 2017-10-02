@@ -20,5 +20,5 @@
 </li>
 <li>
     <input type="text" class="form-control floating-label" id="status" name="status" data-hint="Dataset status (active, in_preparation, deactivated,...)"
-     value="<?php echo (array_key_exists('status',$this->filters) ? $this->filters['status'] : '')?>" placeholder="Status">
+     value="<?php echo (array_key_exists('status',$this->filters) ? $this->filters['status'] : 'active')?>" placeholder="Status">
 </li>

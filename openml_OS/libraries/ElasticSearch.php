@@ -1753,7 +1753,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($datasets) . ' datasets.';
     }
 
-    public function index_data($id, $start_id = 0, $altmetrics=False) {
+    public function index_data($id, $start_id = 0, $altmetrics=True) {
         if ($id)
             return $this->index_single_dataset($id);
 
