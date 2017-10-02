@@ -323,9 +323,8 @@ class Api_flow extends Api_model {
       return;
     }
     
-    $parent_ids = $this->Implementation_component->getColumnWhere('parent', 'child = "'.$implementation->id.'"');
     if ($this->Implementation->isComponent($implementation->id)) {
-      
+      $parent_ids = $this->Implementation_component->getColumnWhere('parent', 'child = "'.$implementation->id.'"');
       $this->returnError(328, $this->version, $this->openmlGeneralErrorCode, '{' . implode(', ', $parent_ids) . '}');
       return;
     }
@@ -341,11 +340,12 @@ class Api_flow extends Api_model {
       return;
     }
 
+    $this->Input->deleteWhere('implementation_id =' . $implementation->id); // should be handled by constraints .. 
+    $this->Implementation_component->deleteWhere('parent = ' . $implementation->id);
     $result = $this->Implementation->delete($implementation->id);
     if( $implementation->binary_file_id != false ) { $this->File->delete_file($implementation->binary_file_id); }
     if( $implementation->source_file_id != false ) { $this->File->delete_file($implementation->source_file_id); }
-    $this->Input->deleteWhere('implementation_id =' . $implementation->id);
-    $this->Implementation_component->deleteWhere('parent = ' . $implementation->id);
+    
     // TODO: also check component parts.
 
     if($result == false) {

@@ -1774,10 +1774,9 @@ class ElasticSearch {
             set_time_limit(600);
             $datasets = null;
             $params['body'] = array();
-
+            $valid_ids = array();
             $datasets = $this->db->query('select d.*, count(rid) as runs, GROUP_CONCAT(dp.error) as error_message from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id) left join data_processed dp on (d.did=dp.did) where d.did>=' . $did . ' and d.did<' . ($did + $incr) . ' group by d.did');
             if($datasets){
-
               foreach ($datasets as $d) {
                 try {
                   $params['body'][] = array(
@@ -1785,6 +1784,7 @@ class ElasticSearch {
                           '_id' => $d->did
                       )
                   );
+		  $valid_ids[] = $d->did;
                   $params['body'][] = $this->build_data($d, $altmetrics);
 
                 } catch (Exception $e) {
@@ -1793,9 +1793,24 @@ class ElasticSearch {
               }
 
               $responses = $this->client->bulk($params);
-
               $submitted += sizeof($responses['items']);
+
+	      //clean up, just to be sure
+              $params_del['index'] = 'openml';
+              $params_del['type'] = 'data';
+	      foreach(array_diff(range($did,$did+$incr-1),$valid_ids) as $delid){
+	          $params_del['id'] = $delid;
+		  try{
+		    $this->client->delete($params_del);
+		  }
+		  catch (Exception $e) {
+		    $result = json_decode($e);
+                    if($result['found']=='true')
+                        echo "deleted_".$delid." ";
+                  }
+ 	      } 		
             }
+
             $did += $incr;
         }
 

@@ -16,6 +16,11 @@
   z-index: 1031;
 }
 
+.searchstatdetail{
+  color: #999;
+  font-style: italic;
+}
+
 .navbar-material-yellow .openmlsoc{
   color: rgba(0,0,0,.84);
 }
