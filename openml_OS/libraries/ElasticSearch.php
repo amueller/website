@@ -856,8 +856,11 @@ class ElasticSearch {
 
         $task_id = max($taskmin, $start_id);
         $submitted = 0;
-        $incr = min(100, $taskcount);
+        $incr = min(50, $taskcount);
+	echo "Processing task          ";
         while ($task_id <= $taskmax) {
+            echo "\033[9D";
+            echo str_pad($task_id, 9, ' ', STR_PAD_RIGHT);
             $tasks = null;
             $params['body'] = array();
             $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date, t.creator FROM task t, task_type tt where t.ttid=tt.ttid and task_id>=' . $task_id . ' and task_id<' . ($task_id + $incr) . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
@@ -1075,10 +1078,11 @@ class ElasticSearch {
             return $i;
     }
 
-    private function fetch_evaluations($min, $max) {
+    private function fetch_evaluations($min, $max, $include_folds=True) {
         $index = array();
+	if($include_folds){
         $folddata = $this->db->query('SELECT e.source, m.name AS function, e.fold, e.`repeat`, e.value FROM evaluation_fold e, math_function m WHERE e.function_id = m.id AND source >= ' . $min . ' and source < ' . $max);
-        $allfolds = array();
+	$allfolds = array();
 
         if ($folddata) {
             $curr_src = array();
@@ -1125,7 +1129,7 @@ class ElasticSearch {
             $curr_src[$fct] = $folds;
             $allfolds[$src] = $curr_src;
         }
-
+	}
         $evals = $this->db->query('SELECT e.source, m.name AS `function`, e.value, e.stdev, e.array_data FROM evaluation e, math_function m WHERE e.function_id = m.id AND source >= ' . $min . ' and source < ' . $max);
         if ($evals) {
             foreach ($evals as $r) {
@@ -1237,31 +1241,30 @@ class ElasticSearch {
 
         $params['index'] = 'openml';
         $params['type'] = 'run';
+	
+	$setups = array();
+        $tasks = array();
 
-        $setups = $this->fetch_setups();
-        $tasks = $this->fetch_tasks();
-
-        $runmaxquery = $this->db->query('SELECT max(rid) as maxrun from run');
+	$runmaxquery = $this->db->query('SELECT max(rid) as maxrun from run');
         $runcountquery = $this->db->query('SELECT count(rid) as runcount from run');
         $runmax = intval($runmaxquery[0]->maxrun);
         $runcount = intval($runcountquery[0]->runcount);
 
         $rid = $start_id;
         $submitted = 0;
-        $incr = 100;
+        $incr = 5;
         echo "Processing run ";
         while ($rid < $runmax) {
-            echo $rid." ";
+            echo str_pad($rid, 9, ' ', STR_PAD_RIGHT);
             set_time_limit(600);
             $runs = null;
             $runfiles = null;
             $evals = null;
             $params['body'] = array();
-
             $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, re.error, error_message, run_details FROM run r,run_evaluated re, algorithm_setup s where r.rid=re.run_id and s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
-            if($runs){
+	    if($runs){
               $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
-              $evals = $this->fetch_evaluations($rid, $rid + $incr);
+	      $evals = $this->fetch_evaluations($rid, $rid + $incr);
 
               foreach ($runs as $r) {
                   try {
@@ -1271,15 +1274,18 @@ class ElasticSearch {
                           )
                       );
                       $params['body'][] = $this->build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics);
-                  } catch (Exception $e) {
+		    } catch (Exception $e) {
+		      echo $e->getMessage();
                       return $e->getMessage();
                   }
               }
               $responses = $this->client->bulk($params);
               $submitted += sizeof($responses['items']);
-            }
+              echo "-  completed ".str_pad($submitted, 9, ' ', STR_PAD_RIGHT);
+	      echo "\033[31D";
+	    }
             else{
-              echo "No runs ";
+	      echo "\033[9D";
             }
             $rid += $incr;
         }
@@ -1287,6 +1293,11 @@ class ElasticSearch {
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
+        // build dictionary of setups and tasks to eliminate duplicate calls
+	if(!array_key_exists($r->setup, $setups))
+          $setups[$r->setup] = $this->fetch_setups($r->setup)[$r->setup];
+        if(!array_key_exists($r->task_id, $tasks))
+          $tasks[$r->task_id] = $this->fetch_tasks($r->task_id)[$r->task_id];
         if(!array_key_exists($r->task_id,$tasks) or !array_key_exists($r->implementation_id,$this->flow_names)){ // catch faulty runs
             return array();
         }

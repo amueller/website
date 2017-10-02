@@ -312,10 +312,21 @@ class Api_flow extends Api_model {
       return;
     }
 
-    $runs = $this->Implementation->query('SELECT rid FROM `algorithm_setup`, `run` WHERE `algorithm_setup`.`sid` = `run`.`setup` AND `algorithm_setup`.`implementation_id` = "'.$implementation->id.'" LIMIT 0,1;');
+    $runs = $this->Run->getRunsByFlowId($implementation->id, null, null, 100);
 
-    if($runs || $this->Implementation->isComponent($implementation->id)) {
-      $this->returnError(324, $this->version);
+    if ($runs) {
+      $ids = array();
+      foreach ($runs as $r) {
+        $ids[] = $r->id;
+      }
+      $this->returnError(324, $this->version, $this->openmlGeneralErrorCode, '{'. implode(', ', $ids) .'} ()');
+      return;
+    }
+    
+    $parent_ids = $this->Implementation_component->getColumnWhere('parent', 'child = "'.$implementation->id.'"');
+    if ($this->Implementation->isComponent($implementation->id)) {
+      
+      $this->returnError(328, $this->version, $this->openmlGeneralErrorCode, '{' . implode(', ', $parent_ids) . '}');
       return;
     }
 
