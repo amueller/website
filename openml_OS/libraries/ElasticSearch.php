@@ -1777,7 +1777,6 @@ class ElasticSearch {
             $valid_ids = array();
             $datasets = $this->db->query('select d.*, count(rid) as runs, GROUP_CONCAT(dp.error) as error_message from dataset d left join task_inputs t on (t.value=d.did and t.input="source_data") left join run r on (r.task_id=t.task_id) left join data_processed dp on (d.did=dp.did) where d.did>=' . $did . ' and d.did<' . ($did + $incr) . ' group by d.did');
             if($datasets){
-	      $done_list = array();
               foreach ($datasets as $d) {
                 try {
                   $params['body'][] = array(
