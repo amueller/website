@@ -216,7 +216,7 @@ foreach($this->filters as $k => $v){
 $fjson = implode(",",$jsonfilters);
 if(count($jsonfilters)>1)
 	$fjson = '['.$fjson.']';
-$sjson = '['.implode(",",$jsonshould).']';
+$sjson = '['.implode(",",$jsonshould).'], "minimum_should_match" : 1 ';
 
 $params['index'] = 'openml';
 if($this->filtertype)
@@ -240,7 +240,7 @@ $params['body']  = '{'.
         }
     }
 }';
-//print_r($params);
+// print_r($params);
 
 // prepare query for result counts over all types (will be loaded using JS)
 $this->alltypes = $params;

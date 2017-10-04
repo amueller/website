@@ -1020,6 +1020,8 @@ class ElasticSearch {
             foreach ($setups as $v) {
                 $index[$v->setup][] = array('parameter' => $v->fullName, 'value' => $v->value);
             }
+        elseif($id != false)
+          $index[$id] = array();
         return $index;
     }
 
@@ -1241,7 +1243,7 @@ class ElasticSearch {
 
         $params['index'] = 'openml';
         $params['type'] = 'run';
-	
+
 	$setups = array();
         $tasks = array();
 
@@ -1294,7 +1296,7 @@ class ElasticSearch {
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
         // build dictionary of setups and tasks to eliminate duplicate calls
-	if(!array_key_exists($r->setup, $setups))
+        if(!array_key_exists($r->setup, $setups))
           $setups[$r->setup] = $this->fetch_setups($r->setup)[$r->setup];
         if(!array_key_exists($r->task_id, $tasks))
           $tasks[$r->task_id] = $this->fetch_tasks($r->task_id)[$r->task_id];
@@ -1808,7 +1810,7 @@ class ElasticSearch {
                     if($result['found']=='true')
                         echo "deleted_".$delid." ";
                   }
- 	      } 		
+ 	      }
             }
 
             $did += $incr;
