@@ -308,7 +308,6 @@ function ARFFcheck($filepath, $numLines = 100)
 							fclose($filehandle);
 							return "invalid value for nominal attribute: " . $s . " (l.".$lineNumber.")";
 						}
-						$nonnum++;
 					}
 
 					if ($i + 1 < $p)
@@ -328,8 +327,8 @@ function ARFFcheck($filepath, $numLines = 100)
 				return "trailing characters on data line " . " (l.".$lineNumber.")";
 			}
 		}
-		$count++;
-		if ($count == $numLines) break;   // for performance reasons we stop after a fixed number of data lines
+		$counter++;
+		if ($counter == $numLines) break;   // for performance reasons we stop after a fixed number of data lines
 	}
 
 	// judged as valid
