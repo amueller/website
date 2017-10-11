@@ -293,7 +293,7 @@ class ElasticSearch {
                 'analyzer' => 'snowball'
             ),
             'properties' => array(
-            		'name' => array(
+                'name' => array(
                     'type' => 'string',
                     'analyzer' => 'snowball'),
                 'visibility' => array(
@@ -303,7 +303,7 @@ class ElasticSearch {
                     'type' => 'date',
                     'format' => 'yyyy-MM-dd HH:mm:ss'
                 ),
-		            'description' => array(
+                'description' => array(
                     'type' => 'string',
                     'analyzer' => 'snowball'
                 ),
@@ -319,7 +319,7 @@ class ElasticSearch {
             )
         );
 
-	$this->mappings['measure'] = array('_all' => array(
+  $this->mappings['measure'] = array('_all' => array(
                 'enabled' => true,
                 'type' => 'string',
                 'analyzer' => 'snowball'
@@ -349,8 +349,8 @@ class ElasticSearch {
                     'analyzer' => 'standard'
                 )
             )
-	);
-	$this->init_indexer = True;
+  );
+  $this->init_indexer = True;
     }
 
     public function test() {
@@ -372,7 +372,7 @@ class ElasticSearch {
         elseif (! $this->init_indexer)
           $this->initialize();
 
-	      $method_name = 'index_' . $type;
+        $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
                 return $this->$method_name($id, $altmetrics);
@@ -1085,9 +1085,9 @@ class ElasticSearch {
 
     private function fetch_evaluations($min, $max, $include_folds=True) {
         $index = array();
-	if($include_folds){
+  if($include_folds){
         $folddata = $this->db->query('SELECT e.source, m.name AS function, e.fold, e.`repeat`, e.value FROM evaluation_fold e, math_function m WHERE e.function_id = m.id AND source >= ' . $min . ' and source < ' . $max);
-	$allfolds = array();
+  $allfolds = array();
 
         if ($folddata) {
             $curr_src = array();
@@ -1134,7 +1134,7 @@ class ElasticSearch {
             $curr_src[$fct] = $folds;
             $allfolds[$src] = $curr_src;
         }
-	}
+  }
         $evals = $this->db->query('SELECT e.source, m.name AS `function`, e.value, e.stdev, e.array_data FROM evaluation e, math_function m WHERE e.function_id = m.id AND source >= ' . $min . ' and source < ' . $max);
         if ($evals) {
             foreach ($evals as $r) {
@@ -1247,10 +1247,10 @@ class ElasticSearch {
         $params['index'] = 'openml';
         $params['type'] = 'run';
 
-	$setups = array();
+  $setups = array();
         $tasks = array();
 
-	$runmaxquery = $this->db->query('SELECT max(rid) as maxrun from run');
+  $runmaxquery = $this->db->query('SELECT max(rid) as maxrun from run');
         $runcountquery = $this->db->query('SELECT count(rid) as runcount from run');
         $runmax = intval($runmaxquery[0]->maxrun);
         $runcount = intval($runcountquery[0]->runcount);
@@ -1262,45 +1262,46 @@ class ElasticSearch {
           echo "Processing run ";
         }
         while ($rid < $runmax) {
-            if ($verbosity) {
-              echo str_pad($rid, 9, ' ', STR_PAD_RIGHT);
-            }
-            set_time_limit(600);
-            $runs = null;
-            $runfiles = null;
-            $evals = null;
-            $params['body'] = array();
-            $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, re.error, error_message, run_details FROM run r,run_evaluated re, algorithm_setup s where r.rid=re.run_id and s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
-	    if($runs){
-              $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
-	      $evals = $this->fetch_evaluations($rid, $rid + $incr);
-
-              foreach ($runs as $r) {
-                  try {
-                      $params['body'][] = array(
-                          'index' => array(
-                              '_id' => $r->rid
-                          )
-                      );
-                      $params['body'][] = $this->build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics);
-		    } catch (Exception $e) {
-		      if ($verbosity) {
-		        echo $e->getMessage();
-            return $e->getMessage();
+          if ($verbosity) {
+            echo str_pad($rid, 9, ' ', STR_PAD_RIGHT);
           }
-        }
-        $responses = $this->client->bulk($params);
-        $submitted += sizeof($responses['items']);
-        if ($verbosity) {
-          echo "-  completed ".str_pad($submitted, 9, ' ', STR_PAD_RIGHT);
-	        echo "\033[31D";
-	      }
-	    } else {
-	      echo "\033[9D";
-      }
-      $rid += $incr;
-    }
-  return 'Successfully indexed ' . $submitted . ' out of ' . $runcount . ' runs.';
+          set_time_limit(600);
+          $runs = null;
+          $runfiles = null;
+          $evals = null;
+          $params['body'] = array();
+          $runs = $this->db->query('SELECT rid, uploader, setup, implementation_id, task_id, start_time, re.error, error_message, run_details FROM run r,run_evaluated re, algorithm_setup s where r.rid=re.run_id and s.sid=r.setup and rid>=' . $rid . ' and rid<' . ($rid + $incr));
+          if($runs){
+            $runfiles = $this->fetch_runfiles($rid, $rid + $incr);
+            $evals = $this->fetch_evaluations($rid, $rid + $incr);
+
+            foreach ($runs as $r) {
+              try {
+                $params['body'][] = array(
+                  'index' => array(
+                     '_id' => $r->rid
+                  )
+                );
+              $params['body'][] = $this->build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics);
+              } catch (Exception $e) {
+                if ($verbosity) {
+                  echo $e->getMessage();
+                  return $e->getMessage();
+                }
+              }
+              $responses = $this->client->bulk($params);
+              $submitted += sizeof($responses['items']);
+              if ($verbosity) {
+                echo "-  completed ".str_pad($submitted, 9, ' ', STR_PAD_RIGHT);
+                echo "\033[31D";
+              }
+           } 
+         } elseif($verbosity) {
+           echo "\033[9D";
+         }
+         $rid += $incr;
+       }
+       return 'Successfully indexed ' . $submitted . ' out of ' . $runcount . ' runs.';
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
@@ -1351,7 +1352,7 @@ class ElasticSearch {
         $new_data['impact_of_reuse'] = 0;
         $new_data['reach_of_reuse'] = 0;
         $new_data['impact'] = 0;
-      	if($altmetrics){
+        if($altmetrics){
               $nr_of_downvotes = 0;
               $nr_of_issues = $this->CI->Downvote->getDownvotesByKnowledgePiece('r',$r->rid,1);
               if($nr_of_issues){
@@ -1387,7 +1388,7 @@ class ElasticSearch {
               $new_data['nr_of_downloads'] = $nr_of_downloads;
               $new_data['total_downloads'] = $total_downloads;
               $new_data['reach'] = $reach;
-      	}
+        }
         return $new_data;
     }
 
@@ -1470,13 +1471,13 @@ class ElasticSearch {
         $responses = $this->client->bulk($params);
 
         if($responses['errors'] == True){
-	  foreach ($responses['items'] as $res){
-		if(array_key_exists('error',$res['index'])){
-			$err = $res['index']['error'];
-  		return 'ERROR for ID ' . $res['index']['_id'] . ' : Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
-	  	}
-	  }
-	}
+    foreach ($responses['items'] as $res){
+    if(array_key_exists('error',$res['index'])){
+      $err = $res['index']['error'];
+      return 'ERROR for ID ' . $res['index']['_id'] . ' : Type:' . $err['type'] . ' Reason: ' . $err['reason'] . (array_key_exists('caused_by', $err) ? ' Caused by: ' . $err['caused_by']['reason'] : '');
+      }
+    }
+  }
 
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($flows) . ' flows.';
     }
@@ -1799,7 +1800,7 @@ class ElasticSearch {
                           '_id' => $d->did
                       )
                   );
-		  $valid_ids[] = $d->did;
+      $valid_ids[] = $d->did;
                   $params['body'][] = $this->build_data($d, $altmetrics);
 
                 } catch (Exception $e) {
@@ -1810,20 +1811,20 @@ class ElasticSearch {
               $responses = $this->client->bulk($params);
               $submitted += sizeof($responses['items']);
 
-	      //clean up, just to be sure
+        //clean up, just to be sure
               $params_del['index'] = 'openml';
               $params_del['type'] = 'data';
-	      foreach(array_diff(range($did,$did+$incr-1),$valid_ids) as $delid){
-	          $params_del['id'] = $delid;
-		  try{
-		    $this->client->delete($params_del);
-		  }
-		  catch (Exception $e) {
-		    $result = json_decode($e);
+        foreach(array_diff(range($did,$did+$incr-1),$valid_ids) as $delid){
+            $params_del['id'] = $delid;
+      try{
+        $this->client->delete($params_del);
+      }
+      catch (Exception $e) {
+        $result = json_decode($e);
                     if($result['found']=='true' && $verbosity)
                         echo "deleted_".$delid." ";
                   }
- 	      }
+         }
             }
 
             $did += $incr;
@@ -1906,11 +1907,11 @@ class ElasticSearch {
                     $feat['stdev'] = $f->StandardDeviation;
                 } elseif ($f->data_type == "nominal") {
                     $distr = json_decode($f->ClassDistribution);
-            		    if(is_array($distr))
-            			     $feat['distr'] = $this->array_map_recursive('strval',$distr);
+                    if(is_array($distr))
+                       $feat['distr'] = $this->array_map_recursive('strval',$distr);
                     else
-            			     $feat['distr'] = [];
-            		}
+                       $feat['distr'] = [];
+                }
                 $new_data['features'][] = $feat;
             }
         }
