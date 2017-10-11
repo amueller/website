@@ -2,7 +2,7 @@
   <?php foreach( $features as $feature ): ?>
   <oml:feature>
     <oml:index><?php echo $feature->index; ?></oml:index>
-    <oml:name><?php echo $feature->name; ?></oml:name>
+    <oml:name><?php echo htmlspecialchars($feature->name); ?></oml:name>
     <oml:data_type><?php echo $feature->data_type; ?></oml:data_type>
     <oml:is_target><?php echo $feature->is_target; ?></oml:is_target>
     <oml:is_ignore><?php echo $feature->is_ignore; ?></oml:is_ignore>

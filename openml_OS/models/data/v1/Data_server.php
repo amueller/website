@@ -118,7 +118,7 @@ class Data_server extends CI_Model {
     }
     echo '"' . implode('","', $features) . "\"\n";
     
-    $this->_header_download($file);
+    $this->_header_download($file, 'csv');
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
       if (trim($line[0]) == '%') {
         continue;
@@ -164,11 +164,17 @@ class Data_server extends CI_Model {
     $this->load->view('403');
   }
 
-  private function _header_download($file) {
+  private function _header_download($file, $overwritten_filetype=null) {
     header('Content-Description: File Transfer');
     header('Content-Type: ' . ($file->extension == 'arff' ? 'text/plain' : $file->mime_type));
     header('Content-Length: ' . $file->filesize);
-    header('Content-Disposition: attachment; filename='.basename($file->filename_original));
+    
+    $filename = basename($file->filename_original);
+    if ($overwritten_filetype) {
+      $filename = pathinfo($filename, PATHINFO_FILENAME) . '.' . $overwritten_filetype;
+    }
+    
+    header('Content-Disposition: attachment; filename='.$filename);
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');

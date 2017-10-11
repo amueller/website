@@ -203,7 +203,7 @@ class Api_data extends Api_model {
     
     // overwrite url field
     if ($dataset->file_id != NULL) {
-      $dataset->url = BASE_URL . 'data/v1/download/' . $dataset->file_id . '/' . $dataset->name . '.' . $dataset->format;
+      $dataset->url = BASE_URL . 'data/v1/download/' . $dataset->file_id . '/' . htmlspecialchars($dataset->name) . '.' . strtolower($dataset->format);
     }
     
     $file = $this->File->getById($dataset->file_id);
