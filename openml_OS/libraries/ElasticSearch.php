@@ -844,7 +844,7 @@ class ElasticSearch {
         return $study;
     }
 
-    public function index_task($id, $start_id = 0, $altmetrics=True) {
+    public function index_task($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
         $params['index'] = 'openml';
         $params['type'] = 'task';
 
@@ -857,10 +857,13 @@ class ElasticSearch {
         $task_id = max($taskmin, $start_id);
         $submitted = 0;
         $incr = min(50, $taskcount);
-	echo "Processing task          ";
+        if ($verbosity)
+          echo "Processing task          ";
         while ($task_id <= $taskmax) {
-            echo "\033[9D";
-            echo str_pad($task_id, 9, ' ', STR_PAD_RIGHT);
+            if ($verbosity) {
+              echo "\033[9D";
+              echo str_pad($task_id, 9, ' ', STR_PAD_RIGHT);
+            }
             $tasks = null;
             $params['body'] = array();
             $tasks = $this->db->query('select a.*, b.runs from (SELECT t.task_id, tt.ttid, tt.name, t.creation_date, t.creator FROM task t, task_type tt where t.ttid=tt.ttid and task_id>=' . $task_id . ' and task_id<' . ($task_id + $incr) . ') as a left outer join (select task_id, count(rid) as runs from run r group by task_id) as b on a.task_id=b.task_id');
@@ -1237,7 +1240,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['_id']) . ' run(s).';
     }
 
-    public function index_run($id, $start_id = 0, $altmetrics=True) {
+    public function index_run($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
         if ($id)
             return $this->index_single_run($id);
 
@@ -1255,9 +1258,13 @@ class ElasticSearch {
         $rid = $start_id;
         $submitted = 0;
         $incr = 5;
-        echo "Processing run ";
+        if ($verbosity) {
+          echo "Processing run ";
+        }
         while ($rid < $runmax) {
-            echo str_pad($rid, 9, ' ', STR_PAD_RIGHT);
+            if ($verbosity) {
+              echo str_pad($rid, 9, ' ', STR_PAD_RIGHT);
+            }
             set_time_limit(600);
             $runs = null;
             $runfiles = null;
@@ -1277,21 +1284,23 @@ class ElasticSearch {
                       );
                       $params['body'][] = $this->build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics);
 		    } catch (Exception $e) {
-		      echo $e->getMessage();
-                      return $e->getMessage();
-                  }
-              }
-              $responses = $this->client->bulk($params);
-              $submitted += sizeof($responses['items']);
-              echo "-  completed ".str_pad($submitted, 9, ' ', STR_PAD_RIGHT);
-	      echo "\033[31D";
-	    }
-            else{
-	      echo "\033[9D";
-            }
-            $rid += $incr;
+		      if ($verbosity) {
+		        echo $e->getMessage();
+            return $e->getMessage();
+          }
         }
-        return 'Successfully indexed ' . $submitted . ' out of ' . $runcount . ' runs.';
+        $responses = $this->client->bulk($params);
+        $submitted += sizeof($responses['items']);
+        if ($verbosity) {
+          echo "-  completed ".str_pad($submitted, 9, ' ', STR_PAD_RIGHT);
+	        echo "\033[31D";
+	      }
+	    } else {
+	      echo "\033[9D";
+      }
+      $rid += $incr;
+    }
+  return 'Successfully indexed ' . $submitted . ' out of ' . $runcount . ' runs.';
     }
 
     private function build_run($r, $setups, $tasks, $runfiles, $evals, $altmetrics=True) {
@@ -1755,7 +1764,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($datasets) . ' datasets.';
     }
 
-    public function index_data($id, $start_id = 0, $altmetrics=True) {
+    public function index_data($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
         if ($id)
             return $this->index_single_dataset($id);
 
@@ -1770,9 +1779,13 @@ class ElasticSearch {
         $did = $start_id;
         $submitted = 0;
         $incr = 100;
-        echo "Processing dataset ";
+        if ($verbosity) {
+          echo "Processing dataset ";
+        }
         while ($did < $datamax) {
-            echo $did." ";
+            if ($verbosity) {
+              echo $did." ";
+            }
             set_time_limit(600);
             $datasets = null;
             $params['body'] = array();
@@ -1807,7 +1820,7 @@ class ElasticSearch {
 		  }
 		  catch (Exception $e) {
 		    $result = json_decode($e);
-                    if($result['found']=='true')
+                    if($result['found']=='true' && $verbosity)
                         echo "deleted_".$delid." ";
                   }
  	      }
