@@ -130,7 +130,7 @@ function ARFFcheck($filepath, $numLines = 100)
 						fclose($filehandle);
 						return "unsupported attribute type: " . $s . " (l.".$lineNumber.")";
 					}
-					array_push($featureType, s);
+					array_push($featureType, $s);
 				}
 			} else {
 				fclose($filehandle);
