@@ -894,7 +894,7 @@ class Api_data extends Api_model {
                ' GROUP BY q.data HAVING numQualities = ' . count($requiredMetafeatures) . ') as `qualityCount` ' .
              ' ON d.did = qualityCount.data '.
              ' WHERE qualityCount.data IS NULL ' .
-             ' AND d.did = p.did AND p.evaluation_engine_id = 1' // . $evaluation_engine_id . TODO: hardcoded value, please fix me 
+             ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me 
              ' AND p.error IS NULL ' .
              ' ORDER BY ' . $tagSort . ' d.did ';
     } else {
@@ -906,7 +906,7 @@ class Api_data extends Api_model {
                ' GROUP BY q.data HAVING numQualities = max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `qualityCount`' .
              ' ON d.did = qualityCount.data ' . 
              ' WHERE qualityCount.data IS NULL ' . 
-             ' AND d.did = p.did AND p.evaluation_engine_id = 1' //. $evaluation_engine_id . TODO: hardcoded value, please fix me
+             ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me
              ' AND p.error IS NULL ' . 
              ' ORDER BY ' . $tagSort . ' d.did ';
     }
