@@ -748,7 +748,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $data_processed = $this->Data_processed->getById(array(0 => $did, 1 => $eval_id));
+    $data_processed = $this->Data_processed->getById(array(0 => $did, 1 => 1)); # TODO: hardcoded default eval engine
     if ($data_processed == false) {
       $this->returnError(384, $this->version);
       return;
