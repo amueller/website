@@ -11,16 +11,6 @@
    "upload_time":"<?php echo $r->start_time; ?>",
    "error_message":"<?php echo $r->error_message; ?>",
    "run_details":"<?php echo $r->run_details; ?>"
-	 <?php if($r->tags): ?>
-	 ,"tags": [
-		 <?php $first_t = TRUE;
-					 foreach(explode(',', $r->tags) as $tag):
-					 echo ($first_t ? "" : ",");
-					 $first_t = FALSE; ?>
-		 "<?php echo $tag;?>"
-	 <?php endforeach; ?>
-	 ]
- 	 <?php endif; ?>
   }
   <?php endforeach; ?>
   ]}
