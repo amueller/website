@@ -661,9 +661,9 @@ class Api_data extends Api_model {
       if( $interval_size !== false && is_numeric( $interval_size ) ) {
         $interval_constraints .= ' AND `interval_end` - `interval_start` = ' . $interval_size;
       }
-      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" ' . $interval_constraints );
+      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" ' . $interval_constraints . ' AND evaluation_engine_id = ' . evaluation_engine_id );
     } else {
-      $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
+      $dataset->qualities = $this->Data_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . evaluation_engine_id);
     }
 
     if( $dataset->qualities === false ) {
@@ -697,8 +697,11 @@ class Api_data extends Api_model {
       $this->returnError( 632, $this->version ); // Add special error code for this case?
       return;
     }
-
-    if( $dataset->processed == NULL) {
+    
+    
+    $data_processed = $this->Data_processed->getById(array(0 => $data_id, 1 => $evaluation_engine_id));
+    
+    if($data_processed === false) {
       $this->returnError( 634, $this->version );
       return;
     }
