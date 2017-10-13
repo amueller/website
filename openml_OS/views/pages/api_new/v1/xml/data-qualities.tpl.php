@@ -5,7 +5,7 @@
   
   <oml:quality <?php echo $start . $end; ?> >
     <oml:name><?php echo $quality->quality; ?></oml:name>
-    <oml:value><?php echo $quality->value; ?></oml:value>
+    <?php if $quality->value != null): ?><oml:value><?php echo $quality->value; ?></oml:value><?php endif; ?>
   </oml:quality>
   <?php endforeach; ?>
 </oml:data_qualities>
