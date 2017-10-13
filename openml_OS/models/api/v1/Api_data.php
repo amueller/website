@@ -80,6 +80,9 @@ class Api_data extends Api_model {
     if (count($segments) == 2 && $segments[0] == 'qualities' && is_numeric($segments[1]) && in_array($request_type, $getpost)) {
       $this->data_qualities($segments[1]);
       return;
+    } elseif(count($segments) == 3 && $segments[0] == 'qualities' && is_numeric($segments[1]) && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
+      $this->data_qualities($segments[1], $segments[2]);
+      return;
     }
     
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
@@ -89,6 +92,9 @@ class Api_data extends Api_model {
     
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
       $this->feature_qualities($segments[2]);
+      return;
+    } elseif (count($segments) == 4 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && is_numeric($segments[3]) && in_array($request_type, $getpost)) {
+      $this->feature_qualities($segments[2], $segments[3]);
       return;
     }
 
@@ -676,7 +682,7 @@ class Api_data extends Api_model {
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
   
-  private function feature_qualities($data_id) {
+  private function feature_qualities($data_id, $evaluation_engine_id = 1) {
     if( $data_id == false ) {
       $this->returnError( 631, $this->version );
       return;
@@ -702,7 +708,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $dataset->feature_qualities = $this->Feature_quality->getWhere( 'data = "' . $dataset->did . '"' );
+    $dataset->feature_qualities = $this->Feature_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . $evaluation_engine_id);
 
     if( $dataset->feature_qualities === false ) {
       $this->returnError( 633, $this->version );
