@@ -780,6 +780,11 @@ class Api_data extends Api_model {
       $newQualities[] = $quality;
     }
     
+    if (count($newQualities) == 0) {
+      $this->returnError(385, $this->version);
+      return;
+    }
+    
     $success = true;
     $this->db->trans_start();
     foreach ($newQualities as $index => $quality) {
