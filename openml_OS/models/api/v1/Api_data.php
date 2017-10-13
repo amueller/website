@@ -796,7 +796,7 @@ class Api_data extends Api_model {
           'interval_start' => $quality->interval_start,
           'interval_end' => $quality->interval_end);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
-        $this->Data_quality_interval->insert_ignore($data);
+        $result = $this->Data_quality_interval->insert_ignore($data);
       } elseif (property_exists($quality, 'feature_index')) {
         $data = array(
           'data' => $did,
@@ -804,14 +804,14 @@ class Api_data extends Api_model {
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
-        $this->Feature_quality->insert_ignore($data);
+        $result = $this->Feature_quality->insert_ignore($data);
       } else {
         $data = array(
           'data' => $did,
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
-        $this->Data_quality->insert_ignore($data);
+        $result = $this->Data_quality->insert_ignore($data);
       }
     }
     $this->db->trans_complete();
