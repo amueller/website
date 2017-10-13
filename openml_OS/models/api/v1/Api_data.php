@@ -786,7 +786,19 @@ class Api_data extends Api_model {
     }
     
     $success = true;
+    
+    $data = array('did' => $did,
+                  'evaluation_engine_id' => $eval_id,
+                  'user_id' => $this->user_id,
+                  'processing_date' => now());
+    if($xml->children('oml', true)->{'error'}) {
+      $data['error'] = htmlentities($xml->children('oml', true)->{'error'});
+    }
+
     $this->db->trans_start();
+    
+    $success = $this->Data_processed->insert_ignore($data);
+    
     foreach ($newQualities as $index => $quality) {
       if (property_exists($quality, 'interval_start')) {
         $data = array(
