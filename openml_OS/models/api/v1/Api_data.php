@@ -785,7 +785,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $success = true;
+    $success = true; // TODO: something with this
     
     $data = array('did' => $did,
                   'evaluation_engine_id' => $eval_id,
@@ -797,7 +797,7 @@ class Api_data extends Api_model {
 
     $this->db->trans_start();
     
-    $success = $this->Data_processed->insert_ignore($data);
+    $result = $this->Data_processed->insert_ignore($data);
     
     foreach ($newQualities as $index => $quality) {
       if (property_exists($quality, 'interval_start')) {
