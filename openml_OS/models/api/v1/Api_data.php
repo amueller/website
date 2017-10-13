@@ -663,7 +663,7 @@ class Api_data extends Api_model {
       }
       $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" ' . $interval_constraints . ' AND evaluation_engine_id = ' . evaluation_engine_id );
     } else {
-      $dataset->qualities = $this->Data_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . evaluation_engine_id);
+      $dataset->qualities = $this->Data_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . $evaluation_engine_id);
     }
 
     if( $dataset->qualities === false ) {
