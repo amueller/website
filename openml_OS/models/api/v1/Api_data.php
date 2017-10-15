@@ -80,6 +80,9 @@ class Api_data extends Api_model {
     if (count($segments) == 2 && $segments[0] == 'qualities' && is_numeric($segments[1]) && in_array($request_type, $getpost)) {
       $this->data_qualities($segments[1]);
       return;
+    } elseif(count($segments) == 3 && $segments[0] == 'qualities' && is_numeric($segments[1]) && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
+      $this->data_qualities($segments[1], $segments[2]);
+      return;
     }
     
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
@@ -89,6 +92,9 @@ class Api_data extends Api_model {
     
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
       $this->feature_qualities($segments[2]);
+      return;
+    } elseif (count($segments) == 4 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && is_numeric($segments[3]) && in_array($request_type, $getpost)) {
+      $this->feature_qualities($segments[2], $segments[3]);
       return;
     }
 
@@ -112,7 +118,7 @@ class Api_data extends Api_model {
   }
 
   private function data_list($segs) {
-    $legal_filters = array('tag', 'status', 'limit', 'offset', 'data_name', 'number_instances', 'number_features', 'number_classes', 'number_missing_values');
+    $legal_filters = array('tag', 'status', 'limit', 'offset', 'data_name', 'data_version', 'number_instances', 'number_features', 'number_classes', 'number_missing_values');
     $query_string = array();
     for ($i = 0; $i < count($segs); $i += 2) {
       $query_string[$segs[$i]] = urldecode($segs[$i+1]);
@@ -123,6 +129,7 @@ class Api_data extends Api_model {
     }
     $tag = element('tag',$query_string);
     $name = element('data_name',$query_string);
+    $version = element('data_version',$query_string);
     $status = element('status',$query_string);
     $limit = element('limit',$query_string);
     $offset = element('offset',$query_string);
@@ -131,20 +138,21 @@ class Api_data extends Api_model {
     $nr_class = element('number_classes',$query_string);
     $nr_miss = element('number_missing_values',$query_string);
 
-    if (!(is_safe($tag) && is_safe($limit) && is_safe($offset) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
-      $this->returnError(371, $this->version );
+    if (!(is_safe($tag) && is_safe($version) && is_safe($limit) && is_safe($offset) && is_safe($nr_insts) && is_safe($nr_feats) && is_safe($nr_class) && is_safe($nr_miss))) {
+      $this->returnError(371, $this->version);
       return;
     }
 
     $where_tag = $tag == false ? '' : ' AND `did` IN (select id from dataset_tag where tag="' . $tag . '") ';
     $where_name = $name == false ? '' : ' AND `name` = "' . $name . '"';
+    $where_version = $version == false ? '' : ' AND `version` = "' . $version . '" ';
     $where_insts = $nr_insts == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfInstances" and value ' . (strpos($nr_insts, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_insts) : '= '. $nr_insts) . ') ';
     $where_feats = $nr_feats == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfFeatures" and value ' . (strpos($nr_feats, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_feats) : '= '. $nr_feats) . ') ';
     $where_class = $nr_class == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfClasses" and value ' . (strpos($nr_class, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_class) : '= '. $nr_class) . ') ';
     $where_miss = $nr_miss == false ? '' : ' AND `did` IN (select data from data_quality dq where quality="NumberOfMissingValues" and value ' . (strpos($nr_miss, '..') !== false ? 'BETWEEN ' . str_replace('..',' AND ',$nr_miss) : '= '. $nr_miss) . ') ';
     // by default, only return active datasets
     $where_status = $status == false ? ' AND status = "active" ' : ' AND status = "'. $status . '" ';
-    $where_total = $where_tag . $where_name . $where_insts . $where_feats . $where_class . $where_miss . $where_status;
+    $where_total = $where_tag . $where_name . $where_version . $where_insts . $where_feats . $where_class . $where_miss . $where_status;
     $where_limit = $limit == false ? '' : ' LIMIT ' . $limit;
     if($limit != false && $offset != false){
       $where_limit =  ' LIMIT ' . $offset . ',' . $limit;
@@ -655,9 +663,9 @@ class Api_data extends Api_model {
       if( $interval_size !== false && is_numeric( $interval_size ) ) {
         $interval_constraints .= ' AND `interval_end` - `interval_start` = ' . $interval_size;
       }
-      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" ' . $interval_constraints );
+      $dataset->qualities = $this->Data_quality_interval->getWhere( 'data = "' . $dataset->did . '" ' . $interval_constraints . ' AND evaluation_engine_id = ' . evaluation_engine_id );
     } else {
-      $dataset->qualities = $this->Data_quality->getWhere( 'data = "' . $dataset->did . '"' );
+      $dataset->qualities = $this->Data_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . $evaluation_engine_id);
     }
 
     if( $dataset->qualities === false ) {
@@ -676,7 +684,7 @@ class Api_data extends Api_model {
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
   
-  private function feature_qualities($data_id) {
+  private function feature_qualities($data_id, $evaluation_engine_id = 1) {
     if( $data_id == false ) {
       $this->returnError( 631, $this->version );
       return;
@@ -691,8 +699,11 @@ class Api_data extends Api_model {
       $this->returnError( 632, $this->version ); // Add special error code for this case?
       return;
     }
-
-    if( $dataset->processed == NULL) {
+    
+    
+    $data_processed = $this->Data_processed->getById(array(0 => $data_id, 1 => $evaluation_engine_id));
+    
+    if($data_processed === false) {
       $this->returnError( 634, $this->version );
       return;
     }
@@ -702,7 +713,7 @@ class Api_data extends Api_model {
       return;
     }
     
-    $dataset->feature_qualities = $this->Feature_quality->getWhere( 'data = "' . $dataset->did . '"' );
+    $dataset->feature_qualities = $this->Feature_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . $evaluation_engine_id);
 
     if( $dataset->feature_qualities === false ) {
       $this->returnError( 633, $this->version );
@@ -780,8 +791,25 @@ class Api_data extends Api_model {
       $newQualities[] = $quality;
     }
     
-    $success = true;
+    if (count($newQualities) == 0) {
+      $this->returnError(385, $this->version);
+      return;
+    }
+    
+    $success = true; // TODO: something with this
+    
+    $data = array('did' => $did,
+                  'evaluation_engine_id' => $eval_id,
+                  'user_id' => $this->user_id,
+                  'processing_date' => now());
+    if($xml->children('oml', true)->{'error'}) {
+      $data['error'] = htmlentities($xml->children('oml', true)->{'error'});
+    }
+
     $this->db->trans_start();
+    
+    $result = $this->Data_processed->insert_ignore($data);
+    
     foreach ($newQualities as $index => $quality) {
       if (property_exists($quality, 'interval_start')) {
         $data = array(
@@ -791,7 +819,7 @@ class Api_data extends Api_model {
           'interval_start' => $quality->interval_start,
           'interval_end' => $quality->interval_end);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
-        $this->Data_quality_interval->insert_ignore($data);
+        $result = $this->Data_quality_interval->insert_ignore($data);
       } elseif (property_exists($quality, 'feature_index')) {
         $data = array(
           'data' => $did,
@@ -799,14 +827,14 @@ class Api_data extends Api_model {
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
-        $this->Feature_quality->insert_ignore($data);
+        $result = $this->Feature_quality->insert_ignore($data);
       } else {
         $data = array(
           'data' => $did,
           'quality' => $quality->name,
           'evaluation_engine_id' => $eval_id);
         if (property_exists($quality, 'value')) { $data['value'] = $quality->value; }
-        $this->Data_quality->insert_ignore($data);
+        $result = $this->Data_quality->insert_ignore($data);
       }
     }
     $this->db->trans_complete();
