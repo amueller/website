@@ -14,25 +14,25 @@ class Data_server extends CI_Model {
 
     $this->load->Library('ion_auth');
   }
-  
-  
+
+
   function download($id, $name = 'undefined') {
     $file = $this->File->getById($id);
     if (!$file) {
       $this->_error404();
       return;
     }
-    
+
     if (!$this->_check_rights($file)) {
       $this->_error403();
       return;
     }
-      
+
     if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
       $this->_error404();
       return;
     }
-    
+
     // in case of externally linked file, handle alternativelly
     if ($file->{'type'} == 'url') {
       header('Location: ' . $file->filepath);
@@ -47,17 +47,17 @@ class Data_server extends CI_Model {
     if ($file === false) {
       $this->_error404();
     }
-    
+
     if (!$this->_check_rights($file)) {
       $this->_error403();
       return;
     }
-  
+
     if (!file_exists(DATA_PATH . $file->filepath) && $file->type != 'url') {
       $this->_error404();
       return;
     }
-    
+
     // in case of externally linked file, handle alternativelly
     if ($file->{'type'} == 'url') {
       header('Location: ' . $file->filepath);
@@ -67,30 +67,30 @@ class Data_server extends CI_Model {
       readfile(DATA_PATH . $file->filepath);
     }
   }
-  
+
   function get_csv($id, $name='undefined') {
-    # TODO: caching mechanism to 
+    # TODO: caching mechanism to
     $file = $this->File->getById($id);
-    
+
     # check file rights
     if (!$this->_check_rights($file)) {
       $this->_error403();
       return;
     }
-    
+
     # file does not exist, or is no valid arff
     if (!$file || strtolower($file->extension) != 'arff') {
       # TODO: think of more meaningfull error
       $this->_error404();
       return;
-    } 
-    
+    }
+
     // in case of externally linked file, handle alternativelly
     $location = DATA_PATH . $file->filepath;
     if ($file->type == 'url') {
       $location = $file->filepath;
     }
-    
+
     $handle = fopen($location, 'r');
     $position = -1;
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
@@ -100,15 +100,15 @@ class Data_server extends CI_Model {
         break;
       }
     }
-    
-    if ($position < 0) { # apparently we didn't find '@data' 
+
+    if ($position < 0) { # apparently we didn't find '@data'
       # TODO: more meaningfull error
       $this->_error404();
       return;
     }
-    
+
     $dataset = $this->Dataset->getWhereSingle('file_id = ' . $id);
-    
+
     // obtain header
     $features = $this->Data_feature->getColumnWhere('name', 'did = "' . $dataset->did . '"', 'index ASC');
     if ($features < 2) {
@@ -117,7 +117,7 @@ class Data_server extends CI_Model {
       return;
     }
     echo '"' . implode('","', $features) . "\"\n";
-    
+
     $this->_header_download($file, 'csv');
     for ($i = 0; ($line = fgets($handle)) !== false; ++$i) {
       if (trim($line[0]) == '%') {
@@ -168,12 +168,13 @@ class Data_server extends CI_Model {
     header('Content-Description: File Transfer');
     header('Content-Type: ' . ($file->extension == 'arff' ? 'text/plain' : $file->mime_type));
     header('Content-Length: ' . $file->filesize);
-    
+    header('Accept-Encoding: gzip,deflate');
+
     $filename = basename($file->filename_original);
     if ($overwritten_filetype) {
       $filename = pathinfo($filename, PATHINFO_FILENAME) . '.' . $overwritten_filetype;
     }
-    
+
     header('Content-Disposition: attachment; filename='.$filename);
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
