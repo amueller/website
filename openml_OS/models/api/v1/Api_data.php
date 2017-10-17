@@ -20,7 +20,7 @@ class Api_data extends Api_model {
 
     $this->load->helper('file_upload');
     $this->db = $this->Database_singleton->getReadConnection();
-    
+
     $this->legal_formats = array('arff', 'sparse_arff');
   }
 
@@ -39,13 +39,13 @@ class Api_data extends Api_model {
       $this->data($segments[0]);
       return;
     }
-    
+
     $order_values = array('random', 'normal');
     if (count($segments) == 3 && $segments[0] == 'unprocessed' && is_numeric($segments[1]) && in_array($segments[2], $order_values)) {
       $this->data_unprocessed($segments[1], $segments[2]);
       return;
     }
-    
+
     if (count($segments) >= 4 && $segments[0] == 'qualities' && $segments[1] == 'unprocessed' && is_numeric($segments[2]) && in_array($segments[3], $order_values)) {
       $feature = (count($segments) > 4 && $segments[4] == 'feature');
       $this->dataqualities_unprocessed($segments[2], $segments[3], $feature);
@@ -84,12 +84,12 @@ class Api_data extends Api_model {
       $this->data_qualities($segments[1], $segments[2]);
       return;
     }
-    
+
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && $segments[2] == 'list' && in_array($request_type, $getpost)) {
       $this->feature_qualities_list($segments[2]);
       return;
     }
-    
+
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
       $this->feature_qualities($segments[2]);
       return;
@@ -177,10 +177,10 @@ class Api_data extends Api_model {
       $dataset->qualities = array();
       $datasets[$dataset->did] = $dataset;
     }
-    
+
     # JvR: This is a BAD idea and this will break in the future, when OpenML grows.
     $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") AND value IS NOT NULL ORDER BY `data`');
-    
+
     if ($dq != false) {
       foreach( $dq as $quality ) {
         $datasets[$quality->data]->qualities[$quality->quality] = $quality->value;
@@ -208,20 +208,20 @@ class Api_data extends Api_model {
       $this->returnError( 112, $this->version );
       return;
     }
-    
+
     // overwrite url field
     if ($dataset->file_id != NULL) {
       $dataset->url = BASE_URL . 'data/v1/download/' . $dataset->file_id . '/' . htmlspecialchars($dataset->name) . '.' . strtolower($dataset->format);
     }
-    
+
     $file = $this->File->getById($dataset->file_id);
     if (!$file) {
       $this->returnError(113, $this->version);
       return;
     }
-    
+
     $dataset->md5_checksum = $file->md5_hash;
-    
+
     $tags = $this->Dataset_tag->getColumnWhere('tag', 'id = ' . $dataset->did);
     $dataset->tag = $tags != false ? '"' . implode( '","', $tags ) . '"' : array();
 
@@ -268,14 +268,14 @@ class Api_data extends Api_model {
       $this->returnError( 355, $this->version );
       return;
     }
-    
+
     try {
       $this->elasticsearch->delete('data', $data_id);
     } catch (Exception $e) {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
-    
+
     $this->xmlContents( 'data-delete', $this->version, array( 'dataset' => $dataset ) );
   }
 
@@ -306,24 +306,24 @@ class Api_data extends Api_model {
         return;
       }
       $xml = simplexml_load_file($description['tmp_name']);
-    } else { 
+    } else {
       $this->returnError(135, $this->version);
       return;
     }
-    
+
     $format = strtolower($xml->children('oml', 'true')->format);
     if (!in_array($format, $this->legal_formats)) {
       $this->returnError(133, $this->version);
       return;
     }
-    
+
     // determine level of access control
     $access_control = 'public';
     $access_control_option = $xml->children('oml', true)->{'visibility'};
     if ($access_control_option != false) {
       $access_control = $access_control_option;
     }
-    
+
     // obtain some other fields
     $name = '' . $xml->children('oml', true)->{'name'};
     $version = $this->Dataset->incrementVersionNumber($name);
@@ -334,7 +334,7 @@ class Api_data extends Api_model {
     $datasetFileProvided = isset($_FILES['dataset']);
     if ($datasetUrlProvided && $datasetFileProvided) {
       $this->returnError(140, $this->version);
-      
+
       return;
     } elseif($datasetFileProvided) {
       $message = '';
@@ -342,13 +342,13 @@ class Api_data extends Api_model {
         $this->returnError(130, $this->version, $this->openmlGeneralErrorCode, 'File dataset: ' . $message);
         return;
       }
-      
+
       $uploadedFileCheck = ARFFcheck($_FILES['dataset']['tmp_name'], 1000);
       if ($uploadedFileCheck !== true) {
         $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset file: ' . $uploadedFileCheck);
         return;
       }
-      
+
       $file_id = $this->File->register_uploaded_file($_FILES['dataset'], $this->data_folders['dataset'], $this->user_id, 'dataset', $access_control);
       if ($file_id === false) {
         $this->returnError(132, $this->version);
@@ -359,19 +359,19 @@ class Api_data extends Api_model {
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } elseif ($datasetUrlProvided) {
       $destinationUrl = '' . $xml->children('oml', true)->url;
-      
+
       $uploadedFileCheck = ARFFcheck($destinationUrl, 1000);
       if ($uploadedFileCheck !== true) {
         $this->returnError(145, $this->version, $this->openmlGeneralErrorCode, 'Arff error in dataset url: ' . $uploadedFileCheck);
         return;
       }
-      
+
       $file_id = $this->File->register_url($destinationUrl, $name . '.arff', 'arff', $this->user_id, $access_control);
       if ($file_id === false) {
         $this->returnError(136, $this->version);
         return;
       }
-      
+
       $file_record = $this->File->getById($file_id);
       $destinationUrl = $this->data_controller . 'download/' . $file_id . '/' . $file_record->filename_original;
     } else {
@@ -411,25 +411,25 @@ class Api_data extends Api_model {
       $this->returnError(134, $this->version);
       return;
     }
-    
-    // try making the ES stuff
-    try {
-      // update elastic search index.
-      $this->elasticsearch->index('data', $id);
-    
-      // update counters
-      $this->elasticsearch->index('user', $this->user_id);
-    } catch (Exception $e) {
-      // TODO: should log
-    }
-  
+
     // insert tags.
     foreach ($tags as $tag) {
       $success = $this->entity_tag_untag('dataset', $id, $tag, false, 'data', true);
       // if tagging went wrong, an error is displayed. (TODO: something else?)
       if (!$success) return;
     }
-    
+
+    // try making the ES stuff
+    try {
+      // update elastic search index.
+      $this->elasticsearch->index('data', $id);
+
+      // update counters
+      $this->elasticsearch->index('user', $this->user_id);
+    } catch (Exception $e) {
+      // TODO: should log
+    }
+
     // create initial wiki page
     $this->wiki->export_to_wiki($id);
 
@@ -453,14 +453,14 @@ class Api_data extends Api_model {
       $this->returnError(271, $this->version); // Add special error code for this case?
       return;
     }
-    
+
     $data_processed = $this->Data_processed->getById(array($data_id, 1));
-    
+
     if ($data_processed == false) {
       $this->returnError(273, $this->version);
       return;
     }
-    
+
     // TODO: think of better policy
     //if ($data_processed->error) {
     //  $this->returnError(274, $this->version);
@@ -490,7 +490,7 @@ class Api_data extends Api_model {
       $this->returnError(106, $this->version);
       return;
     }
-    
+
     // get correct description
     if (isset($_FILES['description']) == false || check_uploaded_file($_FILES['description']) == false) {
       $this->returnError( 432, $this->version );
@@ -507,7 +507,7 @@ class Api_data extends Api_model {
     $xml = simplexml_load_file($description['tmp_name']);
     $did = ''. $xml->children('oml', true)->{'did'};
     $eval_id = ''.$xml->children('oml', true)->{'evaluation_engine_id'};
-    
+
     if (!is_numeric($did) || !is_numeric($eval_id) || $did <= 0 || $eval_id <= 0) {
       $this->returnError( 436, $this->version );
       return;
@@ -518,12 +518,12 @@ class Api_data extends Api_model {
       $this->returnError(434, $this->version);
       return;
     }
-    
+
     if ($this->Data_processed->getWhere('did = ' . $did . ' AND evaluation_engine_id = ' . $eval_id)) {
       $this->returnError(431, $this->version);
       return;
     }
-    
+
     // prepare array for updating data object
     $data = array('did' => $did,
                   'evaluation_engine_id' => $eval_id,
@@ -534,7 +534,7 @@ class Api_data extends Api_model {
     }
 
     $this->db->trans_start();
-    
+
     $success = $this->Data_processed->insert($data);
     if (!$success) {
       $this->returnError(435, $this->version);
@@ -601,8 +601,8 @@ class Api_data extends Api_model {
     }
     $this->xmlContents( 'data-qualities-list', $this->version, array( 'qualities' => $qualities ) );
   }
-  
-  
+
+
   private function feature_qualities_list() {
     $result = $this->Quality->allFeatureQualitiesUsed( );
     $feature_qualities = array();
@@ -633,7 +633,7 @@ class Api_data extends Api_model {
       $this->returnError( 361, $this->version ); // Add special error code for this case?
       return;
     }
-    
+
     $data_processed = $this->Data_processed->getById(array(0 => $data_id, 1 => $evaluation_engine_id));
 
     if (!$data_processed) {
@@ -683,7 +683,7 @@ class Api_data extends Api_model {
 
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
-  
+
   private function feature_qualities($data_id, $evaluation_engine_id = 1) {
     if( $data_id == false ) {
       $this->returnError( 631, $this->version );
@@ -699,10 +699,10 @@ class Api_data extends Api_model {
       $this->returnError( 632, $this->version ); // Add special error code for this case?
       return;
     }
-    
-    
+
+
     $data_processed = $this->Data_processed->getById(array(0 => $data_id, 1 => $evaluation_engine_id));
-    
+
     if($data_processed === false) {
       $this->returnError( 634, $this->version );
       return;
@@ -712,7 +712,7 @@ class Api_data extends Api_model {
       $this->returnError( 635, $this->version );
       return;
     }
-    
+
     $dataset->feature_qualities = $this->Feature_quality->getWhere('data = "' . $dataset->did . '" AND evaluation_engine_id = ' . $evaluation_engine_id);
 
     if( $dataset->feature_qualities === false ) {
@@ -736,7 +736,7 @@ class Api_data extends Api_model {
       $this->returnError(106, $this->version);
       return;
     }
-    
+
     // get correct description
     if (isset($_FILES['description']) == false || check_uploaded_file($_FILES['description']) == false) {
       $this->returnError(382, $this->version);
@@ -753,12 +753,12 @@ class Api_data extends Api_model {
     $xml = simplexml_load_file($description['tmp_name']);
     $did = ''. $xml->children('oml', true)->{'did'};
     $eval_id = ''.$xml->children('oml', true)->{'evaluation_engine_id'};
-    
+
     if (!is_numeric($did) || !is_numeric($eval_id) || $did <= 0 || $eval_id <= 0) {
       $this->returnError( 381, $this->version );
       return;
     }
-    
+
     $data_processed = $this->Data_processed->getById(array(0 => $did, 1 => 1)); # TODO: hardcoded default eval engine
     if ($data_processed == false) {
       $this->returnError(384, $this->version);
@@ -768,14 +768,14 @@ class Api_data extends Api_model {
 
     $all_data_qualities = $this->Quality->getColumnWhere('name', '`type` = "DataQuality"');
     $all_feature_qualities = $this->Quality->getColumnWhere('name', '`type` = "FeatureQuality"');
-    
+
     // check and collect the qualities
     $newQualities = array();
     foreach ($xml->children('oml', true)->{'quality'} as $q) {
       $quality = xml2object($q, true);
-      
+
       if (property_exists($quality, 'feature_index')) {
-        // check if valid feature quality          
+        // check if valid feature quality
         if (is_array($all_feature_qualities) == false || in_array($quality->name, $all_feature_qualities) == false) {
           $this->returnError(387, $this->version, $this->openmlGeneralErrorCode, 'Feature Quality: ' . $quality->name . '. Legal Feature Qualities: ' . implode(', ', $all_feature_qualities));
           return;
@@ -787,17 +787,17 @@ class Api_data extends Api_model {
           return;
         }
       }
-      
+
       $newQualities[] = $quality;
     }
-    
+
     if (count($newQualities) == 0) {
       $this->returnError(385, $this->version);
       return;
     }
-    
+
     $success = true; // TODO: something with this
-    
+
     $data = array('did' => $did,
                   'evaluation_engine_id' => $eval_id,
                   'user_id' => $this->user_id,
@@ -807,9 +807,9 @@ class Api_data extends Api_model {
     }
 
     $this->db->trans_start();
-    
+
     $result = $this->Data_processed->insert_ignore($data);
-    
+
     foreach ($newQualities as $index => $quality) {
       if (property_exists($quality, 'interval_start')) {
         $data = array(
@@ -846,7 +846,7 @@ class Api_data extends Api_model {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, get_class() . '.' . __FUNCTION__ . ':' . $e->getMessage());
       return;
     }
-    
+
     if ($success) {
       $this->xmlContents('data-qualities-upload', $this->version, array('did' => $did));
     } else {
@@ -854,25 +854,25 @@ class Api_data extends Api_model {
       return;
     }
   }
-  
+
   private function data_unprocessed($evaluation_engine_id, $order) {
-    
+
     $this->db->select('d.*')->from('dataset d');
     $this->db->join('data_processed p', 'd.did = p.did AND evaluation_engine_id = ' . $evaluation_engine_id, 'left');
     $this->db->where('p.did IS NULL');
-    
+
     $randomcount = 200;
     if ($order == 'random') {
       $this->db->limit($randomcount);
     } else {
       $this->db->limit('1');
     }
-    
+
     // Reverse order if needed (slower query)
     if ($order == 'reverse') {
       $this->db->order_by('d.did DESC');
     }
-    
+
     $data = $this->db->get();
     if ($data && $data->num_rows() > 0){
       if ($order == 'random'){
@@ -885,26 +885,26 @@ class Api_data extends Api_model {
       $this->returnError(681, $this->version);
       return;
     }
-    
+
     $this->xmlContents('data-unprocessed', $this->version, array('res' => $result));
   }
-  
+
   private function dataqualities_unprocessed($evaluation_engine_id, $order, $feature_attributes = false, $priorityTag = null) {
     $requiredMetafeatures = explode(',', $this->input->get_post('qualities')); // TODO: remove get
     if (count($requiredMetafeatures) < 2) {
       $this->returnError(686, $this->version);
       return;
     }
-    
+
     $type = $feature_attributes ? 'FeatureQuality' : 'DataQuality';
     $legal_qualities = $this->Quality->getColumnWhere('name', 'type = "' . $type . '"');
     $illegal_qualities = array_diff($requiredMetafeatures, $legal_qualities);
-    
+
     if (count($illegal_qualities)) {
       $this->returnError(688, $this->version, $this->openmlGeneralErrorCode, 'Illegal qualities: ' . implode(',', $illegal_qualities) . '');
       return;
     }
-    
+
     $tagJoin = "";
     $tagSelect = "";
     $tagSort = "";
@@ -913,16 +913,16 @@ class Api_data extends Api_model {
       $tagSort = "t.tag DESC, "; // to avoid NULL values first
       $tagJoin = "LEFT JOIN dataset_tag t ON q.data = t.id AND t.tag = '" . $priorityTag . "' ";
     }
-    
+
     if (!$feature_attributes) {
-      $sql = 'SELECT DISTINCT d.* FROM data_processed p, dataset d LEFT JOIN (' . 
+      $sql = 'SELECT DISTINCT d.* FROM data_processed p, dataset d LEFT JOIN (' .
                ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
                ' FROM data_quality q ' . $tagJoin .
                ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '") AND q.evaluation_engine_id = ' . $evaluation_engine_id .
                ' GROUP BY q.data HAVING numQualities = ' . count($requiredMetafeatures) . ') as `qualityCount` ' .
              ' ON d.did = qualityCount.data '.
              ' WHERE qualityCount.data IS NULL ' .
-             ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me 
+             ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me
              ' AND p.error IS NULL ' .
              ' ORDER BY ' . $tagSort . ' d.did ';
     } else {
@@ -930,12 +930,12 @@ class Api_data extends Api_model {
                ' SELECT q.data, COUNT(*) AS `numQualities`' . $tagSelect .
                ' FROM feature_quality q ' . $tagJoin .
                ' JOIN (SELECT data_feature.did, COUNT(*) as `number_of_attributes` FROM data_feature GROUP BY data_feature.did) as `attCounts` ON attCounts.did = q.data' .
-               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '") AND q.evaluation_engine_id = ' . $evaluation_engine_id . 
+               ' WHERE q.quality in ("' . implode('","', $requiredMetafeatures) . '") AND q.evaluation_engine_id = ' . $evaluation_engine_id .
                ' GROUP BY q.data HAVING numQualities = max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `qualityCount`' .
-             ' ON d.did = qualityCount.data ' . 
-             ' WHERE qualityCount.data IS NULL ' . 
+             ' ON d.did = qualityCount.data ' .
+             ' WHERE qualityCount.data IS NULL ' .
              ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me
-             ' AND p.error IS NULL ' . 
+             ' AND p.error IS NULL ' .
              ' ORDER BY ' . $tagSort . ' d.did ';
     }
     if ($order == 'random') {
@@ -949,7 +949,7 @@ class Api_data extends Api_model {
       return;
     }
     $result = array($result[array_rand($result)]);
-    
+
     $this->xmlContents('data-unprocessed', $this->version, array('res' => $result));
   }
 }

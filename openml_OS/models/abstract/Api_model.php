@@ -7,7 +7,7 @@ class Api_model extends CI_Model {
     parent::__construct();
     $this->load->helper('text');
     $this->legal_tag_entities = array('data','task','flow','setup','run');
-    
+
     $this->openmlGeneralErrorCode = $this->config->item('general_http_error_code');
   }
 
@@ -100,13 +100,13 @@ class Api_model extends CI_Model {
     $error['code'] = $code;
     $error['message'] = htmlentities( $this->load->apiErrors[$code] );
     $error['additional'] = htmlentities( $additionalInfo );
-    
+
     if (!$supress_output) {
       http_response_code($httpErrorCode);
       $this->xmlContents('error-message', $version, $error);
     }
-    
-    if ($emailLog && defined('EMAIL_API_LOG')) { 
+
+    if ($emailLog && defined('EMAIL_API_LOG')) {
       $to = EMAIL_API_LOG;
       $subject = 'OpenML API Exception: ' . $code;
       $content = 'Time: ' . now() . "\nUser: ". $this->user_id . ' (' . $this->user_email . ')' . "\nMessage: " . $error['message'] . "\nException Message: " . $emailLog;
@@ -139,13 +139,13 @@ class Api_model extends CI_Model {
       echo $data;
     }
   }
-  
+
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
    * @function entity_tag_untag:
    *    tags or untags an entity (data, flow, task, setup, run)
    *
    * @param type (string):
-   *    in {dataset, implementation, run, task, algorithm_setup} (pointing 
+   *    in {dataset, implementation, run, task, algorithm_setup} (pointing
    *    to a database table)
    * @param entity_id (int):
    *    the id in the table mentioned by type
@@ -153,7 +153,7 @@ class Api_model extends CI_Model {
    *    the name of the tag
    * @param do_untag (bool):
    *    tags iff false, untags iff false
-   * @param special_name (str): 
+   * @param special_name (str):
    *    used by ES and the xml tag. (data, flow, task, setup, run)
    *
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -161,27 +161,27 @@ class Api_model extends CI_Model {
     // checks if type in {dataset, implementation, run, task, algorithm_setup}
     $taggable = $this->config->item('taggable_entities');
     if(!in_array($type, array_keys($taggable))) {
-      
+
       $this->returnError(470, $this->version);
       return false;
     }
-    
+
     if ($id == false || $tag == false) {
       $this->returnError(471, $this->version);
       return false;
     }
-    
+
     $model_name_entity = ucfirst($type);
     $model_name_tag = ucfirst($taggable[$type]);
     $currentTime = now();
-    
+
     $entity = $this->{$model_name_entity}->getById($id);
     if (!$entity) {
       $this->returnError(472, $this->version);
       return false;
     }
-    
-    
+
+
     if ($do_untag) {
       /* * * * * * * * * * *
        *     U N T A G     *
@@ -191,13 +191,13 @@ class Api_model extends CI_Model {
         $this->returnError(475, $this->version);
         return false;
       }
-      
+
       $is_admin = $this->ion_auth->is_admin($this->user_id);
       if ($tag_record->uploader != $this->user_id && $is_admin == false) {
         $this->returnError(476, $this->version);
         return false;
       }
-      
+
       $this->{$model_name_tag}->delete( array( $id, $tag ) );
     } else {
       /* * * * * * * * * * *
@@ -208,7 +208,7 @@ class Api_model extends CI_Model {
         $this->returnError(473, $this->version, 450, 'id=' . $id . '; tag=' . $tag);
         return false;
       }
-      
+      $tag = preg_replace('/[^A-Za-z0-9\-\_]/', '', $tag); // no special characters
       $tag_data = array(
         'id' => $id,
         'tag' => $tag,
@@ -222,7 +222,7 @@ class Api_model extends CI_Model {
         return false;
       }
     }
-    
+
     try {
       //update index
       if ($special_name != 'setup') { // setups can not be indexed
@@ -239,14 +239,14 @@ class Api_model extends CI_Model {
       $this->returnError(105, $this->version, $this->openmlGeneralErrorCode, false, $e->getMessage());
       return false;
     }
-    
+
     if (!$supress_output) {
       $tags = $this->{$model_name_tag}->getColumnWhere('tag', 'id = ' . $id);
       $this->xmlContents(
-        'entity-tag', 
-        $this->version, 
+        'entity-tag',
+        $this->version,
         array(
-          'id' => $id, 
+          'id' => $id,
           'xml_tag_name' => $special_name . '_' . ($do_untag ? 'untag' : 'tag'),
           'tags' => $tags)
       );
