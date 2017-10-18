@@ -384,7 +384,7 @@ class ElasticSearch {
         }
     }
 
-    public function index_from($type, $id = false, $altmetrics=True, $verbosity=0) {
+    public function index_from($type, $id = false, $verbosity=1, $altmetrics=True) {
         //bootstrap
         $indexParams['index'] = 'openml';
         $indexParams['type'] = $type;
