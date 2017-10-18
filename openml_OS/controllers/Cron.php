@@ -59,14 +59,14 @@ class Cron extends CI_Controller {
   }
 
   // indices a range of es items, starting by $id (or 0 if id == false)
-  public function indexfrom($type, $id = false){
+  public function indexfrom($type, $id = false, $verbosity = 0){
       if(!$id){
         // TODO: I guess this function enables the exact same hevaiour as index($type, false) (JvR)
         echo "\r\n Starting ".$type." indexer... ";
         echo $this->elasticsearch->index($type);
       } else {
         echo "\r\n Starting ".$type." indexer from id ".$id."... ";
-        echo $this->elasticsearch->index_from($type, $id);
+        echo $this->elasticsearch->index_from($type, $id, $verbosity);
       }
   }
 
@@ -173,7 +173,7 @@ class Cron extends CI_Controller {
           'INTO OUTFILE "'. $tmp_path .'" ' .
           'FIELDS TERMINATED BY "," ' .
           'ENCLOSED BY "\"" ' .
-          'LINES TERMINATED BY "\n" ' . 
+          'LINES TERMINATED BY "\n" ' .
           ';';
       } elseif ($meta_dataset->type == 'evaluations') {
         // very important to not have any tailing spaces after a comma
@@ -218,7 +218,7 @@ class Cron extends CI_Controller {
         $this->_error_meta_dataset($meta_dataset->id, 'Meta dataset type not recognized: ' . $meta_dataset->type, $meta_dataset->user_id);
         return;
       }
-      
+
       // this query requires FILE privileges (which is by default disabled)
       $this->Dataset->query($sql);
       $success = file_exists($tmp_path);
@@ -228,7 +228,7 @@ class Cron extends CI_Controller {
         $this->_error_meta_dataset($meta_dataset->id, $error, $meta_dataset->user_id);
         return;
       }
-      
+
       if ($header != null) {
         $res = prepend_to_file($header, $tmp_path);
         if (!$res) {
@@ -236,11 +236,11 @@ class Cron extends CI_Controller {
           return;
         }
       }
-      
+
       $filename = getAvailableName(DATA_PATH . $this->dir_suffix, 'meta_dataset.csv');
       $filepath = DATA_PATH . $this->dir_suffix . $filename;
       $success = rename($tmp_path, $filepath);
-      
+
       if (!$success) {
         $this->_error_meta_dataset($meta_dataset->id, 'Failed to move csv to data directory. Filename: ' . $filename, $meta_dataset->user_id);
         return;

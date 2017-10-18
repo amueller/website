@@ -363,7 +363,7 @@ class ElasticSearch {
         return array_keys($array_data['openml']['mappings']);
     }
 
-    public function index($type, $id = false, $altmetrics=True) {
+    public function index($type, $id = false, $altmetrics=True, $verbosity=0) {
         //bootstrap
         $indexParams['index'] = 'openml';
         $indexParams['type'] = $type;
@@ -375,7 +375,7 @@ class ElasticSearch {
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
-                return $this->$method_name($id, $altmetrics);
+                return $this->$method_name($id, $altmetrics, $verbosity);
             } catch (Exception $e) {
                 // TODO: log?
             }
@@ -384,7 +384,7 @@ class ElasticSearch {
         }
     }
 
-    public function index_from($type, $id = false, $altmetrics=True) {
+    public function index_from($type, $id = false, $altmetrics=True, $verbosity=0) {
         //bootstrap
         $indexParams['index'] = 'openml';
         $indexParams['type'] = $type;
@@ -396,7 +396,7 @@ class ElasticSearch {
         $method_name = 'index_' . $type;
         if (method_exists($this, $method_name)) {
             try {
-                return $this->$method_name(false, $id, $altmetrics);
+                return $this->$method_name(false, $id, $altmetrics, $verbosity);
             } catch (Exception $e) {
                 // TODO: log?
             }
@@ -435,7 +435,7 @@ class ElasticSearch {
         return '[Initialized mapping for ' . $t. '] ';
     }
 
-    public function index_downvote($id, $start_id = 0, $altmetrics=True){
+    public function index_downvote($id, $start_id = 0, $altmetrics=True, $verbosity=0){
 
         $params['index'] = 'openml';
         $params['type'] = 'downvote';
@@ -460,7 +460,7 @@ class ElasticSearch {
         return 'Successfully indexed ' . sizeof($responses['items']) . ' out of ' . sizeof($downvotes) . ' downvotes.';
     }
 
-    public function index_like($id, $start_id = 0, $altmetrics=True){
+    public function index_like($id, $start_id = 0, $altmetrics=True, $verbosity=0){
 
         $params['index'] = 'openml';
         $params['type'] = 'like';
@@ -514,7 +514,7 @@ class ElasticSearch {
         return $like;
     }
 
-    public function index_download($id, $start_id = 0, $altmetrics=True){
+    public function index_download($id, $start_id = 0, $altmetrics=True, $verbosity=0){
         $params['index'] = 'openml';
         $params['type'] = 'download';
 
@@ -553,7 +553,7 @@ class ElasticSearch {
 
     }
 
-    public function index_user($id, $start_id = 0, $altmetrics=True) {
+    public function index_user($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
 
         $params['index'] = 'openml';
         $params['type'] = 'user';
@@ -774,7 +774,7 @@ class ElasticSearch {
         return $user;
     }
 
-    public function index_study($id, $start_id = 0, $altmetrics=True) {
+    public function index_study($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
 
         $params['index'] = 'openml';
         $params['type'] = 'study';
@@ -1295,7 +1295,7 @@ class ElasticSearch {
                 echo "-  completed ".str_pad($submitted, 9, ' ', STR_PAD_RIGHT);
                 echo "\033[31D";
               }
-           } 
+           }
          } elseif($verbosity) {
            echo "\033[9D";
          }
@@ -1392,7 +1392,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_task_type($id, $start_id = 0, $altmetrics=True) {
+    public function index_task_type($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
 
         $params['index'] = 'openml';
         $params['type'] = 'task_type';
@@ -1446,7 +1446,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_flow($id, $start_id = 0, $altmetrics=True) {
+    public function index_flow($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
 
         $params['index'] = 'openml';
         $params['type'] = 'flow';
@@ -1600,7 +1600,7 @@ class ElasticSearch {
         return $new_data;
     }
 
-    public function index_measure($id, $start_id = 0, $altmetrics=True) {
+    public function index_measure($id, $start_id = 0, $altmetrics=True, $verbosity=0) {
 
         $params['index'] = 'openml';
         $params['type'] = 'measure';
