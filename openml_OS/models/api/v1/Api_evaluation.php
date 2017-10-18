@@ -26,7 +26,7 @@ class Api_evaluation extends Api_model {
       array_shift($segments); // removes 'request'
       $eval_id = array_shift($segments);
       $order = array_shift($segments);
-      
+
       $this->evaluation_request($eval_id, $order, $segments);
       return;
     }
@@ -51,7 +51,7 @@ class Api_evaluation extends Api_model {
     if ($task != false) {
       $task = explode(',', $task);
     }
-    
+
     $res = $this->Run_evaluated->getUnevaluatedRun($evaluation_engine_id, $order, $ttid, $task, $tag, $uploader);
     if ($res == false) {
       $this->returnError(545, $this->version);
@@ -71,7 +71,7 @@ class Api_evaluation extends Api_model {
         return;
       }
     }
-    
+
     $task_id = element('task', $query_string);
     $setup_id = element('setup',$query_string);
     $implementation_id = element('flow',$query_string);
@@ -108,16 +108,28 @@ class Api_evaluation extends Api_model {
 
     //pre-test, should be quick??
     if($limit == false || (!$offset && $limit > 10000) || ($offset && $limit-$offset > 10000)) { // skip pre-test if less than 10000 are requested by definition
-      $sql_test =
-        'SELECT distinct r.rid ' .
-        'FROM run r, algorithm_setup s ' .
-        'WHERE r.setup = s.sid ' .
-        $where_runs .
-        $where_limit ;
-      $res_test = $this->Evaluation->query( $sql_test );
-
-      if (count($res_test) > 10000) {
-        $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . count($res_test) . ' runs; max size: 10000. Please use limit and offset. ');
+      $count = 0;
+      //shortcuts
+      if ($tag && !$task_id && !$uploader_id && !$implementation_id && !$run_id){
+        $sql_test = 'SELECT count(id) as count from run_tag where tag="botV1"';
+        $count = $this->Evaluation->query( $sql_test )[0]->count;
+      } else if (!$implementation_id) {
+          $sql_test =
+            'SELECT count(distinct r.rid) as count ' .
+            'FROM run r WHERE ' .
+            $where_runs . $where_limit;
+          $count = $this->Evaluation->query( $sql_test )[0]->count;
+      } else {
+        $sql_test =
+          'SELECT count(distinct r.rid) as count ' .
+          'FROM run r, algorithm_setup s ' .
+          'WHERE r.setup = s.sid ' .
+          $where_runs .
+          $where_limit ;
+        $count = $this->Evaluation->query( $sql_test )[0]->count;
+      }
+      if ($count > 10000) {
+        $this->returnError(543, $this->version, $this->openmlGeneralErrorCode, 'Size of result set: ' . $count . ' runs; max size: 10000. Please use limit and offset. ');
         return;
       }
     }
@@ -138,9 +150,8 @@ class Api_evaluation extends Api_model {
       'AND r.task_id = t.task_id ' .
       'AND t.input = "source_data" ' .
       'AND t.value = d.did ' . $where_total .
-    //'ORDER BY r.rid' . 
+    //'ORDER BY r.rid' .
       $where_limit;
-
     $res = $this->Evaluation->query( $sql );
 
     if ($res == false) {
