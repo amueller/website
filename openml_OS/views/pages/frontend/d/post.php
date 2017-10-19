@@ -18,10 +18,11 @@ elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   redirect('d/'.$this->id);
 }
 elseif(isset($_POST["index_type"])){
-  try {
-    $this->searchclient->index($_POST["index_type"],$_POST["index_id"]);
+  try{
+    $this->elasticsearch->index($_POST["index_type"],$_POST["index_id"]);
     redirect('d/'.$this->id);
   } catch (Exception $e) {
+    redirect('d/'.$e->getMessage());
     echo 'Caught exception: ',  $e->getMessage(), "\n";
   }
 }
