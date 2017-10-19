@@ -17,6 +17,14 @@ elseif(isset($_POST["deletetag"]) and !empty($_POST["deletetag"])){
   $api_response = $this->curlhandler->post_helper($url,$post_data);
   redirect('d/'.$this->id);
 }
+elseif(isset($_POST["index_type"])){
+  try {
+    $this->searchclient->index($_POST["index_type"],$_POST["index_id"]);
+    redirect('d/'.$this->id);
+  } catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+  }
+}
 // Description edit
 elseif($this->input->post('page')){
 // prepare to send data to gollum

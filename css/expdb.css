@@ -1996,6 +1996,16 @@ hr.hardSmall {
   line-height: 170%;
 }
 
+.datalink {
+  color: #27b6ba !important;
+  padding-top: 3px !important;
+  padding-bottom: 40px;
+  font-size: 10pt;
+  clear: both;
+  font-weight: normal !important;
+  line-height: 170%;
+}
+
 .datainfo a{
   color: #27b6ba;
 }
