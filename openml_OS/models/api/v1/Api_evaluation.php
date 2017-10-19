@@ -111,7 +111,7 @@ class Api_evaluation extends Api_model {
       $count = 0;
       //shortcuts
       if ($tag && !$task_id && !$uploader_id && !$implementation_id && !$run_id){
-        $sql_test = 'SELECT count(id) as count from run_tag where tag="botV1"';
+        $sql_test = 'SELECT count(id) as count from run_tag where tag="'.$tag.'"';
         $count = $this->Evaluation->query( $sql_test )[0]->count;
       } else if (!$implementation_id) {
           $sql_test =
