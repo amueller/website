@@ -22,7 +22,6 @@ elseif(isset($_POST["index_type"])){
     $this->elasticsearch->index($_POST["index_type"],$_POST["index_id"]);
     redirect('d/'.$this->id);
   } catch (Exception $e) {
-    redirect('d/'.$e->getMessage());
     echo 'Caught exception: ',  $e->getMessage(), "\n";
   }
 }

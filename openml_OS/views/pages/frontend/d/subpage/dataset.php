@@ -57,12 +57,14 @@
        <i class="fa fa-eye-slash"></i> Visibility: <?php echo strtolower($this->data['visibility']); ?>
        <i class="fa fa-cloud-upload"></i> Uploaded <?php echo dateNeat( $this->data['date']); ?> by <a href="u/<?php echo $this->data['uploader_id'] ?>"><?php echo $this->data['uploader'] ?></a>
        <?php if($this->is_owner): echo '<i class="fa fa-pencil-square-o"></i> <a href="d/'.$this->id.'/update">Edit</a>'; endif;?>
+       <?php if ($this->ion_auth->logged_in()) { ?>
        <i class="fa fa-refresh"></i>
          <form method="post" action="" enctype="multipart/form-data" style="display:inline;">
            <input type="hidden" name="index_type" id="index_type" value="data" />
            <input type="hidden" name="index_id" id="index_id" value="<?php echo $this->id; ?>" />
            <input type="submit" class="btn-link datalink" value="Refresh" />
          </form>
+       <?php } ?>
        <br>
        <i class="fa fa-heart"></i> <span id="likecount"><?php if(array_key_exists('nr_of_likes',$this->data)): if($this->data['nr_of_likes']!=null): $nr_l = $this->data['nr_of_likes']; else: $nr_l=0; endif; else: $nr_l=0; endif; echo $nr_l.' likes'; ?></span>
         <i class="fa fa-cloud-download"></i><span id="downloadcount">
