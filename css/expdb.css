@@ -3547,7 +3547,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
   text-align: center;
   margin-bottom: 2px !important;
   padding-top: 65px;
-  float:left;
+  /*float:left;*/
 }
 
 .marketing .row {
