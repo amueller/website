@@ -11,6 +11,8 @@
       <input type="submit" name="key-reset" class="btn btn-warning btn-raised" value="Reset API Key" />
     </form>
 
+    <p style="color:#999"><i class="fa fa-fw fa-warning"></i>This key uniquely identifies you on OpenML. Keep it secret. Keep it safe.</p>
+
     <?php if ($this->ion_auth->in_group('members')) {?>
       <form id="keydegrade" method="post">
         <input type="submit" name="key-degrade" class="btn btn-warning btn-raised" value="Make read-only" />
@@ -20,8 +22,6 @@
         <input type="submit" name="key-upgrade" class="btn btn-warning btn-raised" value="Make write key" />
       </form>
     <?php } ?>
-
-    <p style="color:#999"><i class="fa fa-fw fa-warning"></i>This key uniquely identifies you on OpenML. Keep it secret.</p>
 
     <?php if ($this->ion_auth->in_group('members')) {?>
       <p style="color:#999"><i class="fa fa-fw fa-warning"></i>This key can be used for read and write operations.</p>
