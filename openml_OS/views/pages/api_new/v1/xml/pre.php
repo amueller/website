@@ -311,6 +311,10 @@ $this->apiErrors[586] = 'Parameter in run xml unknown. ';
 // openml.study.list
 $this->apiErrors[590] = 'No studies available. ';
 
+// openml.study.delete
+$this->apiErrors[591] = 'Authentication failed';
+$this->apiErrors[592] = 'Study does not exists';
+$this->apiErrors[593] = 'Deleting study failed';
 
 // openml.study.get
 $this->apiErrors[600] = 'Api function invoked wrong. Unknown knowledge type. ';

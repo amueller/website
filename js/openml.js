@@ -82,7 +82,7 @@ Ps.initialize(container);
 
   $.ajax({
     type: "DELETE",
-    url: "https://" + location.host + "/api_new/v1/json/"+type+"/"+id,
+    url: "https://" + location.host + "/api/v1/json/"+type+"/"+id,
     dataType: "json"
   }).done( function( resultdata ) {
       if(type+"_delete" in resultdata){
