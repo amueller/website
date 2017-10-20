@@ -14,6 +14,7 @@
   <p>Download datasets into Python scripts, build models using Python machine learning libraries (e.g., <i>scikit-learn</i>), and share the results online, all in a few lines of code.<br>
   <a target="_blank" href="https://openml.github.io/openml-python" class="btn btn-raised btn-info">Documentation</a>
   <a target="_blank" href="https://github.com/openml/openml-python/blob/master/examples/OpenML_Tutorial.ipynb" class="btn btn-raised btn-info">Jupyter Notebook</a>
+  <a target="_blank" href="https://github.com/openml/openml-python/blob/cheatsheet/examples/OpenML_Cheat_Sheet.pdf" class="btn btn-raised btn-info">Cheat sheet</a>
   <a target="_blank" class="btn btn-raised btn-info" href="https://everware.ysda.yandex.net/hub/oauth_login?repourl=https://github.com/openml/study_example_python&OPENMLKEY=<?php echo (isset($this->api_key) ? $this->api_key : '');?>">Online demo</a>
 </p>
 
