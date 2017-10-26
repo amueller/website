@@ -167,7 +167,7 @@ class Data_server extends CI_Model {
   private function _header_download($file, $overwritten_filetype=null) {
     header('Content-Description: File Transfer');
     header('Content-Type: ' . ($file->extension == 'arff' ? 'text/plain' : $file->mime_type));
-    if ($overwritten_filetype != csv) { #content length in database not correct for csv
+    if ($overwritten_filetype != 'csv') { #content length in database not correct for csv
        header('Content-Length: ' . $file->filesize);
     }
 
