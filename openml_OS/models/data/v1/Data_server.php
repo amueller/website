@@ -181,6 +181,8 @@ class Data_server extends CI_Model {
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
+    header('Keep-Alive: timeout=300, max=500');
+    header('Accept-Encoding: deflate');
     // header('Content-Length: ' . $file->filesize);
   }
 }
