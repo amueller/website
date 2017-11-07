@@ -22410,7 +22410,7 @@ SwaggerUi.Views.SidebarHeaderView = Backbone.View.extend({
     if (elem.is(".item")) {
       scroll(elem.attr("data-endpoint"));
       setSelected(elem);
-      updateUrl('api_docs/'+eln.find(".path a").first().attr("href"))
+      updateUrl(window.location.pathname+eln.find(".path a").first().attr("href"))
     }
 
     /* scroll */

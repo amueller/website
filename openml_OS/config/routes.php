@@ -55,6 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 $frontend_pages = array(
           'api_docs',
+          'api_data_docs',
           'detail',
           'developers',
           'home',
