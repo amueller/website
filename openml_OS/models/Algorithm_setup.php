@@ -67,7 +67,7 @@ class Algorithm_setup extends Database_write {
 
     $result = $this->db->query( $sql )->result();
 
-    if(count($result) > 0) {
+    if(count($result) > 0 and count($result) == count($parameters)) {
       return $result[0]->sid;
     } elseif($create === false) {
       return false;
