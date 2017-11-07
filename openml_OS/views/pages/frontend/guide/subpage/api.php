@@ -6,8 +6,9 @@
   <ul class="apilist"><li>
   <div class="col-sm-2"><a target="_blank" href="api_docs"><img class="toolcircle" src="img/rest.png" alt="icon"></a></div>
   <p>The REST API allows you to talk directly to the OpenML server from any programming environment.<br>
-  <a target="_blank" href="guide/rest" class="btn btn-raised btn-info">REST tutorial</a>
-  <a target="_blank" href="api_docs" class="btn btn-raised btn-info">REST Documentation</a></p>
+  <a target="_blank" href="guide/rest" class="btn btn-raised btn-info">API tutorial</a>
+  <a target="_blank" href="api_docs" class="btn btn-raised btn-info">API Documentation</a>
+  <a target="_blank" href="api_data_docs" class="btn btn-raised btn-info">File API Documentation</a></p>
 
   </li><li>
   <div class="col-sm-2"><a target="_blank" href="https://openml.github.io/openml-python"><img class="toolcircle" src="img/python.png" alt="icon"></a></div>
