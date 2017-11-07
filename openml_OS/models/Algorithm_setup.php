@@ -62,12 +62,12 @@ class Algorithm_setup extends Database_write {
            'FROM `algorithm_setup` AS `s` ' .
            $leftJoin .
            ' WHERE `implementation_id` = "' . $implementation->id . '" ' .
-           $where .
+           ' AND (SELECT COUNT(*) FROM `input_setting` where `setup` = `s`.`sid`) = ' . count($parameters) . $where .
            ' LIMIT 0,1;';
 
     $result = $this->db->query( $sql )->result();
 
-    if(count($result) > 0 and count($result) == count($parameters)) {
+    if(count($result) > 0) {
       return $result[0]->sid;
     } elseif($create === false) {
       return false;
