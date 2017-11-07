@@ -13,7 +13,7 @@ produces:
 paths:
   '/download/{id}':
     get:
-      summary: Download the file with the given file ID
+      summary: Download data file
       description: >
         Streams the requested file (referenced by ID). The file ID is usually stated in the description of the dataset, task, flow or run retrieved from the main API. Will use gzip compression when requested by the client (with the Accept-Encoding header). Supports chunked downloads for large files. Will time out if the request is not completed in 300 seconds. Will automatically redirect if the file is stored elsewhere.
       parameters:
@@ -50,7 +50,7 @@ paths:
               4.6,3.4,1.4,0.3,Iris-setosa
   '/view/{id}':
     get:
-      summary: Download the file with the given file ID
+      summary: View data file
       description: >
         Streams the requested file (referenced by ID) for viewing. The file ID is usually stated in the description of the dataset, task, flow or run retrieved from the main API. No download compression or chunking. Will automatically redirect if the file is stored elsewhere.
       parameters:
@@ -87,7 +87,7 @@ paths:
               4.6,3.4,1.4,0.3,Iris-setosa
   '/get_csv/{id}':
     get:
-      summary: Download the dataset with the given file ID in CSV format
+      summary: Download CSV dataset
       description: >
         Streams the requested dataset file (referenced by ID) in CSV format. The first line contains the column names. The file ID is stated in the dataset description retrieved from the main API. The file ID is NOT the same as the dataset ID.  Will use gzip compression when requested by the client (with the Accept-Encoding header). Supports chunked downloads for large files. Will time out if the request is not completed in 300 seconds. Will automatically redirect if the file is stored elsewhere.
       parameters:
