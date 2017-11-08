@@ -179,7 +179,7 @@ class Api_data extends Api_model {
     }
 
     # JvR: This is a BAD idea and this will break in the future, when OpenML grows.
-    $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND evaluation_engine_id = ' . $this->config->item('default_evaluation_engine_id') . ' quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") AND value IS NOT NULL ORDER BY `data`');
+    $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND evaluation_engine_id = ' . $this->config->item('default_evaluation_engine_id') . ' AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") AND value IS NOT NULL ORDER BY `data`');
 
     if ($dq != false) {
       foreach( $dq as $quality ) {
