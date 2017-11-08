@@ -208,7 +208,6 @@ class Api_model extends CI_Model {
         $this->returnError(473, $this->version, 450, 'id=' . $id . '; tag=' . $tag);
         return false;
       }
-      $tag = preg_replace('/[^A-Za-z0-9\-\_]/', '', $tag); // no special characters
       $tag_data = array(
         'id' => $id,
         'tag' => $tag,
