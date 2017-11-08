@@ -860,6 +860,8 @@ class Api_data extends Api_model {
     $this->db->select('d.*')->from('dataset d');
     $this->db->join('data_processed p', 'd.did = p.did AND evaluation_engine_id = ' . $evaluation_engine_id, 'left');
     $this->db->where('p.did IS NULL');
+    // JvR TODO: Because of legacy datasets. We should later make 'file_id' a non null field.
+    $this->db->where('d.file_id IS NOT NULL');
 
     $randomcount = 200;
     if ($order == 'random') {
