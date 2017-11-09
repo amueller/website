@@ -20,4 +20,7 @@ $config['email_debug'] = 'janvanrijn@gmail.com';
 $config['allowed_extensions'] = array('arff','csv','model','xml','rds','txt');
 
 $config['general_http_error_code'] = 412;
+
+$config['default_evaluation_engine_id'] = 1;
+
 ?>

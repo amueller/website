@@ -116,7 +116,7 @@ class Api_task extends Api_model {
             'AND `tt`.`ttid` = `t`.`ttid` AND `ti`.`input` IN ("' . implode('","', $this->config->item('basic_taskinputs')).'") ' .
             $where_total . ' ' .
             'GROUP BY t.task_id ' . $where_limit;
-    $full = 'SELECT core.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $core . ') core ON dq.data = core.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") GROUP BY core.task_id;';
+    $full = 'SELECT core.*, CONCAT(\'"\', GROUP_CONCAT(`quality` SEPARATOR \'","\'),\'"\') AS `qualities`, CONCAT(\'"\', GROUP_CONCAT(`value` SEPARATOR \'","\'),\'"\') AS `quality_values` FROM data_quality dq RIGHT JOIN (' . $core . ') core ON dq.data = core.did WHERE dq.quality IN ("' . implode('","', $this->config->item('basic_qualities')).'") AND dq.evaluation_engine_id = ' . $this->config->item('default_evaluation_engine_id') . ' GROUP BY core.task_id;';
     
     $tasks_res = $this->Task->query($full);
 

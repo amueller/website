@@ -78,7 +78,7 @@ class Api_data extends Api_model {
     }
 
     if (count($segments) == 2 && $segments[0] == 'qualities' && is_numeric($segments[1]) && in_array($request_type, $getpost)) {
-      $this->data_qualities($segments[1]);
+      $this->data_qualities($segments[1], $this->config->item('default_evaluation_engine_id'));
       return;
     } elseif(count($segments) == 3 && $segments[0] == 'qualities' && is_numeric($segments[1]) && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
       $this->data_qualities($segments[1], $segments[2]);
@@ -91,7 +91,7 @@ class Api_data extends Api_model {
     }
 
     if (count($segments) == 3 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && in_array($request_type, $getpost)) {
-      $this->feature_qualities($segments[2]);
+      $this->feature_qualities($segments[2], $this->config->item('default_evaluation_engine_id'));
       return;
     } elseif (count($segments) == 4 && $segments[0] == 'features' && $segments[1] == 'qualities' && is_numeric($segments[2]) && is_numeric($segments[3]) && in_array($request_type, $getpost)) {
       $this->feature_qualities($segments[2], $segments[3]);
@@ -179,7 +179,7 @@ class Api_data extends Api_model {
     }
 
     # JvR: This is a BAD idea and this will break in the future, when OpenML grows.
-    $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") AND value IS NOT NULL ORDER BY `data`');
+    $dq = $this->Data_quality->query('SELECT data, quality, value FROM data_quality WHERE `data` IN (' . implode(',', array_keys( $datasets) ) . ') AND evaluation_engine_id = ' . $this->config->item('default_evaluation_engine_id') . ' AND quality IN ("' .  implode('","', $this->config->item('basic_qualities') ) . '") AND value IS NOT NULL ORDER BY `data`');
 
     if ($dq != false) {
       foreach( $dq as $quality ) {
@@ -537,7 +537,7 @@ class Api_data extends Api_model {
 
     $success = $this->Data_processed->insert($data);
     if (!$success) {
-      $this->returnError(435, $this->version);
+      $this->returnError(435, $this->version, $this->openmlGeneralErrorCode, 'Failed to create data processed record. ');
       return;
     }
     //$current_index = -1;
@@ -618,7 +618,7 @@ class Api_data extends Api_model {
   }
 
 
-  private function data_qualities($data_id, $evaluation_engine_id = 1) {
+  private function data_qualities($data_id, $evaluation_engine_id) {
     if( $data_id == false ) {
       $this->returnError( 360, $this->version );
       return;
@@ -684,7 +684,7 @@ class Api_data extends Api_model {
     $this->xmlContents( 'data-qualities', $this->version, $dataset );
   }
 
-  private function feature_qualities($data_id, $evaluation_engine_id = 1) {
+  private function feature_qualities($data_id, $evaluation_engine_id) {
     if( $data_id == false ) {
       $this->returnError( 631, $this->version );
       return;
@@ -924,7 +924,7 @@ class Api_data extends Api_model {
                ' GROUP BY q.data HAVING numQualities = ' . count($requiredMetafeatures) . ') as `qualityCount` ' .
              ' ON d.did = qualityCount.data '.
              ' WHERE qualityCount.data IS NULL ' .
-             ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me
+             ' AND d.did = p.did AND p.evaluation_engine_id = ' . $this->config->item('default_evaluation_engine_id') . 
              ' AND p.error IS NULL ' .
              ' ORDER BY ' . $tagSort . ' d.did ';
     } else {
@@ -936,7 +936,7 @@ class Api_data extends Api_model {
                ' GROUP BY q.data HAVING numQualities = max(attCounts.number_of_attributes)*' . count($requiredMetafeatures) . ') as `qualityCount`' .
              ' ON d.did = qualityCount.data ' .
              ' WHERE qualityCount.data IS NULL ' .
-             ' AND d.did = p.did AND p.evaluation_engine_id = 1' . //$evaluation_engine_id . TODO: hardcoded value, please fix me
+             ' AND d.did = p.did AND p.evaluation_engine_id = ' . $this->config->item('default_evaluation_engine_id') . 
              ' AND p.error IS NULL ' .
              ' ORDER BY ' . $tagSort . ' d.did ';
     }
