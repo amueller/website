@@ -14,8 +14,28 @@
 <p>-->
 <p style="margin-top:20px;">In short, OpenML makes it easy to access data, connect to the right people, and automate experimentation, so that you can focus on the data science.</p>
 
+<h3 class="text-warning"><i class="fa fa-trophy fa-fw"></i> Concepts</h3>
+<p>OpenML operates on a number of core concepts which are important to understand to use OpenML.
+These are:
+<dl>
+<dt><a href="#g_start">Datasets</a></dt>
+<dd>Datasets are pretty straight-forward. They simply consist of a number of samples, usually in tabular form. Example: The iris dataset.</dd>
+<dt><a href="#Tasks">Tasks</a></dt>
+<dd>A task consists of a dataset, together with a machine learning task to perform, such as classification or clustering and an evaluation method. For supervised tasks, this also specifies the target column in the data.
+Example: Predicting the species from the other attributes and evaluate using 10-fold cross-validation (<a href="https://www.openml.org/t/59">see here</a>).
+</dd>
+<dt><a href="#Flows">Flows</a></dt>
+<dd>A flow identifies a particular machine learning algorithm from a particular library or framework such as Weka, MLR or scikit-learn. Example: <a href="https://www.openml.org/f/65">weka's RandomForest</a></dd>
+<dt><a href="#Runs">Runs</a></dt>
+<dd>A run is a particular flow, that is algorithm, with a particular parameter setting, applied to a particular task. Example: <a href="https://www.openml.org/r/6466">Classifying iris with weka's RandomForest</a></dd>
+</p>
+
+<h3 class="text-info"><i class="fa fa-cogs fa-fw"></i> API Keys</h3>
+<p>You can download and inspect all datasets, tasks, flows and runs through the website or the API without creating an account. However, if you want to upload datasets or experiments, you need
+to <a href="/register">create an account</a> or sign in and <a href="https://www.openml.org/#api">create an API key</a>. This key an then be used with any of the OpenML interfaces.
+
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
-<p>You can upload data sets through the <a href="new/data" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted elsewhere can be referenced by URL.</p>
+<p>You can upload and download data sets through the <a href="new/data" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted elsewhere can be referenced by URL.</p>
 
 <p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data characteristics</a> useful to find and compare datasets.</p>
 <div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
@@ -24,7 +44,7 @@
 
 <p><i class="fa fa-fw fa-exclamation-triangle"></i>Currently, OpenML only accepts a limited number of data formats (e.g. ARFF for tabular data). We aim to extend this in the near future, and allow conversions between the main data types.</p>
 
-<h3 class="text-warning"><i class="fa fa-trophy fa-fw"></i> Tasks</h3>
+<h3 class="text-warning" id="Tasks"><i class="fa fa-trophy fa-fw"></i> Tasks</h3>
 <p>Tasks describe what to do with the data. OpenML covers several <a href="search?type=task_type">task types</a>, such as classification and clustering. You can <a href="new/task" class="loginfirst">create tasks</a> online.</p>
 <p>Tasks are little containers including the data and other information such as train/test splits, and define what needs to be returned.</p>
 <p>Tasks are machine-readable so that machine learning environments know what to do, and you can focus on finding the best algorithm. You can run algorithms on your own machine(s) and upload the results. OpenML evaluates and organizes all solutions online.</p>
@@ -43,7 +63,7 @@
 
 <p><i class="fa fa-fw fa-exclamation-triangle"></i> Currently, you will need to install things locally to run flows. We aim to add support for VMs so that flows can be easily (re)run in any environment.</p>
 
-<h3 class="text-danger"><i class="fa fa-star fa-fw"></i> Runs</h3>
+<h3 class="text-danger" id="Runs"><i class="fa fa-star fa-fw"></i> Runs</h3>
 <p>Runs are applications of flows on a specific task. They are typically submitted automatically by <a href="guide/integrations">machine learning environments</a> (through the OpenML API), which make sure that all details are included to ensure reproducibility.</p>
 <p>OpenML organizes all runs online, linked to the underlying data, flows, parameter settings, people, and other details. OpenML also independently evaluates the results contained in the run.</p>
 <p>You can search and compare everyone's runs online, download all results into your favorite machine learning enviroment, and relate evaluations to known properties of the data and algorithms.</p>
