@@ -167,7 +167,7 @@ systems).</p>
 parameter settings, people, and other details. OpenML also independently
 evaluates the results contained in the run given the provided predictions.</p>
 <p>You can search and compare everyone's runs online, download all results into
-your favorite machine learning enviroment, and relate evaluations to known
+your favorite machine learning environment, and relate evaluations to known
 properties of the data and algorithms.</p>
 <div class="img-guide-wrapper"><img src="img/run-ss1.png" alt="dataset
 properties" class="img-guide img-responsive"></div>
