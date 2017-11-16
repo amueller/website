@@ -18,15 +18,15 @@
 <p>OpenML operates on a number of core concepts which are important to understand to use OpenML.
 These are:
 <dl>
-<dt><a href="#g_start">Datasets</a></dt>
+<dt><a href="guide/bootcamp/#g_start">Datasets</a></dt>
 <dd>Datasets are pretty straight-forward. They simply consist of a number of samples, usually in tabular form. Example: The iris dataset.</dd>
-<dt><a href="#Tasks">Tasks</a></dt>
+<dt><a href="guide/bootcamp/#Tasks">Tasks</a></dt>
 <dd>A task consists of a dataset, together with a machine learning task to perform, such as classification or clustering and an evaluation method. For supervised tasks, this also specifies the target column in the data.
 Example: Predicting the species from the other attributes and evaluate using 10-fold cross-validation (<a href="https://www.openml.org/t/59">see here</a>).
 </dd>
-<dt><a href="#Flows">Flows</a></dt>
+<dt><a href="guide/bootcamp/#Flows">Flows</a></dt>
 <dd>A flow identifies a particular machine learning algorithm from a particular library or framework such as Weka, MLR or scikit-learn. Example: <a href="https://www.openml.org/f/65">weka's RandomForest</a></dd>
-<dt><a href="#Runs">Runs</a></dt>
+<dt><a href="guide/bootcamp/#Runs">Runs</a></dt>
 <dd>A run is a particular flow, that is algorithm, with a particular parameter setting, applied to a particular task. Example: <a href="https://www.openml.org/r/6466">Classifying iris with weka's RandomForest</a></dd>
 </p>
 
@@ -37,12 +37,20 @@ to <a href="/register">create an account</a> or sign in and <a href="https://www
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
 <p>You can upload and download data sets through the <a href="new/data" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted elsewhere can be referenced by URL.</p>
 
-<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data characteristics</a> useful to find and compare datasets.</p>
+<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data characteristics</a> (including simple ones like number of features,
+but also more complex statistics like kurtosis or the AUC of a decision tree of depth 3) useful to find and compare datasets.</p>
 <div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
 <p>Every data set gets a dedicated page with all known information (check out <a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user discussions, and the <i>tasks</i> in which it is used.</p>
 
-<p><i class="fa fa-fw fa-exclamation-triangle"></i>Currently, OpenML only accepts a limited number of data formats (e.g. ARFF for tabular data). We aim to extend this in the near future, and allow conversions between the main data types.</p>
+<p><i class="fa fa-fw fa-exclamation-triangle"></i>Currently, OpenML currently only supports uploading of ARFF files. We aim to extend this in the near future, and allow conversions between the main data types.</p>
+
+<h4>Technical details</h4>
+<h5>Dataset ID and versions</h5>
+A dataset can be uniquely identified by its dataset ID, which you can find in the URL of the dataset page, such as 62 for <a href="d/62">zoo</a>. A dataset also has a name, but several dataset can have the same name.
+Different datasets with the same name are given different <i>versions</i> which you can access through the drop down at the top right of the dataset page. Each version has a separate dataset id, and can
+refer to a completely different dataset.
+
 
 <h3 class="text-warning" id="Tasks"><i class="fa fa-trophy fa-fw"></i> Tasks</h3>
 <p>Tasks describe what to do with the data. OpenML covers several <a href="search?type=task_type">task types</a>, such as classification and clustering. You can <a href="new/task" class="loginfirst">create tasks</a> online.</p>
@@ -55,7 +63,7 @@ to <a href="/register">create an account</a> or sign in and <a href="https://www
 
 <p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply hidden test sets for the evaluation of solutions. Novel ways of ranking solutions will be added in the near future.</p>
 
-<h3 class="text-info"><i class="fa fa-cogs fa-fw"></i> Flows</h3>
+<h3 class="text-info" id="Flows"><i class="fa fa-cogs fa-fw"></i> Flows</h3>
 <p>Flows are algorithms, workflows, or scripts solving tasks. You can upload them through the <a href="new/flow" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Code hosted elsewhere (e.g., GitHub) can be referenced by URL.</p>
 <p>Ideally, flows are wrappers around existing algorithms/tools so that they can automatically read and solve OpenML tasks.</p>
 <p>Every flow gets a dedicated page with all known information (check out <a href="f/65">WEKA's RandomForest</a>), including a wiki, hyperparameters, evaluations on all tasks, and user discussions.</p>
