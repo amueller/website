@@ -14,7 +14,7 @@
 <p>-->
 <p style="margin-top:20px;">In short, OpenML makes it easy to access data, connect to the right people, and automate experimentation, so that you can focus on the data science.</p>
 
-<h3 class="text-warning"><i class="fa fa-trophy fa-fw"></i> Concepts</h3>
+<h3 class="text-warning"><i class="fa fa-lightbulb-o fa-fw"></i> Concepts</h3>
 <p>OpenML operates on a number of core concepts which are important to understand to use OpenML.
 These are:
 <dl>
@@ -31,7 +31,7 @@ Example: Predicting the species from the other attributes and evaluate using 10-
 </p>
 
 
-<h3 class="text-info"><i class="fa fa-cogs fa-fw"></i> API Keys</h3>
+<h3 class="text-info"><i class="fa fa-key fa-fw"></i> API Keys</h3>
 <p>You can download and inspect all datasets, tasks, flows and runs through the
 website or the API without creating an account. However, if you want to upload
 datasets or experiments, you need to <a href="/register">create an account</a>
@@ -78,7 +78,7 @@ future, and allow conversions between the main data types.</p>
 <h4>Technical details</h4>
 <h5>Dataset ID and versions</h5>
 <p>A dataset can be uniquely identified by its dataset ID, which you can find
-in the URL of the dataset page, such as 62 for <a href="d/62">zoo</a>. A
+in the URL of the dataset page, such as 62 for <a href="d/62">zoo</a>. Each 
 dataset also has a name, but several dataset can have the same name.  Different
 datasets with the same name are given different <i>versions</i> which you can
 access through the drop down at the top right of the dataset page. Each version
@@ -182,7 +182,7 @@ directly.</p>
 
 <div class="img-guide-wrapper"><img src="img/r-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
-<h3 class="text-muted"><i class="fa fa-folder fa-fw"></i> Tags (under construction)</h3>
+<h3 class="text-muted"><i class="fa fa-flag fa-fw"></i> Tags (under construction)</h3>
 <p>Datasets, tasks, runs and flows can be assigned tags, either via the web interface or the API. These tags can be used
 to search and annotated datasets. For example the tag <a href="search?q=tags.tag%3AOpenML100&type=task">OpenML100</a> refers to benchmark machine learning algorithms used
 as a benchmark suite. Anyone can add or remove tags on any entity.</p>
