@@ -194,9 +194,12 @@ directly.</p>
 <div class="img-guide-wrapper"><img src="img/r-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
 <h3 class="text-info"><i class="fa fa-tags fa-fw"></i> Tags</h3>
-<p>Datasets, tasks, runs and flows can be assigned tags, either via the web interface or the API. These tags can be used
-to search and annotated datasets. For example the tag <a href="search?q=tags.tag%3AOpenML100&type=task">OpenML100</a> refers to benchmark machine learning algorithms used
-as a benchmark suite. Anyone can add or remove tags on any entity.</p>
+<p>Datasets, tasks, runs and flows can be assigned tags, either via the web
+interface or the API. These tags can be used to search and annotated datasets.
+For example the tag <a
+href="search?q=tags.tag%3AOpenML100&type=task">OpenML100</a> refers to
+benchmark machine learning algorithms used as a benchmark suite. Anyone can add
+or remove tags on any entity.</p>
 
 <h3 class="text-muted"><i class="fa fa-folder fa-fw"></i> Studies (under construction)</h3>
 <p>You can combine data sets, flows and runs into studies, to collaborate with others online, or simply keep a log of your work.</p>
