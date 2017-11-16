@@ -41,13 +41,15 @@ fit a simple classifier on the defined data splits, and finally publish runs on 
 <code class="python">import openml
 import sklearn
 benchmark_suite = openml.study.get_study('OpenML100','tasks') # obtain the benchmark suite
-clf = sklearn.pipeline.Pipeline(steps=[('imputer',sklearn.preprocessing.Imputer()), ('estimator',
-    sklearn.tree.DecisionTreeClassifier())]) # build a sklearn classifier
+# build a sklearn classifier
+clf = sklearn.pipeline.make_pipeline(sklearn.preprocessing.Imputer(),
+                                     sklearn.tree.DecisionTreeClassifier())
 for task_id in benchmark_suite.tasks: # iterate over all tasks
   task = openml.tasks.get_task(task_id) # download the OpenML task
   X, y = task.get_X_and_y() # get the data (not used in this example)
   openml.config.apikey = 'FILL_IN_OPENML_API_KEY' # set the OpenML Api Key
-  run = openml.runs.run_model_on_task(task,clf) # run classifier on splits (requires API key)
+  # run classifier on splits (requires API key)
+  run = openml.runs.run_model_on_task(task,clf)
   score = run.get_metric_score(sklearn.metrics.accuracy_score) # print accuracy score
   print('Data set: %s; Accuracy: %0.2f' % (task.get_dataset().name,score.mean()))
   run.publish() # publish the experiment on OpenML (optional)
@@ -58,7 +60,8 @@ for task_id in benchmark_suite.tasks: # iterate over all tasks
 <div class="codehighlight"><pre>
 <code class="java">public static void runTasksAndUpload() throws Exception {
   OpenmlConnector openml = new OpenmlConnector();
-  Study benchmarksuite = openml.studyGet("OpenML100", "tasks"); // obtain the benchmark suite
+  // obtain the benchmark suite
+  Study benchmarksuite = openml.studyGet("OpenML100", "tasks");
   Classifier tree = new REPTree(); // build a Weka classifier
   for (Integer taskId : benchmarksuite.getTasks()) { // iterate over all tasks
     Task t = openml.taskGet(taskId); // download the OpenML task
