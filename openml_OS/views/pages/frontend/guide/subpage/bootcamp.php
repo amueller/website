@@ -24,8 +24,9 @@ samples, usually in tabular form.</br><b>Example:</b> The <a href="/d/61">iris</
 <dd>A task consists of a dataset, together with a machine learning task to
 perform, such as classification or clustering and an evaluation method. For
 supervised tasks, this also specifies the target column in the data.</br>
-<b>Example:</b> Predicting the species from the other attributes and evaluate using
-10-fold cross-validation (<a href="https://www.openml.org/t/59">see here</a>).
+<b>Example:</b> Predicting the species from the other attributes in the iris
+dataset and evaluate using 10-fold cross-validation (<a
+href="https://www.openml.org/t/59">see here</a>).
 </dd>
 <dt><a href="guide/bootcamp/#Flows">Flows</a></dt>
 <dd>A flow identifies a particular machine learning algorithm from a particular
@@ -44,7 +45,7 @@ RandomForest</a></dd>
 website or the API without creating an account. However, if you want to upload
 datasets or experiments, you need to <a href="/register">create an account</a>
 or sign in and <a href="https://www.openml.org/#api">create an API key</a>.
-This key an then be used with any of the OpenML interfaces.
+This key can then be used with any of the OpenML interfaces.
 
 
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
