@@ -172,11 +172,20 @@ algorithm/flow, and automatically upload all runs.</p>
 
 
 <h3 id="g_apis" class="text-warning"><i class="fa fa-rocket fa-fw"></i> Programming APIs</h3>
-<p>If you want to integrate OpenML into your own tools, we offer several <a href="guide/api">language-specific API's</a>, so you can easily interact with OpenML to list, download and upload data sets, tasks, flows and runs.</p>
-<p>With these APIs you can download a task, run an algorithm, and upload the results in just a few lines of code.</p>
-<p>OpenML also offers a REST API which allows you to talk to OpenML directly.</p>
+<p>If you want to integrate OpenML into your own tools, we offer several <a
+href="guide/api">language-specific API's</a>, so you can easily interact with
+OpenML to list, download and upload data sets, tasks, flows and runs.</p>
+<p>With these APIs you can download a task, run an algorithm, and upload the
+results in just a few lines of code.</p>
+<p>OpenML also offers a <a href="guide/rest">REST API</a> which allows you to talk to OpenML
+directly.</p>
 
 <div class="img-guide-wrapper"><img src="img/r-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
+
+<h3 class="text-muted"><i class="fa fa-folder fa-fw"></i> Tags (under construction)</h3>
+<p>Datasets, tasks, runs and flows can be assigned tags, either via the web interface or the API. These tags can be used
+to search and annotated datasets. For example the tag <a href="search?q=tags.tag%3AOpenML100&type=task">OpenML100</a> refers to benchmark machine learning algorithms used
+as a benchmark suite. Anyone can add or remove tags on any entity.</p>
 
 <h3 class="text-muted"><i class="fa fa-folder fa-fw"></i> Studies (under construction)</h3>
 <p>You can combine data sets, flows and runs into studies, to collaborate with others online, or simply keep a log of your work.</p>
