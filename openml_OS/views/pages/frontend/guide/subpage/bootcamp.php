@@ -30,26 +30,71 @@ Example: Predicting the species from the other attributes and evaluate using 10-
 <dd>A run is a particular flow, that is algorithm, with a particular parameter setting, applied to a particular task. Example: <a href="https://www.openml.org/r/6466">Classifying iris with weka's RandomForest</a></dd>
 </p>
 
+
 <h3 class="text-info"><i class="fa fa-cogs fa-fw"></i> API Keys</h3>
-<p>You can download and inspect all datasets, tasks, flows and runs through the website or the API without creating an account. However, if you want to upload datasets or experiments, you need
-to <a href="/register">create an account</a> or sign in and <a href="https://www.openml.org/#api">create an API key</a>. This key an then be used with any of the OpenML interfaces.
+<p>You can download and inspect all datasets, tasks, flows and runs through the
+website or the API without creating an account. However, if you want to upload
+datasets or experiments, you need to <a href="/register">create an account</a>
+or sign in and <a href="https://www.openml.org/#api">create an API key</a>.
+This key an then be used with any of the OpenML interfaces.
+
 
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
-<p>You can upload and download data sets through the <a href="new/data" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted elsewhere can be referenced by URL.</p>
+<p>You can upload and download data sets through the <a href="new/data"
+class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted
+elsewhere can be referenced by URL.</p>
 
-<p>OpenML automatically analyses the data, checks for problems, visualizes it, and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data characteristics</a> (including simple ones like number of features,
-but also more complex statistics like kurtosis or the AUC of a decision tree of depth 3) useful to find and compare datasets.</p>
-<div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
+<p>Data consists of columns or features, each of which is either numeric,
+nominal or a string, and has a unique name. Any column can also contain any
+number of missing values.</p>
+<p>Most datasets have a "default target attribute" which denotes the column that
+is usually the dependent variable in supervised learning tasks. The default
+target column is denoted by "(target)" in the web interface. Not all datasets
+have such a column, though, and a supervised task can pick any column as the
+target (as long as it is of the appropriate type).</p>
+<p>So while the standard task associated with <a
+href="https://www.openml.org/d/554">MNIST</a> is to predict the class from
+pixel values, OpenML also allows you to create a task that tries to predict the
+value of pixel257 given all the other pixel values and the target class.</p>
 
-<p>Every data set gets a dedicated page with all known information (check out <a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user discussions, and the <i>tasks</i> in which it is used.</p>
 
-<p><i class="fa fa-fw fa-exclamation-triangle"></i>Currently, OpenML currently only supports uploading of ARFF files. We aim to extend this in the near future, and allow conversions between the main data types.</p>
+<p>OpenML automatically analyses the data, checks for problems, visualizes it,
+and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data
+characteristics</a>, also called data qualities (including simple ones like number of features, but also
+more complex statistics like kurtosis or the AUC of a decision tree of depth 3)
+useful to find and compare datasets.</p> <div class="img-guide-wrapper"><img
+src="img/data-ss1.png" alt="dataset properties" class="img-guide
+img-responsive"></div>
+
+
+<p>Every data set gets a dedicated page with all known information (check out
+<a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user
+discussions, and the <i>tasks</i> in which it is used.</p>
+
+<p><i class="fa fa-fw fa-exclamation-triangle"></i>Currently, OpenML currently
+only supports uploading of ARFF files. We aim to extend this in the near
+future, and allow conversions between the main data types.</p>
 
 <h4>Technical details</h4>
 <h5>Dataset ID and versions</h5>
-A dataset can be uniquely identified by its dataset ID, which you can find in the URL of the dataset page, such as 62 for <a href="d/62">zoo</a>. A dataset also has a name, but several dataset can have the same name.
-Different datasets with the same name are given different <i>versions</i> which you can access through the drop down at the top right of the dataset page. Each version has a separate dataset id, and can
-refer to a completely different dataset.
+<p>A dataset can be uniquely identified by its dataset ID, which you can find
+in the URL of the dataset page, such as 62 for <a href="d/62">zoo</a>. A
+dataset also has a name, but several dataset can have the same name.  Different
+datasets with the same name are given different <i>versions</i> which you can
+access through the drop down at the top right of the dataset page. Each version
+has a separate dataset id, and can refer to a completely different dataset.</p>
+
+<h5>Dataset status</h5>
+<p>Each dataset has a status, which can be "active", "deactivated" or
+"in_preparation". When you upload a dataset, it will be marked "in_preparation"
+until it is approved by a site administrator.  Once it is approved, the dataset
+will become "active". If a severe issue has been found with a dataset, it can
+become "deactivated". The search will usually only display datasets that are
+"active", but you can access and download datasets with any status.</p>
+
+<h5>Ignored features</h5>
+Features in datasets can be tagged as "ignored". Those features will not be
+considered by programming interfaces, and excluded from any tasks.
 
 
 <h3 class="text-warning" id="Tasks"><i class="fa fa-trophy fa-fw"></i> Tasks</h3>
