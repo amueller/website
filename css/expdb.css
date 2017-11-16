@@ -1102,7 +1102,9 @@ h5{
   color: #485451;
 }
 
-
+dt{
+    margin-top:8px;
+}
 
 .version{
   float:left;

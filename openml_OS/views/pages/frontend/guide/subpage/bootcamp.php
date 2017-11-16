@@ -19,15 +19,24 @@
 These are:
 <dl>
 <dt><a href="guide/bootcamp/#g_start">Datasets</a></dt>
-<dd>Datasets are pretty straight-forward. They simply consist of a number of samples, usually in tabular form. Example: The iris dataset.</dd>
+<dd>Datasets are pretty straight-forward. They simply consist of a number of
+samples, usually in tabular form.</br><b>Example:</b> The <a href="/d/61">iris</a> dataset.</dd>
 <dt><a href="guide/bootcamp/#Tasks">Tasks</a></dt>
-<dd>A task consists of a dataset, together with a machine learning task to perform, such as classification or clustering and an evaluation method. For supervised tasks, this also specifies the target column in the data.
-Example: Predicting the species from the other attributes and evaluate using 10-fold cross-validation (<a href="https://www.openml.org/t/59">see here</a>).
+<dd>A task consists of a dataset, together with a machine learning task to
+perform, such as classification or clustering and an evaluation method. For
+supervised tasks, this also specifies the target column in the data.</br>
+<b>Example:</b> Predicting the species from the other attributes and evaluate using
+10-fold cross-validation (<a href="https://www.openml.org/t/59">see here</a>).
 </dd>
 <dt><a href="guide/bootcamp/#Flows">Flows</a></dt>
-<dd>A flow identifies a particular machine learning algorithm from a particular library or framework such as Weka, MLR or scikit-learn. Example: <a href="https://www.openml.org/f/65">weka's RandomForest</a></dd>
+<dd>A flow identifies a particular machine learning algorithm from a particular
+library or framework such as Weka, MLR or scikit-learn.</br><b>Example:</b> <a
+href="https://www.openml.org/f/65">weka's RandomForest</a></dd>
 <dt><a href="guide/bootcamp/#Runs">Runs</a></dt>
-<dd>A run is a particular flow, that is algorithm, with a particular parameter setting, applied to a particular task. Example: <a href="https://www.openml.org/r/6466">Classifying iris with weka's RandomForest</a></dd>
+<dd>A run is a particular flow, that is algorithm, with a particular parameter
+setting, applied to a particular task.</br><b>Example:</b> <a
+href="https://www.openml.org/r/6466">Classifying iris with weka's
+RandomForest</a></dd>
 </p>
 
 
@@ -47,6 +56,8 @@ elsewhere can be referenced by URL.</p>
 <p>Data consists of columns or features, each of which is either numeric,
 nominal or a string, and has a unique name. A feature can also contain any
 number of missing values.</p>
+ <div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset
+properties" class="img-guide img-responsive"></div>
 <p>Most datasets have a "default target attribute" which denotes the column that
 is usually the dependent variable in supervised learning tasks. The default
 target column is denoted by "(target)" in the web interface. Not all datasets
@@ -62,9 +73,7 @@ the target class is also considered a feature in OpenML terminology.</p>
 and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data
 characteristics</a>, also called data qualities (including simple ones like number of features, but also
 more complex statistics like kurtosis or the AUC of a decision tree of depth 3)
-useful to find and compare datasets.</p> <div class="img-guide-wrapper"><img
-src="img/data-ss1.png" alt="dataset properties" class="img-guide
-img-responsive"></div>
+useful to find and compare datasets.</p>
 
 
 <p>Every data set gets a dedicated page with all known information (check out
@@ -83,6 +92,8 @@ dataset also has a name, but several dataset can have the same name.  Different
 datasets with the same name are given different <i>versions</i> which you can
 access through the drop down at the top right of the dataset page. Each version
 has a separate dataset id, and can refer to a completely different dataset.</p>
+ <div class="img-guide-wrapper"><img src="img/data_version.png" alt="dataset
+versions" class="img-guide img-responsive"></div>
 
 <h5>Dataset status</h5>
 <p>Each dataset has a status, which can be "active", "deactivated" or
@@ -119,8 +130,8 @@ first.</p>
 task (i.e. regression), the target attribute (i.e. which column in the dataset
 should be predicted), the number of splits for cross-validated evaluation and
 the exact dataset splits, as well as an optional evaluation metric. Given this
-specification, a task can be solved using any of the integrated machine
-learning tools, like Weka, MLR and scikit-learn.</p>
+specification, a task can be solved using any of the <a href="guide/integrations">integrated machine
+learning tools</a>, like Weka, MLR and scikit-learn.</p>
 <p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply hidden
 test sets for the evaluation of solutions. Novel ways of ranking solutions will
 be added in the near future.</p>
@@ -182,7 +193,7 @@ directly.</p>
 
 <div class="img-guide-wrapper"><img src="img/r-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
-<h3 class="text-muted"><i class="fa fa-flag fa-fw"></i> Tags (under construction)</h3>
+<h3 class="text-info"><i class="fa fa-tags fa-fw"></i> Tags</h3>
 <p>Datasets, tasks, runs and flows can be assigned tags, either via the web interface or the API. These tags can be used
 to search and annotated datasets. For example the tag <a href="search?q=tags.tag%3AOpenML100&type=task">OpenML100</a> refers to benchmark machine learning algorithms used
 as a benchmark suite. Anyone can add or remove tags on any entity.</p>
