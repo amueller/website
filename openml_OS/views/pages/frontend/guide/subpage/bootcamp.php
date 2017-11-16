@@ -45,7 +45,7 @@ class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted
 elsewhere can be referenced by URL.</p>
 
 <p>Data consists of columns or features, each of which is either numeric,
-nominal or a string, and has a unique name. Any column can also contain any
+nominal or a string, and has a unique name. A feature can also contain any
 number of missing values.</p>
 <p>Most datasets have a "default target attribute" which denotes the column that
 is usually the dependent variable in supervised learning tasks. The default
@@ -55,8 +55,8 @@ target (as long as it is of the appropriate type).</p>
 <p>So while the standard task associated with <a
 href="https://www.openml.org/d/554">MNIST</a> is to predict the class from
 pixel values, OpenML also allows you to create a task that tries to predict the
-value of pixel257 given all the other pixel values and the target class.</p>
-
+value of pixel257 given all the other pixel values and the target class. As such,
+the target class is also considered a feature in OpenML terminology.</p>
 
 <p>OpenML automatically analyses the data, checks for problems, visualizes it,
 and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data
@@ -98,33 +98,76 @@ considered by programming interfaces, and excluded from any tasks.
 
 
 <h3 class="text-warning" id="Tasks"><i class="fa fa-trophy fa-fw"></i> Tasks</h3>
-<p>Tasks describe what to do with the data. OpenML covers several <a href="search?type=task_type">task types</a>, such as classification and clustering. You can <a href="new/task" class="loginfirst">create tasks</a> online.</p>
-<p>Tasks are little containers including the data and other information such as train/test splits, and define what needs to be returned.</p>
-<p>Tasks are machine-readable so that machine learning environments know what to do, and you can focus on finding the best algorithm. You can run algorithms on your own machine(s) and upload the results. OpenML evaluates and organizes all solutions online.</p>
+<p>Tasks describe what to do with the data. OpenML covers several <a
+href="search?type=task_type">task types</a>, such as classification and
+clustering. You can <a href="new/task" class="loginfirst">create tasks</a>
+online.</p>
+<p>Tasks are little containers including the data and other information such as
+train/test splits, and define what needs to be returned.</p>
+<p>Tasks are machine-readable so that machine learning environments know what
+to do, and you can focus on finding the best algorithm. You can run algorithms
+on your own machine(s) and upload the results. OpenML evaluates and organizes
+all solutions online.</p>
 <div class="img-guide-wrapper"><img src="img/task-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
-<p>Tasks are <i>real-time, collaborative</i> data mining challenges (e.g. see <a href="t/7293#!people">this one</a>): you can study, discuss and learn from all submissions (code has to be shared), while OpenML keeps track of who was first.</p>
+<p>Tasks are <i>real-time, collaborative</i> data mining challenges (e.g. see
+<a href="t/7293#!people">this one</a>): you can study, discuss and learn from
+all submissions (code has to be shared), while OpenML keeps track of who was
+first.</p>
 <div class="img-guide-wrapper"><img src="img/task-ss2.png" alt="dataset properties" class="img-guide img-responsive"></div>
-
-<p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply hidden test sets for the evaluation of solutions. Novel ways of ranking solutions will be added in the near future.</p>
+<p>More concretely, tasks specify the dataset, the kind of machine learning
+task (i.e. regression), the target attribute (i.e. which column in the dataset
+should be predicted), the number of splits for cross-validated evaluation and
+the exact dataset splits, as well as an optional evaluation metric. Given this
+specification, a task can be solved using any of the integrated machine
+learning tools, like Weka, MLR and scikit-learn.</p>
+<p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply hidden
+test sets for the evaluation of solutions. Novel ways of ranking solutions will
+be added in the near future.</p>
 
 <h3 class="text-info" id="Flows"><i class="fa fa-cogs fa-fw"></i> Flows</h3>
-<p>Flows are algorithms, workflows, or scripts solving tasks. You can upload them through the <a href="new/flow" class="loginfirst">website</a>, or <a href="guide/api">API</a>. Code hosted elsewhere (e.g., GitHub) can be referenced by URL.</p>
-<p>Ideally, flows are wrappers around existing algorithms/tools so that they can automatically read and solve OpenML tasks.</p>
-<p>Every flow gets a dedicated page with all known information (check out <a href="f/65">WEKA's RandomForest</a>), including a wiki, hyperparameters, evaluations on all tasks, and user discussions.</p>
-<div class="img-guide-wrapper"><img src="img/flow-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
+<p>Flows are algorithms, workflows, or scripts solving tasks. You can upload
+them through the <a href="new/flow" class="loginfirst">website</a>, or <a
+href="guide/api">API</a>. Code hosted elsewhere (e.g., GitHub) can be
+referenced by URL, though typically they are generated automatically by <a
+href="guide/integrations">machine learning environments</a>.</p>
+<p>Flows contain all the information necessary to apply a particular workflow
+or algorithm to a new task. Usually a flow is specific to a task-type, i.e.
+you can not run a classification model on a clustering task.</p>
+<p>Every flow gets a dedicated page with all known information (check out <a
+href="f/65">WEKA's RandomForest</a>), including a wiki, hyperparameters,
+evaluations on all tasks, and user discussions.</p>
+<div class="img-guide-wrapper"><img src="img/flow-ss1.png" alt="dataset
+properties" class="img-guide img-responsive"></div>
 
-<p><i class="fa fa-fw fa-exclamation-triangle"></i> Currently, you will need to install things locally to run flows. We aim to add support for VMs so that flows can be easily (re)run in any environment.</p>
+<p><i class="fa fa-fw fa-exclamation-triangle"></i>Each flow specifies
+requirements and dependencies, and you need to install these locally to execute
+a flow on a specific task. We aim to add support for VMs so that flows can be
+easily (re)run in any environment.</p>
 
 <h3 class="text-danger" id="Runs"><i class="fa fa-star fa-fw"></i> Runs</h3>
-<p>Runs are applications of flows on a specific task. They are typically submitted automatically by <a href="guide/integrations">machine learning environments</a> (through the OpenML API), which make sure that all details are included to ensure reproducibility.</p>
-<p>OpenML organizes all runs online, linked to the underlying data, flows, parameter settings, people, and other details. OpenML also independently evaluates the results contained in the run.</p>
-<p>You can search and compare everyone's runs online, download all results into your favorite machine learning enviroment, and relate evaluations to known properties of the data and algorithms.</p>
-<div class="img-guide-wrapper"><img src="img/run-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
-<p>OpenML stores and analyses results in fine detail, up to the level of individual instances.</p>
+<p>Runs are applications of flows to a specific task. They are typically
+submitted automatically by <a href="guide/integrations">machine learning
+environments</a> (through the OpenML API), with the goal of creating a
+reproducible experiment (though exactly reproducing experiments across machines
+might not be possible because of changes in numeric libraries and operating
+systems).</p>
+<p>OpenML organizes all runs online, linked to the underlying data, flows,
+parameter settings, people, and other details. OpenML also independently
+evaluates the results contained in the run given the provided predictions.</p>
+<p>You can search and compare everyone's runs online, download all results into
+your favorite machine learning enviroment, and relate evaluations to known
+properties of the data and algorithms.</p>
+<div class="img-guide-wrapper"><img src="img/run-ss1.png" alt="dataset
+properties" class="img-guide img-responsive"></div>
+<p>OpenML stores and analyses results in fine detail, up to the level of
+individual instances.</p>
 
 <h3 id="g_plugins" class="text-success"><i class="fa fa-plug fa-fw"></i> Plugins</h3>
-<p>OpenML is deeply <a href="guide/integrations">integrated in several popular machine learning environments</a>. Given a task, these plugins will automatically download the data into the environments, allow you to run any algorithm/flow, and automatically upload all runs.</p>
+<p>OpenML is deeply <a href="guide/integrations">integrated in several popular
+machine learning environments</a>. Given a task, these plugins will
+automatically download the data into the environments, allow you to run any
+algorithm/flow, and automatically upload all runs.</p>
 <div class="img-guide-wrapper"><img src="img/plugins-ss1.png" alt="dataset properties" class="img-guide img-responsive"></div>
 
 
