@@ -1,11 +1,10 @@
-
-    <h2>OpenML aims to create a frictionless, collaborative environment for exploring machine learning</h2>
-    <p><i class="fa fa-globe fa-fw fa-lg"></i> <a href="d">Data sets</a> and <a href="f">workflows</a> from various sources analysed and organized online for easy access</p>
-    <p><i class="fa fa-cogs fa-fw fa-lg"></i> <a href="guide/api">Integrated</a> into <a href="guide/integrations">machine learning environments</a> for automated experimentation, logging, and sharing</p>
-    <p><i class="fa fa-flask fa-fw fa-lg"></i> <a href="r">Fully reproducible and organized results</a> (e.g. models, predictions) you can build on and compare against</p>
-    <p><i class="fa fa-users fa-fw fa-lg"></i> Share your work with the world or within circles of trusted researchers</p>
-    <p><i class="fa fa-graduation-cap fa-fw fa-lg"></i> Make your work more visible and easily citable</p>
-    <p><i class="fa fa-bolt fa-fw fa-lg"></i> Tools to help you design and optimize workflows</p>
+<h2>OpenML Quickstart Bootcamp</h2>
+<p><i class="fa fa-globe fa-fw fa-lg"></i> <a href="d">Data sets</a> and <a href="f">workflows</a> from various sources analysed and organized online for easy access</p>
+<p><i class="fa fa-cogs fa-fw fa-lg"></i> <a href="guide/api">Integrated</a> into <a href="guide/integrations">machine learning environments</a> for automated experimentation, logging, and sharing</p>
+<p><i class="fa fa-flask fa-fw fa-lg"></i> <a href="r">Fully reproducible and organized results</a> (e.g. models, predictions) you can build on and compare against</p>
+<p><i class="fa fa-users fa-fw fa-lg"></i> Share your work with the world or within circles of trusted researchers</p>
+<p><i class="fa fa-graduation-cap fa-fw fa-lg"></i> Make your work more visible and easily citable</p>
+<p><i class="fa fa-bolt fa-fw fa-lg"></i> Tools to help you design and optimize workflows</p>
 
 
     <!--<h3 id="g_intro">Introduction</h3>
