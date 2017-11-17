@@ -80,7 +80,7 @@ useful to find and compare datasets.</p>
 <a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user
 discussions, and the <i>tasks</i> in which it is used.</p>
 
-<p><i class="fa fa-fw fa-exclamation-triangle"></i>Currently, OpenML currently
+<p><i class="fa fa-fw fa-exclamation-triangle"></i>OpenML currently
 only supports uploading of ARFF files. We aim to extend this in the near
 future, and allow conversions between the main data types.</p>
 
