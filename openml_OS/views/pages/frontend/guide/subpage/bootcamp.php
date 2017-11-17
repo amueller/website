@@ -104,7 +104,7 @@ become "deactivated". The search will usually only display datasets that are
 "active", but you can access and download datasets with any status.</p>
 
 <h5>Ignored features</h5>
-Features in datasets can be tagged as "ignored". Those features will not be
+Features in datasets can be tagged as "ignored" or "row id". Those features will not be
 considered by programming interfaces, and excluded from any tasks.
 
 
