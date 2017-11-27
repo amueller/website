@@ -19,7 +19,7 @@ These are:
 <dl>
 <dt><a href="guide/bootcamp/#g_start">Datasets</a></dt>
 <dd>Datasets are pretty straight-forward. They simply consist of a number of
-samples, usually in tabular form.</br><b>Example:</b> The <a href="/d/61">iris</a> dataset.</dd>
+rows, also called <em>instances</em>, usually in tabular form.</br><b>Example:</b> The <a href="/d/61">iris</a> dataset.</dd>
 <dt><a href="guide/bootcamp/#Tasks">Tasks</a></dt>
 <dd>A task consists of a dataset, together with a machine learning task to
 perform, such as classification or clustering and an evaluation method. For
@@ -30,7 +30,7 @@ href="https://www.openml.org/t/59">see here</a>).
 </dd>
 <dt><a href="guide/bootcamp/#Flows">Flows</a></dt>
 <dd>A flow identifies a particular machine learning algorithm from a particular
-library or framework such as Weka, MLR or scikit-learn.</br><b>Example:</b> <a
+library or framework such as Weka, mlr or scikit-learn.</br><b>Example:</b> <a
 href="https://www.openml.org/f/65">weka's RandomForest</a></dd>
 <dt><a href="guide/bootcamp/#Runs">Runs</a></dt>
 <dd>A run is a particular flow, that is algorithm, with a particular parameter
@@ -45,38 +45,39 @@ RandomForest</a></dd>
 website or the API without creating an account. However, if you want to upload
 datasets or experiments, you need to <a href="/register">create an account</a>
 or sign in and <a href="https://www.openml.org/#api">create an API key</a>.
-This key can then be used with any of the OpenML interfaces.
+This key can then be used with any of the <a
+href="guide/api">OpenML interfaces</a>.
 
 
 <h3 id="g_start" class="text-success"><i class="fa fa-database fa-fw"></i> Data</h3>
-<p>You can upload and download data sets through the <a href="new/data"
+<p>You can upload and download datasets through the <a href="new/data"
 class="loginfirst">website</a>, or <a href="guide/api">API</a>. Data hosted
 elsewhere can be referenced by URL.</p>
 
-<p>Data consists of columns or features, each of which is either numeric,
-nominal or a string, and has a unique name. A feature can also contain any
-number of missing values.</p>
+<p>Data consists of columns, also known as features or covariates, each of
+which is either numeric, nominal or a string, and has a unique name. A column
+can also contain any number of missing values.</p>
  <div class="img-guide-wrapper"><img src="img/data-ss1.png" alt="dataset
 properties" class="img-guide img-responsive"></div>
 <p>Most datasets have a "default target attribute" which denotes the column that
-is usually the dependent variable in supervised learning tasks. The default
+is usually the target, also known as dependent variable, in supervised learning tasks. The default
 target column is denoted by "(target)" in the web interface. Not all datasets
 have such a column, though, and a supervised task can pick any column as the
 target (as long as it is of the appropriate type).</p>
-<p>So while the standard task associated with <a
-href="https://www.openml.org/d/554">MNIST</a> is to predict the class from
+<p>Example: The default target variable for the <a
+href="https://www.openml.org/d/554">MNIST</a> data is to predict the class from
 pixel values, OpenML also allows you to create a task that tries to predict the
-value of pixel257 given all the other pixel values and the target class. As such,
-the target class is also considered a feature in OpenML terminology.</p>
+value of pixel257 given all the other pixel values and the class column. As such,
+the class is also considered a feature in OpenML terminology.</p>
 
 <p>OpenML automatically analyses the data, checks for problems, visualizes it,
 and computes <a href="search?q=+measure_type%3Adata_quality&type=measure">data
 characteristics</a>, also called data qualities (including simple ones like number of features, but also
-more complex statistics like kurtosis or the AUC of a decision tree of depth 3)
-useful to find and compare datasets.</p>
+more complex statistics like kurtosis or the AUC of a decision tree of depth 3).
+These data qualities can be useful to find and compare datasets.</p>
 
 
-<p>Every data set gets a dedicated page with all known information (check out
+<p>Every dataset gets a dedicated page with all known information (check out
 <a href="d/62">zoo</a>), including a wiki, visualizations, statistics, user
 discussions, and the <i>tasks</i> in which it is used.</p>
 
@@ -88,10 +89,11 @@ future, and allow conversions between the main data types.</p>
 <h5>Dataset ID and versions</h5>
 <p>A dataset can be uniquely identified by its dataset ID, which you can find
 in the URL of the dataset page, such as 62 for <a href="d/62">zoo</a>. Each 
-dataset also has a name, but several dataset can have the same name.  Different
-datasets with the same name are given different <i>versions</i> which you can
-access through the drop down at the top right of the dataset page. Each version
-has a separate dataset id, and can refer to a completely different dataset.</p>
+dataset also has a name, but several dataset can have the same name. When several datasets
+have the same name, they are called "versions" of the same dataset (altough
+that is not necessarily true). The version number is assigned according to the order
+of upload. Different versions of a dataset can be accessed through the drop
+down menu at the top right of the dataset page.</p>
  <div class="img-guide-wrapper"><img src="img/data_version.png" alt="dataset
 versions" class="img-guide img-responsive"></div>
 
@@ -100,7 +102,7 @@ versions" class="img-guide img-responsive"></div>
 "in_preparation". When you upload a dataset, it will be marked "in_preparation"
 until it is approved by a site administrator.  Once it is approved, the dataset
 will become "active". If a severe issue has been found with a dataset, it can
-become "deactivated". The search will usually only display datasets that are
+become "deactivated". By default, the search will only display datasets that are
 "active", but you can access and download datasets with any status.</p>
 
 <h5>Ignored features</h5>
@@ -129,12 +131,13 @@ first.</p>
 <p>More concretely, tasks specify the dataset, the kind of machine learning
 task (i.e. regression), the target attribute (i.e. which column in the dataset
 should be predicted), the number of splits for cross-validated evaluation and
-the exact dataset splits, as well as an optional evaluation metric. Given this
-specification, a task can be solved using any of the <a href="guide/integrations">integrated machine
-learning tools</a>, like Weka, MLR and scikit-learn.</p>
-<p><i class="fa fa-fw fa-exclamation-triangle"></i>You can also supply hidden
-test sets for the evaluation of solutions. Novel ways of ranking solutions will
-be added in the near future.</p>
+the exact dataset splits, as well as an optional evaluation metric (i.e. mean
+squared error). Given this specification, a task can be solved using any of the
+<a href="guide/integrations">integrated machine learning tools</a>, like Weka,
+mlr and scikit-learn.</p> <p><i class="fa fa-fw
+fa-exclamation-triangle"></i>You can also supply hidden test sets for the
+evaluation of solutions. Novel ways of ranking solutions will be added in the
+near future.</p>
 
 <h3 class="text-info" id="Flows"><i class="fa fa-cogs fa-fw"></i> Flows</h3>
 <p>Flows are algorithms, workflows, or scripts solving tasks. You can upload
@@ -184,8 +187,8 @@ algorithm/flow, and automatically upload all runs.</p>
 
 <h3 id="g_apis" class="text-warning"><i class="fa fa-rocket fa-fw"></i> Programming APIs</h3>
 <p>If you want to integrate OpenML into your own tools, we offer several <a
-href="guide/api">language-specific API's</a>, so you can easily interact with
-OpenML to list, download and upload data sets, tasks, flows and runs.</p>
+href="guide/api">language-specific APIs</a>, so you can easily interact with
+OpenML to list, download and upload datasets, tasks, flows and runs.</p>
 <p>With these APIs you can download a task, run an algorithm, and upload the
 results in just a few lines of code.</p>
 <p>OpenML also offers a <a href="guide/rest">REST API</a> which allows you to talk to OpenML
@@ -202,7 +205,7 @@ benchmark machine learning algorithms used as a benchmark suite. Anyone can add
 or remove tags on any entity.</p>
 
 <h3 class="text-muted"><i class="fa fa-folder fa-fw"></i> Studies (under construction)</h3>
-<p>You can combine data sets, flows and runs into studies, to collaborate with others online, or simply keep a log of your work.</p>
+<p>You can combine datasets, flows and runs into studies, to collaborate with others online, or simply keep a log of your work.</p>
 <p>Each project gets its own page, which can be linked to publications so that others can find all the details online.</p>
 
 <h3 class="text-muted"><i class="fa fa-users fa-fw"></i> Circles (under construction)</h3>
